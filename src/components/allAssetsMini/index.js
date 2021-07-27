@@ -3,6 +3,7 @@ import Web3 from 'web3';
 import axios from 'axios';
 import { BrowserView, MobileView } from 'react-device-detect';
 import { Link } from 'react-router-dom';
+// import { Avatar } from '@material-ui/core';
 
 var contents = ''
 var arr2 = []
@@ -137,6 +138,7 @@ export default class index extends Component {
                             }}>
                             <div style={{ width: '7%', height: '75px', float: 'left' }}>
                                 <img style={{ marginLeft: '10px', height: '30px', width: '30px', marginTop: '15px' }} alt='' src={`https://ethplorer.io${object.image}`} />
+                                {/* <Avatar style={{ marginLeft: '10px', height: '30px', width: '30px', marginTop: '15px' }} alt='token logo' src={`https://ethplorer.io${object.image}`}></Avatar> */}
                             </div>
 
                             <div style={{ width: '23%', height: '75px', float: 'left' }}>

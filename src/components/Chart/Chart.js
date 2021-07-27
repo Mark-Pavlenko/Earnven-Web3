@@ -1,21 +1,25 @@
-import { ResponsiveLine } from '@nivo/line'
+// import { ResponsiveLine } from '@nivo/line'
+// eslint-disable-next-line
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import parse from "html-react-parser";
 import {useParams} from 'react-router-dom';
-import TransparentButton from '../TransparentButton/index'
+// import TransparentButton from '../TransparentButton/index'
 import {
-  ChartDataTwentyFour,
-  ChartDataOneWeek,
-  ChartDataOneMonth,
+  // ChartDataTwentyFour,
+  // ChartDataOneWeek,
+  // ChartDataOneMonth,
+  ChartAllData
 } from './ChartDataFetch/ChartDataFetch'
 import { MobileView, BrowserView } from 'react-device-detect';
+import Apexchart from './Apexchart';
 
 export const Chart = () => {
 
   const {tokenid} = useParams();
   const [Price, setPrice] = useState(null)
   const [Selection, setSelection] = useState(null)
+  // eslint-disable-next-line
   const [View, setView] = useState('Month View')
 
   // const [Token, setToken] = useState('aave')
@@ -34,7 +38,7 @@ export const Chart = () => {
     if(tokenid!=='' && tokenid!==null && tokenid!==undefined){
       
       console.log(1, tokenid)
-      ChartDataOneMonth(tokenid).then((res) => {
+      ChartAllData(tokenid).then((res) => {
         setPrice(res)
         // console.log(Price)
       })
@@ -47,7 +51,7 @@ export const Chart = () => {
   }, [tokenid]);
 
 
-  function loadWeekData(){
+  /* function loadWeekData(){
 
     console.log(tokenid)
     if(tokenid!=='' && tokenid!==null){
@@ -67,9 +71,9 @@ export const Chart = () => {
 
     }
 
-  }
+  } */
 
-  function loadMonthData(){
+  /* function loadMonthData(){
 
     console.log(tokenid)
     if(tokenid!=='' && tokenid!==null){
@@ -90,8 +94,8 @@ export const Chart = () => {
     }
 
   }
-
-  function loadDayData(){
+ */
+  /* function loadDayData(){
 
     console.log(tokenid)
     if(tokenid!=='' && tokenid!==null){
@@ -111,7 +115,7 @@ export const Chart = () => {
 
     }
 
-  }
+  } */
 
   useEffect(() => {
     
@@ -127,6 +131,7 @@ export const Chart = () => {
           data: Price,
         },
       ])
+      // eslint-disable-next-line
     : (data = [
         {
           id: 'japan',
@@ -226,14 +231,14 @@ export const Chart = () => {
 
 
         <br/><br/>
-        <div style={{height: '350px', border:'1px', borderColor:'white',
+        {/*  <div style={{height: '350px', border:'1px', borderColor:'white',
          borderStyle:'solid',
          borderRadius:'20px',
          paddingBottom:'70px',
          }}>
           <div style={{marginTop:'30px', color:'white', textAlign:'center'}}>{View}</div>
           
-          <ResponsiveLine
+         <ResponsiveLine
             data={data}
             margin={{ top: 50, right: 20, bottom: 100, left: 60 }}
             xScale={{ type: 'point' }}
@@ -270,11 +275,15 @@ export const Chart = () => {
             pointLabelYOffset={-12}
             useMesh={true}
             legends={[]}
-          />
+          /> 
+
+          
+
           <br/><br/>
-        </div>
+        </div>*/}
+        <Apexchart data={Price}></Apexchart>
           <br/>
-          <center>
+         {/*  <center>
           <TransparentButton value='Week View' style={{
                 height:'45px',
                 width:'15%',
@@ -315,7 +324,7 @@ export const Chart = () => {
                 cursor:'pointer'
             }}
             onClick = {loadDayData}
-            /></center>
+            /></center> */}
 
           <br/><br/>
           <hr/>

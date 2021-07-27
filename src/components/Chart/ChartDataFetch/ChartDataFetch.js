@@ -16,7 +16,7 @@ export const ChartDataTwentyFour = async (coin) => {
   const data = await CoinGeckoClient.coins
     .fetchMarketChart(coin)
     .then((data) => {
-      //   console.log(data.data.prices)
+        console.log('chart data::',data.data.prices)
       let price = data.data.prices
       let formatedData = []
       for (let i = 0; i < price.length; i++) {
@@ -78,6 +78,30 @@ export const ChartDataOneMonth = async (coin) => {
       }
       // console.log(formatedData)
       return formatedData
+    })
+    .catch(err=>{
+      console.log("Error while fetching coin data")
+    })
+
+  return data
+}
+
+export const ChartAllData = async (coin) => {
+  const data = await CoinGeckoClient.coins
+    .fetchMarketChart(coin,{days:365})
+    .then((data) => {
+        console.log('chart data::',data.data.prices)
+      let price = data.data.prices
+      /* let formatedData = []
+      for (let i = 0; i < price.length; i++) {
+        let date = new Date(price[i][0])
+        let hour = date.getHours()
+        let min = date.getMinutes()
+        let time = `${hour}:${min}`
+        formatedData.push({ x: time, y: price[i][1] })
+      } */
+      //   console.log(formatedData)
+      return price
     })
     .catch(err=>{
       console.log("Error while fetching coin data")
