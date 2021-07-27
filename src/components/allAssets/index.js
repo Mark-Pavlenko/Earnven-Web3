@@ -157,7 +157,7 @@ export default class index extends Component {
                                 // width:'678px',
                                 background: "transparent",
                                 cursor: "pointer",
-                                lineHeight: '1'
+                                lineHeight: '1',
                             }}
                         >
                             <div style={{ width: "7%", height: "50px", float: "left", paddingLeft: '13px' }}>
@@ -208,7 +208,7 @@ export default class index extends Component {
                                 <font color="white" style={{ fontSize: "15px" }}>
                                     <br /> ${object.totalInvestment}{" "}
                                 </font>
-                                <font color="white" style={{ fontSize: "10px" }}>
+                                <font color="#03DAC6" style={{ fontSize: "10px" }}>
                                     {" "}
                                     <br />
                                     {object.profit} %
