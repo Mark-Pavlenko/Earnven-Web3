@@ -5,6 +5,8 @@ export default function Index() {
 
     const [SavingsContent, setSavingsContent] = useState([])
     const [LoansContent, setLoansContent] = useState([])
+    const [PoolsContent, setPoolsContent] = useState([])
+    const [PoolsData, setPoolsData] = useState([])
     const [SavingsData, setSavingsData] = useState([])
     const [LoansData, SetLoansData] = useState([])
 
@@ -60,8 +62,42 @@ export default function Index() {
 
     },[LoansData])
 
+    useEffect(()=>{
+        var content = PoolsData.map((object)=>
+        <div style={{width:'80%'}}>
+            <div style={{display:'inline-block', width:'25%', overflow:'hidden'}}>
+                ${object.token0Symbol}
+            </div>
+
+            <div style={{display:'inline-block', width:'20%', textAlign:'left', overflow:'hidden'}}>
+                ${object.token1Symbol} 
+            </div>
+            <div style={{display:'inline-block', width:'5%', textAlign:'left', overflow:'hidden'}}>
+                
+            </div>
+            <div style={{display:'inline-block', width:'10%', overflow:'hidden'}}>
+                {((object.tokenBalance/object.tokenSupply)*100).toFixed(2)}  %
+            </div>
+
+            <div style={{display:'inline-block', width:'20%', overflow:'hidden'}}>
+                {parseFloat(object.tokenBalance).toFixed(2)} $LP
+            </div>
+
+            <div style={{display:'inline-block', width:'20%', overflow:'hidden'}}>
+                {object.totalInvestment} USD 
+            </div>
+        
+        </div> 
+        )
+
+        setPoolsContent(content)
+
+    },[PoolsData])
+
     useEffect(() => {
-        async function getData(){
+        setSavingsData([])
+        SetLoansData([])
+        async function getAaveV2Data(){
             await axios.post(`https://api.thegraph.com/subgraphs/name/aave/protocol-v2`,
             {
                 query:`{
@@ -124,6 +160,8 @@ export default function Index() {
                         }
                         savings.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
                         loans.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
+                        // savings = SavingsData.concat(savings)
+                        // loans = LoansData.concat(loans)
                         setSavingsData(savings)
                         SetLoansData(loans)
                     }
@@ -131,7 +169,72 @@ export default function Index() {
                     // console.log(response.data.data.userReserves)
             })
         }
-        getData()
+        async function getUniV2Data(){
+            await axios.post(`https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2`,
+            {
+                query:`{
+                    liquidityPositionSnapshots(
+                      first:1000
+                      where:{
+                        user:"0x37d50885b44500a2eacab7c93dd349590600f05f"
+                          liquidityTokenBalance_gt:0
+                      }
+                      
+                      orderBy:timestamp
+                      orderDirection:desc
+                    )
+                    
+                    {
+                      pair{
+                        id
+                        reserveUSD
+                        token0{
+                          name
+                          symbol
+                        }
+                        token1{
+                          name
+                          symbol
+                        }
+                      }
+                      timestamp
+                      liquidityTokenBalance
+                      liquidityTokenTotalSupply
+                      reserveUSD
+                    }
+                  }
+                  `})
+                .then(async(response) => {
+                    if(response.data.data){
+                        var buffer =[]
+                        var pools = []
+                        console.log(response.data.data)
+                        var res = response.data.data.liquidityPositionSnapshots
+                        for(var i =0; i<res.length; i++){
+                            var index = buffer.indexOf(res[i].pair.id)
+                            if(index===-1){
+                                var object = {}
+                                object.tokenBalance = res[i].liquidityTokenBalance;
+                                object.tokenSupply = res[i].liquidityTokenTotalSupply;
+                                object.token0Symbol = res[i].pair.token0.symbol
+                                object.token1Symbol = res[i].pair.token1.symbol
+                                object.liquidity2 = res[i].pair.reserveUSD
+                                object.liquidity = res[i].reserveUSD
+                                object.totalInvestment = ((res[i].liquidityTokenBalance/res[i].liquidityTokenTotalSupply)*res[i].pair.reserveUSD).toFixed(2)
+                                object.timeStamp = res[i].timestamp
+                                buffer.push(res[i].pair.id)
+                                pools.push(object)
+                            }
+                            
+                        }
+                        pools.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
+                        console.log(pools)
+                        setPoolsData(pools)
+                    }
+                })
+        }
+        getAaveV2Data()
+        getUniV2Data()
     }, [])
 
     return (
@@ -145,6 +248,40 @@ export default function Index() {
 
             <h2>LOANS</h2> <br/>
             {LoansContent}
+            
+            <br/>
+            <br/>
+            
+            <h2>POOLS</h2> <br/>
+            <div style={{width:'80%'}}>
+            <div style={{display:'inline-block', width:'25%', overflow:'hidden'}}>
+                Token1
+            </div>
+
+            <div style={{display:'inline-block', width:'20%', textAlign:'left', overflow:'hidden'}}>
+                Token2
+            </div>
+
+            <div style={{display:'inline-block', width:'5%', textAlign:'left', overflow:'hidden'}}>
+               
+            </div>
+
+            <div style={{display:'inline-block', width:'10%', overflow:'hidden'}}>
+                Pool%
+            </div>
+
+            <div style={{display:'inline-block', width:'20%', overflow:'hidden'}}>
+                LP Token Balance
+            </div>
+
+            <div style={{display:'inline-block', width:'20%', overflow:'hidden'}}>
+                Investment
+            </div>
+        
+        </div> 
+        <hr style={{width:'80%'}}/>
+        <br/>
+            {PoolsContent}
             </center>
         </div>
     )
