@@ -78,8 +78,8 @@ import { Box, Drawer, Stack } from '@material-ui/core';
 
 import {MHidden} from '../../../components/@material-extend';
 
-import CompanyLogo from '../../../assets/icons/Subtract.png';
-import Earnven from '../../../assets/icons/Earnven.png';
+import CompanyLogo from '../../../assets/icons/Subtract.svg';
+import Earnven from '../../../assets/icons/Earnven.svg';
 import Account from './account/account';
 
 

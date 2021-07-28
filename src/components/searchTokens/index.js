@@ -5,97 +5,99 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 // import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
+import { Box } from '@material-ui/core';
 // import { Redirect } from 'react-router'
 
 
-var allTokens =[]
+var allTokens = []
 
 const styles = () => ({
     root: {
         "& .MuiInputLabel-outlined:not(.MuiInputLabel-shrink)": {
-          // Default transform is "translate(14px, 20px) scale(1)""
-          // This lines up the label with the initial cursor position in the input
-          // after changing its padding-left.
-          transform: "translate(34px, 20px) scale(1);"
+            // Default transform is "translate(14px, 20px) scale(1)""
+            // This lines up the label with the initial cursor position in the input
+            // after changing its padding-left.
+            transform: "translate(34px, 20px) scale(1);"
         }
-      },
-      inputRoot: {
+    },
+    inputRoot: {
         color: "white",
         // This matches the specificity of the default styles at https://github.com/mui-org/material-ui/blob/v4.11.3/packages/material-ui-lab/src/Autocomplete/Autocomplete.js#L90
         '&[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child': {
-          // Default left padding is 6px
-          paddingLeft: 26
+            // Default left padding is 6px
+            paddingLeft: 26
         },
         "& .MuiOutlinedInput-notchedOutline": {
-          borderColor: "green"
+            borderColor: "#737373"
         },
         "&:hover .MuiOutlinedInput-notchedOutline": {
-          borderColor: "red"
+            borderColor: "#737373"
         },
         "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-          borderColor: "purple"
+            borderColor: "#737373"
         }
-      },
-      option:{
-          color:'#000'
-      }
-    
-  });
+    },
+    option: {
+        color: '#000',
+        //   backgroundColor: '#737373'
+    }
+
+});
 
 class App extends Component {
 
-    async componentWillMount(){
+    async componentWillMount() {
 
-        await axios.get(`https://api.coingecko.com/api/v3/coins/list?include_platform=true`,{},{})
-        // await axios.get(`https://api.ethplorer.io/getAddressInfo/${this.state.account}?apiKey=EK-qSPda-W9rX7yJ-UY93y`,{},{})
-        .then(async(response) => {
-            allTokens = response.data;
-            console.log(allTokens)
-        })
+        await axios.get(`https://api.coingecko.com/api/v3/coins/list`, {}, {})
+            .then(async (response) => {
+                allTokens = response.data;
+                console.log("all tokens:::", allTokens)
+            })
     }
 
     sendData = () => {
         this.props.parentCallback(this.state.token);
-        
+
     }
 
-    searchTokens = async(event) => {
+    searchTokens = async (event) => {
         event.preventDefault()
         var arr = []
-            for(var i=0; i<allTokens.length; i++){
-                var searchPattern = new RegExp('^' + event.target.value, 'i');
-                if (searchPattern.test(allTokens[i].id)) {
-                    arr.push(allTokens[i].id)
-                }
+        for (var i = 0; i < allTokens.length; i++) {
+            var searchPattern = new RegExp('^' + event.target.value, 'i');
+            if (searchPattern.test(allTokens[i].id)) {
+                arr.push(allTokens[i].id)
+                
+            }
         }
         // console.log(arr)
-        if(arr.length<1000){
-            await this.setState({results:arr})
-            // console.log(this.state.results)
+        if (arr.length < 1000) {
+            await this.setState({ results: arr })
+            console.log("value in autocomplete",this.state.results)
 
         }
         // console.log(event)
-        this.setState({searchContent:event.target.value})
-              
+        this.setState({ searchContent: event.target.value })
+
     }
 
-    submitSearch = async(event, value) =>{
+    submitSearch = async (event, value) => {
         event.preventDefault()
         // console.log(value)
-        await this.setState({token:value})
+        await this.setState({ token: value.id })
         // window.location.href = '/test'
         this.sendData();
         // console.log(window.token)
         // await this.setState({searchContent:value, redirect:true})
     }
 
-    constructor(props){
+    constructor(props) {
         super(props)
-        this.state={
-            searchContent:'',
-            results:[],
-            redirect:false,
-            token:''
+        this.state = {
+            searchContent: '',
+            results: [],
+            redirect: false,
+            token: ''
         }
     }
 
@@ -112,58 +114,59 @@ class App extends Component {
         // }
 
         return (
-            <center>
-            <div style={{width:'300px'}}>
-                
+            <div style={{ width: '400px' }}>
                 <div >
-                
-                <Autocomplete
-                    style={{ width: '100%' , float:'left'}}
-                    freeSolo
-                    blurOnSelect
-                    // autoSelect
-                    autoComplete
-                    autoHighlight
-                    classes={classes}
-                    onChange={(event, value) => { this.submitSearch(event,value)}} 
-                    options={this.state.results}
-                    renderInput={(params) => (
-                    <TextField {...params}
-                        id="filled-search"
-                        onChange={this.searchTokens}
-                        // InputProps={{
-                        //     className: classes.multilineColor
-                        // }}
-                        // classes={{
-                        //     root: classes.root,
-                        // }}
-                        variant="filled"
-                        size="small"
-                        label="Search Tokens..."
-                        style={{ borderColor:'white', color:'white', border:'1px', borderStyle:'solid', borderRadius:'7px'}}
+
+                    <Autocomplete
+                        // style={{ width: '100%', float: 'left' }}
+                        freeSolo
+                        blurOnSelect
+                        // autoSelect
+                        fullWidth
+                        autoComplete
+                        autoHighlight
+                        classes={classes}
+                        onChange={(event, value) => { this.submitSearch(event, value) }}
+                        options={this.state.results}
+                        renderOption={(props, option) => (
+                            <Box
+                                component="li"
+                                sx={{ fontSize: 15, '& > span': { mr: '10px', fontSize: 18 } }}
+                                {...props}
+                            >
+                                {option}
+                            </Box>
+                        )}
+                        renderInput={(params) => (
+                            <TextField {...params}
+                                id="filled-search"
+                                onChange={this.searchTokens}
+                                variant="outlined"
+                                size="medium"
+                                label="Search Tokens..."
+                                style={{ borderColor: 'white', color: 'white', border: '0px', borderStyle: 'solid', borderRadius: '7px' }}
+                            />
+                            // <SearchInput {...params}
+                            //      onChange={this.searchTokens}></SearchInput>
+                        )}
                     />
-                    // <SearchInput {...params}
-                    //      onChange={this.searchTokens}></SearchInput>
-                    )}
-                />
                 </div>
-                <div style={{float:'left'}}>
-                 &nbsp;
-                 {/* <Button style={{height:'60px', borderRadius:'50px'}} variant="contained">
-                     Search
-                </Button> */}
-                 </div>
-                 {/* </form> */}
-                </div>
-                </center>
+                {/*  <div style={{float:'left'}}>
+                        &nbsp;
+                        <Button style={{height:'60px', borderRadius:'50px'}} variant="contained">
+                            Search
+                        </Button>
+                        </div>
+                        </form>  */}
+            </div>
+
         )
     }
 }
 
 App.propTypes = {
     classes: PropTypes.object.isRequired,
-  };
-  
-  export default withStyles(styles)(App);
+};
 
-  
+export default withStyles(styles)(App);
+

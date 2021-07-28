@@ -3,7 +3,7 @@ import ApexCharts from 'apexcharts';
 import ReactApexChart from 'react-apexcharts'
 import './portfolioperf.css'
 import axios from 'axios'
-
+import { Button } from '@material-ui/core';
 
 export default class PortfolioPerf extends Component {
 
@@ -17,7 +17,7 @@ export default class PortfolioPerf extends Component {
         }
     }
 
-   
+
 
     // Will return history of ethereum account address
     async getAddressChartHistory() {
@@ -160,33 +160,33 @@ export default class PortfolioPerf extends Component {
                         function CommaFormatted(amount) {
                             amount = amount.toString();
                             var delimiter = ","; // replace comma if desired
-                            var ab = amount.split('.',2)
+                            var ab = amount.split('.', 2)
                             var d = []
-                            if(ab[1]!==undefined){
+                            if (ab[1] !== undefined) {
                                 d = ab[1]
                             }
                             var i = parseInt(ab[0]);
-                            if(isNaN(i)) { return ''; }
+                            if (isNaN(i)) { return ''; }
                             var minus = '';
-                            if(i < 0) { minus = '-'; }
+                            if (i < 0) { minus = '-'; }
                             i = Math.abs(i);
                             var n = i.toString();
                             var a = [];
-                            while(n.length > 3) {
-                                var nn = n.substr(n.length-3);
+                            while (n.length > 3) {
+                                var nn = n.substr(n.length - 3);
                                 a.unshift(nn);
-                                n = n.substr(0,n.length-3);
+                                n = n.substr(0, n.length - 3);
                             }
-                            if(n.length > 0) { a.unshift(n); }
+                            if (n.length > 0) { a.unshift(n); }
                             n = a.join(delimiter);
-                            if(d.length < 1) { amount = n; }
+                            if (d.length < 1) { amount = n; }
                             else { amount = n + '.' + d; }
                             amount = minus + amount;
                             return amount;
                         }
                         let currentDate = new Date(w.globals.seriesX[0][dataPointIndex]);
                         // eslint-disable-next-line
-                        return '<div><h3>'+'$'+CommaFormatted(series[seriesIndex][dataPointIndex]) +'</h3 ><h5>'+currentDate.toLocaleDateString()+'</h5></div >'
+                        return '<div><h3>' + '$' + CommaFormatted(series[seriesIndex][dataPointIndex]) + '</h3 ><h5>' + currentDate.toLocaleDateString() + '</h5></div >'
                     }
 
                 },
@@ -346,30 +346,67 @@ export default class PortfolioPerf extends Component {
             <div style={{ border: '1px solid #737373', borderRadius: '10px' }}>
                 <div>
                     <div style={{ textAlign: 'end' }}>
-                        <button id="one_month"
+                        {/* <button id="one_month"
 
                             onClick={() => this.updateData('one_month')} className={(this.state.selection === 'one_month' ? 'active' : '')}>
                             1M
-                        </button>
+                        </button> */}
+                        <Button id="one_month"
+                            variant='outlined'
+                            size='small'
+                            color='inherit'
+                            sx={{
+                                borderRadius: '10000px',
+                                minWidth: '34px',
+                                height:'20px',
+                                padding:'0px 8px'
+                            }}
+                            onClick={() => this.updateData('one_month')} className={(this.state.selection === 'one_month' ? 'active' : '')}>
+                            1M
+                        </Button>
                         &nbsp;
-                        <button id="one_year"
-
-
+                        <Button id="one_year"
+                            variant='outlined'
+                            size='small'
+                            color='inherit'
+                            sx={{
+                                borderRadius: '10000px',
+                                minWidth: '34px',
+                                height:'20px',
+                                padding:'0px 8px'
+                            }}
                             onClick={() => this.updateData('one_year')} className={(this.state.selection === 'one_year' ? 'active' : '')}>
                             1Y
-                        </button>
+                        </Button>
                         &nbsp;
-                        <button id="ytd"
-
+                        <Button id="ytd"
+                            variant='outlined'
+                            size='small'
+                            color='inherit'
+                            sx={{
+                                borderRadius: '10000px',
+                                minWidth: '34px',
+                                height:'20px',
+                                padding:'0px 8px'
+                            }}
                             onClick={() => this.updateData('ytd')} className={(this.state.selection === 'ytd' ? 'active' : '')}>
                             24H
-                        </button>
+                        </Button>
                         &nbsp;
-                        <button id="all"
-
+                        <Button id="all"
+                            variant='outlined'
+                            size='small'
+                            color='inherit'
+                            sx={{
+                                borderRadius: '10000px',
+                                minWidth: '34px',
+                                height:'20px',
+                                padding:'0px 8px'
+                            }}
                             onClick={() => this.updateData('all')} className={(this.state.selection === 'all' ? 'active' : '')}>
                             ALL
-                        </button>
+                        </Button>
+                        &nbsp;
                     </div>
                 </div>
                 <div id="chart" className='chart'>

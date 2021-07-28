@@ -14,3 +14,7 @@
     background: #737373;
     color: #000;
   }
+
+.active{
+    background: '#BB86FC';
+}

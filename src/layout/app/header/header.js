@@ -98,10 +98,6 @@ const RootStyle = styled(AppBar)(({ theme }) => ({
               <Icon icon={menu2Fill} />
             </IconButton>
           </MHidden>
-  
-          {/* <SearchInput /> */}
-          {/* <Link to='/app/token'><TransparentButton value='Search Tokens'/></Link> */}
-          
           <div>
           <span style={{visibility:'hidden'}}>{Token}</span>
             <SearchTokens parentCallback = {callbackFunction}/> 
