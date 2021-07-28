@@ -15,6 +15,7 @@ import TokenDetails from '../components/tokenDetails'
 import {data} from '../globalStore'
 import DefiAssets from '../components/defiAssets'
 import Exchange from '../components/exchange'
+import LoansAndSavings from '../components/LoansAndSavings'
 
 export default class TestingPage extends Component {
 
@@ -68,7 +69,7 @@ export default class TestingPage extends Component {
 
                     <br/><br/>
                     <br/><br/>
-                    <TokenDetails/>
+                    {/* <TokenDetails/> */}
 
                     <br/><br/><br/><br/><br/>
                     <button
@@ -82,6 +83,8 @@ export default class TestingPage extends Component {
                     <DefiAssets />
                     <br/><br/>
                     <Exchange />
+                    <br/><br/>
+                    <LoansAndSavings/>
                 </div>
             </div>
         )
