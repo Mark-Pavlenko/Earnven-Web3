@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ApexCharts from 'apexcharts';
 import ReactApexChart from 'react-apexcharts'
+import { Button } from '@material-ui/core';
 
 // import axios from 'axios'
 
@@ -30,7 +31,6 @@ export default class Apexchart extends Component {
         c = { data: data };
         // points
         points.push(c);
-        console.log("value of c:::",c);
         this.setState({ series: points })
 
 
@@ -225,8 +225,8 @@ export default class Apexchart extends Component {
                          color: '#fff'
                      },
                  }, */
-                /* noData: {
-                    text: "Your wallet is empty",
+                noData: {
+                    text: "We don't Track this token",
                     align: 'center',
                     verticalAlign: 'middle',
                     offsetX: 0,
@@ -236,7 +236,7 @@ export default class Apexchart extends Component {
                         fontSize: '14px',
                         fontFamily: undefined
                     }
-                }, */
+                },
                 selection: 'one_month',
             },
         };
@@ -331,33 +331,64 @@ export default class Apexchart extends Component {
 
     render() {
         return (
-            <div style={{ border: '1px solid #737373', borderRadius: '10px' }}>
+            <div style={{ border: '1px solid #737373', borderRadius: '10px',marginTop:'20px' }}>
                 <div>
                     <div style={{ textAlign: 'end' }}>
-                        <button id="one_month"
-
+                        <Button id="one_month"
+                            variant='outlined'
+                            size='small'
+                            color='inherit'
+                            sx={{
+                                borderRadius: '10000px',
+                                minWidth: '34px',
+                                height: '20px',
+                                padding: '0px 8px'
+                            }}
                             onClick={() => this.updateData('one_month')} className={(this.state.selection === 'one_month' ? 'active' : '')}>
                             1M
-                        </button>
+                        </Button>
                         &nbsp;
-                        <button id="one_year"
-
-
+                        <Button id="one_year"
+                            variant='outlined'
+                            size='small'
+                            color='inherit'
+                            sx={{
+                                borderRadius: '10000px',
+                                minWidth: '34px',
+                                height: '20px',
+                                padding: '0px 8px'
+                            }}
                             onClick={() => this.updateData('one_year')} className={(this.state.selection === 'one_year' ? 'active' : '')}>
                             1Y
-                        </button>
+                        </Button>
                         &nbsp;
-                        <button id="ytd"
-
+                        <Button id="ytd"
+                            variant='outlined'
+                            size='small'
+                            color='inherit'
+                            sx={{
+                                borderRadius: '10000px',
+                                minWidth: '34px',
+                                height: '20px',
+                                padding: '0px 8px'
+                            }}
                             onClick={() => this.updateData('ytd')} className={(this.state.selection === 'ytd' ? 'active' : '')}>
                             24H
-                        </button>
+                        </Button>
                         &nbsp;
-                        <button id="all"
-
+                        <Button id="all"
+                            variant='outlined'
+                            size='small'
+                            color='inherit'
+                            sx={{
+                                borderRadius: '10000px',
+                                minWidth: '34px',
+                                height: '20px',
+                                padding: '0px 8px'
+                            }}
                             onClick={() => this.updateData('all')} className={(this.state.selection === 'all' ? 'active' : '')}>
                             ALL
-                        </button>
+                        </Button>
                     </div>
                 </div>
                 <div id="chart" className='chart' style={{ height: '250px' }}>
