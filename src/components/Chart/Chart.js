@@ -30,12 +30,14 @@ export const Chart = () => {
     // console.log(tokenid)
     axios.get(`https://api.coingecko.com/api/v3/coins/${tokenid}`,{},{})
         .then(async(response) => {
-            // console.log(response.data)
+            console.log(response.data)
             setSelection(response.data)
+
     })
     setView('Month View')
-
+    console.log("heelo1")
     if(tokenid!=='' && tokenid!==null && tokenid!==undefined){
+      console.log("heelo2")
       
       console.log(1, tokenid)
       ChartAllData(tokenid).then((res) => {

@@ -9,6 +9,12 @@ import ReceiveIcon from "../../assets/icons/receive.png";
 import SendIcon from "../../assets/icons/send.png";
 import UserIcon from "../../assets/icons/userIcon.png";
 import { MobileView, BrowserView } from "react-device-detect";
+import { Typography, Stack } from "@material-ui/core";
+import { AvatarGenerator } from 'random-avatar-generator';
+import ustIcon from "../../assets/icons/ust.png";
+
+// import AvatarGenerator from 'react-avatar-generator';
+
 
 var contents = "";
 var ops = [];
@@ -19,21 +25,9 @@ var eth = {};
 export default class index extends Component {
   async componentWillMount() {
     // await this.loadWeb3();
+
     await this.loadBlockchainData();
   }
-
-  // async loadWeb3() {
-  //     if (window.ethereum) {
-  //       window.web3 = new Web3(window.ethereum)
-  //       await window.ethereum.enable()
-  //     }
-  //     else if (window.web3) {
-  //       window.web3 = new Web3(window.web3.currentProvider)
-  //     }
-  //     else {
-  //       window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
-  //     }
-  // }
 
   shortaddress(addy) {
     if (addy === "") {
@@ -67,13 +61,21 @@ export default class index extends Component {
 
   convertTimestamp(epoch) {
     var myDate = new Date(epoch * 1000);
-    return myDate.toLocaleString();
+    // return myDate.toLocaleString();
+    return myDate.toLocaleDateString();
+  }
+
+  convertTimestampToTime(epoch) {
+    var myDate = new Date(epoch * 1000)
+    return myDate.toLocaleTimeString();
   }
 
   change = (arr) => {
-    contents = arr.map((object) => (
+    const generator = new AvatarGenerator();
+    contents = arr.map((object, i, arr) => (
       <div>
         <BrowserView>
+          {(i !== 0 && this.convertTimestamp(object.timestamp) === this.convertTimestamp(arr[i - 1].timestamp)) ? null : <Typography>{this.convertTimestamp(object.timestamp)}</Typography>}
           <Accordion
             style={{
               background: "transparent",
@@ -95,25 +97,26 @@ export default class index extends Component {
             >
               <div style={{ width: "10%", float: "left" }}>
                 <img
+                  style={{paddingTop:'10px'}}
                   src={object.status === "Receive" ? ReceiveIcon : SendIcon}
                   alt=""
                 />
               </div>
 
-              <div style={{ width: "20%", float: "left", textAlign: "left" }}>
+              <div style={{ width: "30%", float: "left", textAlign: "left" }}>
                 <font color="white">{object.status}</font>
                 <br />
                 <font style={{ fontSize: "10px", color: "white" }}>
-                  {this.convertTimestamp(object.timestamp)}
+                  {this.convertTimestampToTime(object.timestamp)}
                 </font>
               </div>
 
-              <div style={{ width: "5%", float: "left" }}>
+              {/* <div style={{ width: "5%", float: "left" }}>
                 <img
                   width="25px"
                   alt=""
                   style={{ marginTop: "5px" }}
-                  src={UserIcon}
+                  src={generator.generateRandomAvatar(object.from)}
                 />
               </div>
 
@@ -142,14 +145,58 @@ export default class index extends Component {
                 <font style={{ fontSize: "20px", color: "white" }}>
                   {object.value} {object.symbol}
                 </font>
+              </div> */}
+
+              <div style={{ width: "41%", float: "left", textAlign: "left" }}>
+                <Stack direction='row'>
+                  <img
+                    style={{
+                      display: 'inline',
+                      maxWidth: '25px',
+                      verticalAlign: 'top',
+                      // marginLeft: "10px",
+                      height: "25px",
+                      // width: "30px",
+                      // marginTop: "15px",
+                      margin: '16px',
+                      // border: '1px solid',
+                      // borderRadius: '50%'
+                    }}
+                    alt=""
+                    src={object.img !== null ? `https://ethplorer.io${object.img}` : (object.symbol==='UST'? ustIcon:null)}
+                  />
+
+                  {/* <div
+                  style={{
+                    width: "30%",
+                    float: "left",
+                    textAlign: "left",
+                    marginTop: "8px",
+                  }}
+                > */}
+                  <Typography variant='body1' sx={{paddingTop:'15px'}}>
+                    {/* {object.value} {object.symbol} */}
+                    {object.status === "Receive" ? `+${object.value} ${object.symbol}` : `-${object.value} ${object.symbol}`}
+                  </Typography>
+                 
+                  {/* </div> */}
+                </Stack>
               </div>
 
               <div style={{ width: "15%", float: "left", textAlign: "left" }}>
-                <font color="white">TYPE</font>
-                <br />
-                <font style={{ fontSize: "13px", color: "white" }}>
-                  {object.type}
-                </font>
+                <Typography variant='body1'  color="white">{object.status === "Receive" ? "From" : "To"}</Typography>
+                <Stack direction='row' spacing={1}>
+                  <img
+                    width="17px"
+                    alt=""
+                    // style={{ marginTop: "5px" }}
+                    src={generator.generateRandomAvatar(object.from)}
+                  />
+                  <Typography variant='body2'>
+
+                    {object.status === "Receive" ? this.shortaddress(object.from) : this.shortaddress(object.to)}
+                  </Typography>
+                </Stack>
               </div>
             </AccordionSummary>
             <AccordionDetails
@@ -318,18 +365,34 @@ export default class index extends Component {
 
     await axios
       .get(
-        `https://api.ethplorer.io/getAddressHistory/0xbfbe5822a880a41c2075dc7e1d92663739cf119e?apiKey=EK-qSPda-W9rX7yJ-UY93y&limit=1000`,
+        `https://api.ethplorer.io/getAddressHistory/${accounts}?apiKey=EK-qSPda-W9rX7yJ-UY93y&limit=1000`,
         {},
         {}
       )
       .then(async (response) => {
         ops = response.data.operations;
-        // console.log(ops)
+        // for(let i=0;i<temp.length-1;i++){
+        // for(let i=0;i<5;i++){
+        // console.log("transaction object:::",temp[i+1].transactionHash)
+        // if(temp[i].transactionHash===temp[i+1].transactionHash){
+        //   temp[i].firstTransaction = temp[i+1];
+        //   temp[i].type = 'trading'
+        //   ops.push(temp[i])
+        //   i++;
+        // console.log("trading transaction:::",temp[i].transactionHash)
+        // }
+        // else{
+        //   temp[i].type='tokenTransfer'
+        // console.log("new object:::",temp[i])
+        //     ops.push(temp[i])
+        //   }
+        // }
+        // console.log("tokens object:::",ops)
       });
 
     await axios
       .get(
-        `https://api.ethplorer.io/getAddressTransactions/0xbfbe5822a880a41c2075dc7e1d92663739cf119e?apiKey=EK-qSPda-W9rX7yJ-UY93y&limit=1000`,
+        `https://api.ethplorer.io/getAddressTransactions/${accounts}?apiKey=EK-qSPda-W9rX7yJ-UY93y&limit=1000`,
         {},
         {}
       )
@@ -337,11 +400,12 @@ export default class index extends Component {
         ops2 = response.data;
         // console.log(ops2)
         for (var i = 0; i < ops2.length; i++) {
+          ops2[i].type = 'ethTransfer'
           ops.push(ops2[i]);
         }
         ops.sort((a, b) => parseFloat(b.timestamp) - parseFloat(a.timestamp));
 
-        // console.log(ops)
+        console.log("final object response:::", ops)
         this.update();
       });
   }
@@ -359,6 +423,21 @@ export default class index extends Component {
     }
     for (var i = start; i < end; i++) {
       var object = {};
+
+      //   object.from = web3.utils.toChecksumAddress(ops[i].from);
+      //   object.to = web3.utils.toChecksumAddress(ops[i].to);
+      //   object.timestamp = ops[i].timestamp;
+      //   if(ops[i].type==='trading'){
+      //     object.status = "Trade"
+      //     object.firstToken.img=null;
+      //   }
+      //   else{
+      //     if (object.from === web3.utils.toChecksumAddress(this.state.account)) {
+      //       object.status = "Send";
+      //     } else {
+      //       object.status = "Receive";
+      //     }
+      //   }
       object.from = web3.utils.toChecksumAddress(ops[i].from);
       object.to = web3.utils.toChecksumAddress(ops[i].to);
       object.timestamp = ops[i].timestamp;
@@ -374,12 +453,19 @@ export default class index extends Component {
         object.symbol = ops[i].tokenInfo.symbol;
         object.tokenAddress = ops[i].tokenInfo.address;
         object.diff = ops[i].tokenInfo.price.diff;
+        if (ops[i].tokenInfo.image !== undefined) {
+          object.img = ops[i].tokenInfo.image;
+        }
+        else {
+          object.img = null
+        }
       } else if (ops[i].hash !== undefined) {
         object.rate = eth.price;
         object.name = "Ethereum";
         object.symbol = "ETH";
         object.tokenAddress = "";
         object.diff = eth.diff;
+        object.img = '/images/eth.png';
       }
 
       if (ops[i].type !== undefined) {
@@ -413,14 +499,14 @@ export default class index extends Component {
         object.value = parseFloat(ops[i].value).toFixed(2);
       }
 
-      if (object.from === this.state.account) {
+      if (object.from === web3.utils.toChecksumAddress(this.state.account)) {
         object.status = "Send";
       } else {
         object.status = "Receive";
       }
       arr1.push(object);
     }
-    console.log(arr1);
+    console.log("data created in transaction history::", arr1);
     this.change(arr1);
     this.setState({ contents });
 
@@ -432,6 +518,7 @@ export default class index extends Component {
 
   constructor() {
     super();
+
     this.state = {
       account: "",
       contents: "",
@@ -447,92 +534,20 @@ export default class index extends Component {
           height: "auto",
           paddingBottom: "30px",
           background: "transparent",
-          // border:'1px',
-          //   borderStyle: "solid",
-          //   borderColor: "white",
           borderRadius: "20px",
+          // marginRight: '20px'
         }}
       >
-        <center>
-          <div
-            style={{
-              marginTop: "30px",
-              fontSize: "20px",
-              marginBottom: "10px",
-            }}
-          >
-            <font color="white"> All Transactions </font>
-          </div>
+        {/*  <center> */}
+        <Typography variant='h3' align='left' sx={{ marginTop: '10px' }} color="white"> History </Typography>
 
-          {/* <br /> */}
-          {/* <font color="white">
-            {this.state.page > 1 && (
-              <button
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  outline: "none",
-                  transform: "rotate(180deg)",
-                  cursor: "pointer",
-                }}
-                onClick={async (e) => {
-                  if (this.state.page !== 1) {
-                    await this.setState({ page: this.state.page - 1 });
-                    this.update();
-                  }
-                }}
-              >
-                {" "}
-                <svg
-                  width="22"
-                  height="8"
-                  viewBox="0 0 22 8"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M21.3536 4.35355C21.5488 4.15829 21.5488 3.84171 21.3536 3.64645L18.1716 0.464466C17.9763 0.269204 17.6597 0.269204 17.4645 0.464466C17.2692 0.659728 17.2692 0.976311 17.4645 1.17157L20.2929 4L17.4645 6.82843C17.2692 7.02369 17.2692 7.34027 17.4645 7.53553C17.6597 7.7308 17.9763 7.7308 18.1716 7.53553L21.3536 4.35355ZM0 4.5H21V3.5H0V4.5Z"
-                    fill="white"
-                  />
-                </svg>
-              </button>
-            )}{" "}
-            &nbsp;&nbsp;&nbsp;
-            {this.state.page} &nbsp;&nbsp;&nbsp;
-            <button
-              style={{
-                background: "transparent",
-                border: "none",
-                outline: "none",
-                cursor: "pointer",
-              }}
-              onClick={async (e) => {
-                await this.setState({ page: this.state.page + 1 });
-                this.update();
-              }}
-            >
-              {" "}
-              <svg
-                width="22"
-                height="8"
-                viewBox="0 0 22 8"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M21.3536 4.35355C21.5488 4.15829 21.5488 3.84171 21.3536 3.64645L18.1716 0.464466C17.9763 0.269204 17.6597 0.269204 17.4645 0.464466C17.2692 0.659728 17.2692 0.976311 17.4645 1.17157L20.2929 4L17.4645 6.82843C17.2692 7.02369 17.2692 7.34027 17.4645 7.53553C17.6597 7.7308 17.9763 7.7308 18.1716 7.53553L21.3536 4.35355ZM0 4.5H21V3.5H0V4.5Z"
-                  fill="white"
-                />
-              </svg>
-            </button>
-          </font> */}
-          {/* <br /> */}
-          <br />
+        <br />
 
-          {!this.state.contents ? <div>Loading...</div> : this.state.contents}
+        {!this.state.contents ? <Typography variant='h3' sx={{ marginTop: '130px' }} align='center'>Loading...</Typography> : this.state.contents}
 
-          <br />
-          {this.state.contents && (
+        <br />
+        {this.state.contents && (
+          <center>
             <font color="white">
               {this.state.page > 1 && (
                 <button
@@ -596,10 +611,11 @@ export default class index extends Component {
                 </svg>
               </button>
             </font>
-          )}
-          <br />
-          <br />
-        </center>
+          </center>
+        )}
+        <br />
+        <br />
+        {/* </center> */}
       </div>
     );
   }

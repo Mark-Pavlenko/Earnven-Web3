@@ -5,7 +5,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 // import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
-import { Box } from '@material-ui/core';
+import { Box,Typography } from '@material-ui/core';
 // import { Redirect } from 'react-router'
 
 
@@ -62,22 +62,24 @@ class App extends Component {
 
     searchTokens = async (event) => {
         event.preventDefault()
+        console.log("search token method called")
         var arr = []
         for (var i = 0; i < allTokens.length; i++) {
             var searchPattern = new RegExp('^' + event.target.value, 'i');
             if (searchPattern.test(allTokens[i].id)) {
-                arr.push(allTokens[i].id)
-                
+                arr.push(allTokens[i])
+
             }
         }
-        // console.log(arr)
+        console.log("value of arr", arr)
         if (arr.length < 1000) {
+            console.log("value in autocomplete", this.state.results)
             await this.setState({ results: arr })
-            console.log("value in autocomplete",this.state.results)
+
 
         }
         // console.log(event)
-        this.setState({ searchContent: event.target.value })
+        this.setState({ searchContent: event.target.value.id })
 
     }
 
@@ -116,7 +118,7 @@ class App extends Component {
         return (
             <div style={{ width: '400px' }}>
                 <div >
-
+                    {console.log("autocomplete re render")}
                     <Autocomplete
                         // style={{ width: '100%', float: 'left' }}
                         freeSolo
@@ -128,19 +130,28 @@ class App extends Component {
                         classes={classes}
                         onChange={(event, value) => { this.submitSearch(event, value) }}
                         options={this.state.results}
+                        getOptionLabel={(option) => option.name}
                         renderOption={(props, option) => (
                             <Box
                                 component="li"
-                                sx={{ fontSize: 15, '& > span': { mr: '10px', fontSize: 18 } }}
+                                sx={{
+                                    // fontSize: 14,
+                                    fontWeight: 600,
+                                    fontFamily: 'Poppins, sans-serif',
+                                    // backgroundColor: (theme)=> theme.palette.background.default,
+                                    '& > span': { mr: '10px', fontSize: 18 }
+                                }}
                                 {...props}
                             >
-                                {option}
+                                <Typography variant='body2'>{option.name}</Typography>
+                                {/* {console.log("value of option in render:::",option)} */}
                             </Box>
                         )}
                         renderInput={(params) => (
                             <TextField {...params}
                                 id="filled-search"
                                 onChange={this.searchTokens}
+
                                 variant="outlined"
                                 size="medium"
                                 label="Search Tokens..."
