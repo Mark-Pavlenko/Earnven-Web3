@@ -27,23 +27,28 @@ export default function Index() {
 
     useEffect(()=>{
         var content = SavingsData.map((object)=>
-        <div style={{width:'80%'}}>
+        <div style={{width:'90%', marginTop:'12px', marginLeft:'30px'}}>
+
+            <div style={{display:'inline-block', width:'15%'}}>
+                <img src={object.image} style={{height:'30px', marginTop:''}} alt=""/>
+            </div>
+
             <div style={{display:'inline-block', width:'10%'}}>
-                <img src={object.image} alt=""/>
             </div>
 
             <div style={{display:'inline-block', width:'30%', textAlign:'left'}}>
-                {object.name} 
+                ${object.symbol}
             </div>
 
-            <div style={{display:'inline-block', width:'30%'}}>
+            {/* <div style={{display:'inline-block', width:'30%'}}>
                 {object.value} ${object.symbol}
-            </div>
+            </div> */}
 
-            <div style={{display:'inline-block', width:'30%'}}>
+            <div style={{display:'inline-block', width:'40%', fontSize:'13px'}}>
                 {object.totalInvestment} USD 
             </div>
-        
+
+            <br/>
         </div>
         )
 
@@ -137,24 +142,47 @@ export default function Index() {
 
     useEffect(()=>{
         var content = CompoundSavingsData.map((object)=>
-        <div style={{width:'80%'}}>
+        <div style={{width:'90%', marginTop:'12px', marginLeft:'30px'}}>
+
+            <div style={{display:'inline-block', width:'15%'}}>
+                <img src={object.image} style={{height:'30px', marginTop:''}} alt=""/>
+            </div>
+
             <div style={{display:'inline-block', width:'10%'}}>
-                <img src={object.image} alt=""/>
             </div>
 
             <div style={{display:'inline-block', width:'30%', textAlign:'left'}}>
-                {object.name} 
+                ${object.symbol}
             </div>
 
-            <div style={{display:'inline-block', width:'30%'}}>
+            {/* <div style={{display:'inline-block', width:'30%'}}>
                 {object.value} ${object.symbol}
-            </div>
+            </div> */}
 
-            <div style={{display:'inline-block', width:'30%'}}>
+            <div style={{display:'inline-block', width:'40%', fontSize:'13px'}}>
                 {object.totalInvestment} USD 
             </div>
+
+            <br/>
+        </div>
+        // <div style={{width:'80%'}}>
+        //     <div style={{display:'inline-block', width:'10%'}}>
+        //         <img src={object.image} alt=""/>
+        //     </div>
+
+        //     <div style={{display:'inline-block', width:'30%', textAlign:'left'}}>
+        //         {object.name} 
+        //     </div>
+
+        //     <div style={{display:'inline-block', width:'30%'}}>
+        //         {object.value} ${object.symbol}
+        //     </div>
+
+        //     <div style={{display:'inline-block', width:'30%'}}>
+        //         {object.totalInvestment} USD 
+        //     </div>
         
-        </div> 
+        // </div> 
         )
 
         setCompoundSavingsContent(content)
@@ -586,10 +614,41 @@ export default function Index() {
 
     return (
         <div>
-            <center>
-            {/* <h1>AAVE V2</h1> <br/><br/> */}
 
-            <br/><br/><hr style={{width:'40%'}}/> <br/><br/>
+            <div style={{
+                marginLeft:'25px',
+                width:'30%',
+                border:'1px solid white',
+                height : 'auto',
+                minHeight: '200px',
+                borderRadius: '10px'
+            }}>
+            <br/>
+            <center>
+                <div style={{fontSize:'25px'}}>
+                    Savings
+                </div>
+            </center>
+            
+            
+            <div style={{fontSize:'12px', marginLeft:'15px'}}>
+            Aave V2
+            </div>
+            {SavingsContent}
+            <br/>
+
+            <div style={{fontSize:'12px', marginLeft:'15px'}}>
+            Compound V2
+            </div>
+            {CompoundSavingsContent}
+            <br/>
+
+
+            </div>
+
+            <center>
+
+            {/* <br/><br/><hr style={{width:'40%'}}/> <br/><br/>
             <h2>SAVINGS</h2> <br/>
             <br/>
             <h4>Aave V2 </h4>
@@ -598,7 +657,7 @@ export default function Index() {
             <br/><br/>
             <h4>Compound V2 </h4>
             <br/><br/>
-            {CompoundSavingsContent}
+            {CompoundSavingsContent} */}
 
             <br/><br/><hr style={{width:'40%'}}/> <br/><br/>
             <h2>LOANS</h2> <br/>
@@ -664,8 +723,6 @@ export default function Index() {
         <h4>Synthetix </h4>
         <br/>
         {SynthetixContent}
-        {/* {LoansContent} */}
-
 
         </center>
         </div>
