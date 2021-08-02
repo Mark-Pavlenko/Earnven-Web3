@@ -4,6 +4,19 @@ import axios from "axios";
 import { BrowserView, MobileView } from "react-device-detect";
 import { Link } from "react-router-dom";
 import { Typography } from "@material-ui/core";
+import { experimentalStyled as styled } from '@material-ui/core/styles';
+
+const CustomStyle = styled('div')(({ theme }) => ({
+    height: "50px",
+    background: "transparent",
+    cursor: "pointer",
+    lineHeight: '1',
+    marginBottom:'5px',
+    '&:hover':{
+        background: theme.palette.gradients.custom
+    }
+}));
+
 
 var contents = "";
 var arr2 = [];
@@ -14,22 +27,11 @@ export default class index extends Component {
         await this.loadBlockchainData();
     }
 
-    // async loadWeb3() {
-    //     if (window.ethereum) {
-    //       window.web3 = new Web3(window.ethereum)
-    //       await window.ethereum.enable()
-    //     }
-    //     else if (window.web3) {
-    //       window.web3 = new Web3(window.web3.currentProvider)
-    //     }
-    //     else {
-    //       window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
-    //     }
-    // }
-
     componentDidUpdate() {
         if (this.state.account !== this.props.address) {
             arr2 = [];
+            arr1 = [];
+            this.setState({ hideShowMore: false })
             this.loadBlockchainData();
         }
     }
@@ -40,7 +42,7 @@ export default class index extends Component {
         const web3 = new Web3();
         const accounts = this.props.address;
         this.setState({ account: accounts });
-
+        arr2 = []
         /* await axios
           .get(
             `https://api.ethplorer.io/getAddressInfo/0x32Be343B94f860124dC4fEe278FDCBD38C102D88?apiKey=EK-qSPda-W9rX7yJ-UY93y`,
@@ -52,6 +54,8 @@ export default class index extends Component {
                 arr1 = [];
                 var tokens = response.data.tokens;
                 if (response.data.ETH.balance === 0 && tokens === undefined) {
+                    this.setState({ contents: '' })
+                    this.setState({ hideShowMore: true })
                 } else {
                     let ethObject = {};
                     let ethTokenInfo = {};
@@ -151,15 +155,7 @@ export default class index extends Component {
             <div>
                 <BrowserView>
                     <Link to={`/app/token/${object.coingecko}`}>
-                        <div
-                            style={{
-                                height: "60px",
-                                // width:'678px',
-                                background: "transparent",
-                                cursor: "pointer",
-                                lineHeight: '1',
-                            }}
-                        >
+                        <CustomStyle>
                             <div style={{ width: "7%", height: "50px", float: "left", paddingLeft: '13px' }}>
                                 <img
                                     style={{
@@ -215,7 +211,7 @@ export default class index extends Component {
                                 </font>
                             </div>
 
-                        </div>
+                        </CustomStyle>
                         {/* <center>
                             <Stack direction='row' spacing={10}>
                                 <Avatar alt='token-img' src={`https://ethplorer.io${object.image}`}></Avatar>
@@ -311,6 +307,7 @@ export default class index extends Component {
     };
 
     render() {
+
         this.change(arr2);
         return (
             <div>
@@ -363,7 +360,7 @@ export default class index extends Component {
                             await this.setState({ page: this.state.page + 1 });
                             this.update();
                         }}
-                    ><u>Show All Assets</u></Typography>
+                    ><u>Show More</u></Typography>
                 </div>}
 
             </div>
