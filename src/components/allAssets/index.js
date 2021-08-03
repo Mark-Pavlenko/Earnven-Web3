@@ -154,7 +154,7 @@ export default class index extends Component {
         contents = arr.map((object) => (
             <div>
                 <BrowserView>
-                    <Link to={`/app/token/${object.coingecko}`}>
+                    <Link to={`/${this.state.account}/token/${object.coingecko}`}>
                         <CustomStyle>
                             <div style={{ width: "7%", height: "50px", float: "left", paddingLeft: '13px' }}>
                                 <img
