@@ -86,9 +86,12 @@ class App extends Component {
     submitSearch = async (event, value) => {
         event.preventDefault()
         // console.log(value)
-        await this.setState({ token: value.id })
-        // window.location.href = '/test'
-        this.sendData();
+        if(value){
+            await this.setState({ token: value.id })
+            // window.location.href = '/test'
+            this.sendData();
+        }
+        
         // console.log(window.token)
         // await this.setState({searchContent:value, redirect:true})
     }

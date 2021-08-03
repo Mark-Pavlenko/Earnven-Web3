@@ -425,7 +425,7 @@ export default function Index({accountAddress}) {
                   }`})
                 .then(async(response) => {
                     console.log(response)
-                    if(response.data.data.userReserves){
+                    if(response.data.data){
             // console.log('addy2', accountAddress)
 
                         var savings = []
@@ -508,7 +508,7 @@ export default function Index({accountAddress}) {
                     }
                     }`})
                 .then(async(response) => {
-                    if(response.data.data.liquidityPositions){
+                    if(response.data.data){
                         // console.log(response.data.data.liquidityPositions)
                         var pools = []
                         var res = response.data.data.liquidityPositions
@@ -556,7 +556,7 @@ export default function Index({accountAddress}) {
                   }
                   `})
             .then(async(response)=>{
-                if(response.data.data.accountCTokens){
+                if(response.data.data){
                     var savings = []
                     var loans = []
                     // console.log(response.data.data.accountCTokens)

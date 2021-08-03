@@ -58,9 +58,11 @@ export default function Account({ address }) {
         if (addy === '') {
             return addy
         }
-        var l = addy.length
-        var addynew = addy[0] + addy[1] + addy[2] + addy[3] + addy[4] + addy[5] + '...' + addy[l - 4] + addy[l - 3] + addy[l - 2] + addy[l - 1]
-        return addynew
+        if(addy){
+            var l = addy.length
+            var addynew = addy[0] + addy[1] + addy[2] + addy[3] + addy[4] + addy[5] + '...' + addy[l - 4] + addy[l - 3] + addy[l - 2] + addy[l - 1]
+            return addynew
+        }
     }
 
     function shortaddress1(addy) {

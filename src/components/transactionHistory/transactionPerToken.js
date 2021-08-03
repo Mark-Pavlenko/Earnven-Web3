@@ -502,8 +502,8 @@ export default class index extends Component {
 
   async loadBlockchainData() {
     // const web3 = window.web3;
-    const accounts = this.props.address;
-    const tokenid = this.props.tokenid;
+    var accounts = this.props.address;
+    var tokenid = this.props.tokenid;
     var tokenAddress;
     console.log(tokenid)
 
@@ -540,6 +540,7 @@ export default class index extends Component {
       .then(async (response) => {
         var res = response.data.operations;
         console.log(res)
+        ops = []
         for(let i = 0; i < res.length; i++){
           if(res[i].tokenInfo.address===tokenAddress){
             ops.push(res[i]);
@@ -665,9 +666,9 @@ export default class index extends Component {
               firstToken.symbol = firstTokenTemp.tokenInfo.symbol;
               firstTokenTemp.tokenInfo.image !== undefined ? firstToken.image = firstTokenTemp.tokenInfo.image : firstToken.image = null;
               firstToken.image = "/images/eth.png"
-              firstToken.value = parseFloat(web3.utils.fromWei((firstTokenTemp.intValue).toString(), 'ether')).toFixed(3);
-              firstToken.dollarValue = parseFloat(web3.utils.fromWei((firstTokenTemp.intValue).toString(), 'ether') / firstTokenTemp.usdPrice).toFixed(3);
-            }
+              firstToken.value = parseFloat(web3.utils.fromWei(firstTokenTemp.value, 'ether')).toFixed(3);
+              firstToken.dollarValue = ((firstToken.value) / firstTokenTemp.usdPrice).toFixed(3);
+             }
 
             const secondTokenTemp = dataObject.operations[operationsLength-1].tokenInfo
             secondToken.name = secondTokenTemp.name;
@@ -791,7 +792,7 @@ export default class index extends Component {
         }}
       >
         {/*  <center> */}
-        <Typography variant='h3' align='left' sx={{ marginTop: '10px' }} color="white"> Token History </Typography>
+        <Typography variant='h3' align='left' sx={{ marginTop: '10px' }} color="white"> Token Transactions </Typography>
 
         <br />
 
