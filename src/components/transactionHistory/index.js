@@ -267,9 +267,9 @@ export default class index extends Component {
                 <Typography href={this.etherscanTxLink(data.hash)}
                   variant='caption'>{this.shortaddress(data.hash)}
                 </Typography>
-                <IconButton edge="end" aria-label="copy" style={{padding:'0px'}}>
+                <IconButton edge="end" aria-label="copy" style={{ padding: '0px' }}>
                   <CopyToClipboard text={data.hash} >
-                    <MdContentCopy style={{ color: '#929292',padding:'0px',height:'13px'}} />
+                    <MdContentCopy style={{ color: '#929292', padding: '0px', height: '13px' }} />
                   </CopyToClipboard>
                 </IconButton>
               </Stack>
@@ -311,7 +311,7 @@ export default class index extends Component {
           </div>
 
           <div style={{ width: "30%", float: "left", textAlign: "left" }}>
-            <font color="white">{data.status}</font>
+            <font color="white">{data.txType === 'Approval' ? data.txType : data.status}</font>
             <br />
             <font style={{ fontSize: "10px", color: "white" }}>
               {this.convertTimestampToTime(data.timestamp)}
@@ -351,15 +351,23 @@ export default class index extends Component {
               }
 
               <Stack direction='column'>
-                <Typography variant='body2' sx={{ paddingTop: '4px' }}>
-                  {data.status === "Receive" ? `+${data.value} ${data.symbol}` : `-${data.value} ${data.symbol}`}
-                </Typography>
-                {data.dollarValue === null ?
-                  <Typography variant='caption' sx={{ color: '#737373', ml: 1 }}>N/A
-                  </Typography> :
-                  <Typography variant='caption' sx={{ color: '#737373' }}>
-                    {`$${data.dollarValue} `}
-                  </Typography>}
+                {data.txType === "Approval" ? 
+                <div>
+                  <Typography variant='body2' sx={{ paddingTop: '4px' }}>{data.name}</Typography>
+                  <Typography variant='caption' sx={{ color: '#737373' }}>{data.symbol}</Typography>
+                </div> :
+                  <div>
+                    <Typography variant='body2' sx={{ paddingTop: '4px' }}>
+                      {data.status === "Receive" ? `+${data.value} ${data.symbol}` : `-${data.value} ${data.symbol}`}
+                    </Typography>
+                    {data.dollarValue === null ?
+                      <Typography variant='caption' sx={{ color: '#737373', ml: 1 }}>N/A
+                      </Typography> :
+                      <Typography variant='caption' sx={{ color: '#737373' }}>
+                        {`$${data.dollarValue} `}
+                      </Typography>}
+                  </div>}
+
               </Stack>
 
               {/* </div> */}
@@ -407,9 +415,9 @@ export default class index extends Component {
                 <Typography href={this.etherscanTxLink(data.hash)}
                   variant='caption'>{this.shortaddress(data.hash)}
                 </Typography>
-                <IconButton edge="end" aria-label="copy" style={{padding:'0px'}}>
+                <IconButton edge="end" aria-label="copy" style={{ padding: '0px' }}>
                   <CopyToClipboard text={data.hash} >
-                    <MdContentCopy style={{ color: '#929292',padding:'0px',height:'13px'}} />
+                    <MdContentCopy style={{ color: '#929292', padding: '0px', height: '13px' }} />
                   </CopyToClipboard>
                 </IconButton>
               </Stack>
@@ -656,13 +664,13 @@ export default class index extends Component {
           if (operationsLength === 1) {
             // console.log("token transfer")
             // object.to = web3.utils.toChecksumAddress(dataObject.to);
-            if(dataObject.operations[0].type==="approve"){
-              object.txType= "Approval"
+            if (dataObject.operations[0].type === "approve") {
+              object.txType = "Approval"
             }
-            else{
+            else {
               object.txType = "Token"
             }
-            
+
             object.from === web3.utils.toChecksumAddress(this.state.account) ? object.status = 'Send' : object.status = 'Receive';
             const tokenInfo = dataObject.operations[0].tokenInfo
             object.name = tokenInfo.name
@@ -683,10 +691,10 @@ export default class index extends Component {
               firstToken.symbol = "ETH"
               firstToken.image = "/images/eth.png"
               firstToken.value = dataObject.value;
-              const tempArr = dataObject.operations.filter((tempObject)=>{
-                return(tempObject.from === dataObject.to);
+              const tempArr = dataObject.operations.filter((tempObject) => {
+                return (tempObject.from === dataObject.to);
               })
-              firstToken.dollarValue = ((tempArr[0].usdPrice)*(dataObject.value)).toFixed(3)
+              firstToken.dollarValue = ((tempArr[0].usdPrice) * (dataObject.value)).toFixed(3)
               // firstToken.dollarValue = ((dataObject.operations[0].usdPrice) * (dataObject.value)).toFixed(3);
             }
             else {
@@ -698,8 +706,8 @@ export default class index extends Component {
               firstToken.value = parseFloat(web3.utils.fromWei(firstTokenTemp.value, 'ether')).toFixed(3);
               firstToken.dollarValue = ((firstToken.value) / firstTokenTemp.usdPrice).toFixed(3);
             }
-            const tempArr1 = dataObject.operations.filter((tempObject)=>{
-              return(tempObject.to === dataObject.from)
+            const tempArr1 = dataObject.operations.filter((tempObject) => {
+              return (tempObject.to === dataObject.from)
             })
             /* const secondTokenTemp = dataObject.operations[operationsLength - 1].tokenInfo
             secondToken.name = secondTokenTemp.name;
