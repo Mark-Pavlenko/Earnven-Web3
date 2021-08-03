@@ -407,7 +407,7 @@ export default function Index({accountAddress}) {
                 query:`{
                     userReserves(
                       where:{
-                        user:"0x0003fca368838e813fb6d80e6ade47104980158a"
+                        user:"${accountAddress}"
                       }
                     )
                     {
@@ -484,7 +484,7 @@ export default function Index({accountAddress}) {
                     liquidityPositions(
                       first:1000
                       where:{
-                        user:"0x0003fca368838e813fb6d80e6ade47104980158a"
+                        user:"${accountAddress}"
                         liquidityTokenBalance_gt:0
                       }
                       orderDirection:desc
@@ -536,7 +536,7 @@ export default function Index({accountAddress}) {
                 query:`{
                     accountCTokens(
                       where:{
-                        account:"0x0003fca368838e813fb6d80e6ade47104980158a"
+                        account:"${accountAddress}"
                       }
                     ){
                       id
@@ -612,7 +612,7 @@ export default function Index({accountAddress}) {
                     users
                     (
                       where:{
-                        id:"0x000000000000000000000000000000000000dead"
+                        id:"${accountAddress}"
                       }
                     )
                     {
@@ -664,7 +664,7 @@ export default function Index({accountAddress}) {
                     users
                     (
                       where:{
-                        id:"0x0000000000000000000000000000000000000001"
+                        id:"${accountAddress}"
                       }
                     )
                     {
@@ -682,7 +682,7 @@ export default function Index({accountAddress}) {
                   }`
             })
             .then(async(response)=>{
-                if(response.data.data){
+                if(response.data.data[0]){
                     // console.log(response.data.data.users)
                     var res = response.data.data.users[0].smartTokenBalances
                     // console.log(res)
@@ -718,7 +718,7 @@ export default function Index({accountAddress}) {
                     snxholders
                     (
                       where:{
-                          id:"0xbfbe5822a880a41c2075dc7e1d92663739cf119e"
+                          id:"${accountAddress}"
                       }
                     )
                     {
