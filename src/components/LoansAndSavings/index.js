@@ -123,7 +123,7 @@ export default function Index({accountAddress}) {
           }>
         <div style={{width:'90%', marginTop:'12px', marginLeft:'30px'}}>
 
-            <div style={{display:'inline-block', width:'45%', textAlign:'left'}}>
+            <div style={{display:'inline-block', width:'45%', textAlign:'left', wordBreak:'break-all'}}>
                 ${object.token0Symbol}-${object.token1Symbol}
             </div>
 
@@ -425,7 +425,7 @@ export default function Index({accountAddress}) {
                   }`})
                 .then(async(response) => {
                     console.log(response)
-                    if(response.data.data){
+                    if(response.data.data.userReserves){
             // console.log('addy2', accountAddress)
 
                         var savings = []
@@ -508,7 +508,7 @@ export default function Index({accountAddress}) {
                     }
                     }`})
                 .then(async(response) => {
-                    if(response.data.data){
+                    if(response.data.data.liquidityPositions){
                         // console.log(response.data.data.liquidityPositions)
                         var pools = []
                         var res = response.data.data.liquidityPositions
@@ -556,7 +556,7 @@ export default function Index({accountAddress}) {
                   }
                   `})
             .then(async(response)=>{
-                if(response.data.data){
+                if(response.data.data.accountCTokens){
                     var savings = []
                     var loans = []
                     // console.log(response.data.data.accountCTokens)
@@ -636,7 +636,7 @@ export default function Index({accountAddress}) {
                   }`
             })
             .then(async(response)=>{
-                if(response.data.data){
+                if(response.data.data.users[0]){
                     // console.log(response.data.data.users[0].sharesOwned)
                 var res = response.data.data.users[0].sharesOwned
                 var pools = []
@@ -682,7 +682,7 @@ export default function Index({accountAddress}) {
                   }`
             })
             .then(async(response)=>{
-                if(response.data.data[0]){
+                if(response.data.data.users[0]){
                     // console.log(response.data.data.users)
                     var res = response.data.data.users[0].smartTokenBalances
                     // console.log(res)
@@ -730,9 +730,10 @@ export default function Index({accountAddress}) {
                   `
             })
             .then(async(response)=>{
-                if(response.data.data){
+                var assets = []
+                if(response.data.data.snxholders[0]){
                     var res = response.data.data.snxholders[0];
-                    var assets = []
+                    
                     console.log(res)
                     var object = {}
                     await axios.get(`https://api.coingecko.com/api/v3/coins/ethereum/contract/0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f`,{},{})
@@ -747,8 +748,9 @@ export default function Index({accountAddress}) {
                     object.image = res.image;
                     object.balance = parseFloat(res.balanceOf/(10**18)).toFixed(2);
                     assets.push(object)
-                    setSynthetixData(assets)
+                    
                 }
+                setSynthetixData(assets)
                 // console.log(response)
             })
         }
