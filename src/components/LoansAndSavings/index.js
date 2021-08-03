@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react'
 import axios from 'axios'
+import Tooltip from '@material-ui/core/Tooltip';
 
-export default function Index() {
+export default function Index({accountAddress}) {
 
     const [SavingsContent, setSavingsContent] = useState([]) //aave v2
     const [LoansContent, setLoansContent] = useState([]) // aave v2
@@ -27,6 +28,15 @@ export default function Index() {
 
     useEffect(()=>{
         var content = SavingsData.map((object)=>
+        <Tooltip
+        title={
+            <React.Fragment>
+                {object.name} <br/>
+              Token Price : {parseFloat(object.price).toFixed(4)} USD <br/>
+              Total Tokens : {object.value} ${object.symbol} <br/>
+              Total Investment : {object.totalInvestment} USD
+            </React.Fragment>
+          }>
         <div style={{width:'90%', marginTop:'12px', marginLeft:'30px'}}>
 
             <div style={{display:'inline-block', width:'15%'}}>
@@ -45,11 +55,12 @@ export default function Index() {
             </div> */}
 
             <div style={{display:'inline-block', width:'40%', fontSize:'13px'}}>
-                {object.totalInvestment} USD 
+                {object.totalInvestment} USD
             </div>
 
             <br/>
         </div>
+        </Tooltip>
         )
 
         setSavingsContent(content)
@@ -58,24 +69,39 @@ export default function Index() {
 
     useEffect(()=>{
         var content = LoansData.map((object)=>
-        <div style={{width:'80%'}}>
-            <div style={{display:'inline-block', width:'10%'}}>
-                <img src={object.image} alt=""/>
-            </div>
+        <Tooltip
+        title={
+            <React.Fragment>
+                {object.name} <br/>
+              Token Price : {parseFloat(object.price).toFixed(4)} USD <br/>
+              Total Tokens : {object.value} ${object.symbol} <br/>
+              Total Investment : {object.totalInvestment} USD
+            </React.Fragment>
+          }>
+        <div style={{width:'90%', marginTop:'12px', marginLeft:'30px'}}>
 
-            <div style={{display:'inline-block', width:'30%', textAlign:'left'}}>
-                {object.name} 
-            </div>
+<div style={{display:'inline-block', width:'15%'}}>
+    <img src={object.image} style={{height:'30px', marginTop:''}} alt=""/>
+</div>
 
-            <div style={{display:'inline-block', width:'30%'}}>
-                {object.value} ${object.symbol}
-            </div>
+<div style={{display:'inline-block', width:'10%'}}>
+</div>
 
-            <div style={{display:'inline-block', width:'30%'}}>
-                {object.totalInvestment} USD 
-            </div>
-        
-        </div> 
+<div style={{display:'inline-block', width:'30%', textAlign:'left'}}>
+    ${object.symbol}
+</div>
+
+{/* <div style={{display:'inline-block', width:'30%'}}>
+    {object.value} ${object.symbol}
+</div> */}
+
+<div style={{display:'inline-block', width:'40%', fontSize:'13px'}}>
+    {object.totalInvestment} USD
+</div>
+
+<br/>
+</div>
+        </Tooltip>
         )
 
         setLoansContent(content)
@@ -84,30 +110,59 @@ export default function Index() {
 
     useEffect(()=>{
         var content = PoolsData.map((object)=>
-        <div style={{width:'80%'}}>
-            <div style={{display:'inline-block', width:'25%', overflow:'hidden'}}>
-                ${object.token0Symbol}
+
+        <Tooltip
+        title={
+            <React.Fragment>
+              Token 0 : {object.token0name} <br/>
+              Token 1 : {object.token1name} <br/>
+              Pool Share : {parseFloat(object.tokenBalance/object.tokenSupply*100).toFixed(2)} % <br/>
+              Pool Liquidity : {parseFloat(object.liquidity).toFixed(2)} <br/>
+              Total Investment : {object.totalInvestment} USD
+            </React.Fragment>
+          }>
+        <div style={{width:'90%', marginTop:'12px', marginLeft:'30px'}}>
+
+            <div style={{display:'inline-block', width:'45%', textAlign:'left'}}>
+                ${object.token0Symbol}-${object.token1Symbol}
             </div>
 
-            <div style={{display:'inline-block', width:'20%', textAlign:'left', overflow:'hidden'}}>
-                ${object.token1Symbol} 
-            </div>
-            <div style={{display:'inline-block', width:'5%', textAlign:'left', overflow:'hidden'}}>
+            <div style={{display:'inline-block', width:'15%'}}>
                 
             </div>
-            <div style={{display:'inline-block', width:'10%', overflow:'hidden'}}>
-                {((object.tokenBalance/object.tokenSupply)*100).toFixed(2)}  %
-            </div>
 
-            <div style={{display:'inline-block', width:'20%', overflow:'hidden'}}>
-                {parseFloat(object.tokenBalance).toFixed(2)} $LP
-            </div>
-
-            <div style={{display:'inline-block', width:'20%', overflow:'hidden'}}>
+            <div style={{display:'inline-block', width:'40%', fontSize:'13px'}}>
                 {object.totalInvestment} USD 
             </div>
+
+            <br/>
+        </div>
+        </Tooltip>
+
+        // <div style={{width:'80%'}}>
+        //     <div style={{display:'inline-block', width:'25%', overflow:'hidden'}}>
+        //         ${object.token0Symbol}
+        //     </div>
+
+        //     <div style={{display:'inline-block', width:'20%', textAlign:'left', overflow:'hidden'}}>
+        //         ${object.token1Symbol} 
+        //     </div>
+        //     <div style={{display:'inline-block', width:'5%', textAlign:'left', overflow:'hidden'}}>
+                
+        //     </div>
+        //     <div style={{display:'inline-block', width:'10%', overflow:'hidden'}}>
+        //         {((object.tokenBalance/object.tokenSupply)*100).toFixed(2)}  %
+        //     </div>
+
+        //     <div style={{display:'inline-block', width:'20%', overflow:'hidden'}}>
+        //         {parseFloat(object.tokenBalance).toFixed(2)} $LP
+        //     </div>
+
+        //     <div style={{display:'inline-block', width:'20%', overflow:'hidden'}}>
+        //         {object.totalInvestment} USD 
+        //     </div>
         
-        </div> 
+        // </div> 
         )
 
         setPoolsContent(content)
@@ -116,32 +171,15 @@ export default function Index() {
 
     useEffect(()=>{
         var content = CompoundLoansData.map((object)=>
-        <div style={{width:'80%'}}>
-            <div style={{display:'inline-block', width:'10%'}}>
-                <img src={object.image} alt=""/>
-            </div>
-
-            <div style={{display:'inline-block', width:'30%', textAlign:'left'}}>
-                {object.name} 
-            </div>
-
-            <div style={{display:'inline-block', width:'30%'}}>
-                {object.value} ${object.symbol}
-            </div>
-
-            <div style={{display:'inline-block', width:'30%'}}>
-                {object.totalInvestment} USD 
-            </div>
-        
-        </div> 
-        )
-
-        setCompoundLoansContent(content)
-
-    },[CompoundLoansData])
-
-    useEffect(()=>{
-        var content = CompoundSavingsData.map((object)=>
+        <Tooltip
+        title={
+            <React.Fragment>
+                {object.name} <br/>
+              Token Price : {parseFloat(object.price).toFixed(4)} USD <br/>
+              Total Tokens : {object.value} ${object.symbol} <br/>
+              Total Investment : {object.totalInvestment} USD
+            </React.Fragment>
+          }>
         <div style={{width:'90%', marginTop:'12px', marginLeft:'30px'}}>
 
             <div style={{display:'inline-block', width:'15%'}}>
@@ -165,24 +203,48 @@ export default function Index() {
 
             <br/>
         </div>
-        // <div style={{width:'80%'}}>
-        //     <div style={{display:'inline-block', width:'10%'}}>
-        //         <img src={object.image} alt=""/>
-        //     </div>
+        </Tooltip>
+        )
 
-        //     <div style={{display:'inline-block', width:'30%', textAlign:'left'}}>
-        //         {object.name} 
-        //     </div>
+        setCompoundLoansContent(content)
 
-        //     <div style={{display:'inline-block', width:'30%'}}>
-        //         {object.value} ${object.symbol}
-        //     </div>
+    },[CompoundLoansData])
 
-        //     <div style={{display:'inline-block', width:'30%'}}>
-        //         {object.totalInvestment} USD 
-        //     </div>
-        
-        // </div> 
+    useEffect(()=>{
+        var content = CompoundSavingsData.map((object)=>
+        <Tooltip
+        title={
+            <React.Fragment>
+                {object.name} <br/>
+              Token Price : {parseFloat(object.price).toFixed(4)} USD <br/>
+              Total Tokens : {object.value} ${object.symbol} <br/>
+              Total Investment : {object.totalInvestment} USD
+            </React.Fragment>
+          }>
+        <div style={{width:'90%', marginTop:'12px', marginLeft:'30px'}}>
+
+            <div style={{display:'inline-block', width:'15%'}}>
+                <img src={object.image} style={{height:'30px', marginTop:''}} alt=""/>
+            </div>
+
+            <div style={{display:'inline-block', width:'10%'}}>
+            </div>
+
+            <div style={{display:'inline-block', width:'30%', textAlign:'left'}}>
+                ${object.symbol}
+            </div>
+
+            {/* <div style={{display:'inline-block', width:'30%'}}>
+                {object.value} ${object.symbol}
+            </div> */}
+
+            <div style={{display:'inline-block', width:'40%', fontSize:'13px'}}>
+                {object.totalInvestment} USD 
+            </div>
+
+            <br/>
+        </div>
+        </Tooltip>
         )
 
         setCompoundSavingsContent(content)
@@ -191,21 +253,47 @@ export default function Index() {
 
     useEffect(()=>{
         var content = BalancerPoolsData.map((object)=>
-        <div style={{width:'80%'}}>
-
-            <div style={{display:'inline-block', width:'70%', textAlign:'left'}}>
+        <Tooltip
+        title={
+            <React.Fragment>
+                
+                <div style={{display:'inline-block', textAlign:'left', wordBreak:'break-word'}}>
+                Tokens in Pool: <br/>
                 {object.tokens.map((obj)=>
                 <>
-                    ${obj.symbol} &nbsp;&nbsp;&nbsp;&nbsp;
+                    ${obj.symbol}<br/>
+                </>
+                )} 
+                </div>
+            <br/>
+            <br/>
+              Pool Percentage : {parseFloat(object.poolPercentage).toFixed(2)} % <br/>
+              Pool Liquidity : {parseFloat(object.liquidity).toFixed(2)} USD <br/>
+              Total Investment : {object.totalInvestment} USD
+            </React.Fragment>
+          }>
+              
+        <div style={{width:'90%', marginTop:'12px', marginLeft:'30px'}}>
+          <br/>
+            <div style={{display:'inline-block', width:'60%', textAlign:'left', wordBreak:'break-word'}}>
+                {object.tokens.map((obj)=>
+                <>
+                    ${obj.symbol}-
                 </>
                 )} 
             </div>
 
-            <div style={{display:'inline-block', width:'30%'}}>
+            <div style={{display:'inline-block', width:'10%'}}>
+                {/* {object.value} ${object.symbol} */}
+            </div>
+
+            <div style={{display:'inline-block', width:'30%', fontSize:'13px'}}>
                 {object.totalInvestment} USD 
             </div>
-        
-        </div> 
+            <hr style={{width:'30%'}}/>
+            
+        </div>
+        </Tooltip>
         )
 
         setBalancerPoolsContent(content)
@@ -214,21 +302,54 @@ export default function Index() {
 
     useEffect(()=>{
         var content = BancorPoolsData.map((object)=>
-        <div style={{width:'80%'}}>
+        <Tooltip
+        title={
+            <React.Fragment>
+                {object.name} <br/>
+              {/* Token Price : {parseFloat(object.price).toFixed(4)} USD <br/>
+              Total Tokens : {object.value} ${object.symbol} <br/>
+              Total Investment : {object.totalInvestment} USD */}
+            </React.Fragment>
+          }>
+        <div style={{width:'90%', marginTop:'12px', marginLeft:'30px'}}>
 
-            <div style={{display:'inline-block', width:'10%', textAlign:'left'}}>
-                <img src={object.image} alt=""/>
+            <div style={{display:'inline-block', width:'15%'}}>
+                <img src={object.image} style={{height:'30px', marginTop:''}} alt=""/>
             </div>
 
-            <div style={{display:'inline-block', width:'45%', textAlign:'left'}}>
-                {object.name}
+            <div style={{display:'inline-block', width:'10%'}}>
             </div>
 
-            <div style={{display:'inline-block', width:'45%'}}>
-                {object.value} ${object.symbol} 
+            <div style={{display:'inline-block', width:'40%', textAlign:'left'}}>
+                ${object.symbol}
             </div>
+
+            {/* <div style={{display:'inline-block', width:'30%'}}>
+                {object.value} ${object.symbol}
+            </div> */}
+
+            <div style={{display:'inline-block', width:'30%', fontSize:'13px'}}>
+                {object.value} Tokens
+            </div>
+
+            <br/>
+        </div>
+        </Tooltip>
+        // <div style={{width:'80%'}}>
+
+        //     <div style={{display:'inline-block', width:'10%', textAlign:'left'}}>
+        //         <img src={object.image} alt=""/>
+        //     </div>
+
+        //     <div style={{display:'inline-block', width:'45%', textAlign:'left'}}>
+        //         {object.name}
+        //     </div>
+
+        //     <div style={{display:'inline-block', width:'45%'}}>
+        //         {object.value} ${object.symbol} 
+        //     </div>
         
-        </div> 
+        // </div> 
         )
 
         setBancorPoolsContent(content)
@@ -237,21 +358,39 @@ export default function Index() {
 
     useEffect(()=>{
         var content = SynthetixData.map((object)=>
-        <div style={{width:'30%'}}>
-
-            <div style={{display:'inline-block', width:'10%'}}>
-                <img src={object.image} alt=""/>
+        <div style={{width:'90%', marginTop:'12px', marginLeft:'30px'}}>
+            <div style={{display:'inline-block', width:'15%'}}>
+                <img src={object.image} style={{height:'30px', marginTop:''}} alt=""/>
             </div>
 
-            <div style={{display:'inline-block', width:'45%'}}>
+            <div style={{display:'inline-block', width:'40%', textAlign:'left'}}>
                 Synthetix
             </div>
 
-            <div style={{display:'inline-block', width:'45%'}}>
+            <div style={{display:'inline-block', width:'10%'}}>
+            </div>
+
+            <div style={{display:'inline-block', width:'30%', fontSize:'13px'}}>
                 {object.balance} $SNX
             </div>
+
+        </div>
+       
+        // <div style={{width:'30%'}}>
+
+        //     <div style={{display:'inline-block', width:'10%'}}>
+        //         <img src={object.image} alt=""/>
+        //     </div>
+
+        //     <div style={{display:'inline-block', width:'45%'}}>
+        //         Synthetix
+        //     </div>
+
+        //     <div style={{display:'inline-block', width:'45%'}}>
+        //         {object.balance} $SNX
+        //     </div>
         
-        </div> 
+        // </div> 
         )
 
         setSynthetixContent(content)
@@ -259,6 +398,7 @@ export default function Index() {
     },[SynthetixData])
 
     useEffect(() => {
+        console.log('addy:', accountAddress)
         // setSavingsData([])
         // SetLoansData([])
         async function getAaveV2Data(){
@@ -284,7 +424,10 @@ export default function Index() {
                     }
                   }`})
                 .then(async(response) => {
+                    console.log(response)
                     if(response.data.data){
+            // console.log('addy2', accountAddress)
+
                         var savings = []
                         var loans = []
                         var res = response.data.data.userReserves
@@ -366,6 +509,7 @@ export default function Index() {
                     }`})
                 .then(async(response) => {
                     if(response.data.data){
+                        // console.log(response.data.data.liquidityPositions)
                         var pools = []
                         var res = response.data.data.liquidityPositions
                         for(var i =0; i<res.length; i++){
@@ -373,6 +517,8 @@ export default function Index() {
                             object.id = res[i].pair.id
                             object.tokenBalance = res[i].liquidityTokenBalance;
                             object.tokenSupply = res[i].pair.totalSupply;
+                            object.token0name = res[i].pair.token0.name
+                            object.token1name = res[i].pair.token1.name
                             object.token0Symbol = res[i].pair.token0.symbol
                             object.token1Symbol = res[i].pair.token1.symbol
                             object.liquidity = res[i].pair.reserveUSD
@@ -380,7 +526,7 @@ export default function Index() {
                             pools.push(object)
                         }
                         pools.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
-                        // console.log(pools)
+                        console.log(pools)
                         setPoolsData(pools)
                     }
                 })
@@ -490,8 +636,8 @@ export default function Index() {
                   }`
             })
             .then(async(response)=>{
-                if(response.data.data)
-                // console.log(response.data.data.users[0].sharesOwned)
+                if(response.data.data){
+                    // console.log(response.data.data.users[0].sharesOwned)
                 var res = response.data.data.users[0].sharesOwned
                 var pools = []
                 for( var i=0; i<res.length; i++){
@@ -507,6 +653,9 @@ export default function Index() {
                 pools.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
                 setBalancerPoolsData(pools)
                 // console.log(pools)
+
+                }
+                
             })
         }
         async function getBancorData(){
@@ -610,15 +759,16 @@ export default function Index() {
         getBalancerData()
         getBancorData()
         getSynthetixData()
-    }, [])
+    }, [accountAddress])
 
     return (
         <div>
 
             <div style={{
-                marginLeft:'25px',
-                width:'30%',
-                border:'1px solid white',
+                // marginLeft:'25px',
+                width:'100%',
+                minWidth:'300px',
+                border:'1px solid rgb(115, 115, 115)',
                 height : 'auto',
                 minHeight: '200px',
                 borderRadius: '10px'
@@ -642,87 +792,99 @@ export default function Index() {
             </div>
             {CompoundSavingsContent}
             <br/>
-
-
             </div>
 
+            <br/>
+
+            <div style={{
+                // marginLeft:'25px',
+                width:'100%',
+                border:'1px solid rgb(115, 115, 115)',
+                height : 'auto',
+                minHeight: '200px',
+                borderRadius: '10px'
+            }}>
+            <br/>
             <center>
-
-            {/* <br/><br/><hr style={{width:'40%'}}/> <br/><br/>
-            <h2>SAVINGS</h2> <br/>
-            <br/>
-            <h4>Aave V2 </h4>
-            <br/><br/>
-            {SavingsContent}
-            <br/><br/>
-            <h4>Compound V2 </h4>
-            <br/><br/>
-            {CompoundSavingsContent} */}
-
-            <br/><br/><hr style={{width:'40%'}}/> <br/><br/>
-            <h2>LOANS</h2> <br/>
-            <h4>Aave V2 </h4>
-            <br/><br/>
+                <div style={{fontSize:'25px'}}>
+                    Loans
+                </div>
+            </center>
+            
+            
+            <div style={{fontSize:'12px', marginLeft:'15px'}}>
+            Aave V2
+            </div>
             {LoansContent}
-            <br/><br/>
-            <h4>Compound V2 </h4>
-            <br/><br/>
+            <br/>
+
+            <div style={{fontSize:'12px', marginLeft:'15px'}}>
+            Compound V2
+            </div>
             {CompoundLoansContent}
-            
             <br/>
+            </div>
+
             <br/>
+
+            <div style={{
+                // marginLeft:'25px',
+                width:'100%',
+                border:'1px solid rgb(115, 115, 115)',
+                height : 'auto',
+                minHeight: '200px',
+                borderRadius: '10px'
+            }}>
+            <br/>
+            <center>
+                <div style={{fontSize:'25px'}}>
+                    Pools
+                </div>
+            </center>
             
-            <br/><br/><hr style={{width:'40%'}}/> <br/><br/>
-
-            <h2>POOLS</h2> <br/>
-
-            <h4>UNI V2 Pools Data </h4>
-                <br/>
-            <div style={{width:'80%'}}>
-            <div style={{display:'inline-block', width:'25%', overflow:'hidden'}}>
-                Token1
+            
+            <div style={{fontSize:'12px', marginLeft:'15px'}}>
+            Uniswap V2
             </div>
-
-            <div style={{display:'inline-block', width:'20%', textAlign:'left', overflow:'hidden'}}>
-                Token2
-            </div>
-
-            <div style={{display:'inline-block', width:'5%', textAlign:'left', overflow:'hidden'}}>
-               
-            </div>
-
-            <div style={{display:'inline-block', width:'10%', overflow:'hidden'}}>
-                Pool%
-            </div>
-
-            <div style={{display:'inline-block', width:'20%', overflow:'hidden'}}>
-                LP Token Balance
-            </div>
-
-            <div style={{display:'inline-block', width:'20%', overflow:'hidden'}}>
-                Investment
-            </div>
-        
-        </div> 
-        <hr style={{width:'80%'}}/>
-        <br/>
             {PoolsContent}
+            <br/>
 
-        <br/><br/>
-        <h4>Balancer Pools Data </h4>
-        <br/>
-        {BalancerPoolsContent}
+            <div style={{fontSize:'12px', marginLeft:'15px'}}>
+            Balancer
+            </div>
+            {BalancerPoolsContent}
+            <br/>
 
-        <br/><br/>
-        <h4>Bancor Pools Data </h4>
-        <br/>
-        {BancorPoolsContent}
+            <div style={{fontSize:'12px', marginLeft:'15px'}}>
+            Bancor
+            </div>
+            {BancorPoolsContent}
+            <br/>
+            </div>
 
-        <br/><br/><hr style={{width:'40%'}}/> <br/><br/>
-        <h2>Other Assets</h2> <br/>
-        <h4>Synthetix </h4>
-        <br/>
-        {SynthetixContent}
+            <br/>
+
+            <div style={{
+                // marginLeft:'25px',
+                width:'100%',
+                border:'1px solid rgb(115, 115, 115)',
+                height : 'auto',
+                minHeight: '200px',
+                borderRadius: '10px'
+            }}>
+            <br/>
+            <center>
+                <div style={{fontSize:'25px'}}>
+                    Other Assets
+                </div>
+            </center>
+                <div style={{fontSize:'12px', marginLeft:'15px'}}>
+                <br/> Synthetix
+                </div> <br/>
+                {SynthetixContent}
+                <br/>
+                </div>
+            <center>
 
         </center>
         </div>

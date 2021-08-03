@@ -36,6 +36,7 @@ export default class Header extends Component{
 
 import React,{useState} from 'react';
 import PropTypes from 'prop-types';
+import { useParams } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import menu2Fill from '@iconify/icons-eva/menu-2-fill';
 // material
@@ -82,12 +83,13 @@ const RootStyle = styled(AppBar)(({ theme }) => ({
   export default function Header({ onOpenSidebar }) {
 
     var navigate = useNavigate();
+    const {address} = useParams();
 
     const [Token, setToken] = useState('')
 
     function callbackFunction(childData){
         setToken(childData)
-        navigate(`/app/token/${childData}`)
+        navigate(`/${address}/token/${childData}`)
     }
 
     return (
