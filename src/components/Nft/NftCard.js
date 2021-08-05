@@ -29,15 +29,16 @@ export default function NftCard({ tokenId, contractAddress }) {
 
   return (
     <Card>
+      {console.log("value of nft:::",nft)}
       <Box sx={{ pt: '100%', position: 'relative' }}>
-        <NftImgStyle alt=" " src={loading ? spinner : (nft.image!== undefined? nft.image:block)} />
+        <NftImgStyle alt=" " src={loading ? spinner : (nft !== undefined? (nft.image!==""?nft.image:block):block)} />
       </Box>
 
       <Stack spacing={2} sx={{ p: 3 }}>
         <Link to="#" color="inherit" underline="hover" component={RouterLink}>
           <Typography variant="subtitle2" noWrap sx={{ color: '#737373' }}>
             {/* {nftObject==null ? "loading":nftObject.name} */}
-            {loading ? "loading" : nft.name}
+            {loading ? "loading" : (nft !== undefined ? nft.name: 'N/A')}
           </Typography>
         </Link>
 
