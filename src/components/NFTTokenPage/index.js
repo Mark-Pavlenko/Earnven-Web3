@@ -14,6 +14,7 @@ export default function Index() {
 
     useEffect(() => {
         async function getData(){
+
             await axios.get(`https://api.opensea.io/api/v1/assets?token_ids=${id}&asset_contract_addresses=${contract}`,{},{})
             .then(async(response) => {
                 if(response.data.assets[0]){
@@ -28,7 +29,7 @@ export default function Index() {
                 }
             })
         }
-        getData();    
+       getData();    
     }, [contract, id, ObjectURL])
 
     return (

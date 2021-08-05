@@ -1,15 +1,12 @@
-import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import { Box, Card, Link, Typography, Stack } from '@material-ui/core';
 import { experimentalStyled as styled } from '@material-ui/core/styles';
-// utils
-import { fCurrency } from '../../utils/formatNumber';
-//
-import Label from '../Label';
-import ColorPreview from '../ColorPreview';
 
-// ----------------------------------------------------------------------
+
+import { useNft } from "use-nft"
+import spinner from '../../assets/icons/spinner.svg'
+import block from '../../assets/icons/block.png'
 
 const NftImgStyle = styled('img')({
   top: 0,
@@ -21,57 +18,30 @@ const NftImgStyle = styled('img')({
 
 // ----------------------------------------------------------------------
 
-NftCard.propTypes = {
-  product: PropTypes.object
-};
 
-export default function NftCard({ product }) {
-  const { name, cover, price, colors, status, priceSale } = product;
+export default function NftCard({ tokenId, contractAddress }) {
+  
+  const { loading, error, nft } = useNft(
+    contractAddress,
+    tokenId
+  )
+
 
   return (
     <Card>
       <Box sx={{ pt: '100%', position: 'relative' }}>
-        {/* {status && (
-          <Label
-            variant="filled"
-            color={(status === 'sale' && 'error') || 'info'}
-            sx={{
-              zIndex: 9,
-              top: 16,
-              right: 16,
-              position: 'absolute',
-              textTransform: 'uppercase'
-            }}
-          >
-            {status}
-          </Label>
-        )} */}
-        <NftImgStyle alt={name} src={cover} />
+        <NftImgStyle alt=" " src={loading ? spinner : (nft.image!== undefined? nft.image:block)} />
       </Box>
 
       <Stack spacing={2} sx={{ p: 3 }}>
         <Link to="#" color="inherit" underline="hover" component={RouterLink}>
-          <Typography variant="subtitle2" noWrap sx={{color:'#737373'}}>
-            {name}
+          <Typography variant="subtitle2" noWrap sx={{ color: '#737373' }}>
+            {/* {nftObject==null ? "loading":nftObject.name} */}
+            {loading ? "loading" : nft.name}
           </Typography>
         </Link>
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          {/* <ColorPreview colors={colors} /> */}
-          <Typography variant="subtitle1" sx={{color:'#737373'}}>
-            {/* <Typography
-              component="span"
-              variant="body1"
-              sx={{
-                color: 'text.disabled',
-                textDecoration: 'line-through'
-              }}
-            >
-              {priceSale && fCurrency(priceSale)}
-            </Typography> */}
-            &nbsp;
-            {fCurrency(price)}
-          </Typography>
         </Stack>
       </Stack>
     </Card>

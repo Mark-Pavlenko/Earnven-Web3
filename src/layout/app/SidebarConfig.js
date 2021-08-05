@@ -8,6 +8,7 @@ import bridgeLogo from '../../assets/icons/Bridge.svg';
 
 import safeFarmsLogo from '../../assets/icons/safefarm.svg'
 import multiSenderLogo from '../../assets/icons/multisender.svg';
+
 // import pylonProductsLogo from '../../../assets/icons/pylonproducts.png';
 
 // ----------------------------------------------------------------------
@@ -50,6 +51,11 @@ const sidebarConfig = [
     title: 'trading',
     path: '/trading',
     icon: getIcon(multiSenderLogo)
+  },
+  {
+    title: 'nft',
+    path: '/nftdesign',
+    icon: getIcon(tradingLogo)
   }
 ];
 

@@ -54,6 +54,7 @@
     "simplebar": "^5.3.4",
     "simplebar-react": "^2.3.4",
     "styled-components": "^5.3.0",
+    "use-nft": "^0.9.0",
     "web-vitals": "^1.1.2",
     "web3": "^1.4.0",
     "web3modal": "^1.9.3"
