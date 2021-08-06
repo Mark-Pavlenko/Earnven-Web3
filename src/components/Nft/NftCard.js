@@ -7,6 +7,8 @@ import { experimentalStyled as styled } from '@material-ui/core/styles';
 import { useNft } from "use-nft"
 import spinner from '../../assets/icons/spinner.svg'
 import block from '../../assets/icons/block.png'
+import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const NftImgStyle = styled('img')({
   top: 0,
@@ -20,25 +22,29 @@ const NftImgStyle = styled('img')({
 
 
 export default function NftCard({ tokenId, contractAddress }) {
-  
+  const navigate = useNavigate();
+  const {address} = useParams();
+
   const { loading, error, nft } = useNft(
     contractAddress,
     tokenId
   )
-
+  
+  const routeToDetailPage=()=>{
+    navigate(`/${address}/nftdetails/${contractAddress}/${tokenId}`)
+  }
 
   return (
-    <Card>
-      {console.log("value of nft:::",nft)}
+    <Card onClick={routeToDetailPage} style={{cursor:'pointer'}}>
       <Box sx={{ pt: '100%', position: 'relative' }}>
-        <NftImgStyle alt=" " src={loading ? spinner : (nft !== undefined? (nft.image!==""?nft.image:block):block)} />
+        <NftImgStyle alt=" " src={loading ? spinner : (nft !== undefined ? (nft.image !== "" ? nft.image : block) : block)} />
       </Box>
 
       <Stack spacing={2} sx={{ p: 3 }}>
         <Link to="#" color="inherit" underline="hover" component={RouterLink}>
           <Typography variant="subtitle2" noWrap sx={{ color: '#737373' }}>
             {/* {nftObject==null ? "loading":nftObject.name} */}
-            {loading ? "loading" : (nft !== undefined ? nft.name: 'N/A')}
+            {loading ? "loading" : (nft !== undefined ? nft.name : 'N/A')}
           </Typography>
         </Link>
 

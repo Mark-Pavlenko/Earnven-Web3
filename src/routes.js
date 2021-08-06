@@ -21,6 +21,7 @@ import TokenApproval from './screens/tokenApproval'
 import CubicleGraphs from './screens/chartsCubicle'
 import LiquidityPools from './screens/liquidityPools';
 import NFT from './screens/NFT';
+import NftDetails from './screens/NftDetail';
 
 export default function Router(){
 
@@ -61,6 +62,7 @@ export default function Router(){
                 {path:'graphtools',element:<CubicleGraphs />},
                 {path:'earn',element:<LiquidityPools />},
                 {path:'nftdesign',element:<NFT />},
+                {path:'nftdetails/:contract/:id', element:<NftDetails/>},
                 { path: '*', element: <Navigate to="/404" replace /> }
 
             ]
