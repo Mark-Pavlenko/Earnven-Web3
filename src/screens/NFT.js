@@ -69,12 +69,14 @@ export default function NFT() {
                         if (b[res[i].tokenName] === undefined) {
                             b[res[i].tokenName] = {}
                             b[res[i].tokenName]['tokens'] = []
+                            b[res[i].tokenName]['txHash'] = []
                             if (res[i].from.toLowerCase() === account.toLowerCase()) {
                                 b[res[i].tokenName]['qtty'] = -1
                             }
                             else {
                                 b[res[i].tokenName]['qtty'] = 1
                                 b[res[i].tokenName]['tokens'].push(res[i].tokenID)
+                                b[res[i].tokenName]['txHash'].push(res[i].hash)
                             }
                             b[res[i].tokenName]['name'] = res[i].tokenName
                             b[res[i].tokenName]['address'] = res[i].contractAddress
@@ -85,11 +87,13 @@ export default function NFT() {
                                 var index = b[res[i].tokenName]['tokens'].indexOf(res[i].tokenID);
                                 if (index > -1) {
                                     b[res[i].tokenName]['tokens'].splice(index, 1);
+                                    b[res[i].tokenName]['txHash'].splice(index, 1);
                                 }
                             }
                             else {
                                 b[res[i].tokenName]['qtty'] += 1
                                 b[res[i].tokenName]['tokens'].push(res[i].tokenID)
+                                b[res[i].tokenName]['txHash'].push(res[i].hash)
                             }
                         }
                     }
@@ -97,18 +101,20 @@ export default function NFT() {
                     // setdata(Object.values(b).filter((object) => object.tokens.length > 0));
 
                     let temp = Object.values(b)
+                    console.log("value of all nfts",temp)
                     for (let i in temp) {
                         if (temp[i].tokens.length > 0) {
                             for (let j in temp[i].tokens) {
                                 let tempTokenObject = {}
                                 tempTokenObject.tokenID = temp[i].tokens[j]
                                 tempTokenObject.contractAddress = temp[i].address
+                                tempTokenObject.txHash = temp[i].txHash[j]
                                 allTokens.push(tempTokenObject)
                             }
                         }
                     }
 
-                    console.log("all tokens",allTokens)
+                    console.log("all nft tokens",allTokens)
                     setdata(allTokens);
                 })
         }

@@ -37,7 +37,7 @@ export default function NftList({ nftData, ...other }) {
       {nftData.map((nft) => (
         <Grid key={nft.tokenID} item xs={12} sm={6} md={3}>
           <NftProvider fetcher={["ethers", ethersConfig]}>
-            <NftCard tokenId={nft.tokenID} contractAddress={nft.contractAddress} />
+            <NftCard tokenId={nft.tokenID} contractAddress={nft.contractAddress} txHash={nft.txHash} />
           </NftProvider>
         </Grid>
       ))
