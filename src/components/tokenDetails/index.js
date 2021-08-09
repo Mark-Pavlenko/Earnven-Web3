@@ -3,7 +3,7 @@ import SearchTokens from '../searchTokens'
 import { useParams } from 'react-router-dom';
 import {Chart} from '../Chart/Chart'
 import { useNavigate } from 'react-router'
-import TransactionPerToken from '../transactionHistory/transactionPerToken'
+import TransactionPerToken from '../transactionHistory/transactionPerToken copy'
 
 
 export default function Index() {

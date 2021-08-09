@@ -773,7 +773,8 @@ export default function Index({accountAddress}) {
                 border:'1px solid rgb(115, 115, 115)',
                 height : 'auto',
                 minHeight: '200px',
-                borderRadius: '10px'
+                borderRadius: '10px',
+                display: (SavingsData.length>0 || CompoundSavingsData>0)? '':'none'
             }}>
             <br/>
             <center>
@@ -783,28 +784,34 @@ export default function Index({accountAddress}) {
             </center>
             
             
-            <div style={{fontSize:'12px', marginLeft:'15px'}}>
+            <div style={{fontSize:'12px',
+             marginLeft:'15px',
+             display: SavingsData.length>0? '':'none'
+             }}>
             Aave V2
             </div>
             {SavingsContent}
             <br/>
 
-            <div style={{fontSize:'12px', marginLeft:'15px'}}>
+            <div style={{fontSize:'12px', 
+            marginLeft:'15px',
+            display: CompoundSavingsData.length>0? '':'none'}}>
             Compound V2
             </div>
             {CompoundSavingsContent}
             <br/>
             </div>
 
-            <br/>
-
             <div style={{
                 // marginLeft:'25px',
                 width:'100%',
+                minWidth:'300px',
                 border:'1px solid rgb(115, 115, 115)',
                 height : 'auto',
+                marginTop:'20px',
                 minHeight: '200px',
-                borderRadius: '10px'
+                borderRadius: '10px',
+                display : (LoansData.length>0 || CompoundLoansData.length>0)? '':'none'
             }}>
             <br/>
             <center>
@@ -814,28 +821,36 @@ export default function Index({accountAddress}) {
             </center>
             
             
-            <div style={{fontSize:'12px', marginLeft:'15px'}}>
+            <div style={{fontSize:'12px',
+             marginLeft:'15px',
+             display: LoansData.length>0? '':'none'
+             }}>
             Aave V2
             </div>
             {LoansContent}
             <br/>
 
-            <div style={{fontSize:'12px', marginLeft:'15px'}}>
+            <div style={{fontSize:'12px',
+             marginLeft:'15px',
+             display: CompoundLoansData.length>0? '':'none'
+             }}>
             Compound V2
             </div>
             {CompoundLoansContent}
             <br/>
             </div>
 
-            <br/>
 
             <div style={{
                 // marginLeft:'25px',
                 width:'100%',
+                minWidth:'300px',
+                marginTop:'20px',
                 border:'1px solid rgb(115, 115, 115)',
                 height : 'auto',
                 minHeight: '200px',
-                borderRadius: '10px'
+                borderRadius: '10px',
+                display: (PoolsData.length>0 || BalancerPoolsData.length>0 || BancorPoolsData.length>0)? '':'none'
             }}>
             <br/>
             <center>
@@ -845,34 +860,44 @@ export default function Index({accountAddress}) {
             </center>
             
             
-            <div style={{fontSize:'12px', marginLeft:'15px'}}>
+            <div style={{fontSize:'12px',
+             marginLeft:'15px',
+             display: PoolsData.length>0? '':'none'
+             }}>
             Uniswap V2
             </div>
             {PoolsContent}
             <br/>
 
-            <div style={{fontSize:'12px', marginLeft:'15px'}}>
+            <div style={{fontSize:'12px',
+             marginLeft:'15px',
+             display: BalancerPoolsData.length>0? '':'none'
+             }}>
             Balancer
             </div>
             {BalancerPoolsContent}
             <br/>
 
-            <div style={{fontSize:'12px', marginLeft:'15px'}}>
+            <div style={{fontSize:'12px',
+             marginLeft:'15px',
+             display: BancorPoolsData.length>0? '':'none'
+             }}>
             Bancor
             </div>
             {BancorPoolsContent}
             <br/>
             </div>
 
-            <br/>
-
             <div style={{
                 // marginLeft:'25px',
                 width:'100%',
+                marginTop:'20px',
+                minWidth:'300px',
                 border:'1px solid rgb(115, 115, 115)',
                 height : 'auto',
-                minHeight: '200px',
-                borderRadius: '10px'
+                minHeight: '170px',
+                borderRadius: '10px',
+                display: (SynthetixData.length>0)? '':'none'
             }}>
             <br/>
             <center>
@@ -882,9 +907,9 @@ export default function Index({accountAddress}) {
             </center>
                 <div style={{fontSize:'12px', marginLeft:'15px'}}>
                 <br/> Synthetix
-                </div> <br/>
-                {SynthetixContent}
                 <br/>
+                </div> 
+                {SynthetixContent}
                 </div>
             <center>
 

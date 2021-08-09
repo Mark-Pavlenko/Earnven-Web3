@@ -4,7 +4,7 @@ import { Container } from '@material-ui/core';
 // components
 import Page from '../../components/Page';
 // import AllAssetsMini from '../../components/allAssetsMini';
-import AllAssets from '../../components/allAssets'
+import AllAssets from '../../components/allAssets/index copy'
 // import TotalValueBox from '../../components/totalValueBox';
 // import DefiAssets from '../../components/defiAssets';
 import PortfolioPerf from '../../components/portfolioperf/portfolioperf';
