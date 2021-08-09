@@ -30,6 +30,14 @@ export default function Exchange()  {
                     setAllTokens(response.data.records)
                     console.log(response.data.records)
                 })
+            await axios.get(`https://tokens.coingecko.com/uniswap/all.json`,{},{})
+                .then(async(response)=>{
+                    let data = response.data.tokens;
+                    let tokens = AllTokens.map((token) => ({...token, logoURI: data.find(x => x.address == token.address) ? data.find(x => x.address == token.address).logoURI : ""}));
+                    // let tokens = response.data.tokens.filter((token) => tokenAddresses.includes(token.address));
+                    // console.log({tokens});
+                    setAllTokens(tokens)
+                })
         }
         getData()
     }, [])
@@ -121,7 +129,12 @@ export default function Exchange()  {
                                     <MenuItem value="" sx={{backgroundColor:'#141a1e'}}>
                                         <em>None</em>
                                     </MenuItem>
-                                    {AllTokens.map((object)=><MenuItem value={object.symbol} sx={{backgroundColor:'#141a1e'}}>{object.symbol}</MenuItem>)}
+                                    {AllTokens.map((object)=>
+                                        <MenuItem value={object.symbol} sx={{backgroundColor:'#141a1e'}}>
+                                            <img src={object.logoURI} style={{display: 'inline-block'}} />
+                                            &nbsp;&nbsp;
+                                            {object.symbol}
+                                        </MenuItem>)}
                                     </Select>
                                 </FormControl>
 
@@ -161,7 +174,12 @@ export default function Exchange()  {
                                     <MenuItem value="" sx={{backgroundColor:'#141a1e'}}>
                                         <em >None</em>
                                     </MenuItem>
-                                    {AllTokens.map((object)=><MenuItem value={object.symbol} sx={{backgroundColor:'#141a1e'}}>{object.symbol}</MenuItem>)}
+                                    {AllTokens.map((object)=>
+                                        <MenuItem value={object.symbol} sx={{backgroundColor:'#141a1e'}}>
+                                            <img src={object.logoURI} style={{display: 'inline-block'}} />
+                                            &nbsp;&nbsp;
+                                            {object.symbol}
+                                        </MenuItem>)}
                                     </Select>
                                 </FormControl>
                                 </div>
