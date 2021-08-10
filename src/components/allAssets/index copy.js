@@ -11,61 +11,134 @@ const CustomStyle = styled('div')(({ theme }) => ({
     background: "transparent",
     cursor: "pointer",
     lineHeight: '1',
-    marginBottom: '5px',
-    '&:hover': {
+    marginBottom:'5px',
+    '&:hover':{
         background: theme.palette.gradients.custom
     }
 }));
 
 
 var contents = "";
+var stage1Tokens = []
 var arr2 = [];
 var arr1 = [];
 export default class index extends Component {
-    async componentWillMount() {
-        // await this.loadWeb3();
-        await this.loadBlockchainData();
-    }
 
-    componentDidUpdate() {
+    async componentWillMount() {
+        // console.log(this.props)
         if (this.state.account !== this.props.address) {
             arr2 = [];
             arr1 = [];
-            // this.setState({ hideShowMore: false })
-            this.loadBlockchainData();
+            this.setState({account : this.props.address, hideShowMore:false, page:1})
+            await this.loadBlockchainData();
         }
+    }
+
+    async componentWillReceiveProps(props) {
+        // console.log(props)
+        if (this.state.account !== props.address) {
+            arr2 = [];
+            arr1 = [];
+            await this.setState({account : props.address, hideShowMore:false, page:1})
+            await this.loadBlockchainData();
+        } 
     }
 
     async loadBlockchainData() {
         // const web3 = window.web3;
         // const accounts = await web3.eth.getAccounts();
         const web3 = new Web3();
-        // const accounts = this.props.address;
-        const accounts = '0xbfbe5822a880a41c2075dc7e1d92663739cf119e'
+        var accounts = this.props.address;
+        // const accounts = '0xbfbe5822a880a41c2075dc7e1d92663739cf119e'
         this.setState({ account: accounts });
-        try{
-            await axios.get(`https://api2.ethplorer.io/getAddressChartHistory/${accounts}?apiKey=ethplorer.widget`,{},{})
-            .then(async(response)=>{
-                // console.log(response.data.history.data)
-                var res = response.data.history.data
-                // console.log(res[res.length-1].balance)
-                this.setState({totalValue:res[res.length-1].balance})
-            })
-        }
-        catch{}
+        arr2 = []
+        /* await axios
+          .get(
+            `https://api.ethplorer.io/getAddressInfo/0x32Be343B94f860124dC4fEe278FDCBD38C102D88?apiKey=EK-qSPda-W9rX7yJ-UY93y`,
+            {},
+            {}
+          ) */
+        await axios.get(`https://api.ethplorer.io/getAddressInfo/${accounts}?apiKey=EK-qSPda-W9rX7yJ-UY93y`, {}, {})
+            .then(async (response) => {
+                arr1 = [];
+                var tokens = response.data.tokens;
+                if (response.data.ETH.balance === 0 && tokens === undefined) {
+                    this.setState({ contents: '' })
+                    this.setState({ hideShowMore: true })
+                } else {
+                    let ethObject = {};
+                    let ethTokenInfo = {};
+                    let ethPrice = {};
+                    ethTokenInfo.coingecko = "ethereum";
+                    ethTokenInfo.address = "";
+                    ethTokenInfo.name = "Ethereum";
+                    ethTokenInfo.decimals = 18;
+                    ethPrice.diff = response.data.ETH.price.diff;
+                    ethTokenInfo.symbol = "ETH";
+                    ethTokenInfo.image = "/images/eth.png";
+                    ethPrice.rate = response.data.ETH.price.rate;
+                    ethTokenInfo.price = ethPrice;
+                    ethObject.tokenInfo = ethTokenInfo;
+                    ethObject.rawBalance = response.data.ETH.rawBalance;
+                    ethObject.totalInvestment =
+                        response.data.ETH.price.rate *
+                        web3.utils.fromWei(response.data.ETH.rawBalance, "ether");
+                    arr1.push(ethObject);
+                    var total =
+                        response.data.ETH.price.rate *
+                        web3.utils.fromWei(response.data.ETH.rawBalance, "ether");
+                    if (tokens !== undefined) {
+                        for (var i = 0; i < tokens.length; i++) {
+                            if (tokens[i].tokenInfo.price !== false) {
+                                total =
+                                    total +
+                                    tokens[i].tokenInfo.price.rate *
+                                    web3.utils.fromWei(tokens[i].rawBalance, "ether");
+                            }
+                        }
+                    }
 
+                    this.setState({ totalValue: total.toFixed(2) });
+
+                    if (tokens !== undefined) {
+                        for (i = 0; i < tokens.length; i++) {
+                            if (tokens[i].tokenInfo.price !== false) {
+                                tokens[i].totalInvestment = tokens[i].rawBalance/(10**tokens[i].tokenInfo.decimals)*tokens[i].tokenInfo.price.rate;
+                                arr1.push(tokens[i]);
+                                stage1Tokens.push(tokens[i].tokenInfo.address)
+                            }
+                        }
+                    }
+                    // console.log(arr1)
+                    arr1.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
+
+                    // console.log("value of arr1::", arr1)
+                    this.update();
+                    this.addRemainingTokens()
+                }
+            });
+    }
+
+    addRemainingTokens = async() => {
+        const accounts = this.props.address
         await axios.get(`https://api.etherscan.io/api?module=account&action=tokentx&address=${accounts}&startblock=0&endblock=999999999&sort=asc&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W`,{},{})
         .then(async(response)=>{
             // console.log(response)
             if(response.data.result){
                 var erc20data = {}
                 var tx = response.data.result
+                // console.log(stage1Tokens)
                 for (var i = 0; i<tx.length; i++){
                     
                     if(!erc20data[tx[i].contractAddress]){
-                        erc20data[tx[i].contractAddress] = {}
-                        erc20data[tx[i].contractAddress].id = tx[i].contractAddress
-                        erc20data[tx[i].contractAddress].balance = tx[i].value / (10**tx[i].tokenDecimal)
+                        var index
+                        index = stage1Tokens.indexOf(tx[i].contractAddress)
+                        if(index===-1){
+                            erc20data[tx[i].contractAddress] = {}
+                            erc20data[tx[i].contractAddress].id = tx[i].contractAddress
+                            erc20data[tx[i].contractAddress].balance = tx[i].value / (10**tx[i].tokenDecimal)
+                        }
+                        
                     }
                     else{
                         if(tx[i].to.toLowerCase()===accounts.toLowerCase()){
@@ -80,117 +153,107 @@ export default class index extends Component {
                         // }
                     }
                 }   
+                
+                
+                var buffer = Object.values(erc20data)
+                // console.log(buffer) 
+                for (var i = 0; i<buffer.length; i++){
+                    if(buffer[i].balance >= 1/(10**6)){
+                        await axios.get(`https://api.ethplorer.io/getTokenInfo/${buffer[i].id}?apiKey=EK-qSPda-W9rX7yJ-UY93y`,{},{})
+                        .then(async(response2)=>{
+                            // console.log('response  :', buffer[i])
+                            if(response2.data && response2.data.symbol!=='WETH'){
+                                // console.log(response2.data)
 
-                arr1 = Object.values(erc20data)
-                var buffer = []
-                for (var i = 0; i<arr1.length; i++){
-                    if(arr1[i].balance >= 1/(10**6)){
-                        buffer.push(arr1[i]);
-                    }
+                                var object = {}
+                                object.tokenInfo ={}
+                                object.tokenInfo.price = {}
+                                object.tokenInfo.coingecko = response2.data.address
+                                object.tokenInfo.address = buffer[i].id
+                                object.tokenInfo.name = response2.data.name
+                                object.tokenInfo.decimals = response2.data.decimals
+                                if(response2.data.price){
+                                    object.tokenInfo.price.diff = response2.data.price.diff
+                                    object.tokenInfo.price.rate = parseFloat(response2.data.price.rate).toFixed(2)
+                                    object.totalInvestment = parseFloat(buffer[i].balance*response2.data.price.rate).toFixed(2)
+                                    this.setState({total: this.state.total + parseFloat(object.totalInvestment)})
+                                }
+                                else{
+                                    object.tokenInfo.price.diff = '-'
+                                    object.tokenInfo.price.rate= '-'
+                                    object.totalInvestment = '-'
+                                }
+                                
+                                object.tokenInfo.symbol = response2.data.symbol
+                                object.tokenInfo.image =  response2.data.image
+                                object.rawBalance = buffer[i].balance*(10**response2.data.decimals)
+                                // object.rawBalance = '10000000'
+                                
+                                arr1.push(object)
+                                console.log(arr1)
+                                // console.log(response.data)
+                            }
+                        })
+                        .catch((err)=>{console.log(err)})
+                                
+                                // arr1.push(buffer[i]);
+                            }
 
                 }
-                arr1 = buffer;
+
                 this.update();
                 // console.log(erc20data)
                 // console.log(response.data.result)
             }
         })
-        
     }
 
-    update = async() => {
+    update = () => {
         const web3 = new Web3();
-        // arr2 = []
+        
         // console.log(this.state.page)
         var start = (this.state.page - 1) * 10;
         var end;
         if (this.state.page === 1) {
-            end = 4
+            arr2 = []
+            end = 5
         }
         else {
             end = this.state.page * 10;
+        }
+        if (this.state.page === 2) {
+            start = 6
         }
         if (end > arr1.length) {
             end = arr1.length;
             this.setState({ hideShowMore: true })
         }
-        if(this.state.page===1){
-            await axios.get(`https://api.ethplorer.io/getAddressInfo/${this.state.account}?apiKey=EK-qSPda-W9rX7yJ-UY93y`, {}, {})
-            .then(async (response) => {
-                    // console.log(response.data.ETH)
-                    let ethObject = {};
-                    ethObject.coingecko = "ethereum";
-                    ethObject.address = "";
-                    ethObject.name = "Ethereum";
-                    ethObject.profit = response.data.ETH.price.diff;
-                    ethObject.symbol = "ETH";
-                    ethObject.image = 'https://ethplorer.io/images/eth.png'
-                    ethObject.rate = parseFloat(response.data.ETH.price.rate).toFixed(2);
-                    // ethTokenInfo.price = ethPrice;
-                    // ethObject.tokenInfo = ethTokenInfo;
-                    ethObject.rawBalance = response.data.ETH.rawBalance;
-                    ethObject.totalInvestment =
-                        (response.data.ETH.price.rate *
-                        web3.utils.fromWei(response.data.ETH.rawBalance, "ether")).toFixed(2);
-                    // console.log(ethObject)
-                    this.setState({total:parseFloat(ethObject.totalInvestment)})
-                    arr2.push(ethObject);
-            })
-
-        }
-
         for (var i = start; i < end; i++) {
-                await axios.get(`https://api.ethplorer.io/getTokenInfo/${arr1[i].id}?apiKey=EK-qSPda-W9rX7yJ-UY93y`,{},{})
-                .then(async(response)=>{
-                    // console.log(response)
-                    if(response.data && response.data.symbol!=='WETH'){
-                        var object = {}
-                        object.coingecko = response.data.address
-                        object.address = arr1[i].id
-                        object.name = response.data.name
-                        if(response.data.price){
-                            object.profit = response.data.price.diff
-                            object.rate = parseFloat(response.data.price.rate).toFixed(2)
-                            object.totalInvestment = parseFloat(arr1[i].balance*response.data.price.rate).toFixed(2)
-                            this.setState({total: this.state.total + parseFloat(object.totalInvestment)})
-                        }
-                        else{
-                            object.profit = '-'
-                            object.rate = '-'
-                            object.totalInvestment = '-'
-                        }
-
-                        object.symbol = response.data.symbol
-                        object.image = 'https://ethplorer.io/' + response.data.image
-                        object.balance = parseFloat(arr1[i].balance).toFixed(2)
-                        
-                        arr2.push(object)
-                        // console.log(response.data)
-                    }
-                })
-                .catch((err)=>{})
+            if (arr1[i]) {
+                var object = {};
+                object.coingecko = arr1[i].tokenInfo.coingecko;
+                object.address = arr1[i].tokenInfo.address;
+                object.name = arr1[i].tokenInfo.name;
+                object.profit = arr1[i].tokenInfo.price.diff;
+                object.symbol = arr1[i].tokenInfo.symbol;
+                object.image = arr1[i].tokenInfo.image;
+                object.decimals = arr1[i].tokenInfo.decimals;
+                // console.log(arr1[i].rawBalance)
+                object.balance = parseFloat(arr1[i].rawBalance / (10**arr1[i].tokenInfo.decimals)).toFixed(2)
+                if(arr1[i].tokenInfo.price.rate!=='-'){
+                    object.rate = parseFloat(arr1[i].tokenInfo.price.rate).toFixed(2);
+                    object.totalInvestment = parseFloat(object.balance*arr1[i].tokenInfo.price.rate).toFixed(2);
+                }
+                else{
+                    object.rate = '-'
+                    object.totalInvestment = '-'
+                }
+                
+                arr2.push(object);
             }
-
-            // console.log(arr2)
-
-            // if (arr1[i]) {
-            //     var object = {};
-            //     object.coingecko = arr1[i].tokenInfo.coingecko;
-            //     object.address = arr1[i].tokenInfo.address;
-            //     object.name = arr1[i].tokenInfo.name;
-            //     object.profit = arr1[i].tokenInfo.price.diff;
-            //     object.symbol = arr1[i].tokenInfo.symbol;
-            //     object.image = arr1[i].tokenInfo.image;
-            //     object.balance = parseFloat(
-            //         web3.utils.fromWei(arr1[i].rawBalance, "ether")
-            //     ).toFixed(4);
-            //     object.rate = parseFloat(arr1[i].tokenInfo.price.rate).toFixed(2);
-            //     object.totalInvestment = parseFloat(arr1[i].totalInvestment).toFixed(2);
-            //     arr2.push(object);
-            // }
-        // }
+        }
         // console.log(arr2)
-        console.log(this.state.total)
+
         this.change(arr2);
         this.setState({ contents });
     };
@@ -214,7 +277,7 @@ export default class index extends Component {
                                         margin: '16px'
                                     }}
                                     alt=""
-                                    src={object.image}
+                                    src={`https://ethplorer.io${object.image}`}
                                 />
                             </div>
 
@@ -328,14 +391,13 @@ export default class index extends Component {
         // console.log(contents)
     };
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             account: "",
             contents: "",
             page: 1,
             totalValue: "00.00",
-            total : 0,
             hideShowMore: false,
         };
     }

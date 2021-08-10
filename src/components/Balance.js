@@ -40,27 +40,41 @@ export default function Balance({address}) {
         const web3 = new Web3();
         // const accountAddress = localStorage.getItem('selected-account')
         const accountAddress = address;
-        const totalAccountValue = async () =>{
+
+        async function getBalance(){
             try{
-                const path = 'https://api.ethplorer.io/getAddressInfo/'+accountAddress+'?apiKey=EK-qSPda-W9rX7yJ-UY93y'
-                const response = await axios.get(path);
-                let tokens = response.data.tokens;
-                total= (response.data.ETH.price.rate)*(web3.utils.fromWei(response.data.ETH.rawBalance,'ether'));
-                if(tokens!==undefined){
-                    for(var i = 0; i<tokens.length; i++){       
-                        if(tokens[i].tokenInfo.price!==false){
-                            total = total + (tokens[i].tokenInfo.price.rate)*(web3.utils.fromWei(tokens[i].rawBalance,'ether'));
-                            
-                        } 
-                    }
-                }
-                settotalValue(CommaFormatted(total.toFixed(2)))
+                await axios.get(`https://api2.ethplorer.io/getAddressChartHistory/${accountAddress}?apiKey=ethplorer.widget`,{},{})
+                .then(async(response)=>{
+                    // console.log(response.data.history.data)
+                    var res = response.data.history.data
+                    // console.log(res[res.length-1].balance)
+                    settotalValue(CommaFormatted(parseFloat(res[res.length-1].balance).toFixed(2)))
+                })
             }
-            catch(error){
-                console.log(error);
-            }
+            catch{}
         }
-         totalAccountValue();
+        getBalance()
+        // const totalAccountValue = async () =>{
+        //     try{
+        //         const path = 'https://api.ethplorer.io/getAddressInfo/'+accountAddress+'?apiKey=EK-qSPda-W9rX7yJ-UY93y'
+        //         const response = await axios.get(path);
+        //         let tokens = response.data.tokens;
+        //         total= (response.data.ETH.price.rate)*(web3.utils.fromWei(response.data.ETH.rawBalance,'ether'));
+        //         if(tokens!==undefined){
+        //             for(var i = 0; i<tokens.length; i++){       
+        //                 if(tokens[i].tokenInfo.price!==false){
+        //                     total = total + (tokens[i].tokenInfo.price.rate)*(web3.utils.fromWei(tokens[i].rawBalance,'ether'));
+                            
+        //                 } 
+        //             }
+        //         }
+        //         settotalValue(CommaFormatted(total.toFixed(2)))
+        //     }
+        //     catch(error){
+        //         console.log(error);
+        //     }
+        // }
+        //  totalAccountValue();
     },[totalValue,address])
     return (
         <Box sx={{ pb: 2, pt:3}}>
