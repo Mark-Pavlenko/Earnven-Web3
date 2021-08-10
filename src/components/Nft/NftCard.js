@@ -53,12 +53,19 @@ export default function NftCard({ tokenId, contractAddress, txHash }) {
     navigate(`/${address}/nftdetails/${contractAddress}/${tokenId}`)
   }
 
+  const callingOpensea = (address,id) => {
+     console.log("no data came from regular method")
+  }
+
   return (
     
     <Card onClick={routeToDetailPage} style={{ cursor: 'pointer' }}>
      
       <Box sx={{ pt: '100%', position: 'relative' }}>
-        <NftImgStyle alt=" " src={loading ? spinner : (nft !== undefined ? (nft.image !== "" ? nft.image : block) : block)} />
+        {console.log("nft returning from useNft:::",nft)}
+        {/* {nft !== undefined?<NftImgStyle alt=" " src={loading ? spinner : (nft !== undefined ? (nft.image !== "" ? nft.image : block) : block)} />:<div></div>} */}
+        {nft !== undefined?<NftImgStyle alt=" " src={loading ? spinner : nft.image} />: callingOpensea(contractAddress,tokenId)}
+        
       </Box>
 
       <Stack spacing={2} direction='row' sx={{ p: 3 }}>

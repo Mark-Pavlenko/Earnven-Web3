@@ -131,6 +131,7 @@ function NavItem({ item, active ,address}) {
       component={RouterLink}
       to= {`/${address}/${path}`}
       sx={{
+        mt:2,
         ...(isActiveRoot && activeRootStyle)
       }}
     >
@@ -150,7 +151,7 @@ export default function NavSection({ navConfig,address, ...other }) {
   const match = (path) => (path ? !!matchPath({ path, end: false }, pathname) : false);
 
   return (
-    <Box {...other} sx={{p:4,mt:3}}>
+    <Box {...other} sx={{p:4,mt:4}}>
       <List disablePadding>
         {navConfig.map((item) => (
           <NavItem key={item.title} item={item} active={match} address={address} />

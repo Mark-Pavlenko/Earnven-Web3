@@ -128,17 +128,17 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar,address }){
           <Account address={address}/>
       </Box>
 
-      <NavSection navConfig={sidebarConfig} address={address}/>
+      <NavSection  navConfig={sidebarConfig} address={address}/>
 
       <Box sx={{ flexGrow: 1 }} />
 
-      <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
+      <Box sx={{ px: 2.5, pb: 3, mt: 5 }}>
         <Stack
           direction="row"
           spacing={2}
           sx={{
             p: 2.5,
-            pt: 5,
+            pt: 10,
             position: 'relative',
             bgcolor: 'black'
           }}

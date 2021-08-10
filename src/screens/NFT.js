@@ -1,15 +1,24 @@
 import Page from "../components/Page";
 import NftGroup from "../components/Nft/NftGroup";
 import NftList from "../components/Nft/NftList";
-import { Container, Stack, Typography } from '@material-ui/core';
+import { Container, Stack, Typography,Button } from '@material-ui/core';
 import { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom';
 
 export default function NFT() {
     const { address } = useParams();
     const [Account, setAccount] = useState('0x0')
     const [data, setdata] = useState(null)
+    const navigate = useNavigate();
+
+    const routeToHistory = () => {
+        navigate(`/${address}/history`);
+    }
+    const routeToDashboard = () =>{
+        navigate(`/${address}/dashboard`)
+    };
 
     useEffect(() => {
         async function getData() {
@@ -139,6 +148,11 @@ export default function NFT() {
     return (
         <Page title="Nft">
             <Container>
+            <Stack direction='row' spacing={1} sx={{marginTop:"-4px"}}>
+                    <Button variant='text'  sx={{fontSize:'20px',color:"#737373",pt:0}} onClick={routeToDashboard}>Dashboard</Button>
+                    <Button variant='text' sx={{fontSize:'20px',color:"#737373",pt:0}} >NFT Collection</Button>
+                    <Button variant='text' sx={{fontSize:'20px',color:"#737373",pt:0}} onClick={routeToHistory}>History</Button>
+                </Stack>
                 <Typography variant="h2" sx={{ mb: 2 }}>
                     NFT
                 </Typography>
