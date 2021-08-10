@@ -1,6 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Box, Card, Link, Typography, Stack } from '@material-ui/core';
+import { Box, Card, Link, Typography, Stack,Grid } from '@material-ui/core';
 import { experimentalStyled as styled } from '@material-ui/core/styles';
 
 
@@ -11,6 +11,7 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Web3 from "web3";
+import axios from 'axios';
 
 
 const NftImgStyle = styled('img')({
@@ -53,18 +54,19 @@ export default function NftCard({ tokenId, contractAddress, txHash }) {
     navigate(`/${address}/nftdetails/${contractAddress}/${tokenId}`)
   }
 
-  const callingOpensea = (address,id) => {
-     console.log("no data came from regular method")
-  }
+  // const callingOpensea = async (address,id) => {
+     
+  // }
 
   return (
-    
+    <>
+    {nft !== undefined? (nft.image !==""?
+    <Grid key={nft.tokenID} item xs={12} sm={6} md={3}>
     <Card onClick={routeToDetailPage} style={{ cursor: 'pointer' }}>
-     
       <Box sx={{ pt: '100%', position: 'relative' }}>
         {console.log("nft returning from useNft:::",nft)}
-        {/* {nft !== undefined?<NftImgStyle alt=" " src={loading ? spinner : (nft !== undefined ? (nft.image !== "" ? nft.image : block) : block)} />:<div></div>} */}
-        {nft !== undefined?<NftImgStyle alt=" " src={loading ? spinner : nft.image} />: callingOpensea(contractAddress,tokenId)}
+        <NftImgStyle alt=" " src={loading ? spinner : (nft !== undefined ? (nft.image !== "" ? nft.image : block) : block)} />
+        {/* {nft !== undefined?<NftImgStyle alt=" " src={loading ? spinner : nft.image} />: callingOpensea(contractAddress,tokenId)} */}
         
       </Box>
 
@@ -80,9 +82,10 @@ export default function NftCard({ tokenId, contractAddress, txHash }) {
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
         </Stack>
-      </Stack>
-      
+      </Stack> 
     </Card>
-   
+    </Grid>:<></>):<></>}
+    
+   </>
   );
 }
