@@ -338,3 +338,20 @@
   display: flex;
   justify-content: flex-end;
 }
+
+.logo-container {
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.logo-uri {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border-radius: 24px;
+  transform: translateY(15%);
+}
+
+.css-9q3kl4-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.MuiSelect-select {
+  text-overflow: unset;
+}
