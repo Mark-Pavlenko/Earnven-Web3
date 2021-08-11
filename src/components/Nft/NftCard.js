@@ -64,8 +64,9 @@ export default function NftCard({ tokenId, contractAddress, txHash }) {
     <Grid key={nft.tokenID} item xs={12} sm={6} md={3}>
     <Card onClick={routeToDetailPage} style={{ cursor: 'pointer' }}>
       <Box sx={{ pt: '100%', position: 'relative' }}>
-        {console.log("nft returning from useNft:::",nft)}
-        <NftImgStyle alt=" " src={loading ? spinner : (nft !== undefined ? (nft.image !== "" ? nft.image : block) : block)} />
+        {console.log("nft returning from useNft:::",nft.image)}
+        {/* <NftImgStyle alt=" " src={loading ? spinner : (nft !== undefined ? (nft.image !== "" ? nft.image : block) : block)} /> */}
+        <NftImgStyle alt=" " src={nft.image} />
         {/* {nft !== undefined?<NftImgStyle alt=" " src={loading ? spinner : nft.image} />: callingOpensea(contractAddress,tokenId)} */}
         
       </Box>
@@ -76,7 +77,6 @@ export default function NftCard({ tokenId, contractAddress, txHash }) {
           {/* {nftObject==null ? "loading":nftObject.name} */}
           {loading ? "loading" : (nft !== undefined ? nft.name : 'N/A')}
         </Typography>
-        {console.log("price value:::", price)}
         {price !== 0 ? <Typography variant="subtitle2" align='right' sx={{ color: '#737373' }}>{price}ETH</Typography> : <div></div>}
         {/* </Link> */}
 
@@ -84,7 +84,7 @@ export default function NftCard({ tokenId, contractAddress, txHash }) {
         </Stack>
       </Stack> 
     </Card>
-    </Grid>:<></>):<></>}
+    </Grid>:<></>):<> </>}
     
    </>
   );

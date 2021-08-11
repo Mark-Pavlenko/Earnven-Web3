@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import './exchange.css';
 // import eth from '../Assets/eth.svg';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -10,9 +10,10 @@ import TransparentButton from '../../components/TransparentButton'
 import Web3 from 'web3';
 import ERC20ABI from '../../abi/ERC20.json'
 import tokenURIs from './tokenURIs';
+import { Box, Typography, Stack, Container, Grid, TextField, Divider, Button } from '@material-ui/core';
 
 
-export default function Exchange()  {
+export default function Exchange() {
 
     const [TokenFrom, setTokenFrom] = useState('');
     const [TokenTo, setTokenTo] = useState('');
@@ -23,21 +24,21 @@ export default function Exchange()  {
     const [minPrice, setMinPrice] = useState(0);
     const [AllTokens, setAllTokens] = useState([]);
     const [Sources, setSources] = useState([]);
-    
+
 
     useEffect(() => {
-        async function getData(){
+        async function getData() {
             let fetchedTokens;
-            await axios.get(`https://api.0x.org/swap/v1/tokens`,{},{})
-                .then(async(response)=>{
+            await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {})
+                .then(async (response) => {
                     setAllTokens(response.data.records)
                     fetchedTokens = response.data.records;
                     console.log(response.data.records)
                 })
-            await axios.get(`https://tokens.coingecko.com/uniswap/all.json`,{},{})
-                .then(async(response)=>{
+            await axios.get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
+                .then(async (response) => {
                     let data = response.data.tokens;
-                    let tokens = fetchedTokens.map((token) => ({...token, logoURI: data.find(x => x.address == token.address) ? data.find(x => x.address == token.address).logoURI : tokenURIs.find(x => x.address == token.address).logoURI}));
+                    let tokens = fetchedTokens.map((token) => ({ ...token, logoURI: data.find(x => x.address == token.address) ? data.find(x => x.address == token.address).logoURI : tokenURIs.find(x => x.address == token.address).logoURI }));
                     console.log(tokens.filter((token) => token.logoURI === ""));
                     setAllTokens(tokens)
                 })
@@ -46,33 +47,33 @@ export default function Exchange()  {
     }, [])
 
     useEffect(() => {
-        async function getData(){
-            if(TokenFromAmount!=='' && TokenFrom!=='' && TokenTo!==''){
+        async function getData() {
+            if (TokenFromAmount !== '' && TokenFrom !== '' && TokenTo !== '') {
                 // alert(TokenFromAmount)
-                let amount = parseFloat(TokenFromAmount)*Math.pow(10, 18).toString()
-                await axios.get(`https://ropsten.api.0x.org/swap/v1/quote?buyToken=${TokenTo}&sellToken=${TokenFrom}&sellAmount=${amount}&feeRecipient=0xE609192618aD9aC825B981fFECf3Dfd5E92E3cFB&buyTokenPercentageFee=0.02`,{},{})
-                .then(async(response)=>{
-                    console.log(response)
-                    setPrice(response.data.price)
-                    setMinPrice(response.data.guaranteedPrice)
-                    setTokenToAmount(parseFloat(response.data.buyAmount)*Math.pow(10, -18).toString())
-                    var sources = response.data.sources 
-                    sources.sort((a, b) => parseFloat(b.proportion) - parseFloat(a.proportion));
-                    var sources2 = []
-                    for (var i= 0; i<sources.length; i++){
-                        if(sources[i].proportion>0){
-                            sources2.push(sources[i])
+                let amount = parseFloat(TokenFromAmount) * Math.pow(10, 18).toString()
+                await axios.get(`https://ropsten.api.0x.org/swap/v1/quote?buyToken=${TokenTo}&sellToken=${TokenFrom}&sellAmount=${amount}&feeRecipient=0xE609192618aD9aC825B981fFECf3Dfd5E92E3cFB&buyTokenPercentageFee=0.02`, {}, {})
+                    .then(async (response) => {
+                        console.log(response)
+                        setPrice(response.data.price)
+                        setMinPrice(response.data.guaranteedPrice)
+                        setTokenToAmount(parseFloat(response.data.buyAmount) * Math.pow(10, -18).toString())
+                        var sources = response.data.sources
+                        sources.sort((a, b) => parseFloat(b.proportion) - parseFloat(a.proportion));
+                        var sources2 = []
+                        for (var i = 0; i < sources.length; i++) {
+                            if (sources[i].proportion > 0) {
+                                sources2.push(sources[i])
+                            }
                         }
-                    }
-                    setSources(sources2)
-                })
+                        setSources(sources2)
+                    })
             }
         }
         getData()
     }, [TokenFromAmount, TokenFrom, TokenTo])
 
-    async function loadWeb3(){
-    
+    async function loadWeb3() {
+
         if (window.ethereum) {
             window.web3 = new Web3(window.ethereum)
             await window.ethereum.enable()
@@ -83,31 +84,31 @@ export default function Exchange()  {
         else {
             window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
         }
-    
+
     }
-    async function transact(){
+    async function transact() {
         await loadWeb3()
         const web3 = window.web3;
         const accounts = await web3.eth.getAccounts()
-        if(TokenFromAmount!=='' && TokenFrom!=='' && TokenTo!==''){
+        if (TokenFromAmount !== '' && TokenFrom !== '' && TokenTo !== '') {
             // alert(TokenFromAmount)s
-            let amount = parseFloat(TokenFromAmount)*Math.pow(10, 18).toString()
-            await axios.get(`https://ropsten.api.0x.org/swap/v1/quote?buyToken=${TokenTo}&sellToken=${TokenFrom}&sellAmount=${amount}&feeRecipient=0xE609192618aD9aC825B981fFECf3Dfd5E92E3cFB&buyTokenPercentageFee=0.02&slippagePercentage=${Slippage/100}`,{},{})
-            .then(async(response)=>{
-                console.log(response)
-                console.log(Slippage)
-                response.data.gas = parseInt(response.data.gas) + 100000;
-                response.data.from = accounts[0]
-                if(TokenFrom!=='ETH'){
-                    const ERC20contract = new web3.eth.Contract(ERC20ABI, response.data.sellTokenAddress);
-                    await ERC20contract.methods.approve(response.data.allowanceTarget, response.data.sellAmount).send({from: accounts[0]});    
-                }
-                await web3.eth.sendTransaction(await response.data);
-            })
+            let amount = parseFloat(TokenFromAmount) * Math.pow(10, 18).toString()
+            await axios.get(`https://ropsten.api.0x.org/swap/v1/quote?buyToken=${TokenTo}&sellToken=${TokenFrom}&sellAmount=${amount}&feeRecipient=0xE609192618aD9aC825B981fFECf3Dfd5E92E3cFB&buyTokenPercentageFee=0.02&slippagePercentage=${Slippage / 100}`, {}, {})
+                .then(async (response) => {
+                    console.log(response)
+                    console.log(Slippage)
+                    response.data.gas = parseInt(response.data.gas) + 100000;
+                    response.data.from = accounts[0]
+                    if (TokenFrom !== 'ETH') {
+                        const ERC20contract = new web3.eth.Contract(ERC20ABI, response.data.sellTokenAddress);
+                        await ERC20contract.methods.approve(response.data.allowanceTarget, response.data.sellAmount).send({ from: accounts[0] });
+                    }
+                    await web3.eth.sendTransaction(await response.data);
+                })
         }
     }
-    
-    return (
+
+    /* return (
             <div className="main-container">
                 <div className="outbox">
                     <br/><br/>
@@ -235,9 +236,119 @@ export default function Exchange()  {
                         cursor:'pointer',
                         float:'right'
                     }}></TransparentButton> <br/><br/> &nbsp;
-                    {/* <div className="end"><div className="submit"> <button onClick={transact} className="submit-btn">Submit</button></div></div> */}
-                </div>
-            </div>
-    )
+                    /* <div className="end"><div className="submit"> <button onClick={transact} className="submit-btn">Submit</button></div></div> */
+    // </div>
+    // </div>
+    // ) */
+
+    return (
+        <Grid container >
+            
+            <Grid items xs={12} md={8} sx={{ mt: 5, ml: 5 }}>
+                <Container>
+                    <Typography variant='h3' sx={{ fontStyle: 'normal' }}>Exchange</Typography>
+                    <Container sx={{ border: "1px solid #737373", borderRadius: '7px', boxSizing: 'border-box', mt: 2.5 }}>
+                        <Box sx={{ mt: 4, mb: 3 }}>
+                            <Stack direction='row' spacing={2}>
+                                <Stack spacing={0.5}>
+                                    <Typography variant='caption' sx={{ color: '#f5f5f5' }}>Swap</Typography>
+                                    <FormControl variant="outlined" style={{ width: '120px' }}>
+                                        <Select
+                                            style={{ height: '56px', color: 'white' }}
+                                            displayEmpty
+                                            value={TokenFrom}
+                                            onChange={(e) => { setTokenFrom(e.target.value) }}
+                                            sx={{ background: (theme) => (theme.palette.gradients.custom) }}
+                                        >
+                                            <MenuItem disabled value="" sx={{ backgroundColor: '#141a1e' }}>
+                                                <Typography >Select</Typography>
+                                            </MenuItem>
+                                            {AllTokens.map((object) =>
+                                                <MenuItem value={object.symbol} sx={{ backgroundColor: '#141a1e' }}>
+                                                    <div className="logo-container">
+                                                        <img src={object.logoURI} className="logo-uri" />
+                                                    </div>
+                                                    {object.symbol}
+                                                </MenuItem>)}
+                                        </Select>
+                                    </FormControl>
+
+                                </Stack>
+                                <Stack spacing={0.5}>
+                                    <Typography variant='caption' sx={{ color: '#f5f5f5' }}>0</Typography>
+                                    <TextField variant='outlined' id="outlined-basic" placeholder="00.00"  ></TextField>
+                                </Stack>
+
+                                <Stack spacing={0.5}>
+                                    <Typography variant='caption' sx={{ color: '#f5f5f5' }}>For</Typography>
+                                    <FormControl variant="outlined" style={{ width: '130px' }}>
+                                        <Select
+                                            style={{ height: '56px', color: 'white' }}
+                                            displayEmpty
+                                            value={TokenTo}
+                                            onChange={(e) => { setTokenTo(e.target.value) }}
+                                            inputProps={{ 'aria-label': 'Without label' }}
+                                            sx={{ background: (theme) => (theme.palette.gradients.custom) }}
+                                        >
+                                            <MenuItem disabled value="" sx={{ backgroundColor: '#141a1e' }}>
+                                                <Typography>Select</Typography>
+                                            </MenuItem>
+                                            {AllTokens.map((object) =>
+                                                <MenuItem value={object.symbol} sx={{ backgroundColor: '#141a1e' }}>
+                                                    <div className="logo-container">
+                                                        <img src={object.logoURI} className="logo-uri" />
+                                                    </div>
+                                                    {object.symbol}
+                                                </MenuItem>)}
+                                        </Select>
+                                    </FormControl>
+
+                                </Stack>
+                                <Stack spacing={0.5}>
+                                    <Typography variant='caption' sx={{ color: '#f5f5f5' }}>0</Typography>
+                                    <TextField variant='outlined' id="outlined-basic" placeholder="00.00"  ></TextField>
+                                </Stack>
+
+                            </Stack>
+                            <Typography variant='body1' sx={{ color: '#737373', mt: 2.5 }}>Transaction Settings</Typography>
+                            <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
+                                <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Slippage</Typography>
+                                <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
+                                <TextField variant='outlined' id="outlined-basic" size='small' style={{ marginTop: '-7px', width: '12%' }}></TextField>
+                            </Stack>
+
+                            <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
+                                <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Min. output</Typography>
+                                <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
+                                <Typography variant='body2'>{TokenFromAmount > 0 ? (parseFloat(TokenFromAmount) * parseFloat(minPrice)).toFixed(3) : '0'}</Typography>
+                            </Stack>
+
+                            <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
+                                <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Rate</Typography>
+                                <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
+                                <Typography variant='body2'> 1 {TokenFrom} = {parseFloat(Price).toFixed(3)} {TokenTo}</Typography>
+                            </Stack>
+
+                        </Box>
+                    </Container>
+                    <TransparentButton value='Submit'
+                        onClick={transact}
+                        style={{
+                            height: '45px',
+                            width: '200px',
+                            background: 'transparent',
+                            borderWidth: '2px',
+                            borderStyle: 'solid',
+                            borderColor: '#3b2959',
+                            borderRadius: '5px',
+                            color: 'white',
+                            cursor: 'pointer',
+                            float: 'right',
+                            marginTop: '20px'
+                        }}></TransparentButton> <br /><br /> &nbsp;
+                </Container>
+            </Grid>
+        </Grid>
+    );
 
 }

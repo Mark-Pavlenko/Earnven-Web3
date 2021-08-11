@@ -77,7 +77,7 @@ export default function Balance({address}) {
         //  totalAccountValue();
     },[totalValue,address])
     return (
-        <Box sx={{ pb: 2, pt:3}}>
+        <Box sx={{ pb: 2}}>
             <Typography variant="h3" sx={{color:'primary.main'}}>${totalValue}</Typography>
             {/* <Typography variant="subtitle1" sx={{color:'common.white'}}>+ 10.4%($207.65)</Typography> */}
         </Box>

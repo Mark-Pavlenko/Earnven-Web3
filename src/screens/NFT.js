@@ -13,12 +13,12 @@ export default function NFT() {
     const [data, setdata] = useState(null)
     const navigate = useNavigate();
 
-    const routeToHistory = () => {
+    /* const routeToHistory = () => {
         navigate(`/${address}/history`);
     }
     const routeToDashboard = () =>{
         navigate(`/${address}/dashboard`)
-    };
+    }; */
 
     useEffect(() => {
         async function getData() {
@@ -148,15 +148,15 @@ export default function NFT() {
     return (
         <Page title="Nft">
             <Container>
-            <Stack direction='row' spacing={1} sx={{marginTop:"-4px"}}>
+            {/* <Stack direction='row' spacing={1} sx={{marginTop:"-4px"}}>
                     <Button variant='text'  sx={{fontSize:'20px',color:"#737373",pt:0}} onClick={routeToDashboard}>Dashboard</Button>
                     <Button variant='text' sx={{fontSize:'20px',color:"#737373",pt:0}} >NFT Collection</Button>
                     <Button variant='text' sx={{fontSize:'20px',color:"#737373",pt:0}} onClick={routeToHistory}>History</Button>
-                </Stack>
-                <Typography variant="h2" sx={{ mb: 2 }}>
+                </Stack> */}
+                {/* <Typography variant="h2" sx={{ mb: 2 }}>
                     NFT
-                </Typography>
-
+                </Typography> */}
+                
                 {data === null ? <div>Loading</div> : <NftList nftData={data} />}
             </Container>
         </Page>
