@@ -9,6 +9,7 @@ import axios from 'axios';
 import TransparentButton from '../../components/TransparentButton'
 import Web3 from 'web3';
 import ERC20ABI from '../../abi/ERC20.json'
+import tokenURIs from './tokenURIs';
 
 
 export default function Exchange()  {
@@ -22,13 +23,23 @@ export default function Exchange()  {
     const [minPrice, setMinPrice] = useState(0);
     const [AllTokens, setAllTokens] = useState([]);
     const [Sources, setSources] = useState([]);
+    
 
     useEffect(() => {
         async function getData(){
+            let fetchedTokens;
             await axios.get(`https://api.0x.org/swap/v1/tokens`,{},{})
                 .then(async(response)=>{
                     setAllTokens(response.data.records)
+                    fetchedTokens = response.data.records;
                     console.log(response.data.records)
+                })
+            await axios.get(`https://tokens.coingecko.com/uniswap/all.json`,{},{})
+                .then(async(response)=>{
+                    let data = response.data.tokens;
+                    let tokens = fetchedTokens.map((token) => ({...token, logoURI: data.find(x => x.address == token.address) ? data.find(x => x.address == token.address).logoURI : tokenURIs.find(x => x.address == token.address).logoURI}));
+                    console.log(tokens.filter((token) => token.logoURI === ""));
+                    setAllTokens(tokens)
                 })
         }
         getData()
@@ -121,7 +132,13 @@ export default function Exchange()  {
                                     <MenuItem value="" sx={{backgroundColor:'#141a1e'}}>
                                         <em>None</em>
                                     </MenuItem>
-                                    {AllTokens.map((object)=><MenuItem value={object.symbol} sx={{backgroundColor:'#141a1e'}}>{object.symbol}</MenuItem>)}
+                                    {AllTokens.map((object)=>
+                                        <MenuItem value={object.symbol} sx={{backgroundColor:'#141a1e'}}>
+                                            <div className="logo-container">
+                                                <img src={object.logoURI} className="logo-uri" />
+                                            </div>
+                                            {object.symbol}
+                                        </MenuItem>)}
                                     </Select>
                                 </FormControl>
 
@@ -161,7 +178,13 @@ export default function Exchange()  {
                                     <MenuItem value="" sx={{backgroundColor:'#141a1e'}}>
                                         <em >None</em>
                                     </MenuItem>
-                                    {AllTokens.map((object)=><MenuItem value={object.symbol} sx={{backgroundColor:'#141a1e'}}>{object.symbol}</MenuItem>)}
+                                    {AllTokens.map((object)=>
+                                        <MenuItem value={object.symbol} sx={{backgroundColor:'#141a1e'}}>
+                                            <div className="logo-container">
+                                                <img src={object.logoURI} className="logo-uri" />
+                                            </div>
+                                            {object.symbol}
+                                        </MenuItem>)}
                                     </Select>
                                 </FormControl>
                                 </div>
