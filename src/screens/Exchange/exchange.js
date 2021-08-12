@@ -46,7 +46,7 @@ export default function Exchange() {
         getData()
     }, [])
 
-    useEffect(() => {
+    /* useEffect(() => {
         async function getData() {
             if (TokenFromAmount !== '' && TokenFrom !== '' && TokenTo !== '') {
                 // alert(TokenFromAmount)
@@ -70,7 +70,7 @@ export default function Exchange() {
             }
         }
         getData()
-    }, [TokenFromAmount, TokenFrom, TokenTo])
+    }, [TokenFromAmount, TokenFrom, TokenTo]) */
 
     async function loadWeb3() {
 
@@ -104,6 +104,32 @@ export default function Exchange() {
                         await ERC20contract.methods.approve(response.data.allowanceTarget, response.data.sellAmount).send({ from: accounts[0] });
                     }
                     await web3.eth.sendTransaction(await response.data);
+                })
+        }
+    }
+
+    const calculateToAmount = async (tokenFromAmount) => {
+        console.log("calculate amount is called")
+        if (TokenFromAmount !== '' && TokenFrom !== '' && TokenTo !== '') {
+            // alert(TokenFromAmount)
+            // console.log("token from amount::",TokenFromAmount)
+            // let amount = parseFloat(TokenFromAmount) * Math.pow(10, 18);
+            let amount = parseFloat(tokenFromAmount) * Math.pow(10, 18);
+            await axios.get(`https://api.0x.org/swap/v1/quote?buyToken=${TokenTo}&sellToken=${TokenFrom}&sellAmount=${amount}&feeRecipient=0xE609192618aD9aC825B981fFECf3Dfd5E92E3cFB&buyTokenPercentageFee=0.02`, {}, {})
+                .then(async (response) => {
+                    console.log("value came from ox:::", response)
+                    setPrice(response.data.price)
+                    setMinPrice(response.data.guaranteedPrice)
+                    setTokenToAmount((parseInt(response.data.buyAmount) * Math.pow(10, -18)).toFixed(3).toString())
+                    var sources = response.data.sources
+                    sources.sort((a, b) => parseFloat(b.proportion) - parseFloat(a.proportion));
+                    var sources2 = []
+                    for (var i = 0; i < sources.length; i++) {
+                        if (sources[i].proportion > 0) {
+                            sources2.push(sources[i])
+                        }
+                    }
+                    setSources(sources2)
                 })
         }
     }
@@ -243,7 +269,6 @@ export default function Exchange() {
 
     return (
         <Grid container >
-            
             <Grid items xs={12} md={8} sx={{ mt: 5, ml: 5 }}>
                 <Container>
                     <Typography variant='h3' sx={{ fontStyle: 'normal' }}>Exchange</Typography>
@@ -260,11 +285,15 @@ export default function Exchange() {
                                             onChange={(e) => { setTokenFrom(e.target.value) }}
                                             sx={{ background: (theme) => (theme.palette.gradients.custom) }}
                                         >
-                                            <MenuItem disabled value="" sx={{ backgroundColor: '#141a1e' }}>
+                                            <MenuItem value="" sx={{ background: (theme) => (theme.palette.gradients.custom) }}>
                                                 <Typography >Select</Typography>
                                             </MenuItem>
                                             {AllTokens.map((object) =>
-                                                <MenuItem value={object.symbol} sx={{ backgroundColor: '#141a1e' }}>
+                                                <MenuItem value={object.symbol} sx={{
+                                                    backgroundColor: '#141a1e', '&:hover': {
+                                                        background: (theme) => (theme.palette.gradients.custom)
+                                                    }
+                                                }}>
                                                     <div className="logo-container">
                                                         <img src={object.logoURI} className="logo-uri" />
                                                     </div>
@@ -275,8 +304,16 @@ export default function Exchange() {
 
                                 </Stack>
                                 <Stack spacing={0.5}>
-                                    <Typography variant='caption' sx={{ color: '#f5f5f5' }}>0</Typography>
-                                    <TextField variant='outlined' id="outlined-basic" placeholder="00.00"  ></TextField>
+                                    <Typography variant='caption' sx={{ color: '#0E1214' }}>0</Typography>
+                                    <TextField variant='outlined'
+                                        id="outlined-basic"
+                                        placeholder="00.00"
+                                        value={TokenFromAmount}
+                                        onChange={(e) => {
+                                            setTokenFromAmount(e.target.value);
+                                            calculateToAmount(e.target.value);
+                                        }}>
+                                    </TextField>
                                 </Stack>
 
                                 <Stack spacing={0.5}>
@@ -290,65 +327,74 @@ export default function Exchange() {
                                             inputProps={{ 'aria-label': 'Without label' }}
                                             sx={{ background: (theme) => (theme.palette.gradients.custom) }}
                                         >
-                                            <MenuItem disabled value="" sx={{ backgroundColor: '#141a1e' }}>
+                                            <MenuItem  value="" sx={{ background: (theme) => (theme.palette.gradients.custom) }}>
                                                 <Typography>Select</Typography>
                                             </MenuItem>
                                             {AllTokens.map((object) =>
-                                                <MenuItem value={object.symbol} sx={{ backgroundColor: '#141a1e' }}>
-                                                    <div className="logo-container">
-                                                        <img src={object.logoURI} className="logo-uri" />
-                                                    </div>
+                                                <MenuItem value={object.symbol} sx={{
+                                                    backgroundColor: '#141a1e', '&:hover': {
+                                                        background: (theme) => (theme.palette.gradients.custom)
+                                                    }}} >
+                                                        <div className="logo-container">
+                                                            <img src={object.logoURI} className="logo-uri" />
+                                                        </div>
                                                     {object.symbol}
                                                 </MenuItem>)}
                                         </Select>
                                     </FormControl>
 
-                                </Stack>
-                                <Stack spacing={0.5}>
-                                    <Typography variant='caption' sx={{ color: '#f5f5f5' }}>0</Typography>
-                                    <TextField variant='outlined' id="outlined-basic" placeholder="00.00"  ></TextField>
-                                </Stack>
-
                             </Stack>
-                            <Typography variant='body1' sx={{ color: '#737373', mt: 2.5 }}>Transaction Settings</Typography>
-                            <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
-                                <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Slippage</Typography>
-                                <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
-                                <TextField variant='outlined' id="outlined-basic" size='small' style={{ marginTop: '-7px', width: '12%' }}></TextField>
+                            <Stack spacing={0.5}>
+                                <Typography variant='caption' sx={{ color: '#0E1214' }}>0</Typography>
+                                <TextField variant='outlined'
+                                    id="outlined-basic"
+                                    placeholder="00.00"
+                                    value={TokenToAmount}
+                                    onChange={(e) => { setTokenToAmount(e.target.value) }}
+                                    disabled>
+                                </TextField>
                             </Stack>
 
-                            <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
-                                <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Min. output</Typography>
-                                <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
-                                <Typography variant='body2'>{TokenFromAmount > 0 ? (parseFloat(TokenFromAmount) * parseFloat(minPrice)).toFixed(3) : '0'}</Typography>
                             </Stack>
+                        <Typography variant='body1' sx={{ color: '#737373', mt: 2.5 }}>Transaction Settings</Typography>
+                        <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
+                            <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Slippage</Typography>
+                            <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
+                            <TextField variant='outlined' id="outlined-basic" size='small' style={{ marginTop: '-7px', width: '12%' }}></TextField>
+                        </Stack>
 
-                            <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
-                                <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Rate</Typography>
-                                <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
-                                <Typography variant='body2'> 1 {TokenFrom} = {parseFloat(Price).toFixed(3)} {TokenTo}</Typography>
-                            </Stack>
+                        <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
+                            <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Min. output</Typography>
+                            <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
+                            <Typography variant='body2'>{(parseFloat(TokenFromAmount) * parseFloat(minPrice)).toFixed(3)} {TokenTo}</Typography>
+                        </Stack>
+
+                        <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
+                            <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Rate</Typography>
+                            <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
+                            <Typography variant='body2'> 1 {TokenFrom} = {parseFloat(Price).toFixed(3)} {TokenTo}</Typography>
+                        </Stack>
 
                         </Box>
-                    </Container>
-                    <TransparentButton value='Submit'
-                        onClick={transact}
-                        style={{
-                            height: '45px',
-                            width: '200px',
-                            background: 'transparent',
-                            borderWidth: '2px',
-                            borderStyle: 'solid',
-                            borderColor: '#3b2959',
-                            borderRadius: '5px',
-                            color: 'white',
-                            cursor: 'pointer',
-                            float: 'right',
-                            marginTop: '20px'
-                        }}></TransparentButton> <br /><br /> &nbsp;
                 </Container>
-            </Grid>
+                <TransparentButton value='Submit'
+                    onClick={transact}
+                    style={{
+                        height: '45px',
+                        width: '200px',
+                        background: 'transparent',
+                        borderWidth: '2px',
+                        borderStyle: 'solid',
+                        borderColor: '#3b2959',
+                        borderRadius: '5px',
+                        color: 'white',
+                        cursor: 'pointer',
+                        float: 'right',
+                        marginTop: '20px'
+                    }}></TransparentButton> <br /><br /> &nbsp;
+                </Container>
         </Grid>
+        </Grid >
     );
 
 }
