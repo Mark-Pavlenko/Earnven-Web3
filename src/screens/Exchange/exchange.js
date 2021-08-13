@@ -10,7 +10,7 @@ import TransparentButton from '../../components/TransparentButton'
 import Web3 from 'web3';
 import ERC20ABI from '../../abi/ERC20.json'
 import tokenURIs from './tokenURIs';
-import { Box, Typography, Stack, Container, Grid, TextField, Divider, Button, Modal, Tooltip,Avatar } from '@material-ui/core';
+import { Box, Typography, Stack, Container, Grid, TextField, Divider, Button, Modal, Tooltip, Avatar, InputAdornment, OutlinedInput } from '@material-ui/core';
 // import exchangeIcon from '../../assets/icons/exchange.png'
 
 
@@ -33,7 +33,7 @@ export default function Exchange() {
     const [TokenTo, setTokenTo] = useState('');
     const [TokenFromAmount, setTokenFromAmount] = useState();
     const [TokenToAmount, setTokenToAmount] = useState();
-    const [Slippage, setSlippage] = useState(5);
+    const [Slippage, setSlippage] = useState(2);
     const [Price, setPrice] = useState(0);
     const [minPrice, setMinPrice] = useState(0);
     const [AllTokens, setAllTokens] = useState([]);
@@ -386,7 +386,26 @@ export default function Exchange() {
                             <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
                                 <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Slippage</Typography>
                                 <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
-                                <TextField variant='outlined' id="outlined-basic" size='small' style={{ marginTop: '-7px', width: '12%' }}></TextField>
+                                {/* <TextField variant='outlined'
+                                    required
+                                    id="outlined-basic"
+                                    size='small'
+                                    style={{ marginTop: '-7px', width: '12%' }}
+                                    value={Slippage} onChange={(e) => { setSlippage(e.target.value) }}
+                                    endAdornment={<InputAdornment position="end" sx={{color:'red'}}>%K</InputAdornment>}>
+                                </TextField> */}
+                                <OutlinedInput
+                                    id="outlined-adornment-weight"
+                                    value={Slippage}
+                                    onChange={(e) => { setSlippage(e.target.value) }}
+                                    size='small'
+                                    style={{ marginTop: '-7px', width: '12%' }}
+                                    endAdornment={<InputAdornment position="end">%</InputAdornment>}
+                                    aria-describedby="outlined-weight-helper-text"
+                                    inputProps={{
+                                        'aria-label': 'weight',
+                                    }}
+                                />
                             </Stack>
 
                             <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
@@ -400,18 +419,18 @@ export default function Exchange() {
                                     aria-describedby="modal-modal-description"
                                 >
                                     <Box sx={style}>
-                                        <Typography variant='h6' align='center' sx={{color: '#f5f5f5'}}>Offered By</Typography>
+                                        <Typography variant='h6' align='center' sx={{ color: '#f5f5f5' }}>Offered By</Typography>
                                         <Divider variant='fullWidth' sx={{ mt: 3 }}></Divider>
                                         <Box>
                                             <Stack direction='row' spacing={2} sx={{ mt: 2 }}>
-                                                <Typography variant='caption' sx={{color:'#737373'}}>Receive</Typography>
-                                                <Typography variant='caption' sx={{color:'#737373'}}>Network Fee</Typography>
+                                                <Typography variant='caption' sx={{ color: '#737373' }}>Receive</Typography>
+                                                <Typography variant='caption' sx={{ color: '#737373' }}>Network Fee</Typography>
                                             </Stack>
                                         </Box>
                                         <Box sx={{ border: '1px solid #737373', borderRadius: '7px', mt: 1, p: 1 }}>
                                             <Stack direction='row' spacing={2}>
-                                                <Typography variant='body1' sx={{color:'#e3e3e3'}}>$3,214</Typography>
-                                                <Typography variant='body1' sx={{color:'#e3e3e3'}}>$20.86</Typography>
+                                                <Typography variant='body1' sx={{ color: '#e3e3e3' }}>$3,214</Typography>
+                                                <Typography variant='body1' sx={{ color: '#e3e3e3' }}>$20.86</Typography>
                                                 <Box sx={{ flexGrow: 1 }}></Box>
                                                 {/* <Avatar alt="" src={exchangeIcon}></Avatar> */}
                                                 <Tooltip title='0x Exchange'>
@@ -434,7 +453,7 @@ export default function Exchange() {
                                                 <Typography variant='body1'>$20.86</Typography>
                                                 <Box sx={{ flexGrow: 1 }}></Box>
                                                 <Tooltip title='uniswap'>
-                                                <img alt="" width="21" height="20" src="https://assets.coingecko.com/coins/images/12504/small/uniswap-uni.png?1600306604" ></img>
+                                                    <img alt="" width="21" height="20" src="https://assets.coingecko.com/coins/images/12504/small/uniswap-uni.png?1600306604" ></img>
                                                 </Tooltip>
                                             </Stack>
 
