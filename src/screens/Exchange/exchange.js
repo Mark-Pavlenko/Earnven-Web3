@@ -10,8 +10,22 @@ import TransparentButton from '../../components/TransparentButton'
 import Web3 from 'web3';
 import ERC20ABI from '../../abi/ERC20.json'
 import tokenURIs from './tokenURIs';
-import { Box, Typography, Stack, Container, Grid, TextField, Divider, Button } from '@material-ui/core';
+import { Box, Typography, Stack, Container, Grid, TextField, Divider, Button, Modal, Tooltip,Avatar } from '@material-ui/core';
+// import exchangeIcon from '../../assets/icons/exchange.png'
 
+
+const style = {
+    position: 'absolute',
+    top: '45%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 500,
+    bgcolor: 'background.default',
+    // border: '2px solid #000',
+    // boxShadow: 24,
+    p: 4,
+    borderRadius: '10px'
+};
 
 export default function Exchange() {
 
@@ -24,7 +38,10 @@ export default function Exchange() {
     const [minPrice, setMinPrice] = useState(0);
     const [AllTokens, setAllTokens] = useState([]);
     const [Sources, setSources] = useState([]);
+    const [open, setOpen] = useState(false)
 
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
     useEffect(() => {
         async function getData() {
@@ -109,7 +126,7 @@ export default function Exchange() {
     }
 
     const calculateToAmount = async (tokenFromAmount) => {
-        console.log("calculate amount is called")
+        // console.log("calculate amount is called")
         if (TokenFromAmount !== '' && TokenFrom !== '' && TokenTo !== '') {
             // alert(TokenFromAmount)
             // console.log("token from amount::",TokenFromAmount)
@@ -287,6 +304,10 @@ export default function Exchange() {
                                         >
                                             <MenuItem value="" sx={{ background: (theme) => (theme.palette.gradients.custom) }}>
                                                 <Typography >Select</Typography>
+                                                {/*  <div className="logo-container">
+                                                    <img src={AllTokens[0].logoURI} className="logo-uri" />
+                                                </div>
+                                                {AllTokens[0].symbol} */}
                                             </MenuItem>
                                             {AllTokens.map((object) =>
                                                 <MenuItem value={object.symbol} sx={{
@@ -327,73 +348,136 @@ export default function Exchange() {
                                             inputProps={{ 'aria-label': 'Without label' }}
                                             sx={{ background: (theme) => (theme.palette.gradients.custom) }}
                                         >
-                                            <MenuItem  value="" sx={{ background: (theme) => (theme.palette.gradients.custom) }}>
+                                            <MenuItem value="" sx={{ background: (theme) => (theme.palette.gradients.custom) }}>
                                                 <Typography>Select</Typography>
+                                                {/*  <div className="logo-container">
+                                                    <img src={AllTokens[4].logoURI} className="logo-uri" />
+                                                </div>
+                                                {AllTokens[4].symbol} */}
                                             </MenuItem>
                                             {AllTokens.map((object) =>
                                                 <MenuItem value={object.symbol} sx={{
                                                     backgroundColor: '#141a1e', '&:hover': {
                                                         background: (theme) => (theme.palette.gradients.custom)
-                                                    }}} >
-                                                        <div className="logo-container">
-                                                            <img src={object.logoURI} className="logo-uri" />
-                                                        </div>
+                                                    }
+                                                }} >
+                                                    <div className="logo-container">
+                                                        <img src={object.logoURI} className="logo-uri" />
+                                                    </div>
                                                     {object.symbol}
                                                 </MenuItem>)}
                                         </Select>
                                     </FormControl>
 
-                            </Stack>
-                            <Stack spacing={0.5}>
-                                <Typography variant='caption' sx={{ color: '#0E1214' }}>0</Typography>
-                                <TextField variant='outlined'
-                                    id="outlined-basic"
-                                    placeholder="00.00"
-                                    value={TokenToAmount}
-                                    onChange={(e) => { setTokenToAmount(e.target.value) }}
-                                    disabled>
-                                </TextField>
-                            </Stack>
+                                </Stack>
+                                <Stack spacing={0.5}>
+                                    <Typography variant='caption' sx={{ color: '#0E1214' }}>0</Typography>
+                                    <TextField variant='outlined'
+                                        id="outlined-basic"
+                                        placeholder="00.00"
+                                        value={TokenToAmount}
+                                        onChange={(e) => { setTokenToAmount(e.target.value) }}
+                                        disabled>
+                                    </TextField>
+                                </Stack>
 
                             </Stack>
-                        <Typography variant='body1' sx={{ color: '#737373', mt: 2.5 }}>Transaction Settings</Typography>
-                        <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
-                            <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Slippage</Typography>
-                            <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
-                            <TextField variant='outlined' id="outlined-basic" size='small' style={{ marginTop: '-7px', width: '12%' }}></TextField>
-                        </Stack>
+                            <Typography variant='body1' sx={{ color: '#737373', mt: 2.5 }}>Transaction Settings</Typography>
+                            <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
+                                <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Slippage</Typography>
+                                <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
+                                <TextField variant='outlined' id="outlined-basic" size='small' style={{ marginTop: '-7px', width: '12%' }}></TextField>
+                            </Stack>
 
-                        <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
-                            <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Min. output</Typography>
-                            <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
-                            <Typography variant='body2'>{(parseFloat(TokenFromAmount) * parseFloat(minPrice)).toFixed(3)} {TokenTo}</Typography>
-                        </Stack>
+                            <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
+                                <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Offered By</Typography>
+                                <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
+                                <Button onClick={handleOpen}>Ox Exchange</Button>
+                                <Modal
+                                    open={open}
+                                    onClose={handleClose}
+                                    aria-labelledby="modal-modal-title"
+                                    aria-describedby="modal-modal-description"
+                                >
+                                    <Box sx={style}>
+                                        <Typography variant='h6' align='center' sx={{color: '#f5f5f5'}}>Offered By</Typography>
+                                        <Divider variant='fullWidth' sx={{ mt: 3 }}></Divider>
+                                        <Box>
+                                            <Stack direction='row' spacing={2} sx={{ mt: 2 }}>
+                                                <Typography variant='caption' sx={{color:'#737373'}}>Receive</Typography>
+                                                <Typography variant='caption' sx={{color:'#737373'}}>Network Fee</Typography>
+                                            </Stack>
+                                        </Box>
+                                        <Box sx={{ border: '1px solid #737373', borderRadius: '7px', mt: 1, p: 1 }}>
+                                            <Stack direction='row' spacing={2}>
+                                                <Typography variant='body1' sx={{color:'#e3e3e3'}}>$3,214</Typography>
+                                                <Typography variant='body1' sx={{color:'#e3e3e3'}}>$20.86</Typography>
+                                                <Box sx={{ flexGrow: 1 }}></Box>
+                                                {/* <Avatar alt="" src={exchangeIcon}></Avatar> */}
+                                                <Tooltip title='0x Exchange'>
+                                                    <svg width="41" height="20" viewBox="0 0 11 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="sc-LzLrR cfKEdR">
+                                                        <path
+                                                            d="M8.402 25.28l3.105-3.212-3.86-5.209-4.915-6.954A19.904 19.904 0 0 0 0 20c0 6.1 2.732 11.562 
+                                                            7.04 15.23l6.239-4.408a12.796 12.796 0 0 1-4.877-5.541zM14.72 8.402l3.212 3.105 5.209-3.86 6.954-4.915A19.904 
+                                                            19.904 0 0 0 20 0C13.9 0 8.438 2.732 4.77 7.04l4.408 6.239a12.795 12.795 0 0 1 5.541-4.877zm13.773 9.53l3.86 5.209
+                                                            4.915 6.954A19.904 19.904 0 0 0 40 20c0-6.1-2.732-11.562-7.04-15.23l-6.24 4.408a12.796 12.796 0 0 1 4.877 5.541l-3.105 
+                                                            3.213zM35.23 32.96l-4.408-6.239a12.795 12.795 0 0 1-5.541 4.877l-3.213-3.105-5.209 3.86-6.954 4.915A19.904 19.904 0 0 0 
+                                                            20 40c6.1 0 11.562-2.732 15.23-7.04z" fill="#e3e3e3">
+                                                        </path>
+                                                    </svg>
+                                                </Tooltip>
+                                            </Stack>
+                                        </Box>
+                                        <Box sx={{ border: '1px solid #737373', borderRadius: '7px', mt: 1, p: 1 }}>
+                                            <Stack direction='row' spacing={2}>
+                                                <Typography variant='body1'>$3,214</Typography>
+                                                <Typography variant='body1'>$20.86</Typography>
+                                                <Box sx={{ flexGrow: 1 }}></Box>
+                                                <Tooltip title='uniswap'>
+                                                <img alt="" width="21" height="20" src="https://assets.coingecko.com/coins/images/12504/small/uniswap-uni.png?1600306604" ></img>
+                                                </Tooltip>
+                                            </Stack>
 
-                        <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
-                            <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Rate</Typography>
-                            <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
-                            <Typography variant='body2'> 1 {TokenFrom} = {parseFloat(Price).toFixed(3)} {TokenTo}</Typography>
-                        </Stack>
+                                        </Box>
+                                        <Box sx={{ marginLeft: '30%' }}>
+                                            <Button variant='outlined' sx={{ mt: 2 }} >Save for This Trade</Button>
+                                        </Box>
+
+                                    </Box>
+                                </Modal>
+                            </Stack>
+
+                            <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
+                                <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Min. output</Typography>
+                                <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
+                                <Typography variant='body2'>{(parseFloat(TokenFromAmount) * parseFloat(minPrice)).toFixed(3)} {TokenTo}</Typography>
+                            </Stack>
+
+                            <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
+                                <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Rate</Typography>
+                                <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
+                                <Typography variant='body2'> 1 {TokenFrom} = {parseFloat(Price).toFixed(3)} {TokenTo}</Typography>
+                            </Stack>
 
                         </Box>
+                    </Container>
+                    <TransparentButton value='Submit'
+                        onClick={transact}
+                        style={{
+                            height: '45px',
+                            width: '200px',
+                            background: 'transparent',
+                            borderWidth: '2px',
+                            borderStyle: 'solid',
+                            borderColor: '#3b2959',
+                            borderRadius: '5px',
+                            color: 'white',
+                            cursor: 'pointer',
+                            float: 'right',
+                            marginTop: '20px'
+                        }}></TransparentButton> <br /><br /> &nbsp;
                 </Container>
-                <TransparentButton value='Submit'
-                    onClick={transact}
-                    style={{
-                        height: '45px',
-                        width: '200px',
-                        background: 'transparent',
-                        borderWidth: '2px',
-                        borderStyle: 'solid',
-                        borderColor: '#3b2959',
-                        borderRadius: '5px',
-                        color: 'white',
-                        cursor: 'pointer',
-                        float: 'right',
-                        marginTop: '20px'
-                    }}></TransparentButton> <br /><br /> &nbsp;
-                </Container>
-        </Grid>
+            </Grid>
         </Grid >
     );
 
