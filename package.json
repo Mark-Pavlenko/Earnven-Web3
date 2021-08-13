@@ -50,6 +50,7 @@
     "react-infinite-scroller": "^1.2.4",
     "react-router-dom": "^6.0.0-beta.0",
     "react-scripts": "4.0.3",
+    "react-show-more-text": "^1.5.0",
     "rsuite": "^4.10.2",
     "simplebar": "^5.3.4",
     "simplebar-react": "^2.3.4",

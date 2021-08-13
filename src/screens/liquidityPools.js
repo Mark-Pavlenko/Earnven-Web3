@@ -13,21 +13,6 @@ export default function LiquidityPools() {
     const [Data, setData] = useState([])
     const [Content, setContent] = useState('')
 
-    // async function getImageURL(tokenID){
-    //     console.log(tokenID)
-    //     var resp;
-    //     await axios.get(`https://api.ethplorer.io/getTokenInfo/${tokenID}?apiKey=EK-qSPda-W9rX7yJ-UY93y`,{},{})
-    //     .then(async(response) => {
-    //         if(response.data.image){
-    //             // console.log(response.data.image)
-    //             resp = response.data.image
-    //         }
-    //     })
-    //     return resp
-    // }
-
-    // getImageURL('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2')
-
     useEffect(() => {
         var content = Data.map((object)=>
         <>  
@@ -70,17 +55,9 @@ export default function LiquidityPools() {
         </div>
         </AccordionSummary>
         <AccordionDetails>
-        {/* <AmountInput value={object.newAllowance} onChange={(e)=>{object.newAllowance=e.target.value}}/>&nbsp;${object.symbol}<br/>
-        <font style={{fontSize:'10px'}}> &nbsp;&nbsp;**Set Approval <b>0</b> to revoke Approval.</font>
-        <br/>
-        <TransparentButton value='Set new Allowance' onClick={async(e)=>{
-            let web3 = window.web3;
-            const accounts = await web3.eth.getAccounts()
-            let Token = await new web3.eth.Contract(ERC20ABI, tokenAddress)
-            await Token.methods.approve(object.address, (object.newAllowance*(10**18)).toString()).send({ from : accounts[0]})
-        }}/> */}
+        
         </AccordionDetails>
-      </Accordion>
+        </Accordion>
         
         </>
         )
@@ -107,7 +84,7 @@ export default function LiquidityPools() {
                         date:${epoch}
                       }
                         orderBy:dailyVolumeUSD,
-                         orderDirection: desc)
+                        orderDirection: desc)
                     {
                       id
                       token0 {
