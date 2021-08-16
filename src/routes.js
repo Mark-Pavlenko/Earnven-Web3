@@ -22,6 +22,9 @@ import CubicleGraphs from './screens/chartsCubicle'
 import LiquidityPools from './screens/liquidityPools';
 import NFT from './screens/NFT';
 import NftDetails from './screens/NftDetail';
+import Home from './screens/Home';
+import YieldFarm from './screens/YieldFarm'
+import Savings from './screens/Savings'
 
 export default function Router(){
 
@@ -43,7 +46,11 @@ export default function Router(){
             element: <AppLayout/>,
             children:[
                 {path:'/',element: <Navigate to="/:address/dashboard" replace /> },
+                {path:'home',element:<Home/>},
                 {path:'dashboard',element:<Dashboard/>},
+                {path:'liquiditypools',element:<LiquidityPools/>},
+                {path:'yieldfarm',element:<YieldFarm/>},
+                {path:'savings',element:<Savings/>},
                 {path:'history',element:<History />},
                 {path:'defimadeasy',element:<DefiMadeEasy />},
                 {path:'assets',element:<AllAssetsPage />},
@@ -52,7 +59,7 @@ export default function Router(){
                 {path:'bridge',element:<Bridge />},
                 {path:'multisender',element:<Multisender />},
                 {path:'safefarm',element:<SafeFarm />},
-                {path:'trading',element:<Trading />},
+                {path:'exchange',element:<Trading />},
                 {path:'nft',element:<NFTpage />},
                 // {path:'nft-token',element:<NFTTokenPage/>},
                 {path:'nft-token/:contract/:id',element:<NFTTokenPage/>},

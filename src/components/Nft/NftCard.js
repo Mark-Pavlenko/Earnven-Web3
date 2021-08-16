@@ -1,6 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Box, Card, Link, Typography, Stack } from '@material-ui/core';
+import { Box, Card, Link, Typography, Stack,Grid } from '@material-ui/core';
 import { experimentalStyled as styled } from '@material-ui/core/styles';
 
 
@@ -11,6 +11,7 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Web3 from "web3";
+import axios from 'axios';
 
 
 const NftImgStyle = styled('img')({
@@ -53,12 +54,21 @@ export default function NftCard({ tokenId, contractAddress, txHash }) {
     navigate(`/${address}/nftdetails/${contractAddress}/${tokenId}`)
   }
 
-  return (
-    
-    <Card onClick={routeToDetailPage} style={{ cursor: 'pointer' }}>
+  // const callingOpensea = async (address,id) => {
      
+  // }
+
+  return (
+    <>
+    {nft !== undefined? (nft.image !==""?
+    <Grid key={nft.tokenID} item xs={12} sm={6} md={3}>
+    <Card onClick={routeToDetailPage} style={{ cursor: 'pointer' }}>
       <Box sx={{ pt: '100%', position: 'relative' }}>
-        <NftImgStyle alt=" " src={loading ? spinner : (nft !== undefined ? (nft.image !== "" ? nft.image : block) : block)} />
+        {console.log("nft returning from useNft:::",nft.image)}
+        {/* <NftImgStyle alt=" " src={loading ? spinner : (nft !== undefined ? (nft.image !== "" ? nft.image : block) : block)} /> */}
+        <NftImgStyle alt=" " src={nft.image} />
+        {/* {nft !== undefined?<NftImgStyle alt=" " src={loading ? spinner : nft.image} />: callingOpensea(contractAddress,tokenId)} */}
+        
       </Box>
 
       <Stack spacing={2} direction='row' sx={{ p: 3 }}>
@@ -67,15 +77,15 @@ export default function NftCard({ tokenId, contractAddress, txHash }) {
           {/* {nftObject==null ? "loading":nftObject.name} */}
           {loading ? "loading" : (nft !== undefined ? nft.name : 'N/A')}
         </Typography>
-        {console.log("price value:::", price)}
         {price !== 0 ? <Typography variant="subtitle2" align='right' sx={{ color: '#737373' }}>{price}ETH</Typography> : <div></div>}
         {/* </Link> */}
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
         </Stack>
-      </Stack>
-      
+      </Stack> 
     </Card>
-   
+    </Grid>:<></>):<> </>}
+    
+   </>
   );
 }

@@ -791,7 +791,7 @@ export default class index extends Component {
         }}
       >
         {/*  <center> */}
-        <Typography variant='h3' align='left' sx={{ marginTop: '10px' }} color="white"> History </Typography>
+        {/* <Typography variant='h3' align='left' sx={{ marginTop: '10px' }} color="white"> History </Typography> */}
 
         <br />
 

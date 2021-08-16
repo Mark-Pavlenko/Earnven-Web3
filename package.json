@@ -34,6 +34,7 @@
     "jquery": "^3.6.0",
     "lodash": "^4.17.21",
     "numeral": "^2.0.6",
+    "opensea-js": "^1.1.11",
     "papaparse": "^5.3.1",
     "random-avatar-generator": "^2.0.0",
     "react": "^17.0.2",
