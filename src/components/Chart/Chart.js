@@ -4,7 +4,8 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import parse from "html-react-parser";
 import { useParams } from 'react-router-dom';
-// import TransparentButton from '../TransparentButton/index'
+import ShowMoreText from "react-show-more-text";
+import TransparentButton from '../TransparentButton/index'
 import {
   // ChartDataTwentyFour,
   // ChartDataOneWeek,
@@ -125,6 +126,10 @@ export const Chart = () => {
   useEffect(() => {
 
   }, [])
+
+  function executeOnClick(isExpanded) {
+    console.log(isExpanded);
+  }
 
   let data
   //to set coin price we get from coingecko api
@@ -519,8 +524,21 @@ export const Chart = () => {
           <br />
           <div style={{ color: 'white', textAlign: 'left' }}>ABOUT</div><br /><br />
           <div style={{ color: 'white', textAlign: 'left' }}>
+          <ShowMoreText
+                /* Default options */
+                lines={3}
+                more={<div style={{textAlign:'center'}}><TransparentButton value="Show More"/></div>}
+                less={<div style={{textAlign:'center'}}><TransparentButton value="Less"/></div>}
+                className="content-css"
+                anchorClass="my-anchor-css-class"
+                onClick={executeOnClick}
+                expanded={false}
+                // width={280}
+                truncatedEndingComponent={<><br/><br/></>}
+            >
+            
             {Selection.description ? parse(Selection.description.en) : ''}
-
+            </ShowMoreText>
           </div>
           <br /><br />
           <hr style={{ marginTop: '8px', borderTop: '0px ', borderBottom: '1px solid #737373' }} />

@@ -60,7 +60,7 @@ export default class index extends Component {
           ) */
         await axios.get(`https://api.ethplorer.io/getAddressInfo/${accounts}?apiKey=EK-qSPda-W9rX7yJ-UY93y`, {}, {})
             .then(async (response) => {
-                // console.log(response)
+                console.log(response)
                 arr1 = [];
                 var tokens = response.data.tokens;
                 if (response.data.ETH.balance === 0 && tokens === undefined) {
@@ -138,7 +138,6 @@ export default class index extends Component {
                             erc20data[tx[i].contractAddress] = {}
                             erc20data[tx[i].contractAddress].id = tx[i].contractAddress
                             erc20data[tx[i].contractAddress].balance = tx[i].value / (10**tx[i].tokenDecimal)
-                            erc20data[tx[i].contractAddress].decimals = tx[i].tokenDecimal;
                         }
                         
                     }
@@ -161,47 +160,7 @@ export default class index extends Component {
                 // console.log(buffer) 
                 for (var i = 0; i<buffer.length; i++){
                     if(buffer[i].balance >= 1/(10**6)){
-                        await axios.get(`https://api.coingecko.com/api/v3/coins/ethereum/contract/${buffer[i].id}`,{},{})
-                        .then(async(response2)=>{
-                            
-                            // console.log(response2.data);
-
-                            if(response2.data && response2.data.symbol!=='WETH' && response2.data.symbol!=='weth'){
-
-                                var object = {}
-
-                                object.tokenInfo ={}
-                                object.tokenInfo.price = {}
-                                object.tokenInfo.coingecko = response2.data.id
-                                object.tokenInfo.address = buffer[i].id
-                                object.tokenInfo.name = response2.data.name
-                                object.tokenInfo.decimals = buffer[i].decimals
-                                if(response2.data.market_data){
-                                    object.tokenInfo.price.diff = response2.data.market_data.price_change_percentage_24h;
-                                    object.tokenInfo.price.rate = parseFloat(response2.data.market_data.current_price.usd).toFixed(2)
-                                    object.totalInvestment = parseFloat(buffer[i].balance*response2.data.market_data.current_price.usd).toFixed(2)
-                                    this.setState({total: this.state.total + parseFloat(object.totalInvestment)})
-                                }
-                                else{
-                                    object.tokenInfo.price.diff = '-'
-                                    object.tokenInfo.price.rate= '-'
-                                    object.totalInvestment = 0
-                                }
-                                
-                                object.tokenInfo.symbol = response2.data.symbol
-                                object.tokenInfo.image =  response2.data.image.thumb
-                                object.rawBalance = buffer[i].balance*(10**buffer[i].decimals)
-                                // console.log(object)
-                                arr1.push(object)
-
-                                arr1.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
-                                this.update();
-                                // console.log(arr1)
-                            }
-                        })
-                        .catch(async(err)=>{
-
-                            await axios.get(`https://api.ethplorer.io/getTokenInfo/${buffer[i].id}?apiKey=EK-qSPda-W9rX7yJ-UY93y`,{},{})
+                        await axios.get(`https://api.ethplorer.io/getTokenInfo/${buffer[i].id}?apiKey=EK-qSPda-W9rX7yJ-UY93y`,{},{})
                         .then(async(response2)=>{
                             // console.log('response  :', buffer[i])
                             if(response2.data && response2.data.symbol!=='WETH'){
@@ -223,37 +182,38 @@ export default class index extends Component {
                                 else{
                                     object.tokenInfo.price.diff = '-'
                                     object.tokenInfo.price.rate= '-'
-                                    object.totalInvestment = 0
+                                    object.totalInvestment = '-'
                                 }
                                 
                                 object.tokenInfo.symbol = response2.data.symbol
                                 object.tokenInfo.image =  response2.data.image
                                 object.rawBalance = buffer[i].balance*(10**response2.data.decimals)
                                 // object.rawBalance = '10000000'
-                                // console.log(object)
+                                
                                 arr1.push(object)
-                                arr1.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
-                                this.update();
+                                console.log(arr1)
                                 // console.log(response.data)
                             }
                         })
                         .catch((err)=>{console.log(err)})
-
-                        })
-                    }
+                                
+                                // arr1.push(buffer[i]);
+                            }
 
                 }
 
-                // this.update();
+                this.update();
+                // console.log(erc20data)
+                // console.log(response.data.result)
             }
         })
     }
 
     update = () => {
         const web3 = new Web3();
-        // await arr1.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
+        
         // console.log(this.state.page)
-        // var start = (this.state.page - 1) * 10;
+        var start = (this.state.page - 1) * 10;
         var end;
         if (this.state.page === 1) {
             arr2 = []
@@ -262,18 +222,14 @@ export default class index extends Component {
         else {
             end = this.state.page * 10;
         }
-        // if (this.state.page === 2) {
-        //     start = 6
-        // }
+        if (this.state.page === 2) {
+            start = 6
+        }
         if (end > arr1.length) {
             end = arr1.length;
             this.setState({ hideShowMore: true })
         }
-        else{
-            this.setState({ hideShowMore: false })
-        }
-        arr2 = []
-        for (var i = 0; i < end; i++) {
+        for (var i = start; i < end; i++) {
             if (arr1[i]) {
                 var object = {};
                 object.coingecko = arr1[i].tokenInfo.coingecko;
@@ -294,11 +250,6 @@ export default class index extends Component {
                     object.totalInvestment = '-'
                 }
                 
-                // if(arr1.indexOf(object)===-1){
-                //     arr1.push(object);
-                //     console.log(arr2)
-                //     console.log(object)
-                // }
                 arr2.push(object);
             }
         }
@@ -327,7 +278,7 @@ export default class index extends Component {
                                         margin: '16px'
                                     }}
                                     alt=""
-                                    src={object.image? object.image[0]==='/'? `https://ethplorer.io${object.image}`:`${object.image}` : ''}
+                                    src={`https://ethplorer.io${object.image}`}
                                 />
                             </div>
 
