@@ -12,6 +12,11 @@ import ERC20ABI from '../../abi/ERC20.json'
 import tokenURIs from './tokenURIs';
 import { Box, Typography, Stack, Container, Grid, TextField, Divider, Button, Modal, Tooltip, Avatar, InputAdornment, OutlinedInput } from '@material-ui/core';
 // import exchangeIcon from '../../assets/icons/exchange.png'
+// import Uniswap from '../../assets/icons/Uniswap.webp';
+// import Curve from '../../assets/icons/Curve.webp';
+// import SushiSwap from '../../assets/icons/Sushiswap.webp';
+// import Bancor from '../../assets/icons/Bancor.webp';
+import Balancer from '../../assets/icons/balancer.png';
 
 
 const style = {
@@ -39,6 +44,10 @@ export default function Exchange() {
     const [AllTokens, setAllTokens] = useState([]);
     const [Sources, setSources] = useState([]);
     const [open, setOpen] = useState(false)
+    const [protocolsRateList, setprotocolsRateList] = useState([])
+    const [ethPrice, setethPrice] = useState(0);
+    const [toTokenToId, settoTokenToId] = useState('')
+    // const [tokenToDollarValue, settokenToDollarValue] = useState(0)
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -57,11 +66,25 @@ export default function Exchange() {
                     let data = response.data.tokens;
                     let tokens = fetchedTokens.map((token) => ({ ...token, logoURI: data.find(x => x.address == token.address) ? data.find(x => x.address == token.address).logoURI : tokenURIs.find(x => x.address == token.address).logoURI }));
                     console.log(tokens.filter((token) => token.logoURI === ""));
+                    console.log("all tokens data",tokens)
                     setAllTokens(tokens)
                 })
         }
         getData()
     }, [])
+
+    useEffect(() => {
+       async function getEthdollarValue(){
+           try{
+               const ethDollarValue = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+               setethPrice(ethDollarValue.data.ethereum.usd);
+           }
+           catch{
+
+           }
+       }
+       getEthdollarValue();
+    },[])
 
     /* useEffect(() => {
         async function getData() {
@@ -107,10 +130,11 @@ export default function Exchange() {
         await loadWeb3()
         const web3 = window.web3;
         const accounts = await web3.eth.getAccounts()
+        console.log('account selected is :::',accounts[0])
         if (TokenFromAmount !== '' && TokenFrom !== '' && TokenTo !== '') {
             // alert(TokenFromAmount)s
             let amount = parseFloat(TokenFromAmount) * Math.pow(10, 18).toString()
-            await axios.get(`https://ropsten.api.0x.org/swap/v1/quote?buyToken=${TokenTo}&sellToken=${TokenFrom}&sellAmount=${amount}&feeRecipient=0xE609192618aD9aC825B981fFECf3Dfd5E92E3cFB&buyTokenPercentageFee=0.02&slippagePercentage=${Slippage / 100}`, {}, {})
+            await axios.get(`https://ropsten.api.0x.org/swap/v1/quote?buyToken=${TokenTo.symbol}&sellToken=${TokenFrom}&sellAmount=${amount}&feeRecipient=0xE609192618aD9aC825B981fFECf3Dfd5E92E3cFB&buyTokenPercentageFee=0.02&slippagePercentage=${Slippage / 100}`, {}, {})
                 .then(async (response) => {
                     console.log(response)
                     console.log(Slippage)
@@ -125,19 +149,44 @@ export default function Exchange() {
         }
     }
 
+
+    const dollarValueOfToken= async (tokenAddress) =>{
+        try{
+            const response = await axios.get(`https://api.ethplorer.io/getTokenInfo/${tokenAddress}?apiKey=EK-qSPda-W9rX7yJ-UY93y`)
+            let data = response.data;
+            console.log('response of ethplorere api::',data)
+            if(data.price!== undefined){
+                console.log("enter inside method")
+                // settokenToDollarValue(data.price.rate);
+                return data.price.rate;
+            }
+            else{
+                console.log("dollar value of this token is undefined")
+            }
+        }
+        catch{
+
+        }
+    }
+
     const calculateToAmount = async (tokenFromAmount) => {
         // console.log("calculate amount is called")
         if (TokenFromAmount !== '' && TokenFrom !== '' && TokenTo !== '') {
             // alert(TokenFromAmount)
             // console.log("token from amount::",TokenFromAmount)
             // let amount = parseFloat(TokenFromAmount) * Math.pow(10, 18);
+            let differentQuoteList=[];
+            const protocolsList = ['','Uniswap','Curve','SushiSwap','Bancor','Balancer']
             let amount = parseFloat(tokenFromAmount) * Math.pow(10, 18);
-            await axios.get(`https://api.0x.org/swap/v1/quote?buyToken=${TokenTo}&sellToken=${TokenFrom}&sellAmount=${amount}&feeRecipient=0xE609192618aD9aC825B981fFECf3Dfd5E92E3cFB&buyTokenPercentageFee=0.02`, {}, {})
+
+            const tokenToDollarValue = await dollarValueOfToken(TokenTo.address);
+
+            await axios.get(`https://api.0x.org/swap/v1/quote?buyToken=${TokenTo.symbol}&sellToken=${TokenFrom}&sellAmount=${amount}&feeRecipient=0xE609192618aD9aC825B981fFECf3Dfd5E92E3cFB&buyTokenPercentageFee=0.02`, {}, {})
                 .then(async (response) => {
                     console.log("value came from ox:::", response)
                     setPrice(response.data.price)
                     setMinPrice(response.data.guaranteedPrice)
-                    setTokenToAmount((parseInt(response.data.buyAmount) * Math.pow(10, -18)).toFixed(3).toString())
+                    setTokenToAmount((parseInt(response.data.buyAmount) * Math.pow(10, -TokenTo.decimals)).toFixed(3).toString())
                     var sources = response.data.sources
                     sources.sort((a, b) => parseFloat(b.proportion) - parseFloat(a.proportion));
                     var sources2 = []
@@ -148,6 +197,54 @@ export default function Exchange() {
                     }
                     setSources(sources2)
                 })
+
+            for(let i=0;i<protocolsList.length;i++){
+                try{
+                    let protocolQuote={};
+                    const response = await axios.get(`https://api.0x.org/swap/v1/quote?buyToken=${TokenTo.symbol}&sellToken=${TokenFrom}&sellAmount=${amount}&includedSources=${protocolsList[i]}`)
+                    console.log(`response for all ${protocolsList[i]}`,response.data);
+                    if( protocolsList[i]===''){
+                        protocolQuote.name='0x Exchange'
+                    }
+                    else{
+                        protocolQuote.name = protocolsList[i];
+                    }
+                    protocolQuote.price = response.data.price;
+                    protocolQuote.minPrice = response.data.guaranteedPrice
+                    protocolQuote.TokenToAmount = (parseInt(response.data.buyAmount) * Math.pow(10, -18)).toFixed(3).toString()
+                    protocolQuote.gas = (((parseInt(response.data.gas)* parseInt(response.data.gasPrice))* Math.pow(10, -18))*ethPrice).toFixed(3);
+                    console.log("dollar value of token",tokenToDollarValue);
+                    protocolQuote.receivedValueInDollar = ((parseInt(response.data.buyAmount) * Math.pow(10, -TokenTo.decimals))*tokenToDollarValue).toFixed(3);
+                    // protocolQuote.image = `../../assets/icons/${protocolsList[i]}.webp`;
+                    if(protocolsList[i]==='Bancor'){
+                        protocolQuote.image = "https://assets.coingecko.com/coins/images/14053/small/bancorvbnt_32.png?1614048819";
+                    }
+                    if(protocolsList[i]==='Uniswap'){
+                        protocolQuote.image = "https://assets.coingecko.com/coins/images/12504/small/uniswap-uni.png?1600306604";
+                    }
+                    if(protocolsList[i]==='Curve'){
+                        protocolQuote.image = "https://assets.coingecko.com/markets/images/538/small/Curve.png?1591605481";
+                    }
+                    if(protocolsList[i]==='SushiSwap'){
+                        protocolQuote.image = "https://assets.coingecko.com/markets/images/576/small/2048x2048_Logo.png?1609208464";
+                    }
+                    if(protocolsList[i]==='Balancer'){
+                        protocolQuote.image = "https://assets.coingecko.com/coins/images/11683/small/Balancer.png?1592792958";
+                    }
+                    if(protocolsList[i]===''){
+                        protocolQuote.image = "https://assets.coingecko.com/markets/images/565/small/0x-protocol.png?1596623034";
+                    }
+                    
+                    differentQuoteList.push(protocolQuote);
+                }
+                catch{
+                    console.log(`error come for ${protocolsList[i]}`);
+                }
+                
+            }    
+            setprotocolsRateList(differentQuoteList);
+            console.log("different rates we have::",differentQuoteList);
+            
         }
     }
 
@@ -343,8 +440,11 @@ export default function Exchange() {
                                         <Select
                                             style={{ height: '56px', color: 'white' }}
                                             displayEmpty
-                                            value={TokenTo}
-                                            onChange={(e) => { setTokenTo(e.target.value) }}
+                                            value={TokenTo.symbol}
+                                            
+                                            onChange={(e) => { 
+                                                console.log("value of tokento set::",e.target.value)
+                                                setTokenTo(e.target.value) }}
                                             inputProps={{ 'aria-label': 'Without label' }}
                                             sx={{ background: (theme) => (theme.palette.gradients.custom) }}
                                         >
@@ -356,7 +456,7 @@ export default function Exchange() {
                                                 {AllTokens[4].symbol} */}
                                             </MenuItem>
                                             {AllTokens.map((object) =>
-                                                <MenuItem value={object.symbol} sx={{
+                                                <MenuItem value={object} sx={{
                                                     backgroundColor: '#141a1e', '&:hover': {
                                                         background: (theme) => (theme.palette.gradients.custom)
                                                     }
@@ -422,19 +522,20 @@ export default function Exchange() {
                                         <Typography variant='h6' align='center' sx={{ color: '#f5f5f5' }}>Offered By</Typography>
                                         <Divider variant='fullWidth' sx={{ mt: 3 }}></Divider>
                                         <Box>
-                                            <Stack direction='row' spacing={2} sx={{ mt: 2 }}>
+                                            <Stack direction='row' spacing={6} sx={{ mt: 2 }}>
                                                 <Typography variant='caption' sx={{ color: '#737373' }}>Receive</Typography>
                                                 <Typography variant='caption' sx={{ color: '#737373' }}>Network Fee</Typography>
                                             </Stack>
                                         </Box>
-                                        <Box sx={{ border: '1px solid #737373', borderRadius: '7px', mt: 1, p: 1 }}>
+                                        {protocolsRateList.map((object)=> (
+                                            <Box sx={{ border: '1px solid #737373', borderRadius: '7px', mt: 1, p: 1 }}>
                                             <Stack direction='row' spacing={2}>
-                                                <Typography variant='body1' sx={{ color: '#e3e3e3' }}>$3,214</Typography>
-                                                <Typography variant='body1' sx={{ color: '#e3e3e3' }}>$20.86</Typography>
+                                                <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.receivedValueInDollar}</Typography>
+                                                <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.gas}</Typography>
                                                 <Box sx={{ flexGrow: 1 }}></Box>
                                                 {/* <Avatar alt="" src={exchangeIcon}></Avatar> */}
-                                                <Tooltip title='0x Exchange'>
-                                                    <svg width="41" height="20" viewBox="0 0 11 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="sc-LzLrR cfKEdR">
+                                                <Tooltip title={object.name}>
+                                                    {/* <svg width="41" height="20" viewBox="0 0 11 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="sc-LzLrR cfKEdR">
                                                         <path
                                                             d="M8.402 25.28l3.105-3.212-3.86-5.209-4.915-6.954A19.904 19.904 0 0 0 0 20c0 6.1 2.732 11.562 
                                                             7.04 15.23l6.239-4.408a12.796 12.796 0 0 1-4.877-5.541zM14.72 8.402l3.212 3.105 5.209-3.86 6.954-4.915A19.904 
@@ -443,11 +544,15 @@ export default function Exchange() {
                                                             3.213zM35.23 32.96l-4.408-6.239a12.795 12.795 0 0 1-5.541 4.877l-3.213-3.105-5.209 3.86-6.954 4.915A19.904 19.904 0 0 0 
                                                             20 40c6.1 0 11.562-2.732 15.23-7.04z" fill="#e3e3e3">
                                                         </path>
-                                                    </svg>
+                                                    </svg> */}
+                                                     {/* <img alt="" width="21" height="20" src="https://assets.coingecko.com/coins/images/12504/small/uniswap-uni.png?1600306604" ></img> */}
+                                                     {object.name==='Balancer'?<img alt="" width="21" height="20" src={Balancer} ></img> : <img alt="" width="21" height="20" src={object.image}></img> }
                                                 </Tooltip>
                                             </Stack>
                                         </Box>
-                                        <Box sx={{ border: '1px solid #737373', borderRadius: '7px', mt: 1, p: 1 }}>
+                                        ))}
+                                        
+                                        {/* <Box sx={{ border: '1px solid #737373', borderRadius: '7px', mt: 1, p: 1 }}>
                                             <Stack direction='row' spacing={2}>
                                                 <Typography variant='body1'>$3,214</Typography>
                                                 <Typography variant='body1'>$20.86</Typography>
@@ -457,7 +562,7 @@ export default function Exchange() {
                                                 </Tooltip>
                                             </Stack>
 
-                                        </Box>
+                                        </Box> */}
                                         <Box sx={{ marginLeft: '30%' }}>
                                             <Button variant='outlined' sx={{ mt: 2 }} >Save for This Trade</Button>
                                         </Box>
@@ -469,13 +574,13 @@ export default function Exchange() {
                             <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
                                 <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Min. output</Typography>
                                 <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
-                                <Typography variant='body2'>{(parseFloat(TokenFromAmount) * parseFloat(minPrice)).toFixed(3)} {TokenTo}</Typography>
+                                <Typography variant='body2'>{(parseFloat(TokenFromAmount) * parseFloat(minPrice)).toFixed(3)} {TokenTo.symbol}</Typography>
                             </Stack>
 
                             <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
                                 <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Rate</Typography>
                                 <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
-                                <Typography variant='body2'> 1 {TokenFrom} = {parseFloat(Price).toFixed(3)} {TokenTo}</Typography>
+                                <Typography variant='body2'> 1 {TokenFrom} = {parseFloat(Price).toFixed(3)} {TokenTo.symbol}</Typography>
                             </Stack>
 
                         </Box>
