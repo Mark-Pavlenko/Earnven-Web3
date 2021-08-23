@@ -362,10 +362,10 @@ export default class index extends Component {
                                 <font color="white" style={{ fontSize: "15px" }}>
                                     <br /> ${object.totalInvestment}{" "}
                                 </font>
-                                <font color="#03DAC6" style={{ fontSize: "10px" }}>
-                                    {" "}
+                                <font color={parseFloat(object.profit)>0? '#03DAC6':'#ff1f1f'} style={{ fontSize: "10px" }}>
+                                    {" "} 
                                     <br />
-                                    {object.profit} %
+                                     {object.profit} %
                                 </font>
                             </div>
 
