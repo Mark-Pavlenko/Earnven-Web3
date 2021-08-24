@@ -24,21 +24,28 @@ export default function AirDrop() {
     }
 
     async function onSubmit(){
-        await loadWeb3()
-        const web3 = window.web3
-        const accounts = await web3.eth.getAccounts()
-
-        let arr1 = AddressArray.split(',')
-        for(var i =0; i<arr1.length ;i++){
-            arr1[i] = arr1[i].trim()
-            arr1[i] = arr1[i].trim('\n')
+        if(TokenAddress==='' || TokenAmount==='' || AddressArray===''){
+            alert('Please Fill All The Details!')
         }
-        let totalTokensWei = web3.utils.toWei(TokenAmount, 'ether');
-        let tokenContract = await new web3.eth.Contract(ERC20, TokenAddress)
-        let airDropperContract = await new web3.eth.Contract(AirDropper, '0xE729654DB3117Eee851B8E50bC52869eC06Afb86' );
 
-        await tokenContract.methods.approve('0xE729654DB3117Eee851B8E50bC52869eC06Afb86', totalTokensWei ).send({from:accounts[0]})
-        await airDropperContract.methods.doAirdrop(TokenAddress, arr1, totalTokensWei).send({from:accounts[0]})
+        else{
+            await loadWeb3()
+            const web3 = window.web3
+            const accounts = await web3.eth.getAccounts()
+
+            let arr1 = AddressArray.split(',')
+            for(var i =0; i<arr1.length ;i++){
+                arr1[i] = arr1[i].trim()
+                arr1[i] = arr1[i].trim('\n')
+            }
+            let totalTokensWei = web3.utils.toWei(TokenAmount, 'ether');
+            let tokenContract = await new web3.eth.Contract(ERC20, TokenAddress)
+            let airDropperContract = await new web3.eth.Contract(AirDropper, '0xE729654DB3117Eee851B8E50bC52869eC06Afb86' );
+
+            await tokenContract.methods.approve('0xE729654DB3117Eee851B8E50bC52869eC06Afb86', totalTokensWei ).send({from:accounts[0]})
+            await airDropperContract.methods.doAirdrop(TokenAddress, arr1, totalTokensWei).send({from:accounts[0]})
+        }
+        
     }
 
     return (
