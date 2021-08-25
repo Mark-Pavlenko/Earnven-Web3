@@ -18,6 +18,18 @@ import { Box, Typography, Stack, Container, Grid, TextField, Divider, Button, Mo
 // import Bancor from '../../assets/icons/Bancor.webp';
 import Balancer from '../../assets/icons/balancer.png';
 import { invert, update } from 'lodash';
+import styled from 'styled-components'
+import CurrencySearchModal from '../../components/CurrencySearchModal';
+import { ethers } from "ethers";
+import { parseUnits, formatUnits } from "@ethersproject/units";
+import { useParams } from 'react-router-dom';
+
+
+const styles = () => ({
+    selected: {
+        color: 'red'
+    }
+})
 
 
 const style = {
@@ -33,7 +45,54 @@ const style = {
     borderRadius: '10px'
 };
 
+const CurrencySelect = styled.button`
+  align-items: center;
+  height: 42px;
+  font-size: 18px;
+  font-weight: 600;
+  background-color: transparent;
+  color: '#737373'
+  border-radius: 12px;
+  outline: none;
+  cursor: pointer;
+  user-select: none;
+  border: none;
+  padding: 0 0.5rem;
+  margin: 0 0.5rem;
+  :focus,
+  :hover {
+    background-color: 'blue'
+  }
+`
+
+
+
+const erc20Abi = [
+    "function balanceOf(address owner) view returns (uint256)",
+    "function approve(address _spender, uint256 _value) public returns (bool success)",
+    "function allowance(address _owner, address _spender) public view returns (uint256 remaining)"
+];
+
+// const selectedProvider = new Web3(new Web3.providers.HttpProvider("https://mainnet.infura.io/v3/8b2159b7b0944586b64f0280c927d0a8"))
+const selectedProvider = new ethers.providers.JsonRpcProvider("https://mainnet.infura.io/v3/8b2159b7b0944586b64f0280c927d0a8");
+
+
+const makeCall = async (callName, contract, args, metadata = {}) => {
+    if (contract[callName]) {
+        let result
+        if (args) {
+            result = await contract[callName](...args, metadata)
+        } else {
+            result = await contract[callName]()
+        }
+        return result
+    } else {
+        console.log('no call of that name!')
+    }
+}
 export default function Exchange() {
+
+    const { address } = useParams();
 
     const [TokenFrom, setTokenFrom] = useState('ETH');
     const [TokenTo, setTokenTo] = useState('');
@@ -53,6 +112,7 @@ export default function Exchange() {
     const [txSuccess, settxSuccess] = useState(false)
     const [txFailure, settxFailure] = useState(false)
     const [selectedExchangeName, setselectedExchangeName] = useState('')
+    const [currencyModal, setcurrencyModal] = useState(false)
     // const [tokenToDollarValue, settokenToDollarValue] = useState(0)
 
     const handleOpen = () => setOpen(true);
@@ -60,21 +120,38 @@ export default function Exchange() {
 
     useEffect(() => {
         async function getData() {
+            console.log("get data called");
             let fetchedTokens;
+            let tokens;
             await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {})
                 .then(async (response) => {
-                    setAllTokens(response.data.records)
+                    // setAllTokens(response.data.records)
                     fetchedTokens = response.data.records;
-                    console.log(response.data.records)
+                    // console.log(response.data.records)
                 })
             await axios.get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
                 .then(async (response) => {
                     let data = response.data.tokens;
-                    let tokens = fetchedTokens.map((token) => ({ ...token, logoURI: data.find(x => x.address == token.address) ? data.find(x => x.address == token.address).logoURI : tokenURIs.find(x => x.address == token.address).logoURI }));
+                    tokens = fetchedTokens.map((token) => ({ ...token, logoURI: data.find(x => x.address == token.address) ? data.find(x => x.address == token.address).logoURI : tokenURIs.find(x => x.address == token.address).logoURI }));
                     console.log(tokens.filter((token) => token.logoURI === ""));
-                    console.log("all tokens data", tokens)
-                    setAllTokens(tokens)
+                    // console.log("all tokens data", tokens)
+                    // setAllTokens(tokens)
                 })
+
+            console.log("value of tokens::", tokens);
+            setAllTokens(tokens)
+
+            for (let i = 0; i < tokens.length; i++) {
+                console.log("value of token::", tokens[i]);
+                let tempContractIn = new ethers.Contract(tokens[i].address, erc20Abi, selectedProvider);
+                let newBalanceIn = await getBalance(tokens[i].symbol, address, tempContractIn)
+                // console.log("token balance for this address:::", newBalanceIn);
+                // console.log(" real token balance for this address:::", parseFloat(formatUnits(newBalanceIn, 18)));
+                tokens[i].balance = parseFloat(formatUnits(newBalanceIn, tokens[i].decimals)).toFixed(3);
+            }
+            console.log("token list with token balance:::", tokens);
+            setAllTokens(tokens);
+
         }
         getData()
     }, [])
@@ -96,6 +173,8 @@ export default function Exchange() {
         const timeOutId = setTimeout(() => calculateToAmount(TokenFromAmount), 500);
         return () => clearTimeout(timeOutId);
     }, [TokenFromAmount]);
+
+
 
     /* useEffect(() => {
         async function getData() {
@@ -329,18 +408,41 @@ export default function Exchange() {
         setselectedRate(null);
     }
 
+    const test = async () => {
+        console.log("value of provider::", selectedProvider);
+        let tempContractIn = new ethers.Contract("0x6b175474e89094c44da98b954eedeac495271d0f", erc20Abi, selectedProvider);
+        let newBalanceIn = await getBalance('DAI', '0x912fD21d7a69678227fE6d08C64222Db41477bA0', tempContractIn)
+        console.log("token balance for this address:::", newBalanceIn);
+        console.log(" real token balance for this address:::", parseFloat(formatUnits(newBalanceIn, 18)));
+    }
+
+    const handleDismissSearch = () => {
+        setcurrencyModal(false);
+    }
+
+    const getBalance = async (_token, _account, _contract) => {
+
+        let newBalance
+        if (_token === 'ETH') {
+            newBalance = await selectedProvider.getBalance(_account)
+        } else {
+            newBalance = await makeCall('balanceOf', _contract, [_account])
+        }
+        return newBalance
+    }
+
     /* return (
             <div className="main-container">
                 <div className="outbox">
                     <br/><br/>
                     <div className="main-header">Exchange</div>
                     <div className="box">
-
+ 
                         <div className="firstdiv">
                             <div className="firstdiv1">
                                 <div className="swap"> Swap </div>
                                 <div>
-
+ 
                                 <FormControl variant="outlined" style={{width:'120px'}}>
                                     <InputLabel id="demo-simple-select-outlined-label" >Token</InputLabel>
                                     <Select
@@ -363,10 +465,10 @@ export default function Exchange() {
                                         </MenuItem>)}
                                     </Select>
                                 </FormControl>
-
+ 
                                 </div>
                             </div>
-
+ 
                             <div className="firstdiv2" style={{ marginLeft: "7px" }}>
                                 <div className="number"> &nbsp; </div>
                                 <div>
@@ -381,9 +483,9 @@ export default function Exchange() {
                                     </input>
                                 </div>
                             </div>
-
-
-
+ 
+ 
+ 
                             <div className="firstdiv3">
                                 <div className="swap"> For </div>
                                 <div>
@@ -411,7 +513,7 @@ export default function Exchange() {
                                 </FormControl>
                                 </div>
                             </div>
-
+ 
                             <div className="firstdiv4" style={{ marginLeft: "7px" }}>
                                 <div className="number"> &nbsp;</div>
                                 <div>
@@ -427,7 +529,7 @@ export default function Exchange() {
                                     ></input>
                                 </div>
                             </div>
-
+ 
                         </div>
                         
                         <div className="seconddiv">Transaction Settings</div>
@@ -477,30 +579,61 @@ export default function Exchange() {
                                             style={{ height: '56px', color: 'white' }}
                                             displayEmpty
                                             value={TokenFrom}
-                                            // onChange={(e) => { setTokenFrom(e.target.value) }}
                                             onChange={(e) => { fromTokenChange(e.target.value) }}
                                             sx={{ background: (theme) => (theme.palette.gradients.custom) }}
                                         >
-                                            {/* <MenuItem value="" sx={{ background: (theme) => (theme.palette.gradients.custom) }}>
-                                                <Typography >Select</Typography> */}
-                                            {/*  <div className="logo-container">
-                                                    <img src={AllTokens[0].logoURI} className="logo-uri" />
-                                                </div>
-                                                {AllTokens[0].symbol} */}
-                                            {/*  </MenuItem> */}
                                             {AllTokens.map((object) =>
                                                 <MenuItem value={object.symbol} sx={{
                                                     backgroundColor: '#141a1e', '&:hover': {
                                                         background: (theme) => (theme.palette.gradients.custom)
-                                                    }
-                                                }}>
-                                                    <div className="logo-container">
-                                                        <img src={object.logoURI} className="logo-uri" />
-                                                    </div>
-                                                    {object.symbol}
+                                                    },
+                                                    // width: '200px'
+                                                    // position: 'absolute',
+                                                    // top: '45%',
+                                                    // left: '50%',
+                                                    // transform: 'translate(-50%, -50%)',
+                                                    // wi
+                                                    width: 300,
+                                                    // bgcolor: 'background.default',
+
+                                                    // border: '2px solid #000',
+                                                    // boxShadow: 24,
+                                                    // p: 4,
+                                                    // borderRadius: '10px'
+                                                }}
+
+                                                >
+                                                    <Box>
+                                                        <Stack direction='row' spacing={1}>
+                                                            <div className="logo-container">
+                                                                <img src={object.logoURI} className="logo-uri" />
+                                                            </div>
+                                                            <Typography variant='body1'>{object.symbol}</Typography>
+                                                            <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
+                                                            <div float='right' >
+                                                                {object.balance && <Typography variant='caption' sx={{ color: '#fff' }}>{object.balance}</Typography>}
+                                                            </div>
+                                                        </Stack>
+                                                    </Box>
                                                 </MenuItem>)}
                                         </Select>
                                     </FormControl>
+                                    {/*  <CurrencySelect onClick={test}>
+                                    hi
+                                    </CurrencySelect> */}
+
+                                    {/*  <Button variant='outlined'
+                                        onClick={() => {
+                                            setcurrencyModal(true);
+                                             test()
+                                        }}>
+                                        Test
+                                    </Button>
+                                    <CurrencySearchModal
+                                        isOpen={currencyModal}
+                                        onDismiss={handleDismissSearch}
+                                    >
+                                    </CurrencySearchModal> */}
 
                                 </Stack>
                                 <Stack spacing={0.5}>
@@ -621,7 +754,7 @@ export default function Exchange() {
                                                             <Box sx={{ flexGrow: 1 }}></Box>
                                                             {/* <Avatar alt="" src={exchangeIcon}></Avatar> */}
                                                             <Tooltip title={object.name}>
-                                                            {object.name === 'Balancer' ? <img alt="" width="21" height="20" src={Balancer} ></img> : object.name === '0x Exchange'?<img alt="" width="21" height="20" src={object.image} style={{filter:'invert(1)'}} ></img>:<img alt="" width="21" height="20" src={object.image} ></img>}
+                                                                {object.name === 'Balancer' ? <img alt="" width="21" height="20" src={Balancer} ></img> : object.name === '0x Exchange' ? <img alt="" width="21" height="20" src={object.image} style={{ filter: 'invert(1)' }} ></img> : <img alt="" width="21" height="20" src={object.image} ></img>}
                                                             </Tooltip>
                                                         </Stack>
                                                     </Box> :
@@ -632,7 +765,7 @@ export default function Exchange() {
                                                             <Box sx={{ flexGrow: 1 }}></Box>
                                                             {/* <Avatar alt="" src={exchangeIcon}></Avatar> */}
                                                             <Tooltip title={object.name}>
-                                                                {object.name === 'Balancer' ? <img alt="" width="21" height="20" src={Balancer} ></img> : object.name === '0x Exchange'?<img alt="" width="21" height="20" src={object.image} style={{filter:'invert(1)'}} ></img>:<img alt="" width="21" height="20" src={object.image} ></img>}
+                                                                {object.name === 'Balancer' ? <img alt="" width="21" height="20" src={Balancer} ></img> : object.name === '0x Exchange' ? <img alt="" width="21" height="20" src={object.image} style={{ filter: 'invert(1)' }} ></img> : <img alt="" width="21" height="20" src={object.image} ></img>}
                                                             </Tooltip>
                                                         </Stack>
                                                     </Box>)
