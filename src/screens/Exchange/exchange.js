@@ -12,7 +12,7 @@ import ERC20ABI from '../../abi/ERC20.json'
 import tokenURIs from './tokenURIs';
 import { Box, Typography, Stack, Container, Grid, TextField, Divider, Button, Modal, Tooltip, Avatar, InputAdornment, OutlinedInput } from '@material-ui/core';
 // import exchangeIcon from '../../assets/icons/exchange.png'
-// import Uniswap from '../../assets/icons/Uniswap.webp';
+import Uniswap from '../../assets/icons/Uniswap.webp';
 // import Curve from '../../assets/icons/Curve.webp';
 // import SushiSwap from '../../assets/icons/Sushiswap.webp';
 // import Bancor from '../../assets/icons/Bancor.webp';
@@ -23,6 +23,8 @@ import CurrencySearchModal from '../../components/CurrencySearchModal';
 import { ethers } from "ethers";
 import { parseUnits, formatUnits } from "@ethersproject/units";
 import { useParams } from 'react-router-dom';
+import Loader from "react-loader-spinner";
+import ScrollToTop from '../../components/ScrollToTop';
 
 
 const styles = () => ({
@@ -113,6 +115,7 @@ export default function Exchange() {
     const [txFailure, settxFailure] = useState(false)
     const [selectedExchangeName, setselectedExchangeName] = useState('')
     const [currencyModal, setcurrencyModal] = useState(false)
+    const [updateBalance, setupdateBalance] = useState(false)
     // const [tokenToDollarValue, settokenToDollarValue] = useState(0)
 
     const handleOpen = () => setOpen(true);
@@ -139,15 +142,20 @@ export default function Exchange() {
                 })
 
             console.log("value of tokens::", tokens);
-            setAllTokens(tokens)
+            // setAllTokens(tokens)
 
             for (let i = 0; i < tokens.length; i++) {
+                // setcurrencyModal(false)
+                setupdateBalance(!updateBalance)
                 console.log("value of token::", tokens[i]);
                 let tempContractIn = new ethers.Contract(tokens[i].address, erc20Abi, selectedProvider);
                 let newBalanceIn = await getBalance(tokens[i].symbol, address, tempContractIn)
                 // console.log("token balance for this address:::", newBalanceIn);
                 // console.log(" real token balance for this address:::", parseFloat(formatUnits(newBalanceIn, 18)));
                 tokens[i].balance = parseFloat(formatUnits(newBalanceIn, tokens[i].decimals)).toFixed(3);
+                // setcurrencyModal(true)
+                setupdateBalance(!updateBalance)
+                setAllTokens(tokens);
             }
             console.log("token list with token balance:::", tokens);
             setAllTokens(tokens);
@@ -575,31 +583,22 @@ export default function Exchange() {
                                 <Stack spacing={0.5}>
                                     <Typography variant='caption' sx={{ color: '#f5f5f5' }}>Swap</Typography>
                                     <FormControl variant="outlined" style={{ width: '120px' }}>
-                                        <Select
+                                        {/* <Select
                                             style={{ height: '56px', color: 'white' }}
                                             displayEmpty
                                             value={TokenFrom}
                                             onChange={(e) => { fromTokenChange(e.target.value) }}
                                             sx={{ background: (theme) => (theme.palette.gradients.custom) }}
                                         >
+                                            <MenuItem value="">
+                                                <em>Select</em>
+                                            </MenuItem>
                                             {AllTokens.map((object) =>
                                                 <MenuItem value={object.symbol} sx={{
                                                     backgroundColor: '#141a1e', '&:hover': {
                                                         background: (theme) => (theme.palette.gradients.custom)
                                                     },
-                                                    // width: '200px'
-                                                    // position: 'absolute',
-                                                    // top: '45%',
-                                                    // left: '50%',
-                                                    // transform: 'translate(-50%, -50%)',
-                                                    // wi
                                                     width: 300,
-                                                    // bgcolor: 'background.default',
-
-                                                    // border: '2px solid #000',
-                                                    // boxShadow: 24,
-                                                    // p: 4,
-                                                    // borderRadius: '10px'
                                                 }}
 
                                                 >
@@ -613,10 +612,20 @@ export default function Exchange() {
                                                             <div float='right' >
                                                                 {object.balance && <Typography variant='caption' sx={{ color: '#fff' }}>{object.balance}</Typography>}
                                                             </div>
+                                                            <Loader type="Rings" color="#BB86FC" height={30} width={30} />
                                                         </Stack>
                                                     </Box>
                                                 </MenuItem>)}
-                                        </Select>
+                                        </Select> */}
+                                        <Button
+                                            variant='outlined'
+                                            color='primary'
+                                            sx={{ height: '57px',color:'#fff',fontWeight:3500,fontSize:'20px' }}
+                                            onClick={() => {
+                                                setcurrencyModal(true);
+                                            }}
+                                        >{TokenFrom}
+                                        </Button>
                                     </FormControl>
                                     {/*  <CurrencySelect onClick={test}>
                                     hi
@@ -634,6 +643,68 @@ export default function Exchange() {
                                         onDismiss={handleDismissSearch}
                                     >
                                     </CurrencySearchModal> */}
+                                    <Modal
+                                        open={currencyModal}
+                                        onClose={handleDismissSearch}
+                                        aria-labelledby="modal-modal-title"
+                                        aria-describedby="modal-modal-description"
+
+                                    >
+                                        <Box
+                                            sx={{
+                                                marginTop: '2%',
+                                                maxHeight: '520px',
+                                                overflow: 'scroll',
+                                                position: 'absolute',
+                                                top: '45%',
+                                                left: '50%',
+                                                transform: 'translate(-50%, -50%)',
+                                                width: 400,
+                                                bgcolor: 'background.default',
+                                                // border: '2px solid #000',
+                                                // boxShadow: 24,
+                                                p: 4,
+                                                borderRadius: '15px'
+                                            }}>
+                                            <Typography variant='h6' align='center' sx={{ color: '#f5f5f5' }}>Token List</Typography>
+                                            <Divider variant='fullWidth' sx={{ mt: 3 }}></Divider>
+                                            {AllTokens.map((object) =>
+                                                <Box >
+                                                    <Box
+                                                        onClick={() => {
+                                                            fromTokenChange(object.symbol);
+                                                            setcurrencyModal(false)
+                                                        }
+                                                        }
+                                                        sx={{
+                                                            mt: 1, p: 1, cursor: 'pointer',
+                                                            '&:hover': {
+                                                                background: (theme) => (theme.palette.gradients.custom)
+                                                            }
+                                                        }}>
+                                                        <Stack direction='row' spacing={2}>
+                                                            <Box sx={{ marginTop: '5px' }}>
+                                                                <img alt="" width="30" height="30" src={object.logoURI} ></img>
+                                                            </Box>
+                                                            <Stack direction='column' >
+                                                                <Typography variant='body1' sx={{ color: '#e3e3e3' }}>{object.symbol}</Typography>
+                                                                <Typography variant='caption' sx={{ color: '#e3e3e3', fontSize: '11px' }}>{object.name}</Typography>
+                                                            </Stack>
+
+                                                            <Box sx={{ flexGrow: 1 }}></Box>
+                                                            <Box sx={{ marginTop: '5px' }}>
+                                                                <Typography >
+                                                                    {object.balance === undefined ? <Loader type="Rings" color="#BB86FC" height={30} width={30} /> : object.balance}
+                                                                </Typography>
+                                                            </Box>
+                                                        </Stack>
+                                                    </Box>
+                                                    {/* <Divider variant='fullWidth' sx={{  }}></Divider> */}
+                                                </Box>
+                                            )}
+                                        </Box>
+
+                                    </Modal>
 
                                 </Stack>
                                 <Stack spacing={0.5}>
