@@ -12,6 +12,9 @@ export default function Index({accountAddress}) {
     const [PoolsContent, setPoolsContent] = useState([]) //UNI v2
     const [PoolsData, setPoolsData] = useState([]) //UNI v2
 
+    const [SushiPoolsContent, setSushiPoolsContent] = useState([]) //Sushi v2
+    const [SushiPoolsData, setSushiPoolsData] = useState([]) //Sushi v2
+
     const [CompoundSavingsContent, setCompoundSavingsContent] = useState([]) //compound v2
     const [CompoundLoansContent, setCompoundLoansContent] = useState([]) //compound v2
     const [CompoundSavingsData, setCompoundSavingsData] = useState([]) //compound v2
@@ -138,36 +141,47 @@ export default function Index({accountAddress}) {
             <br/>
         </div>
         </Tooltip>
-
-        // <div style={{width:'80%'}}>
-        //     <div style={{display:'inline-block', width:'25%', overflow:'hidden'}}>
-        //         ${object.token0Symbol}
-        //     </div>
-
-        //     <div style={{display:'inline-block', width:'20%', textAlign:'left', overflow:'hidden'}}>
-        //         ${object.token1Symbol} 
-        //     </div>
-        //     <div style={{display:'inline-block', width:'5%', textAlign:'left', overflow:'hidden'}}>
-                
-        //     </div>
-        //     <div style={{display:'inline-block', width:'10%', overflow:'hidden'}}>
-        //         {((object.tokenBalance/object.tokenSupply)*100).toFixed(2)}  %
-        //     </div>
-
-        //     <div style={{display:'inline-block', width:'20%', overflow:'hidden'}}>
-        //         {parseFloat(object.tokenBalance).toFixed(2)} $LP
-        //     </div>
-
-        //     <div style={{display:'inline-block', width:'20%', overflow:'hidden'}}>
-        //         {object.totalInvestment} USD 
-        //     </div>
-        
-        // </div> 
         )
 
         setPoolsContent(content)
 
     },[PoolsData])
+
+    useEffect(()=>{
+        var content = SushiPoolsData.map((object)=>
+
+        <Tooltip
+        title={
+            <React.Fragment>
+              Token 0 : {object.token0name} <br/>
+              Token 1 : {object.token1name} <br/>
+              Pool Share : {parseFloat(object.tokenBalance/object.tokenSupply*100).toFixed(2)} % <br/>
+              Pool Liquidity : {parseFloat(object.liquidity).toFixed(2)} <br/>
+              Total Investment : {object.totalInvestment} USD
+            </React.Fragment>
+          }>
+        <div style={{width:'90%', marginTop:'12px', marginLeft:'30px'}}>
+
+            <div style={{display:'inline-block', width:'45%', textAlign:'left', wordBreak:'break-all'}}>
+                ${object.token0Symbol}-${object.token1Symbol}
+            </div>
+
+            <div style={{display:'inline-block', width:'15%'}}>
+                
+            </div>
+
+            <div style={{display:'inline-block', width:'40%', fontSize:'13px'}}>
+                {object.totalInvestment} USD 
+            </div>
+
+            <br/>
+        </div>
+        </Tooltip>
+        )
+
+        setSushiPoolsContent(content)
+
+    },[SushiPoolsData])
 
     useEffect(()=>{
         var content = CompoundLoansData.map((object)=>
@@ -334,22 +348,7 @@ export default function Index({accountAddress}) {
 
             <br/>
         </div>
-        </Tooltip>
-        // <div style={{width:'80%'}}>
-
-        //     <div style={{display:'inline-block', width:'10%', textAlign:'left'}}>
-        //         <img src={object.image} alt=""/>
-        //     </div>
-
-        //     <div style={{display:'inline-block', width:'45%', textAlign:'left'}}>
-        //         {object.name}
-        //     </div>
-
-        //     <div style={{display:'inline-block', width:'45%'}}>
-        //         {object.value} ${object.symbol} 
-        //     </div>
-        
-        // </div> 
+        </Tooltip> 
         )
 
         setBancorPoolsContent(content)
@@ -375,22 +374,6 @@ export default function Index({accountAddress}) {
             </div>
 
         </div>
-       
-        // <div style={{width:'30%'}}>
-
-        //     <div style={{display:'inline-block', width:'10%'}}>
-        //         <img src={object.image} alt=""/>
-        //     </div>
-
-        //     <div style={{display:'inline-block', width:'45%'}}>
-        //         Synthetix
-        //     </div>
-
-        //     <div style={{display:'inline-block', width:'45%'}}>
-        //         {object.balance} $SNX
-        //     </div>
-        
-        // </div> 
         )
 
         setSynthetixContent(content)
@@ -755,12 +738,73 @@ export default function Index({accountAddress}) {
             })
         }
 
+        async function getSushiV2Data(){
+            await axios.post(`https://gateway.thegraph.com/api/c9596ce7bc47f7544cc808c3881427ed/subgraphs/id/0x4bb4c1b0745ef7b4642feeccd0740dec417ca0a0-0`,
+            {
+                query:`{
+                    users(
+                     where:{
+                       id:"0x84fb6f0a5969a5ce2cde8606235b40b39baedd4f"
+                     }
+                   ){
+                     liquidityPositions(first:1000
+                         where:{
+                         liquidityTokenBalance_gt:0
+                         }
+                     ){
+                       liquidityTokenBalance
+                       pair{
+                         id
+                         totalSupply
+                         reserveUSD
+                         token0{
+                           id
+                           name
+                           symbol
+                         }
+                         token1{
+                           id
+                           name
+                           symbol
+                         }
+                       }
+                     }
+                   } 
+                   }`})
+                .then(async(response) => {
+                    // console.log(response)
+                    if(response.data.data){
+                        if(response.data.data.users[0]){
+                        // console.log(response.data.data.users[0].liquidityPositions)
+                        var pools = []
+                        var res = response.data.data.users[0].liquidityPositions
+                        for(var i =0; i<res.length; i++){
+                            var object = {}
+                            object.id = res[i].pair.id
+                            object.tokenBalance = res[i].liquidityTokenBalance;
+                            object.tokenSupply = res[i].pair.totalSupply;
+                            object.token0name = res[i].pair.token0.name
+                            object.token1name = res[i].pair.token1.name
+                            object.token0Symbol = res[i].pair.token0.symbol
+                            object.token1Symbol = res[i].pair.token1.symbol
+                            object.liquidity = res[i].pair.reserveUSD
+                            object.totalInvestment = ((res[i].liquidityTokenBalance/res[i].pair.totalSupply)*res[i].pair.reserveUSD).toFixed(2)
+                            pools.push(object)
+                        }
+                        pools.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
+                        // console.log(pools)
+                        setSushiPoolsData(pools)
+                    }}
+                })
+        }
+
         getCompoundV2Data()
         getAaveV2Data()
         getUniV2Data()
         getBalancerData()
         getBancorData()
         getSynthetixData()
+        getSushiV2Data()
     }, [accountAddress])
 
     return (
@@ -850,7 +894,7 @@ export default function Index({accountAddress}) {
                 height : 'auto',
                 minHeight: '200px',
                 borderRadius: '10px',
-                display: (PoolsData.length>0 || BalancerPoolsData.length>0 || BancorPoolsData.length>0)? '':'none'
+                display: (PoolsData.length>0 || BalancerPoolsData.length>0 || SushiPoolsData.length>0 || BancorPoolsData.length>0)? '':'none'
             }}>
             <br/>
             <center>
@@ -867,6 +911,15 @@ export default function Index({accountAddress}) {
             Uniswap V2
             </div>
             {PoolsContent}
+            <br/>
+
+            <div style={{fontSize:'12px',
+             marginLeft:'15px',
+             display: SushiPoolsData.length>0? '':'none'
+             }}>
+            SushiSwap V2
+            </div>
+            {SushiPoolsContent}
             <br/>
 
             <div style={{fontSize:'12px',

@@ -25,6 +25,7 @@ import NftDetails from './screens/NftDetail';
 import Home from './screens/Home';
 import YieldFarm from './screens/YieldFarm'
 import Savings from './screens/Savings'
+import Airdrop from './screens/AirDrop'
 
 export default function Router(){
 
@@ -68,6 +69,7 @@ export default function Router(){
                 {path:'approvals/:tokenAddress',element:<TokenApproval />},
                 {path:'graphtools',element:<CubicleGraphs />},
                 {path:'earn',element:<LiquidityPools />},
+                {path:'airdrop',element:<Airdrop />},
                 {path:'nftdesign',element:<NFT />},
                 {path:'nftdetails/:contract/:id', element:<NftDetails/>},
                 { path: '*', element: <Navigate to="/404" replace /> }
