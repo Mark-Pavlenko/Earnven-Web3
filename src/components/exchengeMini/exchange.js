@@ -92,7 +92,7 @@ const makeCall = async (callName, contract, args, metadata = {}) => {
         console.log('no call of that name!')
     }
 }
-export default function Exchange() {
+export default function ExchangeMini() {
 
     const { address } = useParams();
 
@@ -115,6 +115,7 @@ export default function Exchange() {
     const [txFailure, settxFailure] = useState(false)
     const [selectedExchangeName, setselectedExchangeName] = useState('')
     const [currencyModal, setcurrencyModal] = useState(false)
+    const [currencyToModal, setcurrencyToModal] = useState(false)
     const [updateBalance, setupdateBalance] = useState(false)
     // const [tokenToDollarValue, settokenToDollarValue] = useState(0)
 
@@ -294,10 +295,6 @@ export default function Exchange() {
     }
 
     const calculateToAmount = async (tokenFromAmount) => {
-        console.log("calculate method called with ammount::", tokenFromAmount)
-        console.log("value of Tokenfromamount::", TokenFromAmount)
-        console.log("value of tokenfrom::", TokenFrom)
-        console.log("value of tokenTo::", TokenTo)
         if (tokenFromAmount > 0) {
             // console.log("calculate amount is called")
             if (TokenFrom !== '' && TokenTo !== '') {
@@ -424,6 +421,7 @@ export default function Exchange() {
 
     const handleDismissSearch = () => {
         setcurrencyModal(false);
+        setcurrencyToModal(false)
     }
 
     const getBalance = async (_token, _account, _contract) => {
@@ -437,142 +435,11 @@ export default function Exchange() {
         return newBalance
     }
 
-    /* return (
-            <div className="main-container">
-                <div className="outbox">
-                    <br/><br/>
-                    <div className="main-header">Exchange</div>
-                    <div className="box">
- 
-                        <div className="firstdiv">
-                            <div className="firstdiv1">
-                                <div className="swap"> Swap </div>
-                                <div>
- 
-                                <FormControl variant="outlined" style={{width:'120px'}}>
-                                    <InputLabel id="demo-simple-select-outlined-label" >Token</InputLabel>
-                                    <Select
-                                    style={{height:'50px', color:'white'}}
-                                    labelId="demo-simple-select-outlined-label"
-                                    id="demo-simple-select-outlined"
-                                    value={TokenFrom}
-                                    onChange={(e)=>{setTokenFrom(e.target.value)}}
-                                    label="Token"
-                                    >
-                                    <MenuItem value="" sx={{backgroundColor:'#141a1e'}}>
-                                        <em>None</em>
-                                    </MenuItem>
-                                    {AllTokens.map((object)=>
-                                        <MenuItem value={object.symbol} sx={{backgroundColor:'#141a1e'}}>
-                                            <div className="logo-container">
-                                                <img src={object.logoURI} className="logo-uri" />
-                                            </div>
-                                            {object.symbol}
-                                        </MenuItem>)}
-                                    </Select>
-                                </FormControl>
- 
-                                </div>
-                            </div>
- 
-                            <div className="firstdiv2" style={{ marginLeft: "7px" }}>
-                                <div className="number"> &nbsp; </div>
-                                <div>
-                                    <input className="inputfield"
-                                        type="text" inputMode="decimal" placeholder="00.00"
-                                        minLength="1"
-                                        maxLength="79"
-                                        spellCheck="false"
-                                        value={TokenFromAmount}
-                                        onChange={(e)=>{setTokenFromAmount(e.target.value)}}
-                                    >
-                                    </input>
-                                </div>
-                            </div>
- 
- 
- 
-                            <div className="firstdiv3">
-                                <div className="swap"> For </div>
-                                <div>
-                                <FormControl variant="outlined" style={{width:'120px'}}>
-                                    <InputLabel id="demo-simple-select-outlined-label" >Token</InputLabel>
-                                    <Select
-                                    style={{height:'50px', color:'white'}}
-                                    labelId="demo-simple-select-outlined-label"
-                                    id="demo-simple-select-outlined"
-                                    value={TokenTo}
-                                    onChange={(e)=>{setTokenTo(e.target.value)}}
-                                    label="Token"
-                                    >
-                                    <MenuItem value="" sx={{backgroundColor:'#141a1e'}}>
-                                        <em >None</em>
-                                    </MenuItem>
-                                    {AllTokens.map((object)=>
-                                        <MenuItem value={object.symbol} sx={{backgroundColor:'#141a1e'}}>
-                                            <div className="logo-container">
-                                                <img src={object.logoURI} className="logo-uri" />
-                                            </div>
-                                            {object.symbol}
-                                        </MenuItem>)}
-                                    </Select>
-                                </FormControl>
-                                </div>
-                            </div>
- 
-                            <div className="firstdiv4" style={{ marginLeft: "7px" }}>
-                                <div className="number"> &nbsp;</div>
-                                <div>
-                                    <input className="inputfield" inputMode="decimal"
-                                        type="text"
-                                        pattern="^[0-9]*[.,]?[0-9]*$"
-                                        placeholder="00.00"
-                                        minLength="1"
-                                        maxLength="79"
-                                        spellCheck="false"
-                                        value={TokenToAmount}
-                                        onChange={(e)=>{setTokenToAmount(e.target.value)}}
-                                    ></input>
-                                </div>
-                            </div>
- 
-                        </div>
-                        
-                        <div className="seconddiv">Transaction Settings</div>
-                        <font color='white'>
-                        {Sources.map((object)=><>{object.name}    :     {(parseFloat(object.proportion)*100).toFixed(2)} %<br/></>)}
-                        </font>
-                        <div className="thirddiv"> <div className="thirddiv-title"> Slippage </div> <div className="dash"></div> <div className="slippage-input-box"> <input className="slippage-input" value={Slippage} onChange={(e)=>{setSlippage(e.target.value)}} maxLength="3"></input>
-                            <div className="Percentage"> <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M0.406781 2.85C0.406781 2.19133 0.597448 1.67567 0.978781 1.303C1.36878 0.930333 1.86711 0.744 2.47378 0.744C3.08045 0.744 3.57445 0.930333 3.95578 1.303C4.34578 1.67567 4.54078 2.19133 4.54078 2.85C4.54078 3.51733 4.34578 4.03733 3.95578 4.41C3.57445 4.78267 3.08045 4.969 2.47378 4.969C1.86711 4.969 1.36878 4.78267 0.978781 4.41C0.597448 4.03733 0.406781 3.51733 0.406781 2.85ZM8.75278 0.899999L3.64378 10H1.87578L6.97178 0.899999H8.75278ZM2.46078 1.836C1.98411 1.836 1.74578 2.174 1.74578 2.85C1.74578 3.53467 1.98411 3.877 2.46078 3.877C2.69478 3.877 2.87678 3.79467 3.00678 3.63C3.13678 3.45667 3.20178 3.19667 3.20178 2.85C3.20178 2.174 2.95478 1.836 2.46078 1.836ZM6.11378 8.037C6.11378 7.36967 6.30445 6.854 6.68578 6.49C7.07578 6.11733 7.57411 5.931 8.18078 5.931C8.78745 5.931 9.27712 6.11733 9.64978 6.49C10.0311 6.854 10.2218 7.36967 10.2218 8.037C10.2218 8.70433 10.0311 9.22433 9.64978 9.597C9.27712 9.96967 8.78745 10.156 8.18078 10.156C7.56545 10.156 7.06711 9.96967 6.68578 9.597C6.30445 9.22433 6.11378 8.70433 6.11378 8.037ZM8.16778 7.023C7.67378 7.023 7.42678 7.361 7.42678 8.037C7.42678 8.72167 7.67378 9.064 8.16778 9.064C8.65312 9.064 8.89578 8.72167 8.89578 8.037C8.89578 7.361 8.65312 7.023 8.16778 7.023Z" fill="white" />
-                            </svg>
-                            </div>
-                        </div> </div>
-                        <div className="fourthdiv"><div className="fourthdiv-title"> Min. output </div> <div className="dash1"> </div> <div className="minimum-op-text">{TokenFromAmount>0? (parseFloat(TokenFromAmount)*parseFloat(minPrice)).toFixed(3):'0'}</div> </div>
-                        <div className="fifthdiv"><div className="fifthdiv-title"> Rate </div> <span className="dash2"></span> <div className="rate-text"> 1 {TokenFrom} = {parseFloat(Price).toFixed(3)} {TokenTo}</div> </div>
-                    </div>
-                    <TransparentButton value='Submit Transaction'
-                    onClick={transact}
-                    style={{
-                        height:'45px',
-                        width:'300px',
-                        background:'transparent',
-                        borderWidth:'1px',
-                        borderStyle:'solid',
-                        borderColor:'#ac6afc',
-                        borderRadius:'5px',
-                        color:'white',
-                        cursor:'pointer',
-                        float:'right'
-                    }}></TransparentButton> <br/><br/> &nbsp;
-                    /* <div className="end"><div className="submit"> <button onClick={transact} className="submit-btn">Submit</button></div></div> */
-    // </div>
-    // </div>
-    // ) */
+
 
     return (
         <Grid container >
-            <Grid items xs={12} md={8} sx={{ mt: 5, ml: 5 }}>
+            <Grid items xs={12} md={12} sx={{ mt: 5, ml: 5 }}>
                 <Container>
                     <Typography variant='h3' sx={{ fontStyle: 'normal' }}>Exchange</Typography>
                     <Container sx={{ border: "1px solid #737373", borderRadius: '7px', boxSizing: 'border-box', mt: 2.5 }}>
@@ -580,67 +447,20 @@ export default function Exchange() {
                             <Stack direction='row' spacing={2}>
                                 <Stack spacing={0.5}>
                                     <Typography variant='caption' sx={{ color: '#f5f5f5' }}>Swap</Typography>
-                                    <FormControl variant="outlined" style={{ width: '120px' }}>
-                                        {/* <Select
-                                            style={{ height: '56px', color: 'white' }}
-                                            displayEmpty
-                                            value={TokenFrom}
-                                            onChange={(e) => { fromTokenChange(e.target.value) }}
-                                            sx={{ background: (theme) => (theme.palette.gradients.custom) }}
-                                        >
-                                            <MenuItem value="">
-                                                <em>Select</em>
-                                            </MenuItem>
-                                            {AllTokens.map((object) =>
-                                                <MenuItem value={object.symbol} sx={{
-                                                    backgroundColor: '#141a1e', '&:hover': {
-                                                        background: (theme) => (theme.palette.gradients.custom)
-                                                    },
-                                                    width: 300,
-                                                }}
-
-                                                >
-                                                    <Box>
-                                                        <Stack direction='row' spacing={1}>
-                                                            <div className="logo-container">
-                                                                <img src={object.logoURI} className="logo-uri" />
-                                                            </div>
-                                                            <Typography variant='body1'>{object.symbol}</Typography>
-                                                            <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
-                                                            <div float='right' >
-                                                                {object.balance && <Typography variant='caption' sx={{ color: '#fff' }}>{object.balance}</Typography>}
-                                                            </div>
-                                                            <Loader type="Rings" color="#BB86FC" height={30} width={30} />
-                                                        </Stack>
-                                                    </Box>
-                                                </MenuItem>)}
-                                        </Select> */}
+                                    <FormControl variant="outlined" style={{ width: '90px' }}>
                                         <Button
                                             variant='outlined'
                                             color='primary'
-                                            sx={{ height: '57px',color:'#fff',fontWeight:3500,fontSize:'20px' }}
+                                            sx={{
+                                                height: '57px', color: '#fff', fontWeight: 100, fontSize: '17px',
+                                                background: (theme) => theme.palette.gradients.custom
+                                            }}
                                             onClick={() => {
                                                 setcurrencyModal(true);
                                             }}
                                         >{TokenFrom}
                                         </Button>
                                     </FormControl>
-                                    {/*  <CurrencySelect onClick={test}>
-                                    hi
-                                    </CurrencySelect> */}
-
-                                    {/*  <Button variant='outlined'
-                                        onClick={() => {
-                                            setcurrencyModal(true);
-                                             test()
-                                        }}>
-                                        Test
-                                    </Button>
-                                    <CurrencySearchModal
-                                        isOpen={currencyModal}
-                                        onDismiss={handleDismissSearch}
-                                    >
-                                    </CurrencySearchModal> */}
                                     <Modal
                                         open={currencyModal}
                                         onClose={handleDismissSearch}
@@ -697,7 +517,6 @@ export default function Exchange() {
                                                             </Box>
                                                         </Stack>
                                                     </Box>
-                                                    {/* <Divider variant='fullWidth' sx={{  }}></Divider> */}
                                                 </Box>
                                             )}
                                         </Box>
@@ -713,34 +532,28 @@ export default function Exchange() {
                                         value={TokenFromAmount}
                                         onChange={(e) => {
                                             setTokenFromAmount(e.target.value);
-                                            // calculateToAmount(e.target.value);
                                         }}>
                                     </TextField>
                                 </Stack>
 
+
+
+                            </Stack>
+                            <Stack direction='row' spacing={2}>
                                 <Stack spacing={0.5}>
                                     <Typography variant='caption' sx={{ color: '#f5f5f5' }}>For</Typography>
-                                    <FormControl variant="outlined" style={{ width: '130px' }}>
+                                    {/* <FormControl variant="outlined" style={{ width: '130px' }}>
                                         <Select
                                             style={{ height: '56px', color: 'white' }}
                                             displayEmpty
                                             value={TokenTo.symbol}
 
                                             onChange={(e) => {
-                                                // console.log("value of tokento set::", e.target.value)
-                                                // setTokenTo(e.target.value)
                                                 ToTokenChange(e.target.value)
                                             }}
                                             inputProps={{ 'aria-label': 'Without label' }}
                                             sx={{ background: (theme) => (theme.palette.gradients.custom) }}
                                         >
-                                            {/* <MenuItem value="" sx={{ background: (theme) => (theme.palette.gradients.custom) }}>
-                                                <Typography>Select</Typography> */}
-                                            {/*  <div className="logo-container">
-                                                    <img src={AllTokens[4].logoURI} className="logo-uri" />
-                                                </div>
-                                                {AllTokens[4].symbol} */}
-                                            {/*  </MenuItem> */}
                                             {AllTokens.map((object) =>
                                                 <MenuItem value={object} sx={{
                                                     backgroundColor: '#141a1e', '&:hover': {
@@ -753,7 +566,82 @@ export default function Exchange() {
                                                     {object.symbol}
                                                 </MenuItem>)}
                                         </Select>
+                                    </FormControl> */}
+                                    <FormControl variant="outlined" style={{ width: '90px' }}>
+                                        <Button
+                                            variant='outlined'
+                                            color='primary'
+                                            sx={{
+                                                height: '57px', color: '#fff', fontWeight: 100, fontSize: '17px',
+                                                background: (theme) => theme.palette.gradients.custom
+                                            }}
+                                            onClick={() => {
+                                                setcurrencyToModal(true);
+                                            }}
+                                        >{TokenTo.symbol===undefined?'Select':TokenTo.symbol}
+                                        </Button>
                                     </FormControl>
+                                    <Modal
+                                        open={currencyToModal}
+                                        onClose={handleDismissSearch}
+                                        aria-labelledby="modal-modal-title"
+                                        aria-describedby="modal-modal-description"
+
+                                    >
+                                        <Box
+                                            sx={{
+                                                marginTop: '2%',
+                                                maxHeight: '520px',
+                                                overflow: 'scroll',
+                                                position: 'absolute',
+                                                top: '45%',
+                                                left: '50%',
+                                                transform: 'translate(-50%, -50%)',
+                                                width: 400,
+                                                bgcolor: 'background.default',
+                                                // border: '2px solid #000',
+                                                // boxShadow: 24,
+                                                p: 4,
+                                                borderRadius: '15px'
+                                            }}>
+                                            <Typography variant='h6' align='center' sx={{ color: '#f5f5f5' }}>Token List</Typography>
+                                            <Divider variant='fullWidth' sx={{ mt: 3 }}></Divider>
+                                            {AllTokens.map((object) =>
+                                                <Box >
+                                                    <Box
+                                                        onClick={() => {
+                                                            ToTokenChange(object);
+                                                            setcurrencyToModal(false)
+                                                        }
+                                                        }
+                                                        sx={{
+                                                            mt: 1, p: 1, cursor: 'pointer',
+                                                            '&:hover': {
+                                                                background: (theme) => (theme.palette.gradients.custom)
+                                                            }
+                                                        }}>
+                                                        <Stack direction='row' spacing={2}>
+                                                            <Box sx={{ marginTop: '5px' }}>
+                                                                <img alt="" width="30" height="30" src={object.logoURI} ></img>
+                                                            </Box>
+                                                            <Stack direction='column' >
+                                                                <Typography variant='body1' sx={{ color: '#e3e3e3' }}>{object.symbol}</Typography>
+                                                                <Typography variant='caption' sx={{ color: '#e3e3e3', fontSize: '11px' }}>{object.name}</Typography>
+                                                            </Stack>
+
+                                                            {/* <Box sx={{ flexGrow: 1 }}></Box>
+                                                            <Box sx={{ marginTop: '5px' }}>
+                                                                <Typography >
+                                                                    {object.balance === undefined ? <Loader type="Rings" color="#BB86FC" height={30} width={30} /> : object.balance}
+                                                                </Typography>
+                                                            </Box> */}
+                                                        </Stack>
+                                                    </Box>
+                                                </Box>
+                                            )}
+                                        </Box>
+
+                                    </Modal>
 
                                 </Stack>
                                 <Stack spacing={0.5}>
@@ -766,27 +654,18 @@ export default function Exchange() {
                                         disabled>
                                     </TextField>
                                 </Stack>
-
                             </Stack>
                             {selectedRate !== null && protocolsRateList.length === 0 ? <Typography variant='caption' sx={{ color: '#FFC107' }}>This Exchange is yet not supported</Typography> : <></>}
                             <Typography variant='body1' sx={{ color: '#737373', mt: 2.5 }}>Transaction Settings</Typography>
                             <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
                                 <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Slippage</Typography>
                                 <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
-                                {/* <TextField variant='outlined'
-                                    required
-                                    id="outlined-basic"
-                                    size='small'
-                                    style={{ marginTop: '-7px', width: '12%' }}
-                                    value={Slippage} onChange={(e) => { setSlippage(e.target.value) }}
-                                    endAdornment={<InputAdornment position="end" sx={{color:'red'}}>%K</InputAdornment>}>
-                                </TextField> */}
                                 <OutlinedInput
                                     id="outlined-adornment-weight"
                                     value={Slippage}
                                     onChange={(e) => { setSlippage(e.target.value) }}
                                     size='small'
-                                    style={{ marginTop: '-7px', width: '12%' }}
+                                    style={{ marginTop: '-7px', width: '25%' }}
                                     endAdornment={<InputAdornment position="end">%</InputAdornment>}
                                     aria-describedby="outlined-weight-helper-text"
                                     inputProps={{
@@ -840,18 +719,6 @@ export default function Exchange() {
                                                     </Box>)
 
                                             ))}
-
-                                            {/* <Box sx={{ border: '1px solid #737373', borderRadius: '7px', mt: 1, p: 1 }}>
-                                        <Stack direction='row' spacing={2}>
-                                            <Typography variant='body1'>$3,214</Typography>
-                                            <Typography variant='body1'>$20.86</Typography>
-                                            <Box sx={{ flexGrow: 1 }}></Box>
-                                            <Tooltip title='uniswap'>
-                                                <img alt="" width="21" height="20" src="https://assets.coingecko.com/coins/images/12504/small/uniswap-uni.png?1600306604" ></img>
-                                            </Tooltip>
-                                        </Stack>
-
-                                    </Box> */}
                                             <Box sx={{ marginLeft: '30%' }}>
                                                 <Button onClick={updateSelectedRate} variant='outlined' sx={{ mt: 2 }} >Save for This Trade</Button>
                                             </Box>
@@ -881,7 +748,7 @@ export default function Exchange() {
                         onClick={transact}
                         style={{
                             height: '45px',
-                            width: '200px',
+                            width: '300px',
                             background: 'transparent',
                             borderWidth: '2px',
                             borderStyle: 'solid',

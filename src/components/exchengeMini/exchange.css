@@ -1,0 +1,357 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins");
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  background: #141a1e;
+  width: calc(100% - 345px);
+  display: flex;
+  margin-left: 280px;
+  margin-right: 0px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 65px 0px 0px 65px;
+  height: calc(100% - 65px);
+  overflow-x: hidden;
+}
+.outbox {
+  width: 830px;
+  height: auto;
+  left: 495px;
+  top: 171px;
+}
+.box {
+  padding: 58px;
+  width: 830px;
+  height: auto;
+  left: 495px;
+  top: 246px;
+  border: 1px solid #737373;
+  box-sizing: border-box;
+  border-radius: 7px;
+  margin-bottom: 24px;
+}
+
+.main-header {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 48px;
+
+  /* identical to box height, or 120% */
+  letter-spacing: 1.8px;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+.firstdiv {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+}
+
+.firstdiv1 {
+  display: flex;
+  flex-direction: column;
+}
+
+.swap {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 4px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-left: 10px;
+}
+.select-token-container {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.select-token-text {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 167.5%;
+
+  /* identical to box height, or 27px */
+  letter-spacing: 0.025em;
+
+  /* white */
+  color: #ffffff;
+}
+
+.select-button-wrapper {
+  width: 130px;
+  height: 50px;
+  left: 534px;
+  top: 323px;
+  background: linear-gradient(
+    90.1deg,
+    #3b2959 0.43%,
+    #291d41 41.76%,
+    #1d282f 98.22%
+  );
+  border-radius: 7px;
+  border: 0;
+}
+
+.firstdiv3 {
+  display: flex;
+  flex-direction: column;
+  margin-left: 15px;
+}
+.number {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 4px;
+  color: rgba(255, 255, 255, 0.6);
+}
+.inputfield {
+  width: 218px;
+  height: 50px;
+  left: 1074px;
+  top: 323px;
+  /* background */
+  background: #141a1e;
+  border: 1px solid #737373;
+  box-sizing: border-box;
+  border-radius: 7px;
+  color: #ffffff;
+  font-size: 18px;
+  padding: 0 16px;
+}
+
+.seconddiv {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 167.5%;
+
+  /* identical to box height, or 22px */
+
+  /* white 60% */
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.thirddiv {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
+  justify-content: space-between;
+}
+
+.thirddiv-title {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 167.5%;
+
+  /* identical to box height, or 27px */
+  letter-spacing: 0.025em;
+
+  /* white */
+  color: #ffffff;
+}
+.dash {
+  width: 500px;
+  height: 0px;
+  left: 629px;
+  top: 446px;
+  align-items: center;
+  /* white 60% */
+  border: 0.6px dashed rgba(255, 255, 255, 0.3);
+}
+
+.slippage-input-box {
+  width: 79px;
+  height: 40px;
+  left: 1213px;
+  top: 426px;
+  background: #141a1e;
+  border: 1px solid #737373;
+  box-sizing: border-box;
+  border-radius: 7px;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: row;
+  padding: 0px 16px;
+}
+
+.slippage-input {
+  width: 39px;
+  height: 35px;
+  left: 1213px;
+  top: 426px;
+
+  background: #141a1e;
+  border: 0px solid #737373;
+  box-sizing: border-box;
+  color: #ffffff;
+  font-size: 16px;
+}
+
+.Percentage {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  color: #ffffff;
+  margin-left: auto;
+}
+
+.fourthdiv {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
+  justify-content: space-between;
+
+  /* white */
+  color: #ffffff;
+}
+
+.fourthdiv-title {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 167.5%;
+
+  /* identical to box height, or 27px */
+  letter-spacing: 0.025em;
+
+  /* white */
+  color: #ffffff;
+}
+
+.minimum-op-text {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 167.5%;
+
+  /* identical to box height, or 27px */
+  letter-spacing: 0.025em;
+
+  /* white */
+  color: #ffffff;
+}
+
+.dash1 {
+  width: 500px;
+  height: 0px;
+  left: 300px;
+  top: 487px;
+  /* white 60% */
+  border: 0.5px dashed rgba(255, 255, 255, 0.3);
+}
+
+.fifthdiv {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
+  justify-content: space-between;
+}
+
+.fifthdiv-title {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 167.5%;
+
+  /* identical to box height, or 27px */
+  letter-spacing: 0.025em;
+
+  /* white */
+  color: #ffffff;
+}
+.dash2 {
+  width: 450px;
+  height: 0px;
+  left: 360px;
+  top: 518px;
+
+  /* white 60% */
+  border: 0.5px dashed rgba(255, 255, 255, 0.3);
+}
+
+.rate-text {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 167.5%;
+
+  /* identical to box height, or 27px */
+  letter-spacing: 0.025em;
+
+  /* white */
+  color: #ffffff;
+}
+
+.submit {
+  width: 270px;
+  height: 50px;
+  left: 1055px;
+  top: 602px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.submit-btn {
+  width: 100%;
+  text-align: center;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  background: #141a1e;
+  color: #ffffff;
+  border: 1px solid #bb86fc;
+  box-sizing: border-box;
+  border-radius: 7px;
+}
+
+.end {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.logo-container {
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.logo-uri {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border-radius: 24px;
+  transform: translateY(15%);
+}
+
+.css-9q3kl4-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.MuiSelect-select {
+  text-overflow: unset;
+}
