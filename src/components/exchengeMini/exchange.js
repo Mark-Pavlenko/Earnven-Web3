@@ -539,34 +539,9 @@ export default function ExchangeMini() {
 
 
                             </Stack>
-                            <Stack direction='row' spacing={2}>
+                            <Stack direction='row' spacing={2} sx={{mt:1}}>
                                 <Stack spacing={0.5}>
                                     <Typography variant='caption' sx={{ color: '#f5f5f5' }}>For</Typography>
-                                    {/* <FormControl variant="outlined" style={{ width: '130px' }}>
-                                        <Select
-                                            style={{ height: '56px', color: 'white' }}
-                                            displayEmpty
-                                            value={TokenTo.symbol}
-
-                                            onChange={(e) => {
-                                                ToTokenChange(e.target.value)
-                                            }}
-                                            inputProps={{ 'aria-label': 'Without label' }}
-                                            sx={{ background: (theme) => (theme.palette.gradients.custom) }}
-                                        >
-                                            {AllTokens.map((object) =>
-                                                <MenuItem value={object} sx={{
-                                                    backgroundColor: '#141a1e', '&:hover': {
-                                                        background: (theme) => (theme.palette.gradients.custom)
-                                                    }
-                                                }} >
-                                                    <div className="logo-container">
-                                                        <img src={object.logoURI} className="logo-uri" />
-                                                    </div>
-                                                    {object.symbol}
-                                                </MenuItem>)}
-                                        </Select>
-                                    </FormControl> */}
                                     <FormControl variant="outlined" style={{ width: '90px' }}>
                                         <Button
                                             variant='outlined'
@@ -586,7 +561,6 @@ export default function ExchangeMini() {
                                         onClose={handleDismissSearch}
                                         aria-labelledby="modal-modal-title"
                                         aria-describedby="modal-modal-description"
-
                                     >
                                         <Box
                                             sx={{
@@ -628,13 +602,6 @@ export default function ExchangeMini() {
                                                                 <Typography variant='body1' sx={{ color: '#e3e3e3' }}>{object.symbol}</Typography>
                                                                 <Typography variant='caption' sx={{ color: '#e3e3e3', fontSize: '11px' }}>{object.name}</Typography>
                                                             </Stack>
-
-                                                            {/* <Box sx={{ flexGrow: 1 }}></Box>
-                                                            <Box sx={{ marginTop: '5px' }}>
-                                                                <Typography >
-                                                                    {object.balance === undefined ? <Loader type="Rings" color="#BB86FC" height={30} width={30} /> : object.balance}
-                                                                </Typography>
-                                                            </Box> */}
                                                         </Stack>
                                                     </Box>
                                                 </Box>
