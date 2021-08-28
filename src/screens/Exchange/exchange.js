@@ -115,6 +115,7 @@ export default function Exchange() {
     const [txFailure, settxFailure] = useState(false)
     const [selectedExchangeName, setselectedExchangeName] = useState('')
     const [currencyModal, setcurrencyModal] = useState(false)
+    const [currencyToModal, setcurrencyToModal] = useState(false)
     const [updateBalance, setupdateBalance] = useState(false)
     // const [tokenToDollarValue, settokenToDollarValue] = useState(0)
 
@@ -415,11 +416,9 @@ export default function Exchange() {
     }
 
     const test = async () => {
-        console.log("value of provider::", selectedProvider);
         let tempContractIn = new ethers.Contract("0x6b175474e89094c44da98b954eedeac495271d0f", erc20Abi, selectedProvider);
         let newBalanceIn = await getBalance('DAI', '0x912fD21d7a69678227fE6d08C64222Db41477bA0', tempContractIn)
-        console.log("token balance for this address:::", newBalanceIn);
-        console.log(" real token balance for this address:::", parseFloat(formatUnits(newBalanceIn, 18)));
+
     }
 
     const handleDismissSearch = () => {
@@ -618,7 +617,10 @@ export default function Exchange() {
                                         <Button
                                             variant='outlined'
                                             color='primary'
-                                            sx={{ height: '57px',color:'#fff',fontWeight:3500,fontSize:'20px' }}
+                                            sx={{
+                                                height: '57px', color: '#fff', fontWeight: 500, fontSize: '20px' ,
+                                                background: (theme) => theme.palette.gradients.custom
+                                            }}
                                             onClick={() => {
                                                 setcurrencyModal(true);
                                             }}
@@ -720,40 +722,73 @@ export default function Exchange() {
 
                                 <Stack spacing={0.5}>
                                     <Typography variant='caption' sx={{ color: '#f5f5f5' }}>For</Typography>
-                                    <FormControl variant="outlined" style={{ width: '130px' }}>
-                                        <Select
-                                            style={{ height: '56px', color: 'white' }}
-                                            displayEmpty
-                                            value={TokenTo.symbol}
-
-                                            onChange={(e) => {
-                                                // console.log("value of tokento set::", e.target.value)
-                                                // setTokenTo(e.target.value)
-                                                ToTokenChange(e.target.value)
+                                    <FormControl variant="outlined" style={{ width: '120px' }}>
+                                        <Button
+                                            variant='outlined'
+                                            color='primary'
+                                            sx={{
+                                                height: '57px', color: '#fff', fontWeight: 500, fontSize: '20px' ,
+                                                background: (theme) => theme.palette.gradients.custom
                                             }}
-                                            inputProps={{ 'aria-label': 'Without label' }}
-                                            sx={{ background: (theme) => (theme.palette.gradients.custom) }}
-                                        >
-                                            {/* <MenuItem value="" sx={{ background: (theme) => (theme.palette.gradients.custom) }}>
-                                                <Typography>Select</Typography> */}
-                                            {/*  <div className="logo-container">
-                                                    <img src={AllTokens[4].logoURI} className="logo-uri" />
-                                                </div>
-                                                {AllTokens[4].symbol} */}
-                                            {/*  </MenuItem> */}
-                                            {AllTokens.map((object) =>
-                                                <MenuItem value={object} sx={{
-                                                    backgroundColor: '#141a1e', '&:hover': {
-                                                        background: (theme) => (theme.palette.gradients.custom)
-                                                    }
-                                                }} >
-                                                    <div className="logo-container">
-                                                        <img src={object.logoURI} className="logo-uri" />
-                                                    </div>
-                                                    {object.symbol}
-                                                </MenuItem>)}
-                                        </Select>
+                                            onClick={() => {
+                                                setcurrencyToModal(true);
+                                            }}
+                                        >{TokenTo.symbol === undefined ? 'Select' : TokenTo.symbol}
+                                        </Button>
                                     </FormControl>
+                                    <Modal
+                                        open={currencyToModal}
+                                        onClose={handleDismissSearch}
+                                        aria-labelledby="modal-modal-title"
+                                        aria-describedby="modal-modal-description"
+                                    >
+                                        <Box
+                                            sx={{
+                                                marginTop: '2%',
+                                                maxHeight: '520px',
+                                                overflow: 'scroll',
+                                                position: 'absolute',
+                                                top: '45%',
+                                                left: '50%',
+                                                transform: 'translate(-50%, -50%)',
+                                                width: 400,
+                                                bgcolor: 'background.default',
+                                                // border: '2px solid #000',
+                                                // boxShadow: 24,
+                                                p: 4,
+                                                borderRadius: '15px'
+                                            }}>
+                                            <Typography variant='h6' align='center' sx={{ color: '#f5f5f5' }}>Token List</Typography>
+                                            <Divider variant='fullWidth' sx={{ mt: 3 }}></Divider>
+                                            {AllTokens.map((object) =>
+                                                <Box >
+                                                    <Box
+                                                        onClick={() => {
+                                                            ToTokenChange(object);
+                                                            setcurrencyToModal(false)
+                                                        }
+                                                        }
+                                                        sx={{
+                                                            mt: 1, p: 1, cursor: 'pointer',
+                                                            '&:hover': {
+                                                                background: (theme) => (theme.palette.gradients.custom)
+                                                            }
+                                                        }}>
+                                                        <Stack direction='row' spacing={2}>
+                                                            <Box sx={{ marginTop: '5px' }}>
+                                                                <img alt="" width="30" height="30" src={object.logoURI} ></img>
+                                                            </Box>
+                                                            <Stack direction='column' >
+                                                                <Typography variant='body1' sx={{ color: '#e3e3e3' }}>{object.symbol}</Typography>
+                                                                <Typography variant='caption' sx={{ color: '#e3e3e3', fontSize: '11px' }}>{object.name}</Typography>
+                                                            </Stack>
+                                                        </Stack>
+                                                    </Box>
+                                                </Box>
+                                            )}
+                                        </Box>
+
+                                    </Modal>
 
                                 </Stack>
                                 <Stack spacing={0.5}>
