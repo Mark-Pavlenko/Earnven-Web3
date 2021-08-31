@@ -314,21 +314,25 @@ export default class index extends Component {
                 <BrowserView>
                     <Link to={`/${this.state.account}/token/${object.coingecko}`}>
                         <CustomStyle>
-                            <div style={{ width: "7%", height: "50px", float: "left", paddingLeft: '13px' }}>
+                            <div style={{ width: "7%", height: "50px", float: "left", paddingLeft: '13px', backgroundColor:''}}>
+                                <div style={{ maxWidth:'30px', height:'30px',marginTop: "12px", padding:'5px' , borderRadius:'10px', backgroundImage:'linear-gradient(to right,  rgba(0,0,0,.7), rgba(20,20,20,.7), rgba(0,0,0,.7))'}} >
+                                <center>
                                 <img
                                     style={{
-                                        display: 'inline',
+                                        boxShadow:'2px 2px 5px 5px rgba(0, 0, 0, 0.1)',
                                         maxWidth: '20px',
-                                        verticalAlign: 'top',
+                                        // verticalAlign: 'top',
                                         // marginLeft: "10px",
                                         height: "20px",
                                         // width: "30px",
                                         // marginTop: "15px",
-                                        margin: '16px'
+                                        // margin: '16px'
                                     }}
                                     alt=""
                                     src={object.image? object.image[0]==='/'? `https://ethplorer.io${object.image}`:`${object.image}` : ''}
                                 />
+                                </center>
+                                </div>
                             </div>
 
                             <div style={{ width: "23%", height: "50px", float: "left" }}>

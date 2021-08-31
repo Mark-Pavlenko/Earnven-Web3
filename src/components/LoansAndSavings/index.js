@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import axios from 'axios'
 import Tooltip from '@material-ui/core/Tooltip';
+import YearnLogo from '../../assets/icons/yearnLogo.png'
 
 export default function Index({accountAddress}) {
 
@@ -26,8 +27,14 @@ export default function Index({accountAddress}) {
     const [BancorPoolsData, setBancorPoolsData] = useState([]) //bancor
     const [BancorPoolsContent, setBancorPoolsContent] = useState([]) //bancor
 
-    const [SynthetixData, setSynthetixData] = useState([])
-    const [SynthetixContent, setSynthetixContent] = useState([])
+    const [YearnData, setYearnData] = useState([]) //Yearn
+    const [YearnContent, setYearnContent] = useState([]) //Yearn
+
+    const [SynthetixData, setSynthetixData] = useState([]) //Synthetix
+    const [SynthetixContent, setSynthetixContent] = useState([]) //Synethetix
+
+    const [PolygonTokenData, setPolygonTokenData] = useState([])
+    const [PolygonTokenContent, setPolygonTokenContent] = useState([])
 
     useEffect(()=>{
         var content = SavingsData.map((object)=>
@@ -43,7 +50,11 @@ export default function Index({accountAddress}) {
         <div style={{width:'90%', marginTop:'12px', marginLeft:'30px'}}>
 
             <div style={{display:'inline-block', width:'15%'}}>
+                <div style={{ height:'40px', padding:'5px' , borderRadius:'10px', backgroundImage:'linear-gradient(to right,  rgba(20,24,30,.1), rgba(173,204,151,.5), rgba(20,24,30,.1))'}} >
+                  <center>
                 <img src={object.image} style={{height:'30px', marginTop:''}} alt=""/>
+                  </center>
+                </div>
             </div>
 
             <div style={{display:'inline-block', width:'10%'}}>
@@ -84,7 +95,11 @@ export default function Index({accountAddress}) {
         <div style={{width:'90%', marginTop:'12px', marginLeft:'30px'}}>
 
 <div style={{display:'inline-block', width:'15%'}}>
+<div style={{ height:'40px', padding:'5px' , borderRadius:'10px', backgroundImage:'linear-gradient(to right,  rgba(20,24,30,.1), rgba(173,204,151,.5), rgba(20,24,30,.1))'}} >
+    <center>
     <img src={object.image} style={{height:'30px', marginTop:''}} alt=""/>
+    </center>
+    </div>
 </div>
 
 <div style={{display:'inline-block', width:'10%'}}>
@@ -197,7 +212,11 @@ export default function Index({accountAddress}) {
         <div style={{width:'90%', marginTop:'12px', marginLeft:'30px'}}>
 
             <div style={{display:'inline-block', width:'15%'}}>
+            <div style={{ height:'40px', padding:'5px' , borderRadius:'10px', backgroundImage:'linear-gradient(to right,  rgba(20,24,30,.1), rgba(173,204,151,.5), rgba(20,24,30,.1))'}} >
+                <center>
                 <img src={object.image} style={{height:'30px', marginTop:''}} alt=""/>
+                </center>
+            </div>
             </div>
 
             <div style={{display:'inline-block', width:'10%'}}>
@@ -238,7 +257,11 @@ export default function Index({accountAddress}) {
         <div style={{width:'90%', marginTop:'12px', marginLeft:'30px'}}>
 
             <div style={{display:'inline-block', width:'15%'}}>
+            <div style={{ height:'40px', padding:'5px' , borderRadius:'10px', backgroundImage:'linear-gradient(to right,  rgba(20,24,30,.1), rgba(173,204,151,.5), rgba(20,24,30,.1))'}} >
+                <center>
                 <img src={object.image} style={{height:'30px', marginTop:''}} alt=""/>
+                </center>
+            </div>
             </div>
 
             <div style={{display:'inline-block', width:'10%'}}>
@@ -328,7 +351,11 @@ export default function Index({accountAddress}) {
         <div style={{width:'90%', marginTop:'12px', marginLeft:'30px'}}>
 
             <div style={{display:'inline-block', width:'15%'}}>
+            <div style={{ height:'40px', padding:'5px' , borderRadius:'10px', backgroundImage:'linear-gradient(to right,  rgba(20,24,30,.1), rgba(173,204,151,.5), rgba(20,24,30,.1))'}} >
+                <center>
                 <img src={object.image} style={{height:'30px', marginTop:''}} alt=""/>
+                </center>
+            </div>
             </div>
 
             <div style={{display:'inline-block', width:'10%'}}>
@@ -359,10 +386,18 @@ export default function Index({accountAddress}) {
         var content = SynthetixData.map((object)=>
         <div style={{width:'90%', marginTop:'12px', marginLeft:'30px'}}>
             <div style={{display:'inline-block', width:'15%'}}>
+            <div style={{ height:'40px', padding:'5px' , borderRadius:'10px', backgroundImage:'linear-gradient(to right,  rgba(20,24,30,.1), rgba(173,204,151,.5), rgba(20,24,30,.1))'}} >
+                <center>
                 <img src={object.image} style={{height:'30px', marginTop:''}} alt=""/>
+                </center>
+            </div>
             </div>
 
-            <div style={{display:'inline-block', width:'40%', textAlign:'left'}}>
+            <div style={{display:'inline-block', width:'10%', textAlign:'left'}}>
+                
+            </div>
+
+            <div style={{display:'inline-block', width:'30%', textAlign:'left'}}>
                 Synthetix
             </div>
 
@@ -379,6 +414,52 @@ export default function Index({accountAddress}) {
         setSynthetixContent(content)
 
     },[SynthetixData])
+
+    useEffect(()=>{
+        var content = YearnData.map((object)=>
+        <Tooltip
+        title={
+            <React.Fragment>
+                {object.shareTokenName} <br/>
+              Share Price : {parseFloat(object.sharePrice/(10**object.shareTokenDecimals)).toFixed(4)} USD <br/>
+              Total Shares : {parseFloat(object.balanceShares/(10**object.shareTokenDecimals)).toFixed(2)} ${object.symbol} <br/>
+              Total Investment : {parseFloat(object.totalInvestment).toFixed(2)} USD <br/>
+              Underlying Token Name : {object.mainTokenName} <br/>
+            </React.Fragment>
+          }>
+        <div style={{width:'90%', marginTop:'12px', marginLeft:'30px'}}>
+
+            <div style={{display:'inline-block', width:'15%'}}>
+            <div style={{ height:'40px', padding:'5px' , borderRadius:'10px', backgroundImage:'linear-gradient(to right,  rgba(20,24,30,.1), rgba(173,204,151,.5), rgba(20,24,30,.1))'}} >
+                <center>
+                <img src={object.image? object.image:YearnLogo} style={{height:'30px', marginTop:''}} alt=""/>
+                </center>
+              </div>
+            </div>
+
+            <div style={{display:'inline-block', width:'10%'}}>
+            </div>
+
+            <div style={{display:'inline-block', fontSize:'12px', width:'40%', textAlign:'left'}}>
+                ${object.shareTokenSymbol}
+            </div>
+
+            {/* <div style={{display:'inline-block', width:'30%'}}>
+                {object.value} ${object.symbol}
+            </div> */}
+
+            <div style={{display:'inline-block', width:'30%', fontSize:'13px'}}>
+                {parseFloat(object.totalInvestment).toFixed(2)} USD
+            </div>
+
+            <br/>
+        </div>
+        </Tooltip>
+        )
+
+        setYearnContent(content)
+
+    },[YearnData])
 
     useEffect(() => {
         console.log('addy:', accountAddress)
@@ -797,6 +878,84 @@ export default function Index({accountAddress}) {
                     }}
                 })
         }
+        // c9596ce7bc47f7544cc808c3881427ed
+        async function getYearnData(){
+            await axios.post(`https://gateway.thegraph.com/api/c9596ce7bc47f7544cc808c3881427ed/subgraphs/id/0xf50b705e4eaba269dfe954f10c65bd34e6351e0c-0`,
+            {
+                query:`{
+                    accountVaultPositions(
+                      first:1000
+                      where:{
+                        account:"0x4beaa82fdda3543523d68bdf525d471ca20cd73c"
+                        balanceShares_gt:0
+                      }
+                    )
+                    {
+                      id
+                      balanceTokens
+                      balancePosition
+                      balanceShares
+                      balanceProfit
+                      vault{
+                        token{
+                          symbol
+                          name
+                          id
+                          decimals
+                        }
+                        shareToken{
+                          id
+                          name
+                          symbol
+                          decimals
+                        }
+                        latestUpdate{
+                          pricePerShare
+                        }
+                      }
+                    }
+                  }`})
+                .then(async(response) => {
+                    console.log(response)
+                    if(response.data.data){
+                        var res = response.data.data.accountVaultPositions
+                        console.log(res)
+                        var positions = []
+                        for(var i =0; i<res.length; i++){
+                            var object = {}
+
+                            await axios.get(`https://api.coingecko.com/api/v3/coins/ethereum/contract/${res[i].vault.token.id}`,{},{})
+                            .then(async(priceData)=>{
+                                    // console.log(priceData);
+                                    res[i].image = priceData.data.image.thumb
+                                    // console.log(res[i].image)
+                                    // res[i].price = priceData.data.market_data.current_price.usd
+                            })
+                            .catch((err)=>{})
+                            
+                            object.balanceShares = res[i].balanceShares
+                            object.sharePrice = res[i].vault.latestUpdate.pricePerShare
+                            object.shareTokenAddress = res[i].vault.shareToken.id
+                            object.shareTokenSymbol = res[i].vault.shareToken.symbol
+                            object.shareTokenDecimals = res[i].vault.shareToken.decimals 
+                            object.shareTokenName = res[i].vault.shareToken.name
+                            object.mainTokenSymbol = res[i].vault.token.symbol
+                            object.mainTokenName = res[i].vault.token.name
+                            object.mainTokenDecimals = res[i].vault.token.decimals
+                            object.mainTokenAddress = res[i].vault.token.id
+                            object.image = res[i].image
+                            object.totalInvestment = object.balanceShares/(10**object.shareTokenDecimals) * object.sharePrice/(10**object.shareTokenDecimals)
+
+                            console.log(object)
+                            positions.push(object)
+                        }
+
+                        positions.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
+                        setYearnData(positions)
+                    }
+                })
+        }
+
 
         getCompoundV2Data()
         getAaveV2Data()
@@ -805,6 +964,7 @@ export default function Index({accountAddress}) {
         getBancorData()
         getSynthetixData()
         getSushiV2Data()
+        getYearnData()
     }, [accountAddress])
 
     return (
@@ -950,7 +1110,7 @@ export default function Index({accountAddress}) {
                 height : 'auto',
                 minHeight: '170px',
                 borderRadius: '10px',
-                display: (SynthetixData.length>0)? '':'none'
+                display: (SynthetixData.length>0 || YearnData.length>0)? '':'none'
             }}>
             <br/>
             <center>
@@ -958,11 +1118,25 @@ export default function Index({accountAddress}) {
                     Other Assets
                 </div>
             </center>
-                <div style={{fontSize:'12px', marginLeft:'15px'}}>
+                <div style={{fontSize:'12px',
+                 marginLeft:'15px',
+                 display: SynthetixData.length>0? '':'none'
+                 }}>
                 <br/> Synthetix
                 <br/>
                 </div> 
                 {SynthetixContent}
+                <br/>
+
+                <div style={{fontSize:'12px',
+                    marginLeft:'15px',
+                    display: YearnData.length>0? '':'none'
+                    }}>
+                Yearn Finance
+                </div>
+                {YearnContent}
+                <br/>
+
                 </div>
             <center>
 
