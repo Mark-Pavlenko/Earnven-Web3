@@ -112,7 +112,7 @@ const palette = {
   grey: GREY,
   gradients: GRADIENTS,
   divider: GREY[500_24],
-  text: { primary: '#fff', secondary: GREY[600], disabled: GREY[500] },
+  text: { primary: '#e5e5e5', secondary: GREY[600], disabled: GREY[500] },
   background: { paper: '#fff', default: '#0E1214', neutral: GREY[200] },
   action: {
     active: GREY[600],
