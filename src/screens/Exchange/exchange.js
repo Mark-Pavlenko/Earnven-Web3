@@ -254,11 +254,11 @@ export default function Exchange() {
                 await ERC20contract.methods.approve(txObject.allowanceTarget, txObject.sellAmount).send({ from: accounts[0] });
             }
             try {
-                await web3.eth.sendTransaction(await txObject);
+                await web3.eth.sendTransaction(txObject);
                 settxSuccess(true);
             }
-            catch {
-                console.log("tx failed")
+            catch(error) {
+                console.log("tx failed::",error)
                 settxFailure(true);
             }
 
