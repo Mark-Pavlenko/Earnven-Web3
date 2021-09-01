@@ -127,26 +127,38 @@ export default function Exchange() {
             console.log("get data called");
             let fetchedTokens;
             let tokens;
-            await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {})
+            // await axios.get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
+            // await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {})
+            //     .then(async (response) => {
+            //         // setAllTokens(response.data.records)
+            //         fetchedTokens = response.data.records;
+            //         // fetchedTokens = response.data.tokens;
+            //         // console.log(response.data.records)
+            //     })
+            await axios.get(`https://zapper.fi/api/token-list`, {}, {})
                 .then(async (response) => {
                     // setAllTokens(response.data.records)
-                    fetchedTokens = response.data.records;
+                    // fetchedTokens = response.data.records;
+                    fetchedTokens = response.data.tokens;
+                    tokens = fetchedTokens;
+                    setAllTokens(tokens)
                     // console.log(response.data.records)
                 })
-            await axios.get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
-                .then(async (response) => {
-                    let data = response.data.tokens;
-                    tokens = fetchedTokens.map((token) => ({ ...token, logoURI: data.find(x => x.address == token.address) ? data.find(x => x.address == token.address).logoURI : tokenURIs.find(x => x.address == token.address).logoURI }));
-                    console.log(tokens.filter((token) => token.logoURI === ""));
-                    // console.log("all tokens data", tokens)
-                    // setAllTokens(tokens)
-                })
+            // await axios.get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
+            //     .then(async (response) => {
+            //         let data = response.data.tokens;
+            //         tokens = fetchedTokens.map((token) => ({ ...token, logoURI: data.find(x => x.address == token.address) ? data.find(x => x.address == token.address).logoURI : tokenURIs.find(x => x.address == token.address).logoURI }));
+            //         console.log(tokens.filter((token) => token.logoURI === ""));
+            //         // console.log("all tokens data", tokens)
+            //         // setAllTokens(tokens)
+            //     })
 
             console.log("value of tokens::", tokens);
-            setAllTokens(tokens)
+            // setAllTokens(tokens)
 
             for (let i = 0; i < tokens.length; i++) {
                 // setcurrencyModal(false)
+                // setupdateBalance(false)
                 console.log("value of token::", tokens[i]);
                 let tempContractIn = new ethers.Contract(tokens[i].address, erc20Abi, selectedProvider);
                 let newBalanceIn = await getBalance(tokens[i].symbol, address, tempContractIn)
@@ -156,6 +168,19 @@ export default function Exchange() {
                 // setcurrencyModal(true)
                 setupdateBalance(!updateBalance)
             }
+            // for (let i = 0; i < AllTokens.length; i++) {
+            //     // setcurrencyModal(false)
+            //     // setupdateBalance(false)
+            //     console.log("value of token::", AllTokens[i]);
+            //     let tempContractIn = new ethers.Contract(AllTokens[i].address, erc20Abi, selectedProvider);
+            //     let newBalanceIn = await getBalance(AllTokens[i].symbol, address, tempContractIn)
+            //     // console.log("token balance for this address:::", newBalanceIn);
+            //     // console.log(" real token balance for this address:::", parseFloat(formatUnits(newBalanceIn, 18)));
+            //     AllTokens[i].balance = parseFloat(formatUnits(newBalanceIn, AllTokens[i].decimals)).toFixed(3);
+            //     // setcurrencyModal(true)
+            //     setupdateBalance(!updateBalance)
+            //     setAllTokens(AllTokens);
+            // }
             console.log("token list with token balance:::", tokens);
             setAllTokens(tokens);
 
@@ -693,9 +718,9 @@ export default function Exchange() {
 
                                                             <Box sx={{ flexGrow: 1 }}></Box>
                                                             <Box sx={{ marginTop: '5px' }}>
-                                                                <Typography >
+                                                                {updateBalance&&<Typography >
                                                                     {object.balance === undefined ? <Loader type="Rings" color="#BB86FC" height={30} width={30} /> : object.balance}
-                                                                </Typography>
+                                                                </Typography>}
                                                             </Box>
                                                         </Stack>
                                                     </Box>
