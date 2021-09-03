@@ -27,6 +27,7 @@ import Loader from "react-loader-spinner";
 import ScrollToTop from '../../components/ScrollToTop';
 import Avatar from 'react-avatar';
 import ethImage from '../../assets/icons/eth.png'
+import { FaAngleRight } from "react-icons/fa";
 
 
 const styles = () => ({
@@ -143,13 +144,13 @@ export default function Exchange() {
                 .then(async (response) => {
                     // console.log(response)
                     const arr1 = [];
-                    if(response.data.ETH.balance!==0){
-                        const tempObj={}
+                    if (response.data.ETH.balance !== 0) {
+                        const tempObj = {}
                         tempObj.address = ''
                         tempObj.name = 'Ethereum';
                         tempObj.symbol = 'ETH';
                         tempObj.balance = ((response.data.ETH.balance).toFixed(3)).toString();
-                        tempObj.logoURI=ethImage;
+                        tempObj.logoURI = ethImage;
                         arr1.push(tempObj)
                     }
                     var tokens = response.data.tokens;
@@ -395,10 +396,20 @@ export default function Exchange() {
                 for (let i = 0; i < protocolsList.length; i++) {
                     try {
                         let protocolQuote = {};
-                        const response = await axios.get(`https://ropsten.api.0x.org/swap/v1/quote?buyToken=${TokenTo.symbol}&sellToken=${TokenFrom}&sellAmount=${amount}&feeRecipient=0xE609192618aD9aC825B981fFECf3Dfd5E92E3cFB&buyTokenPercentageFee=0.02&includedSources=${protocolsList[i]}`)
+                        const response = await axios.get(`https://api.0x.org/swap/v1/quote?buyToken=${TokenTo.symbol}&sellToken=${TokenFrom}&sellAmount=${amount}&feeRecipient=0xE609192618aD9aC825B981fFECf3Dfd5E92E3cFB&buyTokenPercentageFee=0.02&includedSources=${protocolsList[i]}`)
                         console.log(`response for all ${protocolsList[i]}`, response.data);
+
                         if (protocolsList[i] === '') {
                             protocolQuote.name = '0x Exchange'
+                            var sources = response.data.sources
+                            sources.sort((a, b) => parseFloat(b.proportion) - parseFloat(a.proportion));
+                            var sources2 = []
+                            for (var j = 0; j < sources.length; j++) {
+                                if (sources[j].proportion > 0) {
+                                    sources2.push(sources[j])
+                                }
+                            }
+                            setSources(sources2)
                         }
                         else {
                             protocolQuote.name = protocolsList[i];
@@ -469,6 +480,7 @@ export default function Exchange() {
         setTokenToAmount(0);
         setprotocolsRateList([])
         setselectedRate(null);
+        setSources([])
     }
 
     const ToTokenChange = (value) => {
@@ -477,6 +489,7 @@ export default function Exchange() {
         setTokenToAmount(0);
         setprotocolsRateList([])
         setselectedRate(null);
+        setSources([])
     }
 
     const test = async () => {
@@ -858,9 +871,9 @@ export default function Exchange() {
                                                             }
                                                         }}>
                                                         <Stack direction='row' spacing={2}>
-                                                        <Box sx={{ marginTop: '5px' }}>
+                                                            <Box sx={{ marginTop: '5px' }}>
                                                                 {object.logoURI !== null ? <img alt="" width="30" height="30" src={object.logoURI}
-                                                                    >
+                                                                >
                                                                 </img>
                                                                     :
                                                                     <Avatar style={{
@@ -900,6 +913,16 @@ export default function Exchange() {
 
                             </Stack>
                             {selectedRate !== null && protocolsRateList.length === 0 ? <Typography variant='caption' sx={{ color: '#FFC107' }}>This Exchange is yet not supported</Typography> : <></>}
+                            <Stack direction='row' sx={{ mt: 2 }}>
+                                {Sources.map((object) =>
+                                    <div>
+                                        <Button variant='contained' color='primary' disabled size='small' sx={{fontSize:'10px'}}>
+                                            {(parseFloat(object.proportion) * 100).toFixed(2)}% {object.name}
+                                        </Button>
+                                        <FaAngleRight style={{ paddingTop: '6px', marginLeft: '1px', color: '#737373' }} />
+                                    </div>
+                                )}
+                            </Stack>
                             <Typography variant='body1' sx={{ color: '#737373', mt: 2.5 }}>Transaction Settings</Typography>
                             <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
                                 <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Slippage</Typography>
