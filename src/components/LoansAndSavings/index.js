@@ -3,6 +3,7 @@ import axios from 'axios'
 import Tooltip from '@material-ui/core/Tooltip';
 import YearnLogo from '../../assets/icons/yearnLogo.png'
 import CurveLogo from '../../assets/icons/curveLogo.png'
+import ETHLogo from '../../assets/icons/eth.png'
 
 
 export default function Index({accountAddress}) {
@@ -34,6 +35,9 @@ export default function Index({accountAddress}) {
 
     const [SynthetixData, setSynthetixData] = useState([]) //Synthetix
     const [SynthetixContent, setSynthetixContent] = useState([]) //Synethetix
+
+    const [BeaconData, setBeaconData] = useState({}) //Beacon (Ethereum 2.0 Staking)
+    // const [BeaconContent, setBeaconContent] = useState([]) //Beacon (Ethereum 2.0 Staking)
 
     const [CurveStakeData, setCurveStakeData] = useState([]) //Curve
     const [CurveStakeContent, setCurveStakeContent] = useState([]) //Curve
@@ -535,7 +539,7 @@ export default function Index({accountAddress}) {
                     }
                   }`})
                 .then(async(response) => {
-                    console.log(response)
+                    // console.log(response)
                     if(response.data.data){
             // console.log('addy2', accountAddress)
 
@@ -637,7 +641,7 @@ export default function Index({accountAddress}) {
                             pools.push(object)
                         }
                         pools.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
-                        console.log(pools)
+                        // console.log(pools)
                         setPoolsData(pools)
                     }
                 })
@@ -845,7 +849,7 @@ export default function Index({accountAddress}) {
                 if(response.data.data.snxholders[0]){
                     var res = response.data.data.snxholders[0];
                     
-                    console.log(res)
+                    // console.log(res)
                     var object = {}
                     await axios.get(`https://api.coingecko.com/api/v3/coins/ethereum/contract/0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f`,{},{})
                     .then(async(priceData)=>{
@@ -963,10 +967,10 @@ export default function Index({accountAddress}) {
                     }
                   }`})
                 .then(async(response) => {
-                    console.log(response)
+                    // console.log(response)
                     if(response.data.data){
                         var res = response.data.data.accountVaultPositions
-                        console.log(res)
+                        // console.log(res)
                         var positions = []
                         for(var i =0; i<res.length; i++){
                             var object = {}
@@ -993,7 +997,7 @@ export default function Index({accountAddress}) {
                             object.image = res[i].image
                             object.totalInvestment = object.balanceShares/(10**object.shareTokenDecimals) * object.sharePrice/(10**object.shareTokenDecimals)
 
-                            console.log(object)
+                            // console.log(object)
                             positions.push(object)
                         }
 
@@ -1039,7 +1043,7 @@ export default function Index({accountAddress}) {
 
                     
                     var res = response.data.data.accounts[0].gauges
-                    console.log(res)
+                    // console.log(res)
                     var stakings = []
 
                     for(var i = 0 ; i<res.length; i++){
@@ -1058,12 +1062,55 @@ export default function Index({accountAddress}) {
 
                     stakings.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
                     setCurveStakeData(stakings)
-                    console.log(stakings) 
+                    // console.log(stakings) 
                   } 
               }})
         }
 
+        async function getBeaconData(){
+          await axios.post(`https://gateway.thegraph.com/api/c9596ce7bc47f7544cc808c3881427ed/subgraphs/id/0x540b14e4bd871cfe59e48d19254328b5ff11d820-0`,
+          {
+              query:`{
+                depositors
+                (
+                  where:{
+                    id:"0x000000005dcee11e13fb536fa40d65450f53c5a8"
+                  }
+                ) {
+                  id
+                  totalAmountDeposited
+                  depositCount
+                  deposits {
+                    id
+                    amount
+                  }
+                }
+              }
+              `})
+              .then(async(response) => {
+                  // console.log(response)
+                  if(response.data.data){
+                    if(response.data.data.depositors){
+                      var res = response.data.data.depositors[0]
+                      var object = {}
+                      object.totalDeposit = res.totalAmountDeposited/(10**9)
 
+                      await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd')
+                      .then(async(response2)=>{
+                        // console.log(response2)
+                        if(response2.data){
+                          object.ethPrice = response2.data.ethereum.usd
+                        }
+                      })
+
+                      object.totalInvestment = parseFloat(object.ethPrice * object.totalDeposit).toFixed(2)
+                      console.log(object)
+                      setBeaconData(object)
+                    }
+                  }
+              })
+        }
+        
         getCompoundV2Data()
         getAaveV2Data()
         getUniV2Data()
@@ -1073,6 +1120,8 @@ export default function Index({accountAddress}) {
         getSushiV2Data()
         getYearnData()
         getCurveData()
+
+        getBeaconData()
     }, [accountAddress])
 
     return (
@@ -1218,7 +1267,7 @@ export default function Index({accountAddress}) {
                 height : 'auto',
                 minHeight: '170px',
                 borderRadius: '10px',
-                display: (SynthetixData.length>0 || YearnData.length>0)? '':'none'
+                display: (SynthetixData.length>0 || YearnData.length>0 || BeaconData.totalInvestment)? '':'none'
             }}>
             <br/>
             <center>
@@ -1226,6 +1275,7 @@ export default function Index({accountAddress}) {
                     Other Assets
                 </div>
             </center>
+
                 <div style={{fontSize:'12px',
                  marginLeft:'15px',
                  display: SynthetixData.length>0? '':'none'
@@ -1234,6 +1284,38 @@ export default function Index({accountAddress}) {
                 <br/>
                 </div> 
                 {SynthetixContent}
+
+                <div style={{fontSize:'12px',
+                 marginLeft:'15px',
+                 display: BeaconData.totalInvestment? '':'none'
+                 }}>
+                <br/> Ethereum 2.0 Staking
+                <br/>
+                </div>
+
+                <div style={{width:'90%', marginTop:'12px', marginLeft:'30px'}}>
+                  <div style={{display:'inline-block', width:'15%'}}>
+                  <div style={{ height:'40px', padding:'5px' , borderRadius:'10px', backgroundImage:'linear-gradient(to right,  rgba(20,24,30,.1), rgba(173,204,151,.5), rgba(20,24,30,.1))'}} >
+                      <center>
+                      <img src={ETHLogo} style={{height:'30px', marginTop:''}} alt=""/>
+                      </center>
+                  </div>
+                  </div>
+
+                  <div style={{display:'inline-block', width:'10%', textAlign:'left'}}>
+                      
+                  </div>
+
+                  <div style={{display:'inline-block', width:'30%'}}>
+                      {BeaconData.totalDeposit} ETH
+                  </div>
+
+                  <div style={{display:'inline-block', width:'40%', fontSize:'13px'}}>
+                      {BeaconData.totalInvestment} USD 
+                  </div>
+
+              </div>
+                
                 <br/>
 
                 <div style={{fontSize:'12px',
