@@ -10,7 +10,7 @@ import TransparentButton from '../../components/TransparentButton'
 import Web3 from 'web3';
 import ERC20ABI from '../../abi/ERC20.json'
 import tokenURIs from './tokenURIs';
-import { Box, Typography, Stack, Container, Grid, TextField, Divider, Button, Modal, Tooltip, Avatar, InputAdornment, OutlinedInput } from '@material-ui/core';
+import { Box, Typography, Stack, Container, Grid, TextField, Divider, Button, Modal, Tooltip, InputAdornment, OutlinedInput } from '@material-ui/core';
 // import exchangeIcon from '../../assets/icons/exchange.png'
 import Uniswap from '../../assets/icons/Uniswap.webp';
 // import Curve from '../../assets/icons/Curve.webp';
@@ -25,6 +25,8 @@ import { parseUnits, formatUnits } from "@ethersproject/units";
 import { useParams } from 'react-router-dom';
 import Loader from "react-loader-spinner";
 import ScrollToTop from '../../components/ScrollToTop';
+import Avatar from 'react-avatar';
+import ethImage from '../../assets/icons/eth.png'
 
 
 const styles = () => ({
@@ -116,7 +118,8 @@ export default function Exchange() {
     const [selectedExchangeName, setselectedExchangeName] = useState('')
     const [currencyModal, setcurrencyModal] = useState(false)
     const [currencyToModal, setcurrencyToModal] = useState(false)
-    const [updateBalance, setupdateBalance] = useState(false)
+    const [updateBalance, setupdateBalance] = useState(true)
+    const [toTokens, settoTokens] = useState([])
     // const [tokenToDollarValue, settokenToDollarValue] = useState(0)
 
     const handleOpen = () => setOpen(true);
@@ -125,39 +128,100 @@ export default function Exchange() {
     useEffect(() => {
         async function getData() {
             console.log("get data called");
-            let fetchedTokens;
-            let tokens;
-            await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {})
+            // let fetchedTokens;
+            // let tokens;
+            // await axios.get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
+            // await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {})
+            //     .then(async (response) => {
+            //         settoTokens(response.data.records)
+            //         fetchedTokens = response.data.records;
+            //         // fetchedTokens = response.data.tokens;
+            //         // console.log(response.data.records)
+            //     })
+
+            await axios.get(`https://api.ethplorer.io/getAddressInfo/${address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`, {}, {})
+                .then(async (response) => {
+                    // console.log(response)
+                    const arr1 = [];
+                    if(response.data.ETH.balance!==0){
+                        const tempObj={}
+                        tempObj.address = ''
+                        tempObj.name = 'Ethereum';
+                        tempObj.symbol = 'ETH';
+                        tempObj.balance = ((response.data.ETH.balance).toFixed(3)).toString();
+                        tempObj.logoURI=ethImage;
+                        arr1.push(tempObj)
+                    }
+                    var tokens = response.data.tokens;
+                    for (let i = 0; i < tokens.length; i++) {
+                        const tempObj = {};
+                        tempObj.address = tokens[i].tokenInfo.address;
+                        tempObj.name = tokens[i].tokenInfo.name;
+                        tempObj.symbol = tokens[i].tokenInfo.symbol;
+                        tempObj.balance = ((tokens[i].balance * (Math.pow(10, -parseInt(tokens[i].tokenInfo.decimals)))).toFixed(3)).toString();
+                        if (tokens[i].tokenInfo.image !== undefined) {
+                            tempObj.logoURI = `https://ethplorer.io${tokens[i].tokenInfo.image}`
+                        }
+                        else {
+                            tempObj.logoURI = null;
+                        }
+
+                        arr1.push(tempObj);
+                    }
+                    console.log("new list objects:::", arr1)
+                    setAllTokens(arr1);
+
+                })
+
+
+            await axios.get(`https://cdn.furucombo.app/furucombo.tokenlist.json`, {}, {})
                 .then(async (response) => {
                     // setAllTokens(response.data.records)
-                    fetchedTokens = response.data.records;
+                    // fetchedTokens = response.data.records;
+                    // fetchedTokens = response.data.tokens;
+                    // tokens = fetchedTokens;
+                    settoTokens(response.data.tokens)
                     // console.log(response.data.records)
                 })
-            await axios.get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
-                .then(async (response) => {
-                    let data = response.data.tokens;
-                    tokens = fetchedTokens.map((token) => ({ ...token, logoURI: data.find(x => x.address == token.address) ? data.find(x => x.address == token.address).logoURI : tokenURIs.find(x => x.address == token.address).logoURI }));
-                    console.log(tokens.filter((token) => token.logoURI === ""));
-                    // console.log("all tokens data", tokens)
-                    // setAllTokens(tokens)
-                })
+            // await axios.get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
+            //     .then(async (response) => {
+            //         let data = response.data.tokens;
+            //         tokens = fetchedTokens.map((token) => ({ ...token, logoURI: data.find(x => x.address == token.address) ? data.find(x => x.address == token.address).logoURI : tokenURIs.find(x => x.address == token.address).logoURI }));
+            //         console.log(tokens.filter((token) => token.logoURI === ""));
+            //         // console.log("all tokens data", tokens)
+            //         // setAllTokens(tokens)
+            //     })
 
-            console.log("value of tokens::", tokens);
-            setAllTokens(tokens)
+            // console.log("value of tokens::", tokens);
+            // setAllTokens(tokens)
 
-            for (let i = 0; i < tokens.length; i++) {
-                // setcurrencyModal(false)
-                console.log("value of token::", tokens[i]);
-                let tempContractIn = new ethers.Contract(tokens[i].address, erc20Abi, selectedProvider);
-                let newBalanceIn = await getBalance(tokens[i].symbol, address, tempContractIn)
-                // console.log("token balance for this address:::", newBalanceIn);
-                // console.log(" real token balance for this address:::", parseFloat(formatUnits(newBalanceIn, 18)));
-                tokens[i].balance = parseFloat(formatUnits(newBalanceIn, tokens[i].decimals)).toFixed(3);
-                // setcurrencyModal(true)
-                setupdateBalance(!updateBalance)
-            }
-            console.log("token list with token balance:::", tokens);
-            setAllTokens(tokens);
+            // for (let i = 0; i < tokens.length; i++) {
+            //     // setcurrencyModal(false)
+            //     // setupdateBalance(false)
+            //     console.log("value of token::", tokens[i]);
+            //     let tempContractIn = new ethers.Contract(tokens[i].address, erc20Abi, selectedProvider);
+            //     let newBalanceIn = await getBalance(tokens[i].symbol, address, tempContractIn)
+            //     // console.log("token balance for this address:::", newBalanceIn);
+            //     // console.log(" real token balance for this address:::", parseFloat(formatUnits(newBalanceIn, 18)));
+            //     tokens[i].balance = parseFloat(formatUnits(newBalanceIn, tokens[i].decimals)).toFixed(3);
+            //     // setcurrencyModal(true)
+            //     setupdateBalance(!updateBalance)
+            // }
+            // for (let i = 0; i < AllTokens.length; i++) {
+            //     // setcurrencyModal(false)
+            //     // setupdateBalance(false)
+            //     console.log("value of token::", AllTokens[i]);
+            //     let tempContractIn = new ethers.Contract(AllTokens[i].address, erc20Abi, selectedProvider);
+            //     let newBalanceIn = await getBalance(AllTokens[i].symbol, address, tempContractIn)
+            //     // console.log("token balance for this address:::", newBalanceIn);
+            //     // console.log(" real token balance for this address:::", parseFloat(formatUnits(newBalanceIn, 18)));
+            //     AllTokens[i].balance = parseFloat(formatUnits(newBalanceIn, AllTokens[i].decimals)).toFixed(3);
+            //     // setcurrencyModal(true)
+            //     setupdateBalance(!updateBalance)
+            //     setAllTokens(AllTokens);
+            // }
+            // console.log("token list with token balance:::", tokens);
+            // setAllTokens(tokens);
 
         }
         getData()
@@ -254,11 +318,11 @@ export default function Exchange() {
                 await ERC20contract.methods.approve(txObject.allowanceTarget, txObject.sellAmount).send({ from: accounts[0] });
             }
             try {
-                await web3.eth.sendTransaction(await txObject);
+                await web3.eth.sendTransaction(txObject);
                 settxSuccess(true);
             }
-            catch {
-                console.log("tx failed")
+            catch (error) {
+                console.log("tx failed::", error)
                 settxFailure(true);
             }
 
@@ -423,6 +487,9 @@ export default function Exchange() {
 
     const handleDismissSearch = () => {
         setcurrencyModal(false);
+    }
+    const handleCurrencyToDismissSearch = () => {
+        setcurrencyToModal(false);
     }
 
     const getBalance = async (_token, _account, _contract) => {
@@ -618,7 +685,7 @@ export default function Exchange() {
                                             variant='outlined'
                                             color='primary'
                                             sx={{
-                                                height: '57px', color: '#fff', fontWeight: 500, fontSize: '20px' ,
+                                                height: '57px', color: '#fff', fontWeight: 500, fontSize: '20px',
                                                 background: (theme) => theme.palette.gradients.custom
                                             }}
                                             onClick={() => {
@@ -684,7 +751,23 @@ export default function Exchange() {
                                                         }}>
                                                         <Stack direction='row' spacing={2}>
                                                             <Box sx={{ marginTop: '5px' }}>
-                                                                <img alt="" width="30" height="30" src={object.logoURI} ></img>
+                                                                {object.logoURI !== null ? <img alt="" width="30" height="30" src={object.logoURI}
+                                                                    style={{
+                                                                        borderRadius: '50%',
+                                                                        backgroundColor: '#e5e5e5'
+                                                                    }}>
+                                                                </img>
+                                                                    :
+                                                                    <Avatar style={{
+                                                                        display: 'inline',
+                                                                        maxWidth: '30px',
+                                                                        verticalAlign: 'top',
+                                                                        height: "30px",
+                                                                        // marginLeft: '11px',
+
+                                                                    }} color={"#737373"} name={object.name} round={true} size="30" textSizeRatio={1} />
+                                                                }
+
                                                             </Box>
                                                             <Stack direction='column' >
                                                                 <Typography variant='body1' sx={{ color: '#e3e3e3' }}>{object.symbol}</Typography>
@@ -727,7 +810,7 @@ export default function Exchange() {
                                             variant='outlined'
                                             color='primary'
                                             sx={{
-                                                height: '57px', color: '#fff', fontWeight: 500, fontSize: '20px' ,
+                                                height: '57px', color: '#fff', fontWeight: 500, fontSize: '20px',
                                                 background: (theme) => theme.palette.gradients.custom
                                             }}
                                             onClick={() => {
@@ -738,7 +821,7 @@ export default function Exchange() {
                                     </FormControl>
                                     <Modal
                                         open={currencyToModal}
-                                        onClose={handleDismissSearch}
+                                        onClose={handleCurrencyToDismissSearch}
                                         aria-labelledby="modal-modal-title"
                                         aria-describedby="modal-modal-description"
                                     >
@@ -760,7 +843,7 @@ export default function Exchange() {
                                             }}>
                                             <Typography variant='h6' align='center' sx={{ color: '#f5f5f5' }}>Token List</Typography>
                                             <Divider variant='fullWidth' sx={{ mt: 3 }}></Divider>
-                                            {AllTokens.map((object) =>
+                                            {toTokens.map((object) =>
                                                 <Box >
                                                     <Box
                                                         onClick={() => {
@@ -775,8 +858,21 @@ export default function Exchange() {
                                                             }
                                                         }}>
                                                         <Stack direction='row' spacing={2}>
-                                                            <Box sx={{ marginTop: '5px' }}>
-                                                                <img alt="" width="30" height="30" src={object.logoURI} ></img>
+                                                        <Box sx={{ marginTop: '5px' }}>
+                                                                {object.logoURI !== null ? <img alt="" width="30" height="30" src={object.logoURI}
+                                                                    >
+                                                                </img>
+                                                                    :
+                                                                    <Avatar style={{
+                                                                        display: 'inline',
+                                                                        maxWidth: '30px',
+                                                                        verticalAlign: 'top',
+                                                                        height: "30px",
+                                                                        // marginLeft: '11px',
+
+                                                                    }} color={"#737373"} name={object.name} round={true} size="30" textSizeRatio={1} />
+                                                                }
+
                                                             </Box>
                                                             <Stack direction='column' >
                                                                 <Typography variant='body1' sx={{ color: '#e3e3e3' }}>{object.symbol}</Typography>

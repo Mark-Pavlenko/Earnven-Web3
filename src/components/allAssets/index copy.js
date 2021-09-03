@@ -329,7 +329,7 @@ export default class index extends Component {
                                                 height: "25px",
                                                 // width: "30px",
                                                 // marginTop: "15px",
-                                                margin: '11px',
+                                                margin: '11.3px',
                                                 marginLeft:'15px',
                                                 borderRadius: '50%',
                                                 // backgroundColor: '#737373'
@@ -346,7 +346,7 @@ export default class index extends Component {
                                                 height: "25px",
                                                 // width: "30px",
                                                 // marginTop: "15px",
-                                                margin: '11px',
+                                                margin: '11.3px',
                                                 marginLeft:'15px',
                                                 borderRadius: '50%',
                                                 backgroundColor: '#e5e5e5'
