@@ -26,6 +26,7 @@ import Home from './screens/Home';
 import YieldFarm from './screens/YieldFarm'
 import Savings from './screens/Savings'
 import Airdrop from './screens/AirDrop'
+import TokenCreator from './screens/TokenCreator'
 
 export default function Router(){
 
@@ -70,6 +71,7 @@ export default function Router(){
                 {path:'graphtools',element:<CubicleGraphs />},
                 {path:'earn',element:<LiquidityPools />},
                 {path:'airdrop',element:<Airdrop />},
+                {path:'create-token',element:<TokenCreator />},
                 {path:'nftdesign',element:<NFT />},
                 {path:'nftdetails/:contract/:id', element:<NftDetails/>},
                 { path: '*', element: <Navigate to="/404" replace /> }
