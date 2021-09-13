@@ -61,7 +61,21 @@
     "web-vitals": "^1.1.2",
     "web3": "^1.4.0",
     "web3modal": "^1.9.3",
-    "react-toastify": "^7.0.4"
+    "react-toastify": "^7.0.4",
+    "@dfyn/sdk": "0.0.5",
+    "@sushiswap-core/sdk": "^3.0.3-beta.1",
+    "@uniswap/sdk": "^3.0.3",
+    "big-number": "^2.0.0",
+    "eth-permit": "^0.1.7",
+    "eth-sig-util": "^3.0.1",
+    "ethereumjs-util": "^7.1.0",
+    "quickswap-sdk": "^3.0.8",
+    "rc-slider": "^9.7.2",
+    "react-bootstrap-range-slider": "^3.0.2",
+    "react-switch": "^6.0.0",
+    "secure-ls": "^1.2.6",
+    "sushi-sdk": "0.0.5",
+    "throttle-debounce": "^3.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -27,6 +27,7 @@ import YieldFarm from './screens/YieldFarm'
 import Savings from './screens/Savings'
 import Airdrop from './screens/AirDrop'
 import Swapping from './screens/TestSwapping/Swapping';
+import HomeScreen from './container/home/HomeScreen'
 
 export default function Router(){
 
@@ -80,7 +81,7 @@ export default function Router(){
         { path: '/404', element: <PageNotFound /> },
         { path: '*', element: <Navigate to="/404" replace /> },
         { path:'/testingpage', element: <TestingPage />},
-        { path:'/swappingTest', element: <Swapping />}
+        { path:'/swappingTest', element: <HomeScreen />}
     ]
     );
 }
