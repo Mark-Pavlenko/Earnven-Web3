@@ -29,12 +29,6 @@ export const Chart = () => {
   // eslint-disable-next-line
   const [View, setView] = useState('Month View')
 
-  const [CurrentValue , setCurrentValue] = useState(0)
-  const [AvgTotalPrice , setAvgTotalPrice] = useState(0)
-  const [Profit, setProfit] = useState(0)
-  const [ProfitPercent, setProfitPercent] = useState(0)
-  const [AccumulatingCost, setAccumulatingCost] = useState(0)
-  const [TotalTokens, setTotalTokens] = useState(0)
   // const [Token, setToken] = useState('aave')
 
   React.useEffect(() => {
@@ -70,9 +64,9 @@ export const Chart = () => {
 
   useEffect(() => {
     // console.log('lol',tokenAddress)
-    var buyDetails = {tokens:0, usd:0}
-    var sellDetails = {tokens:0, usd:0}
-    var totalDetails = {tokens:0, usd:0}
+    var buyDetails = {tokens:0, ether:0, usd:0}
+    var sellDetails = {tokens:0, ether:0, usd:0}
+    var totalDetails = {tokens:0, ether:0, usd:0}
     var res2 = []
     var res3 = 0
 
@@ -81,74 +75,50 @@ export const Chart = () => {
       var res1 = response.data.result
       console.log('res1', res1)
 
-      for( var i = 0; i<res1.length ; i++){
+      axios.get(`https://api.etherscan.io/api?module=account&action=txlist&address=${address}&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W`)
+      .then(async(response)=>{
+        res2 = response.data.result
+        console.log('res2', res2)
+      
 
-        var d = new Date(0)
-        d.setUTCSeconds(res1[i].timeStamp);
-        var day = d.getUTCDate()
-        var month = d.getUTCMonth()+1
-        var year = d.getUTCFullYear()
-        console.log('date', day, month, year)
+      for(var i=0; i<res1.length; i++){
+        for(var j = 0; j < res2.length ; j++){
+          if(res1[i].hash === res2[j].hash){
+            console.log('halla')
+            if(res1[i].from===address){
+              if(parseInt(res1[i].value)>0 && parseInt(res2[j].value)>0){
+                sellDetails.tokens += parseInt(res1[i].value)
+                sellDetails.ether += parseInt(res2[j].value)
+              }
+            }
+            else if(res1[i].to===address){
+              if(parseInt(res1[i].value)>0 && parseInt(res2[j].value)>0){
 
-        await axios.get(`https://api.coingecko.com/api/v3/coins/${tokenid}/history?date=${day+'-'+month+'-'+year}&localization=false`)
-        .then(async(response)=>{
-          if(response.data.market_data){
+                var d = new Date()
+                var day = d.getUTCDate()
+                var month = d.getUTCMonth()
+                var year = d.getUTCFullYear()
 
-          var res2 = response.data.market_data.current_price.usd
-          console.log('res2', res2)
+                await axios.get(`https://api.coingecko.com/api/v3/coins/ethereum/history?date=${day+'-'+month+'-'+year}&localization=false`)
+                .then(async(response)=>{
+                  res3 = response.data.market_data.current_price.usd
+                  console.log('res3', res3) 
+                })
 
-          if(res1[i].to === address){
-            buyDetails.tokens += res1[i].value / (10**res1[i].tokenDecimal)
-            buyDetails.usd += res1[i].value / (10**res1[i].tokenDecimal) * res2
+                buyDetails.tokens += parseInt(res1[i].value)
+                buyDetails.ether += parseInt(res2[j].value)
+                buyDetails.usd += parseInt(res2[j].value)/(10**18) * parseFloat(res3)
+                console.log('buyDetails', buyDetails)
+              }
+            }
           }
-          else{
-            sellDetails.tokens += res1[i].value / (10**res1[i].tokenDecimal)
-            sellDetails.usd += res1[i].value / (10**res1[i].tokenDecimal) * res2
-          }
-          
-          totalDetails.tokens = buyDetails.tokens - sellDetails.tokens
-          totalDetails.usd = buyDetails.usd - sellDetails.usd
         }
-        })
-
-        var avgBuyPrice = buyDetails.usd / buyDetails.tokens
-        var avgSellPrice = sellDetails.usd / sellDetails.tokens
-        var avgTotalPrice = totalDetails.usd/ totalDetails.tokens
       }
 
-      var today = new Date()
-      var day2 = today.getUTCDate()
-      var month2 = today.getUTCMonth()+1
-      var year2 = today.getUTCFullYear()
-
-      await axios.get(`https://api.coingecko.com/api/v3/coins/${tokenid}/history?date=${day2+'-'+month2+'-'+year2}&localization=false`)
-        .then(async(response)=>{
-          res3 = response.data.market_data.current_price.usd
-          console.log('res3', res3) 
-      })
-
-      var currentValue = res3 * totalDetails.tokens
-      var unrealisedProfit = currentValue - totalDetails.usd
-      var profitPercent = (unrealisedProfit/totalDetails.usd)*100
-
-      setCurrentValue(currentValue);
-      setAvgTotalPrice(avgTotalPrice)
-      setProfit(unrealisedProfit)
-      setProfitPercent(profitPercent)
-      setTotalTokens(totalDetails.tokens)
-      setAccumulatingCost(totalDetails.usd)
-
-      console.log('buy', buyDetails)
-      console.log('sell', sellDetails)
-      console.log('totalDetails', totalDetails)
-      console.log('BuyPrice', avgBuyPrice)
-      console.log('SellPrice', avgSellPrice)
-      console.log('TotalPrice', avgTotalPrice)
-      console.log('CurrentValue', currentValue)
-      console.log('UnrealisedProfit', unrealisedProfit)
-      console.log('ProfitPercentage', profitPercent)
-
+      console.log('buyDetails', buyDetails)
+      console.log('sellDetails', sellDetails)
     })
+  })
 
   }, [tokenAddress])
 
@@ -257,75 +227,9 @@ export const Chart = () => {
 
 
                 <hr style={{ marginTop: '8px', borderTop: '0px ', borderBottom: '1px solid #737373' }} />
-                <div style={{ color: 'white', textAlign: 'left', marginTop: '15px', fontSize:'28px' }}>STATS</div> <br/>
+                <div style={{ color: 'white', textAlign: 'left', marginTop: '15px' }}>STATS</div>
                 <div>
                   <BrowserView>
-
-                  <div style={{border:'1px solid white', paddingLeft:'5%', borderRadius:'10px'}}>
-
-                    <br/>
-
-                  <div style={{ marginLeft: '25%'  ,width: '25%', height: '125px', display: 'inline-block', color: 'white', marginTop: '8px' }}>
-                      Tokens Holding
-                      <br /><br />
-                      <font color='#00FFE7'>
-                        {TotalTokens ?  parseFloat(TotalTokens).toFixed(2) + '  $' + (Selection.symbol ? Selection.symbol.toUpperCase() : ''): ''}
-                      </font>
-                      <br /><br /><br /><br />
-                    </div>
-
-                    <div style={{ width: '25%', height: '125px', display: 'inline-block', color: 'white' }}>
-                      Accumulation Cost
-                      <br /><br />
-                      <font color='#00FFE7'>
-                        {AccumulatingCost ? '$ ' + parseFloat(AccumulatingCost).toFixed(2) : ''}
-                      </font>
-                      <br /><br /><br /><br />
-                    </div>
-                    
-
-                    <br/>
-
-                  <div style={{ width: '25%', height: '125px', display: 'inline-block', color: 'white', marginTop: '8px' }}>
-                      Total HODL Value
-                      <br /><br />
-                      <font color='#00FFE7'>
-                        {CurrentValue ? '$ ' + parseFloat(CurrentValue).toFixed(2) : ''}
-                      </font>
-                      <br /><br /><br /><br />
-                    </div>
-
-                    <div style={{ width: '25%', height: '125px', display: 'inline-block', color: 'white' }}>
-                      Avg. Buying Cost
-                      <br /><br />
-                      <font color='#00FFE7'>
-                        {AvgTotalPrice ? '$ ' + parseFloat(AvgTotalPrice).toFixed(2) : ''}
-                      </font>
-                      <br /><br /><br /><br />
-                    </div>
-
-                    <div style={{ width: '25%', height: '125px', display: 'inline-block', color: 'white' }}>
-                      Profit/Loss
-                      <br /><br />
-                      <font color='#00FFE7'>
-                        {Profit ? '$ ' + parseFloat(Profit).toFixed(2) : ''}
-                      </font>
-                      <br /><br /><br /><br />
-                    </div>
-
-                    <div style={{ width: '25%', height: '125px', display: 'inline-block', color: 'white' }}>
-                      Profit/Loss Percent
-                      <br /><br />
-                      <font color='#00FFE7'>
-                        {ProfitPercent ? parseFloat(ProfitPercent).toFixed(2) + '%' : ''}
-                      </font>
-                      <br /><br /><br /><br />
-                    </div>
-
-                    </div>
-                    
-                    <br/>
-
                     <div style={{ width: '25%', height: '125px', display: 'inline-block', color: 'white', marginTop: '8px' }}>
                       1 DAY
                       <br /><br />
