@@ -82,7 +82,7 @@ export default function Router(){
         },
         { path: '/404', element: <PageNotFound /> },
         { path: '*', element: <Navigate to="/404" replace /> },
-        { path:'/testingpage', element: <TestingPage />},
+        // { path:'/testingpage', element: <TestingPage />},
         { path:'/swappingTest', element: <HomeScreen />}
     ]
     );
