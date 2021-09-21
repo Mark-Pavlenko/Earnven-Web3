@@ -1,7 +1,11 @@
-
 import Scrollbar from '../../../components/Scrollbar';
 import sidebarConfig from '../SidebarConfig';
 import NavSection from '../../../components/NavSection';
+
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
@@ -11,7 +15,7 @@ import { experimentalStyled as styled } from '@material-ui/core/styles';
 // import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@material-ui/core';
 import { Box, Drawer, Stack } from '@material-ui/core';
 
-
+import { useNavigate } from 'react-router-dom';
 
 import {MHidden} from '../../../components/@material-extend';
 
@@ -39,6 +43,15 @@ Sidebar.propTypes = {
 
 export default function Sidebar({ isOpenSidebar, onCloseSidebar,address }){
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  function mouseOver(e){
+    e.target.style.background = '#242321'
+  }
+
+  function mouseOut(e){
+      e.target.style.background = 'transparent'
+  }
 
   useEffect(() => {
     if (isOpenSidebar) {
@@ -66,8 +79,49 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar,address }){
       </Box>
 
       <NavSection  navConfig={sidebarConfig} address={address}/>
-
-      <Box sx={{ flexGrow: 1 }} />
+      
+      <center>
+      <Accordion style={{width:'60%', background:'transparent'}}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          Tools
+        </AccordionSummary>
+        <AccordionDetails>
+          <div 
+          onMouseOver={(e)=>{mouseOver(e)}}
+          onMouseOut={(e)=>{mouseOut(e)}}
+          onClick={(e)=>{navigate(`/${address}/airdrop`)}}
+          style={{
+            background : 'transparent',
+            border:'none',
+            height : '50px',
+            color:'white',
+            cursor:'pointer',
+            paddingTop: '15px'
+          }}> 
+              Mass AirDropper
+          </div>
+          <div 
+          onMouseOver={(e)=>{mouseOver(e)}}
+          onMouseOut={(e)=>{mouseOut(e)}}
+          onClick={(e)=>{navigate(`/${address}/create-token`)}}
+          style={{
+            background : 'transparent',
+            border:'none',
+            height : '50px',
+            color:'white',
+            cursor:'pointer',
+            paddingTop: '15px'
+          }}> 
+              Token Creator
+          </div>
+        </AccordionDetails>
+      </Accordion>
+      </center>
+      {/* <Box sx={{ flexGrow: 1 }} /> */}
 
       <Box sx={{ px: 2.5, pb: 3, mt: 5 }}>
         <Stack

@@ -10,7 +10,7 @@ import Bridge from './screens/Bridge';
 import Multisender from './screens/MultiSender';
 import SafeFarm from './screens/safeFarms/safefarm';
 import Trading from './screens/Exchange/exchange';
-import TestingPage from './screens/testingPage';
+// import TestingPage from './screens/testingPage';
 import AllAssetsPage from './screens/AllAssetsPage';
 import TokenDetailsPage from './components/tokenDetails'
 import NFTpage from './screens/NFTpage';
@@ -28,6 +28,7 @@ import Savings from './screens/Savings'
 import Airdrop from './screens/AirDrop'
 import Swapping from './screens/TestSwapping/Swapping';
 import HomeScreen from './container/home/HomeScreen'
+import TokenCreator from './screens/TokenCreator'
 
 export default function Router(){
 
@@ -72,6 +73,7 @@ export default function Router(){
                 {path:'graphtools',element:<CubicleGraphs />},
                 {path:'earn',element:<LiquidityPools />},
                 {path:'airdrop',element:<Airdrop />},
+                {path:'create-token',element:<TokenCreator />},
                 {path:'nftdesign',element:<NFT />},
                 {path:'nftdetails/:contract/:id', element:<NftDetails/>},
                 { path: '*', element: <Navigate to="/404" replace /> }
