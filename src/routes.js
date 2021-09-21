@@ -10,7 +10,7 @@ import Bridge from './screens/Bridge';
 import Multisender from './screens/MultiSender';
 import SafeFarm from './screens/safeFarms/safefarm';
 import Trading from './screens/Exchange/exchange';
-import TestingPage from './screens/testingPage';
+// import TestingPage from './screens/testingPage';
 import AllAssetsPage from './screens/AllAssetsPage';
 import TokenDetailsPage from './components/tokenDetails'
 import NFTpage from './screens/NFTpage';
@@ -80,7 +80,7 @@ export default function Router(){
         },
         { path: '/404', element: <PageNotFound /> },
         { path: '*', element: <Navigate to="/404" replace /> },
-        { path:'/testingpage', element: <TestingPage />}
+        // { path:'/testingpage', element: <TestingPage />}
     ]
     );
 }

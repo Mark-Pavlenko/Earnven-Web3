@@ -8,6 +8,7 @@ import Box from '@material-ui/core/Box';
 import UniV2 from '../components/liquidityPoolContents/UniV2'
 import SushiV2 from '../components/liquidityPoolContents/SushiV2'
 import Balancer from '../components/liquidityPoolContents/Balancer'
+import UniV3 from '../components/liquidityPoolContents/UniV3'
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -62,6 +63,8 @@ export default function LiquidityPools() {
             <Tab label="Uniswap V2" {...a11yProps(0)} />
             <Tab label="Sushiswap V2" {...a11yProps(1)} />
             <Tab label="Balancer" {...a11yProps(2)} />
+            <Tab label="Uniswap V3" {...a11yProps(3)} />
+
             </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
@@ -72,6 +75,9 @@ export default function LiquidityPools() {
         </TabPanel>
         <TabPanel value={value} index={2}>
             <Balancer/>
+        </TabPanel>
+        <TabPanel value={value} index={3}>
+            <UniV3/>
         </TabPanel>
         </Box>
     )
