@@ -5,8 +5,8 @@ purpose : this component is used to display pool details for the selected pool o
 */
 
 import React, { useEffect, useState } from 'react'
-import { useParams, Link, useNavigate } from 'react-router-dom'
-//import { useNavigate } from 'react-router'
+import { useParams, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import PoolDetailsPage from './PoolDetailData'
 import DetailLoadPage from './DetailLoadPage'
 import { Chart } from '../Chart/Chart'

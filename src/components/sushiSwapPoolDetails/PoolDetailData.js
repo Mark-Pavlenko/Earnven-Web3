@@ -29,10 +29,12 @@ import { fontStyle } from '@material-ui/system'
 import SushiSwapLogo from '../../assets/icons/Sushiswap.webp'
 import PoolDetailChart from './PoolDetailsChart'
 
-const getUniswapGraphData = require('./getPoolDetailGraphData')
-  .getUniswapGraphData
+import getUniswapGraphData from './getPoolDetailGraphData'
+// const getUniswapGraphData = require('./getPoolDetailGraphData')
+//   .getUniswapGraphData
 
-const getPoolTokenImage = require('./getPoolTokenImage').getPoolTokenImage
+import getPoolTokenImage from './getPoolTokenImage'
+//const getPoolTokenImage = require('./getPoolTokenImage').getPoolTokenImage
 
 export default function Chart(props) {
   console.log('I am inside the sushi pool details page')

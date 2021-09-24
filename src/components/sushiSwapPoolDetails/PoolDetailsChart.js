@@ -19,8 +19,9 @@ import {
 import { maxHeight } from '@material-ui/system'
 import { parseInt } from 'lodash'
 
-const getUniswapGraphData = require('./getPoolDetailGraphData')
-  .getUniswapGraphData
+import getUniswapGraphData from './getPoolDetailGraphData'
+// const getUniswapGraphData = require('./getPoolDetailGraphData')
+//   .getUniswapGraphData
 
 const PoolDetailChart = (props) => {
   const [Data, setData] = useState([]) //UNI V2 Pools

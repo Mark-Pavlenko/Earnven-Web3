@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import SearchTokens from '../searchTokens'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { Chart } from '../Chart/Chart'
-//import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
 import TransactionPerToken from '../transactionHistory/transactionPerToken copy'
 
 export default function Index() {
