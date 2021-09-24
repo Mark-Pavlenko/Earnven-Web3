@@ -186,7 +186,7 @@ export default function LiquidityPools() {
               <div style={{ display: 'inline-block', width: '10%' }}>
                 {/*Link code added by Prabha on 15-Sep-2021 */}
                 <Link
-                  to={`/${address}/uniswap/address/${object.token0.id}/${object.token1.id}`}
+                  to={`/${address}/uniswap/address/${object.token0.id}/${object.token1.id}`} 
                 >
                   <Button
                     color="primary"
@@ -202,6 +202,7 @@ export default function LiquidityPools() {
                   </Button>
                 </Link>
                 <br />
+          
                 <img
                   style={{
                     height: '30px',

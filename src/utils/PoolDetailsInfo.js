@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import './PoolDetailsInfo.css'
 import TransparentButton from '../components/TransparentButton'
-import { Button } from '@material-ui/core'
+import {
+  Box,
+  Button,
+  ListItem,
+  IconButton,
+  ListItemText,
+} from '@material-ui/core'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { MdContentCopy } from 'react-icons/md'
 
 //call this component to get pool details information in main page at footer
 function PoolDetailsInfo(props) {
@@ -32,6 +40,11 @@ function PoolDetailsInfo(props) {
   } catch (err) {
     console.log('No token found!!')
   }
+
+  const updateSelectedAccount = (tokenPair) => {
+    localStorage.setItem('selected-account', tokenPair)
+  }
+
   return (
     <div>
       <h2>&nbsp;Pair Information </h2>
@@ -43,22 +56,58 @@ function PoolDetailsInfo(props) {
         <div className="pairInfo__description">
           <h4 style={{ padding: '0.5rem' }}>Pair address</h4>
           &nbsp;&nbsp;{tokeIdPairAddress}
+          <ListItem
+            secondaryAction={
+              <IconButton edge="end" aria-label="copy">
+                <CopyToClipboard text={tokenPair}>
+                  <MdContentCopy className="pairInfo__iconCopy" />
+                </CopyToClipboard>
+              </IconButton>
+            }
+          ></ListItem>
         </div>
         <div className="pairInfo__description">
           <h5 style={{ padding: '0.5rem' }}>{tokenASymbol} Address</h5>
           &nbsp;&nbsp;{tokenAAddress}
+          <ListItem
+            secondaryAction={
+              <IconButton edge="end" aria-label="copy">
+                <CopyToClipboard text={tokenAId}>
+                  <MdContentCopy className="pairInfo__iconCopy" />
+                </CopyToClipboard>
+              </IconButton>
+            }
+          ></ListItem>
         </div>
         <div className="pairInfo__description">
           <h5 style={{ padding: '0.5rem' }}>{tokenBSymbol} Address</h5>
           &nbsp;&nbsp;{tokenBAddress}
+          <ListItem
+            secondaryAction={
+              <IconButton edge="end" aria-label="copy">
+                <CopyToClipboard text={tokenBId}>
+                  <MdContentCopy className="pairInfo__iconCopy" />
+                </CopyToClipboard>
+              </IconButton>
+            }
+          ></ListItem>
         </div>
-        <a
-          href={`https://etherscan.io/address/${tokenPair}`}
-          style={{ textDecoration: 'none', color: '#00FFE7' }}
-          target="blank"
+        <div
+          style={{
+            display: 'inline-block',
+          }}
         >
-          Etherscan
-        </a>
+          <a
+            href={`https://etherscan.io/address/${tokenPair}`}
+            style={{
+              textDecoration: 'none',
+              color: '#00FFE7',
+            }}
+            target="blank"
+          >
+            Etherscan &#8599;
+          </a>
+        </div>
       </div>
     </div>
   )

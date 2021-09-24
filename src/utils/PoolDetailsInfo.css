@@ -18,3 +18,11 @@
   display: inline-block;
   color: blanchedalmond;
 }
+
+.pairInfo__iconCopy {
+  color: #929292;
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-bottom: 50px;
+  margin-right: 50px;
+}

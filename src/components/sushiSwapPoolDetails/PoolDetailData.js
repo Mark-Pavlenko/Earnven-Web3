@@ -1,6 +1,6 @@
 // import { ResponsiveLine } from '@nivo/line'
 // eslint-disable-next-line
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Fragment } from 'react'
 import axios from 'axios'
 import parse from 'html-react-parser'
 import { useParams } from 'react-router-dom'
@@ -28,13 +28,9 @@ import { LoadingButton } from '@material-ui/lab'
 import { fontStyle } from '@material-ui/system'
 import SushiSwapLogo from '../../assets/icons/Sushiswap.webp'
 import PoolDetailChart from './PoolDetailsChart'
-
 import getUniswapGraphData from './getPoolDetailGraphData'
-// const getUniswapGraphData = require('./getPoolDetailGraphData')
-//   .getUniswapGraphData
-
 import getPoolTokenImage from './getPoolTokenImage'
-//const getPoolTokenImage = require('./getPoolTokenImage').getPoolTokenImage
+import PoolDetailsInfo from '../../utils/PoolDetailsInfo'
 
 export default function Chart(props) {
   console.log('I am inside the sushi pool details page')
@@ -58,8 +54,8 @@ export default function Chart(props) {
   // eslint-disable-next-line
   const [View, setView] = useState('Month View')
 
-  const [pairOftoke0, setToken0] = useState()
-  const [pairOftoke1, setToken1] = useState()
+  const [tokenASymbol, setToken0] = useState()
+  const [tokenBSymbol, setToken1] = useState()
   const [currentMarketCap, setMarketCap] = useState(0)
   const [totalVolume, setTotalVolume] = useState('')
   const [fullyDiluted, setfullyDiluted] = useState(0)
@@ -427,13 +423,13 @@ export default function Chart(props) {
 
           var tokens = response.data.tokenInfo
           //console.log('ethplorer data', tokens)
-          console.log('Token0 sumbol', pairOftoke0)
+          console.log('Token0 sumbol', tokenASymbol)
           console.log(
             `token price for ${tokens.symbol.toUpperCase()}`,
             tokens.price.rate,
           )
-          if (tokens.symbol.toUpperCase() === pairOftoke0) {
-            console.log(`token price for ${pairOftoke0}`, tokens.price.rate)
+          if (tokens.symbol.toUpperCase() === tokenASymbol) {
+            console.log(`token price for ${tokenASymbol}`, tokens.price.rate)
             setToken0USDRate(parseFloat(tokens.price.rate).toFixed(2))
           }
         })
@@ -449,589 +445,598 @@ export default function Chart(props) {
 
           var tokens = response.data.tokenInfo
           //console.log('ethplorer data', tokens)
-          console.log('Token0 sumbol', pairOftoke1)
+          console.log('Token0 sumbol', tokenBSymbol)
           console.log(
             `token price for ${tokens.symbol.toUpperCase()}`,
             tokens.price.rate,
           )
 
-          if (tokens.symbol.toUpperCase() === pairOftoke1) {
-            console.log(`token price for ${pairOftoke1}`, tokens.price.rate)
+          if (tokens.symbol.toUpperCase() === tokenBSymbol) {
+            console.log(`token price for ${tokenBSymbol}`, tokens.price.rate)
             setToken1USDRate(parseFloat(tokens.price.rate).toFixed(2))
           }
         })
     }
     getStateData()
-  }, [token0, token1, pairOftoke0, pairOftoke1])
+  }, [token0, token1, tokenASymbol, tokenBSymbol])
 
   return (
-    <Grid container>
-      <Grid item md={8}>
-        <Container>
-          <Box sx={{ mt: 4, mb: 3 }}>
-            <div>
-              {Loading ? (
-                <center> Loading...</center>
-              ) : (
-                <div>
-                  <Box sx={{ width: '100%' }}>
+    <Fragment>
+      <Grid container>
+        <Grid item md={8}>
+          <Container>
+            <Box sx={{ mt: 4, mb: 3 }}>
+              <div>
+                {Loading ? (
+                  <center> Loading...</center>
+                ) : (
+                  <div>
+                    <Box sx={{ width: '100%' }}>
+                      <center>
+                        <h2 style={{ fontSize: '40px', color: 'white' }}>
+                          Liquidity Pool Details
+                        </h2>
+                      </center>
+                    </Box>
                     <center>
-                      <h2 style={{ fontSize: '40px', color: 'white' }}>
-                        Liquidity Pool Details
+                      <h2>
+                        <img
+                          style={{
+                            height: '30px',
+                            width: '30px',
+                            display: 'inline-block',
+                          }}
+                          title="Sushiswap"
+                          src={SushiSwapLogo}
+                          alt=""
+                        />
+                        &nbsp; Sushiswap
                       </h2>
                     </center>
-                  </Box>
-                  <center>
-                    <h2>
+                    <br />
+                    <div>
                       <img
                         style={{
                           height: '30px',
                           width: '30px',
                           display: 'inline-block',
                         }}
-                        title="Sushiswap"
-                        src={SushiSwapLogo}
-                        alt=""
+                        src={`https://ethplorer.io${token0Image}`}
                       />
-                      &nbsp; Sushiswap
-                    </h2>
-                  </center>
-                  <br />
-                  <div>
-                    <img
+                      <img
+                        style={{
+                          height: '30px',
+                          width: '30px',
+                          display: 'inline-block',
+                        }}
+                        src={`https://ethplorer.io${token1Image}`}
+                      />
+                      &nbsp;
+                      <h3
+                        style={{
+                          marginBottom: '2rem 0',
+                          display: 'inline-block',
+                        }}
+                      >
+                        {tokenASymbol}-{tokenBSymbol}
+                      </h3>
+                    </div>
+
+                    <div
                       style={{
-                        height: '30px',
-                        width: '30px',
-                        display: 'inline-block',
-                      }}
-                      src={`https://ethplorer.io${token0Image}`}
-                    />
-                    <img
-                      style={{
-                        height: '30px',
-                        width: '30px',
-                        display: 'inline-block',
-                      }}
-                      src={`https://ethplorer.io${token1Image}`}
-                    />
-                    &nbsp;
-                    <h3
-                      style={{
-                        marginBottom: '2rem 0',
-                        display: 'inline-block',
+                        width: '100%',
+                        margin: 'auto',
+                        marginLeft: '10px',
                       }}
                     >
-                      {pairOftoke0}-{pairOftoke1}
-                    </h3>
+                      {/*Blow logic is to implement pair's individual token detials  */}
+                      <div
+                        style={{
+                          // marginLeft:'25px',
+                          width: '49%',
+                          marginTop: '15px',
+                          minWidth: '30px',
+                          border: '1px solid rgb(115, 115, 115)',
+                          height: '80px',
+                          minHeight: '50px',
+                          borderRadius: '20px',
+                          display: 'inline-block',
+                          margin: '1rem 0',
+                        }}
+                      >
+                        <div style={{ marginTop: '10px', padding: '0 1rem' }}>
+                          <img
+                            style={{
+                              height: '20px',
+                              width: '25px',
+                              display: 'inline-block',
+                            }}
+                            src={`https://ethplorer.io${token0Image}`}
+                          />
+                          &nbsp; &nbsp;{token0Reserve}&nbsp;{tokenASymbol}
+                        </div>
+
+                        <div style={{ display: 'inline-block' }}>
+                          &nbsp; &nbsp;1&nbsp;{tokenASymbol}={token1Price}&nbsp;
+                          {tokenBSymbol}(${token0USDRate})
+                        </div>
+                      </div>
+                      {/*End of logic to implement pair's individual token detials  */}
+                      &nbsp;
+                      {/*Logic of second token */}
+                      <div
+                        style={{
+                          // marginLeft:'25px',
+                          width: '49%',
+                          marginTop: '15px',
+
+                          minWidth: '30px',
+                          border: '1px solid rgb(115, 115, 115)',
+                          height: '80px',
+                          minHeight: '50px',
+                          borderRadius: '20px',
+                          display: 'inline-block',
+                          margin: '1rem 0',
+                        }}
+                      >
+                        <div style={{ marginTop: '10px', padding: '0 1rem' }}>
+                          <img
+                            style={{
+                              height: '20px',
+                              width: '25px',
+                              display: 'inline-block',
+                            }}
+                            src={`https://ethplorer.io${token1Image}`}
+                          />
+                          &nbsp; &nbsp;{token1Reserve}&nbsp;{tokenBSymbol}
+                        </div>
+
+                        <div style={{ display: 'inline-block' }}>
+                          &nbsp; &nbsp;1&nbsp;{tokenBSymbol}={token0Price}&nbsp;
+                          {tokenASymbol}(${token1USDRate})
+                        </div>
+                      </div>
+                      {/*End of the Logic for secound token */}
+                      <br />
+                      <Typography
+                        variant="h4"
+                        sx={{ mt: 2, ml: 1, color: 'turquoise' }}
+                      >
+                        ${totalVolume}
+                      </Typography>
+                      <hr
+                        style={{
+                          marginTop: '0.01px',
+                          borderTop: '0px ',
+                          borderBottom: '1px solid #737373',
+                        }}
+                      />
+                      <div
+                        style={{
+                          color: 'darkviolet',
+                          textAlign: 'left',
+                          marginTop: '15px',
+                          fontStyle: 'unset',
+                        }}
+                      >
+                        STATS
+                      </div>
+                      <div>
+                        <BrowserView>
+                          <div
+                            style={{
+                              width: '25%',
+                              height: '125px',
+                              display: 'inline-block',
+                              color: 'blanchedalmond',
+                              marginTop: '8px',
+                            }}
+                          >
+                            1 Day
+                            <br />
+                            <br />
+                            <font
+                              color={
+                                parseInt(oneDayReserverUSD) >= 0
+                                  ? '#00FFE7'
+                                  : 'red'
+                              }
+                            >
+                              {oneDayReserverUSD}
+                            </font>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                          </div>
+
+                          <div
+                            style={{
+                              width: '25%',
+                              height: '125px',
+                              display: 'inline-block',
+                              color: 'blanchedalmond',
+                            }}
+                          >
+                            1 Month
+                            <br />
+                            <br />
+                            <font
+                              color={
+                                parseInt(oneMonthState) >= 0 ? '#00FFE7' : 'red'
+                              }
+                            >
+                              {oneMonthState}
+                            </font>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                          </div>
+
+                          <div
+                            style={{
+                              width: '25%',
+                              height: '125px',
+                              display: 'inline-block',
+                              color: 'blanchedalmond',
+                            }}
+                          >
+                            3 Months
+                            <br />
+                            <br />
+                            <font
+                              color={
+                                parseInt(threeMonthState) >= 0
+                                  ? '#00FFE7'
+                                  : 'red'
+                              }
+                            >
+                              {threeMonthState}
+                            </font>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                          </div>
+
+                          <div
+                            style={{
+                              width: '25%',
+                              height: '125px',
+                              display: 'inline-block',
+                              color: 'blanchedalmond',
+                            }}
+                          >
+                            1 Year
+                            <br />
+                            <br />
+                            <font
+                              color={
+                                parseInt(oneYearState) >= 0 ? '#00FFE7' : 'red'
+                              }
+                            >
+                              {oneYearState}%
+                            </font>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                          </div>
+
+                          <div
+                            style={{
+                              width: '25%',
+                              height: '100px',
+                              display: 'inline-block',
+                              color: 'blanchedalmond',
+                            }}
+                          >
+                            Market Cap
+                            <br />
+                            <br />
+                            <font color="#00FFE7">{currentMarketCap}</font>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                          </div>
+
+                          <div
+                            style={{
+                              width: '25%',
+                              height: '125px',
+                              display: 'inline-block',
+                              color: 'blanchedalmond',
+                            }}
+                          >
+                            Fully Diluted
+                            <br />
+                            <br />
+                            <font color="#00FFE7">{fullyDiluted}</font>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                          </div>
+
+                          <div
+                            style={{
+                              width: '25%',
+                              height: '125px',
+                              display: 'inline-block',
+                              color: 'blanchedalmond',
+                            }}
+                          >
+                            Volume(24hrs)
+                            <br />
+                            <br />
+                            <font color="#00FFE7">{volume24Hrs}</font>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                          </div>
+
+                          <div
+                            style={{
+                              width: '25%',
+                              height: '125px',
+                              display: 'inline-block',
+                              color: 'blanchedalmond',
+                            }}
+                          >
+                            Fees(24hrs)
+                            <br />
+                            <br />
+                            <font color="#00FFE7">{fees24Hrs}</font>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                          </div>
+                        </BrowserView>
+                        <MobileView>
+                          <div
+                            style={{
+                              width: '50%',
+                              height: '125px',
+                              display: 'inline-block',
+                              color: 'blanchedalmond',
+                            }}
+                          >
+                            1 DAY
+                            <br />
+                            <br />
+                            <font
+                              color={
+                                parseInt(oneDayReserverUSD) > 0
+                                  ? '#00FFE7'
+                                  : 'red'
+                              }
+                            >
+                              {oneDayReserverUSD}
+                            </font>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                          </div>
+
+                          <div
+                            style={{
+                              width: '50%',
+                              height: '125px',
+                              display: 'inline-block',
+                              color: 'blanchedalmond',
+                            }}
+                          >
+                            1 Month
+                            <br />
+                            <br />
+                            <font
+                              color={
+                                parseInt(oneMonthState) > 0 ? '#00FFE7' : 'red'
+                              }
+                            >
+                              {oneMonthState}
+                            </font>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                          </div>
+                          <br />
+
+                          <div
+                            style={{
+                              width: '50%',
+                              height: '125px',
+                              display: 'inline-block',
+                              color: 'blanchedalmond',
+                            }}
+                          >
+                            3 Months
+                            <br />
+                            <br />
+                            <font
+                              color={
+                                parseInt(threeMonthState) > 0
+                                  ? '#00FFE7'
+                                  : 'red'
+                              }
+                            >
+                              {threeMonthState}
+                            </font>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                          </div>
+
+                          <div
+                            style={{
+                              width: '50%',
+                              height: '125px',
+                              display: 'inline-block',
+                              color: 'blanchedalmond',
+                            }}
+                          >
+                            1 Year
+                            <br />
+                            <br />
+                            <font
+                              color={
+                                parseInt(oneYearState) > 0 ? '#00FFE7' : 'red'
+                              }
+                            >
+                              {oneYearState}
+                            </font>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                          </div>
+
+                          <br />
+
+                          <div
+                            style={{
+                              width: '50%',
+                              height: '125px',
+                              display: 'inline-block',
+                              color: 'blanchedalmond',
+                            }}
+                          >
+                            Market Cap
+                            <br />
+                            <br />
+                            <font color="#00FFE7">{currentMarketCap}</font>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                          </div>
+
+                          <div
+                            style={{
+                              width: '50%',
+                              height: '125px',
+                              display: 'inline-block',
+                              color: 'blanchedalmond',
+                            }}
+                          >
+                            Fully Diluted
+                            <br />
+                            <br />
+                            <font color="#00FFE7">{fullyDiluted}</font>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                          </div>
+
+                          <br />
+
+                          <div
+                            style={{
+                              width: '50%',
+                              height: '125px',
+                              display: 'inline-block',
+                              color: 'blanchedalmond',
+                            }}
+                          >
+                            Volume(24hrs)
+                            <br />
+                            <br />
+                            <font color="#00FFE7">{volume24Hrs}</font>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                          </div>
+
+                          <div
+                            style={{
+                              width: '50%',
+                              height: '125px',
+                              display: 'inline-block',
+                              color: 'blanchedalmond',
+                            }}
+                          >
+                            Fees(24hrs)
+                            <br />
+                            <br />
+                            <font color="#00FFE7">{fees24Hrs}</font>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                          </div>
+                        </MobileView>
+                      </div>
+                      <hr
+                        style={{
+                          marginTop: '1px',
+                          borderTop: '0px ',
+                          borderBottom: '1px solid #737373',
+                        }}
+                      />
+                      <br />
+                      <div
+                        style={{
+                          color: 'darkviolet',
+                          textAlign: 'left',
+                          fontStyle: 'unset',
+                        }}
+                      >
+                        ABOUT
+                      </div>
+                      <br />
+                      <div style={{ color: 'white' }}>
+                        <h4>
+                          &nbsp;&nbsp;&nbsp;&nbsp; SushiSwap enables the buying
+                          and selling of different cryptocurrencies between
+                          users. 0.3% in fees is charged for facilitating each
+                          swap, with 0.25% going to liquidity providers and
+                          0.05% being converted to SUSHI and distributed to
+                          users holding the SUSHI token. SUSHI tokens also
+                          entitle their holders to continue earning a portion of
+                          fees, even after they’ve stopped actively providing
+                          liquidity.
+                        </h4>
+                      </div>
+                      <br />
+                      <br />
+                      <hr
+                        style={{
+                          marginTop: '8px',
+                          borderTop: '0px ',
+                          borderBottom: '1px solid #737373',
+                        }}
+                      />
+                    </div>
                   </div>
-                  <h4
-                    style={{
-                      fontFamily: 'sans-serif',
-                      color: 'wheat',
-                      fontSize: '15px',
-                    }}
-                  >
-                    {tokenPairId}
-                  </h4>
-
-                  <div
-                    style={{
-                      width: '100%',
-                      margin: 'auto',
-                      marginLeft: '10px',
-                    }}
-                  >
-                    {/*Blow logic is to implement pair's individual token detials  */}
-                    <div
-                      style={{
-                        // marginLeft:'25px',
-                        width: '49%',
-                        marginTop: '15px',
-                        minWidth: '30px',
-                        border: '1px solid rgb(115, 115, 115)',
-                        height: '80px',
-                        minHeight: '50px',
-                        borderRadius: '20px',
-                        display: 'inline-block',
-                        margin: '1rem 0',
-                      }}
-                    >
-                      <div style={{ marginTop: '10px', padding: '0 1rem' }}>
-                        <img
-                          style={{
-                            height: '20px',
-                            width: '25px',
-                            display: 'inline-block',
-                          }}
-                          src={`https://ethplorer.io${token0Image}`}
-                        />
-                        &nbsp; &nbsp;{token0Reserve}&nbsp;{pairOftoke0}
-                      </div>
-
-                      <div style={{ display: 'inline-block' }}>
-                        &nbsp; &nbsp;1&nbsp;{pairOftoke0}={token1Price}&nbsp;
-                        {pairOftoke1}(${token0USDRate})
-                      </div>
-                    </div>
-                    {/*End of logic to implement pair's individual token detials  */}
-                    &nbsp;
-                    {/*Logic of second token */}
-                    <div
-                      style={{
-                        // marginLeft:'25px',
-                        width: '49%',
-                        marginTop: '15px',
-
-                        minWidth: '30px',
-                        border: '1px solid rgb(115, 115, 115)',
-                        height: '80px',
-                        minHeight: '50px',
-                        borderRadius: '20px',
-                        display: 'inline-block',
-                        margin: '1rem 0',
-                      }}
-                    >
-                      <div style={{ marginTop: '10px', padding: '0 1rem' }}>
-                        <img
-                          style={{
-                            height: '20px',
-                            width: '25px',
-                            display: 'inline-block',
-                          }}
-                          src={`https://ethplorer.io${token1Image}`}
-                        />
-                        &nbsp; &nbsp;{token1Reserve}&nbsp;{pairOftoke1}
-                      </div>
-
-                      <div style={{ display: 'inline-block' }}>
-                        &nbsp; &nbsp;1&nbsp;{pairOftoke1}={token0Price}&nbsp;
-                        {pairOftoke0}(${token1USDRate})
-                      </div>
-                    </div>
-                    {/*End of the Logic for secound token */}
-                    <br />
-                    <Typography
-                      variant="h4"
-                      sx={{ mt: 2, ml: 1, color: 'turquoise' }}
-                    >
-                      ${totalVolume}
-                    </Typography>
-                    <hr
-                      style={{
-                        marginTop: '0.01px',
-                        borderTop: '0px ',
-                        borderBottom: '1px solid #737373',
-                      }}
-                    />
-                    <div
-                      style={{
-                        color: 'darkviolet',
-                        textAlign: 'left',
-                        marginTop: '15px',
-                        fontStyle: 'unset',
-                      }}
-                    >
-                      STATS
-                    </div>
-                    <div>
-                      <BrowserView>
-                        <div
-                          style={{
-                            width: '25%',
-                            height: '125px',
-                            display: 'inline-block',
-                            color: 'blanchedalmond',
-                            marginTop: '8px',
-                          }}
-                        >
-                          1 Day
-                          <br />
-                          <br />
-                          <font
-                            color={
-                              parseInt(oneDayReserverUSD) >= 0
-                                ? '#00FFE7'
-                                : 'red'
-                            }
-                          >
-                            {oneDayReserverUSD}
-                          </font>
-                          <br />
-                          <br />
-                          <br />
-                          <br />
-                        </div>
-
-                        <div
-                          style={{
-                            width: '25%',
-                            height: '125px',
-                            display: 'inline-block',
-                            color: 'blanchedalmond',
-                          }}
-                        >
-                          1 Month
-                          <br />
-                          <br />
-                          <font
-                            color={
-                              parseInt(oneMonthState) >= 0 ? '#00FFE7' : 'red'
-                            }
-                          >
-                            {oneMonthState}
-                          </font>
-                          <br />
-                          <br />
-                          <br />
-                          <br />
-                        </div>
-
-                        <div
-                          style={{
-                            width: '25%',
-                            height: '125px',
-                            display: 'inline-block',
-                            color: 'blanchedalmond',
-                          }}
-                        >
-                          3 Months
-                          <br />
-                          <br />
-                          <font
-                            color={
-                              parseInt(threeMonthState) >= 0 ? '#00FFE7' : 'red'
-                            }
-                          >
-                            {threeMonthState}
-                          </font>
-                          <br />
-                          <br />
-                          <br />
-                          <br />
-                        </div>
-
-                        <div
-                          style={{
-                            width: '25%',
-                            height: '125px',
-                            display: 'inline-block',
-                            color: 'blanchedalmond',
-                          }}
-                        >
-                          1 Year
-                          <br />
-                          <br />
-                          <font
-                            color={
-                              parseInt(oneYearState) >= 0 ? '#00FFE7' : 'red'
-                            }
-                          >
-                            {oneYearState}%
-                          </font>
-                          <br />
-                          <br />
-                          <br />
-                          <br />
-                        </div>
-
-                        <div
-                          style={{
-                            width: '25%',
-                            height: '100px',
-                            display: 'inline-block',
-                            color: 'blanchedalmond',
-                          }}
-                        >
-                          Market Cap
-                          <br />
-                          <br />
-                          <font color="#00FFE7">{currentMarketCap}</font>
-                          <br />
-                          <br />
-                          <br />
-                          <br />
-                        </div>
-
-                        <div
-                          style={{
-                            width: '25%',
-                            height: '125px',
-                            display: 'inline-block',
-                            color: 'blanchedalmond',
-                          }}
-                        >
-                          Fully Diluted
-                          <br />
-                          <br />
-                          <font color="#00FFE7">{fullyDiluted}</font>
-                          <br />
-                          <br />
-                          <br />
-                          <br />
-                        </div>
-
-                        <div
-                          style={{
-                            width: '25%',
-                            height: '125px',
-                            display: 'inline-block',
-                            color: 'blanchedalmond',
-                          }}
-                        >
-                          Volume(24hrs)
-                          <br />
-                          <br />
-                          <font color="#00FFE7">{volume24Hrs}</font>
-                          <br />
-                          <br />
-                          <br />
-                          <br />
-                        </div>
-
-                        <div
-                          style={{
-                            width: '25%',
-                            height: '125px',
-                            display: 'inline-block',
-                            color: 'blanchedalmond',
-                          }}
-                        >
-                          Fees(24hrs)
-                          <br />
-                          <br />
-                          <font color="#00FFE7">{fees24Hrs}</font>
-                          <br />
-                          <br />
-                          <br />
-                          <br />
-                        </div>
-                      </BrowserView>
-                      <MobileView>
-                        <div
-                          style={{
-                            width: '50%',
-                            height: '125px',
-                            display: 'inline-block',
-                            color: 'blanchedalmond',
-                          }}
-                        >
-                          1 DAY
-                          <br />
-                          <br />
-                          <font
-                            color={
-                              parseInt(oneDayReserverUSD) > 0
-                                ? '#00FFE7'
-                                : 'red'
-                            }
-                          >
-                            {oneDayReserverUSD}
-                          </font>
-                          <br />
-                          <br />
-                          <br />
-                          <br />
-                        </div>
-
-                        <div
-                          style={{
-                            width: '50%',
-                            height: '125px',
-                            display: 'inline-block',
-                            color: 'blanchedalmond',
-                          }}
-                        >
-                          1 Month
-                          <br />
-                          <br />
-                          <font
-                            color={
-                              parseInt(oneMonthState) > 0 ? '#00FFE7' : 'red'
-                            }
-                          >
-                            {oneMonthState}
-                          </font>
-                          <br />
-                          <br />
-                          <br />
-                          <br />
-                        </div>
-                        <br />
-
-                        <div
-                          style={{
-                            width: '50%',
-                            height: '125px',
-                            display: 'inline-block',
-                            color: 'blanchedalmond',
-                          }}
-                        >
-                          3 Months
-                          <br />
-                          <br />
-                          <font
-                            color={
-                              parseInt(threeMonthState) > 0 ? '#00FFE7' : 'red'
-                            }
-                          >
-                            {threeMonthState}
-                          </font>
-                          <br />
-                          <br />
-                          <br />
-                          <br />
-                        </div>
-
-                        <div
-                          style={{
-                            width: '50%',
-                            height: '125px',
-                            display: 'inline-block',
-                            color: 'blanchedalmond',
-                          }}
-                        >
-                          1 Year
-                          <br />
-                          <br />
-                          <font
-                            color={
-                              parseInt(oneYearState) > 0 ? '#00FFE7' : 'red'
-                            }
-                          >
-                            {oneYearState}
-                          </font>
-                          <br />
-                          <br />
-                          <br />
-                          <br />
-                        </div>
-
-                        <br />
-
-                        <div
-                          style={{
-                            width: '50%',
-                            height: '125px',
-                            display: 'inline-block',
-                            color: 'blanchedalmond',
-                          }}
-                        >
-                          Market Cap
-                          <br />
-                          <br />
-                          <font color="#00FFE7">{currentMarketCap}</font>
-                          <br />
-                          <br />
-                          <br />
-                          <br />
-                        </div>
-
-                        <div
-                          style={{
-                            width: '50%',
-                            height: '125px',
-                            display: 'inline-block',
-                            color: 'blanchedalmond',
-                          }}
-                        >
-                          Fully Diluted
-                          <br />
-                          <br />
-                          <font color="#00FFE7">{fullyDiluted}</font>
-                          <br />
-                          <br />
-                          <br />
-                          <br />
-                        </div>
-
-                        <br />
-
-                        <div
-                          style={{
-                            width: '50%',
-                            height: '125px',
-                            display: 'inline-block',
-                            color: 'blanchedalmond',
-                          }}
-                        >
-                          Volume(24hrs)
-                          <br />
-                          <br />
-                          <font color="#00FFE7">{volume24Hrs}</font>
-                          <br />
-                          <br />
-                          <br />
-                          <br />
-                        </div>
-
-                        <div
-                          style={{
-                            width: '50%',
-                            height: '125px',
-                            display: 'inline-block',
-                            color: 'blanchedalmond',
-                          }}
-                        >
-                          Fees(24hrs)
-                          <br />
-                          <br />
-                          <font color="#00FFE7">{fees24Hrs}</font>
-                          <br />
-                          <br />
-                          <br />
-                          <br />
-                        </div>
-                      </MobileView>
-                    </div>
-                    <hr
-                      style={{
-                        marginTop: '1px',
-                        borderTop: '0px ',
-                        borderBottom: '1px solid #737373',
-                      }}
-                    />
-                    <br />
-                    <div
-                      style={{
-                        color: 'darkviolet',
-                        textAlign: 'left',
-                        fontStyle: 'unset',
-                      }}
-                    >
-                      ABOUT
-                    </div>
-                    <br />
-                    <div style={{ color: 'white' }}>
-                      <h4>
-                        &nbsp;&nbsp;&nbsp;&nbsp; SushiSwap enables the buying
-                        and selling of different cryptocurrencies between users.
-                        0.3% in fees is charged for facilitating each swap, with
-                        0.25% going to liquidity providers and 0.05% being
-                        converted to SUSHI and distributed to users holding the
-                        SUSHI token. SUSHI tokens also entitle their holders to
-                        continue earning a portion of fees, even after they’ve
-                        stopped actively providing liquidity.
-                      </h4>
-                    </div>
-                    <br />
-                    <br />
-                    <hr
-                      style={{
-                        marginTop: '8px',
-                        borderTop: '0px ',
-                        borderBottom: '1px solid #737373',
-                      }}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          </Box>
-        </Container>
+                )}
+              </div>
+            </Box>
+          </Container>
+        </Grid>
+        <Grid item md={4} style={{ display: 'inline-block' }}>
+          {!Loading && <PoolDetailChart token0={token0} token1={token1} />}
+        </Grid>
       </Grid>
-      <Grid item md={4} style={{ display: 'inline-block' }}>
-        {!Loading && <PoolDetailChart token0={token0} token1={token1} />}
+      <Grid item md={12}>
+        {!Loading && (
+          <PoolDetailsInfo
+            tokenASymbol={tokenASymbol}
+            tokenBSymbol={tokenBSymbol}
+            tokenAId={token0}
+            tokenBId={token1}
+            tokenPair={tokenPairId}
+          />
+        )}
       </Grid>
-    </Grid>
+    </Fragment>
   )
 }
