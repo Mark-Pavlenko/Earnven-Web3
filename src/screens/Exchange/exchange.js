@@ -28,7 +28,10 @@ import ScrollToTop from '../../components/ScrollToTop';
 import Avatar from 'react-avatar';
 import ethImage from '../../assets/icons/eth.png'
 import { FaAngleRight } from "react-icons/fa";
-
+import { FiPlusCircle } from "react-icons/fi";
+import IUniswapV2Router02 from '../../abi/IUniswapV2Router02.json';
+import Swap from '../../abi/SwapWithReverse.json'
+import tokenList from './TokenList';
 
 const styles = () => ({
     selected: {
@@ -99,7 +102,7 @@ export default function Exchange() {
 
     const { address } = useParams();
 
-    const [TokenFrom, setTokenFrom] = useState('ETH');
+    const [TokenFrom, setTokenFrom] = useState([]);
     const [TokenTo, setTokenTo] = useState('');
     const [TokenFromAmount, setTokenFromAmount] = useState();
     const [TokenToAmount, setTokenToAmount] = useState();
@@ -118,28 +121,22 @@ export default function Exchange() {
     const [txFailure, settxFailure] = useState(false)
     const [selectedExchangeName, setselectedExchangeName] = useState('')
     const [currencyModal, setcurrencyModal] = useState(false)
+    const [firstcurrencyModal, setfirstcurrencyModal] = useState(false)
+    const [secondcurrencyModal, setsecondcurrencyModal] = useState(false)
     const [currencyToModal, setcurrencyToModal] = useState(false)
     const [updateBalance, setupdateBalance] = useState(true)
     const [toTokens, settoTokens] = useState([])
+    const [showFirstTab, setshowFirstTab] = useState(false)
+    const [showSecondTab, setshowSecondTab] = useState(false)
+    const [ContractAddress, setcontractAddress] = useState("0xD23774726DB4d3D03Ba483514d7c8DF9bE729eEa")
+    const [Account, setAccount] = useState("")
     // const [tokenToDollarValue, settokenToDollarValue] = useState(0)
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
     useEffect(() => {
-        async function getData() {
-            console.log("get data called");
-            // let fetchedTokens;
-            // let tokens;
-            // await axios.get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
-            // await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {})
-            //     .then(async (response) => {
-            //         settoTokens(response.data.records)
-            //         fetchedTokens = response.data.records;
-            //         // fetchedTokens = response.data.tokens;
-            //         // console.log(response.data.records)
-            //     })
-
+        /* async function getData() {
             await axios.get(`https://api.ethplorer.io/getAddressInfo/${address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`, {}, {})
                 .then(async (response) => {
                     // console.log(response)
@@ -151,6 +148,7 @@ export default function Exchange() {
                         tempObj.symbol = 'ETH';
                         tempObj.balance = ((response.data.ETH.balance).toFixed(3)).toString();
                         tempObj.logoURI = ethImage;
+                        tempObj.isApprove = true;
                         arr1.push(tempObj)
                     }
                     var tokens = response.data.tokens;
@@ -166,6 +164,7 @@ export default function Exchange() {
                         else {
                             tempObj.logoURI = null;
                         }
+                        tempObj.isApprove = false;
 
                         arr1.push(tempObj);
                     }
@@ -177,55 +176,17 @@ export default function Exchange() {
 
             await axios.get(`https://cdn.furucombo.app/furucombo.tokenlist.json`, {}, {})
                 .then(async (response) => {
-                    // setAllTokens(response.data.records)
-                    // fetchedTokens = response.data.records;
-                    // fetchedTokens = response.data.tokens;
-                    // tokens = fetchedTokens;
                     settoTokens(response.data.tokens)
-                    // console.log(response.data.records)
                 })
-            // await axios.get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
-            //     .then(async (response) => {
-            //         let data = response.data.tokens;
-            //         tokens = fetchedTokens.map((token) => ({ ...token, logoURI: data.find(x => x.address == token.address) ? data.find(x => x.address == token.address).logoURI : tokenURIs.find(x => x.address == token.address).logoURI }));
-            //         console.log(tokens.filter((token) => token.logoURI === ""));
-            //         // console.log("all tokens data", tokens)
-            //         // setAllTokens(tokens)
-            //     })
+            
 
-            // console.log("value of tokens::", tokens);
-            // setAllTokens(tokens)
+        } */
+        // await getData()
 
-            // for (let i = 0; i < tokens.length; i++) {
-            //     // setcurrencyModal(false)
-            //     // setupdateBalance(false)
-            //     console.log("value of token::", tokens[i]);
-            //     let tempContractIn = new ethers.Contract(tokens[i].address, erc20Abi, selectedProvider);
-            //     let newBalanceIn = await getBalance(tokens[i].symbol, address, tempContractIn)
-            //     // console.log("token balance for this address:::", newBalanceIn);
-            //     // console.log(" real token balance for this address:::", parseFloat(formatUnits(newBalanceIn, 18)));
-            //     tokens[i].balance = parseFloat(formatUnits(newBalanceIn, tokens[i].decimals)).toFixed(3);
-            //     // setcurrencyModal(true)
-            //     setupdateBalance(!updateBalance)
-            // }
-            // for (let i = 0; i < AllTokens.length; i++) {
-            //     // setcurrencyModal(false)
-            //     // setupdateBalance(false)
-            //     console.log("value of token::", AllTokens[i]);
-            //     let tempContractIn = new ethers.Contract(AllTokens[i].address, erc20Abi, selectedProvider);
-            //     let newBalanceIn = await getBalance(AllTokens[i].symbol, address, tempContractIn)
-            //     // console.log("token balance for this address:::", newBalanceIn);
-            //     // console.log(" real token balance for this address:::", parseFloat(formatUnits(newBalanceIn, 18)));
-            //     AllTokens[i].balance = parseFloat(formatUnits(newBalanceIn, AllTokens[i].decimals)).toFixed(3);
-            //     // setcurrencyModal(true)
-            //     setupdateBalance(!updateBalance)
-            //     setAllTokens(AllTokens);
-            // }
-            // console.log("token list with token balance:::", tokens);
-            // setAllTokens(tokens);
-
-        }
-        getData()
+        const tokens = tokenList["4"];
+        setAllTokens(tokens)
+        settoTokens(tokens)
+        setLoggedInAccount()
     }, [])
 
     useEffect(() => {
@@ -241,11 +202,15 @@ export default function Exchange() {
         getEthdollarValue();
     }, [])
 
-    useEffect(() => {
-        const timeOutId = setTimeout(() => calculateToAmount(TokenFromAmount), 500);
+    /* useEffect(() => {
+        // const timeOutId = setTimeout(() => calculateToAmount(TokenFromAmount), 500);
+        const timeOutId = setTimeout(() => calculateToAmountNew(TokenFromAmount), 500);
         return () => clearTimeout(timeOutId);
-    }, [TokenFromAmount]);
+    }, [TokenFromAmount]); */
 
+    useEffect(() => {
+        calculateToAmountNew();
+    }, [TokenTo])
 
 
     /* useEffect(() => {
@@ -287,6 +252,13 @@ export default function Exchange() {
             window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
         }
 
+    }
+
+    async function setLoggedInAccount() {
+        await loadWeb3()
+        const web3 = window.web3;
+        const accounts = await web3.eth.getAccounts()
+        setAccount(accounts[0]);
     }
     async function transact() {
         await loadWeb3()
@@ -375,24 +347,6 @@ export default function Exchange() {
                 let amount = parseFloat(tokenFromAmount) * Math.pow(10, 18);
 
                 const tokenToDollarValue = await dollarValueOfToken(TokenTo.address);
-
-                /* await axios.get(`https://api.0x.org/swap/v1/quote?buyToken=${TokenTo.symbol}&sellToken=${TokenFrom}&sellAmount=${amount}&feeRecipient=0xE609192618aD9aC825B981fFECf3Dfd5E92E3cFB&buyTokenPercentageFee=0.02`, {}, {})
-                    .then(async (response) => {
-                        console.log("value came from ox:::", response)
-                        setPrice(response.data.price)
-                        setMinPrice(response.data.guaranteedPrice)
-                        setTokenToAmount((parseInt(response.data.buyAmount) * Math.pow(10, -TokenTo.decimals)).toFixed(3).toString())
-                        var sources = response.data.sources
-                        sources.sort((a, b) => parseFloat(b.proportion) - parseFloat(a.proportion));
-                        var sources2 = []
-                        for (var i = 0; i < sources.length; i++) {
-                            if (sources[i].proportion > 0) {
-                                sources2.push(sources[i])
-                            }
-                        }
-                        setSources(sources2)
-                    })
-            */
                 for (let i = 0; i < protocolsList.length; i++) {
                     try {
                         let protocolQuote = {};
@@ -474,7 +428,9 @@ export default function Exchange() {
     }
 
     const fromTokenChange = (value) => {
-        setTokenFrom(value);
+        let temp = TokenFrom;
+        temp.push(value)
+        setTokenFrom(temp);
         // setTokenTo('');
         setTokenFromAmount(0);
         setTokenToAmount(0);
@@ -500,6 +456,8 @@ export default function Exchange() {
 
     const handleDismissSearch = () => {
         setcurrencyModal(false);
+        setfirstcurrencyModal(false);
+        setsecondcurrencyModal(false);
     }
     const handleCurrencyToDismissSearch = () => {
         setcurrencyToModal(false);
@@ -516,138 +474,311 @@ export default function Exchange() {
         return newBalance
     }
 
-    /* return (
-            <div className="main-container">
-                <div className="outbox">
-                    <br/><br/>
-                    <div className="main-header">Exchange</div>
-                    <div className="box">
- 
-                        <div className="firstdiv">
-                            <div className="firstdiv1">
-                                <div className="swap"> Swap </div>
-                                <div>
- 
-                                <FormControl variant="outlined" style={{width:'120px'}}>
-                                    <InputLabel id="demo-simple-select-outlined-label" >Token</InputLabel>
-                                    <Select
-                                    style={{height:'50px', color:'white'}}
-                                    labelId="demo-simple-select-outlined-label"
-                                    id="demo-simple-select-outlined"
-                                    value={TokenFrom}
-                                    onChange={(e)=>{setTokenFrom(e.target.value)}}
-                                    label="Token"
-                                    >
-                                    <MenuItem value="" sx={{backgroundColor:'#141a1e'}}>
-                                        <em>None</em>
-                                    </MenuItem>
-                                    {AllTokens.map((object)=>
-                                        <MenuItem value={object.symbol} sx={{backgroundColor:'#141a1e'}}>
-                                            <div className="logo-container">
-                                                <img src={object.logoURI} className="logo-uri" />
-                                            </div>
-                                            {object.symbol}
-                                        </MenuItem>)}
-                                    </Select>
-                                </FormControl>
- 
-                                </div>
-                            </div>
- 
-                            <div className="firstdiv2" style={{ marginLeft: "7px" }}>
-                                <div className="number"> &nbsp; </div>
-                                <div>
-                                    <input className="inputfield"
-                                        type="text" inputMode="decimal" placeholder="00.00"
-                                        minLength="1"
-                                        maxLength="79"
-                                        spellCheck="false"
-                                        value={TokenFromAmount}
-                                        onChange={(e)=>{setTokenFromAmount(e.target.value)}}
-                                    >
-                                    </input>
-                                </div>
-                            </div>
- 
- 
- 
-                            <div className="firstdiv3">
-                                <div className="swap"> For </div>
-                                <div>
-                                <FormControl variant="outlined" style={{width:'120px'}}>
-                                    <InputLabel id="demo-simple-select-outlined-label" >Token</InputLabel>
-                                    <Select
-                                    style={{height:'50px', color:'white'}}
-                                    labelId="demo-simple-select-outlined-label"
-                                    id="demo-simple-select-outlined"
-                                    value={TokenTo}
-                                    onChange={(e)=>{setTokenTo(e.target.value)}}
-                                    label="Token"
-                                    >
-                                    <MenuItem value="" sx={{backgroundColor:'#141a1e'}}>
-                                        <em >None</em>
-                                    </MenuItem>
-                                    {AllTokens.map((object)=>
-                                        <MenuItem value={object.symbol} sx={{backgroundColor:'#141a1e'}}>
-                                            <div className="logo-container">
-                                                <img src={object.logoURI} className="logo-uri" />
-                                            </div>
-                                            {object.symbol}
-                                        </MenuItem>)}
-                                    </Select>
-                                </FormControl>
-                                </div>
-                            </div>
- 
-                            <div className="firstdiv4" style={{ marginLeft: "7px" }}>
-                                <div className="number"> &nbsp;</div>
-                                <div>
-                                    <input className="inputfield" inputMode="decimal"
-                                        type="text"
-                                        pattern="^[0-9]*[.,]?[0-9]*$"
-                                        placeholder="00.00"
-                                        minLength="1"
-                                        maxLength="79"
-                                        spellCheck="false"
-                                        value={TokenToAmount}
-                                        onChange={(e)=>{setTokenToAmount(e.target.value)}}
-                                    ></input>
-                                </div>
-                            </div>
- 
-                        </div>
-                        
-                        <div className="seconddiv">Transaction Settings</div>
-                        <font color='white'>
-                        {Sources.map((object)=><>{object.name}    :     {(parseFloat(object.proportion)*100).toFixed(2)} %<br/></>)}
-                        </font>
-                        <div className="thirddiv"> <div className="thirddiv-title"> Slippage </div> <div className="dash"></div> <div className="slippage-input-box"> <input className="slippage-input" value={Slippage} onChange={(e)=>{setSlippage(e.target.value)}} maxLength="3"></input>
-                            <div className="Percentage"> <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M0.406781 2.85C0.406781 2.19133 0.597448 1.67567 0.978781 1.303C1.36878 0.930333 1.86711 0.744 2.47378 0.744C3.08045 0.744 3.57445 0.930333 3.95578 1.303C4.34578 1.67567 4.54078 2.19133 4.54078 2.85C4.54078 3.51733 4.34578 4.03733 3.95578 4.41C3.57445 4.78267 3.08045 4.969 2.47378 4.969C1.86711 4.969 1.36878 4.78267 0.978781 4.41C0.597448 4.03733 0.406781 3.51733 0.406781 2.85ZM8.75278 0.899999L3.64378 10H1.87578L6.97178 0.899999H8.75278ZM2.46078 1.836C1.98411 1.836 1.74578 2.174 1.74578 2.85C1.74578 3.53467 1.98411 3.877 2.46078 3.877C2.69478 3.877 2.87678 3.79467 3.00678 3.63C3.13678 3.45667 3.20178 3.19667 3.20178 2.85C3.20178 2.174 2.95478 1.836 2.46078 1.836ZM6.11378 8.037C6.11378 7.36967 6.30445 6.854 6.68578 6.49C7.07578 6.11733 7.57411 5.931 8.18078 5.931C8.78745 5.931 9.27712 6.11733 9.64978 6.49C10.0311 6.854 10.2218 7.36967 10.2218 8.037C10.2218 8.70433 10.0311 9.22433 9.64978 9.597C9.27712 9.96967 8.78745 10.156 8.18078 10.156C7.56545 10.156 7.06711 9.96967 6.68578 9.597C6.30445 9.22433 6.11378 8.70433 6.11378 8.037ZM8.16778 7.023C7.67378 7.023 7.42678 7.361 7.42678 8.037C7.42678 8.72167 7.67378 9.064 8.16778 9.064C8.65312 9.064 8.89578 8.72167 8.89578 8.037C8.89578 7.361 8.65312 7.023 8.16778 7.023Z" fill="white" />
-                            </svg>
-                            </div>
-                        </div> </div>
-                        <div className="fourthdiv"><div className="fourthdiv-title"> Min. output </div> <div className="dash1"> </div> <div className="minimum-op-text">{TokenFromAmount>0? (parseFloat(TokenFromAmount)*parseFloat(minPrice)).toFixed(3):'0'}</div> </div>
-                        <div className="fifthdiv"><div className="fifthdiv-title"> Rate </div> <span className="dash2"></span> <div className="rate-text"> 1 {TokenFrom} = {parseFloat(Price).toFixed(3)} {TokenTo}</div> </div>
-                    </div>
-                    <TransparentButton value='Submit Transaction'
-                    onClick={transact}
-                    style={{
-                        height:'45px',
-                        width:'300px',
-                        background:'transparent',
-                        borderWidth:'1px',
-                        borderStyle:'solid',
-                        borderColor:'#ac6afc',
-                        borderRadius:'5px',
-                        color:'white',
-                        cursor:'pointer',
-                        float:'right'
-                    }}></TransparentButton> <br/><br/> &nbsp;
-                    /* <div className="end"><div className="submit"> <button onClick={transact} className="submit-btn">Submit</button></div></div> */
-    // </div>
-    // </div>
-    // ) */
+
+
+    const calculateToAmountNew = async (tokenFromAmount) => {
+        // let TokenFrom=[];
+        for (let i = 0; i < TokenFrom.length; i++) {
+            let inputTokenAddress, outputTokenAddress, outputTokenDecimals, inputTokenDecimals, inputTokenSymbol, outputTokenSymbol, price, data, initialData;
+            await loadWeb3()
+            const web3 = window.web3;
+
+
+            // const swapToETH = new web3.eth.Contract(SwapToETH, "0xece2546292E8569503381C4eAe9457f1115EE639");
+            const uni = new web3.eth.Contract(IUniswapV2Router02, "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D");
+            const sushi = new web3.eth.Contract(IUniswapV2Router02, "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506");
+
+            const weth2 = "0xc778417e063141139fce010982780140aa0cd5ab";
+            const weth = "0xc778417e063141139fce010982780140aa0cd5ab";
+
+            inputTokenAddress = TokenFrom[i].address;
+            outputTokenAddress = TokenTo.address;
+            outputTokenDecimals = TokenTo.decimals;
+            inputTokenDecimals = TokenFrom[i].decimals;
+            inputTokenSymbol = TokenFrom[i].symbol;
+            outputTokenSymbol = TokenTo.symbol;
+
+            const inputAmount = (1 * 10 ** parseInt(inputTokenDecimals)).toString();
+
+            // TokenFrom.push(TokenFrom[i])
+            TokenFrom[i].targetPrice = 0;
+            TokenFrom[i].path = "";
+            if
+                (
+                // Condition
+                (!inputTokenAddress && inputTokenSymbol === "ETH" && outputTokenAddress === weth2) ||
+                (!outputTokenAddress && outputTokenSymbol === "ETH" && inputTokenAddress === weth)
+            ) {
+                TokenFrom[i].targetPrice = "1";
+                TokenFrom[i].path = "1";
+            }
+            else if
+                (
+                // Condition
+                (!inputTokenAddress && inputTokenSymbol === "ETH" && outputTokenAddress === weth2) ||
+                (!outputTokenAddress && outputTokenSymbol === "ETH" && inputTokenAddress === weth2)
+            ) {
+                TokenFrom[i].targetPrice = "1";
+                TokenFrom[i].path = "5";
+            }
+            else if (!inputTokenAddress && inputTokenSymbol === "ETH") {
+                // uni
+                data = await getPrice(uni.methods, inputAmount, weth, outputTokenAddress, outputTokenDecimals, "uni");
+                if (data.res && parseFloat(TokenFrom[i].targetPrice) < parseFloat(data.price)) {
+
+                    TokenFrom[i].targetPrice = data.price;
+                    TokenFrom[i].path = "1";
+                }
+
+                // Sushi
+                data = await getPrice(sushi.methods, inputAmount, weth2, outputTokenAddress, outputTokenDecimals, "sushi");
+                if (data.res && parseFloat(TokenFrom[i].targetPrice) < parseFloat(data.price)) {
+                    TokenFrom[i].targetPrice = data.price;
+                    TokenFrom[i].path = "5";
+                }
+
+            }
+            else {
+                if (outputTokenAddress !== weth && outputTokenAddress !== weth2) {
+                    // uni Initial
+                    initialData = await getPrice(uni.methods, inputAmount, inputTokenAddress, weth, outputTokenDecimals, "uni lvl 2");
+
+                    // uni
+                    data = await getPrice(uni.methods, initialData.res, weth, outputTokenAddress, outputTokenDecimals, "uni to uni");
+                    if (data.res && parseFloat(TokenFrom[i].targetPrice) < parseFloat(data.price)) {
+                        TokenFrom[i].targetPrice = data.price;
+                        TokenFrom[i].path = "2";
+                    }
+
+                    // Sushi
+                    data = await getPrice(sushi.methods, initialData.res, weth2, outputTokenAddress, outputTokenDecimals, "uni to sushi");
+                    if (data.res && parseFloat(TokenFrom[i].targetPrice) < parseFloat(data.price)) {
+                        TokenFrom[i].targetPrice = data.price;
+                        TokenFrom[i].path = "3";
+                    }
+
+                    initialData = await getPrice(sushi.methods, inputAmount, inputTokenAddress, weth2, outputTokenDecimals, "sushi lvl 2");
+
+                    // uni
+                    data = await getPrice(uni.methods, initialData.res, weth, outputTokenAddress, outputTokenDecimals, "sushi to uni");
+                    if (data.res && parseFloat(TokenFrom[i].targetPrice) < parseFloat(data.price)) {
+                        TokenFrom[i].targetPrice = data.price;
+                        TokenFrom[i].path = "7";
+                    }
+
+                    // Sushi
+                    data = await getPrice(sushi.methods, initialData.res, weth2, outputTokenAddress, outputTokenDecimals, "sushi to sushi");
+                    if (data.res && parseFloat(TokenFrom[i].targetPrice) < parseFloat(data.price)) {
+                        TokenFrom[i].targetPrice = data.price;
+                        TokenFrom[i].path = "6";
+                    }
+
+                }
+                if (inputTokenAddress === weth) {
+                    initialData = await getPrice(uni.methods, inputAmount, weth, weth2, outputTokenDecimals, "uni lvl 2");
+
+                    data = await getPrice(sushi.methods, initialData.res, weth2, outputTokenAddress, outputTokenDecimals, "uni to sushi");
+                    if (data.res && parseFloat(TokenFrom[i].targetPrice) < parseFloat(data.price)) {
+                        TokenFrom[i].targetPrice = data.price;
+                        TokenFrom[i].path = "3";
+                    }
+                }
+                if (inputTokenAddress === weth2) {
+                    initialData = await getPrice(sushi.methods, inputAmount, weth2, weth, outputTokenDecimals, "sushi lvl 2");
+
+                    data = await getPrice(uni.methods, initialData.res, weth, outputTokenAddress, outputTokenDecimals, "sushi to uni");
+                    if (data.res && parseFloat(TokenFrom[i].targetPrice) < parseFloat(data.price)) {
+                        TokenFrom[i].targetPrice = data.price;
+                        TokenFrom[i].path = "7";
+                    }
+
+                }
+                if (outputTokenAddress === weth) {
+                    initialData = await getPrice(sushi.methods, inputAmount, inputTokenAddress, weth2, outputTokenDecimals, "sushi lvl 2");
+
+                    data = await getPrice(uni.methods, initialData.res, weth2, weth, outputTokenDecimals, "sushi to uni");
+                    if (data.res && parseFloat(TokenFrom[i].targetPrice) < parseFloat(data.price)) {
+                        TokenFrom[i].targetPrice = data.price;
+                        TokenFrom[i].path = "13";
+                    }
+                }
+
+                data = await getPrice(uni.methods, inputAmount, inputTokenAddress, outputTokenAddress || weth, outputTokenDecimals, "uni");
+                if (data.res && parseFloat(TokenFrom[i].targetPrice) < parseFloat(data.price)) {
+                    TokenFrom[i].targetPrice = data.price;
+                    TokenFrom[i].path = "1";
+                }
+
+                data = await getPrice(sushi.methods, inputAmount, inputTokenAddress, outputTokenAddress || weth2, outputTokenDecimals, "sushi");
+                if (data.res && parseFloat(TokenFrom[i].targetPrice) < parseFloat(data.price)) {
+                    TokenFrom[i].targetPrice = data.price;
+                    TokenFrom[i].path = "5";
+
+                }
+                // console.log("value of target price::::", TokenFrom[i].targetPrice);
+                // console.log("value of target TokenFrom[i].path::::", TokenFrom[i].path);
+
+            }
+        }
+
+        // setTokenFrom(TokenFrom);
+       
+
+
+    }
+
+
+    const getPrice = async (router, amount, firstpath, secondpath, decimals, route) => {
+        console.log("value of amount", amount);
+        console.log("value of first", firstpath);
+        console.log("value of secondu", secondpath);
+        console.log("value of router", router);
+        console.log("value of weth", await router.WETH().call());
+        console.log("test",);
+
+        try {
+            const res = await router.getAmountsOut(amount, [firstpath, secondpath]).call({ from: "0xD5Cd7dC05279653F960736482aBc7A7B2bF39B5d" });
+            // const res = await router.getAmountsOut("1000000000000000000", ["0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984", "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa"]).call();
+            const price = (parseInt(res[1]) / 10 ** parseInt(decimals)).toString();
+            // console.log(`${route}: `, res);
+            return { price, res: res[1] };
+        }
+        catch (error) {
+            // console.log(`error in ${route}`);
+            console.log("error came while fetching data:::", error);
+            return { res: 0 };
+        }
+    }
+
+
+    const handleApproveMultiToSingleToken = async () => {
+        const web3 = window.web3;
+        // const { tokenBlock, account, contractAddress } = this.state;
+        const tokenBlock = TokenFrom;
+        const contractAddress = ContractAddress;
+        const account = Account;
+
+        // if (!account.length) return alert("Please connect your wallet");
+        for (let i = 0; i < tokenBlock.length; i++) {
+            if (tokenBlock[i].isApprove) continue;
+
+            const ercContract = await new web3.eth.Contract(ERC20ABI, tokenBlock[i].address);
+            const totalSupply = await ercContract.methods.totalSupply().call({ from: account });
+            await ercContract.methods.approve(contractAddress, totalSupply).send({ from: account }).then(() => {
+                tokenBlock[i].isApprove = true;
+                // this.setState({ ...this.state });
+            })
+                .catch((error) => {
+                    alert('Transaction Failed');
+                })
+        }
+        setTokenFrom(tokenBlock);
+    }
+
+
+    const handleMultiToSingleTokenSwap = async () => {
+        // const { tokenBlock, account, isMultiToSingleToken, selectedDownToken } = this.state;
+        const tokenBlock = TokenFrom;
+        const account = Account;
+        const isValid = tokenBlock.every((token) => token.isApprove);
+        const isMultiToSingleToken = true;
+        const selectedDownToken = TokenTo;
+        const web3 = window.web3;
+        const swap = new web3.eth.Contract(Swap, "0xD23774726DB4d3D03Ba483514d7c8DF9bE729eEa");
+
+        if (isValid) {
+            const weth2 = "0xc778417e063141139fce010982780140aa0cd5ab";
+            const weth = "0xc778417e063141139fce010982780140aa0cd5ab";
+            // this.setState({isSwapLoading: true});
+            // this.setState({isSwapMiniLoading: true});
+            const tokenInputAddress = tokenBlock.map((token) => !!token.address ? token.address : token.path == 1 ? weth : weth2);
+            // const tokenInputAddress = ["0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984"];
+            const tokenInputAmount = tokenBlock.map((token) => (parseFloat(token.tokenAmount) * 10 ** parseInt(token.decimals)).toString());
+            // const tokenInputAmount = ["2000", "2000"];
+            const swapRoute = tokenBlock.map((token) => token.path);
+            const isEth = tokenBlock.map((token) => token.isEth);;
+            const targetTokenAddress = TokenTo.address;
+
+
+            if (TokenTo.symbol === "ETH") {
+                await swap.methods.swapToETH(tokenInputAmount, tokenInputAddress, swapRoute).send({ from: account })
+                    .once('transactionHash', (txHash) => {
+                        // this.setState({ transactionHash: txHash });
+                        // this.setState({ isSwapLoading: false });
+                        // this.setState({ isTransactionSubmitted: true });
+                        alert("swapping is successfully done")
+                    })
+                    .then(() => {
+                        // this.updateBalances();
+                        // this.setState({ isSwapMiniLoading: false });
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    })
+            }
+            else if (isEth.includes(true)) {
+                const matic = tokenBlock.find((token) => token.isEth);
+
+
+                const maticAmount = (parseFloat(matic.tokenAmount) * 10 ** parseInt(matic.decimals)).toString();
+
+                console.log("value of matic amount::", maticAmount);
+                await swap.methods.swap(tokenInputAmount, tokenInputAddress, swapRoute, isEth, targetTokenAddress, isMultiToSingleToken, TokenTo.isEth).send({ from: account, value: maticAmount })
+                    .once('transactionHash', (txHash) => {
+                        // this.setState({ transactionHash: txHash });
+                        // this.setState({ isSwapLoading: false });
+                        // this.setState({ isTransactionSubmitted: true });
+                        alert("swapping is successfully done")
+                    })
+                    .then(() => {
+                        // this.updateBalances();
+                        // this.setState({ isSwapMiniLoading: false });
+                    })
+                    .catch((error) => {
+                        if (error.code === 4001) {
+                            // this.setState({ isSwapLoading: false });
+                            // this.setState({ isSwapMiniLoading: false });
+                        }
+                    })
+            }
+            else {
+                console.log("value of tokeninputaddress::", tokenInputAddress);
+                console.log("value of targetTokenAddress::", targetTokenAddress);
+                console.log("value of amountIN::", tokenInputAmount);
+                console.log("value of swapRoute::", swapRoute);
+                console.log("value of isMultiToSingleToken::", isMultiToSingleToken);
+                console.log("value of selecteddowntoken isEth::", selectedDownToken.isEth);
+                console.log("value of isEth::", isEth);
+                await swap.methods.swap(tokenInputAmount, tokenInputAddress, swapRoute, isEth, targetTokenAddress, isMultiToSingleToken, TokenTo.isEth).send({ from: account })
+                    .once('transactionHash', (txHash) => {
+                        // this.setState({ transactionHash: txHash });
+                        // this.setState({ isSwapLoading: false });
+                        // this.setState({ isTransactionSubmitted: true });
+                        alert("swapping is successfully done")
+                    })
+                    .then(() => {
+                        // this.updateBalances();
+                        // this.setState({ isSwapMiniLoading: false });
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    })
+            }
+        }
+        else {
+            alert("Please approve the token first")
+        }
+    }
+
+    const setTokenFromAmt = (value,index)=>{
+        TokenFrom[index].tokenAmount = value;
+    }
+
+    const swapTokens = async()=>{
+        await handleApproveMultiToSingleToken();
+        await handleMultiToSingleTokenSwap();
+    }
+
 
     return (
         <Grid container >
@@ -656,73 +787,29 @@ export default function Exchange() {
                     <Typography variant='h3' sx={{ fontStyle: 'normal' }}>Exchange</Typography>
                     <Container sx={{ border: "1px solid #737373", borderRadius: '7px', boxSizing: 'border-box', mt: 2.5 }}>
                         <Box sx={{ mt: 4, mb: 3 }}>
-                            <Stack direction='row' spacing={2}>
+                            <Stack spacing={2}>
                                 <Stack spacing={0.5}>
                                     <Typography variant='caption' sx={{ color: '#f5f5f5' }}>Swap</Typography>
-                                    <FormControl variant="outlined" style={{ width: '120px' }}>
-                                        {/* <Select
-                                            style={{ height: '56px', color: 'white' }}
-                                            displayEmpty
-                                            value={TokenFrom}
-                                            onChange={(e) => { fromTokenChange(e.target.value) }}
-                                            sx={{ background: (theme) => (theme.palette.gradients.custom) }}
-                                        >
-                                            <MenuItem value="">
-                                                <em>Select</em>
-                                            </MenuItem>
-                                            {AllTokens.map((object) =>
-                                                <MenuItem value={object.symbol} sx={{
-                                                    backgroundColor: '#141a1e', '&:hover': {
-                                                        background: (theme) => (theme.palette.gradients.custom)
-                                                    },
-                                                    width: 300,
+                                    <Stack direction='row' spacing={1}>
+                                        <FormControl variant="outlined" style={{ width: '120px' }}>
+
+                                            <Button
+                                                variant='outlined'
+                                                color='primary'
+                                                sx={{
+                                                    height: '57px', color: '#fff', fontWeight: 500, fontSize: '20px',
+                                                    background: (theme) => theme.palette.gradients.custom
                                                 }}
+                                                onClick={() => {
+                                                    setcurrencyModal(true);
+                                                }}
+                                            >{TokenFrom[0] === undefined ? "select" : TokenFrom[0].symbol}
+                                            </Button>
+                                        </FormControl>
+                                        
+                                        {/* {TokenTo!== '' && <Typography>1 {TokenFrom[0].symbol} = {TokenFrom[0].targetPrice}{TokenTo.symbol}</Typography>} */}
+                                    </Stack>
 
-                                                >
-                                                    <Box>
-                                                        <Stack direction='row' spacing={1}>
-                                                            <div className="logo-container">
-                                                                <img src={object.logoURI} className="logo-uri" />
-                                                            </div>
-                                                            <Typography variant='body1'>{object.symbol}</Typography>
-                                                            <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
-                                                            <div float='right' >
-                                                                {object.balance && <Typography variant='caption' sx={{ color: '#fff' }}>{object.balance}</Typography>}
-                                                            </div>
-                                                            <Loader type="Rings" color="#BB86FC" height={30} width={30} />
-                                                        </Stack>
-                                                    </Box>
-                                                </MenuItem>)}
-                                        </Select> */}
-                                        <Button
-                                            variant='outlined'
-                                            color='primary'
-                                            sx={{
-                                                height: '57px', color: '#fff', fontWeight: 500, fontSize: '20px',
-                                                background: (theme) => theme.palette.gradients.custom
-                                            }}
-                                            onClick={() => {
-                                                setcurrencyModal(true);
-                                            }}
-                                        >{TokenFrom}
-                                        </Button>
-                                    </FormControl>
-                                    {/*  <CurrencySelect onClick={test}>
-                                    hi
-                                    </CurrencySelect> */}
-
-                                    {/*  <Button variant='outlined'
-                                        onClick={() => {
-                                            setcurrencyModal(true);
-                                             test()
-                                        }}>
-                                        Test
-                                    </Button>
-                                    <CurrencySearchModal
-                                        isOpen={currencyModal}
-                                        onDismiss={handleDismissSearch}
-                                    >
-                                    </CurrencySearchModal> */}
                                     <Modal
                                         open={currencyModal}
                                         onClose={handleDismissSearch}
@@ -752,7 +839,7 @@ export default function Exchange() {
                                                 <Box >
                                                     <Box
                                                         onClick={() => {
-                                                            fromTokenChange(object.symbol);
+                                                            fromTokenChange(object);
                                                             setcurrencyModal(false)
                                                         }
                                                         }
@@ -788,11 +875,11 @@ export default function Exchange() {
                                                             </Stack>
 
                                                             <Box sx={{ flexGrow: 1 }}></Box>
-                                                            <Box sx={{ marginTop: '5px' }}>
+                                                            {/* <Box sx={{ marginTop: '5px' }}>
                                                                 <Typography >
                                                                     {object.balance === undefined ? <Loader type="Rings" color="#BB86FC" height={30} width={30} /> : object.balance}
                                                                 </Typography>
-                                                            </Box>
+                                                            </Box> */}
                                                         </Stack>
                                                     </Box>
                                                     {/* <Divider variant='fullWidth' sx={{  }}></Divider> */}
@@ -802,19 +889,85 @@ export default function Exchange() {
 
                                     </Modal>
 
-                                </Stack>
-                                <Stack spacing={0.5}>
-                                    <Typography variant='caption' sx={{ color: '#0E1214' }}>0</Typography>
                                     <TextField variant='outlined'
                                         id="outlined-basic"
                                         placeholder="00.00"
-                                        value={TokenFromAmount}
+                                        value={TokenFrom[0] !== undefined ?TokenFrom[0].tokenAmount:null}
                                         onChange={(e) => {
-                                            setTokenFromAmount(e.target.value);
+                                            // setTokenFromAmount(e.target.value);
+                                            setTokenFromAmt(e.target.value,0)
                                             // calculateToAmount(e.target.value);
                                         }}>
                                     </TextField>
+
+                                    <FiPlusCircle style={{ marginLeft: '54px', cursor: 'pointer' }} onClick={() => setshowFirstTab(true)} />
+                                    {showFirstTab && 
+                                    <Stack direction='row' spacing={1}>
+                                    <FormControl variant="outlined" style={{ width: '120px' }}>
+                                        <Button
+                                            variant='outlined'
+                                            color='primary'
+                                            sx={{
+                                                height: '57px', color: '#fff', fontWeight: 500, fontSize: '20px',
+                                                background: (theme) => theme.palette.gradients.custom
+                                            }}
+                                            onClick={() => {
+                                                setfirstcurrencyModal(true);
+                                            }}
+                                        >{TokenFrom[1] === undefined ? "select" : TokenFrom[1].symbol}
+                                        </Button>
+                                    </FormControl>
+                                    {/* {TokenTo!== '' && <Typography>1 {TokenFrom[1].symbol} = {TokenFrom[1].targetPrice}{TokenTo.symbol}</Typography>} */}
+                                    </Stack>}
+
+                                    {showFirstTab && <TextField variant='outlined'
+                                        id="outlined-basic"
+                                        placeholder="00.00"
+                                        value={TokenFrom[1] !== undefined ?TokenFrom[1].tokenAmount:null}
+                                        onChange={(e) => {
+                                            // setTokenFromAmount(e.target.value);
+                                            setTokenFromAmt(e.target.value,1)
+                                            // calculateToAmount(e.target.value);
+                                        }}
+                                        style={{ marginTop: '3px' }}
+                                    >
+                                    </TextField>}
+                                    {showFirstTab && <FiPlusCircle style={{ marginLeft: '54px', cursor: 'pointer' }} onClick={() => setshowSecondTab(true)} />}
+                                    {showSecondTab && <FormControl variant="outlined" style={{ width: '120px' }}>
+                                        <Button
+                                            variant='outlined'
+                                            color='primary'
+                                            sx={{
+                                                height: '57px', color: '#fff', fontWeight: 500, fontSize: '20px',
+                                                background: (theme) => theme.palette.gradients.custom
+                                            }}
+                                            onClick={() => {
+                                                setsecondcurrencyModal(true);
+                                            }}
+                                        >{TokenFrom[2] === undefined ? "select" : TokenFrom[2].symbol}
+                                        </Button>
+                                    </FormControl>}
+
+                                    {showSecondTab && <TextField variant='outlined'
+                                        id="outlined-basic"
+                                        placeholder="00.00"
+                                        value={TokenFrom[2] !== undefined ?TokenFrom[2].tokenAmount:null}
+                                        onChange={(e) => {
+                                            // setTokenFromAmount(e.target.value);
+                                            setTokenFromAmt(e.target.value,2)
+                                            // calculateToAmount(e.target.value);
+                                        }}
+                                        style={{ marginTop: '3px' }}
+                                    >
+                                    </TextField>}
+
                                 </Stack>
+                                {/*  <Stack spacing={0.5}>
+                                    <Typography variant='caption' sx={{ color: '#0E1214' }}>0</Typography>
+                                    
+
+                                    
+                                </Stack> */}
 
                                 <Stack spacing={0.5}>
                                     <Typography variant='caption' sx={{ color: '#f5f5f5' }}>For</Typography>
@@ -898,10 +1051,6 @@ export default function Exchange() {
                                         </Box>
 
                                     </Modal>
-
-                                </Stack>
-                                <Stack spacing={0.5}>
-                                    <Typography variant='caption' sx={{ color: '#0E1214' }}>0</Typography>
                                     <TextField variant='outlined'
                                         id="outlined-basic"
                                         placeholder="00.00"
@@ -909,14 +1058,19 @@ export default function Exchange() {
                                         onChange={(e) => { setTokenToAmount(e.target.value) }}
                                         disabled>
                                     </TextField>
+
                                 </Stack>
+                                {/* <Stack spacing={0.5}>
+                                    <Typography variant='caption' sx={{ color: '#0E1214' }}>0</Typography>
+                                    
+                                </Stack> */}
 
                             </Stack>
                             {selectedRate !== null && protocolsRateList.length === 0 ? <Typography variant='caption' sx={{ color: '#FFC107' }}>This Exchange is yet not supported</Typography> : <></>}
                             <Stack direction='row' sx={{ mt: 2 }}>
                                 {Sources.map((object) =>
                                     <div>
-                                        <Button variant='contained' color='primary' disabled size='small' sx={{fontSize:'10px'}}>
+                                        <Button variant='contained' color='primary' disabled size='small' sx={{ fontSize: '10px' }}>
                                             {(parseFloat(object.proportion) * 100).toFixed(2)}% {object.name}
                                         </Button>
                                         <FaAngleRight style={{ paddingTop: '6px', marginLeft: '1px', color: '#737373' }} />
@@ -995,17 +1149,6 @@ export default function Exchange() {
 
                                             ))}
 
-                                            {/* <Box sx={{ border: '1px solid #737373', borderRadius: '7px', mt: 1, p: 1 }}>
-                                        <Stack direction='row' spacing={2}>
-                                            <Typography variant='body1'>$3,214</Typography>
-                                            <Typography variant='body1'>$20.86</Typography>
-                                            <Box sx={{ flexGrow: 1 }}></Box>
-                                            <Tooltip title='uniswap'>
-                                                <img alt="" width="21" height="20" src="https://assets.coingecko.com/coins/images/12504/small/uniswap-uni.png?1600306604" ></img>
-                                            </Tooltip>
-                                        </Stack>
-
-                                    </Box> */}
                                             <Box sx={{ marginLeft: '30%' }}>
                                                 <Button onClick={updateSelectedRate} variant='outlined' sx={{ mt: 2 }} >Save for This Trade</Button>
                                             </Box>
@@ -1032,7 +1175,7 @@ export default function Exchange() {
                     {txSuccess && <Typography variant='caption' sx={{ color: '#54D62C' }}>Swap is done Successfully</Typography>}
                     {txFailure && <Typography variant='caption' sx={{ color: '#FF4842' }}>Swap is Failed</Typography>}
                     <TransparentButton value='Submit'
-                        onClick={transact}
+                        onClick={swapTokens}
                         style={{
                             height: '45px',
                             width: '200px',
@@ -1046,8 +1189,168 @@ export default function Exchange() {
                             float: 'right',
                             marginTop: '20px'
                         }}></TransparentButton> <br /><br /> &nbsp;
+
+                    <Button onClick={() => { calculateToAmountNew(1) }}>Testing</Button>
                 </Container>
             </Grid>
+            <Modal
+                open={firstcurrencyModal}
+                onClose={handleDismissSearch}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+
+            >
+                <Box
+                    sx={{
+                        marginTop: '2%',
+                        maxHeight: '520px',
+                        overflow: 'scroll',
+                        position: 'absolute',
+                        top: '45%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: 400,
+                        bgcolor: 'background.default',
+                        // border: '2px solid #000',
+                        // boxShadow: 24,
+                        p: 4,
+                        borderRadius: '15px'
+                    }}>
+                    <Typography variant='h6' align='center' sx={{ color: '#f5f5f5' }}>Token List</Typography>
+                    <Divider variant='fullWidth' sx={{ mt: 3 }}></Divider>
+                    {AllTokens.map((object) =>
+                        <Box >
+                            <Box
+                                onClick={() => {
+                                    fromTokenChange(object);
+                                    setfirstcurrencyModal(false)
+                                }
+                                }
+                                sx={{
+                                    mt: 1, p: 1, cursor: 'pointer',
+                                    '&:hover': {
+                                        background: (theme) => (theme.palette.gradients.custom)
+                                    }
+                                }}>
+                                <Stack direction='row' spacing={2}>
+                                    <Box sx={{ marginTop: '5px' }}>
+                                        {object.logoURI !== null ? <img alt="" width="30" height="30" src={object.logoURI}
+                                            style={{
+                                                borderRadius: '50%',
+                                                backgroundColor: '#e5e5e5'
+                                            }}>
+                                        </img>
+                                            :
+                                            <Avatar style={{
+                                                display: 'inline',
+                                                maxWidth: '30px',
+                                                verticalAlign: 'top',
+                                                height: "30px",
+                                                // marginLeft: '11px',
+
+                                            }} color={"#737373"} name={object.name} round={true} size="30" textSizeRatio={1} />
+                                        }
+
+                                    </Box>
+                                    <Stack direction='column' >
+                                        <Typography variant='body1' sx={{ color: '#e3e3e3' }}>{object.symbol}</Typography>
+                                        <Typography variant='caption' sx={{ color: '#e3e3e3', fontSize: '11px' }}>{object.name}</Typography>
+                                    </Stack>
+
+                                    <Box sx={{ flexGrow: 1 }}></Box>
+                                    {/*  <Box sx={{ marginTop: '5px' }}>
+                                        <Typography >
+                                            {object.balance === undefined ? <Loader type="Rings" color="#BB86FC" height={30} width={30} /> : object.balance}
+                                        </Typography>
+                                    </Box> */}
+                                </Stack>
+                            </Box>
+                            {/* <Divider variant='fullWidth' sx={{  }}></Divider> */}
+                        </Box>
+                    )}
+                </Box>
+
+            </Modal>
+
+            <Modal
+                open={secondcurrencyModal}
+                onClose={handleDismissSearch}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+
+            >
+                <Box
+                    sx={{
+                        marginTop: '2%',
+                        maxHeight: '520px',
+                        overflow: 'scroll',
+                        position: 'absolute',
+                        top: '45%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: 400,
+                        bgcolor: 'background.default',
+                        // border: '2px solid #000',
+                        // boxShadow: 24,
+                        p: 4,
+                        borderRadius: '15px'
+                    }}>
+                    <Typography variant='h6' align='center' sx={{ color: '#f5f5f5' }}>Token List</Typography>
+                    <Divider variant='fullWidth' sx={{ mt: 3 }}></Divider>
+                    {AllTokens.map((object) =>
+                        <Box >
+                            <Box
+                                onClick={() => {
+                                    fromTokenChange(object);
+                                    setsecondcurrencyModal(false)
+                                }
+                                }
+                                sx={{
+                                    mt: 1, p: 1, cursor: 'pointer',
+                                    '&:hover': {
+                                        background: (theme) => (theme.palette.gradients.custom)
+                                    }
+                                }}>
+                                <Stack direction='row' spacing={2}>
+                                    <Box sx={{ marginTop: '5px' }}>
+                                        {object.logoURI !== null ? <img alt="" width="30" height="30" src={object.logoURI}
+                                            style={{
+                                                borderRadius: '50%',
+                                                backgroundColor: '#e5e5e5'
+                                            }}>
+                                        </img>
+                                            :
+                                            <Avatar style={{
+                                                display: 'inline',
+                                                maxWidth: '30px',
+                                                verticalAlign: 'top',
+                                                height: "30px",
+                                                // marginLeft: '11px',
+
+                                            }} color={"#737373"} name={object.name} round={true} size="30" textSizeRatio={1} />
+                                        }
+
+                                    </Box>
+                                    <Stack direction='column' >
+                                        <Typography variant='body1' sx={{ color: '#e3e3e3' }}>{object.symbol}</Typography>
+                                        <Typography variant='caption' sx={{ color: '#e3e3e3', fontSize: '11px' }}>{object.name}</Typography>
+                                    </Stack>
+
+                                    <Box sx={{ flexGrow: 1 }}></Box>
+                                    {/* <Box sx={{ marginTop: '5px' }}>
+                                        <Typography >
+                                            {object.balance === undefined ? <Loader type="Rings" color="#BB86FC" height={30} width={30} /> : object.balance}
+                                        </Typography>
+                                    </Box> */}
+                                </Stack>
+                            </Box>
+                            {/* <Divider variant='fullWidth' sx={{  }}></Divider> */}
+                        </Box>
+                    )}
+                </Box>
+
+            </Modal>
+            {console.log("value of selected token:::", TokenFrom)}
         </Grid >
     );
 
