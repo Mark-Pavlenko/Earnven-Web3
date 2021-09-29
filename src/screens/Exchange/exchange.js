@@ -130,6 +130,7 @@ export default function Exchange() {
     const [showSecondTab, setshowSecondTab] = useState(false)
     const [ContractAddress, setcontractAddress] = useState("0xD23774726DB4d3D03Ba483514d7c8DF9bE729eEa")
     const [Account, setAccount] = useState("")
+    const [totalToAmount, settotalToAmount] = useState('')
     // const [tokenToDollarValue, settokenToDollarValue] = useState(0)
 
     const handleOpen = () => setOpen(true);
@@ -210,6 +211,7 @@ export default function Exchange() {
 
     useEffect(() => {
         calculateToAmountNew();
+        
     }, [TokenTo])
 
 
@@ -621,6 +623,10 @@ export default function Exchange() {
             }
         }
 
+        if(TokenTo!==''){
+            tokenToTotalValue();
+        }
+
         // setTokenFrom(TokenFrom);
        
 
@@ -779,6 +785,21 @@ export default function Exchange() {
         await handleMultiToSingleTokenSwap();
     }
 
+    const tokenToTotalValue = async()=>{
+        if(TokenFrom.length>0 && TokenTo !==''){
+            console.log("value of Tokenfrom::",TokenFrom)
+            let totalValue = 0;
+            for(let i=0;i<TokenFrom.length;i++){
+                totalValue=totalValue+ (parseFloat(TokenFrom[i].tokenAmount)*parseFloat(TokenFrom[i].targetPrice))
+            }
+            settotalToAmount(totalValue);
+        }
+        
+        else{
+            console.log("Please select tokens first")
+        }
+    }
+
 
     return (
         <Grid container >
@@ -840,6 +861,7 @@ export default function Exchange() {
                                                     <Box
                                                         onClick={() => {
                                                             fromTokenChange(object);
+                                                            
                                                             setcurrencyModal(false)
                                                         }
                                                         }
@@ -896,6 +918,7 @@ export default function Exchange() {
                                         onChange={(e) => {
                                             // setTokenFromAmount(e.target.value);
                                             setTokenFromAmt(e.target.value,0)
+                                            tokenToTotalValue()
                                             // calculateToAmount(e.target.value);
                                         }}>
                                     </TextField>
@@ -927,6 +950,7 @@ export default function Exchange() {
                                         onChange={(e) => {
                                             // setTokenFromAmount(e.target.value);
                                             setTokenFromAmt(e.target.value,1)
+                                            tokenToTotalValue()
                                             // calculateToAmount(e.target.value);
                                         }}
                                         style={{ marginTop: '3px' }}
@@ -955,6 +979,7 @@ export default function Exchange() {
                                         onChange={(e) => {
                                             // setTokenFromAmount(e.target.value);
                                             setTokenFromAmt(e.target.value,2)
+                                            tokenToTotalValue()
                                             // calculateToAmount(e.target.value);
                                         }}
                                         style={{ marginTop: '3px' }}
@@ -1014,6 +1039,7 @@ export default function Exchange() {
                                                     <Box
                                                         onClick={() => {
                                                             ToTokenChange(object);
+                                                            
                                                             setcurrencyToModal(false)
                                                         }
                                                         }
@@ -1054,7 +1080,8 @@ export default function Exchange() {
                                     <TextField variant='outlined'
                                         id="outlined-basic"
                                         placeholder="00.00"
-                                        value={selectedRate !== null && protocolsRateList.length > 0 ? selectedRate.TokenToAmount : "00.00"}
+                                        // value={selectedRate !== null && protocolsRateList.length > 0 ? selectedRate.TokenToAmount : "00.00"}
+                                        value={ totalToAmount!== ''? totalToAmount : "00.00"}
                                         onChange={(e) => { setTokenToAmount(e.target.value) }}
                                         disabled>
                                     </TextField>
@@ -1161,13 +1188,19 @@ export default function Exchange() {
                             <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
                                 <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Min. output</Typography>
                                 <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
-                                <Typography variant='body2'>{selectedRate !== null && protocolsRateList.length > 0 ? ((parseFloat(TokenFromAmount) * parseFloat(selectedRate.minPrice)).toFixed(3)) : "00.00"}{TokenTo !== '' ? TokenTo.symbol : ''}</Typography>
+                                {/* <Typography variant='body2'>{selectedRate !== null && protocolsRateList.length > 0 ? ((parseFloat(TokenFromAmount) * parseFloat(selectedRate.minPrice)).toFixed(3)) : "00.00"}{TokenTo !== '' ? TokenTo.symbol : ''}</Typography> */}
+                                <Typography variant='body2'>{totalToAmount !== '' ? totalToAmount : "00.00"}{TokenTo !== '' ? TokenTo.symbol : ''}</Typography>
                             </Stack>
 
                             <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
                                 <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Rate</Typography>
                                 <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
-                                <Typography variant='body2'> 1 {TokenFrom} = {selectedRate !== null && protocolsRateList.length > 0 ? parseFloat(selectedRate.price).toFixed(3) : '00.00'} {TokenTo !== '' ? TokenTo.symbol : ''}</Typography>
+                                {/* <Typography variant='body2'> 1 {TokenFrom} = {selectedRate !== null && protocolsRateList.length > 0 ? parseFloat(selectedRate.price).toFixed(3) : '00.00'} {TokenTo !== '' ? TokenTo.symbol : ''}</Typography> */}
+                                <Stack>
+                                    <Typography variant='body2'>{TokenFrom[0]!==undefined && TokenTo !==''? `1${TokenFrom[0].symbol}=${TokenFrom[0].targetPrice}${TokenTo.symbol}`:''}</Typography>
+                                    <Typography variant='body2'>{TokenFrom[1]!==undefined && TokenTo !==''? `1${TokenFrom[1].symbol}=${TokenFrom[1].targetPrice}${TokenTo.symbol}`:''}</Typography>
+                                    <Typography variant='body2'>{TokenFrom[2]!==undefined && TokenTo !==''? `1${TokenFrom[2].symbol}=${TokenFrom[2].targetPrice}${TokenTo.symbol}`:''}</Typography>
+                                </Stack>
                             </Stack>
 
                         </Box>
@@ -1190,7 +1223,7 @@ export default function Exchange() {
                             marginTop: '20px'
                         }}></TransparentButton> <br /><br /> &nbsp;
 
-                    <Button onClick={() => { calculateToAmountNew(1) }}>Testing</Button>
+                    {/* <Button onClick={() => { calculateToAmountNew(1) }}>Testing</Button> */}
                 </Container>
             </Grid>
             <Modal
