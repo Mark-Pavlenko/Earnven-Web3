@@ -87,7 +87,6 @@ export default function Exchange() {
     const [TokenFrom, setTokenFrom] = useState([]);
     const [TokenTo, setTokenTo] = useState('');
     const [TokenFromAmount, setTokenFromAmount] = useState();
-    const [TokenToAmount, setTokenToAmount] = useState();
     const [Slippage, setSlippage] = useState(2);
     const [AllTokens, setAllTokens] = useState([]);
     const [txSuccess, settxSuccess] = useState(false)
@@ -100,6 +99,7 @@ export default function Exchange() {
     const [totalToAmount, settotalToAmount] = useState('')
     const [fromTokenCount, setfromTokenCount] = useState([0])
     const [oneToMany, setoneToMany] = useState(true)
+    const [clickedModalIndex, setclickedModalIndex] = useState()
 
     const forceUpdate = useForceUpdate();
 
@@ -140,18 +140,30 @@ export default function Exchange() {
 
 
     const fromTokenChange = (value) => {
-        let temp = TokenFrom;
-        temp.push(value)
-        setTokenFrom(temp);
-        if(TokenTo !==''){
+        if (TokenFrom[clickedModalIndex] === undefined) {
+            let temp = TokenFrom;
+            value.tokenAmount=''
+            temp.push(value)
+            setTokenFrom(temp);
+        }
+        else {
+            let temp = TokenFrom;
+            temp[clickedModalIndex] = value;
+            temp[clickedModalIndex].tokenAmount='';
+            setTokenFrom(temp)
+            forceUpdate();
+        }
+        if (TokenTo !== '') {
             calculateToAmountNew();
         }
+        forceUpdate();
+
     }
 
     const ToTokenChange = (value) => {
         setTokenTo(value)
         // setTokenFromAmount(0);
-        setTokenToAmount(0);
+        // setTokenToAmount(0);
     }
 
     const handleDismissSearch = () => {
@@ -310,12 +322,12 @@ export default function Exchange() {
         }
 
         if (TokenTo !== '') {
-            if(oneToMany===true){
+            if (oneToMany === true) {
                 tokenToTotalValue();
             }
-            else{
+            else {
                 fromTokenInReverse();
-            }  
+            }
         }
 
         // setTokenFrom(TokenFrom);
@@ -326,13 +338,6 @@ export default function Exchange() {
 
 
     const getPrice = async (router, amount, firstpath, secondpath, decimals, route) => {
-        console.log("value of amount", amount);
-        console.log("value of first", firstpath);
-        console.log("value of secondu", secondpath);
-        console.log("value of router", router);
-        console.log("value of weth", await router.WETH().call());
-        console.log("test",);
-
         try {
             const res = await router.getAmountsOut(amount, [firstpath, secondpath]).call({ from: "0xD5Cd7dC05279653F960736482aBc7A7B2bF39B5d" });
             // const res = await router.getAmountsOut("1000000000000000000", ["0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984", "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa"]).call();
@@ -342,7 +347,7 @@ export default function Exchange() {
         }
         catch (error) {
             // console.log(`error in ${route}`);
-            console.log("error came while fetching data:::", error);
+            // console.log("error came while fetching data:::", error);
             return { res: 0 };
         }
     }
@@ -439,13 +444,6 @@ export default function Exchange() {
                     })
             }
             else {
-                console.log("value of tokeninputaddress::", tokenInputAddress);
-                console.log("value of targetTokenAddress::", targetTokenAddress);
-                console.log("value of amountIN::", tokenInputAmount);
-                console.log("value of swapRoute::", swapRoute);
-                console.log("value of isMultiToSingleToken::", isMultiToSingleToken);
-                console.log("value of selecteddowntoken isEth::", selectedDownToken.isEth);
-                console.log("value of isEth::", isEth);
                 await swap.methods.swap(tokenInputAmount, tokenInputAddress, swapRoute, isEth, targetTokenAddress, isMultiToSingleToken, TokenTo.isEth).send({ from: account })
                     .once('transactionHash', (txHash) => {
                         // this.setState({ transactionHash: txHash });
@@ -481,7 +479,10 @@ export default function Exchange() {
             console.log("value of Tokenfrom::", TokenFrom)
             let totalValue = 0;
             for (let i = 0; i < TokenFrom.length; i++) {
-                totalValue = totalValue + (parseFloat(TokenFrom[i].tokenAmount) * parseFloat(TokenFrom[i].targetPrice))
+                if (parseFloat(TokenFrom[i].tokenAmount) > 0) {
+                    totalValue = totalValue + (parseFloat(TokenFrom[i].tokenAmount) * parseFloat(TokenFrom[i].targetPrice))
+                }
+
             }
             settotalToAmount(totalValue);
         }
@@ -510,24 +511,38 @@ export default function Exchange() {
         let fromTokenTemp = TokenFrom;
         fromTokenTemp.splice(index, 1);
         setTokenFrom(fromTokenTemp);
-        tokenToTotalValue();
+        if(oneToMany===false){
+            fromTokenInReverse();
+        }
+        else{
+            tokenToTotalValue();
+        }
+       
         forceUpdate();
     }
 
-    const reverse = () =>{
+    const reverse = () => {
+        console.log("token from inside reverse::",TokenFrom);
+
         setTokenFrom([]);
         setTokenTo('');
         setfromTokenCount([0])
         settotalToAmount('')
+        setclickedModalIndex()
         setoneToMany(!oneToMany);
+        forceUpdate();
+        console.log("Token from inside reverse after reverse::",TokenFrom);
     }
 
-    const fromTokenInReverse = () =>{
+    const fromTokenInReverse = () => {
         if (TokenFrom.length > 0 && TokenTo !== '') {
             console.log("value of Tokenfrom::", TokenFrom)
             let totalValue = 0;
             for (let i = 0; i < TokenFrom.length; i++) {
-                totalValue = totalValue + (parseFloat(TokenFrom[i].tokenAmount))
+                if (parseFloat(TokenFrom[i].tokenAmount) > 0) {
+                    totalValue = totalValue + (parseFloat(TokenFrom[i].tokenAmount))
+                }
+
             }
             settotalToAmount(totalValue);
         }
@@ -562,16 +577,17 @@ export default function Exchange() {
                                                             }}
                                                             onClick={() => {
                                                                 setcurrencyModal(true);
+                                                                setclickedModalIndex(i);
                                                             }}
                                                         >{TokenFrom[i] === undefined ? "select" : TokenFrom[i].symbol}
                                                         </Button>
                                                     </FormControl>
                                                     {i !== 0 && <FiMinusCircle style={{ marginLeft: '34px', marginTop: '20px', cursor: 'pointer' }} onClick={() => removeFromTab(i)} />}
                                                 </Stack>
-
                                                 <TextField variant='outlined'
                                                     id="outlined-basic"
                                                     placeholder="00.00"
+                                                    type='number'
                                                     value={TokenFrom[i] !== undefined ? TokenFrom[i].tokenAmount : null}
                                                     onChange={(e) => {
 
@@ -608,8 +624,9 @@ export default function Exchange() {
                                         <TextField variant='outlined'
                                             id="outlined-basic"
                                             placeholder="00.00"
+                                            type='number'
                                             value={totalToAmount !== '' ? totalToAmount : "00.00"}
-                                            onChange={(e) => { setTokenToAmount(e.target.value) }}
+                                            // onChange={(e) => { setTokenToAmount(e.target.value) }}
                                             disabled>
                                         </TextField>
 
@@ -637,12 +654,13 @@ export default function Exchange() {
                                         <TextField variant='outlined'
                                             id="outlined-basic"
                                             placeholder="00.00"
+                                            type='number'
                                             value={totalToAmount !== '' ? totalToAmount : "00.00"}
-                                            onChange={(e) => { setTokenToAmount(e.target.value) }}
+                                            // onChange={(e) => { setTokenToAmount(e.target.value) }}
                                             disabled>
                                         </TextField>
-                                        
-                                        
+
+
                                     </Stack>
 
 
@@ -663,18 +681,19 @@ export default function Exchange() {
                                                             }}
                                                             onClick={() => {
                                                                 setcurrencyModal(true);
+                                                                setclickedModalIndex(i);
                                                             }}
                                                         >{TokenFrom[i] === undefined ? "select" : TokenFrom[i].symbol}
                                                         </Button>
                                                     </FormControl>
                                                     {i !== 0 && <FiMinusCircle style={{ marginLeft: '34px', marginTop: '20px', cursor: 'pointer' }} onClick={() => removeFromTab(i)} />}
                                                 </Stack>
-
                                                 <OutlinedInput variant='outlined'
                                                     id="outlined-basic"
                                                     placeholder="00.00"
+                                                    type='number'
                                                     value={TokenFrom[i] !== undefined ? TokenFrom[i].tokenAmount : null}
-                                                    endAdornment={<InputAdornment position="end">{TokenTo !== ''?TokenTo.symbol:''}</InputAdornment>}
+                                                    endAdornment={<InputAdornment position="end">{TokenTo !== '' ? TokenTo.symbol : ''}</InputAdornment>}
                                                     onChange={(e) => {
 
                                                         setTokenFromAmt(e.target.value, i)
@@ -716,8 +735,8 @@ export default function Exchange() {
                             </Stack>
 
                             <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
-                                {oneToMany==true?<Typography variant='body2' sx={{ color: '#f5f5f5' }}>Min. output</Typography>:<Typography variant='body2' sx={{ color: '#f5f5f5' }}>Input</Typography>}
-                                
+                                {oneToMany == true ? <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Min. output</Typography> : <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Input</Typography>}
+
                                 <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
                                 {/* <Typography variant='body2'>{selectedRate !== null && protocolsRateList.length > 0 ? ((parseFloat(TokenFromAmount) * parseFloat(selectedRate.minPrice)).toFixed(3)) : "00.00"}{TokenTo !== '' ? TokenTo.symbol : ''}</Typography> */}
                                 <Typography variant='body2'>{totalToAmount !== '' ? totalToAmount : "00.00"}{TokenTo !== '' ? TokenTo.symbol : ''}</Typography>
