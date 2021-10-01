@@ -9,8 +9,8 @@ import DefiMadeEasy from './screens/DefiMadeEasy';
 import Bridge from './screens/Bridge';
 import Multisender from './screens/MultiSender';
 import SafeFarm from './screens/safeFarms/safefarm';
+// import Trading from './screens/Exchange/exchange';
 import Trading from './screens/Exchange/exchange';
-// import Trading from './screens/Exchange/exchangeTemp';
 // import TestingPage from './screens/testingPage';
 import AllAssetsPage from './screens/AllAssetsPage';
 import TokenDetailsPage from './components/tokenDetails'
