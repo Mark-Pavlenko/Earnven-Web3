@@ -1,0 +1,62 @@
+[
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "_amountIn",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "address[]",
+				"name": "_token",
+				"type": "address[]"
+			},
+			{
+				"internalType": "uint8[]",
+				"name": "_swapRoute",
+				"type": "uint8[]"
+			},
+			{
+				"internalType": "address",
+				"name": "_tokenTarget",
+				"type": "address"
+			}
+		],
+		"name": "swap",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "_amountIn",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "address[]",
+				"name": "_token",
+				"type": "address[]"
+			},
+			{
+				"internalType": "uint8[]",
+				"name": "_swapRoute",
+				"type": "uint8[]"
+			}
+		],
+		"name": "swapToETH",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"stateMutability": "payable",
+		"type": "receive"
+	}
+]

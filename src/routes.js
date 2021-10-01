@@ -9,6 +9,7 @@ import DefiMadeEasy from './screens/DefiMadeEasy';
 import Bridge from './screens/Bridge';
 import Multisender from './screens/MultiSender';
 import SafeFarm from './screens/safeFarms/safefarm';
+// import Trading from './screens/Exchange/exchange';
 import Trading from './screens/Exchange/exchange';
 // import TestingPage from './screens/testingPage';
 import AllAssetsPage from './screens/AllAssetsPage';
@@ -26,7 +27,10 @@ import Home from './screens/Home';
 import YieldFarm from './screens/YieldFarm'
 import Savings from './screens/Savings'
 import Airdrop from './screens/AirDrop'
+import Swapping from './screens/TestSwapping/Swapping';
+import HomeScreen from './container/home/HomeScreen'
 import TokenCreator from './screens/TokenCreator'
+// import ExchangeTemp from './screens/ExchangeTemp/exchange'
 
 export default function Router(){
 
@@ -62,6 +66,7 @@ export default function Router(){
                 {path:'multisender',element:<Multisender />},
                 {path:'safefarm',element:<SafeFarm />},
                 {path:'exchange',element:<Trading />},
+                // {path:'exchange',element:<ExchangeTemp />},
                 {path:'nft',element:<NFTpage />},
                 // {path:'nft-token',element:<NFTTokenPage/>},
                 {path:'nft-token/:contract/:id',element:<NFTTokenPage/>},
@@ -80,7 +85,8 @@ export default function Router(){
         },
         { path: '/404', element: <PageNotFound /> },
         { path: '*', element: <Navigate to="/404" replace /> },
-        // { path:'/testingpage', element: <TestingPage />}
+        // { path:'/testingpage', element: <TestingPage />},
+        { path:'/swappingTest', element: <HomeScreen />}
     ]
     );
 }

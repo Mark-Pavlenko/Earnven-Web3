@@ -6,15 +6,17 @@ import { Container, Stack, Typography, Grid, Card, Box, List, ListItem, ListItem
 import { useNft } from "use-nft"
 import spinner from '../assets/icons/spinner.svg'
 import block from '../assets/icons/block.png'
+import axios from 'axios'
 
 
 
-
+// let nftImageUrl = "";
 export default function NftDetails() {
 
     const { address, contract, id } = useParams()
     const web3 = new Web3(new Web3.providers.HttpProvider("https://mainnet.infura.io/v3/8b2159b7b0944586b64f0280c927d0a8"))
     const [tokenHistory, settokenHistory] = useState([])
+    const [imgUrl, setimgUrl] = useState()
 
     const { loading, error, nft } = useNft(
         contract,
@@ -84,13 +86,23 @@ export default function NftDetails() {
 
     }, [contract, id])
 
+    useEffect(() => {
+       const nftDetail = async () =>{
+            const response = await axios.get(`https://api.opensea.io/api/v1/assets?token_ids=${id}&asset_contract_addresses=${contract}`);
+            setimgUrl(response.data.assets[0].image_url)
+       }
+
+       nftDetail();
+    }, [contract, id])
+
     return (
         <Container>
             {console.log("value of nft::",nft)}
             <Typography variant='h2' align='center'>{loading?"":(nft!==undefined?nft.name:"")}</Typography>
             <Grid container spacing={3} sx={{ mt: 4 }}>
                 <Grid item xs={12} md={6} sx={{ border: '1px solid #737373', borderRadius: '10px' }}>
-                    <img alt="nft-image" style={{height:'96%'}} src={loading ? spinner : (nft !== undefined ? (nft.image !== "" ? nft.image : block) : block)}></img>
+                    {/* <img alt="nft-image" style={{height:'96%'}} src={loading ? spinner : (nft !== undefined ? (nft.image !== "" ? nft.image : block) : block)}></img> */}
+                    <img alt="nft-image" style={{height:'96%'}} src={imgUrl}></img>
                 </Grid>
                 {/* <Grid itme md={1}></Grid> */}
                 <Grid item xs={12} md={5} sx={{ border: '1px solid #737373', ml: 3, borderRadius: '10px' }}>

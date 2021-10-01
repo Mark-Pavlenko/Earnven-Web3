@@ -11,6 +11,7 @@ import ScrollToTop from './components/ScrollToTop';
 import { NftProvider } from "use-nft"
 import { Contract, ethers } from "ethers"
 
+
 const ethersConfig = {
   ethers: { Contract },
   provider: new ethers.providers.InfuraProvider("homestead", "8b2159b7b0944586b64f0280c927d0a8")

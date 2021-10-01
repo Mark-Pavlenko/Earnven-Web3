@@ -10,7 +10,7 @@ import TransparentButton from '../../components/TransparentButton'
 import Web3 from 'web3';
 import ERC20ABI from '../../abi/ERC20.json'
 import tokenURIs from './tokenURIs';
-import { Box, Typography, Stack, Container, Grid, TextField, Divider, Button, Modal, Tooltip, InputAdornment, OutlinedInput } from '@material-ui/core';
+import { Box, Typography, Stack, Container, Grid, TextField, Divider, Button, Modal, Tooltip, InputAdornment, OutlinedInput,Tab, Tabs } from '@material-ui/core';
 // import exchangeIcon from '../../assets/icons/exchange.png'
 import Uniswap from '../../assets/icons/Uniswap.webp';
 // import Curve from '../../assets/icons/Curve.webp';
@@ -27,6 +27,37 @@ import Loader from "react-loader-spinner";
 import ScrollToTop from '../../components/ScrollToTop';
 import Avatar from 'react-avatar';
 import ethImage from '../../assets/icons/eth.png'
+import { FaAngleRight } from "react-icons/fa";
+import NukeExchange from './nukeExchange';
+
+
+
+function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+            {value === index && (
+                <Box >
+                    {children}
+                </Box>
+            )}
+        </div>
+    );
+}
+
+function a11yProps(index) {
+    return {
+        id: `simple-tab-${index}`,
+        'aria-controls': `simple-tabpanel-${index}`,
+    };
+}
 
 
 const styles = () => ({
@@ -34,8 +65,6 @@ const styles = () => ({
         color: 'red'
     }
 })
-
-
 const style = {
     position: 'absolute',
     top: '45%',
@@ -48,7 +77,6 @@ const style = {
     p: 4,
     borderRadius: '10px'
 };
-
 const CurrencySelect = styled.button`
   align-items: center;
   height: 42px;
@@ -68,19 +96,13 @@ const CurrencySelect = styled.button`
     background-color: 'blue'
   }
 `
-
-
-
 const erc20Abi = [
     "function balanceOf(address owner) view returns (uint256)",
     "function approve(address _spender, uint256 _value) public returns (bool success)",
     "function allowance(address _owner, address _spender) public view returns (uint256 remaining)"
 ];
-
 // const selectedProvider = new Web3(new Web3.providers.HttpProvider("https://mainnet.infura.io/v3/8b2159b7b0944586b64f0280c927d0a8"))
 const selectedProvider = new ethers.providers.JsonRpcProvider("https://mainnet.infura.io/v3/8b2159b7b0944586b64f0280c927d0a8");
-
-
 const makeCall = async (callName, contract, args, metadata = {}) => {
     if (contract[callName]) {
         let result
@@ -95,9 +117,8 @@ const makeCall = async (callName, contract, args, metadata = {}) => {
     }
 }
 export default function Exchange() {
-
     const { address } = useParams();
-
+    const [value, setValue] = useState(0);
     const [TokenFrom, setTokenFrom] = useState('ETH');
     const [TokenTo, setTokenTo] = useState('');
     const [TokenFromAmount, setTokenFromAmount] = useState();
@@ -121,10 +142,11 @@ export default function Exchange() {
     const [updateBalance, setupdateBalance] = useState(true)
     const [toTokens, settoTokens] = useState([])
     // const [tokenToDollarValue, settokenToDollarValue] = useState(0)
-
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
     useEffect(() => {
         async function getData() {
             console.log("get data called");
@@ -138,18 +160,17 @@ export default function Exchange() {
             //         // fetchedTokens = response.data.tokens;
             //         // console.log(response.data.records)
             //     })
-
             await axios.get(`https://api.ethplorer.io/getAddressInfo/${address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`, {}, {})
                 .then(async (response) => {
                     // console.log(response)
                     const arr1 = [];
-                    if(response.data.ETH.balance!==0){
-                        const tempObj={}
+                    if (response.data.ETH.balance !== 0) {
+                        const tempObj = {}
                         tempObj.address = ''
                         tempObj.name = 'Ethereum';
                         tempObj.symbol = 'ETH';
                         tempObj.balance = ((response.data.ETH.balance).toFixed(3)).toString();
-                        tempObj.logoURI=ethImage;
+                        tempObj.logoURI = ethImage;
                         arr1.push(tempObj)
                     }
                     var tokens = response.data.tokens;
@@ -165,15 +186,11 @@ export default function Exchange() {
                         else {
                             tempObj.logoURI = null;
                         }
-
                         arr1.push(tempObj);
                     }
                     console.log("new list objects:::", arr1)
                     setAllTokens(arr1);
-
                 })
-
-
             await axios.get(`https://cdn.furucombo.app/furucombo.tokenlist.json`, {}, {})
                 .then(async (response) => {
                     // setAllTokens(response.data.records)
@@ -191,10 +208,8 @@ export default function Exchange() {
             //         // console.log("all tokens data", tokens)
             //         // setAllTokens(tokens)
             //     })
-
             // console.log("value of tokens::", tokens);
             // setAllTokens(tokens)
-
             // for (let i = 0; i < tokens.length; i++) {
             //     // setcurrencyModal(false)
             //     // setupdateBalance(false)
@@ -222,11 +237,9 @@ export default function Exchange() {
             // }
             // console.log("token list with token balance:::", tokens);
             // setAllTokens(tokens);
-
         }
         getData()
     }, [])
-
     useEffect(() => {
         async function getEthdollarValue() {
             try {
@@ -234,19 +247,14 @@ export default function Exchange() {
                 setethPrice(ethDollarValue.data.ethereum.usd);
             }
             catch {
-
             }
         }
         getEthdollarValue();
     }, [])
-
     useEffect(() => {
         const timeOutId = setTimeout(() => calculateToAmount(TokenFromAmount), 500);
         return () => clearTimeout(timeOutId);
     }, [TokenFromAmount]);
-
-
-
     /* useEffect(() => {
         async function getData() {
             if (TokenFromAmount !== '' && TokenFrom !== '' && TokenTo !== '') {
@@ -272,9 +280,7 @@ export default function Exchange() {
         }
         getData()
     }, [TokenFromAmount, TokenFrom, TokenTo]) */
-
     async function loadWeb3() {
-
         if (window.ethereum) {
             window.web3 = new Web3(window.ethereum)
             await window.ethereum.enable()
@@ -285,7 +291,6 @@ export default function Exchange() {
         else {
             window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
         }
-
     }
     async function transact() {
         await loadWeb3()
@@ -325,15 +330,11 @@ export default function Exchange() {
                 console.log("tx failed::", error)
                 settxFailure(true);
             }
-
-
         }
         else {
             alert("Please Fill All fields")
         }
     }
-
-
     const dollarValueOfToken = async (tokenAddress) => {
         try {
             if (tokenAddress === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
@@ -354,10 +355,8 @@ export default function Exchange() {
             }
         }
         catch {
-
         }
     }
-
     const calculateToAmount = async (tokenFromAmount) => {
         console.log("calculate method called with ammount::", tokenFromAmount)
         console.log("value of Tokenfromamount::", TokenFromAmount)
@@ -372,9 +371,7 @@ export default function Exchange() {
                 let differentQuoteList = [];
                 const protocolsList = ['', 'Uniswap', 'Curve', 'SushiSwap', 'Bancor', 'Balancer']
                 let amount = parseFloat(tokenFromAmount) * Math.pow(10, 18);
-
                 const tokenToDollarValue = await dollarValueOfToken(TokenTo.address);
-
                 /* await axios.get(`https://api.0x.org/swap/v1/quote?buyToken=${TokenTo.symbol}&sellToken=${TokenFrom}&sellAmount=${amount}&feeRecipient=0xE609192618aD9aC825B981fFECf3Dfd5E92E3cFB&buyTokenPercentageFee=0.02`, {}, {})
                     .then(async (response) => {
                         console.log("value came from ox:::", response)
@@ -397,8 +394,18 @@ export default function Exchange() {
                         let protocolQuote = {};
                         const response = await axios.get(`https://ropsten.api.0x.org/swap/v1/quote?buyToken=${TokenTo.symbol}&sellToken=${TokenFrom}&sellAmount=${amount}&feeRecipient=0xE609192618aD9aC825B981fFECf3Dfd5E92E3cFB&buyTokenPercentageFee=0.02&includedSources=${protocolsList[i]}`)
                         console.log(`response for all ${protocolsList[i]}`, response.data);
+
                         if (protocolsList[i] === '') {
                             protocolQuote.name = '0x Exchange'
+                            var sources = response.data.sources
+                            sources.sort((a, b) => parseFloat(b.proportion) - parseFloat(a.proportion));
+                            var sources2 = []
+                            for (var j = 0; j < sources.length; j++) {
+                                if (sources[j].proportion > 0) {
+                                    sources2.push(sources[j])
+                                }
+                            }
+                            setSources(sources2)
                         }
                         else {
                             protocolQuote.name = protocolsList[i];
@@ -430,38 +437,30 @@ export default function Exchange() {
                         if (protocolsList[i] === '') {
                             protocolQuote.image = "https://assets.coingecko.com/markets/images/565/small/0x-protocol.png?1596623034";
                         }
-
                         differentQuoteList.push(protocolQuote);
                     }
                     catch {
                         console.log(`error come for ${protocolsList[i]}`);
                     }
-
                 }
-
                 differentQuoteList.sort((a, b) => b.netReceived - a.netReceived);
                 setselectedRate(differentQuoteList[0]);
                 setselectedExchangeName(differentQuoteList[0].name)
                 setprotocolsRateList(differentQuoteList);
                 console.log("different rates we have::", differentQuoteList);
-
             }
         }
-
     }
-
     const newRateSelected = (object) => {
         setnewSelectedRate(object);
         setselectedExchangeName(object.name);
     }
-
     const updateSelectedRate = () => {
         if (newSelectedRate !== null) {
             setselectedRate(newSelectedRate)
             setOpen(false);
         }
     }
-
     const fromTokenChange = (value) => {
         setTokenFrom(value);
         // setTokenTo('');
@@ -469,6 +468,7 @@ export default function Exchange() {
         setTokenToAmount(0);
         setprotocolsRateList([])
         setselectedRate(null);
+        setSources([])
     }
 
     const ToTokenChange = (value) => {
@@ -477,23 +477,20 @@ export default function Exchange() {
         setTokenToAmount(0);
         setprotocolsRateList([])
         setselectedRate(null);
+        setSources([])
     }
 
     const test = async () => {
         let tempContractIn = new ethers.Contract("0x6b175474e89094c44da98b954eedeac495271d0f", erc20Abi, selectedProvider);
         let newBalanceIn = await getBalance('DAI', '0x912fD21d7a69678227fE6d08C64222Db41477bA0', tempContractIn)
-
     }
-
     const handleDismissSearch = () => {
         setcurrencyModal(false);
     }
     const handleCurrencyToDismissSearch = () => {
         setcurrencyToModal(false);
     }
-
     const getBalance = async (_token, _account, _contract) => {
-
         let newBalance
         if (_token === 'ETH') {
             newBalance = await selectedProvider.getBalance(_account)
@@ -502,141 +499,16 @@ export default function Exchange() {
         }
         return newBalance
     }
-
-    /* return (
-            <div className="main-container">
-                <div className="outbox">
-                    <br/><br/>
-                    <div className="main-header">Exchange</div>
-                    <div className="box">
- 
-                        <div className="firstdiv">
-                            <div className="firstdiv1">
-                                <div className="swap"> Swap </div>
-                                <div>
- 
-                                <FormControl variant="outlined" style={{width:'120px'}}>
-                                    <InputLabel id="demo-simple-select-outlined-label" >Token</InputLabel>
-                                    <Select
-                                    style={{height:'50px', color:'white'}}
-                                    labelId="demo-simple-select-outlined-label"
-                                    id="demo-simple-select-outlined"
-                                    value={TokenFrom}
-                                    onChange={(e)=>{setTokenFrom(e.target.value)}}
-                                    label="Token"
-                                    >
-                                    <MenuItem value="" sx={{backgroundColor:'#141a1e'}}>
-                                        <em>None</em>
-                                    </MenuItem>
-                                    {AllTokens.map((object)=>
-                                        <MenuItem value={object.symbol} sx={{backgroundColor:'#141a1e'}}>
-                                            <div className="logo-container">
-                                                <img src={object.logoURI} className="logo-uri" />
-                                            </div>
-                                            {object.symbol}
-                                        </MenuItem>)}
-                                    </Select>
-                                </FormControl>
- 
-                                </div>
-                            </div>
- 
-                            <div className="firstdiv2" style={{ marginLeft: "7px" }}>
-                                <div className="number"> &nbsp; </div>
-                                <div>
-                                    <input className="inputfield"
-                                        type="text" inputMode="decimal" placeholder="00.00"
-                                        minLength="1"
-                                        maxLength="79"
-                                        spellCheck="false"
-                                        value={TokenFromAmount}
-                                        onChange={(e)=>{setTokenFromAmount(e.target.value)}}
-                                    >
-                                    </input>
-                                </div>
-                            </div>
- 
- 
- 
-                            <div className="firstdiv3">
-                                <div className="swap"> For </div>
-                                <div>
-                                <FormControl variant="outlined" style={{width:'120px'}}>
-                                    <InputLabel id="demo-simple-select-outlined-label" >Token</InputLabel>
-                                    <Select
-                                    style={{height:'50px', color:'white'}}
-                                    labelId="demo-simple-select-outlined-label"
-                                    id="demo-simple-select-outlined"
-                                    value={TokenTo}
-                                    onChange={(e)=>{setTokenTo(e.target.value)}}
-                                    label="Token"
-                                    >
-                                    <MenuItem value="" sx={{backgroundColor:'#141a1e'}}>
-                                        <em >None</em>
-                                    </MenuItem>
-                                    {AllTokens.map((object)=>
-                                        <MenuItem value={object.symbol} sx={{backgroundColor:'#141a1e'}}>
-                                            <div className="logo-container">
-                                                <img src={object.logoURI} className="logo-uri" />
-                                            </div>
-                                            {object.symbol}
-                                        </MenuItem>)}
-                                    </Select>
-                                </FormControl>
-                                </div>
-                            </div>
- 
-                            <div className="firstdiv4" style={{ marginLeft: "7px" }}>
-                                <div className="number"> &nbsp;</div>
-                                <div>
-                                    <input className="inputfield" inputMode="decimal"
-                                        type="text"
-                                        pattern="^[0-9]*[.,]?[0-9]*$"
-                                        placeholder="00.00"
-                                        minLength="1"
-                                        maxLength="79"
-                                        spellCheck="false"
-                                        value={TokenToAmount}
-                                        onChange={(e)=>{setTokenToAmount(e.target.value)}}
-                                    ></input>
-                                </div>
-                            </div>
- 
-                        </div>
-                        
-                        <div className="seconddiv">Transaction Settings</div>
-                        <font color='white'>
-                        {Sources.map((object)=><>{object.name}    :     {(parseFloat(object.proportion)*100).toFixed(2)} %<br/></>)}
-                        </font>
-                        <div className="thirddiv"> <div className="thirddiv-title"> Slippage </div> <div className="dash"></div> <div className="slippage-input-box"> <input className="slippage-input" value={Slippage} onChange={(e)=>{setSlippage(e.target.value)}} maxLength="3"></input>
-                            <div className="Percentage"> <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M0.406781 2.85C0.406781 2.19133 0.597448 1.67567 0.978781 1.303C1.36878 0.930333 1.86711 0.744 2.47378 0.744C3.08045 0.744 3.57445 0.930333 3.95578 1.303C4.34578 1.67567 4.54078 2.19133 4.54078 2.85C4.54078 3.51733 4.34578 4.03733 3.95578 4.41C3.57445 4.78267 3.08045 4.969 2.47378 4.969C1.86711 4.969 1.36878 4.78267 0.978781 4.41C0.597448 4.03733 0.406781 3.51733 0.406781 2.85ZM8.75278 0.899999L3.64378 10H1.87578L6.97178 0.899999H8.75278ZM2.46078 1.836C1.98411 1.836 1.74578 2.174 1.74578 2.85C1.74578 3.53467 1.98411 3.877 2.46078 3.877C2.69478 3.877 2.87678 3.79467 3.00678 3.63C3.13678 3.45667 3.20178 3.19667 3.20178 2.85C3.20178 2.174 2.95478 1.836 2.46078 1.836ZM6.11378 8.037C6.11378 7.36967 6.30445 6.854 6.68578 6.49C7.07578 6.11733 7.57411 5.931 8.18078 5.931C8.78745 5.931 9.27712 6.11733 9.64978 6.49C10.0311 6.854 10.2218 7.36967 10.2218 8.037C10.2218 8.70433 10.0311 9.22433 9.64978 9.597C9.27712 9.96967 8.78745 10.156 8.18078 10.156C7.56545 10.156 7.06711 9.96967 6.68578 9.597C6.30445 9.22433 6.11378 8.70433 6.11378 8.037ZM8.16778 7.023C7.67378 7.023 7.42678 7.361 7.42678 8.037C7.42678 8.72167 7.67378 9.064 8.16778 9.064C8.65312 9.064 8.89578 8.72167 8.89578 8.037C8.89578 7.361 8.65312 7.023 8.16778 7.023Z" fill="white" />
-                            </svg>
-                            </div>
-                        </div> </div>
-                        <div className="fourthdiv"><div className="fourthdiv-title"> Min. output </div> <div className="dash1"> </div> <div className="minimum-op-text">{TokenFromAmount>0? (parseFloat(TokenFromAmount)*parseFloat(minPrice)).toFixed(3):'0'}</div> </div>
-                        <div className="fifthdiv"><div className="fifthdiv-title"> Rate </div> <span className="dash2"></span> <div className="rate-text"> 1 {TokenFrom} = {parseFloat(Price).toFixed(3)} {TokenTo}</div> </div>
-                    </div>
-                    <TransparentButton value='Submit Transaction'
-                    onClick={transact}
-                    style={{
-                        height:'45px',
-                        width:'300px',
-                        background:'transparent',
-                        borderWidth:'1px',
-                        borderStyle:'solid',
-                        borderColor:'#ac6afc',
-                        borderRadius:'5px',
-                        color:'white',
-                        cursor:'pointer',
-                        float:'right'
-                    }}></TransparentButton> <br/><br/> &nbsp;
-                    /* <div className="end"><div className="submit"> <button onClick={transact} className="submit-btn">Submit</button></div></div> */
-    // </div>
-    // </div>
-    // ) */
-
+   
     return (
+        <Box sx={{ width: '100%', mt: 3 }}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                    <Tab label="Exchange" {...a11yProps(0)} />
+                    <Tab label="Nuke" {...a11yProps(1)} />
+                </Tabs>
+            </Box>
+            <TabPanel value={value} index={0}>
         <Grid container >
             <Grid items xs={12} md={8} sx={{ mt: 5, ml: 5 }}>
                 <Container>
@@ -664,7 +536,6 @@ export default function Exchange() {
                                                     },
                                                     width: 300,
                                                 }}
-
                                                 >
                                                     <Box>
                                                         <Stack direction='row' spacing={1}>
@@ -697,7 +568,6 @@ export default function Exchange() {
                                     {/*  <CurrencySelect onClick={test}>
                                     hi
                                     </CurrencySelect> */}
-
                                     {/*  <Button variant='outlined'
                                         onClick={() => {
                                             setcurrencyModal(true);
@@ -715,7 +585,6 @@ export default function Exchange() {
                                         onClose={handleDismissSearch}
                                         aria-labelledby="modal-modal-title"
                                         aria-describedby="modal-modal-description"
-
                                     >
                                         <Box
                                             sx={{
@@ -764,16 +633,13 @@ export default function Exchange() {
                                                                         verticalAlign: 'top',
                                                                         height: "30px",
                                                                         // marginLeft: '11px',
-
                                                                     }} color={"#737373"} name={object.name} round={true} size="30" textSizeRatio={1} />
                                                                 }
-
                                                             </Box>
                                                             <Stack direction='column' >
                                                                 <Typography variant='body1' sx={{ color: '#e3e3e3' }}>{object.symbol}</Typography>
                                                                 <Typography variant='caption' sx={{ color: '#e3e3e3', fontSize: '11px' }}>{object.name}</Typography>
                                                             </Stack>
-
                                                             <Box sx={{ flexGrow: 1 }}></Box>
                                                             <Box sx={{ marginTop: '5px' }}>
                                                                 <Typography >
@@ -786,9 +652,7 @@ export default function Exchange() {
                                                 </Box>
                                             )}
                                         </Box>
-
                                     </Modal>
-
                                 </Stack>
                                 <Stack spacing={0.5}>
                                     <Typography variant='caption' sx={{ color: '#0E1214' }}>0</Typography>
@@ -802,7 +666,6 @@ export default function Exchange() {
                                         }}>
                                     </TextField>
                                 </Stack>
-
                                 <Stack spacing={0.5}>
                                     <Typography variant='caption' sx={{ color: '#f5f5f5' }}>For</Typography>
                                     <FormControl variant="outlined" style={{ width: '120px' }}>
@@ -858,9 +721,9 @@ export default function Exchange() {
                                                             }
                                                         }}>
                                                         <Stack direction='row' spacing={2}>
-                                                        <Box sx={{ marginTop: '5px' }}>
+                                                            <Box sx={{ marginTop: '5px' }}>
                                                                 {object.logoURI !== null ? <img alt="" width="30" height="30" src={object.logoURI}
-                                                                    >
+                                                                >
                                                                 </img>
                                                                     :
                                                                     <Avatar style={{
@@ -869,10 +732,8 @@ export default function Exchange() {
                                                                         verticalAlign: 'top',
                                                                         height: "30px",
                                                                         // marginLeft: '11px',
-
                                                                     }} color={"#737373"} name={object.name} round={true} size="30" textSizeRatio={1} />
                                                                 }
-
                                                             </Box>
                                                             <Stack direction='column' >
                                                                 <Typography variant='body1' sx={{ color: '#e3e3e3' }}>{object.symbol}</Typography>
@@ -883,9 +744,7 @@ export default function Exchange() {
                                                 </Box>
                                             )}
                                         </Box>
-
                                     </Modal>
-
                                 </Stack>
                                 <Stack spacing={0.5}>
                                     <Typography variant='caption' sx={{ color: '#0E1214' }}>0</Typography>
@@ -900,6 +759,16 @@ export default function Exchange() {
 
                             </Stack>
                             {selectedRate !== null && protocolsRateList.length === 0 ? <Typography variant='caption' sx={{ color: '#FFC107' }}>This Exchange is yet not supported</Typography> : <></>}
+                            {/* <Stack direction='row' sx={{ mt: 2 }}>
+                                {Sources.map((object) =>
+                                    <div>
+                                        <Button variant='contained' color='primary' disabled size='small' sx={{fontSize:'10px'}}>
+                                            {(parseFloat(object.proportion) * 100).toFixed(2)}% {object.name}
+                                        </Button>
+                                        <FaAngleRight style={{ paddingTop: '6px', marginLeft: '1px', color: '#737373' }} />
+                                    </div>
+                                )}
+                            </Stack> */}
                             <Typography variant='body1' sx={{ color: '#737373', mt: 2.5 }}>Transaction Settings</Typography>
                             <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
                                 <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Slippage</Typography>
@@ -925,7 +794,7 @@ export default function Exchange() {
                                     }}
                                 />
                             </Stack>
-                            {protocolsRateList.length > 0 &&
+                            {/* {protocolsRateList.length > 0 &&
                                 <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
                                     <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Offered By</Typography>
                                     <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
@@ -952,7 +821,7 @@ export default function Exchange() {
                                                             <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.receivedValueInDollar}</Typography>
                                                             <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.gas}</Typography>
                                                             <Box sx={{ flexGrow: 1 }}></Box>
-                                                            {/* <Avatar alt="" src={exchangeIcon}></Avatar> */}
+                                                            
                                                             <Tooltip title={object.name}>
                                                                 {object.name === 'Balancer' ? <img alt="" width="21" height="20" src={Balancer} ></img> : object.name === '0x Exchange' ? <img alt="" width="21" height="20" src={object.image} style={{ filter: 'invert(1)' }} ></img> : <img alt="" width="21" height="20" src={object.image} ></img>}
                                                             </Tooltip>
@@ -963,47 +832,29 @@ export default function Exchange() {
                                                             <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.receivedValueInDollar}</Typography>
                                                             <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.gas}</Typography>
                                                             <Box sx={{ flexGrow: 1 }}></Box>
-                                                            {/* <Avatar alt="" src={exchangeIcon}></Avatar> */}
+                                                            
                                                             <Tooltip title={object.name}>
                                                                 {object.name === 'Balancer' ? <img alt="" width="21" height="20" src={Balancer} ></img> : object.name === '0x Exchange' ? <img alt="" width="21" height="20" src={object.image} style={{ filter: 'invert(1)' }} ></img> : <img alt="" width="21" height="20" src={object.image} ></img>}
                                                             </Tooltip>
                                                         </Stack>
                                                     </Box>)
-
                                             ))}
-
-                                            {/* <Box sx={{ border: '1px solid #737373', borderRadius: '7px', mt: 1, p: 1 }}>
-                                        <Stack direction='row' spacing={2}>
-                                            <Typography variant='body1'>$3,214</Typography>
-                                            <Typography variant='body1'>$20.86</Typography>
-                                            <Box sx={{ flexGrow: 1 }}></Box>
-                                            <Tooltip title='uniswap'>
-                                                <img alt="" width="21" height="20" src="https://assets.coingecko.com/coins/images/12504/small/uniswap-uni.png?1600306604" ></img>
-                                            </Tooltip>
-                                        </Stack>
-
-                                    </Box> */}
                                             <Box sx={{ marginLeft: '30%' }}>
                                                 <Button onClick={updateSelectedRate} variant='outlined' sx={{ mt: 2 }} >Save for This Trade</Button>
                                             </Box>
-
                                         </Box>
                                     </Modal>
-                                </Stack>}
-
-
+                                                </Stack>} */}
                             <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
                                 <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Min. output</Typography>
                                 <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
                                 <Typography variant='body2'>{selectedRate !== null && protocolsRateList.length > 0 ? ((parseFloat(TokenFromAmount) * parseFloat(selectedRate.minPrice)).toFixed(3)) : "00.00"}{TokenTo !== '' ? TokenTo.symbol : ''}</Typography>
                             </Stack>
-
                             <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
                                 <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Rate</Typography>
                                 <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
                                 <Typography variant='body2'> 1 {TokenFrom} = {selectedRate !== null && protocolsRateList.length > 0 ? parseFloat(selectedRate.price).toFixed(3) : '00.00'} {TokenTo !== '' ? TokenTo.symbol : ''}</Typography>
                             </Stack>
-
                         </Box>
                     </Container>
                     {txSuccess && <Typography variant='caption' sx={{ color: '#54D62C' }}>Swap is done Successfully</Typography>}
@@ -1026,6 +877,10 @@ export default function Exchange() {
                 </Container>
             </Grid>
         </Grid >
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+                <NukeExchange />
+            </TabPanel>
+        </Box>
     );
-
 }
