@@ -136,24 +136,25 @@ export default function LiquidityPools() {
 
             <div style={{display:'inline-block', width:'25%'}}>
                 <br/>
-                {object.pool.token0.symbol} {object.pool.token1.symbol}
+                {object.converter.tokenBalances[1].token.symbol} {object.converter.tokenBalances[2].token.symbol}
             </div> 
 
             <div style={{display:'inline-block', width:'30%'}}>
                 <br/>
-                {parseFloat(object.tvlUSD).toFixed(2)} USD
+                {/* {parseFloat(object.reserveUSD).toFixed(2)}  */}
+                USD
             </div>
 
             <div style={{display:'inline-block', width:'30%', marginTop:'10px'}}>
                 
-                {((parseInt(object.volumeUSD)*0.003)/parseInt(object.tvlUSD)*100*365).toFixed(2)} % (Yearly)<br/>
-                {((parseInt(object.volumeUSD)*0.003)/parseInt(object.tvlUSD)*100*7).toFixed(2)} % (Weekly)
+                {/* {((parseInt(object.dailyVolumeUSD)*0.003)/parseInt(object.reserveUSD)*100*365).toFixed(2)} % (Yearly)<br/> */}
+                {/* {((parseInt(object.dailyVolumeUSD)*0.003)/parseInt(object.reserveUSD)*100*7).toFixed(2)} % (Weekly) */}
             </div>
             <div style={{display:'inline-block', width:'10%',}}>
             
-                <img style={{ height:'30px', width:'30px',display:'inline-block'}} alt='' src={`https://ethplorer.io${object.pool.token0.image}`}/>
+                <img style={{ height:'30px', width:'30px',display:'inline-block'}} alt='' src={`https://ethplorer.io${object.converter.tokenBalances[1].token.image}`}/>
                 &nbsp;&nbsp;&nbsp;
-                <img style={{ height:'30px', width:'30px',display:'inline-block'}} alt='' src={`https://ethplorer.io${object.pool.token1.image}`}/>
+                <img style={{ height:'30px', width:'30px',display:'inline-block'}} alt='' src={`https://ethplorer.io${object.converter.tokenBalances[2].token.image}`}/>
             
             </div>
 
@@ -269,10 +270,10 @@ export default function LiquidityPools() {
 
         <center> OR <br/><br/><br/>
 
-        {object.pool.token0.name} Amount : &nbsp;&nbsp;
+        {object.converter.tokenBalances[1].token.name} Amount : &nbsp;&nbsp;
         <AmountInput onChange={(e)=>{setAmountTokenA(e.target.value)}}/> 
         &nbsp;&nbsp;&nbsp;
-        {object.pool.token1.name} Amount : &nbsp;&nbsp;
+        {object.converter.tokenBalances[2].token.name} Amount : &nbsp;&nbsp;
         <AmountInput onChange={(e)=>{setAmountTokenB(e.target.value)}}/>
 
         <br/><br/>
@@ -375,61 +376,53 @@ export default function LiquidityPools() {
         // console.log(epoch)
         async function getData(){
             setLoading(true)
-            await axios.post(`https://gateway.thegraph.com/api/c9596ce7bc47f7544cc808c3881427ed/subgraphs/id/0x9bde7bf4d5b13ef94373ced7c8ee0be59735a298-2`,
+            await axios.post(`https://api.thegraph.com/subgraphs/name/blocklytics/bancor`,
             {
                 query:`{
-                    poolDayDatas
-                    (
-                      first:20
-                      where:{
-                        date: 1630972800
-                      }
-                      orderBy:volumeUSD
+                    converterTokenSwapTotals(
+                      first: 20,
+                      skip : ${Page*20}
+                      orderBy:totalAmountPurchased
                       orderDirection:desc
-                    )
-                    {
-                      id
-                      date
-                      pool{
-                        
-                        token0{
-                          id
-                          symbol
-                          name
-                          decimals
-                        }
-                        
-                        token1{
-                          id
-                          symbol
-                          name
-                          decimals
+                    ){
+                      converter
+                      {
+                        id
+                        weight
+                        conversionFee
+                        tokenBalances{
+                          balance
+                          token{
+                            id
+                            name
+                            symbol
+                            decimals
+                          }
                         }
                       }
-                      date
-                      volumeUSD
-                      tvlUSD
-                    }
-                  }`})
+                      }
+                  }
+                  `})
                 .then(async(response) => {
-                    console.log(response)
                     if(response.data.data){
-                        var res = response.data.data.poolDayDatas
+                        var res = response.data.data.converterTokenSwapTotals
+                        console.log(res)
                         for(var i =0; i<res.length; i++){
-                            await axios.get(`https://api.ethplorer.io/getTokenInfo/${res[i].pool.token0.id}?apiKey=EK-qSPda-W9rX7yJ-UY93y`,{},{})
+                            await axios.get(`https://api.ethplorer.io/getTokenInfo/${res[i].converter.tokenBalances[1].token.id}?apiKey=EK-qSPda-W9rX7yJ-UY93y`,{},{})
                             .then((response) => {
                                 if(response.data.image){
                                     // console.log(response.data.image)
-                                    res[i].pool.token0.image = response.data.image
+                                    res[i].converter.tokenBalances[1].token.image = response.data.image
                                 }
                             })
-                            await axios.get(`https://api.ethplorer.io/getTokenInfo/${res[i].pool.token1.id}?apiKey=EK-qSPda-W9rX7yJ-UY93y`,{},{})
+                            await axios.get(`https://api.ethplorer.io/getTokenInfo/${res[i].converter.tokenBalances[2].token.id}?apiKey=EK-qSPda-W9rX7yJ-UY93y`,{},{})
                             .then((response) => {
                                 if(response.data.image){
-                                    res[i].pool.token1.image = response.data.image
+                                    res[i].converter.tokenBalances[2].token.image = response.data.image
 
                                 }
                             })
+
                             var data2 = Data
                             data2.push(res[i])
                             console.log(data2)

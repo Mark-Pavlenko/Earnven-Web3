@@ -421,8 +421,12 @@ export default function LiquidityPools() {
 
                                 }
                             })
+                            var data2 = Data
+                            data2.push(res[i])
+                            console.log(data2)
+                            setData([...data2])
                         }
-                        setData(Data.concat(res))
+                        // setData(Data.concat(res))
                         setLoading(false)
                     console.log(res)
                 }

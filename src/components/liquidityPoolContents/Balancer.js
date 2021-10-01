@@ -428,16 +428,13 @@ export default function LiquidityPools() {
                                         res[i].tokens[j].image = response.data.image
                                     }
                                 })
-                //             await axios.get(`https://api.ethplorer.io/getTokenInfo/${res[i].token1.id}?apiKey=EK-qSPda-W9rX7yJ-UY93y`,{},{})
-                //             .then((response) => {
-                //                 if(response.data.image){
-                //                     res[i].token1.image = response.data.image
-
-                //                 }
-                //             })
                             }
+                            var data2 = Data
+                            data2.push(res[i])
+                            console.log(data2)
+                            setData([...data2])
                         }
-                        setData(Data.concat(res))
+                        // setData(Data.concat(res))
                         setLoading(false)
                     console.log('lol',res)
                 }

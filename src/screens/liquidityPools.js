@@ -5,6 +5,8 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
+import Bancor from '../components/liquidityPoolContents/Bancor'
+import Curve from '../components/liquidityPoolContents/Curve'
 import UniV2 from '../components/liquidityPoolContents/UniV2'
 import SushiV2 from '../components/liquidityPoolContents/SushiV2'
 import Balancer from '../components/liquidityPoolContents/Balancer'
@@ -64,6 +66,8 @@ export default function LiquidityPools() {
             <Tab label="Sushiswap V2" {...a11yProps(1)} />
             <Tab label="Balancer" {...a11yProps(2)} />
             <Tab label="Uniswap V3" {...a11yProps(3)} />
+            <Tab label="Bancor" {...a11yProps(4)} />
+            <Tab label="Curve" {...a11yProps(5)} />
 
             </Tabs>
         </Box>
@@ -78,6 +82,12 @@ export default function LiquidityPools() {
         </TabPanel>
         <TabPanel value={value} index={3}>
             <UniV3/>
+        </TabPanel>
+        <TabPanel value={value} index={4}>
+            <Bancor/>
+        </TabPanel>
+        <TabPanel value={value} index={5}>
+            <Curve/>
         </TabPanel>
         </Box>
     )

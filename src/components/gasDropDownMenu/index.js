@@ -127,7 +127,7 @@ export default function GasDropDownMenu() {
   const [GasPricesContent , setGasPricesContent] = useState([])
 
   useEffect(() => {
-    console.log('Updating Layout....')
+    // console.log('Updating Layout....')
     var content = GasPrices.map((option) => (
       <MenuItem
         // key={option.value}
@@ -165,7 +165,7 @@ export default function GasDropDownMenu() {
     async function getData(){
       try {
         const response = await axios.get('https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W');
-        console.log("api response::", response);
+        // console.log("api response::", response);
         const result = response.data.result;
         gasType[0].value= result.FastGasPrice;
         gasType[1].value = result.ProposeGasPrice;
@@ -173,7 +173,7 @@ export default function GasDropDownMenu() {
         data.gasSelected=result.ProposeGasPrice;
         // setGasPrices([])
         setGasPrices([...gasType])
-        console.log("gasType::",gasType);
+        // console.log("gasType::",gasType);
   
   
       }
@@ -185,7 +185,7 @@ export default function GasDropDownMenu() {
     getData();
 
     const interval = setInterval(() => {
-      console.log('Logs every 10 secs');
+      // console.log('Logs every 10 secs');
       getData();
     }, MINUTE_MS); 
 
