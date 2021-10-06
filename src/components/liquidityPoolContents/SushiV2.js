@@ -374,7 +374,7 @@ export default function LiquidityPools() {
         // console.log(epoch)
         async function getData(){
             setLoading(true)
-            await axios.post(`https://gateway.thegraph.com/api/c9596ce7bc47f7544cc808c3881427ed/subgraphs/id/0x4bb4c1b0745ef7b4642feeccd0740dec417ca0a0-0`,
+            await axios.post(`https://gateway.thegraph.com/api/${Addresses.graph_API}/subgraphs/id/0x4bb4c1b0745ef7b4642feeccd0740dec417ca0a0-0`,
             {
                 query:`
                 {

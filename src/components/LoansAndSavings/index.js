@@ -4,6 +4,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import YearnLogo from '../../assets/icons/yearnLogo.png'
 import CurveLogo from '../../assets/icons/curveLogo.png'
 import ETHLogo from '../../assets/icons/eth.png'
+import addresses from '../../contractAddresses';
 
 
 export default function Index({ accountAddress }) {
@@ -918,7 +919,7 @@ export default function Index({ accountAddress }) {
     }
 
     async function getSushiV2Data() {
-      await axios.post(`https://gateway.thegraph.com/api/c9596ce7bc47f7544cc808c3881427ed/subgraphs/id/0x4bb4c1b0745ef7b4642feeccd0740dec417ca0a0-0`,
+      await axios.post(`https://gateway.thegraph.com/api/${addresses.graph_API}/subgraphs/id/0x4bb4c1b0745ef7b4642feeccd0740dec417ca0a0-0`,
         {
           query: `{
                     users(
@@ -982,7 +983,7 @@ export default function Index({ accountAddress }) {
     }
     // c9596ce7bc47f7544cc808c3881427ed
     async function getYearnData() {
-      await axios.post(`https://gateway.thegraph.com/api/c9596ce7bc47f7544cc808c3881427ed/subgraphs/id/0xf50b705e4eaba269dfe954f10c65bd34e6351e0c-0`,
+      await axios.post(`https://gateway.thegraph.com/api/${addresses.graph_API}/subgraphs/id/0xf50b705e4eaba269dfe954f10c65bd34e6351e0c-0`,
         {
           query: `{
                     accountVaultPositions(
@@ -1061,7 +1062,7 @@ export default function Index({ accountAddress }) {
     }
 
     async function getCurveData() {
-      await axios.post(`https://gateway.thegraph.com/api/c9596ce7bc47f7544cc808c3881427ed/subgraphs/id/0x2382ab6c2099474cf424560a370ed1b1fdb65253-0`,
+      await axios.post(`https://gateway.thegraph.com/api/${addresses.graph_API}/subgraphs/id/0x2382ab6c2099474cf424560a370ed1b1fdb65253-0`,
         {
           query: `{
                 accounts
@@ -1123,7 +1124,7 @@ export default function Index({ accountAddress }) {
     }
 
     async function getBeaconData() {
-      await axios.post(`https://gateway.thegraph.com/api/c9596ce7bc47f7544cc808c3881427ed/subgraphs/id/0x540b14e4bd871cfe59e48d19254328b5ff11d820-0`,
+      await axios.post(`https://gateway.thegraph.com/api/${addresses.graph_API}/subgraphs/id/0x540b14e4bd871cfe59e48d19254328b5ff11d820-0`,
         {
           query: `{
                 depositors
@@ -1309,7 +1310,7 @@ export default function Index({ accountAddress }) {
           marginLeft: '15px',
           display: SushiPoolsData.length > 0 ? '' : 'none'
         }}>
-          SushiSwap V2 --- {SushiV2Total} USD
+          SushiSwap V2 --- {parseFloat(SushiV2Total).toFixed(2)} USD
         </div>
         {SushiPoolsContent}
         <br />

@@ -4,7 +4,8 @@ var addresses ={
     sushiRouter : '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F',
     sushiFactory : '0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac',
     oneClickUniV2Contract : '0x367964E1A5E7f5f1b859071572cF549f70683685',
-    oneClickSushiV2Contract : '0xE9616467dfc714ED5214f2bED909387Ef7Cd80b4'
+    oneClickSushiV2Contract : '0xE9616467dfc714ED5214f2bED909387Ef7Cd80b4',
+    graph_API : 'c9596ce7bc47f7544cc808c3881427ed',
 }
 
 export default addresses
