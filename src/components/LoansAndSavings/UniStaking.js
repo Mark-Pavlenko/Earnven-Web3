@@ -20,10 +20,10 @@ export default function UniStaking({ accountAddress }) {
             const UniStakeDAI = new web3.eth.Contract( UniStakingABI, Addresses.uniStakingDAI );
             const UniStakeUSDC = new web3.eth.Contract( UniStakingABI, Addresses.uniStakingUSDC );
             const UniStakeWBTC = new web3.eth.Contract( UniStakingABI, Addresses.uniStakingWBTC );
-            var USDTAmount = await UniStakeUSDT.methods.balanceOf(accountAddress).call()
-            var DAIAmount = await UniStakeDAI.methods.balanceOf(accountAddress).call()
-            var USDCAmount = await UniStakeUSDC.methods.balanceOf(accountAddress).call()            
-            var WBTCAmount = await UniStakeWBTC.methods.balanceOf(accountAddress).call()
+            var USDTAmount = await UniStakeUSDT.methods.balanceOf(accountAddress).call() / (10**18)
+            var DAIAmount = await UniStakeDAI.methods.balanceOf(accountAddress).call() / (10**18)
+            var USDCAmount = await UniStakeUSDC.methods.balanceOf(accountAddress).call() / (10**18)           
+            var WBTCAmount = await UniStakeWBTC.methods.balanceOf(accountAddress).call() / (10**18)
 
             // var graphData;
             
@@ -94,7 +94,7 @@ export default function UniStaking({ accountAddress }) {
         <div>
             <div 
             style={{
-              display: USDTAmountUSD+USDCAmountUSD+DAIAmountUSD+WBTCAmountUSD>0? '':''
+              display: USDTAmountUSD+USDCAmountUSD+DAIAmountUSD+WBTCAmountUSD>0? '':'none'
             }}
             >
               <div style={{
@@ -107,7 +107,7 @@ export default function UniStaking({ accountAddress }) {
               </div>
               <div style={{marginLeft:'10%'}}>
 
-              <div style={{display:USDTAmountUSD>0?'':''}}>
+              <div style={{display:USDTAmountUSD>0?'':'none'}}>
               USDT/ETH : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {parseFloat(USDTAmountUSD).toFixed(2)} USD<br/>
               </div>
               <div style={{display:USDCAmountUSD>0?'':'none'}}>
