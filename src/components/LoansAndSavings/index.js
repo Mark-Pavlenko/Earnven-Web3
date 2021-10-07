@@ -795,7 +795,7 @@ export default function Index({ accountAddress }) {
             // console.log(response.data.data.users[0].sharesOwned)
             var res = response.data.data.users[0].sharesOwned
             var pools = []
-            var tot = 0
+            var tot = parseInt(0)
             for (var i = 0; i < res.length; i++) {
               var object = {}
               object.balance = res[i].balance
@@ -805,7 +805,9 @@ export default function Index({ accountAddress }) {
               object.poolPercentage = (res[i].balance / res[i].poolId.totalShares) * 100
               object.totalInvestment = parseFloat((res[i].balance / res[i].poolId.totalShares) * res[i].poolId.liquidity).toFixed(2)
               tot += parseFloat(object.totalInvestment).toFixed(2)
-              pools.push(object)
+              if(object.totalInvestment>0){
+                pools.push(object)
+              }
             }
             pools.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
             setBalancerTotal(tot)
