@@ -670,8 +670,10 @@ export default function Index({ accountAddress }) {
               object.token1Symbol = res[i].pair.token1.symbol
               object.liquidity = res[i].pair.reserveUSD
               object.totalInvestment = ((res[i].liquidityTokenBalance / res[i].pair.totalSupply) * res[i].pair.reserveUSD).toFixed(2)
-              tot += parseFloat(object.totalInvestment)
-              pools.push(object)
+              if(object.totalInvestment>0){
+                tot += parseFloat(object.totalInvestment)
+                pools.push(object)
+              }
             }
             pools.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
             // console.log(pools)
@@ -804,8 +806,8 @@ export default function Index({ accountAddress }) {
               object.totalShares = res[i].poolId.totalShares
               object.poolPercentage = (res[i].balance / res[i].poolId.totalShares) * 100
               object.totalInvestment = parseFloat((res[i].balance / res[i].poolId.totalShares) * res[i].poolId.liquidity).toFixed(2)
-              tot += parseFloat(object.totalInvestment).toFixed(2)
               if(object.totalInvestment>0){
+                tot += parseFloat(object.totalInvestment).toFixed(2)
                 pools.push(object)
               }
             }
