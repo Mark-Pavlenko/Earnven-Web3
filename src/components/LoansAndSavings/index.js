@@ -5,6 +5,7 @@ import YearnLogo from '../../assets/icons/yearnLogo.png'
 import CurveLogo from '../../assets/icons/curveLogo.png'
 import ETHLogo from '../../assets/icons/eth.png'
 import addresses from '../../contractAddresses';
+import UniStaking from './UniStaking';
 
 
 export default function Index({ accountAddress }) {
@@ -1185,7 +1186,6 @@ export default function Index({ accountAddress }) {
 
   return (
     <div>
-
       <div style={{
         // marginLeft:'25px',
         width: '100%',
@@ -1440,6 +1440,8 @@ export default function Index({ accountAddress }) {
         </div>
         {CurveStakeContent}
         <br />
+
+        <UniStaking accountAddress={accountAddress} />
 
       </div>
     </div>
