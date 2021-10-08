@@ -30,6 +30,12 @@ import Airdrop from './screens/AirDrop'
 import Swapping from './screens/TestSwapping/Swapping'
 import HomeScreen from './container/home/HomeScreen'
 import TokenCreator from './screens/TokenCreator'
+//added by Prabha on sep-14-2021
+import UniswapLiquidityPool from './components/liquidityPoolDetails/Index'
+import UniswapPoolDetail from './components/liquidityPoolDetails/DetailLoadPage'
+//added by Prabha on sep-18-2021
+import SushiwapLiquidityPool from './components/sushiSwapPoolDetails/Index'
+import SushiswapPoolDetail from './components/sushiSwapPoolDetails/DetailLoadPage'
 // import ExchangeTemp from './screens/ExchangeTemp/exchange'
 
 export default function Router() {
@@ -60,6 +66,20 @@ export default function Router() {
         { path: 'assets', element: <AllAssetsPage /> },
         { path: 'token/:tokenid', element: <TokenDetailsPage /> },
         { path: 'token', element: <TokenDetailsPage /> },
+        {
+          path: 'uniswap/address/:token0/:token1',
+          element: <UniswapLiquidityPool />,
+        },
+        { path: 'uniswap/pair/:tokenid', element: <UniswapPoolDetail /> },
+        {
+          path: 'sushiswap/address/:token0/:token1',
+          element: <SushiwapLiquidityPool />,
+        },
+
+        {
+          path: 'sushiswap/pair/:tokenid',
+          element: <SushiswapPoolDetail />,
+        },
         { path: 'bridge', element: <Bridge /> },
         { path: 'multisender', element: <Multisender /> },
         { path: 'safefarm', element: <SafeFarm /> },
