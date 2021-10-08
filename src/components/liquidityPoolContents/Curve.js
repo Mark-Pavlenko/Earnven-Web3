@@ -12,13 +12,13 @@ import TransparentButton from '../../components/TransparentButton'
 import ERC20ABI from '../../abi/ERC20.json'
 import ROUTERABI from '../../abi/UniRouterV2.json'
 import FACTORYABI from '../../abi/UniFactoryV2.json'
-import Addresses from '../../contractAddresses'
 
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import tokenURIs from '../../screens/Exchange/tokenURIs';
+import Addresses from '../../contractAddresses';
 
 
 import PropTypes from 'prop-types';
@@ -28,7 +28,6 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import { Add } from '@material-ui/icons';
 // import AmountInput from '../components/amountInput'
 
 
@@ -129,31 +128,44 @@ export default function LiquidityPools() {
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-        <div style={{height:'60px', width:'100%'}}>
+        <div style={{height:'auto', minHeight:'60px', width:'100%'}}>
             <div style={{display:'inline-block', width:'5%'}}>
                 
             </div>
 
-            <div style={{display:'inline-block', width:'25%'}}>
-                <br/>
-                {object.pool.token0.symbol} {object.pool.token1.symbol}
+            <div style={{display:'inline-block', width:'20%'}}>
+                <br/> <b><u>{object.pool.name}</u></b> <br/>
+                {
+                    object.pool.underlyingCoins.map((tok)=>
+                        <>
+                            {tok.token.symbol}<br/>
+                        </>
+                    )
+                }
             </div> 
 
             <div style={{display:'inline-block', width:'30%'}}>
                 <br/>
-                {parseFloat(object.tvlUSD).toFixed(2)} USD
+                {parseFloat(object.pool.liquidity).toFixed(2)} USD
             </div>
 
             <div style={{display:'inline-block', width:'30%', marginTop:'10px'}}>
                 
-                {((parseInt(object.volumeUSD)*0.003)/parseInt(object.tvlUSD)*100*365).toFixed(2)} % (Yearly)<br/>
-                {((parseInt(object.volumeUSD)*0.003)/parseInt(object.tvlUSD)*100*7).toFixed(2)} % (Weekly)
+                {((parseInt(object.volume)*(object.pool.fee))/parseInt(object.pool.liquidity)*100*365).toFixed(2)} % (Yearly)<br/>
+                {((parseInt(object.volume)*(object.pool.fee))/parseInt(object.pool.liquidity)*100*7).toFixed(2)} % (Weekly)
             </div>
-            <div style={{display:'inline-block', width:'10%',}}>
-            
-                <img style={{ height:'30px', width:'30px',display:'inline-block'}} alt='' src={`https://ethplorer.io${object.pool.token0.image}`}/>
+            <div style={{display:'inline-block', width:'15%',}}>
+                {
+                    object.pool.underlyingCoins.map((tok)=>
+                        <>
+                            <img style={{ height:'30px', width:'30px',display:'inline-block'}} alt='' src={`https://ethplorer.io${tok.image}`}/>
+                            &nbsp;
+                        </>
+                    )
+                }
+                {/* <img style={{ height:'30px', width:'30px',display:'inline-block'}} alt='' src={`https://ethplorer.io${object.tokens[0].image}`}/>
                 &nbsp;&nbsp;&nbsp;
-                <img style={{ height:'30px', width:'30px',display:'inline-block'}} alt='' src={`https://ethplorer.io${object.pool.token1.image}`}/>
+                <img style={{ height:'30px', width:'30px',display:'inline-block'}} alt='' src={`https://ethplorer.io${object.tokens[1].image}`}/> */}
             
             </div>
 
@@ -269,10 +281,10 @@ export default function LiquidityPools() {
 
         <center> OR <br/><br/><br/>
 
-        {object.pool.token0.name} Amount : &nbsp;&nbsp;
+        {object.token0.name} Amount : &nbsp;&nbsp;
         <AmountInput onChange={(e)=>{setAmountTokenA(e.target.value)}}/> 
         &nbsp;&nbsp;&nbsp;
-        {object.pool.token1.name} Amount : &nbsp;&nbsp;
+        {object.token1.name} Amount : &nbsp;&nbsp;
         <AmountInput onChange={(e)=>{setAmountTokenB(e.target.value)}}/>
 
         <br/><br/>
@@ -375,69 +387,83 @@ export default function LiquidityPools() {
         // console.log(epoch)
         async function getData(){
             setLoading(true)
-            await axios.post(`https://gateway.thegraph.com/api/${Addresses.graph_API}/subgraphs/id/0x9bde7bf4d5b13ef94373ced7c8ee0be59735a298-2`,
+            await axios.post(`https://gateway.thegraph.com/api/${Addresses.graph_API}/subgraphs/id/0x2382ab6c2099474cf424560a370ed1b1fdb65253-0`,
             {
-                query:`{
-                    poolDayDatas
+                query:`
+                {
+                    dailyVolumes
                     (
                       first:20
-                      where:{
-                        date: 1630972800
-                      }
-                      orderBy:volumeUSD
+                      skip : ${Page*20}
+                      orderBy:volume
                       orderDirection:desc
+                      where:{
+                        timestamp:${epoch}
+                      }
                     )
                     {
-                      id
-                      date
-                      pool{
-                        
-                        token0{
-                          id
-                          symbol
+                    pool
+                    {
+                      fee
+                      adminFee
+                      name
+                      underlyingCoins{
+                        balance
+                        token{
                           name
-                          decimals
-                        }
-                        
-                        token1{
-                          id
                           symbol
-                          name
                           decimals
+                          address
                         }
                       }
-                      date
-                      volumeUSD
-                      tvlUSD
                     }
-                  }`})
+                    volume
+                  }
+                  }                  
+                `})
                 .then(async(response) => {
-                    console.log(response)
                     if(response.data.data){
-                        var res = response.data.data.poolDayDatas
-                        for(var i =0; i<res.length; i++){
-                            await axios.get(`https://api.ethplorer.io/getTokenInfo/${res[i].pool.token0.id}?apiKey=EK-qSPda-W9rX7yJ-UY93y`,{},{})
-                            .then((response) => {
-                                if(response.data.image){
-                                    // console.log(response.data.image)
-                                    res[i].pool.token0.image = response.data.image
-                                }
-                            })
-                            await axios.get(`https://api.ethplorer.io/getTokenInfo/${res[i].pool.token1.id}?apiKey=EK-qSPda-W9rX7yJ-UY93y`,{},{})
-                            .then((response) => {
-                                if(response.data.image){
-                                    res[i].pool.token1.image = response.data.image
+                        var res = response.data.data.dailyVolumes
+                        console.log(res)
 
-                                }
-                            })
+                        for(var i =0; i<res.length; i++){
+                            res[i].token0 = 'haha'
+                            res[i].token1 = 'haha'
+                            var liquidity = 0;
+                            // console.log(res[i].pool.underlyingCoins)
+                            for(var j=0; j<res[i].pool.underlyingCoins.length; j++){
+                                // console.log('lul')
+                                
+                                await axios.get(`https://api.ethplorer.io/getTokenInfo/${res[i].pool.underlyingCoins[j].token.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`,{},{})
+                                .then((response) => {
+                                    // console.log('lol2')
+                                    if(response.data.image){
+                                        // console.log(response.data)
+                                        res[i].pool.underlyingCoins[j].price = response.data.price.rate
+                                        res[i].pool.underlyingCoins[j].image = response.data.image
+                                        // console.log(response.data.price.rate)
+                                        // console.log(res[i].pool.underlyingCoins[j].balance)
+                                        if(res[i].pool.underlyingCoins[j].balance<1){
+                                            res[i].pool.underlyingCoins[j].balance = res[i].pool.underlyingCoins[j].balance*(10**12)
+                                        }
+                                        liquidity += parseFloat(response.data.price.rate)*parseFloat(res[i].pool.underlyingCoins[j].balance)
+                                        
+                                    }
+                                
+                                })
+                                .catch((err)=>{console.log(err)})
+                            }
+                            res[i].pool.liquidity = liquidity
+                            console.log(res[i])
                             var data2 = Data
                             data2.push(res[i])
                             console.log(data2)
                             setData([...data2])
                         }
+                        console.log(res)
                         // setData(Data.concat(res))
                         setLoading(false)
-                    console.log(res)
+                    console.log('lol',res)
                 }
             })
         }   
@@ -465,7 +491,7 @@ export default function LiquidityPools() {
         await loadWeb3();
         const web3 = window.web3;
         const accounts = await web3.eth.getAccounts();
-        var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.uniFactory)
+        var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.sushiFactory)
         var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call()
         var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
         var qtty = await PairContract.methods.balanceOf(accounts[0]).call();
@@ -478,11 +504,11 @@ export default function LiquidityPools() {
         await loadWeb3();
         const web3 = window.web3;
         const accounts = await web3.eth.getAccounts();
-        var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.uniFactory)
+        var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.sushiFactory)
         var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call()
         var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
-        const oneClickContract = new web3.eth.Contract(OneClickLiquidity, Addresses.oneClickUniV2Contract);
-        await PairContract.methods.approve(Addresses.oneClickUniV2Contract, liquidityAmount).send({from:accounts[0]});
+        const oneClickContract = new web3.eth.Contract(OneClickLiquidity, Addresses.oneClickSushiV2Contract);
+        await PairContract.methods.approve(Addresses.oneClickSushiV2Contract, liquidityAmount).send({from:accounts[0]});
         await oneClickContract.methods.removeLiquidityOneClick(tokenA, tokenB, receiveToken, liquidityAmount).send({from:accounts[0]}) ;
     }
 
@@ -490,11 +516,11 @@ export default function LiquidityPools() {
         await loadWeb3();
         const web3 = window.web3;
         const accounts = await web3.eth.getAccounts();
-        var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.uniFactory)
+        var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.sushiFactory)
         var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call()
         var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
-        const oneClickContract = new web3.eth.Contract(OneClickLiquidity, Addresses.oneClickUniV2Contract);
-        await PairContract.methods.approve(Addresses.oneClickUniV2Contract, LiquidityAmount).send({from:accounts[0]});
+        const oneClickContract = new web3.eth.Contract(OneClickLiquidity, Addresses.oneClickSushiV2Contract);
+        await PairContract.methods.approve(Addresses.oneClickSushiV2Contract, LiquidityAmount).send({from:accounts[0]});
         await oneClickContract.methods.removeLiquidityOneClickETH(tokenA, tokenB, LiquidityAmount).send({from:accounts[0]}) ;
     }
 
@@ -503,11 +529,11 @@ export default function LiquidityPools() {
         await loadWeb3();
         const web3 = window.web3;
         const accounts = await web3.eth.getAccounts();
-        var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.uniFactory)
+        var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.sushiFactory)
         var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call()
         var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
-        const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.uniRouter);
-        await PairContract.methods.approve(Addresses.uniRouter, LiquidityAmount).send({from:accounts[0]});
+        const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.sushiRouter);
+        await PairContract.methods.approve(Addresses.sushiRouter, LiquidityAmount).send({from:accounts[0]});
         await UniRouter.methods.removeLiquidity(tokenA, tokenB, LiquidityAmount, 0, 0 , accounts[0], start.toString()).send({from:accounts[0]}) ;
     }
 
@@ -516,8 +542,8 @@ export default function LiquidityPools() {
         const web3 = window.web3;
         const accounts = await web3.eth.getAccounts();
         var tokenContract = new web3.eth.Contract(ERC20ABI, supplyToken);
-        const oneClickContract = new web3.eth.Contract(OneClickLiquidity, Addresses.oneClickUniV2Contract);
-        await tokenContract.methods.approve(Addresses.oneClickUniV2Contract, supplyTokenQtty).send({from:accounts[0]});
+        const oneClickContract = new web3.eth.Contract(OneClickLiquidity, Addresses.oneClickSushiV2Contract);
+        await tokenContract.methods.approve(Addresses.oneClickSushiV2Contract, supplyTokenQtty).send({from:accounts[0]});
         await oneClickContract.methods.addLiquidityOneClick(tokenA, tokenB, supplyToken, supplyTokenQtty).send({from:accounts[0]}) ;
     }
 
@@ -525,7 +551,7 @@ export default function LiquidityPools() {
         await loadWeb3();
         const web3 = window.web3;
         const accounts = await web3.eth.getAccounts();
-        const oneClickContract = new web3.eth.Contract(OneClickLiquidity, Addresses.oneClickUniV2Contract);
+        const oneClickContract = new web3.eth.Contract(OneClickLiquidity, Addresses.oneClickSushiV2Contract);
         await oneClickContract.methods.addLiquidityOneClickETH(tokenA, tokenB).send({from:accounts[0], value: web3.utils.toWei(ethAmount, 'ether')}) ;
     }
 
@@ -536,9 +562,9 @@ export default function LiquidityPools() {
         const accounts = await web3.eth.getAccounts();
         var tokenAContract = new web3.eth.Contract(ERC20ABI, tokenA);
         var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
-        await tokenAContract.methods.approve(Addresses.uniRouter, web3.utils.toWei(amountTokenA, 'ether')).send({from:accounts[0]});
-        await tokenBContract.methods.approve(Addresses.uniRouter, web3.utils.toWei(amountTokenB, 'ether')).send({from:accounts[0]});
-        const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.uniRouter);
+        await tokenAContract.methods.approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenA, 'ether')).send({from:accounts[0]});
+        await tokenBContract.methods.approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenB, 'ether')).send({from:accounts[0]});
+        const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.sushiRouter);
         await UniRouter.methods.addLiquidity(tokenA, tokenB, web3.utils.toWei(amountTokenA, 'ether'), web3.utils.toWei(amountTokenB, 'ether'), 0, 0, accounts[0], start.toString() ).send({from:accounts[0]}) ;
         
     }

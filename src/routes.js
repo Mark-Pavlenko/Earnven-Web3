@@ -9,6 +9,7 @@ import DefiMadeEasy from './screens/DefiMadeEasy'
 import Bridge from './screens/Bridge'
 import Multisender from './screens/MultiSender'
 import SafeFarm from './screens/safeFarms/safefarm'
+// import Trading from './screens/Exchange/exchange';
 import Trading from './screens/Exchange/exchange'
 // import TestingPage from './screens/testingPage';
 import AllAssetsPage from './screens/AllAssetsPage'
@@ -29,10 +30,7 @@ import Airdrop from './screens/AirDrop'
 import Swapping from './screens/TestSwapping/Swapping'
 import HomeScreen from './container/home/HomeScreen'
 import TokenCreator from './screens/TokenCreator'
-import UniswapLiquidityPool from './components/liquidityPoolDetails/Index'
-import UniswapPoolDetail from './components/liquidityPoolDetails/DetailLoadPage'
-import SushiwapLiquidityPool from './components/sushiSwapPoolDetails/Index'
-import SushiswapPoolDetail from './components/sushiSwapPoolDetails/DetailLoadPage'
+// import ExchangeTemp from './screens/ExchangeTemp/exchange'
 
 export default function Router() {
   // return(
@@ -61,25 +59,12 @@ export default function Router() {
         { path: 'defimadeasy', element: <DefiMadeEasy /> },
         { path: 'assets', element: <AllAssetsPage /> },
         { path: 'token/:tokenid', element: <TokenDetailsPage /> },
-        {
-          path: 'uniswap/address/:token0/:token1',
-          element: <UniswapLiquidityPool />,
-        },
-        { path: 'uniswap/pair/:tokenid', element: <UniswapPoolDetail /> },
-        {
-          path: 'sushiswap/address/:token0/:token1',
-          element: <SushiwapLiquidityPool />,
-        },
-
-        {
-          path: 'sushiswap/pair/:tokenid',
-          element: <SushiswapPoolDetail />,
-        },
         { path: 'token', element: <TokenDetailsPage /> },
         { path: 'bridge', element: <Bridge /> },
         { path: 'multisender', element: <Multisender /> },
         { path: 'safefarm', element: <SafeFarm /> },
         { path: 'exchange', element: <Trading /> },
+        // {path:'exchange',element:<ExchangeTemp />},
         { path: 'nft', element: <NFTpage /> },
         // {path:'nft-token',element:<NFTTokenPage/>},
         { path: 'nft-token/:contract/:id', element: <NFTTokenPage /> },

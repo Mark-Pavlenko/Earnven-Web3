@@ -183,22 +183,6 @@ export default function LiquidityPools() {
                 % (Weekly)
               </div>
               <div style={{ display: 'inline-block', width: '10%' }}>
-                <Link
-                  to={`/${address}/sushiswap/address/${object.token0.id}/${object.token1.id}`}
-                >
-                  <Button
-                    color="primary"
-                    sx={{
-                      height: '0.1px',
-                      color: '#fff',
-                      fontWeight: 5,
-                      fontSize: '13px',
-                      background: (theme) => theme.palette.gradients.custom,
-                    }}
-                  >
-                    Details
-                  </Button>
-                </Link>
                 <img
                   style={{
                     height: '30px',
@@ -574,7 +558,7 @@ export default function LiquidityPools() {
       setLoading(true)
       await axios
         .post(
-          `https://gateway.thegraph.com/api/c9596ce7bc47f7544cc808c3881427ed/subgraphs/id/0x4bb4c1b0745ef7b4642feeccd0740dec417ca0a0-0`,
+          `https://gateway.thegraph.com/api/${Addresses.graph_API}/subgraphs/id/0x4bb4c1b0745ef7b4642feeccd0740dec417ca0a0-0`,
           {
             query: `
                 {
@@ -632,8 +616,12 @@ export default function LiquidityPools() {
                     res[i].token1.image = response.data.image
                   }
                 })
+              var data2 = Data
+              data2.push(res[i])
+              console.log(data2)
+              setData([...data2])
             }
-            setData(Data.concat(res))
+            // setData(Data.concat(res))
             setLoading(false)
             console.log(res)
           }
@@ -641,6 +629,23 @@ export default function LiquidityPools() {
     }
     getData()
   }, [Page])
+
+  useEffect(() => {
+    setData([])
+  }, [])
+
+  async function loadWeb3() {
+    if (window.ethereum) {
+      window.web3 = new Web3(window.ethereum)
+      await window.ethereum.enable()
+    } else if (window.web3) {
+      window.web3 = new Web3(window.web3.currentProvider)
+    } else {
+      window.alert(
+        'Non-Ethereum browser detected. You should consider trying MetaMask!',
+      )
+    }
+  }
 
   useEffect(() => {
     setData([])

@@ -123,6 +123,33 @@ export default function GasDropDownMenu() {
   const anchorRef = useRef(null);
   const [open, setopen] = useState(false)
   const [selected, setselected] = useState("Average")
+  const [GasPrices, setGasPrices] = useState([])
+  const [GasPricesContent , setGasPricesContent] = useState([])
+
+  useEffect(() => {
+    // console.log('Updating Layout....')
+    var content = GasPrices.map((option) => (
+      <MenuItem
+        // key={option.value}
+        selected={option.label === selected}
+        onClick={() => {
+          handleClose();
+          updateGasValue(option.value,option.label);
+        }}
+        sx={{ py: 1, px: 2.5 }}
+      >
+        <ListItemIcon>
+          <Box component="img" alt={option.label} src={languageImg} />
+        </ListItemIcon>
+        <ListItemText primaryTypographyProps={{ variant: 'body2', color: '#fff' }}>
+          {option.label + "-" + option.value+" Gwei"}
+        </ListItemText>
+      </MenuItem>
+    ))
+
+    setGasPricesContent(content)
+    
+  }, [GasPrices])
 
   const handleOpen = () => {
     setopen(true);
@@ -132,17 +159,21 @@ export default function GasDropDownMenu() {
     setopen(false);
   }
 
+  const MINUTE_MS = 10000;
+
   useEffect(() => {
     async function getData(){
       try {
         const response = await axios.get('https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W');
-        console.log("api response::", response);
+        // console.log("api response::", response);
         const result = response.data.result;
         gasType[0].value= result.FastGasPrice;
         gasType[1].value = result.ProposeGasPrice;
         gasType[2].value = result.SafeGasPrice;
         data.gasSelected=result.ProposeGasPrice;
-        console.log("gasType::",gasType);
+        // setGasPrices([])
+        setGasPrices([...gasType])
+        // console.log("gasType::",gasType);
   
   
       }
@@ -150,8 +181,15 @@ export default function GasDropDownMenu() {
         console.log(error);
       }
     }
+
     getData();
 
+    const interval = setInterval(() => {
+      // console.log('Logs every 10 secs');
+      getData();
+    }, MINUTE_MS); 
+
+    return () => clearInterval(interval);
   }, [])
 
   const updateGasValue = (val,label) => {
@@ -179,24 +217,7 @@ export default function GasDropDownMenu() {
       </IconButton>
       <MenuPopover open={open} onClose={handleClose} anchorEl={anchorRef.current}>
         <Box sx={{ py: 1 }}>
-          {gasType.map((option) => (
-            <MenuItem
-              key={option.value}
-              selected={option.label === selected}
-              onClick={() => {
-                handleClose();
-                updateGasValue(option.value,option.label);
-              }}
-              sx={{ py: 1, px: 2.5 }}
-            >
-              <ListItemIcon>
-                <Box component="img" alt={option.label} src={languageImg} />
-              </ListItemIcon>
-              <ListItemText primaryTypographyProps={{ variant: 'body2', color: '#fff' }}>
-                {option.label + "-" + option.value+" Gwei"}
-              </ListItemText>
-            </MenuItem>
-          ))}
+          {GasPricesContent}
         </Box>
       </MenuPopover>
 

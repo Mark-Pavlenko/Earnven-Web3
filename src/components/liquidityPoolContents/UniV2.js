@@ -186,7 +186,7 @@ export default function LiquidityPools() {
               <div style={{ display: 'inline-block', width: '10%' }}>
                 {/*Link code added by Prabha on 15-Sep-2021 */}
                 <Link
-                  to={`/${address}/uniswap/address/${object.token0.id}/${object.token1.id}`} 
+                  to={`/${address}/uniswap/address/${object.token0.id}/${object.token1.id}`}
                 >
                   <Button
                     color="primary"
@@ -202,7 +202,6 @@ export default function LiquidityPools() {
                   </Button>
                 </Link>
                 <br />
-          
                 <img
                   style={{
                     height: '30px',
@@ -632,8 +631,12 @@ export default function LiquidityPools() {
                     res[i].token1.image = response.data.image
                   }
                 })
+              var data2 = Data
+              data2.push(res[i])
+              console.log(data2)
+              setData([...data2])
             }
-            setData(Data.concat(res))
+            // setData(Data.concat(res))
             setLoading(false)
             console.log(res)
           }
@@ -641,6 +644,39 @@ export default function LiquidityPools() {
     }
     getData()
   }, [Page])
+
+  useEffect(() => {
+    setData([])
+  }, [])
+
+  async function loadWeb3() {
+    if (window.ethereum) {
+      window.web3 = new Web3(window.ethereum)
+      await window.ethereum.enable()
+    } else if (window.web3) {
+      window.web3 = new Web3(window.web3.currentProvider)
+    } else {
+      window.alert(
+        'Non-Ethereum browser detected. You should consider trying MetaMask!',
+      )
+    }
+  }
+
+  async function checkLiquidity(tokenA, tokenB) {
+    await loadWeb3()
+    const web3 = window.web3
+    const accounts = await web3.eth.getAccounts()
+    var FactoryContract = new web3.eth.Contract(
+      FACTORYABI,
+      Addresses.uniFactory,
+    )
+    var pairAddress = await FactoryContract.methods
+      .getPair(tokenA, tokenB)
+      .call()
+    var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress)
+    var qtty = await PairContract.methods.balanceOf(accounts[0]).call()
+    setAccountLiquidity(qtty)
+  }
 
   useEffect(() => {
     setData([])
