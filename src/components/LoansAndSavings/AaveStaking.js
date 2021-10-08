@@ -47,7 +47,7 @@ export default function AaveStaking({ accountAddress }) {
   useEffect(() => {
     async function getBlockchainData() {
       const AaveBalaceAmount = await checkAaveStake(accountAddress)
-      console.log('AaveBalaceAmount', AaveBalaceAmount)
+      console.log('AaveTotalStake', AaveBalaceAmount)
       setAaveBalanceAmt(AaveBalaceAmount)
 
       //get the Aave token USD price from aave api data pools
@@ -58,8 +58,8 @@ export default function AaveStaking({ accountAddress }) {
           const StakeCalcValue =
             parseInt(AaveUsdPrice) * parseFloat(AaveBalaceAmount)
           const statkeUSDValue = (StakeCalcValue / 10 ** 18).toLocaleString()
-          console.log('Aave USD amount', AaveUsdPrice)
-          console.log('Aave data', statkeUSDValue)
+          console.log('Aave USD Price', AaveUsdPrice.toFixed(3))
+          console.log('Aave Staking Value in USD', statkeUSDValue)
           setAaveUsdPrice(parseFloat(AaveUsdPrice).toFixed(3))
           setAaveAmountUSD(statkeUSDValue)
         })
@@ -80,8 +80,6 @@ export default function AaveStaking({ accountAddress }) {
           display: AaveAmountUSD.length > 0 ? '' : 'none',
         }}
       >
-        Aave Staking --- {AaveAmountUSD} USD
-        <br /> <br />
         &nbsp;&nbsp;
         <img
           src={aaveLogo}
@@ -93,8 +91,10 @@ export default function AaveStaking({ accountAddress }) {
           }}
           alt=""
         />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$1Aave &nbsp;&nbsp; {AaveUsdPrice}{' '}
-        USD
+        &nbsp;&nbsp; Aave Staking --- ${AaveAmountUSD} USD
+        <br /> <br />
+        {/* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$1Aave &nbsp;&nbsp; {AaveUsdPrice}{' '}
+        USD */}
         <br />
       </div>
     </div>
