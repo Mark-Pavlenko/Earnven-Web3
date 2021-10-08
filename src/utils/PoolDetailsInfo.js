@@ -46,7 +46,7 @@ function PoolDetailsInfo(props) {
   }
 
   return (
-    <div>
+    <div style={{ marginTop: '100px' }}>
       <h2>&nbsp;Pair Information </h2>
       <div className="pairInfo-item">
         <div className="pairInfo__description">

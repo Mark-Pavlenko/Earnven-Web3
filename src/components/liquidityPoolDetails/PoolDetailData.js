@@ -24,6 +24,7 @@ import PoolDetailChart from './PoolDetailsChart'
 import PoolDetailsInfo from '../../utils/PoolDetailsInfo'
 import getUniswapGraphData from './getPoolDetailGraphData'
 import getPoolTokenImage from './getPoolTokenImage'
+import AddRemoveUniV2 from './AddRemoveUniV2'
 // const getUniswapGraphData = require('./getPoolDetailGraphData')
 //   .getUniswapGraphData
 
