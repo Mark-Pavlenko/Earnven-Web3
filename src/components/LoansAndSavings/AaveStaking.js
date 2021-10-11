@@ -87,7 +87,6 @@ export default function AaveStaking({ accountAddress }) {
       >
         Aave Staking --- {AaveAmountUSD} USD
       </div>
-
       <div>
         <img
           src={aaveLogo}
@@ -106,11 +105,9 @@ export default function AaveStaking({ accountAddress }) {
             marginLeft: '15px',
           }}
         >
-          $stkAAVE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {AaveAmountUSD} USD
+          AAVE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {AaveAmountUSD} USD
         </div>
       </div>
-      {/* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$1Aave &nbsp;&nbsp; {AaveUsdPrice}{' '}
-        USD */}
     </div>
   )
 }

@@ -678,7 +678,7 @@ export default function Index({ accountAddress }) {
           <div
             style={{ display: 'inline-block', width: '40%', textAlign: 'left' }}
           >
-            ${object.symbol}
+            {object.symbol}
           </div>
 
           {/* <div style={{display:'inline-block', width:'30%'}}>
@@ -1798,7 +1798,9 @@ export default function Index({ accountAddress }) {
         </div>
         {CurveStakeContent}
         <br />
+
         <AaveStaking accountAddress={accountAddress} />
+
         <br />
         <SushiStaking accountAddress={accountAddress} />
         <br />

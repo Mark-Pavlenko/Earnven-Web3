@@ -143,7 +143,7 @@ export default function SushiStaking({ accountAddress }) {
             marginLeft: '15px',
           }}
         >
-          $Sushi &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {SushiAmountUSD} USD
+          Sushi &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {SushiAmountUSD} USD
         </div>
       </div>
       {/* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$1Aave &nbsp;&nbsp; {AaveUsdPrice}{' '}
