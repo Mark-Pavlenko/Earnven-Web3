@@ -79,35 +79,41 @@ export default function AaveStaking({ accountAddress }) {
 
   return (
     <div>
-      <div
-        style={{
-          fontSize: '12px',
-          marginLeft: '15px',
-        }}
-      >
-        Aave Staking --- {AaveAmountUSD} USD
-      </div>
-      <div>
-        <img
-          src={aaveLogo}
-          style={{
-            height: '30px',
-            marginTop: '',
-            display: 'inline-block',
-            marginLeft: '15px',
-          }}
-          alt=""
-        />
-        <div
-          style={{
-            fontSize: '12px',
-            display: 'inline-block',
-            marginLeft: '15px',
-          }}
-        >
-          AAVE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {AaveAmountUSD} USD
+      {parseInt(AaveAmountUSD) ? (
+        <div>
+          <div
+            style={{
+              fontSize: '12px',
+              marginLeft: '15px',
+            }}
+          >
+            Aave Staking --- {AaveAmountUSD} USD
+          </div>
+          <div>
+            <img
+              src={aaveLogo}
+              style={{
+                height: '30px',
+                marginTop: '',
+                display: 'inline-block',
+                marginLeft: '15px',
+              }}
+              alt=""
+            />
+            <div
+              style={{
+                fontSize: '12px',
+                display: 'inline-block',
+                marginLeft: '15px',
+              }}
+            >
+              AAVE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {AaveAmountUSD} USD
+            </div>
+          </div>
         </div>
-      </div>
+      ) : (
+        ''
+      )}
     </div>
   )
 }

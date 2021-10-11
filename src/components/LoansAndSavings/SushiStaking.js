@@ -116,38 +116,42 @@ export default function SushiStaking({ accountAddress }) {
 
   return (
     <div>
-      <div
-        style={{
-          fontSize: '12px',
-          marginLeft: '15px',
-        }}
-      >
-        Sushi Staking --- {SushiAmountUSD} USD
-      </div>
+      {parseInt(SushiAmountUSD) ? (
+        <div>
+          <div
+            style={{
+              fontSize: '12px',
+              marginLeft: '15px',
+            }}
+          >
+            Sushi Staking --- {SushiAmountUSD} USD
+          </div>
 
-      <div>
-        <img
-          src={SushiSwapLogo}
-          style={{
-            height: '30px',
-            marginTop: '',
-            display: 'inline-block',
-            marginLeft: '15px',
-          }}
-          alt=""
-        />
-        <div
-          style={{
-            fontSize: '12px',
-            display: 'inline-block',
-            marginLeft: '15px',
-          }}
-        >
-          Sushi &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {SushiAmountUSD} USD
+          <div>
+            <img
+              src={SushiSwapLogo}
+              style={{
+                height: '30px',
+                marginTop: '',
+                display: 'inline-block',
+                marginLeft: '15px',
+              }}
+              alt=""
+            />
+            <div
+              style={{
+                fontSize: '12px',
+                display: 'inline-block',
+                marginLeft: '15px',
+              }}
+            >
+              Sushi &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {SushiAmountUSD} USD
+            </div>
+          </div>
         </div>
-      </div>
-      {/* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$1Aave &nbsp;&nbsp; {AaveUsdPrice}{' '}
-        USD */}
+      ) : (
+        ''
+      )}
     </div>
   )
 }
