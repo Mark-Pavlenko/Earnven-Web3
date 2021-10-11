@@ -1,7 +1,13 @@
-/*
+/***********************************************************************************
 Purpose : This component is used to get stake token value from Aave Protocol
-Version -----------Developed by 
- */
+Developed by : Prabhakaran.R
+Version log:
+----------------------------------------------------------------------------------
+Version           Date                         Description
+---------------------------------------------------------------------------------
+1.0               8/Sep/2021                   Initial Development
+
+************************************************************************************/
 import React, { useEffect, useState } from 'react'
 import AaveStakingABI from '../../abi/AaveStakingContract.json'
 import Addresses from '../../contractAddresses'
@@ -55,13 +61,13 @@ export default function AaveStaking({ accountAddress }) {
         .get('https://aave-api-v2.aave.com/data/pools', {})
         .then(async (response) => {
           const AaveUsdPrice = response.data[0].price.usd
-          const StakeCalcValue =
-            parseInt(AaveUsdPrice) * parseFloat(AaveBalaceAmount)
-          const statkeUSDValue = (StakeCalcValue / 10 ** 18).toLocaleString()
+          const stakeValue = AaveBalaceAmount / 10 ** 18
+
+          const statkeUSDValue = AaveUsdPrice * stakeValue
           console.log('Aave USD Price', AaveUsdPrice.toFixed(3))
           console.log('Aave Staking Value in USD', statkeUSDValue)
           setAaveUsdPrice(parseFloat(AaveUsdPrice).toFixed(3))
-          setAaveAmountUSD(statkeUSDValue)
+          setAaveAmountUSD(statkeUSDValue.toLocaleString())
         })
         .catch((err) => {
           console.log('Error Message message', err)
@@ -77,26 +83,34 @@ export default function AaveStaking({ accountAddress }) {
         style={{
           fontSize: '12px',
           marginLeft: '15px',
-          display: AaveAmountUSD.length > 0 ? '' : 'none',
         }}
       >
-        &nbsp;&nbsp;
+        Aave Staking --- {AaveAmountUSD} USD
+      </div>
+
+      <div>
         <img
           src={aaveLogo}
           style={{
             height: '30px',
             marginTop: '',
             display: 'inline-block',
-            marginLeft: '5%',
+            marginLeft: '15px',
           }}
           alt=""
         />
-        &nbsp;&nbsp; Aave Staking --- ${AaveAmountUSD} USD
-        <br /> <br />
-        {/* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$1Aave &nbsp;&nbsp; {AaveUsdPrice}{' '}
-        USD */}
-        <br />
+        <div
+          style={{
+            fontSize: '12px',
+            display: 'inline-block',
+            marginLeft: '15px',
+          }}
+        >
+          $stkAAVE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {AaveAmountUSD} USD
+        </div>
       </div>
+      {/* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$1Aave &nbsp;&nbsp; {AaveUsdPrice}{' '}
+        USD */}
     </div>
   )
 }

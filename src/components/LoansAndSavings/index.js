@@ -7,6 +7,7 @@ import ETHLogo from '../../assets/icons/eth.png'
 import addresses from '../../contractAddresses'
 import UniStaking from './UniStaking'
 import AaveStaking from './AaveStaking'
+import SushiStaking from './SushiStaking'
 
 export default function Index({ accountAddress }) {
   const [SavingsContent, setSavingsContent] = useState([]) //aave v2
@@ -1382,7 +1383,7 @@ export default function Index({ accountAddress }) {
                 object.totalInvestment = parseFloat(
                   object.price * object.balance,
                 ).toFixed(2)
-                tot += parseFloat(object.totalInvestment).toFixed(2)
+                tot += parseFloat(object.totalInvestment)
                 if (object.totalInvestment > 0) {
                   stakings.push(object)
                 }
@@ -1798,6 +1799,8 @@ export default function Index({ accountAddress }) {
         {CurveStakeContent}
         <br />
         <AaveStaking accountAddress={accountAddress} />
+        <br />
+        <SushiStaking accountAddress={accountAddress} />
         <br />
         <UniStaking accountAddress={accountAddress} />
       </div>
