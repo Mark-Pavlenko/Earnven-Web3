@@ -132,29 +132,29 @@ export default class index extends Component {
                     var erc20data = {}
                     var tx = response.data.result
                     // console.log(stage1Tokens)
-                    for (var i = 0; i < tx.length; i++) {
+                    for (var j = 0; j < tx.length; j++) {
 
-                        if (!erc20data[tx[i].contractAddress]) {
+                        if (!erc20data[tx[j].contractAddress]) {
                             var index
-                            index = stage1Tokens.indexOf(tx[i].contractAddress)
+                            index = stage1Tokens.indexOf(tx[j].contractAddress)
                             if (index === -1) {
-                                erc20data[tx[i].contractAddress] = {}
-                                erc20data[tx[i].contractAddress].id = tx[i].contractAddress
-                                erc20data[tx[i].contractAddress].balance = tx[i].value / (10 ** tx[i].tokenDecimal)
-                                erc20data[tx[i].contractAddress].decimals = tx[i].tokenDecimal;
+                                erc20data[tx[j].contractAddress] = {}
+                                erc20data[tx[j].contractAddress].id = tx[j].contractAddress
+                                erc20data[tx[j].contractAddress].balance = tx[j].value / (10 ** tx[j].tokenDecimal)
+                                erc20data[tx[j].contractAddress].decimals = tx[j].tokenDecimal;
                             }
 
                         }
                         else {
-                            if (tx[i].to.toLowerCase() === accounts.toLowerCase()) {
-                                erc20data[tx[i].contractAddress].balance += tx[i].value / (10 ** tx[i].tokenDecimal)
+                            if (tx[j].to.toLowerCase() === accounts.toLowerCase()) {
+                                erc20data[tx[j].contractAddress].balance += tx[j].value / (10 ** tx[j].tokenDecimal)
                             }
-                            else if (tx[i].from.toLowerCase() === accounts.toLowerCase()) {
-                                erc20data[tx[i].contractAddress].balance -= tx[i].value / (10 ** tx[i].tokenDecimal)
+                            else if (tx[j].from.toLowerCase() === accounts.toLowerCase()) {
+                                erc20data[tx[j].contractAddress].balance -= tx[j].value / (10 ** tx[j].tokenDecimal)
                             }
 
-                            // if(tx[i].contractAddress==='0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'){
-                            //     console.log(erc20data[tx[i].contractAddress].balance)
+                            // if(tx[j].contractAddress==='0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'){
+                            //     console.log(erc20data[tx[j].contractAddress].balance)
                             // }
                         }
                     }
@@ -206,7 +206,7 @@ export default class index extends Component {
 
                                     await axios.get(`https://api.ethplorer.io/getTokenInfo/${buffer[i].id}?apiKey=EK-qSPda-W9rX7yJ-UY93y`, {}, {})
                                         .then(async (response2) => {
-                                            // console.log('response  :', buffer[i])
+                                            // console.log('response  :', buffer[j])
                                             if (response2.data && response2.data.symbol !== 'WETH') {
                                                 // console.log(response2.data)
 

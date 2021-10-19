@@ -1,39 +1,44 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable */
+import React, {useEffect, useState} from 'react';
 import './exchange.css';
-// import eth from '../Assets/eth.svg';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import axios from 'axios';
 import TransparentButton from '../../components/TransparentButton'
 import Web3 from 'web3';
 import ERC20ABI from '../../abi/ERC20.json'
-import tokenURIs from './tokenURIs';
-import { Box, Typography, Stack, Container, Grid, TextField, Divider, Button, Modal, Tooltip, InputAdornment, OutlinedInput,Tab, Tabs } from '@material-ui/core';
+import {
+    Box,
+    Button,
+    Container,
+    Divider,
+    Grid,
+    InputAdornment,
+    Modal,
+    OutlinedInput,
+    Stack,
+    Tab,
+    Tabs,
+    TextField,
+    Typography
+} from '@material-ui/core';
 // import exchangeIcon from '../../assets/icons/exchange.png'
 import Uniswap from '../../assets/icons/Uniswap.webp';
 // import Curve from '../../assets/icons/Curve.webp';
 // import SushiSwap from '../../assets/icons/Sushiswap.webp';
 // import Bancor from '../../assets/icons/Bancor.webp';
 import Balancer from '../../assets/icons/balancer.png';
-import { invert, update } from 'lodash';
 import styled from 'styled-components'
-import CurrencySearchModal from '../../components/CurrencySearchModal';
-import { ethers } from "ethers";
-import { parseUnits, formatUnits } from "@ethersproject/units";
-import { useParams } from 'react-router-dom';
+import {ethers} from "ethers";
+import {useParams} from 'react-router-dom';
 import Loader from "react-loader-spinner";
-import ScrollToTop from '../../components/ScrollToTop';
 import Avatar from 'react-avatar';
 import ethImage from '../../assets/icons/eth.png'
-import { FaAngleRight } from "react-icons/fa";
 import NukeExchange from './nukeExchange';
 
 
-
 function TabPanel(props) {
-    const { children, value, index, ...other } = props;
+    const {children, value, index, ...other} = props;
 
     return (
         <div
@@ -44,7 +49,7 @@ function TabPanel(props) {
             {...other}
         >
             {value === index && (
-                <Box >
+                <Box>
                     {children}
                 </Box>
             )}
@@ -117,7 +122,7 @@ const makeCall = async (callName, contract, args, metadata = {}) => {
     }
 }
 export default function Exchange() {
-    const { address } = useParams();
+    const {address} = useParams();
     const [value, setValue] = useState(0);
     const [TokenFrom, setTokenFrom] = useState('ETH');
     const [TokenTo, setTokenTo] = useState('');
@@ -182,8 +187,7 @@ export default function Exchange() {
                         tempObj.balance = ((tokens[i].balance * (Math.pow(10, -parseInt(tokens[i].tokenInfo.decimals)))).toFixed(3)).toString();
                         if (tokens[i].tokenInfo.image !== undefined) {
                             tempObj.logoURI = `https://ethplorer.io${tokens[i].tokenInfo.image}`
-                        }
-                        else {
+                        } else {
                             tempObj.logoURI = null;
                         }
                         arr1.push(tempObj);
@@ -238,6 +242,7 @@ export default function Exchange() {
             // console.log("token list with token balance:::", tokens);
             // setAllTokens(tokens);
         }
+
         getData()
     }, [])
     useEffect(() => {
@@ -245,16 +250,17 @@ export default function Exchange() {
             try {
                 const ethDollarValue = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
                 setethPrice(ethDollarValue.data.ethereum.usd);
-            }
-            catch {
+            } catch {
             }
         }
+
         getEthdollarValue();
     }, [])
     useEffect(() => {
         const timeOutId = setTimeout(() => calculateToAmount(TokenFromAmount), 500);
         return () => clearTimeout(timeOutId);
     }, [TokenFromAmount]);
+
     /* useEffect(() => {
         async function getData() {
             if (TokenFromAmount !== '' && TokenFrom !== '' && TokenTo !== '') {
@@ -284,14 +290,13 @@ export default function Exchange() {
         if (window.ethereum) {
             window.web3 = new Web3(window.ethereum)
             await window.ethereum.enable()
-        }
-        else if (window.web3) {
+        } else if (window.web3) {
             window.web3 = new Web3(window.web3.currentProvider)
-        }
-        else {
+        } else {
             window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
         }
     }
+
     async function transact() {
         await loadWeb3()
         const web3 = window.web3;
@@ -320,27 +325,25 @@ export default function Exchange() {
             txObject.from = accounts[0]
             if (TokenFrom !== 'ETH') {
                 const ERC20contract = new web3.eth.Contract(ERC20ABI, txObject.sellTokenAddress);
-                await ERC20contract.methods.approve(txObject.allowanceTarget, txObject.sellAmount).send({ from: accounts[0] });
+                await ERC20contract.methods.approve(txObject.allowanceTarget, txObject.sellAmount).send({from: accounts[0]});
             }
             try {
                 await web3.eth.sendTransaction(txObject);
                 settxSuccess(true);
-            }
-            catch (error) {
+            } catch (error) {
                 console.log("tx failed::", error)
                 settxFailure(true);
             }
-        }
-        else {
+        } else {
             alert("Please Fill All fields")
         }
     }
+
     const dollarValueOfToken = async (tokenAddress) => {
         try {
             if (tokenAddress === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
                 return ethPrice;
-            }
-            else {
+            } else {
                 const response = await axios.get(`https://api.ethplorer.io/getTokenInfo/${tokenAddress}?apiKey=EK-qSPda-W9rX7yJ-UY93y`)
                 let data = response.data;
                 console.log('response of ethplorere api::', data)
@@ -348,13 +351,11 @@ export default function Exchange() {
                     console.log("enter inside method")
                     // settokenToDollarValue(data.price.rate);
                     return data.price.rate;
-                }
-                else {
+                } else {
                     console.log("dollar value of this token is undefined")
                 }
             }
-        }
-        catch {
+        } catch {
         }
     }
     const calculateToAmount = async (tokenFromAmount) => {
@@ -406,8 +407,7 @@ export default function Exchange() {
                                 }
                             }
                             setSources(sources2)
-                        }
-                        else {
+                        } else {
                             protocolQuote.name = protocolsList[i];
                         }
                         protocolQuote.price = response.data.price;
@@ -438,8 +438,7 @@ export default function Exchange() {
                             protocolQuote.image = "https://assets.coingecko.com/markets/images/565/small/0x-protocol.png?1596623034";
                         }
                         differentQuoteList.push(protocolQuote);
-                    }
-                    catch {
+                    } catch {
                         console.log(`error come for ${protocolsList[i]}`);
                     }
                 }
@@ -499,27 +498,32 @@ export default function Exchange() {
         }
         return newBalance
     }
-   
+
     return (
-        <Box sx={{ width: '100%', mt: 3 }}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Box sx={{width: '100%', mt: 3}}>
+            <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                     <Tab label="Exchange" {...a11yProps(0)} />
                     <Tab label="Nuke" {...a11yProps(1)} />
                 </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
-        <Grid container >
-            <Grid items xs={12} md={8} sx={{ mt: 5, ml: 5 }}>
-                <Container>
-                    <Typography variant='h3' sx={{ fontStyle: 'normal' }}>Exchange</Typography>
-                    <Container sx={{ border: "1px solid #737373", borderRadius: '7px', boxSizing: 'border-box', mt: 2.5 }}>
-                        <Box sx={{ mt: 4, mb: 3 }}>
-                            <Stack direction='row' spacing={2}>
-                                <Stack spacing={0.5}>
-                                    <Typography variant='caption' sx={{ color: '#f5f5f5' }}>Swap</Typography>
-                                    <FormControl variant="outlined" style={{ width: '120px' }}>
-                                        {/* <Select
+                <Grid container>
+                    <Grid items xs={12} md={8} sx={{mt: 5, ml: 5}}>
+                        <Container>
+                            <Typography variant='h3' sx={{fontStyle: 'normal'}}>Exchange</Typography>
+                            <Container sx={{
+                                border: "1px solid #737373",
+                                borderRadius: '7px',
+                                boxSizing: 'border-box',
+                                mt: 2.5
+                            }}>
+                                <Box sx={{mt: 4, mb: 3}}>
+                                    <Stack direction='row' spacing={2}>
+                                        <Stack spacing={0.5}>
+                                            <Typography variant='caption' sx={{color: '#f5f5f5'}}>Swap</Typography>
+                                            <FormControl variant="outlined" style={{width: '120px'}}>
+                                                {/* <Select
                                             style={{ height: '56px', color: 'white' }}
                                             displayEmpty
                                             value={TokenFrom}
@@ -552,23 +556,26 @@ export default function Exchange() {
                                                     </Box>
                                                 </MenuItem>)}
                                         </Select> */}
-                                        <Button
-                                            variant='outlined'
-                                            color='primary'
-                                            sx={{
-                                                height: '57px', color: '#fff', fontWeight: 500, fontSize: '20px',
-                                                background: (theme) => theme.palette.gradients.custom
-                                            }}
-                                            onClick={() => {
-                                                setcurrencyModal(true);
-                                            }}
-                                        >{TokenFrom}
-                                        </Button>
-                                    </FormControl>
-                                    {/*  <CurrencySelect onClick={test}>
+                                                <Button
+                                                    variant='outlined'
+                                                    color='primary'
+                                                    sx={{
+                                                        height: '57px',
+                                                        color: '#fff',
+                                                        fontWeight: 500,
+                                                        fontSize: '20px',
+                                                        background: (theme) => theme.palette.gradients.custom
+                                                    }}
+                                                    onClick={() => {
+                                                        setcurrencyModal(true);
+                                                    }}
+                                                >{TokenFrom}
+                                                </Button>
+                                            </FormControl>
+                                            {/*  <CurrencySelect onClick={test}>
                                     hi
                                     </CurrencySelect> */}
-                                    {/*  <Button variant='outlined'
+                                            {/*  <Button variant='outlined'
                                         onClick={() => {
                                             setcurrencyModal(true);
                                              test()
@@ -580,186 +587,214 @@ export default function Exchange() {
                                         onDismiss={handleDismissSearch}
                                     >
                                     </CurrencySearchModal> */}
-                                    <Modal
-                                        open={currencyModal}
-                                        onClose={handleDismissSearch}
-                                        aria-labelledby="modal-modal-title"
-                                        aria-describedby="modal-modal-description"
-                                    >
-                                        <Box
-                                            sx={{
-                                                marginTop: '2%',
-                                                maxHeight: '520px',
-                                                overflow: 'scroll',
-                                                position: 'absolute',
-                                                top: '45%',
-                                                left: '50%',
-                                                transform: 'translate(-50%, -50%)',
-                                                width: 400,
-                                                bgcolor: 'background.default',
-                                                // border: '2px solid #000',
-                                                // boxShadow: 24,
-                                                p: 4,
-                                                borderRadius: '15px'
-                                            }}>
-                                            <Typography variant='h6' align='center' sx={{ color: '#f5f5f5' }}>Token List</Typography>
-                                            <Divider variant='fullWidth' sx={{ mt: 3 }}></Divider>
-                                            {AllTokens.map((object) =>
-                                                <Box >
-                                                    <Box
-                                                        onClick={() => {
-                                                            fromTokenChange(object.symbol);
-                                                            setcurrencyModal(false)
-                                                        }
-                                                        }
-                                                        sx={{
-                                                            mt: 1, p: 1, cursor: 'pointer',
-                                                            '&:hover': {
-                                                                background: (theme) => (theme.palette.gradients.custom)
-                                                            }
-                                                        }}>
-                                                        <Stack direction='row' spacing={2}>
-                                                            <Box sx={{ marginTop: '5px' }}>
-                                                                {object.logoURI !== null ? <img alt="" width="30" height="30" src={object.logoURI}
-                                                                    style={{
-                                                                        borderRadius: '50%',
-                                                                        backgroundColor: '#e5e5e5'
-                                                                    }}>
-                                                                </img>
-                                                                    :
-                                                                    <Avatar style={{
-                                                                        display: 'inline',
-                                                                        maxWidth: '30px',
-                                                                        verticalAlign: 'top',
-                                                                        height: "30px",
-                                                                        // marginLeft: '11px',
-                                                                    }} color={"#737373"} name={object.name} round={true} size="30" textSizeRatio={1} />
+                                            <Modal
+                                                open={currencyModal}
+                                                onClose={handleDismissSearch}
+                                                aria-labelledby="modal-modal-title"
+                                                aria-describedby="modal-modal-description"
+                                            >
+                                                <Box
+                                                    sx={{
+                                                        marginTop: '2%',
+                                                        maxHeight: '520px',
+                                                        overflow: 'scroll',
+                                                        position: 'absolute',
+                                                        top: '45%',
+                                                        left: '50%',
+                                                        transform: 'translate(-50%, -50%)',
+                                                        width: 400,
+                                                        bgcolor: 'background.default',
+                                                        // border: '2px solid #000',
+                                                        // boxShadow: 24,
+                                                        p: 4,
+                                                        borderRadius: '15px'
+                                                    }}>
+                                                    <Typography variant='h6' align='center' sx={{color: '#f5f5f5'}}>Token
+                                                        List</Typography>
+                                                    <Divider variant='fullWidth' sx={{mt: 3}}></Divider>
+                                                    {AllTokens.map((object) =>
+                                                        <Box>
+                                                            <Box
+                                                                onClick={() => {
+                                                                    fromTokenChange(object.symbol);
+                                                                    setcurrencyModal(false)
                                                                 }
-                                                            </Box>
-                                                            <Stack direction='column' >
-                                                                <Typography variant='body1' sx={{ color: '#e3e3e3' }}>{object.symbol}</Typography>
-                                                                <Typography variant='caption' sx={{ color: '#e3e3e3', fontSize: '11px' }}>{object.name}</Typography>
-                                                            </Stack>
-                                                            <Box sx={{ flexGrow: 1 }}></Box>
-                                                            <Box sx={{ marginTop: '5px' }}>
-                                                                <Typography >
-                                                                    {object.balance === undefined ? <Loader type="Rings" color="#BB86FC" height={30} width={30} /> : object.balance}
-                                                                </Typography>
-                                                            </Box>
-                                                        </Stack>
-                                                    </Box>
-                                                    {/* <Divider variant='fullWidth' sx={{  }}></Divider> */}
-                                                </Box>
-                                            )}
-                                        </Box>
-                                    </Modal>
-                                </Stack>
-                                <Stack spacing={0.5}>
-                                    <Typography variant='caption' sx={{ color: '#0E1214' }}>0</Typography>
-                                    <TextField variant='outlined'
-                                        id="outlined-basic"
-                                        placeholder="00.00"
-                                        value={TokenFromAmount}
-                                        onChange={(e) => {
-                                            setTokenFromAmount(e.target.value);
-                                            // calculateToAmount(e.target.value);
-                                        }}>
-                                    </TextField>
-                                </Stack>
-                                <Stack spacing={0.5}>
-                                    <Typography variant='caption' sx={{ color: '#f5f5f5' }}>For</Typography>
-                                    <FormControl variant="outlined" style={{ width: '120px' }}>
-                                        <Button
-                                            variant='outlined'
-                                            color='primary'
-                                            sx={{
-                                                height: '57px', color: '#fff', fontWeight: 500, fontSize: '20px',
-                                                background: (theme) => theme.palette.gradients.custom
-                                            }}
-                                            onClick={() => {
-                                                setcurrencyToModal(true);
-                                            }}
-                                        >{TokenTo.symbol === undefined ? 'Select' : TokenTo.symbol}
-                                        </Button>
-                                    </FormControl>
-                                    <Modal
-                                        open={currencyToModal}
-                                        onClose={handleCurrencyToDismissSearch}
-                                        aria-labelledby="modal-modal-title"
-                                        aria-describedby="modal-modal-description"
-                                    >
-                                        <Box
-                                            sx={{
-                                                marginTop: '2%',
-                                                maxHeight: '520px',
-                                                overflow: 'scroll',
-                                                position: 'absolute',
-                                                top: '45%',
-                                                left: '50%',
-                                                transform: 'translate(-50%, -50%)',
-                                                width: 400,
-                                                bgcolor: 'background.default',
-                                                // border: '2px solid #000',
-                                                // boxShadow: 24,
-                                                p: 4,
-                                                borderRadius: '15px'
-                                            }}>
-                                            <Typography variant='h6' align='center' sx={{ color: '#f5f5f5' }}>Token List</Typography>
-                                            <Divider variant='fullWidth' sx={{ mt: 3 }}></Divider>
-                                            {toTokens.map((object) =>
-                                                <Box >
-                                                    <Box
-                                                        onClick={() => {
-                                                            ToTokenChange(object);
-                                                            setcurrencyToModal(false)
-                                                        }
-                                                        }
-                                                        sx={{
-                                                            mt: 1, p: 1, cursor: 'pointer',
-                                                            '&:hover': {
-                                                                background: (theme) => (theme.palette.gradients.custom)
-                                                            }
-                                                        }}>
-                                                        <Stack direction='row' spacing={2}>
-                                                            <Box sx={{ marginTop: '5px' }}>
-                                                                {object.logoURI !== null ? <img alt="" width="30" height="30" src={object.logoURI}
-                                                                >
-                                                                </img>
-                                                                    :
-                                                                    <Avatar style={{
-                                                                        display: 'inline',
-                                                                        maxWidth: '30px',
-                                                                        verticalAlign: 'top',
-                                                                        height: "30px",
-                                                                        // marginLeft: '11px',
-                                                                    }} color={"#737373"} name={object.name} round={true} size="30" textSizeRatio={1} />
                                                                 }
+                                                                sx={{
+                                                                    mt: 1, p: 1, cursor: 'pointer',
+                                                                    '&:hover': {
+                                                                        background: (theme) => (theme.palette.gradients.custom)
+                                                                    }
+                                                                }}>
+                                                                <Stack direction='row' spacing={2}>
+                                                                    <Box sx={{marginTop: '5px'}}>
+                                                                        {object.logoURI !== null ?
+                                                                            <img alt="" width="30" height="30"
+                                                                                 src={object.logoURI}
+                                                                                 style={{
+                                                                                     borderRadius: '50%',
+                                                                                     backgroundColor: '#e5e5e5'
+                                                                                 }}>
+                                                                            </img>
+                                                                            :
+                                                                            <Avatar style={{
+                                                                                display: 'inline',
+                                                                                maxWidth: '30px',
+                                                                                verticalAlign: 'top',
+                                                                                height: "30px",
+                                                                                // marginLeft: '11px',
+                                                                            }} color={"#737373"} name={object.name}
+                                                                                    round={true} size="30"
+                                                                                    textSizeRatio={1}/>
+                                                                        }
+                                                                    </Box>
+                                                                    <Stack direction='column'>
+                                                                        <Typography variant='body1'
+                                                                                    sx={{color: '#e3e3e3'}}>{object.symbol}</Typography>
+                                                                        <Typography variant='caption' sx={{
+                                                                            color: '#e3e3e3',
+                                                                            fontSize: '11px'
+                                                                        }}>{object.name}</Typography>
+                                                                    </Stack>
+                                                                    <Box sx={{flexGrow: 1}}></Box>
+                                                                    <Box sx={{marginTop: '5px'}}>
+                                                                        <Typography>
+                                                                            {object.balance === undefined ?
+                                                                                <Loader type="Rings" color="#BB86FC"
+                                                                                        height={30}
+                                                                                        width={30}/> : object.balance}
+                                                                        </Typography>
+                                                                    </Box>
+                                                                </Stack>
                                                             </Box>
-                                                            <Stack direction='column' >
-                                                                <Typography variant='body1' sx={{ color: '#e3e3e3' }}>{object.symbol}</Typography>
-                                                                <Typography variant='caption' sx={{ color: '#e3e3e3', fontSize: '11px' }}>{object.name}</Typography>
-                                                            </Stack>
-                                                        </Stack>
-                                                    </Box>
+                                                            {/* <Divider variant='fullWidth' sx={{  }}></Divider> */}
+                                                        </Box>
+                                                    )}
                                                 </Box>
-                                            )}
-                                        </Box>
-                                    </Modal>
-                                </Stack>
-                                <Stack spacing={0.5}>
-                                    <Typography variant='caption' sx={{ color: '#0E1214' }}>0</Typography>
-                                    <TextField variant='outlined'
-                                        id="outlined-basic"
-                                        placeholder="00.00"
-                                        value={selectedRate !== null && protocolsRateList.length > 0 ? selectedRate.TokenToAmount : "00.00"}
-                                        onChange={(e) => { setTokenToAmount(e.target.value) }}
-                                        disabled>
-                                    </TextField>
-                                </Stack>
+                                            </Modal>
+                                        </Stack>
+                                        <Stack spacing={0.5}>
+                                            <Typography variant='caption' sx={{color: '#0E1214'}}>0</Typography>
+                                            <TextField variant='outlined'
+                                                       id="outlined-basic"
+                                                       placeholder="00.00"
+                                                       value={TokenFromAmount}
+                                                       onChange={(e) => {
+                                                           setTokenFromAmount(e.target.value);
+                                                           // calculateToAmount(e.target.value);
+                                                       }}>
+                                            </TextField>
+                                        </Stack>
+                                        <Stack spacing={0.5}>
+                                            <Typography variant='caption' sx={{color: '#f5f5f5'}}>For</Typography>
+                                            <FormControl variant="outlined" style={{width: '120px'}}>
+                                                <Button
+                                                    variant='outlined'
+                                                    color='primary'
+                                                    sx={{
+                                                        height: '57px',
+                                                        color: '#fff',
+                                                        fontWeight: 500,
+                                                        fontSize: '20px',
+                                                        background: (theme) => theme.palette.gradients.custom
+                                                    }}
+                                                    onClick={() => {
+                                                        setcurrencyToModal(true);
+                                                    }}
+                                                >{TokenTo.symbol === undefined ? 'Select' : TokenTo.symbol}
+                                                </Button>
+                                            </FormControl>
+                                            <Modal
+                                                open={currencyToModal}
+                                                onClose={handleCurrencyToDismissSearch}
+                                                aria-labelledby="modal-modal-title"
+                                                aria-describedby="modal-modal-description"
+                                            >
+                                                <Box
+                                                    sx={{
+                                                        marginTop: '2%',
+                                                        maxHeight: '520px',
+                                                        overflow: 'scroll',
+                                                        position: 'absolute',
+                                                        top: '45%',
+                                                        left: '50%',
+                                                        transform: 'translate(-50%, -50%)',
+                                                        width: 400,
+                                                        bgcolor: 'background.default',
+                                                        // border: '2px solid #000',
+                                                        // boxShadow: 24,
+                                                        p: 4,
+                                                        borderRadius: '15px'
+                                                    }}>
+                                                    <Typography variant='h6' align='center' sx={{color: '#f5f5f5'}}>Token
+                                                        List</Typography>
+                                                    <Divider variant='fullWidth' sx={{mt: 3}}></Divider>
+                                                    {toTokens.map((object) =>
+                                                        <Box>
+                                                            <Box
+                                                                onClick={() => {
+                                                                    ToTokenChange(object);
+                                                                    setcurrencyToModal(false)
+                                                                }
+                                                                }
+                                                                sx={{
+                                                                    mt: 1, p: 1, cursor: 'pointer',
+                                                                    '&:hover': {
+                                                                        background: (theme) => (theme.palette.gradients.custom)
+                                                                    }
+                                                                }}>
+                                                                <Stack direction='row' spacing={2}>
+                                                                    <Box sx={{marginTop: '5px'}}>
+                                                                        {object.logoURI !== null ?
+                                                                            <img alt="" width="30" height="30"
+                                                                                 src={object.logoURI}
+                                                                            >
+                                                                            </img>
+                                                                            :
+                                                                            <Avatar style={{
+                                                                                display: 'inline',
+                                                                                maxWidth: '30px',
+                                                                                verticalAlign: 'top',
+                                                                                height: "30px",
+                                                                                // marginLeft: '11px',
+                                                                            }} color={"#737373"} name={object.name}
+                                                                                    round={true} size="30"
+                                                                                    textSizeRatio={1}/>
+                                                                        }
+                                                                    </Box>
+                                                                    <Stack direction='column'>
+                                                                        <Typography variant='body1'
+                                                                                    sx={{color: '#e3e3e3'}}>{object.symbol}</Typography>
+                                                                        <Typography variant='caption' sx={{
+                                                                            color: '#e3e3e3',
+                                                                            fontSize: '11px'
+                                                                        }}>{object.name}</Typography>
+                                                                    </Stack>
+                                                                </Stack>
+                                                            </Box>
+                                                        </Box>
+                                                    )}
+                                                </Box>
+                                            </Modal>
+                                        </Stack>
+                                        <Stack spacing={0.5}>
+                                            <Typography variant='caption' sx={{color: '#0E1214'}}>0</Typography>
+                                            <TextField variant='outlined'
+                                                       id="outlined-basic"
+                                                       placeholder="00.00"
+                                                       value={selectedRate !== null && protocolsRateList.length > 0 ? selectedRate.TokenToAmount : "00.00"}
+                                                       onChange={(e) => {
+                                                           setTokenToAmount(e.target.value)
+                                                       }}
+                                                       disabled>
+                                            </TextField>
+                                        </Stack>
 
-                            </Stack>
-                            {selectedRate !== null && protocolsRateList.length === 0 ? <Typography variant='caption' sx={{ color: '#FFC107' }}>This Exchange is yet not supported</Typography> : <></>}
-                            {/* <Stack direction='row' sx={{ mt: 2 }}>
+                                    </Stack>
+                                    {selectedRate !== null && protocolsRateList.length === 0 ?
+                                        <Typography variant='caption' sx={{color: '#FFC107'}}>This Exchange is yet not
+                                            supported</Typography> : <></>}
+                                    {/* <Stack direction='row' sx={{ mt: 2 }}>
                                 {Sources.map((object) =>
                                     <div>
                                         <Button variant='contained' color='primary' disabled size='small' sx={{fontSize:'10px'}}>
@@ -769,11 +804,16 @@ export default function Exchange() {
                                     </div>
                                 )}
                             </Stack> */}
-                            <Typography variant='body1' sx={{ color: '#737373', mt: 2.5 }}>Transaction Settings</Typography>
-                            <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
-                                <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Slippage</Typography>
-                                <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
-                                {/* <TextField variant='outlined'
+                                    <Typography variant='body1' sx={{color: '#737373', mt: 2.5}}>Transaction
+                                        Settings</Typography>
+                                    <Stack direction='row' spacing={1} sx={{mt: 1.5}}>
+                                        <Typography variant='body2' sx={{color: '#f5f5f5'}}>Slippage</Typography>
+                                        <Divider sx={{
+                                            flexGrow: 1,
+                                            border: "0.5px dashed rgba(255, 255, 255, 0.3)",
+                                            height: '0px'
+                                        }} style={{marginTop: '10px'}}/>
+                                        {/* <TextField variant='outlined'
                                     required
                                     id="outlined-basic"
                                     size='small'
@@ -781,20 +821,22 @@ export default function Exchange() {
                                     value={Slippage} onChange={(e) => { setSlippage(e.target.value) }}
                                     endAdornment={<InputAdornment position="end" sx={{color:'red'}}>%K</InputAdornment>}>
                                 </TextField> */}
-                                <OutlinedInput
-                                    id="outlined-adornment-weight"
-                                    value={Slippage}
-                                    onChange={(e) => { setSlippage(e.target.value) }}
-                                    size='small'
-                                    style={{ marginTop: '-7px', width: '12%' }}
-                                    endAdornment={<InputAdornment position="end">%</InputAdornment>}
-                                    aria-describedby="outlined-weight-helper-text"
-                                    inputProps={{
-                                        'aria-label': 'weight',
-                                    }}
-                                />
-                            </Stack>
-                            {/* {protocolsRateList.length > 0 &&
+                                        <OutlinedInput
+                                            id="outlined-adornment-weight"
+                                            value={Slippage}
+                                            onChange={(e) => {
+                                                setSlippage(e.target.value)
+                                            }}
+                                            size='small'
+                                            style={{marginTop: '-7px', width: '12%'}}
+                                            endAdornment={<InputAdornment position="end">%</InputAdornment>}
+                                            aria-describedby="outlined-weight-helper-text"
+                                            inputProps={{
+                                                'aria-label': 'weight',
+                                            }}
+                                        />
+                                    </Stack>
+                                    {/* {protocolsRateList.length > 0 &&
                                 <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
                                     <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Offered By</Typography>
                                     <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
@@ -845,41 +887,53 @@ export default function Exchange() {
                                         </Box>
                                     </Modal>
                                                 </Stack>} */}
-                            <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
-                                <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Min. output</Typography>
-                                <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
-                                <Typography variant='body2'>{selectedRate !== null && protocolsRateList.length > 0 ? ((parseFloat(TokenFromAmount) * parseFloat(selectedRate.minPrice)).toFixed(3)) : "00.00"}{TokenTo !== '' ? TokenTo.symbol : ''}</Typography>
-                            </Stack>
-                            <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
-                                <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Rate</Typography>
-                                <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
-                                <Typography variant='body2'> 1 {TokenFrom} = {selectedRate !== null && protocolsRateList.length > 0 ? parseFloat(selectedRate.price).toFixed(3) : '00.00'} {TokenTo !== '' ? TokenTo.symbol : ''}</Typography>
-                            </Stack>
-                        </Box>
-                    </Container>
-                    {txSuccess && <Typography variant='caption' sx={{ color: '#54D62C' }}>Swap is done Successfully</Typography>}
-                    {txFailure && <Typography variant='caption' sx={{ color: '#FF4842' }}>Swap is Failed</Typography>}
-                    <TransparentButton value='Submit'
-                        onClick={transact}
-                        style={{
-                            height: '45px',
-                            width: '200px',
-                            background: 'transparent',
-                            borderWidth: '2px',
-                            borderStyle: 'solid',
-                            borderColor: '#3b2959',
-                            borderRadius: '5px',
-                            color: 'white',
-                            cursor: 'pointer',
-                            float: 'right',
-                            marginTop: '20px'
-                        }}></TransparentButton> <br /><br /> &nbsp;
-                </Container>
-            </Grid>
-        </Grid >
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-                <NukeExchange />
+                                    <Stack direction='row' spacing={1} sx={{mt: 1.5}}>
+                                        <Typography variant='body2' sx={{color: '#f5f5f5'}}>Min. output</Typography>
+                                        <Divider sx={{
+                                            flexGrow: 1,
+                                            border: "0.5px dashed rgba(255, 255, 255, 0.3)",
+                                            height: '0px'
+                                        }} style={{marginTop: '10px'}}/>
+                                        <Typography
+                                            variant='body2'>{selectedRate !== null && protocolsRateList.length > 0 ? ((parseFloat(TokenFromAmount) * parseFloat(selectedRate.minPrice)).toFixed(3)) : "00.00"}{TokenTo !== '' ? TokenTo.symbol : ''}</Typography>
+                                    </Stack>
+                                    <Stack direction='row' spacing={1} sx={{mt: 1.5}}>
+                                        <Typography variant='body2' sx={{color: '#f5f5f5'}}>Rate</Typography>
+                                        <Divider sx={{
+                                            flexGrow: 1,
+                                            border: "0.5px dashed rgba(255, 255, 255, 0.3)",
+                                            height: '0px'
+                                        }} style={{marginTop: '10px'}}/>
+                                        <Typography
+                                            variant='body2'> 1 {TokenFrom} = {selectedRate !== null && protocolsRateList.length > 0 ? parseFloat(selectedRate.price).toFixed(3) : '00.00'} {TokenTo !== '' ? TokenTo.symbol : ''}</Typography>
+                                    </Stack>
+                                </Box>
+                            </Container>
+                            {txSuccess && <Typography variant='caption' sx={{color: '#54D62C'}}>Swap is done
+                                Successfully</Typography>}
+                            {txFailure &&
+                            <Typography variant='caption' sx={{color: '#FF4842'}}>Swap is Failed</Typography>}
+                            <TransparentButton value='Submit'
+                                               onClick={transact}
+                                               style={{
+                                                   height: '45px',
+                                                   width: '200px',
+                                                   background: 'transparent',
+                                                   borderWidth: '2px',
+                                                   borderStyle: 'solid',
+                                                   borderColor: '#3b2959',
+                                                   borderRadius: '5px',
+                                                   color: 'white',
+                                                   cursor: 'pointer',
+                                                   float: 'right',
+                                                   marginTop: '20px'
+                                               }}></TransparentButton> <br/><br/> &nbsp;
+                        </Container>
+                    </Grid>
+                </Grid>
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+                <NukeExchange/>
             </TabPanel>
         </Box>
     );

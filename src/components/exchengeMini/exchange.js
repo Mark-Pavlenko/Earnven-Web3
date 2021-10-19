@@ -172,7 +172,7 @@ export default function ExchangeMini() {
                 const ethDollarValue = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
                 setethPrice(ethDollarValue.data.ethereum.usd);
             } catch {
-
+                // so smth.
             }
         }
 
@@ -286,7 +286,7 @@ export default function ExchangeMini() {
                 }
             }
         } catch {
-
+            // do smth.
         }
     }
 

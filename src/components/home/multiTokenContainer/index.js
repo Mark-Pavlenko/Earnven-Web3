@@ -1,4 +1,5 @@
-import { Component } from "react";
+/* eslint-disable */
+import React, { Component } from "react";
 import { StyledMultiTokenContainer } from "./styles";
 import { toast } from "react-toastify";
 import Slider from "rc-slider";

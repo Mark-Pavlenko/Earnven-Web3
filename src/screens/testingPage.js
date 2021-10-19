@@ -1,40 +1,29 @@
-import React, { Component } from 'react'
-import Input from '../components/amountInput/index'
-import SearchInput from '../components/searchInput/index'
-import GasDropDownMenu from '../components/gasDropDownMenu/index'
-import LanguageDropDownMenu from '../components/languageDropDown/index'
-import HelpDropDownMenu from '../components/helpDropDown/index'
-import TransparentButton from '../components/TransparentButton'
-import NetworkDropDown from '../components/networkDropDown'
-import TotalValueBox from '../components/totalValueBox'
-import AllAssetsMini from '../components/allAssetsMini'
-import AllAssets from '../components/allAssets'
-import TransactionHistory from '../components/transactionHistory'
-// import SearchTokens from '../components/searchTokens'
-import TokenDetails from '../components/tokenDetails'
-import { data } from '../globalStore'
-import DefiAssets from '../components/defiAssets'
-import Exchange from '../components/exchange'
-import LoansAndSavings from '../components/LoansAndSavings'
+import React, { Component } from 'react';
 
 export default class TestingPage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      token: '',
+    };
+  }
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            token: ''
-        }
-    }
-
-    render() {
-        return (
-            <div>
-                For Testing Purposes
-                <br /><br />
-                Token : {this.state.token}
-                <br />
-                <div style={{ backgroundColor: '#141A1E', height: 'auto', width: '1000px', paddingBottom: '50px' }}>
-                    {/* <center><br /><br />
+  render() {
+    return (
+      <div>
+        For Testing Purposes
+        <br />
+        <br />
+        Token : {this.state.token}
+        <br />
+        <div
+          style={{
+            backgroundColor: '#141A1E',
+            height: 'auto',
+            width: '1000px',
+            paddingBottom: '50px',
+          }}>
+          {/* <center><br /><br />
                         <Input />
 
                         <br /><br />
@@ -80,13 +69,13 @@ export default class TestingPage extends Component {
                         <br /><br />
 
                     </center> */}
-                    {/* <DefiAssets />
+          {/* <DefiAssets />
                     <br /><br />
                     <Exchange />
                     <br /><br />
                     <LoansAndSavings /> */}
-                </div>
-            </div>
-        )
-    }
+        </div>
+      </div>
+    );
+  }
 }

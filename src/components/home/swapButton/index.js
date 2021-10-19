@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import { StyledSwapButtonContainer } from "./styles";
 
 class swapButton extends Component

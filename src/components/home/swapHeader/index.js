@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import { StyledSwapHeaderContainer } from "./styles";
 import Settings from "../../settings";
 

@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import ApexCharts from 'apexcharts';
 import ReactApexChart from 'react-apexcharts'
-import { Button } from '@material-ui/core';
+import {Button} from '@material-ui/core';
 
 // import axios from 'axios'
 
 
 export default class Apexchart extends Component {
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.getAddressChartHistory()
     }
 
@@ -19,20 +19,19 @@ export default class Apexchart extends Component {
     } */
 
 
-
     // Will return history of ethereum account address
     async getAddressChartHistory() {
         var data = [];
         var points = [];
         // let result = [];
         let c = {};
+        // eslint-disable-next-line react/prop-types
         data = this.props.data;
 
-        c = { data: data };
+        c = {data: data};
         // points
         points.push(c);
-        this.setState({ series: points })
-
+        this.setState({series: points})
 
 
     }
@@ -93,9 +92,7 @@ export default class Apexchart extends Component {
                         colors: ['#BB86FC'],
                     },
                 },
-                legend: {
-
-                },
+                legend: {},
                 markers: {
                     size: 0,
                     style: 'hollow',
@@ -144,7 +141,7 @@ export default class Apexchart extends Component {
                     //     },
                     // },
 
-                    custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+                    custom: function ({series, seriesIndex, dataPointIndex, w}) {
                         function CommaFormatted(amount) {
                             amount = amount.toString();
                             var delimiter = ","; // replace comma if desired
@@ -154,9 +151,13 @@ export default class Apexchart extends Component {
                                 d = ab[1]
                             }
                             var i = parseInt(ab[0]);
-                            if (isNaN(i)) { return ''; }
+                            if (isNaN(i)) {
+                                return '';
+                            }
                             var minus = '';
-                            if (i < 0) { minus = '-'; }
+                            if (i < 0) {
+                                minus = '-';
+                            }
                             i = Math.abs(i);
                             var n = i.toString();
                             var a = [];
@@ -165,13 +166,19 @@ export default class Apexchart extends Component {
                                 a.unshift(nn);
                                 n = n.substr(0, n.length - 3);
                             }
-                            if (n.length > 0) { a.unshift(n); }
+                            if (n.length > 0) {
+                                a.unshift(n);
+                            }
                             n = a.join(delimiter);
-                            if (d.length < 1) { amount = n; }
-                            else { amount = n + '.' + d; }
+                            if (d.length < 1) {
+                                amount = n;
+                            } else {
+                                amount = n + '.' + d;
+                            }
                             amount = minus + amount;
                             return amount;
                         }
+
                         let currentDate = new Date(w.globals.seriesX[0][dataPointIndex]);
                         // eslint-disable-next-line
                         return '<div><h3>' + '$' + CommaFormatted(series[seriesIndex][dataPointIndex]) + '</h3 ><h5>' + currentDate.toLocaleDateString() + '</h5></div >'
@@ -241,9 +248,9 @@ export default class Apexchart extends Component {
             },
         };
     }
+
     monthDiff(d1, d2) {
-        var months;
-        months = (d2.getFullYear() - d1.getFullYear()) * 12;
+        let months = (d2.getFullYear() - d1.getFullYear()) * 12;
         months -= d1.getMonth();
         months += d2.getMonth();
         return months <= 0 ? 0 : months;
@@ -251,9 +258,8 @@ export default class Apexchart extends Component {
 
     updateData(timeline) {
         if (this.state.series[0].data.length === 0) {
-
-        }
-        else {
+            // do smth.
+        } else {
             const length = this.state.series[0].data.length;
             const firstDay = new Date(this.state.series[0].data[0][0]);
             const lastDay = new Date(this.state.series[0].data[length - 1][0]);
@@ -277,8 +283,7 @@ export default class Apexchart extends Component {
                             oneMonthBackDate.getTime(),
                             lastDay.getTime()
                         )
-                    }
-                    else {
+                    } else {
                         ApexCharts.exec(
                             'area-datetime',
                             'zoomX',
@@ -297,8 +302,7 @@ export default class Apexchart extends Component {
                             oneYearBackDate.getTime(),
                             lastDay.getTime()
                         )
-                    }
-                    else {
+                    } else {
                         ApexCharts.exec(
                             'area-datetime',
                             'zoomX',
@@ -331,72 +335,77 @@ export default class Apexchart extends Component {
 
     render() {
         return (
-            <div style={{ border: '1px solid #737373', borderRadius: '10px',marginTop:'20px' }}>
+            <div style={{border: '1px solid #737373', borderRadius: '10px', marginTop: '20px'}}>
                 <div>
-                    <div style={{ textAlign: 'end' }}>
+                    <div style={{textAlign: 'end'}}>
                         <Button id="one_month"
-                            variant='outlined'
-                            size='small'
-                            color='inherit'
-                            sx={{
-                                borderRadius: '10000px',
-                                minWidth: '34px',
-                                height: '20px',
-                                padding: '0px 8px'
-                            }}
-                            onClick={() => this.updateData('one_month')} className={(this.state.selection === 'one_month' ? 'active' : '')}>
+                                variant='outlined'
+                                size='small'
+                                color='inherit'
+                                sx={{
+                                    borderRadius: '10000px',
+                                    minWidth: '34px',
+                                    height: '20px',
+                                    padding: '0px 8px'
+                                }}
+                                onClick={() => this.updateData('one_month')}
+                                className={(this.state.selection === 'one_month' ? 'active' : '')}>
                             1M
                         </Button>
                         &nbsp;
                         <Button id="one_year"
-                            variant='outlined'
-                            size='small'
-                            color='inherit'
-                            sx={{
-                                borderRadius: '10000px',
-                                minWidth: '34px',
-                                height: '20px',
-                                padding: '0px 8px'
-                            }}
-                            onClick={() => this.updateData('one_year')} className={(this.state.selection === 'one_year' ? 'active' : '')}>
+                                variant='outlined'
+                                size='small'
+                                color='inherit'
+                                sx={{
+                                    borderRadius: '10000px',
+                                    minWidth: '34px',
+                                    height: '20px',
+                                    padding: '0px 8px'
+                                }}
+                                onClick={() => this.updateData('one_year')}
+                                className={(this.state.selection === 'one_year' ? 'active' : '')}>
                             1Y
                         </Button>
                         &nbsp;
                         <Button id="ytd"
-                            variant='outlined'
-                            size='small'
-                            color='inherit'
-                            sx={{
-                                borderRadius: '10000px',
-                                minWidth: '34px',
-                                height: '20px',
-                                padding: '0px 8px'
-                            }}
-                            onClick={() => this.updateData('ytd')} className={(this.state.selection === 'ytd' ? 'active' : '')}>
+                                variant='outlined'
+                                size='small'
+                                color='inherit'
+                                sx={{
+                                    borderRadius: '10000px',
+                                    minWidth: '34px',
+                                    height: '20px',
+                                    padding: '0px 8px'
+                                }}
+                                onClick={() => this.updateData('ytd')}
+                                className={(this.state.selection === 'ytd' ? 'active' : '')}>
                             24H
                         </Button>
                         &nbsp;
                         <Button id="all"
-                            variant='outlined'
-                            size='small'
-                            color='inherit'
-                            sx={{
-                                borderRadius: '10000px',
-                                minWidth: '34px',
-                                height: '20px',
-                                padding: '0px 8px'
-                            }}
-                            onClick={() => this.updateData('all')} className={(this.state.selection === 'all' ? 'active' : '')}>
+                                variant='outlined'
+                                size='small'
+                                color='inherit'
+                                sx={{
+                                    borderRadius: '10000px',
+                                    minWidth: '34px',
+                                    height: '20px',
+                                    padding: '0px 8px'
+                                }}
+                                onClick={() => this.updateData('all')}
+                                className={(this.state.selection === 'all' ? 'active' : '')}>
                             ALL
                         </Button>
                     </div>
                 </div>
-                <div id="chart" className='chart' style={{ height: '250px' }}>
+                <div id="chart" className='chart' style={{height: '250px'}}>
 
 
-                    <div style={{ float: 'left', position: 'relative', width: '100%' }}>
+                    <div style={{float: 'left', position: 'relative', width: '100%'}}>
 
-                        <ReactApexChart options={this.state.options} series={this.state.series} type="area" height={250} />
+                        <ReactApexChart options={this.state.options} series={this.state.series} type="area"
+                                        height={250}/>
                     </div>
                 </div>
 

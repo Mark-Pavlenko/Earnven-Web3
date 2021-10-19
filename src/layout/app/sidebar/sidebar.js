@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Scrollbar from '../../../components/Scrollbar';
 import sidebarConfig from '../SidebarConfig';
 import NavSection from '../../../components/NavSection';
@@ -57,7 +58,6 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar,address }){
     if (isOpenSidebar) {
       onCloseSidebar();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   const renderContent = (
@@ -79,7 +79,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar,address }){
       </Box>
 
       <NavSection  navConfig={sidebarConfig} address={address}/>
-      
+
       <center>
       <Accordion style={{width:'60%', background:'transparent'}}>
         <AccordionSummary
@@ -90,7 +90,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar,address }){
           Tools
         </AccordionSummary>
         <AccordionDetails>
-          <div 
+          <div
           onMouseOver={(e)=>{mouseOver(e)}}
           onMouseOut={(e)=>{mouseOut(e)}}
           onClick={(e)=>{navigate(`/${address}/airdrop`)}}
@@ -101,10 +101,10 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar,address }){
             color:'white',
             cursor:'pointer',
             paddingTop: '15px'
-          }}> 
+          }}>
               Mass AirDropper
           </div>
-          <div 
+          <div
           onMouseOver={(e)=>{mouseOver(e)}}
           onMouseOut={(e)=>{mouseOut(e)}}
           onClick={(e)=>{navigate(`/${address}/create-token`)}}
@@ -115,7 +115,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar,address }){
             color:'white',
             cursor:'pointer',
             paddingTop: '15px'
-          }}> 
+          }}>
               Token Creator
           </div>
         </AccordionDetails>

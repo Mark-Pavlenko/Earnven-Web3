@@ -1,15 +1,10 @@
-
-// import dashboardLogo from '../../assets/icons/dashboardlogo.png';
+import React from "react";
 import dashboardLogo from '../../assets/icons/trello.svg';
-import historyLogo from '../../assets/icons/history.svg';
 import defiMadeEasyLogo from '../../assets/icons/defimadeeasy.svg';
 import tradingLogo from '../../assets/icons/trading.svg';
 import bridgeLogo from '../../assets/icons/Bridge.svg';
-
 import safeFarmsLogo from '../../assets/icons/safefarm.svg'
 import multiSenderLogo from '../../assets/icons/multisender.svg';
-
-// import pylonProductsLogo from '../../../assets/icons/pylonproducts.png';
 
 // ----------------------------------------------------------------------
 

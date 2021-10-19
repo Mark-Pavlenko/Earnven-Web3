@@ -8,12 +8,12 @@ import ERC20 from "../../../abi/ERC20.json";
 import SecureLS from "secure-ls";
 import tokenList from "../../../constants/tokenList";
 
-class SelectToken extends Component 
+class SelectToken extends Component
 {
-    constructor(props) 
+    constructor(props)
     {
         super(props)
-        this.state = 
+        this.state =
         {
             tokenList: [],
             searchText: "",
@@ -28,7 +28,7 @@ class SelectToken extends Component
             errorMessage: "Please connect your metamask wallet",
             errorTitle: "Wallet Not Connected",
             data: [],
-            commonBases: 
+            commonBases:
             [
                 {
                     logoURI: "https://dynamic-assets.coinbase.com/085ce26e1eba2ccb210ea85df739a0ca2ef782747e47d618c64e92b168b94512df469956de1b667d93b2aa05ce77947e7bf1b4e0c7276371aa88ef9406036166/asset_icons/57f28803aad363f419a950a5f5b99acfd4fba8b683c01b9450baab43c9fa97ea.png",
@@ -100,8 +100,8 @@ class SelectToken extends Component
         this.removeSavedToken = this.removeSavedToken.bind(this);
         this.removeAllSavedTokens = this.removeAllSavedTokens.bind(this);
     }
-  
-    async componentDidMount() 
+
+    async componentDidMount()
     {
         await this.mounted();
         await this.loadTokens();
@@ -114,7 +114,7 @@ class SelectToken extends Component
         this.secureLsInit();
 
         // Add savedTokens to data object if it has saved tokens
-        if(typeof this.state.ls.get('savedTokens') === 'object') 
+        if(typeof this.state.ls.get('savedTokens') === 'object')
         {
             this.state.data = this.state.ls.get('savedTokens')[this.props.chainId] ? this.state.data.concat(this.state.ls.get('savedTokens')[this.props.chainId]) : this.state.data;
             this.setState([...this.state.data]);
@@ -153,7 +153,7 @@ class SelectToken extends Component
     {
         this.state.ls = new SecureLS({ encryptionSecret: "securelsTrakinvest*$%@&$" });
 
-        if (!this.state.ls.getAllKeys().includes('savedTokens') || typeof this.state.ls.get('savedTokens') === 'string') 
+        if (!this.state.ls.getAllKeys().includes('savedTokens') || typeof this.state.ls.get('savedTokens') === 'string')
         {
             let obj = {};
             obj[this.props.chainId] = [];
@@ -184,37 +184,37 @@ class SelectToken extends Component
         // this.state.ls.removeAll();
     }
 
-    async handleSearch(e) 
+    async handleSearch(e)
     {
         this.setState({searchText: e.target.value});
         let data = this.state.data;
-        if (e.target.value.startsWith("0x")) 
+        if (e.target.value.startsWith("0x"))
         {
             data = data.filter((x) => x.symbol !== "MATIC");
         }
         this.state.filteredData = data.filter(this.search(e.target.value));
         this.setState([...this.state.filteredData]);
 
-        if (!this.state.filteredData.length && e.target.value.length > 30 && e.target.value.startsWith("0x")) 
+        if (!this.state.filteredData.length && e.target.value.length > 30 && e.target.value.startsWith("0x"))
         {
             this.getSearchedToken(e.target.value);
         }
     }
 
-    search(text) 
+    search(text)
     {
-        return (searchItem) => 
+        return (searchItem) =>
         {
             if (searchItem.symbol.toLowerCase().includes(text.toLowerCase()) || (text.length > 30 && searchItem.address.toLowerCase().includes(text.toLowerCase())))
             return searchItem;
         }
     }
 
-    async getSearchedToken(address) 
+    async getSearchedToken(address)
     {
         if (this.state.searchedData.address && this.state.searchedData.address === address) return;
-        
-        if (!this.props.account.length) 
+
+        if (!this.props.account.length)
         {
             this.setState({isError: true});
             return;
@@ -226,7 +226,7 @@ class SelectToken extends Component
         {
             const tokenName = await ercContract.methods.name().call({from: this.props.account});
             const decimals = await ercContract.methods.decimals().call({from: this.props.account});
-            const obj = 
+            const obj =
             {
                 logoURI: "https://cdn.imgbin.com/5/7/6/imgbin-computer-icons-question-mark-symbol-symbol-ENabv6w1xfvGrpWTRw4YrX25q.jpg",
                 symbol: res,
@@ -237,7 +237,7 @@ class SelectToken extends Component
             };
             this.setState({searchedData: obj});
             return;
-        }).catch((error) => 
+        }).catch((error) =>
         {
             this.setState({isError: true});
             this.setState({errorMessage: "The token you are trying to search may not be available in this network. Please check your token address carefully."});
@@ -245,7 +245,7 @@ class SelectToken extends Component
         });
     }
 
-    importToken(tokenData) 
+    importToken(tokenData)
     {
         let savedTokens = this.state.ls.get('savedTokens');
         if (Object.keys(savedTokens).includes(String(this.props.chainId)) && savedTokens[this.props.chainId].length)
@@ -260,7 +260,7 @@ class SelectToken extends Component
         this.props.handleSelectToken(tokenData);
     }
 
-    removeSavedToken(i) 
+    removeSavedToken(i)
     {
         const savedTokens = this.state.savedTokens;
         let lsSavedTokens = {};
@@ -270,7 +270,7 @@ class SelectToken extends Component
         this.state.ls.set('savedTokens', lsSavedTokens);
     }
 
-    removeAllSavedTokens() 
+    removeAllSavedTokens()
     {
         let lsSavedTokens = {};
         lsSavedTokens[this.props.chainId] = [];
@@ -278,9 +278,9 @@ class SelectToken extends Component
         this.state.ls.set('savedTokens', lsSavedTokens);
     }
 
-    async handleSelectToken(item) 
+    async handleSelectToken(item)
     {
-        if(!this.state.allSelectedTokens.includes(item.symbol)) 
+        if(!this.state.allSelectedTokens.includes(item.symbol))
         {
             this.props.handleSelectToken(item);
         }
@@ -366,7 +366,7 @@ class SelectToken extends Component
         await this.loadTokens();
     }
 
-    render() 
+    render()
     {
         return (
             <StyledSelectToken>
@@ -411,7 +411,7 @@ class SelectToken extends Component
                                 <div className="common-base-text">Common bases</div>
                             </div>
                             <div className="common-base-tokenlist-container">
-                                {this.state.commonBases.map((token) => 
+                                {this.state.commonBases.map((token) =>
                                 {
                                     return (
                                         <div className="common-base-token-container" onClick={() => this.handleSelectToken(token)}>
@@ -432,7 +432,7 @@ class SelectToken extends Component
                         </div>
                         <div className="list-container">
                             {console.log("value of filtered token list:::",this.state.filteredData)}
-                            { this.state.data.length > 0 && this.state.filteredData.map((item, index) => 
+                            { this.state.data.length > 0 && this.state.filteredData.map((item, index) =>
                                 {
                                     return (
                                         <div
@@ -514,7 +514,7 @@ class SelectToken extends Component
                             <hr style={{ margin: "10px" }} />
                         </div>
                         <div className="import-warning">
-                            This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade.
+                            This token doesn&apos;t appear on the active token list(s). Make sure this is the token that you want to trade.
                         </div>
                         <div className="import-details">
                             <div className="currency-logo">
@@ -531,15 +531,15 @@ class SelectToken extends Component
                             </div>
                             <div className="warning-container">
                                 <div className="warning">
-                                    <svg 
-                                        xmlns="http://www.w3.org/2000/svg" 
-                                        width="10px" 
-                                        height="10px" 
-                                        viewBox="0 0 24 24" 
-                                        fill="none" 
-                                        stroke="#FF4343" 
-                                        strokeWidth="2" 
-                                        strokeLinecap="round" 
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="10px"
+                                        height="10px"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="#FF4343"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
                                         strokeLinejoin="round">
                                         <circle cx="12" cy="12" r="10"></circle>
                                         <line x1="12" y1="8" x2="12" y2="12"></line>
@@ -607,21 +607,21 @@ class SelectToken extends Component
                             <div className="row lists-tokens-tab-header">
                                 <div className="col-sm-6 list-tokens-container">
                                     <button
-                                        className={`lists-tokens-tab ${!this.state.isTabClicked ? 'active-tab' : 'inactive-tab'}`} 
+                                        className={`lists-tokens-tab ${!this.state.isTabClicked ? 'active-tab' : 'inactive-tab'}`}
                                         onClick={() => this.setState({isTabClicked: false})}>
                                         Lists
                                     </button>
                                 </div>
                                 <div className="col-sm-6 list-tokens-container">
                                     <button
-                                        className={`lists-tokens-tab ${this.state.isTabClicked ? 'active-tab' : 'inactive-tab'}`} 
+                                        className={`lists-tokens-tab ${this.state.isTabClicked ? 'active-tab' : 'inactive-tab'}`}
                                         onClick={() => this.setState({isTabClicked: true})}>
                                         Tokens
                                     </button>
                                 </div>
                             </div>
                             <div className="lists-tokens-tab-content">
-                                {!this.state.isTabClicked ? 
+                                {!this.state.isTabClicked ?
                                 <div style={{height: '430px'}}>
                                     <ManageToken
                                         theme={this.props.theme}
@@ -650,7 +650,7 @@ class SelectToken extends Component
                                         desc="86 tokens"
                                         color="#e75aa6"
                                     />
-                                </div> : 
+                                </div> :
                                 <div>
                                     <div className="custom-token-content-wrapper">
                                         <div className="row custom-token-header">
@@ -660,7 +660,7 @@ class SelectToken extends Component
                                                 </div>
                                             </div>
                                             <div className="col-sm-6">
-                                                <div 
+                                                <div
                                                     className="custom-token-header-right"
                                                     onClick={() => this.removeAllSavedTokens()}>
                                                     Clear all
@@ -668,7 +668,7 @@ class SelectToken extends Component
                                             </div>
                                         </div>
 
-                                        {this.state.savedTokens.length > 0 && this.state.savedTokens.map((token, index) => 
+                                        {this.state.savedTokens.length > 0 && this.state.savedTokens.map((token, index) =>
                                             {
                                                 return (
                                                     <div className="row custom-token-content">
@@ -686,35 +686,33 @@ class SelectToken extends Component
                                                             <div className="custom-token-actions">
                                                                 <svg
                                                                     onClick={() => this.removeSavedToken(index)}
-                                                                    xmlns="http://www.w3.org/2000/svg" 
-                                                                    width="24" 
-                                                                    height="24" 
-                                                                    viewBox="0 0 24 24" 
-                                                                    fill="none" 
-                                                                    stroke="currentColor" 
-                                                                    strokeWidth="2" 
-                                                                    strokeLinecap="round" 
-                                                                    strokeLinejoin="round" 
-                                                                    class="sc-1cchcrx-8 kmfzfO">
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    width="24"
+                                                                    height="24"
+                                                                    viewBox="0 0 24 24"
+                                                                    fill="none"
+                                                                    stroke="currentColor"
+                                                                    strokeWidth="2"
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round">
                                                                     <polyline points="3 6 5 6 21 6"></polyline>
                                                                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                                                                 </svg>
 
                                                                 <a target="_blank" href={"https://polygonscan.com/token/" + token.address}>
                                                                     <svg
-                                                                        xmlns="http://www.w3.org/2000/svg" 
-                                                                        width="24" 
-                                                                        height="24" 
-                                                                        viewBox="0 0 24 24" 
-                                                                        fill="none" 
-                                                                        stroke="currentColor" 
-                                                                        strokeWidth="2" 
-                                                                        strokeLinecap="round" 
-                                                                        strokeLinejoin="round" 
-                                                                        class="sc-1cchcrx-7 dRUSwL">
-                                                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                                                                        <polyline points="15 3 21 3 21 9"></polyline>
-                                                                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                        width="24"
+                                                                        height="24"
+                                                                        viewBox="0 0 24 24"
+                                                                        fill="none"
+                                                                        stroke="currentColor"
+                                                                        strokeWidth="2"
+                                                                        strokeLinecap="round"
+                                                                        strokeLinejoin="round">
+                                                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                                                                        <polyline points="15 3 21 3 21 9"/>
+                                                                        <line x1="10" y1="14" x2="21" y2="3"/>
                                                                     </svg>
                                                                 </a>
                                                             </div>
@@ -732,7 +730,7 @@ class SelectToken extends Component
                             </div>
                         </div>
                     </div>
-                </div> : 
+                </div> :
                 <div className="token-selector-container">
                     <div className="token-selector-wrapper">
                         <div className="import-token-header">

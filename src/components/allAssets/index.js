@@ -52,7 +52,9 @@ export default class index extends Component {
                 this.setState({totalValue:res[res.length-1].balance})
             })
         }
-        catch{}
+        catch{
+            // do smth.
+        }
 
         await axios.get(`https://api.etherscan.io/api?module=account&action=tokentx&address=${accounts}&startblock=0&endblock=999999999&sort=asc&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W`,{},{})
         .then(async(response)=>{
@@ -83,9 +85,9 @@ export default class index extends Component {
 
                 arr1 = Object.values(erc20data)
                 var buffer = []
-                for (var i = 0; i<arr1.length; i++){
-                    if(arr1[i].balance >= 1/(10**6)){
-                        buffer.push(arr1[i]);
+                for (var j = 0; j<arr1.length; j++){
+                    if(arr1[j].balance >= 1/(10**6)){
+                        buffer.push(arr1[j]);
                     }
 
                 }

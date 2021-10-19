@@ -1,16 +1,14 @@
-import React, { Component } from "react";
-import { StyledNukeOnProgress } from "./styles";
-import { Spinner } from "react-bootstrap";
+import React, {Component} from "react";
+import {StyledNukeOnProgress} from "./styles";
+import {Spinner} from "react-bootstrap";
+import PropTypes from 'prop-types';
 
-class confirmSwap extends Component
-{
-    constructor(props)
-    {
+class confirmSwap extends Component {
+    constructor(props) {
         super(props)
     }
 
-    render()
-    {
+    render() {
         return (
             <StyledNukeOnProgress>
                 <div className="swap-loading-container">
@@ -27,12 +25,12 @@ class confirmSwap extends Component
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             className="svg-token">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
                         </svg>
                     </div>
                     <div className="loading-spinner">
-                        <Spinner animation="border" style={{ width:'100px', height:'100px' }} variant="primary" />
+                        <Spinner animation="border" style={{width: '100px', height: '100px'}} variant="primary"/>
                     </div>
                     <div className="confirmation-header">
                         Transaction on Progress...
@@ -47,6 +45,12 @@ class confirmSwap extends Component
             </StyledNukeOnProgress>
         );
     }
+}
+
+confirmSwap.propTypes = {
+    closeModal: PropTypes.any,
+    value: PropTypes.any,
+    targetToken: PropTypes.string,
 }
 
 export default confirmSwap;

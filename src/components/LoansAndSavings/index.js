@@ -771,23 +771,22 @@ export default function Index({ accountAddress }) {
               }
 
               if (res[i].currentVariableDebt > 0) {
-                var object = {}
-                object.name = res[i].reserve.name
-                object.symbol = res[i].reserve.symbol
-                object.tokenAddress =
-                  res[i].reserve.aToken.underlyingAssetAddress
-                object.value = (
-                  parseFloat(res[i].currentVariableDebt) /
-                  10 ** parseInt(res[i].reserve.aToken.underlyingAssetDecimals)
-                ).toFixed(2)
-                object.image = res[i].image
-                object.price = res[i].price
-                object.totalInvestment = (object.value * object.price).toFixed(
-                  2,
-                )
-                totDebt += parseFloat(object.totalInvestment)
+                let t = {
+                    name : res[i].reserve.name,
+                    symbol : res[i].reserve.symbol,
+                    tokenAddress: res[i].reserve.aToken.underlyingAssetAddress,
+                    value : (
+                        parseFloat(res[i].currentVariableDebt) /
+                        10 ** parseInt(res[i].reserve.aToken.underlyingAssetDecimals)
+                    ).toFixed(2),
+                    image : res[i].image,
+                    price : res[i].price,
+                    totalInvestment : (object.value * object.price).toFixed(2,)
+                }
+
+                totDebt += parseFloat(t.totalInvestment)
                 console.log('debt:', totDebt)
-                loans.push(object)
+                loans.push(t)
               }
             }
             savings.sort(
@@ -944,24 +943,24 @@ export default function Index({ accountAddress }) {
                 loans.push(object)
               }
               if (res[i].supplyBalanceUnderlying > 0) {
-                var object = {}
-                object.value = parseFloat(
+                var supply = {}
+                supply.value = parseFloat(
                   res[i].supplyBalanceUnderlying,
                 ).toFixed(2)
-                object.borrowRate = parseFloat(
+                supply.borrowRate = parseFloat(
                   res[i].market.supplyRate,
                 ).toFixed(2)
-                object.name = res[i].market.underlyingName
-                object.symbol = res[i].market.underlyingSymbol
-                object.tokenAddress = res[i].market.underlyingAddress
-                object.price = res[i].market.underlyingPriceUSD
-                object.image = res[i].image
-                object.totalInvestment = parseFloat(
+                supply.name = res[i].market.underlyingName
+                supply.symbol = res[i].market.underlyingSymbol
+                supply.tokenAddress = res[i].market.underlyingAddress
+                supply.price = res[i].market.underlyingPriceUSD
+                supply.image = res[i].image
+                supply.totalInvestment = parseFloat(
                   res[i].market.underlyingPriceUSD *
                     res[i].supplyBalanceUnderlying,
                 ).toFixed(2)
-                totSave += parseFloat(object.totalInvestment)
-                savings.push(object)
+                totSave += parseFloat(supply.totalInvestment)
+                savings.push(supply)
               }
             }
             savings.sort(

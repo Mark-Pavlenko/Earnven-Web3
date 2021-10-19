@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import { StyledTokenAddAndChangeContainer } from "./styles";
 
 class tokenAddAndChangeContainer extends Component

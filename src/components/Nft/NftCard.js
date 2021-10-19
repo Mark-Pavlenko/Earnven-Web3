@@ -1,18 +1,11 @@
-import { Link as RouterLink } from 'react-router-dom';
-// material
-import { Box, Card, Link, Typography, Stack,Grid } from '@material-ui/core';
+import { Box, Card, Typography, Stack } from '@material-ui/core';
 import { experimentalStyled as styled } from '@material-ui/core/styles';
-
-
-import { useNft } from "use-nft"
 import spinner from '../../assets/icons/spinner.svg'
-import block from '../../assets/icons/block.png'
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Web3 from "web3";
 import axios from 'axios';
-import nftAbi from '../../abi/NftAbi.json';
 
 
 
@@ -46,17 +39,17 @@ export default function NftCard({ tokenId, contractAddress, txHash }) {
   //       contractAddress,
   //       { gasLimit: "1000000" });
   //       const result = await nftContract.methods.tokenURI(tokenId).call();
-       
+
   //       getMetaData(result);
   //   }
 
   //    getNft();
-  
-    
+
+
   // }, [contractAddress,tokenId])
 
   // const getMetaData = async (tokenUri)=>{
-  //   const response = await axios.get(tokenUri); 
+  //   const response = await axios.get(tokenUri);
   //   const result = response.data;
   //   console.log("value of metadata of each nft::",result);
   // }
@@ -71,7 +64,7 @@ export default function NftCard({ tokenId, contractAddress, txHash }) {
          setnftDetails(tempObject)
         }
         catch{
-          
+          // do smth.
         }
     }
 
@@ -85,7 +78,7 @@ export default function NftCard({ tokenId, contractAddress, txHash }) {
       const valueInWei = parseInt(tx.value)
       setprice(parseFloat(web3.utils.fromWei(valueInWei.toString(), 'ether')).toFixed(3))
     }
-    
+
   }
 
   useEffect(async () => {
@@ -98,7 +91,7 @@ export default function NftCard({ tokenId, contractAddress, txHash }) {
   }
 
   // const callingOpensea = async (address,id) => {
-     
+
   // }
 
   return (
@@ -112,7 +105,7 @@ export default function NftCard({ tokenId, contractAddress, txHash }) {
         {nftDetails!==undefined?<NftImgStyle alt=" " src={nftDetails.img} />:<NftImgStyle alt=" " src={spinner} />}
         {/* <NftImgStyle alt=" " src={nft.image} /> */}
         {/* {nft !== undefined?<NftImgStyle alt=" " src={loading ? spinner : nft.image} />: callingOpensea(contractAddress,tokenId)} */}
-        
+
       </Box>
 
       <Stack spacing={2} direction='row' sx={{ p: 3 }}>
@@ -127,10 +120,10 @@ export default function NftCard({ tokenId, contractAddress, txHash }) {
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
         </Stack>
-      </Stack> 
+      </Stack>
     </Card>
     {/* </Grid>:<></>):<> </>} */}
-    
+
    </>
   );
 }

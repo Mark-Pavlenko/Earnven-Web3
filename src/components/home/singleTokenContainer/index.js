@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import { StyledSingleTokenContainer } from "./styles";
 import { toast } from "react-toastify";
 

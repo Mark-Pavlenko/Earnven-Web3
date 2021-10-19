@@ -1,7 +1,7 @@
 import { experimentalStyled as styled } from '@material-ui/core/styles';
 import accountLogo from '../../../../assets/icons/accountlogo.png';
 import { Box, Typography, Avatar, MenuItem, ListItemIcon, ListItemText, Stack, Divider, ListItem, IconButton } from '@material-ui/core';
-import { useState, useRef, useEffect } from 'react';
+import React,{ useState, useRef, useEffect } from 'react';
 import MenuPopover from '../../../../components/MenuPopover'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { RiSettings5Line } from "react-icons/ri";
@@ -107,7 +107,7 @@ export default function Account({ address }) {
                                 {shortaddress1(option.address)}
                             </ListItemText>
                         </MenuItem>
-                        
+
                         ......
                         <CopyToClipboard text={option.address} style={{marginRight:'8px',marginLeft:'5px',marginTop:'8px'}}><RiSettings5Line style={{ color: 'fff' }} /></CopyToClipboard>
                         </Stack>

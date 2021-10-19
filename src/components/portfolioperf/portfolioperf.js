@@ -263,7 +263,7 @@ export default class PortfolioPerf extends Component {
 
     updateData(timeline) {
         if (this.state.series[0].data.length === 0) {
-
+            // do smth.
         }
         else {
             const length = this.state.series[0].data.length;

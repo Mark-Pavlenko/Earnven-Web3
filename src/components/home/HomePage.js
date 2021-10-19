@@ -1,11 +1,9 @@
 import React, { Component } from "react";
-import Navbar from "../navbar/Navbar";
 import { StyledHomePageContainer } from "./styles";
 import Modal from "../common/modal";
 import { ThemeProvider } from "styled-components";
 import SelectToken from "./selectToken/index";
 import ConfirmSwap from "./confirmSwap/index";
-import TransactionSummary from "./transactionSummary/index";
 import TransactionSubmitted from "./transactionSubmitted/index";
 import { lightTheme, darkTheme, GlobalStyles } from "../theme/themes";
 import ERC20 from "../../abi/ERC20.json";

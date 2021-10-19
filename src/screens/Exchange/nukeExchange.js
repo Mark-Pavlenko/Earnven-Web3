@@ -1,15 +1,28 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable */
+import React, {useEffect, useState} from 'react';
 import './exchange.css';
 import FormControl from '@material-ui/core/FormControl';
 import TransparentButton from '../../components/TransparentButton'
 import Web3 from 'web3';
 import ERC20ABI from '../../abi/ERC20.json'
-import { Box, Typography, Stack, Container, Grid, TextField, Divider, Button, Modal, Tooltip, InputAdornment, OutlinedInput } from '@material-ui/core';
+import {
+    Box,
+    Button,
+    Container,
+    Divider,
+    Grid,
+    InputAdornment,
+    Modal,
+    OutlinedInput,
+    Stack,
+    TextField,
+    Typography
+} from '@material-ui/core';
 import styled from 'styled-components'
-import { ethers } from "ethers";
-import { useParams } from 'react-router-dom';
+import {ethers} from "ethers";
+import {useParams} from 'react-router-dom';
 import Avatar from 'react-avatar';
-import { FiPlusCircle, FiMinusCircle, FiRepeat } from "react-icons/fi";
+import {FiMinusCircle, FiPlusCircle, FiRepeat} from "react-icons/fi";
 import IUniswapV2Router02 from '../../abi/IUniswapV2Router02.json';
 import Swap from '../../abi/SwapWithReverse.json'
 import tokenList from './TokenList';
@@ -56,7 +69,6 @@ const CurrencySelect = styled.button`
 `
 
 
-
 const erc20Abi = [
     "function balanceOf(address owner) view returns (uint256)",
     "function approve(address _spender, uint256 _value) public returns (bool success)",
@@ -82,7 +94,7 @@ const makeCall = async (callName, contract, args, metadata = {}) => {
 }
 export default function NukeExchange() {
 
-    const { address } = useParams();
+    const {address} = useParams();
 
     const [TokenFrom, setTokenFrom] = useState([]);
     const [TokenTo, setTokenTo] = useState('');
@@ -120,11 +132,9 @@ export default function NukeExchange() {
         if (window.ethereum) {
             window.web3 = new Web3(window.ethereum)
             await window.ethereum.enable()
-        }
-        else if (window.web3) {
+        } else if (window.web3) {
             window.web3 = new Web3(window.web3.currentProvider)
-        }
-        else {
+        } else {
             window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
         }
 
@@ -138,18 +148,16 @@ export default function NukeExchange() {
     }
 
 
-
     const fromTokenChange = (value) => {
         if (TokenFrom[clickedModalIndex] === undefined) {
             let temp = TokenFrom;
-            value.tokenAmount=''
+            value.tokenAmount = ''
             temp.push(value)
             setTokenFrom(temp);
-        }
-        else {
+        } else {
             let temp = TokenFrom;
             temp[clickedModalIndex] = value;
-            temp[clickedModalIndex].tokenAmount='';
+            temp[clickedModalIndex].tokenAmount = '';
             setTokenFrom(temp)
             forceUpdate();
         }
@@ -179,7 +187,8 @@ export default function NukeExchange() {
     const calculateToAmountNew = async () => {
         // let TokenFrom=[];
         for (let i = 0; i < TokenFrom.length; i++) {
-            let inputTokenAddress, outputTokenAddress, outputTokenDecimals, inputTokenDecimals, inputTokenSymbol, outputTokenSymbol, price, data, initialData;
+            let inputTokenAddress, outputTokenAddress, outputTokenDecimals, inputTokenDecimals, inputTokenSymbol,
+                outputTokenSymbol, price, data, initialData;
             await loadWeb3()
             const web3 = window.web3;
 
@@ -204,24 +213,22 @@ export default function NukeExchange() {
             TokenFrom[i].targetPrice = 0;
             TokenFrom[i].path = "";
             if
-                (
+            (
                 // Condition
                 (!inputTokenAddress && inputTokenSymbol === "ETH" && outputTokenAddress === weth2) ||
                 (!outputTokenAddress && outputTokenSymbol === "ETH" && inputTokenAddress === weth)
             ) {
                 TokenFrom[i].targetPrice = "1";
                 TokenFrom[i].path = "1";
-            }
-            else if
-                (
+            } else if
+            (
                 // Condition
                 (!inputTokenAddress && inputTokenSymbol === "ETH" && outputTokenAddress === weth2) ||
                 (!outputTokenAddress && outputTokenSymbol === "ETH" && inputTokenAddress === weth2)
             ) {
                 TokenFrom[i].targetPrice = "1";
                 TokenFrom[i].path = "5";
-            }
-            else if (!inputTokenAddress && inputTokenSymbol === "ETH") {
+            } else if (!inputTokenAddress && inputTokenSymbol === "ETH") {
                 // uni
                 data = await getPrice(uni.methods, inputAmount, weth, outputTokenAddress, outputTokenDecimals, "uni");
                 if (data.res && parseFloat(TokenFrom[i].targetPrice) < parseFloat(data.price)) {
@@ -237,8 +244,7 @@ export default function NukeExchange() {
                     TokenFrom[i].path = "5";
                 }
 
-            }
-            else {
+            } else {
                 if (outputTokenAddress !== weth && outputTokenAddress !== weth2) {
                     // uni Initial
                     initialData = await getPrice(uni.methods, inputAmount, inputTokenAddress, weth, outputTokenDecimals, "uni lvl 2");
@@ -324,8 +330,7 @@ export default function NukeExchange() {
         if (TokenTo !== '') {
             if (oneToMany === true) {
                 tokenToTotalValue();
-            }
-            else {
+            } else {
                 fromTokenInReverse();
             }
         }
@@ -333,22 +338,20 @@ export default function NukeExchange() {
         // setTokenFrom(TokenFrom);
 
 
-
     }
 
 
     const getPrice = async (router, amount, firstpath, secondpath, decimals, route) => {
         try {
-            const res = await router.getAmountsOut(amount, [firstpath, secondpath]).call({ from: "0xD5Cd7dC05279653F960736482aBc7A7B2bF39B5d" });
+            const res = await router.getAmountsOut(amount, [firstpath, secondpath]).call({from: "0xD5Cd7dC05279653F960736482aBc7A7B2bF39B5d"});
             // const res = await router.getAmountsOut("1000000000000000000", ["0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984", "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa"]).call();
             const price = (parseInt(res[1]) / 10 ** parseInt(decimals)).toString();
             // console.log(`${route}: `, res);
-            return { price, res: res[1] };
-        }
-        catch (error) {
+            return {price, res: res[1]};
+        } catch (error) {
             // console.log(`error in ${route}`);
             // console.log("error came while fetching data:::", error);
-            return { res: 0 };
+            return {res: 0};
         }
     }
 
@@ -365,8 +368,8 @@ export default function NukeExchange() {
             if (tokenBlock[i].isApprove) continue;
 
             const ercContract = await new web3.eth.Contract(ERC20ABI, tokenBlock[i].address);
-            const totalSupply = await ercContract.methods.totalSupply().call({ from: account });
-            await ercContract.methods.approve(contractAddress, totalSupply).send({ from: account }).then(() => {
+            const totalSupply = await ercContract.methods.totalSupply().call({from: account});
+            await ercContract.methods.approve(contractAddress, totalSupply).send({from: account}).then(() => {
                 tokenBlock[i].isApprove = true;
                 // this.setState({ ...this.state });
             })
@@ -398,12 +401,13 @@ export default function NukeExchange() {
             const tokenInputAmount = tokenBlock.map((token) => (parseFloat(token.tokenAmount) * 10 ** parseInt(token.decimals)).toString());
             // const tokenInputAmount = ["2000", "2000"];
             const swapRoute = tokenBlock.map((token) => token.path);
-            const isEth = tokenBlock.map((token) => token.isEth);;
+            const isEth = tokenBlock.map((token) => token.isEth);
+            ;
             const targetTokenAddress = TokenTo.address;
 
 
             if (TokenTo.symbol === "ETH") {
-                await swap.methods.swapToETH(tokenInputAmount, tokenInputAddress, swapRoute).send({ from: account })
+                await swap.methods.swapToETH(tokenInputAmount, tokenInputAddress, swapRoute).send({from: account})
                     .once('transactionHash', (txHash) => {
                         // this.setState({ transactionHash: txHash });
                         // this.setState({ isSwapLoading: false });
@@ -417,15 +421,17 @@ export default function NukeExchange() {
                     .catch((error) => {
                         console.log(error)
                     })
-            }
-            else if (isEth.includes(true)) {
+            } else if (isEth.includes(true)) {
                 const matic = tokenBlock.find((token) => token.isEth);
 
 
                 const maticAmount = (parseFloat(matic.tokenAmount) * 10 ** parseInt(matic.decimals)).toString();
 
                 console.log("value of matic amount::", maticAmount);
-                await swap.methods.swap(tokenInputAmount, tokenInputAddress, swapRoute, isEth, targetTokenAddress, isMultiToSingleToken, TokenTo.isEth).send({ from: account, value: maticAmount })
+                await swap.methods.swap(tokenInputAmount, tokenInputAddress, swapRoute, isEth, targetTokenAddress, isMultiToSingleToken, TokenTo.isEth).send({
+                    from: account,
+                    value: maticAmount
+                })
                     .once('transactionHash', (txHash) => {
                         // this.setState({ transactionHash: txHash });
                         // this.setState({ isSwapLoading: false });
@@ -442,9 +448,8 @@ export default function NukeExchange() {
                             // this.setState({ isSwapMiniLoading: false });
                         }
                     })
-            }
-            else {
-                await swap.methods.swap(tokenInputAmount, tokenInputAddress, swapRoute, isEth, targetTokenAddress, isMultiToSingleToken, TokenTo.isEth).send({ from: account })
+            } else {
+                await swap.methods.swap(tokenInputAmount, tokenInputAddress, swapRoute, isEth, targetTokenAddress, isMultiToSingleToken, TokenTo.isEth).send({from: account})
                     .once('transactionHash', (txHash) => {
                         // this.setState({ transactionHash: txHash });
                         // this.setState({ isSwapLoading: false });
@@ -459,8 +464,7 @@ export default function NukeExchange() {
                         console.log(error)
                     })
             }
-        }
-        else {
+        } else {
             alert("Please approve the token first")
         }
     }
@@ -485,9 +489,7 @@ export default function NukeExchange() {
 
             }
             settotalToAmount(totalValue);
-        }
-
-        else {
+        } else {
             console.log("Please select tokens first")
         }
     }
@@ -502,7 +504,6 @@ export default function NukeExchange() {
     }
 
 
-
     const removeFromTab = async (index) => {
         let temp = fromTokenCount;
         temp.pop();
@@ -511,18 +512,17 @@ export default function NukeExchange() {
         let fromTokenTemp = TokenFrom;
         fromTokenTemp.splice(index, 1);
         setTokenFrom(fromTokenTemp);
-        if(oneToMany===false){
+        if (oneToMany === false) {
             fromTokenInReverse();
-        }
-        else{
+        } else {
             tokenToTotalValue();
         }
-       
+
         forceUpdate();
     }
 
     const reverse = () => {
-        console.log("token from inside reverse::",TokenFrom);
+        console.log("token from inside reverse::", TokenFrom);
 
         setTokenFrom([]);
         setTokenTo('');
@@ -531,7 +531,7 @@ export default function NukeExchange() {
         setclickedModalIndex()
         setoneToMany(!oneToMany);
         forceUpdate();
-        console.log("Token from inside reverse after reverse::",TokenFrom);
+        console.log("Token from inside reverse after reverse::", TokenFrom);
     }
 
     const fromTokenInReverse = () => {
@@ -545,34 +545,36 @@ export default function NukeExchange() {
 
             }
             settotalToAmount(totalValue);
-        }
-
-        else {
+        } else {
             console.log("Please select tokens first")
         }
     }
 
 
     return (
-        <Grid container >
-            <Grid items xs={12} md={8} sx={{ mt: 5, ml: 5 }}>
+        <Grid container>
+            <Grid items xs={12} md={8} sx={{mt: 5, ml: 5}}>
                 <Container>
-                    <Typography variant='h3' sx={{ fontStyle: 'normal' }}>Nuke Exchange</Typography>
-                    <Container sx={{ border: "1px solid #737373", borderRadius: '7px', boxSizing: 'border-box', mt: 2.5 }}>
-                        <Box sx={{ mt: 4, mb: 3 }}>
+                    <Typography variant='h3' sx={{fontStyle: 'normal'}}>Nuke Exchange</Typography>
+                    <Container
+                        sx={{border: "1px solid #737373", borderRadius: '7px', boxSizing: 'border-box', mt: 2.5}}>
+                        <Box sx={{mt: 4, mb: 3}}>
                             {oneToMany === true ?
                                 <Stack spacing={2}>
                                     <Stack spacing={0.5}>
-                                        <Typography variant='caption' sx={{ color: '#f5f5f5' }}>Swap</Typography>
+                                        <Typography variant='caption' sx={{color: '#f5f5f5'}}>Swap</Typography>
                                         {fromTokenCount.map((i) =>
                                             <>
                                                 <Stack direction='row' spacing={1}>
-                                                    <FormControl variant="outlined" style={{ width: '120px' }}>
+                                                    <FormControl variant="outlined" style={{width: '120px'}}>
                                                         <Button
                                                             variant='outlined'
                                                             color='primary'
                                                             sx={{
-                                                                height: '57px', color: '#fff', fontWeight: 500, fontSize: '20px',
+                                                                height: '57px',
+                                                                color: '#fff',
+                                                                fontWeight: 500,
+                                                                fontSize: '20px',
                                                                 background: (theme) => theme.palette.gradients.custom
                                                             }}
                                                             onClick={() => {
@@ -582,31 +584,37 @@ export default function NukeExchange() {
                                                         >{TokenFrom[i] === undefined ? "select" : TokenFrom[i].symbol}
                                                         </Button>
                                                     </FormControl>
-                                                    {i !== 0 && <FiMinusCircle style={{ marginLeft: '34px', marginTop: '20px', cursor: 'pointer' }} onClick={() => removeFromTab(i)} />}
+                                                    {i !== 0 && <FiMinusCircle style={{
+                                                        marginLeft: '34px',
+                                                        marginTop: '20px',
+                                                        cursor: 'pointer'
+                                                    }} onClick={() => removeFromTab(i)}/>}
                                                 </Stack>
                                                 <TextField variant='outlined'
-                                                    id="outlined-basic"
-                                                    placeholder="00.00"
-                                                    type='number'
-                                                    value={TokenFrom[i] !== undefined ? TokenFrom[i].tokenAmount : null}
-                                                    onChange={(e) => {
+                                                           id="outlined-basic"
+                                                           placeholder="00.00"
+                                                           type='number'
+                                                           value={TokenFrom[i] !== undefined ? TokenFrom[i].tokenAmount : null}
+                                                           onChange={(e) => {
 
-                                                        setTokenFromAmt(e.target.value, i)
-                                                        tokenToTotalValue()
+                                                               setTokenFromAmt(e.target.value, i)
+                                                               tokenToTotalValue()
 
-                                                    }}>
+                                                           }}>
                                                 </TextField>
                                             </>
                                         )}
-                                        <FiPlusCircle style={{ marginLeft: '54px', cursor: 'pointer' }} onClick={() => addFromTab()} />
+                                        <FiPlusCircle style={{marginLeft: '54px', cursor: 'pointer'}}
+                                                      onClick={() => addFromTab()}/>
                                     </Stack>
 
 
-                                    <FiRepeat style={{ marginLeft: '294px', marginTop: '20px', cursor: 'pointer' }} onClick={() => reverse()} />
+                                    <FiRepeat style={{marginLeft: '294px', marginTop: '20px', cursor: 'pointer'}}
+                                              onClick={() => reverse()}/>
 
                                     <Stack spacing={0.5}>
-                                        <Typography variant='caption' sx={{ color: '#f5f5f5' }}>For</Typography>
-                                        <FormControl variant="outlined" style={{ width: '120px' }}>
+                                        <Typography variant='caption' sx={{color: '#f5f5f5'}}>For</Typography>
+                                        <FormControl variant="outlined" style={{width: '120px'}}>
                                             <Button
                                                 variant='outlined'
                                                 color='primary'
@@ -622,12 +630,12 @@ export default function NukeExchange() {
                                         </FormControl>
 
                                         <TextField variant='outlined'
-                                            id="outlined-basic"
-                                            placeholder="00.00"
-                                            type='number'
-                                            value={totalToAmount !== '' ? totalToAmount : "00.00"}
+                                                   id="outlined-basic"
+                                                   placeholder="00.00"
+                                                   type='number'
+                                                   value={totalToAmount !== '' ? totalToAmount : "00.00"}
                                             // onChange={(e) => { setTokenToAmount(e.target.value) }}
-                                            disabled>
+                                                   disabled>
                                         </TextField>
 
                                     </Stack>
@@ -635,8 +643,8 @@ export default function NukeExchange() {
                                 </Stack> :
                                 <Stack spacing={2}>
                                     <Stack spacing={0.5}>
-                                        <Typography variant='caption' sx={{ color: '#f5f5f5' }}>Swap</Typography>
-                                        <FormControl variant="outlined" style={{ width: '120px' }}>
+                                        <Typography variant='caption' sx={{color: '#f5f5f5'}}>Swap</Typography>
+                                        <FormControl variant="outlined" style={{width: '120px'}}>
                                             <Button
                                                 variant='outlined'
                                                 color='primary'
@@ -652,31 +660,35 @@ export default function NukeExchange() {
                                         </FormControl>
 
                                         <TextField variant='outlined'
-                                            id="outlined-basic"
-                                            placeholder="00.00"
-                                            type='number'
-                                            value={totalToAmount !== '' ? totalToAmount : "00.00"}
+                                                   id="outlined-basic"
+                                                   placeholder="00.00"
+                                                   type='number'
+                                                   value={totalToAmount !== '' ? totalToAmount : "00.00"}
                                             // onChange={(e) => { setTokenToAmount(e.target.value) }}
-                                            disabled>
+                                                   disabled>
                                         </TextField>
 
 
                                     </Stack>
 
 
-                                    <FiRepeat style={{ marginLeft: '294px', marginTop: '20px', cursor: 'pointer' }} onClick={() => reverse()} />
+                                    <FiRepeat style={{marginLeft: '294px', marginTop: '20px', cursor: 'pointer'}}
+                                              onClick={() => reverse()}/>
 
                                     <Stack spacing={0.5}>
-                                        <Typography variant='caption' sx={{ color: '#f5f5f5' }}>For</Typography>
+                                        <Typography variant='caption' sx={{color: '#f5f5f5'}}>For</Typography>
                                         {fromTokenCount.map((i) =>
                                             <>
                                                 <Stack direction='row' spacing={1}>
-                                                    <FormControl variant="outlined" style={{ width: '120px' }}>
+                                                    <FormControl variant="outlined" style={{width: '120px'}}>
                                                         <Button
                                                             variant='outlined'
                                                             color='primary'
                                                             sx={{
-                                                                height: '57px', color: '#fff', fontWeight: 500, fontSize: '20px',
+                                                                height: '57px',
+                                                                color: '#fff',
+                                                                fontWeight: 500,
+                                                                fontSize: '20px',
                                                                 background: (theme) => theme.palette.gradients.custom
                                                             }}
                                                             onClick={() => {
@@ -686,32 +698,41 @@ export default function NukeExchange() {
                                                         >{TokenFrom[i] === undefined ? "select" : TokenFrom[i].symbol}
                                                         </Button>
                                                     </FormControl>
-                                                    {i !== 0 && <FiMinusCircle style={{ marginLeft: '34px', marginTop: '20px', cursor: 'pointer' }} onClick={() => removeFromTab(i)} />}
+                                                    {i !== 0 && <FiMinusCircle style={{
+                                                        marginLeft: '34px',
+                                                        marginTop: '20px',
+                                                        cursor: 'pointer'
+                                                    }} onClick={() => removeFromTab(i)}/>}
                                                 </Stack>
                                                 <OutlinedInput variant='outlined'
-                                                    id="outlined-basic"
-                                                    placeholder="00.00"
-                                                    type='number'
-                                                    value={TokenFrom[i] !== undefined ? TokenFrom[i].tokenAmount : null}
-                                                    endAdornment={<InputAdornment position="end">{TokenTo !== '' ? TokenTo.symbol : ''}</InputAdornment>}
-                                                    onChange={(e) => {
+                                                               id="outlined-basic"
+                                                               placeholder="00.00"
+                                                               type='number'
+                                                               value={TokenFrom[i] !== undefined ? TokenFrom[i].tokenAmount : null}
+                                                               endAdornment={<InputAdornment
+                                                                   position="end">{TokenTo !== '' ? TokenTo.symbol : ''}</InputAdornment>}
+                                                               onChange={(e) => {
 
-                                                        setTokenFromAmt(e.target.value, i)
-                                                        fromTokenInReverse()
+                                                                   setTokenFromAmt(e.target.value, i)
+                                                                   fromTokenInReverse()
 
-                                                    }}>
+                                                               }}>
                                                 </OutlinedInput>
-                                                <FiPlusCircle style={{ marginLeft: '54px', cursor: 'pointer' }} onClick={() => addFromTab()} />
+                                                <FiPlusCircle style={{marginLeft: '54px', cursor: 'pointer'}}
+                                                              onClick={() => addFromTab()}/>
                                             </>
                                         )}
 
                                     </Stack>
                                 </Stack>
                             }
-                            <Typography variant='body1' sx={{ color: '#737373', mt: 2.5 }}>Transaction Settings</Typography>
-                            <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
-                                <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Slippage</Typography>
-                                <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
+                            <Typography variant='body1' sx={{color: '#737373', mt: 2.5}}>Transaction
+                                Settings</Typography>
+                            <Stack direction='row' spacing={1} sx={{mt: 1.5}}>
+                                <Typography variant='body2' sx={{color: '#f5f5f5'}}>Slippage</Typography>
+                                <Divider
+                                    sx={{flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px'}}
+                                    style={{marginTop: '10px'}}/>
                                 {/* <TextField variant='outlined'
                                     required
                                     id="outlined-basic"
@@ -723,9 +744,11 @@ export default function NukeExchange() {
                                 <OutlinedInput
                                     id="outlined-adornment-weight"
                                     value={Slippage}
-                                    onChange={(e) => { setSlippage(e.target.value) }}
+                                    onChange={(e) => {
+                                        setSlippage(e.target.value)
+                                    }}
                                     size='small'
-                                    style={{ marginTop: '-7px', width: '12%' }}
+                                    style={{marginTop: '-7px', width: '12%'}}
                                     endAdornment={<InputAdornment position="end">%</InputAdornment>}
                                     aria-describedby="outlined-weight-helper-text"
                                     inputProps={{
@@ -734,21 +757,29 @@ export default function NukeExchange() {
                                 />
                             </Stack>
 
-                            <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
-                                {oneToMany == true ? <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Min. output</Typography> : <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Input</Typography>}
+                            <Stack direction='row' spacing={1} sx={{mt: 1.5}}>
+                                {oneToMany == true ?
+                                    <Typography variant='body2' sx={{color: '#f5f5f5'}}>Min. output</Typography> :
+                                    <Typography variant='body2' sx={{color: '#f5f5f5'}}>Input</Typography>}
 
-                                <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
+                                <Divider
+                                    sx={{flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px'}}
+                                    style={{marginTop: '10px'}}/>
                                 {/* <Typography variant='body2'>{selectedRate !== null && protocolsRateList.length > 0 ? ((parseFloat(TokenFromAmount) * parseFloat(selectedRate.minPrice)).toFixed(3)) : "00.00"}{TokenTo !== '' ? TokenTo.symbol : ''}</Typography> */}
-                                <Typography variant='body2'>{totalToAmount !== '' ?oneToMany == true? (totalToAmount-(totalToAmount*(Slippage/100))): totalToAmount : "00.00"}{TokenTo !== '' ? TokenTo.symbol : ''}</Typography>
+                                <Typography
+                                    variant='body2'>{totalToAmount !== '' ? oneToMany == true ? (totalToAmount - (totalToAmount * (Slippage / 100))) : totalToAmount : "00.00"}{TokenTo !== '' ? TokenTo.symbol : ''}</Typography>
                             </Stack>
 
-                            <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
-                                <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Rate</Typography>
-                                <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
+                            <Stack direction='row' spacing={1} sx={{mt: 1.5}}>
+                                <Typography variant='body2' sx={{color: '#f5f5f5'}}>Rate</Typography>
+                                <Divider
+                                    sx={{flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px'}}
+                                    style={{marginTop: '10px'}}/>
                                 {/* <Typography variant='body2'> 1 {TokenFrom} = {selectedRate !== null && protocolsRateList.length > 0 ? parseFloat(selectedRate.price).toFixed(3) : '00.00'} {TokenTo !== '' ? TokenTo.symbol : ''}</Typography> */}
                                 <Stack>
                                     {TokenFrom.map((token) =>
-                                        <Typography variant='body2'>{token.targetPrice !== undefined && TokenTo !== '' ? `1${token.symbol}=${token.targetPrice}${TokenTo.symbol}` : ''}</Typography>
+                                        <Typography
+                                            variant='body2'>{token.targetPrice !== undefined && TokenTo !== '' ? `1${token.symbol}=${token.targetPrice}${TokenTo.symbol}` : ''}</Typography>
                                     )}
 
 
@@ -757,23 +788,24 @@ export default function NukeExchange() {
 
                         </Box>
                     </Container>
-                    {txSuccess && <Typography variant='caption' sx={{ color: '#54D62C' }}>Swap is done Successfully</Typography>}
-                    {txFailure && <Typography variant='caption' sx={{ color: '#FF4842' }}>Swap is Failed</Typography>}
+                    {txSuccess &&
+                    <Typography variant='caption' sx={{color: '#54D62C'}}>Swap is done Successfully</Typography>}
+                    {txFailure && <Typography variant='caption' sx={{color: '#FF4842'}}>Swap is Failed</Typography>}
                     <TransparentButton value='Submit'
-                        onClick={swapTokens}
-                        style={{
-                            height: '45px',
-                            width: '200px',
-                            background: 'transparent',
-                            borderWidth: '2px',
-                            borderStyle: 'solid',
-                            borderColor: '#3b2959',
-                            borderRadius: '5px',
-                            color: 'white',
-                            cursor: 'pointer',
-                            float: 'right',
-                            marginTop: '20px'
-                        }}></TransparentButton> <br /><br /> &nbsp;
+                                       onClick={swapTokens}
+                                       style={{
+                                           height: '45px',
+                                           width: '200px',
+                                           background: 'transparent',
+                                           borderWidth: '2px',
+                                           borderStyle: 'solid',
+                                           borderColor: '#3b2959',
+                                           borderRadius: '5px',
+                                           color: 'white',
+                                           cursor: 'pointer',
+                                           float: 'right',
+                                           marginTop: '20px'
+                                       }}></TransparentButton> <br/><br/> &nbsp;
 
                     {/* <Button onClick={() => { calculateToAmountNew(1) }}>Testing</Button> */}
                 </Container>
@@ -803,10 +835,10 @@ export default function NukeExchange() {
                         p: 4,
                         borderRadius: '15px'
                     }}>
-                    <Typography variant='h6' align='center' sx={{ color: '#f5f5f5' }}>Token List</Typography>
-                    <Divider variant='fullWidth' sx={{ mt: 3 }}></Divider>
+                    <Typography variant='h6' align='center' sx={{color: '#f5f5f5'}}>Token List</Typography>
+                    <Divider variant='fullWidth' sx={{mt: 3}}></Divider>
                     {AllTokens.map((object) =>
-                        <Box >
+                        <Box>
                             <Box
                                 onClick={() => {
                                     fromTokenChange(object);
@@ -821,13 +853,14 @@ export default function NukeExchange() {
                                     }
                                 }}>
                                 <Stack direction='row' spacing={2}>
-                                    <Box sx={{ marginTop: '5px' }}>
-                                        {object.logoURI !== null ? <img alt="" width="30" height="30" src={object.logoURI}
-                                            style={{
-                                                borderRadius: '50%',
-                                                backgroundColor: '#e5e5e5'
-                                            }}>
-                                        </img>
+                                    <Box sx={{marginTop: '5px'}}>
+                                        {object.logoURI !== null ?
+                                            <img alt="" width="30" height="30" src={object.logoURI}
+                                                 style={{
+                                                     borderRadius: '50%',
+                                                     backgroundColor: '#e5e5e5'
+                                                 }}>
+                                            </img>
                                             :
                                             <Avatar style={{
                                                 display: 'inline',
@@ -836,16 +869,18 @@ export default function NukeExchange() {
                                                 height: "30px",
                                                 // marginLeft: '11px',
 
-                                            }} color={"#737373"} name={object.name} round={true} size="30" textSizeRatio={1} />
+                                            }} color={"#737373"} name={object.name} round={true} size="30"
+                                                    textSizeRatio={1}/>
                                         }
 
                                     </Box>
-                                    <Stack direction='column' >
-                                        <Typography variant='body1' sx={{ color: '#e3e3e3' }}>{object.symbol}</Typography>
-                                        <Typography variant='caption' sx={{ color: '#e3e3e3', fontSize: '11px' }}>{object.name}</Typography>
+                                    <Stack direction='column'>
+                                        <Typography variant='body1' sx={{color: '#e3e3e3'}}>{object.symbol}</Typography>
+                                        <Typography variant='caption'
+                                                    sx={{color: '#e3e3e3', fontSize: '11px'}}>{object.name}</Typography>
                                     </Stack>
 
-                                    <Box sx={{ flexGrow: 1 }}></Box>
+                                    <Box sx={{flexGrow: 1}}></Box>
                                     {/* <Box sx={{ marginTop: '5px' }}>
                                                                 <Typography >
                                                                     {object.balance === undefined ? <Loader type="Rings" color="#BB86FC" height={30} width={30} /> : object.balance}
@@ -881,10 +916,10 @@ export default function NukeExchange() {
                         p: 4,
                         borderRadius: '15px'
                     }}>
-                    <Typography variant='h6' align='center' sx={{ color: '#f5f5f5' }}>Token List</Typography>
-                    <Divider variant='fullWidth' sx={{ mt: 3 }}></Divider>
+                    <Typography variant='h6' align='center' sx={{color: '#f5f5f5'}}>Token List</Typography>
+                    <Divider variant='fullWidth' sx={{mt: 3}}></Divider>
                     {toTokens.map((object) =>
-                        <Box >
+                        <Box>
                             <Box
                                 onClick={() => {
                                     ToTokenChange(object);
@@ -899,10 +934,11 @@ export default function NukeExchange() {
                                     }
                                 }}>
                                 <Stack direction='row' spacing={2}>
-                                    <Box sx={{ marginTop: '5px' }}>
-                                        {object.logoURI !== null ? <img alt="" width="30" height="30" src={object.logoURI}
-                                        >
-                                        </img>
+                                    <Box sx={{marginTop: '5px'}}>
+                                        {object.logoURI !== null ?
+                                            <img alt="" width="30" height="30" src={object.logoURI}
+                                            >
+                                            </img>
                                             :
                                             <Avatar style={{
                                                 display: 'inline',
@@ -911,13 +947,15 @@ export default function NukeExchange() {
                                                 height: "30px",
                                                 // marginLeft: '11px',
 
-                                            }} color={"#737373"} name={object.name} round={true} size="30" textSizeRatio={1} />
+                                            }} color={"#737373"} name={object.name} round={true} size="30"
+                                                    textSizeRatio={1}/>
                                         }
 
                                     </Box>
-                                    <Stack direction='column' >
-                                        <Typography variant='body1' sx={{ color: '#e3e3e3' }}>{object.symbol}</Typography>
-                                        <Typography variant='caption' sx={{ color: '#e3e3e3', fontSize: '11px' }}>{object.name}</Typography>
+                                    <Stack direction='column'>
+                                        <Typography variant='body1' sx={{color: '#e3e3e3'}}>{object.symbol}</Typography>
+                                        <Typography variant='caption'
+                                                    sx={{color: '#e3e3e3', fontSize: '11px'}}>{object.name}</Typography>
                                     </Stack>
                                 </Stack>
                             </Box>
@@ -926,7 +964,7 @@ export default function NukeExchange() {
                 </Box>
 
             </Modal>
-        </Grid >
+        </Grid>
     );
 
 }

@@ -16,20 +16,20 @@ const PRODUCT_NAME = [
   'Non Fungible Token 8',
   'Non Fungible Token 9',
   'Non Fungible Token 10',
-//   'Kyrie 7 EP Sisterhood',
-//   'Nike Air Zoom BB NXT',
-//   'Nike Air Force 1 07 LX',
-//   'Nike Air Force 1 Shadow SE',
-//   'Nike Air Zoom Tempo NEXT%',
-//   'Nike DBreak-Type',
-//   'Nike Air Max Up',
-//   'Nike Air Max 270 React ENG',
-//   'NikeCourt Royale',
-//   'Nike Air Zoom Pegasus 37 Premium',
-//   'Nike Air Zoom SuperRep',
-//   'NikeCourt Royale',
-//   'Nike React Art3mis',
-//   'Nike React Infinity Run Flyknit A.I.R. Chaz Bear'
+  //   'Kyrie 7 EP Sisterhood',
+  //   'Nike Air Zoom BB NXT',
+  //   'Nike Air Force 1 07 LX',
+  //   'Nike Air Force 1 Shadow SE',
+  //   'Nike Air Zoom Tempo NEXT%',
+  //   'Nike DBreak-Type',
+  //   'Nike Air Max Up',
+  //   'Nike Air Max 270 React ENG',
+  //   'NikeCourt Royale',
+  //   'Nike Air Zoom Pegasus 37 Premium',
+  //   'Nike Air Zoom SuperRep',
+  //   'NikeCourt Royale',
+  //   'Nike React Art3mis',
+  //   'Nike React Infinity Run Flyknit A.I.R. Chaz Bear'
 ];
 const PRODUCT_COLOR = [
   '#00AB55',
@@ -39,7 +39,7 @@ const PRODUCT_COLOR = [
   '#FF4842',
   '#1890FF',
   '#94D82D',
-  '#FFC107'
+  '#FFC107',
 ];
 
 // ----------------------------------------------------------------------
@@ -61,7 +61,7 @@ const products = [...Array(8)].map((_, index) => {
       (setIndex === 23 && PRODUCT_COLOR.slice(4, 6)) ||
       (setIndex === 24 && PRODUCT_COLOR.slice(5, 6)) ||
       PRODUCT_COLOR,
-    status: sample(['sale', 'new', '', ''])
+    status: sample(['sale', 'new', '', '']),
   };
 });
 

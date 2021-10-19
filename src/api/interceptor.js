@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios from 'axios';
 
 axios.interceptors.request.use(
   async (config) => {
-    console.log(config)
+    console.log(config);
     return config;
   },
   (err) => {
