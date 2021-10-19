@@ -1,6 +1,6 @@
-import { Modal, Typography, Box, Divider } from "@material-ui/core"
-
-
+import React from 'react'
+import {Box, Divider, Modal, Typography} from "@material-ui/core"
+import {any} from "prop-types";
 
 const style = {
     position: 'absolute',
@@ -15,20 +15,23 @@ const style = {
     borderRadius: '10px'
 };
 
-export default function CurrencySearchModal({ isOpen, onDismiss }) {
-
+function CurrencySearchModal({isOpen, onDismiss}) {
     return (
-        <Modal
-            open={isOpen}
-            onClose={onDismiss}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
+        <Modal open={isOpen} onClose={onDismiss}
+               aria-labelledby="modal-modal-title"
+               aria-describedby="modal-modal-description"
         >
             <Box style={style}>
-                <Typography variant='h6' align='center' sx={{ color: '#f5f5f5' }}>Token List</Typography>
-                <Divider variant='fullWidth' sx={{ mt: 3 }}></Divider>
+                <Typography variant='h6' align='center' sx={{color: '#f5f5f5'}}>Token List</Typography>
+                <Divider variant='fullWidth' sx={{mt: 3}}/>
             </Box>
-
         </Modal>
     )
 }
+
+CurrencySearchModal.propTypes = {
+    isOpen: any,
+    onDismiss: any,
+}
+
+export default CurrencySearchModal

@@ -8,7 +8,6 @@ export default class index extends Component {
     async componentWillMount(){
         await this.loadWeb3();
         await this.loadBlockchainData();
-        
     }
 
     async loadWeb3() {
@@ -35,14 +34,14 @@ export default class index extends Component {
             var total= parseFloat(response.data.ETH.price.rate)*parseInt(web3.utils.fromWei(response.data.ETH.rawBalance,'ether')) ;
             if(tokens!==undefined){
                 for(var i = 0; i<tokens.length; i++){
-                
+
                     if(tokens[i].tokenInfo.price!==false){
                         total = total + parseFloat(tokens[i].tokenInfo.price.rate)*parseInt(web3.utils.fromWei(tokens[i].rawBalance,'ether'));
                         console.log(tokens[i].tokenInfo.price.rate,parseInt(web3.utils.fromWei(tokens[i].rawBalance,'ether')))
-                    } 
+                    }
                 }
             }
-            
+
             this.setState({totalValue: total.toFixed(2)})
             // console.log(total)
     })

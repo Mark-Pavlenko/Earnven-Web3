@@ -1,9 +1,10 @@
-import { useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import axios from 'axios';
-import { useState } from "react";
 import Web3 from "web3";
-import { Typography } from "@material-ui/core";
-export default function AccountBalance({ address }) {
+import {Typography} from "@material-ui/core";
+import {string} from "prop-types";
+
+function AccountBalance({address}) {
     const [totalValue, settotalValue] = useState('00.00')
 
     function CommaFormatted(amount) {
@@ -11,9 +12,13 @@ export default function AccountBalance({ address }) {
         var ab = amount.split('.', 2)
         var d = ab[1];
         var i = parseInt(ab[0]);
-        if (isNaN(i)) { return ''; }
+        if (isNaN(i)) {
+            return '';
+        }
         var minus = '';
-        if (i < 0) { minus = '-'; }
+        if (i < 0) {
+            minus = '-';
+        }
         i = Math.abs(i);
         var n = i.toString();
         var a = [];
@@ -22,10 +27,15 @@ export default function AccountBalance({ address }) {
             a.unshift(nn);
             n = n.substr(0, n.length - 3);
         }
-        if (n.length > 0) { a.unshift(n); }
+        if (n.length > 0) {
+            a.unshift(n);
+        }
         n = a.join(delimiter);
-        if (d.length < 1) { amount = n; }
-        else { amount = n + '.' + d; }
+        if (d.length < 1) {
+            amount = n;
+        } else {
+            amount = n + '.' + d;
+        }
         amount = minus + amount;
         return amount;
     }
@@ -49,16 +59,21 @@ export default function AccountBalance({ address }) {
                     }
                 }
                 settotalValue(CommaFormatted(total.toFixed(2)))
-            }
-            catch (error) {
+            } catch (error) {
                 console.log(error);
             }
         }
         totalAccountValue();
-    }, [totalValue,address])
+    }, [totalValue, address])
     return (
         <>
             <Typography variant='subtitle2'>${totalValue}</Typography>
         </>
     );
 }
+
+AccountBalance.propTypes = {
+    address: string
+}
+
+export default AccountBalance

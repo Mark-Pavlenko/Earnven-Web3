@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import './exchange.css';
 // import eth from '../Assets/eth.svg';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import axios from 'axios';
@@ -10,29 +8,31 @@ import TransparentButton from '../../components/TransparentButton'
 import Web3 from 'web3';
 import ERC20ABI from '../../abi/ERC20.json'
 import tokenURIs from './tokenURIs';
-import { Box, Typography, Stack, Container, Grid, TextField, Divider, Button, Modal, Tooltip, Avatar, InputAdornment, OutlinedInput } from '@material-ui/core';
+import {
+    Box,
+    Button,
+    Container,
+    Divider,
+    Grid,
+    InputAdornment,
+    Modal,
+    OutlinedInput,
+    Stack,
+    TextField,
+    Tooltip,
+    Typography
+} from '@material-ui/core';
 // import exchangeIcon from '../../assets/icons/exchange.png'
 import Uniswap from '../../assets/icons/Uniswap.webp';
 // import Curve from '../../assets/icons/Curve.webp';
 // import SushiSwap from '../../assets/icons/Sushiswap.webp';
 // import Bancor from '../../assets/icons/Bancor.webp';
 import Balancer from '../../assets/icons/balancer.png';
-import { invert, update } from 'lodash';
 import styled from 'styled-components'
-import CurrencySearchModal from '../../components/CurrencySearchModal';
-import { ethers } from "ethers";
-import { parseUnits, formatUnits } from "@ethersproject/units";
-import { useParams } from 'react-router-dom';
+import {ethers} from "ethers";
+import {formatUnits} from "@ethersproject/units";
+import {useParams} from 'react-router-dom';
 import Loader from "react-loader-spinner";
-import ScrollToTop from '../../components/ScrollToTop';
-
-
-const styles = () => ({
-    selected: {
-        color: 'red'
-    }
-})
-
 
 const style = {
     position: 'absolute',
@@ -68,7 +68,6 @@ const CurrencySelect = styled.button`
 `
 
 
-
 const erc20Abi = [
     "function balanceOf(address owner) view returns (uint256)",
     "function approve(address _spender, uint256 _value) public returns (bool success)",
@@ -94,7 +93,7 @@ const makeCall = async (callName, contract, args, metadata = {}) => {
 }
 export default function ExchangeMini() {
 
-    const { address } = useParams();
+    const {address} = useParams();
 
     const [TokenFrom, setTokenFrom] = useState('ETH');
     const [TokenTo, setTokenTo] = useState('');
@@ -136,7 +135,10 @@ export default function ExchangeMini() {
             await axios.get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
                 .then(async (response) => {
                     let data = response.data.tokens;
-                    tokens = fetchedTokens.map((token) => ({ ...token, logoURI: data.find(x => x.address == token.address) ? data.find(x => x.address == token.address).logoURI : tokenURIs.find(x => x.address == token.address).logoURI }));
+                    tokens = fetchedTokens.map((token) => ({
+                        ...token,
+                        logoURI: data.find(x => x.address == token.address) ? data.find(x => x.address == token.address).logoURI : tokenURIs.find(x => x.address == token.address).logoURI
+                    }));
                     console.log(tokens.filter((token) => token.logoURI === ""));
                     // console.log("all tokens data", tokens)
                     // setAllTokens(tokens)
@@ -160,6 +162,7 @@ export default function ExchangeMini() {
             setAllTokens(tokens);
 
         }
+
         getData()
     }, [])
 
@@ -168,11 +171,11 @@ export default function ExchangeMini() {
             try {
                 const ethDollarValue = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
                 setethPrice(ethDollarValue.data.ethereum.usd);
-            }
-            catch {
+            } catch {
 
             }
         }
+
         getEthdollarValue();
     }, [])
 
@@ -180,7 +183,6 @@ export default function ExchangeMini() {
         const timeOutId = setTimeout(() => calculateToAmount(TokenFromAmount), 500);
         return () => clearTimeout(timeOutId);
     }, [TokenFromAmount]);
-
 
 
     /* useEffect(() => {
@@ -214,15 +216,14 @@ export default function ExchangeMini() {
         if (window.ethereum) {
             window.web3 = new Web3(window.ethereum)
             await window.ethereum.enable()
-        }
-        else if (window.web3) {
+        } else if (window.web3) {
             window.web3 = new Web3(window.web3.currentProvider)
-        }
-        else {
+        } else {
             window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
         }
 
     }
+
     async function transact() {
         await loadWeb3()
         const web3 = window.web3;
@@ -251,20 +252,18 @@ export default function ExchangeMini() {
             txObject.from = accounts[0]
             if (TokenFrom !== 'ETH') {
                 const ERC20contract = new web3.eth.Contract(ERC20ABI, txObject.sellTokenAddress);
-                await ERC20contract.methods.approve(txObject.allowanceTarget, txObject.sellAmount).send({ from: accounts[0] });
+                await ERC20contract.methods.approve(txObject.allowanceTarget, txObject.sellAmount).send({from: accounts[0]});
             }
             try {
                 await web3.eth.sendTransaction(await txObject);
                 settxSuccess(true);
-            }
-            catch {
+            } catch {
                 console.log("tx failed")
                 settxFailure(true);
             }
 
 
-        }
-        else {
+        } else {
             alert("Please Fill All fields")
         }
     }
@@ -274,8 +273,7 @@ export default function ExchangeMini() {
         try {
             if (tokenAddress === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
                 return ethPrice;
-            }
-            else {
+            } else {
                 const response = await axios.get(`https://api.ethplorer.io/getTokenInfo/${tokenAddress}?apiKey=EK-qSPda-W9rX7yJ-UY93y`)
                 let data = response.data;
                 console.log('response of ethplorere api::', data)
@@ -283,13 +281,11 @@ export default function ExchangeMini() {
                     console.log("enter inside method")
                     // settokenToDollarValue(data.price.rate);
                     return data.price.rate;
-                }
-                else {
+                } else {
                     console.log("dollar value of this token is undefined")
                 }
             }
-        }
-        catch {
+        } catch {
 
         }
     }
@@ -331,8 +327,7 @@ export default function ExchangeMini() {
                         console.log(`response for all ${protocolsList[i]}`, response.data);
                         if (protocolsList[i] === '') {
                             protocolQuote.name = '0x Exchange'
-                        }
-                        else {
+                        } else {
                             protocolQuote.name = protocolsList[i];
                         }
                         protocolQuote.price = response.data.price;
@@ -364,8 +359,7 @@ export default function ExchangeMini() {
                         }
 
                         differentQuoteList.push(protocolQuote);
-                    }
-                    catch {
+                    } catch {
                         console.log(`error come for ${protocolsList[i]}`);
                     }
 
@@ -436,18 +430,18 @@ export default function ExchangeMini() {
     }
 
 
-
     return (
-        <Grid container >
-            <Grid items xs={12} md={12} sx={{ mt: 5, ml: 5 }}>
+        <Grid container>
+            <Grid items xs={12} md={12} sx={{mt: 5, ml: 5}}>
                 <Container>
-                    <Typography variant='h3' sx={{ fontStyle: 'normal' }}>Exchange</Typography>
-                    <Container sx={{ border: "1px solid #737373", borderRadius: '7px', boxSizing: 'border-box', mt: 2.5 }}>
-                        <Box sx={{ mt: 4, mb: 3 }}>
+                    <Typography variant='h3' sx={{fontStyle: 'normal'}}>Exchange</Typography>
+                    <Container
+                        sx={{border: "1px solid #737373", borderRadius: '7px', boxSizing: 'border-box', mt: 2.5}}>
+                        <Box sx={{mt: 4, mb: 3}}>
                             <Stack direction='row' spacing={2}>
                                 <Stack spacing={0.5}>
-                                    <Typography variant='caption' sx={{ color: '#f5f5f5' }}>Swap</Typography>
-                                    <FormControl variant="outlined" style={{ width: '90px' }}>
+                                    <Typography variant='caption' sx={{color: '#f5f5f5'}}>Swap</Typography>
+                                    <FormControl variant="outlined" style={{width: '90px'}}>
                                         <Button
                                             variant='outlined'
                                             color='primary'
@@ -484,10 +478,11 @@ export default function ExchangeMini() {
                                                 p: 4,
                                                 borderRadius: '15px'
                                             }}>
-                                            <Typography variant='h6' align='center' sx={{ color: '#f5f5f5' }}>Token List</Typography>
-                                            <Divider variant='fullWidth' sx={{ mt: 3 }}></Divider>
+                                            <Typography variant='h6' align='center' sx={{color: '#f5f5f5'}}>Token
+                                                List</Typography>
+                                            <Divider variant='fullWidth' sx={{mt: 3}}/>
                                             {AllTokens.map((object) =>
-                                                <Box >
+                                                <Box>
                                                     <Box
                                                         onClick={() => {
                                                             fromTokenChange(object.symbol);
@@ -501,18 +496,25 @@ export default function ExchangeMini() {
                                                             }
                                                         }}>
                                                         <Stack direction='row' spacing={2}>
-                                                            <Box sx={{ marginTop: '5px' }}>
-                                                                <img alt="" width="30" height="30" src={object.logoURI} ></img>
+                                                            <Box sx={{marginTop: '5px'}}>
+                                                                <img alt="" width="30" height="30"
+                                                                     src={object.logoURI}/>
                                                             </Box>
-                                                            <Stack direction='column' >
-                                                                <Typography variant='body1' sx={{ color: '#e3e3e3' }}>{object.symbol}</Typography>
-                                                                <Typography variant='caption' sx={{ color: '#e3e3e3', fontSize: '11px' }}>{object.name}</Typography>
+                                                            <Stack direction='column'>
+                                                                <Typography variant='body1'
+                                                                            sx={{color: '#e3e3e3'}}>{object.symbol}</Typography>
+                                                                <Typography variant='caption' sx={{
+                                                                    color: '#e3e3e3',
+                                                                    fontSize: '11px'
+                                                                }}>{object.name}</Typography>
                                                             </Stack>
 
-                                                            <Box sx={{ flexGrow: 1 }}></Box>
-                                                            <Box sx={{ marginTop: '5px' }}>
-                                                                <Typography >
-                                                                    {object.balance === undefined ? <Loader type="Rings" color="#BB86FC" height={30} width={30} /> : object.balance}
+                                                            <Box sx={{flexGrow: 1}}/>
+                                                            <Box sx={{marginTop: '5px'}}>
+                                                                <Typography>
+                                                                    {object.balance === undefined ?
+                                                                        <Loader type="Rings" color="#BB86FC" height={30}
+                                                                                width={30}/> : object.balance}
                                                                 </Typography>
                                                             </Box>
                                                         </Stack>
@@ -525,24 +527,23 @@ export default function ExchangeMini() {
 
                                 </Stack>
                                 <Stack spacing={0.5}>
-                                    <Typography variant='caption' sx={{ color: '#0E1214' }}>0</Typography>
+                                    <Typography variant='caption' sx={{color: '#0E1214'}}>0</Typography>
                                     <TextField variant='outlined'
-                                        id="outlined-basic"
-                                        placeholder="00.00"
-                                        value={TokenFromAmount}
-                                        onChange={(e) => {
-                                            setTokenFromAmount(e.target.value);
-                                        }}>
+                                               id="outlined-basic"
+                                               placeholder="00.00"
+                                               value={TokenFromAmount}
+                                               onChange={(e) => {
+                                                   setTokenFromAmount(e.target.value);
+                                               }}>
                                     </TextField>
                                 </Stack>
 
 
-
                             </Stack>
-                            <Stack direction='row' spacing={2} sx={{mt:1}}>
+                            <Stack direction='row' spacing={2} sx={{mt: 1}}>
                                 <Stack spacing={0.5}>
-                                    <Typography variant='caption' sx={{ color: '#f5f5f5' }}>For</Typography>
-                                    <FormControl variant="outlined" style={{ width: '90px' }}>
+                                    <Typography variant='caption' sx={{color: '#f5f5f5'}}>For</Typography>
+                                    <FormControl variant="outlined" style={{width: '90px'}}>
                                         <Button
                                             variant='outlined'
                                             color='primary'
@@ -553,7 +554,7 @@ export default function ExchangeMini() {
                                             onClick={() => {
                                                 setcurrencyToModal(true);
                                             }}
-                                        >{TokenTo.symbol===undefined?'Select':TokenTo.symbol}
+                                        >{TokenTo.symbol === undefined ? 'Select' : TokenTo.symbol}
                                         </Button>
                                     </FormControl>
                                     <Modal
@@ -578,10 +579,11 @@ export default function ExchangeMini() {
                                                 p: 4,
                                                 borderRadius: '15px'
                                             }}>
-                                            <Typography variant='h6' align='center' sx={{ color: '#f5f5f5' }}>Token List</Typography>
-                                            <Divider variant='fullWidth' sx={{ mt: 3 }}></Divider>
+                                            <Typography variant='h6' align='center' sx={{color: '#f5f5f5'}}>Token
+                                                List</Typography>
+                                            <Divider variant='fullWidth' sx={{mt: 3}}/>
                                             {AllTokens.map((object) =>
-                                                <Box >
+                                                <Box>
                                                     <Box
                                                         onClick={() => {
                                                             ToTokenChange(object);
@@ -595,12 +597,17 @@ export default function ExchangeMini() {
                                                             }
                                                         }}>
                                                         <Stack direction='row' spacing={2}>
-                                                            <Box sx={{ marginTop: '5px' }}>
-                                                                <img alt="" width="30" height="30" src={object.logoURI} ></img>
+                                                            <Box sx={{marginTop: '5px'}}>
+                                                                <img alt="" width="30" height="30"
+                                                                     src={object.logoURI}/>
                                                             </Box>
-                                                            <Stack direction='column' >
-                                                                <Typography variant='body1' sx={{ color: '#e3e3e3' }}>{object.symbol}</Typography>
-                                                                <Typography variant='caption' sx={{ color: '#e3e3e3', fontSize: '11px' }}>{object.name}</Typography>
+                                                            <Stack direction='column'>
+                                                                <Typography variant='body1'
+                                                                            sx={{color: '#e3e3e3'}}>{object.symbol}</Typography>
+                                                                <Typography variant='caption' sx={{
+                                                                    color: '#e3e3e3',
+                                                                    fontSize: '11px'
+                                                                }}>{object.name}</Typography>
                                                             </Stack>
                                                         </Stack>
                                                     </Box>
@@ -612,27 +619,36 @@ export default function ExchangeMini() {
 
                                 </Stack>
                                 <Stack spacing={0.5}>
-                                    <Typography variant='caption' sx={{ color: '#0E1214' }}>0</Typography>
+                                    <Typography variant='caption' sx={{color: '#0E1214'}}>0</Typography>
                                     <TextField variant='outlined'
-                                        id="outlined-basic"
-                                        placeholder="00.00"
-                                        value={selectedRate !== null && protocolsRateList.length > 0 ? selectedRate.TokenToAmount : "00.00"}
-                                        onChange={(e) => { setTokenToAmount(e.target.value) }}
-                                        disabled>
+                                               id="outlined-basic"
+                                               placeholder="00.00"
+                                               value={selectedRate !== null && protocolsRateList.length > 0 ? selectedRate.TokenToAmount : "00.00"}
+                                               onChange={(e) => {
+                                                   setTokenToAmount(e.target.value)
+                                               }}
+                                               disabled>
                                     </TextField>
                                 </Stack>
                             </Stack>
-                            {selectedRate !== null && protocolsRateList.length === 0 ? <Typography variant='caption' sx={{ color: '#FFC107' }}>This Exchange is yet not supported</Typography> : <></>}
-                            <Typography variant='body1' sx={{ color: '#737373', mt: 2.5 }}>Transaction Settings</Typography>
-                            <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
-                                <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Slippage</Typography>
-                                <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
+                            {selectedRate !== null && protocolsRateList.length === 0 ?
+                                <Typography variant='caption' sx={{color: '#FFC107'}}>This Exchange is yet not
+                                    supported</Typography> : <></>}
+                            <Typography variant='body1' sx={{color: '#737373', mt: 2.5}}>Transaction
+                                Settings</Typography>
+                            <Stack direction='row' spacing={1} sx={{mt: 1.5}}>
+                                <Typography variant='body2' sx={{color: '#f5f5f5'}}>Slippage</Typography>
+                                <Divider
+                                    sx={{flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px'}}
+                                    style={{marginTop: '10px'}}/>
                                 <OutlinedInput
                                     id="outlined-adornment-weight"
                                     value={Slippage}
-                                    onChange={(e) => { setSlippage(e.target.value) }}
+                                    onChange={(e) => {
+                                        setSlippage(e.target.value)
+                                    }}
                                     size='small'
-                                    style={{ marginTop: '-7px', width: '25%' }}
+                                    style={{marginTop: '-7px', width: '25%'}}
                                     endAdornment={<InputAdornment position="end">%</InputAdornment>}
                                     aria-describedby="outlined-weight-helper-text"
                                     inputProps={{
@@ -641,94 +657,137 @@ export default function ExchangeMini() {
                                 />
                             </Stack>
                             {protocolsRateList.length > 0 &&
-                                <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
-                                    <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Offered By</Typography>
-                                    <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
-                                    <Button onClick={handleOpen} sx={{ height: '20px' }}>{selectedRate.name}</Button>
-                                    <Modal
-                                        open={open}
-                                        onClose={handleClose}
-                                        aria-labelledby="modal-modal-title"
-                                        aria-describedby="modal-modal-description"
-                                    >
-                                        <Box sx={style}>
-                                            <Typography variant='h6' align='center' sx={{ color: '#f5f5f5' }}>Offered By</Typography>
-                                            <Divider variant='fullWidth' sx={{ mt: 3 }}></Divider>
-                                            <Box>
-                                                <Stack direction='row' spacing={6} sx={{ mt: 2 }}>
-                                                    <Typography variant='caption' sx={{ color: '#737373' }}>Receive</Typography>
-                                                    <Typography variant='caption' sx={{ color: '#737373' }}>Network Fee</Typography>
-                                                </Stack>
-                                            </Box>
-                                            {protocolsRateList.map((object) => (
-                                                (object.name === selectedExchangeName ?
-                                                    <Box onClick={() => newRateSelected(object)} sx={{ border: '1px solid #BB86FC', borderRadius: '7px', mt: 1, p: 1, cursor: 'pointer' }}>
-                                                        <Stack direction='row' spacing={2}>
-                                                            <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.receivedValueInDollar}</Typography>
-                                                            <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.gas}</Typography>
-                                                            <Box sx={{ flexGrow: 1 }}></Box>
-                                                            {/* <Avatar alt="" src={exchangeIcon}></Avatar> */}
-                                                            <Tooltip title={object.name}>
-                                                                {object.name === 'Balancer' ? <img alt="" width="21" height="20" src={Balancer} ></img> : object.name === '0x Exchange' ? <img alt="" width="21" height="20" src={object.image} style={{ filter: 'invert(1)' }} ></img> : <img alt="" width="21" height="20" src={object.image} ></img>}
-                                                            </Tooltip>
-                                                        </Stack>
-                                                    </Box> :
-                                                    <Box onClick={() => newRateSelected(object)} sx={{ border: '1px solid #737373', borderRadius: '7px', mt: 1, p: 1, cursor: 'pointer' }}>
-                                                        <Stack direction='row' spacing={2}>
-                                                            <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.receivedValueInDollar}</Typography>
-                                                            <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.gas}</Typography>
-                                                            <Box sx={{ flexGrow: 1 }}></Box>
-                                                            {/* <Avatar alt="" src={exchangeIcon}></Avatar> */}
-                                                            <Tooltip title={object.name}>
-                                                                {object.name === 'Balancer' ? <img alt="" width="21" height="20" src={Balancer} ></img> : object.name === '0x Exchange' ? <img alt="" width="21" height="20" src={object.image} style={{ filter: 'invert(1)' }} ></img> : <img alt="" width="21" height="20" src={object.image} ></img>}
-                                                            </Tooltip>
-                                                        </Stack>
-                                                    </Box>)
-
-                                            ))}
-                                            <Box sx={{ marginLeft: '30%' }}>
-                                                <Button onClick={updateSelectedRate} variant='outlined' sx={{ mt: 2 }} >Save for This Trade</Button>
-                                            </Box>
-
+                            <Stack direction='row' spacing={1} sx={{mt: 1.5}}>
+                                <Typography variant='body2' sx={{color: '#f5f5f5'}}>Offered By</Typography>
+                                <Divider
+                                    sx={{flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px'}}
+                                    style={{marginTop: '10px'}}/>
+                                <Button onClick={handleOpen} sx={{height: '20px'}}>{selectedRate.name}</Button>
+                                <Modal
+                                    open={open}
+                                    onClose={handleClose}
+                                    aria-labelledby="modal-modal-title"
+                                    aria-describedby="modal-modal-description"
+                                >
+                                    <Box sx={style}>
+                                        <Typography variant='h6' align='center' sx={{color: '#f5f5f5'}}>Offered
+                                            By</Typography>
+                                        <Divider variant='fullWidth' sx={{mt: 3}}/>
+                                        <Box>
+                                            <Stack direction='row' spacing={6} sx={{mt: 2}}>
+                                                <Typography variant='caption'
+                                                            sx={{color: '#737373'}}>Receive</Typography>
+                                                <Typography variant='caption' sx={{color: '#737373'}}>Network
+                                                    Fee</Typography>
+                                            </Stack>
                                         </Box>
-                                    </Modal>
-                                </Stack>}
+                                        {protocolsRateList.map((object) => (
+                                            (object.name === selectedExchangeName ?
+                                                <Box onClick={() => newRateSelected(object)} sx={{
+                                                    border: '1px solid #BB86FC',
+                                                    borderRadius: '7px',
+                                                    mt: 1,
+                                                    p: 1,
+                                                    cursor: 'pointer'
+                                                }}>
+                                                    <Stack direction='row' spacing={2}>
+                                                        <Typography variant='body1'
+                                                                    sx={{color: '#e3e3e3'}}>${object.receivedValueInDollar}</Typography>
+                                                        <Typography variant='body1'
+                                                                    sx={{color: '#e3e3e3'}}>${object.gas}</Typography>
+                                                        <Box sx={{flexGrow: 1}}/>
+                                                        {/* <Avatar alt="" src={exchangeIcon}></Avatar> */}
+                                                        <Tooltip title={object.name}>
+                                                            {object.name === 'Balancer' ?
+                                                                <img alt="" width="21" height="20"
+                                                                     src={Balancer}/> : object.name === '0x Exchange' ?
+                                                                    <img alt="" width="21" height="20"
+                                                                         src={object.image}
+                                                                         style={{filter: 'invert(1)'}}/> :
+                                                                    <img alt="" width="21" height="20"
+                                                                         src={object.image}/>}
+                                                        </Tooltip>
+                                                    </Stack>
+                                                </Box> :
+                                                <Box onClick={() => newRateSelected(object)} sx={{
+                                                    border: '1px solid #737373',
+                                                    borderRadius: '7px',
+                                                    mt: 1,
+                                                    p: 1,
+                                                    cursor: 'pointer'
+                                                }}>
+                                                    <Stack direction='row' spacing={2}>
+                                                        <Typography variant='body1'
+                                                                    sx={{color: '#e3e3e3'}}>${object.receivedValueInDollar}</Typography>
+                                                        <Typography variant='body1'
+                                                                    sx={{color: '#e3e3e3'}}>${object.gas}</Typography>
+                                                        <Box sx={{flexGrow: 1}}/>
+                                                        {/* <Avatar alt="" src={exchangeIcon}></Avatar> */}
+                                                        <Tooltip title={object.name}>
+                                                            {object.name === 'Balancer' ?
+                                                                <img alt="" width="21" height="20"
+                                                                     src={Balancer}/> : object.name === '0x Exchange' ?
+                                                                    <img alt="" width="21" height="20"
+                                                                         src={object.image}
+                                                                         style={{filter: 'invert(1)'}}/> :
+                                                                    <img alt="" width="21" height="20"
+                                                                         src={object.image}/>}
+                                                        </Tooltip>
+                                                    </Stack>
+                                                </Box>)
+
+                                        ))}
+                                        <Box sx={{marginLeft: '30%'}}>
+                                            <Button onClick={updateSelectedRate} variant='outlined' sx={{mt: 2}}>Save
+                                                for This Trade</Button>
+                                        </Box>
+
+                                    </Box>
+                                </Modal>
+                            </Stack>}
 
 
-                            <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
-                                <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Min. output</Typography>
-                                <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
-                                <Typography variant='body2'>{selectedRate !== null && protocolsRateList.length > 0 ? ((parseFloat(TokenFromAmount) * parseFloat(selectedRate.minPrice)).toFixed(3)) : "00.00"}{TokenTo !== '' ? TokenTo.symbol : ''}</Typography>
+                            <Stack direction='row' spacing={1} sx={{mt: 1.5}}>
+                                <Typography variant='body2' sx={{color: '#f5f5f5'}}>Min. output</Typography>
+                                <Divider
+                                    sx={{flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px'}}
+                                    style={{marginTop: '10px'}}/>
+                                <Typography
+                                    variant='body2'>{selectedRate !== null && protocolsRateList.length > 0 ? ((parseFloat(TokenFromAmount) * parseFloat(selectedRate.minPrice)).toFixed(3)) : "00.00"}{TokenTo !== '' ? TokenTo.symbol : ''}</Typography>
                             </Stack>
 
-                            <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
-                                <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Rate</Typography>
-                                <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
-                                <Typography variant='body2'> 1 {TokenFrom} = {selectedRate !== null && protocolsRateList.length > 0 ? parseFloat(selectedRate.price).toFixed(3) : '00.00'} {TokenTo !== '' ? TokenTo.symbol : ''}</Typography>
+                            <Stack direction='row' spacing={1} sx={{mt: 1.5}}>
+                                <Typography variant='body2' sx={{color: '#f5f5f5'}}>Rate</Typography>
+                                <Divider
+                                    sx={{flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px'}}
+                                    style={{marginTop: '10px'}}/>
+                                <Typography
+                                    variant='body2'> 1 {TokenFrom} = {selectedRate !== null && protocolsRateList.length > 0 ? parseFloat(selectedRate.price).toFixed(3) : '00.00'} {TokenTo !== '' ? TokenTo.symbol : ''}</Typography>
                             </Stack>
 
                         </Box>
                     </Container>
-                    {txSuccess && <Typography variant='caption' sx={{ color: '#54D62C' }}>Swap is done Successfully</Typography>}
-                    {txFailure && <Typography variant='caption' sx={{ color: '#FF4842' }}>Swap is Failed</Typography>}
+                    {txSuccess &&
+                    <Typography variant='caption' sx={{color: '#54D62C'}}>Swap is done Successfully</Typography>}
+                    {txFailure && <Typography variant='caption' sx={{color: '#FF4842'}}>Swap is Failed</Typography>}
                     <TransparentButton value='Submit'
-                        onClick={transact}
-                        style={{
-                            height: '45px',
-                            width: '300px',
-                            background: 'transparent',
-                            borderWidth: '2px',
-                            borderStyle: 'solid',
-                            borderColor: '#3b2959',
-                            borderRadius: '5px',
-                            color: 'white',
-                            cursor: 'pointer',
-                            float: 'right',
-                            marginTop: '20px'
-                        }}></TransparentButton> <br /><br /> &nbsp;
+                                       onClick={transact}
+                                       style={{
+                                           height: '45px',
+                                           width: '300px',
+                                           background: 'transparent',
+                                           borderWidth: '2px',
+                                           borderStyle: 'solid',
+                                           borderColor: '#3b2959',
+                                           borderRadius: '5px',
+                                           color: 'white',
+                                           cursor: 'pointer',
+                                           float: 'right',
+                                           marginTop: '20px'
+                                       }}/> <br/><br/> &nbsp;
                 </Container>
             </Grid>
-        </Grid >
+        </Grid>
     );
 
 }

@@ -1,42 +1,52 @@
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import axios from 'axios'
-import Web3 from 'web3'
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import NFTPageTokenIDs from '../components/NFTPageTokenIDs'
-import { useParams } from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 
 var contents = ''
 var arr1 = []
 
 function NFTpage() {
-    const { address } = useParams();
+    const {address} = useParams();
     const [Account, setAccount] = useState('0x0')
     const [Content, setContent] = useState('')
 
     var change = (arr) => {
         console.log("result which is showing:::", arr)
-        contents = arr.map((object) =>
-
-            <Accordion style={{ background: 'transparent', marginBottom: '5px', width: '90%', border: '1px', borderColor: 'white', borderStyle: 'solid', borderRadius: '10px' }}>
+        contents = arr.map((object, index) =>
+            <Accordion key={index} style={{
+                background: 'transparent',
+                marginBottom: '5px',
+                width: '90%',
+                border: '1px',
+                borderColor: 'white',
+                borderStyle: 'solid',
+                borderRadius: '10px'
+            }}>
                 <AccordionSummary
                     // expandIcon={<ExpandMoreIcon style={{fill:'white'}}/>}
-                    expandIcon={object.image ? <img src={object.image} alt='' style={{ height: '60px', border: '3px', borderColor: 'white', borderStyle: 'solid', borderRadius: '50px' }}></img> : <ExpandMoreIcon />}
+                    expandIcon={object.image ? <img src={object.image} alt='' style={{
+                        height: '60px',
+                        border: '3px',
+                        borderColor: 'white',
+                        borderStyle: 'solid',
+                        borderRadius: '50px'
+                    }}/> : <ExpandMoreIcon/>}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
-                    style={{ height: '100px' }}
+                    style={{height: '100px'}}
                 >
                     <font color='white'>{object.name}</font>
 
                 </AccordionSummary>
-                <AccordionDetails style={{ backgroundColor: 'transparent', paddingBottom: '30px', textAlign: 'left' }}>
-                    <NFTPageTokenIDs contractAddress={object.address} tokenIDs={object.tokens} />
+                <AccordionDetails style={{backgroundColor: 'transparent', paddingBottom: '30px', textAlign: 'left'}}>
+                    <NFTPageTokenIDs contractAddress={object.address} tokenIDs={object.tokens}/>
                 </AccordionDetails>
             </Accordion>
-
-
         )
         // console.log(contents)
     }
@@ -82,8 +92,7 @@ function NFTpage() {
                             b[res[i].tokenName]['tokens'] = []
                             if (res[i].from.toLowerCase() === account.toLowerCase()) {
                                 b[res[i].tokenName]['qtty'] = -1
-                            }
-                            else {
+                            } else {
                                 b[res[i].tokenName]['qtty'] = 1
                                 b[res[i].tokenName]['tokens'].push(res[i].tokenID)
                             }
@@ -91,23 +100,20 @@ function NFTpage() {
                                 .then(async (response) => {
                                     if (response.data.assets[0]) {
                                         b[res[i].tokenName]['image'] = response.data.assets[0].image_url
-                                    }
-                                    else {
+                                    } else {
                                         b[res[i].tokenName]['image'] = undefined
                                     }
                                 })
                             b[res[i].tokenName]['name'] = res[i].tokenName
                             b[res[i].tokenName]['address'] = res[i].contractAddress
-                        }
-                        else {
+                        } else {
                             if (res[i].from.toLowerCase() === account.toLowerCase()) {
                                 b[res[i].tokenName]['qtty'] -= 1
                                 var index = b[res[i].tokenName]['tokens'].indexOf(res[i].tokenID);
                                 if (index > -1) {
                                     b[res[i].tokenName]['tokens'].splice(index, 1);
                                 }
-                            }
-                            else {
+                            } else {
                                 b[res[i].tokenName]['qtty'] += 1
                                 b[res[i].tokenName]['tokens'].push(res[i].tokenID)
                             }
@@ -121,6 +127,7 @@ function NFTpage() {
 
                 })
         }
+
         // loadWeb3();
         getData();
 
@@ -134,19 +141,18 @@ function NFTpage() {
         return (
             <>
                 <center>
-                    <br />
-                    <h1 style={{ color: 'white', fontSize: '50px' }}>My NFTs</h1> <br /><br />
-                    <h3 style={{ color: 'white', fontSize: '20px' }}>Loading...</h3> <br /><br />
+                    <br/>
+                    <h1 style={{color: 'white', fontSize: '50px'}}>My NFTs</h1> <br/><br/>
+                    <h3 style={{color: 'white', fontSize: '20px'}}>Loading...</h3> <br/><br/>
                 </center>
             </>
         )
-    }
-    else {
+    } else {
         return (
             <>
                 <center>
-                    <br />
-                    <h1 style={{ color: 'white', fontSize: '50px' }}>My NFTs</h1> <br /><br />
+                    <br/>
+                    <h1 style={{color: 'white', fontSize: '50px'}}>My NFTs</h1> <br/><br/>
                     {Content}
                 </center>
             </>

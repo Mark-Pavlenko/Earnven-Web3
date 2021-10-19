@@ -1,6 +1,7 @@
+import React from 'react'
 import PropTypes from 'prop-types';
 // material
-import { Popover } from '@material-ui/core';
+import {Popover} from '@material-ui/core';
 // import { alpha, experimentalStyled as styled } from '@material-ui/core/styles';
 
 // ----------------------------------------------------------------------
@@ -25,32 +26,32 @@ import { Popover } from '@material-ui/core';
 // ----------------------------------------------------------------------
 
 MenuPopover.propTypes = {
-  children: PropTypes.node.isRequired,
-  sx: PropTypes.object
+    children: PropTypes.node.isRequired,
+    sx: PropTypes.object
 };
 
-export default function MenuPopover({ children, sx, ...other }) {
-  return (
-    <Popover
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      transformOrigin={{ vertical: 'top', horizontal: 'center' }}
-      PaperProps={{
-        sx: {
-          mt: 1.5,
-          ml: 0.5,
-          overflow: 'inherit',
-        //   boxShadow: (theme) => theme.customShadows.z20,
-          border: (theme) => `solid 1px ${theme.palette.grey[500_8]}`,
-          backgroundColor: (theme) => theme.palette.background.default,
-        //   width: 100,
-          ...sx
-        }
-      }}
-      {...other}
-    >
-      {/* <ArrowStyle className="arrow" /> */}
+export default function MenuPopover({children, sx, ...other}) {
+    return (
+        <Popover
+            anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
+            transformOrigin={{vertical: 'top', horizontal: 'center'}}
+            PaperProps={{
+                sx: {
+                    mt: 1.5,
+                    ml: 0.5,
+                    overflow: 'inherit',
+                    //   boxShadow: (theme) => theme.customShadows.z20,
+                    border: (theme) => `solid 1px ${theme.palette.grey[500_8]}`,
+                    backgroundColor: (theme) => theme.palette.background.default,
+                    //   width: 100,
+                    ...sx
+                }
+            }}
+            {...other}
+        >
+            {/* <ArrowStyle className="arrow" /> */}
 
-      {children}
-    </Popover>
-  );
+            {children}
+        </Popover>
+    );
 }

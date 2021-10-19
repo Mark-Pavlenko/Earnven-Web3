@@ -1,30 +1,24 @@
 import Page from "../components/Page";
 import NftGroup from "../components/Nft/NftGroup";
-import NftList from "../components/Nft/NftList";
-import { Container, Stack, Typography, Button } from '@material-ui/core';
-import { useState, useEffect } from "react";
-import { useParams } from 'react-router-dom';
+import {Container} from '@material-ui/core';
+import React, {useEffect, useState} from "react";
+import {useParams} from 'react-router-dom';
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom';
-import nftAbi from '../abi/NftAbi.json'
-import Web3 from "web3";
 
 export default function NFT() {
-    const { address } = useParams();
+    const {address} = useParams();
     const [Account, setAccount] = useState('0x0')
     const [data, setdata] = useState(null)
-    const navigate = useNavigate();
 
     useEffect(() => {
         async function getData() {
-            var account = address
+            let account = address
             setAccount(account)
             console.log(Account)
             await axios.get(`https://api.etherscan.io/api?module=account&action=tokennfttx&address=${account}&startblock=0&endblock=999999999&sort=asc&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W`, {}, {})
                 .then(async (response) => {
-                    var b = {}
-                    var allTokens = [];
-                    var res = response.data.result;
+                    let b = {}
+                    let res = response.data.result;
                     console.log(res)
                     for (let i in res) {
                         if (b[res[i].tokenName] === undefined) {
@@ -33,16 +27,14 @@ export default function NFT() {
                             b[res[i].tokenName]['txHash'] = []
                             if (res[i].from.toLowerCase() === account.toLowerCase()) {
                                 b[res[i].tokenName]['qtty'] = -1
-                            }
-                            else {
+                            } else {
                                 b[res[i].tokenName]['qtty'] = 1
                                 b[res[i].tokenName]['tokens'].push(res[i].tokenID)
                                 b[res[i].tokenName]['txHash'].push(res[i].hash)
                             }
                             b[res[i].tokenName]['name'] = res[i].tokenName
                             b[res[i].tokenName]['address'] = res[i].contractAddress
-                        }
-                        else {
+                        } else {
                             if (res[i].from.toLowerCase() === account.toLowerCase()) {
                                 b[res[i].tokenName]['qtty'] -= 1
                                 var index = b[res[i].tokenName]['tokens'].indexOf(res[i].tokenID);
@@ -50,8 +42,7 @@ export default function NFT() {
                                     b[res[i].tokenName]['tokens'].splice(index, 1);
                                     b[res[i].tokenName]['txHash'].splice(index, 1);
                                 }
-                            }
-                            else {
+                            } else {
                                 b[res[i].tokenName]['qtty'] += 1
                                 b[res[i].tokenName]['tokens'].push(res[i].tokenID)
                                 b[res[i].tokenName]['txHash'].push(res[i].hash)
@@ -64,8 +55,8 @@ export default function NFT() {
                     let temp = Object.values(b)
                     console.log("value of all nfts", temp)
                     let finalObject = []
-                    for(let i in temp){
-                        if(temp[i].tokens.length>0){
+                    for (let i in temp) {
+                        if (temp[i].tokens.length > 0) {
                             finalObject.push(temp[i]);
                         }
                     }
@@ -87,8 +78,8 @@ export default function NFT() {
                     setdata(allTokens); */
                 })
         }
-        getData();
 
+        getData();
 
 
     }, [Account, address])
@@ -100,7 +91,7 @@ export default function NFT() {
                     NFT
                 </Typography> */}
 
-                {data === null ? <div>Loading</div> : <NftGroup nftData={data} />}
+                {data === null ? <div>Loading</div> : <NftGroup nftData={data}/>}
             </Container>
         </Page>
     );
