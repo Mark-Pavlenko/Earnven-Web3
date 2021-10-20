@@ -41,34 +41,61 @@ export default function LiquityStaking({ accountAddress }) {
           response.data.data &&
           response.data.data.lqtyStakes.length > 0
         ) {
+          console.log('Liquity staked amount: ', response.data.data.lqtyStakes[0].amount);
           setLiquityStake(response.data.data.lqtyStakes[0].amount);
         }
       });
   }
 
   useEffect(() => {
-    async function getBlockchainData() {
-      await getLiquityData(accountAddress);
-      console.log('LiquityTotalStake', LiquityStake);
+    async function getBlockchainData(accountAddress) {
       //get the Liquity token USD price from aave api data pools
+
       await axios
-        .get(
-          `https://api.coingecko.com/api/v3/coins/ethereum/contract/0x6dea81c8171d0ba574754ef6f8b412f2ed88c54d`,
-          {}
+        .post(
+          `https://gateway.thegraph.com/api/${addresses.graph_API}/subgraphs/id/0x147676a5e327080386bcc227e103a73dd2979049-0`,
+          {
+            query: `{
+            lqtyStakes (
+              where:{
+                id:"${accountAddress}"  
+            }
+            ){
+              id
+              amount
+            }
+          }`,
+          }
         )
-        .then(async ({ data }) => {
-          const LiquityUsdPrice = data.market_data.current_price.usd;
-          const stakeUSDValue = LiquityUsdPrice * LiquityStake;
-          console.log('Liquity Staking Value in USD', stakeUSDValue);
-          setLiquityStakeAmountUSD(stakeUSDValue.toLocaleString());
-          setLiquityLogo(data.image.thumb);
-        })
-        .catch((err) => {
-          console.log('Error Message message', err);
+        .then(async (response) => {
+          if (
+            response.status === 200 &&
+            response.data.data &&
+            response.data.data.lqtyStakes.length > 0
+          ) {
+            console.log('Liquity staked amount: ', response.data.data.lqtyStakes[0].amount);
+            setLiquityStake(response.data.data.lqtyStakes[0].amount);
+            await axios
+              .get(
+                `https://api.coingecko.com/api/v3/coins/ethereum/contract/0x6dea81c8171d0ba574754ef6f8b412f2ed88c54d`,
+                {}
+              )
+              .then(async ({ data }) => {
+                const LiquityUsdPrice = data.market_data.current_price.usd;
+                console.log('Liquity USD price: ', LiquityUsdPrice);
+                const stakeUSDValue = LiquityUsdPrice * response.data.data.lqtyStakes[0].amount;
+                console.log('Liquity Staking Value in USD', stakeUSDValue);
+                setLiquityStakeAmountUSD(stakeUSDValue.toLocaleString());
+                setLiquityLogo(data.image.thumb);
+              })
+              .catch((err) => {
+                console.log('Error Message message', err);
+              });
+          }
         });
     }
-    getBlockchainData();
-  }, [accountAddress]);
+    getBlockchainData(accountAddress);
+  }, [accountAddress, LiquityStakeAmountUSD]);
 
   return (
     <div>
