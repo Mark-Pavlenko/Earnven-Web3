@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import Web3 from 'web3';
 import AmountInput from '../components/amountInput';
 import TransparentButton from '../components/TransparentButton';
 import AirDropper from '../abi/airDroppper.json';
-import Web3 from 'web3';
 import ERC20 from '../abi/ERC20.json';
 
 export default function AirDrop() {
@@ -26,17 +26,17 @@ export default function AirDrop() {
       alert('Please Fill All The Details!');
     } else {
       await loadWeb3();
-      const web3 = window.web3;
+      const { web3 } = window;
       const accounts = await web3.eth.getAccounts();
 
-      let arr1 = AddressArray.split(',');
-      for (var i = 0; i < arr1.length; i++) {
+      const arr1 = AddressArray.split(',');
+      for (let i = 0; i < arr1.length; i++) {
         arr1[i] = arr1[i].trim();
         arr1[i] = arr1[i].trim('\n');
       }
-      let totalTokensWei = web3.utils.toWei(TokenAmount, 'ether');
-      let tokenContract = await new web3.eth.Contract(ERC20, TokenAddress);
-      let airDropperContract = await new web3.eth.Contract(
+      const totalTokensWei = web3.utils.toWei(TokenAmount, 'ether');
+      const tokenContract = await new web3.eth.Contract(ERC20, TokenAddress);
+      const airDropperContract = await new web3.eth.Contract(
         AirDropper,
         '0xE729654DB3117Eee851B8E50bC52869eC06Afb86'
       );
@@ -81,7 +81,8 @@ export default function AirDrop() {
               paddingLeft: '15px',
               paddingRight: '15px',
             }}
-            placeholder="Supply Token Address*"></input>
+            placeholder="Supply Token Address*"
+          />
           <br />
           <br />
           <textarea

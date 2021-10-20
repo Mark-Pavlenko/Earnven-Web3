@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
-import abi from '../abi/NftAbi.json';
 import { useParams } from 'react-router-dom';
 import {
   Container,
@@ -15,6 +14,7 @@ import {
 } from '@material-ui/core';
 import { useNft } from 'use-nft';
 import axios from 'axios';
+import abi from '../abi/NftAbi.json';
 
 // let nftImageUrl = "";
 export default function NftDetails() {
@@ -30,12 +30,12 @@ export default function NftDetails() {
   const { loading, error, nft } = useNft(contract, id);
 
   const convertTimestampToDate = (epoch) => {
-    let myDate = new Date(epoch * 1000);
+    const myDate = new Date(epoch * 1000);
     return myDate.toLocaleDateString();
   };
 
   const etherscanTxLink = (hash) => {
-    return 'https://etherscan.io/tx/' + hash;
+    return `https://etherscan.io/tx/${hash}`;
   };
 
   const shortaddress = (addy) => {
@@ -43,28 +43,18 @@ export default function NftDetails() {
       return addy;
     }
 
-    let l = addy.length;
+    const l = addy.length;
 
-    return (
-      addy[0] +
-      addy[1] +
-      addy[2] +
-      addy[3] +
-      addy[4] +
-      addy[5] +
-      '...' +
-      addy[l - 4] +
-      addy[l - 3] +
-      addy[l - 2] +
-      addy[l - 1]
-    );
+    return `${addy[0] + addy[1] + addy[2] + addy[3] + addy[4] + addy[5]}...${addy[l - 4]}${
+      addy[l - 3]
+    }${addy[l - 2]}${addy[l - 1]}`;
   };
 
   useEffect(() => {
     async function getEvents() {
       const nftHistoryData = [];
       const contractInstance = await new web3.eth.Contract(abi, contract);
-      let historical_block = 0;
+      const historical_block = 0;
       const events = await contractInstance.getPastEvents('Transfer', {
         filter: { tokenId: id },
         fromBlock: historical_block,
@@ -72,7 +62,7 @@ export default function NftDetails() {
       });
 
       for (let i = 0; i < events.length; i++) {
-        let object = {};
+        const object = {};
         const block = await web3.eth.getBlock(events[i].blockNumber);
         object.timestamp = block.timestamp;
         object.from = events[i].returnValues.from;

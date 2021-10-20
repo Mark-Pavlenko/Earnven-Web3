@@ -27,7 +27,7 @@ export default function AllTokensApprovals() {
   }
 
   useEffect(() => {
-    var content = Tokens.map((object) => (
+    const content = Tokens.map((object) => (
       <>
         <Link to={{ pathname: `/app/approvals/${object.address}` }}>
           <div
@@ -64,7 +64,7 @@ export default function AllTokensApprovals() {
   useEffect(() => {
     async function getData() {
       await loadWeb3();
-      var tokens = [];
+      const tokens = [];
       // const web3 = window.web3;
       // const accounts = await web3.eth.getAccounts()
 
@@ -76,15 +76,15 @@ export default function AllTokensApprovals() {
           {}
         )
         .then(async (response) => {
-          var ops = response.data.operations;
+          const ops = response.data.operations;
           // var balance = {}
           console.log(ops);
-          var buffer = [];
-          for (var i = 0; i < ops.length; i++) {
+          const buffer = [];
+          for (let i = 0; i < ops.length; i++) {
             if (ops[i].type === 'approve') {
-              var index = buffer.indexOf(ops[i].tokenInfo.address);
+              const index = buffer.indexOf(ops[i].tokenInfo.address);
               if (index === -1) {
-                var object = { name: ops[i].tokenInfo.name, address: ops[i].tokenInfo.address };
+                const object = { name: ops[i].tokenInfo.name, address: ops[i].tokenInfo.address };
                 buffer.push(ops[i].tokenInfo.address);
                 tokens.push(object);
               }

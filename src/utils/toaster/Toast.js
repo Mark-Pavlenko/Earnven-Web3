@@ -1,8 +1,8 @@
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
 
 export const toastSuccessMessage = (message) => {
   toast.success(message, {
-    position: "top-right",
+    position: 'top-right',
     autoClose: 4000,
     hideProgressBar: false,
     closeOnClick: true,

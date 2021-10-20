@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledCurrencyContainer = styled.div`
   .currency-list-wrapper {
@@ -8,7 +8,7 @@ export const StyledCurrencyContainer = styled.div`
     align-items: center;
     cursor: pointer;
     &:hover {
-      background-color: ${(props) => props.isImported ? "none" : "rgba(0, 0, 0,0.08)"};
+      background-color: ${(props) => (props.isImported ? 'none' : 'rgba(0, 0, 0,0.08)')};
     }
     border-radius: 10px;
     .currency-logo {
@@ -58,9 +58,8 @@ export const StyledCurrencyContainer = styled.div`
     cursor: pointer;
     user-select: none;
     font-weight: 500;
-    background-color: #2172E5;
+    background-color: #2172e5;
     color: #eee;
-    border: 1px solid ${(props) =>
-      props.theme === "light" ? props.theme.back : props.theme.back};
+    border: 1px solid ${(props) => (props.theme === 'light' ? props.theme.back : props.theme.back)};
   }
 `;

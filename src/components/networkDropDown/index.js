@@ -91,17 +91,17 @@ import React, { useRef, useState } from 'react';
 import { alpha } from '@material-ui/core/styles';
 import { Box, MenuItem, ListItemIcon, ListItemText, IconButton } from '@material-ui/core';
 // components
-import MenuPopover from "../../components/MenuPopover";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import MenuPopover from '../MenuPopover';
 // import globe from '../../assets/icons/globe.svg'
 // import languageImg from '../../assets/icons/language.png'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 // import { IoIosHelpCircleOutline } from "react-icons/io";
 
-import EthereumIcon from '../../assets/icons/ethereum.svg'
-import BinanceIcon from '../../assets/icons/binance.svg'
-import Solana from '../../assets/icons/solana.svg'
-import Polkadot from '../../assets/icons/polkadot.svg'
-import Polygon from '../../assets/icons/polygon.svg'
+import EthereumIcon from '../../assets/icons/ethereum.svg';
+import BinanceIcon from '../../assets/icons/binance.svg';
+import Solana from '../../assets/icons/solana.svg';
+import Polkadot from '../../assets/icons/polkadot.svg';
+import Polygon from '../../assets/icons/polygon.svg';
 
 // import {data} from '../../globalStore'
 
@@ -116,23 +116,23 @@ const LANGS = [
   {
     value: 'bsc',
     label: 'Binance Smart Chain',
-    icon: BinanceIcon
+    icon: BinanceIcon,
   },
   {
     value: 'sol',
     label: 'Solana',
-    icon: Solana
+    icon: Solana,
   },
   {
     value: 'pol',
     label: 'Polkadot',
-    icon: Polkadot
+    icon: Polkadot,
   },
   {
     value: 'matic',
     label: 'Polygon',
-    icon: Polygon
-  }
+    icon: Polygon,
+  },
 ];
 
 // ----------------------------------------------------------------------
@@ -159,13 +159,14 @@ export default function NetworkDropDown() {
           width: 44,
           height: 44,
           ...(open && {
-            bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.focusOpacity)
-          })
-        }}
-      >
-        <img src={EthereumIcon} alt=""/><ExpandMoreIcon style={{color:'#fff'}}/>
-        
-       {/* <IoIosHelpCircleOutline style={{color:'#fff'}}/><ExpandMoreIcon style={{color:'#fff'}}/> */}
+            bgcolor: (theme) =>
+              alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
+          }),
+        }}>
+        <img src={EthereumIcon} alt="" />
+        <ExpandMoreIcon style={{ color: '#fff' }} />
+
+        {/* <IoIosHelpCircleOutline style={{color:'#fff'}}/><ExpandMoreIcon style={{color:'#fff'}}/> */}
       </IconButton>
 
       <MenuPopover open={open} onClose={handleClose} anchorEl={anchorRef.current}>
@@ -175,12 +176,11 @@ export default function NetworkDropDown() {
               key={option.value}
               selected={option.value === LANGS[0].value}
               onClick={handleClose}
-              sx={{ py: 1, px: 2.5 }}
-            >
+              sx={{ py: 1, px: 2.5 }}>
               <ListItemIcon>
                 <Box component="img" alt={option.label} src={option.icon} />
               </ListItemIcon>
-              <ListItemText primaryTypographyProps={{ variant: 'body2',color:'#fff' }}>
+              <ListItemText primaryTypographyProps={{ variant: 'body2', color: '#fff' }}>
                 {option.label}
               </ListItemText>
             </MenuItem>

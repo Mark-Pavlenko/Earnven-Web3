@@ -1,9 +1,9 @@
-import Page from '../components/Page';
-import NftGroup from '../components/Nft/NftGroup';
 import { Container } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import NftGroup from '../components/Nft/NftGroup';
+import Page from '../components/Page';
 
 export default function NFT() {
   const { address } = useParams();
@@ -12,7 +12,7 @@ export default function NFT() {
 
   useEffect(() => {
     async function getData() {
-      let account = address;
+      const account = address;
       setAccount(account);
       console.log(Account);
       await axios
@@ -22,45 +22,43 @@ export default function NFT() {
           {}
         )
         .then(async (response) => {
-          let b = {};
-          let res = response.data.result;
+          const b = {};
+          const res = response.data.result;
           console.log(res);
-          for (let i in res) {
+          for (const i in res) {
             if (b[res[i].tokenName] === undefined) {
               b[res[i].tokenName] = {};
-              b[res[i].tokenName]['tokens'] = [];
-              b[res[i].tokenName]['txHash'] = [];
+              b[res[i].tokenName].tokens = [];
+              b[res[i].tokenName].txHash = [];
               if (res[i].from.toLowerCase() === account.toLowerCase()) {
-                b[res[i].tokenName]['qtty'] = -1;
+                b[res[i].tokenName].qtty = -1;
               } else {
-                b[res[i].tokenName]['qtty'] = 1;
-                b[res[i].tokenName]['tokens'].push(res[i].tokenID);
-                b[res[i].tokenName]['txHash'].push(res[i].hash);
+                b[res[i].tokenName].qtty = 1;
+                b[res[i].tokenName].tokens.push(res[i].tokenID);
+                b[res[i].tokenName].txHash.push(res[i].hash);
               }
-              b[res[i].tokenName]['name'] = res[i].tokenName;
-              b[res[i].tokenName]['address'] = res[i].contractAddress;
+              b[res[i].tokenName].name = res[i].tokenName;
+              b[res[i].tokenName].address = res[i].contractAddress;
+            } else if (res[i].from.toLowerCase() === account.toLowerCase()) {
+              b[res[i].tokenName].qtty -= 1;
+              const index = b[res[i].tokenName].tokens.indexOf(res[i].tokenID);
+              if (index > -1) {
+                b[res[i].tokenName].tokens.splice(index, 1);
+                b[res[i].tokenName].txHash.splice(index, 1);
+              }
             } else {
-              if (res[i].from.toLowerCase() === account.toLowerCase()) {
-                b[res[i].tokenName]['qtty'] -= 1;
-                var index = b[res[i].tokenName]['tokens'].indexOf(res[i].tokenID);
-                if (index > -1) {
-                  b[res[i].tokenName]['tokens'].splice(index, 1);
-                  b[res[i].tokenName]['txHash'].splice(index, 1);
-                }
-              } else {
-                b[res[i].tokenName]['qtty'] += 1;
-                b[res[i].tokenName]['tokens'].push(res[i].tokenID);
-                b[res[i].tokenName]['txHash'].push(res[i].hash);
-              }
+              b[res[i].tokenName].qtty += 1;
+              b[res[i].tokenName].tokens.push(res[i].tokenID);
+              b[res[i].tokenName].txHash.push(res[i].hash);
             }
           }
           // console.log("final data:::", Object.values(b).filter((object) => object.tokens.length > 0))
           // setdata(Object.values(b).filter((object) => object.tokens.length > 0));
 
-          let temp = Object.values(b);
+          const temp = Object.values(b);
           console.log('value of all nfts', temp);
-          let finalObject = [];
-          for (let i in temp) {
+          const finalObject = [];
+          for (const i in temp) {
             if (temp[i].tokens.length > 0) {
               finalObject.push(temp[i]);
             }
@@ -105,5 +103,5 @@ export default function NFT() {
                  {data === null ? <div>Loading</div> : <NftList nftData={data} />}
              </Container>
          </Page>
-     );*/
+     ); */
 }

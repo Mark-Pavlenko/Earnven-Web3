@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 // material
 import { alpha, experimentalStyled as styled } from '@material-ui/core/styles';
 
-// ----------------------------------------------------------------------
-
 const RootStyle = styled('span')(({ theme, styleProps }) => {
   const { color, variant } = styleProps;
 

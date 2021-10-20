@@ -1,5 +1,5 @@
-const axios = require('axios')
-//this function is to get graph data for uniswap
+const axios = require('axios');
+// this function is to get graph data for uniswap
 const getUniswapGraphData = async (token0, token1, epochDate) => {
   // console.log('sushiswap - Calling for the graph query page')
   // console.log('sushiswap token0 -', token0)
@@ -52,20 +52,20 @@ const getUniswapGraphData = async (token0, token1, epochDate) => {
                       token1Price
                     }
                 }`,
-      },
-    )
-    console.log('sushiswap result from graph-', result.data.data)
-    return result
+      }
+    );
+    console.log('sushiswap result from graph-', result.data.data);
+    return result;
   } catch (err) {
-    console.log('No data found for the give paired token')
+    console.log('No data found for the give paired token');
   }
-}
-//0xc3d03e4f041fd4cd388c549ee2a29a9e5075882f-18890
-//0xc3d03e4f041fd4cd388c549ee2a29a9e5075882f-18889
+};
+// 0xc3d03e4f041fd4cd388c549ee2a29a9e5075882f-18890
+// 0xc3d03e4f041fd4cd388c549ee2a29a9e5075882f-18889
 // getUniswapGraphData(
 //   '0xc3d03e4f041fd4cd388c549ee2a29a9e5075882f',
 
 //   1632096000,
 // )
 
-export default getUniswapGraphData
+export default getUniswapGraphData;

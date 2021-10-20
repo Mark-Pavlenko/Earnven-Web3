@@ -1,10 +1,8 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 // material
-import React from 'react';
 import { alpha, experimentalStyled as styled } from '@material-ui/core/styles';
 import { Box, Typography } from '@material-ui/core';
-
-// ----------------------------------------------------------------------
 
 const RootStyle = styled(Box)({
   display: 'flex',
@@ -20,8 +18,6 @@ const IconStyle = styled('div')(({ theme }) => ({
   border: `solid 2px ${theme.palette.background.paper}`,
   boxShadow: `inset -1px 1px 2px ${alpha(theme.palette.common.black, 0.24)}`,
 }));
-
-// ----------------------------------------------------------------------
 
 ColorPreview.propTypes = {
   colors: PropTypes.array.isRequired,

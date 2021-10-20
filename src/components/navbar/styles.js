@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const NavbarContainer = styled.div`
   .navbar-container {
@@ -36,9 +36,7 @@ export const NavbarContainer = styled.div`
         justify-content: flex-start;
         justify-self: center;
         background-color: ${(props) =>
-          props.theme === "light"
-            ? "rgb(255, 255, 255)"
-            : props.theme.swapContainer};
+          props.theme === 'light' ? 'rgb(255, 255, 255)' : props.theme.swapContainer};
         width: fit-content;
         padding: 4px;
         border-radius: 16px;
@@ -54,9 +52,7 @@ export const NavbarContainer = styled.div`
           cursor: pointer;
           text-decoration: none;
           color: ${(props) =>
-            props.theme === "light"
-              ? "rgb(86, 90, 105)"
-              : props.theme.fontColor};
+            props.theme === 'light' ? 'rgb(86, 90, 105)' : props.theme.fontColor};
           font-size: 1rem;
           width: fit-content;
           font-weight: 500;
@@ -101,13 +97,11 @@ export const NavbarContainer = styled.div`
             user-select: none;
             font-weight: 500;
             background-color: ${(props) =>
-              props.theme === "light" ? props.theme.back : props.theme.back};
+              props.theme === 'light' ? props.theme.back : props.theme.back};
             color: ${(props) =>
-              props.theme === "light"
-                ? props.theme.connect
-                : props.theme.connect};
-            border: 1px solid ${(props) =>
-              props.theme === "light" ? props.theme.back : props.theme.back};
+              props.theme === 'light' ? props.theme.connect : props.theme.connect};
+            border: 1px solid
+              ${(props) => (props.theme === 'light' ? props.theme.back : props.theme.back)};
           }
           .swap-all-asset-button {
             & img {
@@ -127,9 +121,7 @@ export const NavbarContainer = styled.div`
             margin: 0px 0px 0px 8px;
             height: 35px;
             background-color: ${(props) =>
-              props.theme === "light"
-                ? "rgb(237, 238, 242)"
-                : props.theme.option};
+              props.theme === 'light' ? 'rgb(237, 238, 242)' : props.theme.option};
             padding: 0.15rem 0.5rem;
             border-radius: 0.5rem;
           }
@@ -150,9 +142,7 @@ export const NavbarContainer = styled.div`
             margin: 0px;
             height: 35px;
             background-color: ${(props) =>
-              props.theme === "light"
-                ? "rgb(237, 238, 242)"
-                : props.theme.option};
+              props.theme === 'light' ? 'rgb(237, 238, 242)' : props.theme.option};
             padding: 0.15rem 0.5rem;
             border-radius: 0.5rem;
           }
@@ -161,8 +151,8 @@ export const NavbarContainer = styled.div`
     }
   }
   .tooltip-inner {
-    color: #D50166 !important; 
-    background-color: #FDEAF1 !important;
+    color: #d50166 !important;
+    background-color: #fdeaf1 !important;
   }
 `;
 

@@ -4,18 +4,18 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import NFTPageTokenIDs from '../components/NFTPageTokenIDs';
 import { useParams } from 'react-router-dom';
+import NFTPageTokenIDs from '../components/NFTPageTokenIDs';
 
-var contents = '';
-var arr1 = [];
+let contents = '';
+let arr1 = [];
 
 function NFTpage() {
   const { address } = useParams();
   const [Account, setAccount] = useState('0x0');
   const [Content, setContent] = useState('');
 
-  var change = (arr) => {
+  const change = (arr) => {
     console.log('result which is showing:::', arr);
     contents = arr.map((object, index) => (
       <Accordion
@@ -84,7 +84,7 @@ function NFTpage() {
       // var account = '0x48E8479b4906D45fBE702A18ac2454F800238b37'
       // var account = '0xbfbe5822a880a41c2075dc7e1d92663739cf119e';
       // setAccount(accounts[0])
-      var account = address;
+      const account = address;
       setAccount(account);
       console.log(Account);
 
@@ -96,18 +96,18 @@ function NFTpage() {
           {}
         )
         .then(async (response) => {
-          var b = {};
-          var res = response.data.result;
+          const b = {};
+          const res = response.data.result;
           console.log(res);
-          for (let i in res) {
+          for (const i in res) {
             if (b[res[i].tokenName] === undefined) {
               b[res[i].tokenName] = {};
-              b[res[i].tokenName]['tokens'] = [];
+              b[res[i].tokenName].tokens = [];
               if (res[i].from.toLowerCase() === account.toLowerCase()) {
-                b[res[i].tokenName]['qtty'] = -1;
+                b[res[i].tokenName].qtty = -1;
               } else {
-                b[res[i].tokenName]['qtty'] = 1;
-                b[res[i].tokenName]['tokens'].push(res[i].tokenID);
+                b[res[i].tokenName].qtty = 1;
+                b[res[i].tokenName].tokens.push(res[i].tokenID);
               }
               await axios
                 .get(
@@ -117,24 +117,22 @@ function NFTpage() {
                 )
                 .then(async (response) => {
                   if (response.data.assets[0]) {
-                    b[res[i].tokenName]['image'] = response.data.assets[0].image_url;
+                    b[res[i].tokenName].image = response.data.assets[0].image_url;
                   } else {
-                    b[res[i].tokenName]['image'] = undefined;
+                    b[res[i].tokenName].image = undefined;
                   }
                 });
-              b[res[i].tokenName]['name'] = res[i].tokenName;
-              b[res[i].tokenName]['address'] = res[i].contractAddress;
-            } else {
-              if (res[i].from.toLowerCase() === account.toLowerCase()) {
-                b[res[i].tokenName]['qtty'] -= 1;
-                var index = b[res[i].tokenName]['tokens'].indexOf(res[i].tokenID);
-                if (index > -1) {
-                  b[res[i].tokenName]['tokens'].splice(index, 1);
-                }
-              } else {
-                b[res[i].tokenName]['qtty'] += 1;
-                b[res[i].tokenName]['tokens'].push(res[i].tokenID);
+              b[res[i].tokenName].name = res[i].tokenName;
+              b[res[i].tokenName].address = res[i].contractAddress;
+            } else if (res[i].from.toLowerCase() === account.toLowerCase()) {
+              b[res[i].tokenName].qtty -= 1;
+              const index = b[res[i].tokenName].tokens.indexOf(res[i].tokenID);
+              if (index > -1) {
+                b[res[i].tokenName].tokens.splice(index, 1);
               }
+            } else {
+              b[res[i].tokenName].qtty += 1;
+              b[res[i].tokenName].tokens.push(res[i].tokenID);
             }
           }
 
@@ -164,18 +162,17 @@ function NFTpage() {
         </center>
       </>
     );
-  } else {
-    return (
-      <>
-        <center>
-          <br />
-          <h1 style={{ color: 'white', fontSize: '50px' }}>My NFTs</h1> <br />
-          <br />
-          {Content}
-        </center>
-      </>
-    );
   }
+  return (
+    <>
+      <center>
+        <br />
+        <h1 style={{ color: 'white', fontSize: '50px' }}>My NFTs</h1> <br />
+        <br />
+        {Content}
+      </center>
+    </>
+  );
 }
 
 export default NFTpage;

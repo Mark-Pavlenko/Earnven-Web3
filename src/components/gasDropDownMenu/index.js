@@ -96,16 +96,16 @@ export default class MenuListComposition extends React.Component {
 }
  */
 import React, { useRef, useState, useEffect } from 'react';
-import gas from '../../assets/icons/gas.svg';
 import { Box, MenuItem, ListItemIcon, ListItemText, IconButton } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MenuPopover from '../../components/MenuPopover';
 import { alpha } from '@material-ui/core/styles';
-import languageImg from '../../assets/icons/language.png';
 import axios from 'axios';
+import MenuPopover from '../MenuPopover';
+import languageImg from '../../assets/icons/language.png';
+import gas from '../../assets/icons/gas.svg';
 import { data } from '../../globalStore';
 
-let gasType = [
+const gasType = [
   {
     value: '',
     label: 'Fast',
@@ -129,7 +129,7 @@ export default function GasDropDownMenu() {
 
   useEffect(() => {
     // console.log('Updating Layout....')
-    var content = GasPrices.map((option) => (
+    const content = GasPrices.map((option) => (
       <MenuItem
         // key={option.value}
         selected={option.label === selected}
@@ -142,7 +142,7 @@ export default function GasDropDownMenu() {
           <Box component="img" alt={option.label} src={languageImg} />
         </ListItemIcon>
         <ListItemText primaryTypographyProps={{ variant: 'body2', color: '#fff' }}>
-          {option.label + '-' + option.value + ' Gwei'}
+          {`${option.label}-${option.value} Gwei`}
         </ListItemText>
       </MenuItem>
     ));
@@ -167,7 +167,7 @@ export default function GasDropDownMenu() {
           'https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W'
         );
         // console.log("api response::", response);
-        const result = response.data.result;
+        const { result } = response.data;
         gasType[0].value = result.FastGasPrice;
         gasType[1].value = result.ProposeGasPrice;
         gasType[2].value = result.SafeGasPrice;

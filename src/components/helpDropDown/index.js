@@ -75,17 +75,16 @@ export default function SimpleAccordion() {
 }
  */
 
-
 import React, { useRef, useState } from 'react';
 // material
 import { alpha } from '@material-ui/core/styles';
-import { Box, MenuItem, ListItemText, IconButton} from '@material-ui/core';
+import { Box, MenuItem, ListItemText, IconButton } from '@material-ui/core';
 // components
-import MenuPopover from "../../components/MenuPopover";
 // import globe from '../../assets/icons/globe.svg'
 // import languageImg from '../../assets/icons/language.png'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { IoIosHelpCircleOutline } from "react-icons/io";
+import { IoIosHelpCircleOutline } from 'react-icons/io';
+import MenuPopover from '../MenuPopover';
 
 // ----------------------------------------------------------------------
 
@@ -114,7 +113,7 @@ const LANGS = [
     value: 'fr',
     label: 'Telegram',
     // icon: '/static/icons/language.svg'
-  }
+  },
 ];
 
 // ----------------------------------------------------------------------
@@ -141,13 +140,14 @@ export default function HelpDropDown() {
           width: 50,
           height: 50,
           ...(open && {
-            bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.focusOpacity)
-          })
-        }}
-      >
+            bgcolor: (theme) =>
+              alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
+          }),
+        }}>
         {/* <img src={globe} alt=""/><ExpandMoreIcon style={{color:'#fff'}}/> */}
-        
-       <IoIosHelpCircleOutline style={{color:'#fff'}}/><ExpandMoreIcon style={{color:'#fff'}}/>
+
+        <IoIosHelpCircleOutline style={{ color: '#fff' }} />
+        <ExpandMoreIcon style={{ color: '#fff' }} />
       </IconButton>
 
       <MenuPopover open={open} onClose={handleClose} anchorEl={anchorRef.current}>
@@ -157,12 +157,11 @@ export default function HelpDropDown() {
               key={option.value}
               selected={option.value === LANGS[0].value}
               onClick={handleClose}
-              sx={{ py: 1, px: 2.5 }}
-            >
+              sx={{ py: 1, px: 2.5 }}>
               {/* <ListItemIcon>
                 <Box component="img" alt={option.label} src={languageImg} />
               </ListItemIcon> */}
-              <ListItemText primaryTypographyProps={{ variant: 'body2',color:'#fff' }}>
+              <ListItemText primaryTypographyProps={{ variant: 'body2', color: '#fff' }}>
                 {option.label}
               </ListItemText>
             </MenuItem>

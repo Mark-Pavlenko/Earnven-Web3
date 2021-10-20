@@ -1,6 +1,6 @@
 import React from 'react';
-import TransactionHistory from '../components/transactionHistory';
 import { useParams } from 'react-router-dom';
+import TransactionHistory from '../components/transactionHistory';
 
 export default function History() {
   const { address } = useParams();

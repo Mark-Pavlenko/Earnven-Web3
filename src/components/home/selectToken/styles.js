@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledSelectToken = styled.div`
     .token-selector-container 
@@ -13,7 +13,7 @@ export const StyledSelectToken = styled.div`
         height: 610px;
         border-radius: 20px
         background-color: ${(props) =>
-            props.theme === "light" ? props.theme.body : props.theme.swapContainer};
+          props.theme === 'light' ? props.theme.body : props.theme.swapContainer};
         .token-selector-wrapper 
         {
             height: 100%;
@@ -24,9 +24,9 @@ export const StyledSelectToken = styled.div`
             row-gap: 16px;
             padding: 20px 20px 0 20px;
             background-color: ${(props) =>
-                props.theme === "light" ? props.theme.body : props.theme.swapContainer};
+              props.theme === 'light' ? props.theme.body : props.theme.swapContainer};
             color: ${(props) =>
-                props.theme === "light" ? props.theme.fontColor : props.theme.coinDesc};
+              props.theme === 'light' ? props.theme.fontColor : props.theme.coinDesc};
             .select-token-header 
             {
                 box-sizing: border-box;
@@ -282,7 +282,7 @@ export const StyledSelectToken = styled.div`
                 background-color: #2172E5;
                 color: #eee;
                 border: 1px solid ${(props) =>
-                    props.theme === "light" ? props.theme.back : props.theme.back};
+                  props.theme === 'light' ? props.theme.back : props.theme.back};
             }
             .search-box-container 
             {
@@ -309,7 +309,7 @@ export const StyledSelectToken = styled.div`
                     outline: currentcolor none medium;
                     border-radius: 20px;
                     color: ${(props) =>
-                        props.theme === "light" ? props.theme.color : props.theme.color};
+                      props.theme === 'light' ? props.theme.color : props.theme.color};
                     border: 1px solid rgb(206, 208, 217);
                     appearance: none;
                     font-size: 18px;
@@ -409,7 +409,7 @@ export const StyledSelectToken = styled.div`
         {
             height: 70px;
             background-color: ${(props) =>
-                props.theme === "light" ? props.theme.body : props.theme.swapContainer};
+              props.theme === 'light' ? props.theme.body : props.theme.swapContainer};
             border-radius: 0 0 20px 20px;
             .manage-token-btn 
             {
@@ -431,11 +431,9 @@ export const StyledSelectToken = styled.div`
                 position: relative;
                 z-index: 1;
                 background-color: ${(props) =>
-                    props.theme === "light" ? props.theme.back : props.theme.back};
+                  props.theme === 'light' ? props.theme.back : props.theme.back};
                 color: ${(props) =>
-                    props.theme === "light"
-                        ? props.theme.connect
-                        : props.theme.connect};
+                  props.theme === 'light' ? props.theme.connect : props.theme.connect};
                 font-size: 16px;
                 font-weight: 500;
             }

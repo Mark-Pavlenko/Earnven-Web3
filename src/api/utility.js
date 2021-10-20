@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 export class ServerUtility {
   async getToServer(url, requestModelQuery, functionToHandleResponseFromServer, errorCallBack) {
     try {
@@ -12,6 +13,7 @@ export class ServerUtility {
       console.log(error);
     }
   }
+
   async postToServer() {}
 
   async putToServer() {}

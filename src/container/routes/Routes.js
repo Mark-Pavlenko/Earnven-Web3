@@ -1,7 +1,7 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import HomeScreen from "../home/HomeScreen";
-import Main from "../../components/Main";
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import HomeScreen from '../home/HomeScreen';
+import Main from '../../components/Main';
 
 function Routes() {
   return (

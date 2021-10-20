@@ -7,11 +7,11 @@ import { string } from 'prop-types';
 
 // call this component to get pool details information in main page at footer.
 function PoolDetailsInfo(props) {
-  let tokenASymbol = props.tokenASymbol;
-  let tokenBSymbol = props.tokenBSymbol;
-  let tokenAId = props.tokenAId;
-  let tokenBId = props.tokenBId;
-  let tokenPair = props.tokenPair;
+  const { tokenASymbol } = props;
+  const { tokenBSymbol } = props;
+  const { tokenAId } = props;
+  const { tokenBId } = props;
+  const { tokenPair } = props;
   let tokeIdPairAddress;
   let tokenAAddress;
   let tokenBAddress;
@@ -21,14 +21,14 @@ function PoolDetailsInfo(props) {
   // ex :0xb4e1...c9dc
   try {
     const setTokenAddress = (token) => {
-      let tokenId = token;
+      const tokenId = token;
       // get the length of the pair address
-      let tokenLength = tokenId.length;
+      const tokenLength = tokenId.length;
       // get first 6 digit of the address
-      let tokenPairAddress1 = tokenId.substring(0, 6);
+      const tokenPairAddress1 = tokenId.substring(0, 6);
       // get last 4 digit of address
-      let tokenPairAddress2 = tokenId.substring(tokenLength - 4, tokenLength);
-      return tokenPairAddress1 + '...' + tokenPairAddress2;
+      const tokenPairAddress2 = tokenId.substring(tokenLength - 4, tokenLength);
+      return `${tokenPairAddress1}...${tokenPairAddress2}`;
     };
     // call the function to get token Address for paird token and tokens of the each pair
     tokeIdPairAddress = setTokenAddress(tokenPair);

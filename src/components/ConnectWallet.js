@@ -1,10 +1,4 @@
 import { Box, Button, Grid, Stack, TextField, Typography } from '@material-ui/core';
-import metamask from '../assets/icons/metamask.svg';
-import walletConnectLogo from '../assets/icons/walletconnect-logo.svg';
-import fortmaticLogo from '../assets/icons/fortmatic.png';
-import coinbaseWalletLogo from '../assets/icons/coinbase-wallet.png';
-import torusWalletLogo from '../assets/icons/torus.png';
-import portisWalletLogo from '../assets/icons/portisLogo.png';
 import Web3 from 'web3';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowRight } from 'react-icons/fa';
@@ -14,6 +8,12 @@ import Fortmatic from 'fortmatic';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Torus from '@toruslabs/torus-embed';
 import { bool } from 'prop-types';
+import portisWalletLogo from '../assets/icons/portisLogo.png';
+import torusWalletLogo from '../assets/icons/torus.png';
+import coinbaseWalletLogo from '../assets/icons/coinbase-wallet.png';
+import fortmaticLogo from '../assets/icons/fortmatic.png';
+import walletConnectLogo from '../assets/icons/walletconnect-logo.svg';
+import metamask from '../assets/icons/metamask.svg';
 
 export default function ConnectWallet() {
   const navigate = useNavigate();
@@ -48,7 +48,7 @@ export default function ConnectWallet() {
   };
 
   const loadFormatic = async () => {
-    let fm = new Fortmatic('pk_live_9F53EBC750F34391');
+    const fm = new Fortmatic('pk_live_9F53EBC750F34391');
     window.web3 = new Web3(fm.getProvider());
     const accounts = await window.web3.eth.getAccounts();
     routeToDashboard(accounts[0], 'metamask');
@@ -68,12 +68,12 @@ export default function ConnectWallet() {
   };
 
   const routeToDashboard = async (account, provider) => {
-    let existingWallet = localStorage.getItem('wallets');
-    let parsedExistingWallet = JSON.parse(existingWallet);
+    const existingWallet = localStorage.getItem('wallets');
+    const parsedExistingWallet = JSON.parse(existingWallet);
 
     const newWallet = {
       address: account,
-      provider: provider,
+      provider,
     };
     let newDetails = [];
     if (existingWallet === null) {
@@ -100,7 +100,7 @@ export default function ConnectWallet() {
   };
 
   const trackAddress = () => {
-    let validAddress = Web3.utils.isAddress(address);
+    const validAddress = Web3.utils.isAddress(address);
     if (validAddress) {
       routeToDashboard(address, null);
       seterrorMsg(false);
@@ -110,16 +110,15 @@ export default function ConnectWallet() {
   };
 
   const ErrorComponent = (props) => {
-    const isWrongAddress = props.isWrongAddress;
+    const { isWrongAddress } = props;
     if (isWrongAddress) {
       return (
         <Typography variant="caption" sx={{ color: (theme) => theme.palette.error.light }}>
           Invalid Ethereum address
         </Typography>
       );
-    } else {
-      return null;
     }
+    return null;
   };
   ErrorComponent.propTypes = {
     isWrongAddress: bool,

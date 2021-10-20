@@ -8,22 +8,22 @@ function Balance({ address }) {
   const [totalValue, settotalValue] = useState('00.00');
 
   function CommaFormatted(amount) {
-    var delimiter = ','; // replace comma if desired
-    var ab = amount.split('.', 2);
-    var d = ab[1];
-    var i = parseInt(ab[0]);
+    const delimiter = ','; // replace comma if desired
+    const ab = amount.split('.', 2);
+    const d = ab[1];
+    let i = parseInt(ab[0]);
     if (isNaN(i)) {
       return '';
     }
-    var minus = '';
+    let minus = '';
     if (i < 0) {
       minus = '-';
     }
     i = Math.abs(i);
-    var n = i.toString();
-    var a = [];
+    let n = i.toString();
+    const a = [];
     while (n.length > 3) {
-      var nn = n.substr(n.length - 3);
+      const nn = n.substr(n.length - 3);
       a.unshift(nn);
       n = n.substr(0, n.length - 3);
     }
@@ -34,7 +34,7 @@ function Balance({ address }) {
     if (d.length < 1) {
       amount = n;
     } else {
-      amount = n + '.' + d;
+      amount = `${n}.${d}`;
     }
     amount = minus + amount;
     return amount;
@@ -53,7 +53,7 @@ function Balance({ address }) {
           )
           .then(async (response) => {
             // console.log(response.data.history.data)
-            var res = response.data.history.data;
+            const res = response.data.history.data;
             // console.log(res[res.length-1].balance)
             settotalValue(CommaFormatted(parseFloat(res[res.length - 1].balance).toFixed(2)));
           });

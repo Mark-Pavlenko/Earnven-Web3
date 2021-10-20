@@ -1,21 +1,20 @@
-import React, { useState } from 'react'
-import SearchTokens from '../searchTokens'
-import { useParams } from 'react-router-dom'
-import { Chart } from '../Chart/Chart'
-import { useNavigate } from 'react-router'
-import TransactionPerToken from '../transactionHistory/transactionPerToken copy'
+import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router';
+import { Chart } from '../Chart/Chart';
+import TransactionPerToken from '../transactionHistory/transactionPerToken';
 
 export default function Index() {
-  var navigate = useNavigate()
-  const { address } = useParams()
-  const { tokenid } = useParams()
-  console.log(tokenid)
+  const navigate = useNavigate();
+  const { address } = useParams();
+  const { tokenid } = useParams();
+  console.log(tokenid);
 
-  const [Token, setToken] = useState('')
+  const [Token, setToken] = useState('');
 
   function callbackFunction(childData) {
-    setToken(childData)
-    navigate(`/app/token/${childData}`)
+    setToken(childData);
+    navigate(`/app/token/${childData}`);
   }
 
   return (
@@ -30,5 +29,5 @@ export default function Index() {
         <TransactionPerToken address={address} tokenid={tokenid} />
       </center>
     </div>
-  )
+  );
 }

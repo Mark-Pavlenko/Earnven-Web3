@@ -8,22 +8,22 @@ function AccountBalance({ address }) {
   const [totalValue, settotalValue] = useState('00.00');
 
   function CommaFormatted(amount) {
-    var delimiter = ','; // replace comma if desired
-    var ab = amount.split('.', 2);
-    var d = ab[1];
-    var i = parseInt(ab[0]);
+    const delimiter = ','; // replace comma if desired
+    const ab = amount.split('.', 2);
+    const d = ab[1];
+    let i = parseInt(ab[0]);
     if (isNaN(i)) {
       return '';
     }
-    var minus = '';
+    let minus = '';
     if (i < 0) {
       minus = '-';
     }
     i = Math.abs(i);
-    var n = i.toString();
-    var a = [];
+    let n = i.toString();
+    const a = [];
     while (n.length > 3) {
-      var nn = n.substr(n.length - 3);
+      const nn = n.substr(n.length - 3);
       a.unshift(nn);
       n = n.substr(0, n.length - 3);
     }
@@ -34,7 +34,7 @@ function AccountBalance({ address }) {
     if (d.length < 1) {
       amount = n;
     } else {
-      amount = n + '.' + d;
+      amount = `${n}.${d}`;
     }
     amount = minus + amount;
     return amount;
@@ -46,19 +46,15 @@ function AccountBalance({ address }) {
     const accountAddress = localStorage.getItem('selected-account');
     const totalAccountValue = async () => {
       try {
-        const path =
-          'https://api.ethplorer.io/getAddressInfo/' +
-          accountAddress +
-          '?apiKey=EK-qSPda-W9rX7yJ-UY93y';
+        const path = `https://api.ethplorer.io/getAddressInfo/${accountAddress}?apiKey=EK-qSPda-W9rX7yJ-UY93y`;
         const response = await axios.get(path);
-        let tokens = response.data.tokens;
+        const { tokens } = response.data;
         total =
           response.data.ETH.price.rate * web3.utils.fromWei(response.data.ETH.rawBalance, 'ether');
         if (tokens !== undefined) {
-          for (var i = 0; i < tokens.length; i++) {
+          for (let i = 0; i < tokens.length; i++) {
             if (tokens[i].tokenInfo.price !== false) {
-              total =
-                total +
+              total +=
                 tokens[i].tokenInfo.price.rate * web3.utils.fromWei(tokens[i].rawBalance, 'ether');
             }
           }

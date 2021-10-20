@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Web3 from 'web3';
 import axios from 'axios';
-import ERC20ABI from '../abi/ERC20.json';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ERC20ABI from '../abi/ERC20.json';
 import TransparentButton from '../components/TransparentButton';
 import AmountInput from '../components/amountInput';
 
@@ -28,7 +28,7 @@ export default function TokenApproval() {
   }
 
   useEffect(() => {
-    var content = Addresses.map((object) => (
+    const content = Addresses.map((object) => (
       <>
         <br />
         <Accordion
@@ -77,9 +77,9 @@ export default function TokenApproval() {
             <TransparentButton
               value="Set new Allowance"
               onClick={async () => {
-                let web3 = window.web3;
+                const { web3 } = window;
                 const accounts = await web3.eth.getAccounts();
-                let Token = await new web3.eth.Contract(ERC20ABI, tokenAddress);
+                const Token = await new web3.eth.Contract(ERC20ABI, tokenAddress);
                 await Token.methods
                   .approve(object.address, (object.newAllowance * 10 ** 18).toString())
                   .send({ from: accounts[0] });
@@ -95,10 +95,10 @@ export default function TokenApproval() {
   useEffect(() => {
     async function getData() {
       await loadWeb3();
-      var addresses = [];
-      const web3 = window.web3;
+      const addresses = [];
+      const { web3 } = window;
       // const accounts = await web3.eth.getAccounts()
-      let Token = await new web3.eth.Contract(ERC20ABI, tokenAddress);
+      const Token = await new web3.eth.Contract(ERC20ABI, tokenAddress);
 
       // await axios.get(`https://api.ethplorer.io/getAddressHistory/${accounts[0]}?apiKey=EK-qSPda-W9rX7yJ-UY93y`,{},{})
       await axios
@@ -108,11 +108,11 @@ export default function TokenApproval() {
           {}
         )
         .then(async (response) => {
-          var ops = response.data.operations;
-          var buffer = [];
-          for (var i = 0; i < ops.length; i++) {
+          const ops = response.data.operations;
+          const buffer = [];
+          for (let i = 0; i < ops.length; i++) {
             if (ops[i].type === 'approve' && ops[i].tokenInfo.address === tokenAddress) {
-              var index = buffer.indexOf(ops[i].to);
+              const index = buffer.indexOf(ops[i].to);
               let contractName = 0;
               if (index === -1) {
                 await axios
@@ -125,14 +125,14 @@ export default function TokenApproval() {
                     // console.log(response.data.result[0].ContractName)
                     contractName = response.data.result[0].ContractName;
                   });
-                let allowance = await Token.methods
+                const allowance = await Token.methods
                   .allowance('0xbfbe5822a880a41c2075dc7e1d92663739cf119e', ops[i].to)
                   .call();
-                var object = {
+                const object = {
                   address: ops[i].to,
                   allowed: allowance,
                   symbol: ops[i].tokenInfo.symbol,
-                  contractName: contractName,
+                  contractName,
                 };
                 buffer.push(ops[i].to);
                 addresses.push(object);

@@ -25,11 +25,11 @@ export default function TokenCreator() {
       alert('Please Fill All The Details!');
     } else {
       await loadWeb3();
-      const web3 = window.web3;
+      const { web3 } = window;
       const accounts = await web3.eth.getAccounts();
 
-      let totalSupplyWei = web3.utils.toWei(TotalSupply, 'ether');
-      let tokenContract = await new web3.eth.Contract(
+      const totalSupplyWei = web3.utils.toWei(TotalSupply, 'ether');
+      const tokenContract = await new web3.eth.Contract(
         ERC20Factory,
         '0xc738e327F107115d7b1797005150b94165ed5A2a'
       );
@@ -73,7 +73,8 @@ export default function TokenCreator() {
               paddingLeft: '15px',
               paddingRight: '15px',
             }}
-            placeholder="Token Name*"></input>
+            placeholder="Token Name*"
+          />
 
           <br />
           <br />
@@ -95,7 +96,8 @@ export default function TokenCreator() {
               paddingLeft: '15px',
               paddingRight: '15px',
             }}
-            placeholder="Token Symbol*"></input>
+            placeholder="Token Symbol*"
+          />
 
           <br />
           <br />
@@ -117,7 +119,8 @@ export default function TokenCreator() {
               paddingLeft: '15px',
               paddingRight: '15px',
             }}
-            placeholder="Total Supply*"></input>
+            placeholder="Total Supply*"
+          />
 
           <br />
           <br />
@@ -139,7 +142,8 @@ export default function TokenCreator() {
               paddingLeft: '15px',
               paddingRight: '15px',
             }}
-            placeholder="Receiver Address*"></input>
+            placeholder="Receiver Address*"
+          />
 
           <br />
           <br />

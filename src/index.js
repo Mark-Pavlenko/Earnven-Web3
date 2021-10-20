@@ -5,7 +5,6 @@ import { HelmetProvider } from 'react-helmet-async';
 
 import App from './App';
 
-
 ReactDOM.render(
   <HelmetProvider>
     <BrowserRouter>
@@ -14,4 +13,3 @@ ReactDOM.render(
   </HelmetProvider>,
   document.getElementById('root')
 );
-

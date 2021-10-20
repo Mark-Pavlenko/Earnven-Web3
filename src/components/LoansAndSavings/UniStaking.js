@@ -1,34 +1,31 @@
-import React, {useEffect, useState} from 'react'
-import UniStakingABI from '../../abi/uniStakingContract.json'
-import Addresses from '../../contractAddresses'
+import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
 import axios from 'axios';
+import UniStakingABI from '../../abi/uniStakingContract.json';
+import Addresses from '../../contractAddresses';
 
 export default function UniStaking({ accountAddress }) {
+  const [USDTAmountUSD, setUSDTAmountUSD] = useState(0);
+  const [USDCAmountUSD, setUSDCAmountUSD] = useState(0);
+  const [DAIAmountUSD, setDAIAmountUSD] = useState(0);
+  const [WBTCAmountUSD, setWBTCAmuntUSD] = useState(0);
 
-    const [USDTAmountUSD, setUSDTAmountUSD] = useState(0);
-    const [USDCAmountUSD, setUSDCAmountUSD] = useState(0);
-    const [DAIAmountUSD, setDAIAmountUSD] = useState(0);
-    const [WBTCAmountUSD, setWBTCAmuntUSD] = useState(0);
+  useEffect(() => {
+    async function getBlockchainData() {
+      const web3 = new Web3(Web3.givenProvider || Addresses.alchemyAPI);
+      const UniStakeUSDT = new web3.eth.Contract(UniStakingABI, Addresses.uniStakingUSDT);
+      const UniStakeDAI = new web3.eth.Contract(UniStakingABI, Addresses.uniStakingDAI);
+      const UniStakeUSDC = new web3.eth.Contract(UniStakingABI, Addresses.uniStakingUSDC);
+      const UniStakeWBTC = new web3.eth.Contract(UniStakingABI, Addresses.uniStakingWBTC);
+      const USDTAmount = (await UniStakeUSDT.methods.balanceOf(accountAddress).call()) / 10 ** 18;
+      const DAIAmount = (await UniStakeDAI.methods.balanceOf(accountAddress).call()) / 10 ** 18;
+      const USDCAmount = (await UniStakeUSDC.methods.balanceOf(accountAddress).call()) / 10 ** 18;
+      const WBTCAmount = (await UniStakeWBTC.methods.balanceOf(accountAddress).call()) / 10 ** 18;
 
-    useEffect(() => {
+      // var graphData;
 
-        async function getBlockchainData(){
-            
-            var web3 = new Web3(Web3.givenProvider || Addresses.alchemyAPI);
-            const UniStakeUSDT = new web3.eth.Contract( UniStakingABI, Addresses.uniStakingUSDT );
-            const UniStakeDAI = new web3.eth.Contract( UniStakingABI, Addresses.uniStakingDAI );
-            const UniStakeUSDC = new web3.eth.Contract( UniStakingABI, Addresses.uniStakingUSDC );
-            const UniStakeWBTC = new web3.eth.Contract( UniStakingABI, Addresses.uniStakingWBTC );
-            var USDTAmount = await UniStakeUSDT.methods.balanceOf(accountAddress).call() / (10**18)
-            var DAIAmount = await UniStakeDAI.methods.balanceOf(accountAddress).call() / (10**18)
-            var USDCAmount = await UniStakeUSDC.methods.balanceOf(accountAddress).call() / (10**18)           
-            var WBTCAmount = await UniStakeWBTC.methods.balanceOf(accountAddress).call() / (10**18)
-
-            // var graphData;
-            
-            await axios.post(`https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2`,
-        {
+      await axios
+        .post(`https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2`, {
           query: `
           {
             USDT: pairs(
@@ -67,64 +64,71 @@ export default function UniStaking({ accountAddress }) {
               totalSupply
             }
             
-          }`})
+          }`,
+        })
         .then(async (response) => {
+          console.log(response.data.data);
 
-                console.log(response.data.data)
+          const USDTPrice =
+            response.data.data.USDT[0].reserveUSD / response.data.data.USDT[0].totalSupply;
+          const USDCPrice =
+            response.data.data.USDC[0].reserveUSD / response.data.data.USDC[0].totalSupply;
+          const DAIPrice =
+            response.data.data.DAI[0].reserveUSD / response.data.data.DAI[0].totalSupply;
+          const WBTCPrice =
+            response.data.data.WBTC[0].reserveUSD / response.data.data.WBTC[0].totalSupply;
 
-                var USDTPrice = response.data.data.USDT[0].reserveUSD/response.data.data.USDT[0].totalSupply
-                var USDCPrice = response.data.data.USDC[0].reserveUSD/response.data.data.USDC[0].totalSupply
-                var DAIPrice = response.data.data.DAI[0].reserveUSD/response.data.data.DAI[0].totalSupply
-                var WBTCPrice = response.data.data.WBTC[0].reserveUSD/response.data.data.WBTC[0].totalSupply
+          setUSDTAmountUSD(USDTPrice * USDTAmount);
+          setUSDCAmountUSD(USDCPrice * USDCAmount);
+          setDAIAmountUSD(DAIPrice * DAIAmount);
+          setWBTCAmuntUSD(WBTCPrice * WBTCAmount);
+        });
+    }
 
-                setUSDTAmountUSD(USDTPrice*USDTAmount)
-                setUSDCAmountUSD(USDCPrice*USDCAmount)
-                setDAIAmountUSD(DAIPrice*DAIAmount)
-                setWBTCAmuntUSD(WBTCPrice*WBTCAmount)
+    getBlockchainData();
+  }, []);
 
-            })
-        
-        }
-        
-        getBlockchainData()
-
-    }, [])  
-
-    return (
-        <div>
-            <div 
-            style={{
-              display: USDTAmountUSD+USDCAmountUSD+DAIAmountUSD+WBTCAmountUSD>0? '':'none'
-            }}
-            >
-              <div style={{
-                fontSize: '12px',
-                marginLeft: '15px',
-                
-              }}>
-              Uniswap LP Staking  --- {parseFloat(USDTAmountUSD+USDCAmountUSD+DAIAmountUSD+WBTCAmountUSD).toFixed(2)} USD
-              <br/><br/>
-              </div>
-              <div style={{marginLeft:'10%'}}>
-
-              <div style={{display:USDTAmountUSD>0?'':'none'}}>
-              USDT/ETH : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {parseFloat(USDTAmountUSD).toFixed(2)} USD<br/>
-              </div>
-              <div style={{display:USDCAmountUSD>0?'':'none'}}>
-              USDC/ETH : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {parseFloat(USDCAmountUSD).toFixed(2)} USD<br/>
-              </div>
-              
-              <div style={{display:DAIAmountUSD>0?'':'none'}}>
-              DAI/ETH : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {parseFloat(DAIAmountUSD).toFixed(2)} USD<br/>
-              </div>
-
-              <div style={{display:WBTCAmountUSD>0?'':'none'}}>
-              WBTC/ETH : &nbsp;&nbsp;&nbsp;&nbsp; {parseFloat(WBTCAmountUSD).toFixed(2)} USD<br/>
-              </div>
-              
-              </div>
-              <br/><br/>
-            </div>
+  return (
+    <div>
+      <div
+        style={{
+          display: USDTAmountUSD + USDCAmountUSD + DAIAmountUSD + WBTCAmountUSD > 0 ? '' : 'none',
+        }}>
+        <div
+          style={{
+            fontSize: '12px',
+            marginLeft: '15px',
+          }}>
+          Uniswap LP Staking ---{' '}
+          {parseFloat(USDTAmountUSD + USDCAmountUSD + DAIAmountUSD + WBTCAmountUSD).toFixed(2)} USD
+          <br />
+          <br />
         </div>
-    )
+        <div style={{ marginLeft: '10%' }}>
+          <div style={{ display: USDTAmountUSD > 0 ? '' : 'none' }}>
+            USDT/ETH : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {parseFloat(USDTAmountUSD).toFixed(2)}{' '}
+            USD
+            <br />
+          </div>
+          <div style={{ display: USDCAmountUSD > 0 ? '' : 'none' }}>
+            USDC/ETH : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {parseFloat(USDCAmountUSD).toFixed(2)} USD
+            <br />
+          </div>
+
+          <div style={{ display: DAIAmountUSD > 0 ? '' : 'none' }}>
+            DAI/ETH : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{' '}
+            {parseFloat(DAIAmountUSD).toFixed(2)} USD
+            <br />
+          </div>
+
+          <div style={{ display: WBTCAmountUSD > 0 ? '' : 'none' }}>
+            WBTC/ETH : &nbsp;&nbsp;&nbsp;&nbsp; {parseFloat(WBTCAmountUSD).toFixed(2)} USD
+            <br />
+          </div>
+        </div>
+        <br />
+        <br />
+      </div>
+    </div>
+  );
 }

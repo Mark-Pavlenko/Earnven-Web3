@@ -16,8 +16,8 @@ MHidden.propTypes = {
     'smUp',
     'mdUp',
     'lgUp',
-    'xlUp'
-  ]).isRequired
+    'xlUp',
+  ]).isRequired,
 };
 
 export default function MHidden({ width, children }) {

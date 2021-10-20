@@ -1,4 +1,4 @@
-var addresses = {
+const addresses = {
   uniRouter: '0x7a250d5630b4cf539739df2c5dacb4c659f2488d',
   uniFactory: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
   sushiRouter: '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F',
@@ -12,8 +12,7 @@ var addresses = {
   uniStakingWBTC: '0xCA35e32e7926b96A9988f61d510E038108d8068e',
   aaveStakingV2: '0x4da27a545c0c5B758a6BA100e3a049001de870f5',
   aaveStakedToken: '0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9',
-  alchemyAPI:
-    'wss://eth-mainnet.alchemyapi.io/v2/ivCp0kXZjI8E554gL_Ti_kClfVr_kAj1',
-}
+  alchemyAPI: 'wss://eth-mainnet.alchemyapi.io/v2/ivCp0kXZjI8E554gL_Ti_kClfVr_kAj1',
+};
 
-export default addresses
+export default addresses;

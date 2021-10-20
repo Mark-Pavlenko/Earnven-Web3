@@ -1,6 +1,6 @@
 import React from 'react';
 import GridLayout from 'react-grid-layout';
-import Chart from './../components/tokenDetails/cubicleChartDetails';
+import Chart from '../components/tokenDetails/cubicleChartDetails';
 
 export default function ChartsCubicle() {
   const layout = [

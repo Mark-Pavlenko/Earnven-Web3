@@ -1,6 +1,6 @@
 import React from 'react';
-import AllAssets from '../components/allAssets';
 import { useParams } from 'react-router-dom';
+import AllAssets from '../components/allAssets';
 
 export default function AllAssetsPage() {
   const { address } = useParams();

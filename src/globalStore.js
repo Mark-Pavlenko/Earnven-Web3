@@ -1,8 +1,8 @@
-var data = {
-    gasSelected : 0,
-    language : 'EN',
-    network : 'ethereum',
-    account:''
-}
+const data = {
+  gasSelected: 0,
+  language: 'EN',
+  network: 'ethereum',
+  account: '',
+};
 
-export {data}
+export { data };
