@@ -8,6 +8,7 @@ import addresses from '../../contractAddresses';
 import UniStaking from './UniStaking';
 import AaveStaking from './AaveStaking';
 import SushiStaking from './SushiStaking';
+import LiquityStaking from './LiquityStaking';
 
 export default function Index({ accountAddress }) {
   const [SavingsContent, setSavingsContent] = useState([]); // aave v2
@@ -1608,6 +1609,8 @@ export default function Index({ accountAddress }) {
         <SushiStaking accountAddress={accountAddress} />
         <br />
         <UniStaking accountAddress={accountAddress} />
+        <br />
+        <LiquityStaking accountAddress={accountAddress} />
       </div>
     </div>
   );
