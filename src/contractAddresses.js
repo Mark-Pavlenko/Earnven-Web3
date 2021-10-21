@@ -12,6 +12,8 @@ const addresses = {
   uniStakingWBTC: '0xCA35e32e7926b96A9988f61d510E038108d8068e',
   aaveStakingV2: '0x4da27a545c0c5B758a6BA100e3a049001de870f5',
   aaveStakedToken: '0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9',
+  convexStakingCRV: '0xCF50b810E57Ac33B91dCF525C6ddd9881B139332',
+  convexStakingcvxCRV: '0x3Fe65692bfCD0e6CF84cB1E7d24108E434A7587e',
   alchemyAPI: 'wss://eth-mainnet.alchemyapi.io/v2/ivCp0kXZjI8E554gL_Ti_kClfVr_kAj1',
 };
 

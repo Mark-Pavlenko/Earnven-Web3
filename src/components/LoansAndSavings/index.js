@@ -9,6 +9,7 @@ import UniStaking from './UniStaking';
 import AaveStaking from './AaveStaking';
 import SushiStaking from './SushiStaking';
 import LiquityStaking from './LiquityStaking';
+import ConvexStaking from './ConvexStaking';
 
 export default function Index({ accountAddress }) {
   const [SavingsContent, setSavingsContent] = useState([]); // aave v2
@@ -1602,15 +1603,15 @@ export default function Index({ accountAddress }) {
         </div>
         {CurveStakeContent}
         <br />
-
         <AaveStaking accountAddress={accountAddress} />
-
         <br />
         <SushiStaking accountAddress={accountAddress} />
         <br />
         <UniStaking accountAddress={accountAddress} />
         <br />
         <LiquityStaking accountAddress={accountAddress} />
+        <br />
+        <ConvexStaking accountAddress={accountAddress} />
       </div>
     </div>
   );
