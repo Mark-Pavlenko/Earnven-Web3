@@ -22,13 +22,13 @@ module.exports = {
   rules: {
     'react/no-direct-mutation-state': 'off',
     'react/jsx-no-target-blank': 'off',
-    'react/no-deprecated': 'off',
+    'react/no-deprecated': 'warn',
     'react/jsx-key': 'off',
     'react/prop-types': 'off',
     'no-extra-boolean-cast': 'off',
     'no-undef': 'off',
     'no-unused-vars': 'off',
-    'prettier/prettier': ['error'],
+    'prettier/prettier': ['error', { endOfLine: 'lf' }],
     'no-console': 'off',
   },
   settings: {
