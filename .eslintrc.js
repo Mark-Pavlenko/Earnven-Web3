@@ -22,7 +22,7 @@ module.exports = {
   rules: {
     'react/no-direct-mutation-state': 'off',
     'react/jsx-no-target-blank': 'off',
-    'react/no-deprecated': 'warn',
+    'react/no-deprecated': 'off',
     'react/jsx-key': 'off',
     'react/prop-types': 'off',
     'no-extra-boolean-cast': 'off',
