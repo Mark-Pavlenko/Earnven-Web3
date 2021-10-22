@@ -597,8 +597,6 @@ export default function Index({ accountAddress }) {
 
   useEffect(() => {
     console.log('addy:', accountAddress);
-    // setSavingsData([])
-    // SetLoansData([])
     async function getAaveV2Data() {
       await axios
         .post(`https://api.thegraph.com/subgraphs/name/aave/protocol-v2`, {
@@ -623,15 +621,21 @@ export default function Index({ accountAddress }) {
                   }`,
         })
         .then(async (response) => {
-          // console.log(response)
-          if (response.data.data) {
-            // console.log('addy2', accountAddress)
-
+          if (response.data && response.data.data) {
             const savings = [];
             const loans = [];
             let totDebt = 0;
             let totSave = 0;
-            const res = response.data.data.userReserves;
+            let res = response.data.data.userReserves;
+
+            // filtering res data for the user reserves with currentTokenBalance > `0`, where `0` is a string
+            // TBD, for now both checks are here for the 0 as a string and 0 as a number.
+            // Need to remove one of htem on the basis it is working on the main, staging and the production code.
+            res = res.filter((userReserve) => {
+              if (userReserve.currentATokenBalance !== '0') {
+                return true;
+              }
+            });
 
             for (var i = 0; i < res.length; i++) {
               await axios
@@ -641,7 +645,6 @@ export default function Index({ accountAddress }) {
                   {}
                 )
                 .then(async (priceData) => {
-                  // console.log(priceData.data);
                   res[i].image = priceData.data.image.thumb;
                   res[i].price = priceData.data.market_data.current_price.usd;
                 })
@@ -691,8 +694,6 @@ export default function Index({ accountAddress }) {
             setSavingsData(savings);
             SetLoansData(loans);
           }
-
-          // console.log(response.data.data.userReserves)
         });
     }
     async function getUniV2Data() {
@@ -728,7 +729,6 @@ export default function Index({ accountAddress }) {
         })
         .then(async (response) => {
           if (response.data.data) {
-            // console.log(response.data.data.liquidityPositions)
             let tot = 0;
             const pools = [];
             const res = response.data.data.liquidityPositions;
@@ -752,7 +752,6 @@ export default function Index({ accountAddress }) {
               }
             }
             pools.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
-            // console.log(pools)
             setUniV2Total(tot);
             setPoolsData(pools);
           }
@@ -785,7 +784,7 @@ export default function Index({ accountAddress }) {
                   `,
         })
         .then(async (response) => {
-          if (response.data.data) {
+          if (response.data && response.data.data) {
             const savings = [];
             const loans = [];
             let totDebt = 0;
@@ -932,9 +931,7 @@ export default function Index({ accountAddress }) {
         })
         .then(async (response) => {
           if (response.data.data.users[0]) {
-            // console.log(response.data.data.users)
             const res = response.data.data.users[0].smartTokenBalances;
-            // console.log(res)
             const pools = [];
             for (var i = 0; i < res.length; i++) {
               await axios
@@ -944,10 +941,7 @@ export default function Index({ accountAddress }) {
                   {}
                 )
                 .then(async (priceData) => {
-                  // console.log(priceData.data);
                   res[i].image = priceData.data.image.thumb;
-                  // console.log(res[i].image)
-                  // res[i].price = priceData.data.market_data.current_price.usd
                 })
                 .catch((err) => {});
 
@@ -961,10 +955,8 @@ export default function Index({ accountAddress }) {
               pools.push(object);
               setBancorTotal(object.value);
             }
-            // console.log(pools)
             setBancorPoolsData(pools);
           }
-          // console.log(response.data.data)
         });
     }
 
@@ -991,8 +983,6 @@ export default function Index({ accountAddress }) {
           let tot = 0;
           if (response.data.data.snxholders[0]) {
             const res = response.data.data.snxholders[0];
-
-            // console.log(res)
             const object = {};
             await axios
               .get(
@@ -1001,10 +991,7 @@ export default function Index({ accountAddress }) {
                 {}
               )
               .then(async (priceData) => {
-                // console.log(priceData.data);
                 res.image = priceData.data.image.thumb;
-                // console.log(res[i].image)
-                // res[i].price = priceData.data.market_data.current_price.usd
               })
               .catch((err) => {});
 
@@ -1017,7 +1004,6 @@ export default function Index({ accountAddress }) {
           }
           setSynthetixData(assets);
           setSynthetixTotal(tot);
-          // console.log(response)
         });
     }
 
@@ -1059,10 +1045,8 @@ export default function Index({ accountAddress }) {
           }
         )
         .then(async (response) => {
-          // console.log(response)
           if (response.data.data) {
             if (response.data.data.users[0]) {
-              // console.log(response.data.data.users[0].liquidityPositions)
               let tot = 0;
               const pools = [];
               const res = response.data.data.users[0].liquidityPositions;
@@ -1084,14 +1068,12 @@ export default function Index({ accountAddress }) {
                 pools.push(object);
               }
               pools.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
-              // console.log(pools)
               setSushiV2Total(tot);
               setSushiPoolsData(pools);
             }
           }
         });
     }
-    // c9596ce7bc47f7544cc808c3881427ed
     async function getYearnData() {
       await axios
         .post(
@@ -1133,10 +1115,8 @@ export default function Index({ accountAddress }) {
           }
         )
         .then(async (response) => {
-          // console.log(response)
           if (response.data.data) {
             const res = response.data.data.accountVaultPositions;
-            // console.log(res)
             const positions = [];
             let tot = 0;
             for (var i = 0; i < res.length; i++) {
@@ -1149,10 +1129,7 @@ export default function Index({ accountAddress }) {
                   {}
                 )
                 .then(async (priceData) => {
-                  // console.log(priceData);
                   res[i].image = priceData.data.image.thumb;
-                  // console.log(res[i].image)
-                  // res[i].price = priceData.data.market_data.current_price.usd
                 })
                 .catch((err) => {});
 
@@ -1171,7 +1148,6 @@ export default function Index({ accountAddress }) {
                 ((object.balanceShares / 10 ** object.shareTokenDecimals) * object.sharePrice) /
                 10 ** object.shareTokenDecimals;
               tot += parseFloat(object.totalInvestment).toFixed(2);
-              // console.log(object)
               positions.push(object);
             }
 
@@ -1215,12 +1191,9 @@ export default function Index({ accountAddress }) {
           }
         )
         .then(async (response) => {
-          // console.log(response)
-
           if (response.data.data) {
             if (response.data.data.accounts[0]) {
               const res = response.data.data.accounts[0].gauges;
-              // console.log(res)
               const stakings = [];
               let tot = 0;
               for (let i = 0; i < res.length; i++) {
@@ -1242,7 +1215,6 @@ export default function Index({ accountAddress }) {
               );
               setCurveStakeData(stakings);
               setCurveStakeTotal(tot);
-              // console.log(stakings)
             }
           }
         });
@@ -1273,7 +1245,6 @@ export default function Index({ accountAddress }) {
           }
         )
         .then(async (response) => {
-          // console.log(response)
           if (response.data.data) {
             if (response.data.data.depositors) {
               const res = response.data.data.depositors[0];
@@ -1284,7 +1255,6 @@ export default function Index({ accountAddress }) {
               await axios
                 .get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd')
                 .then(async (response2) => {
-                  // console.log(response2)
                   if (response2.data) {
                     object.ethPrice = response2.data.ethereum.usd;
                   }
@@ -1317,7 +1287,6 @@ export default function Index({ accountAddress }) {
     <div>
       <div
         style={{
-          // marginLeft:'25px',
           width: '100%',
           minWidth: '300px',
           border: '1px solid rgb(115, 115, 115)',
@@ -1362,7 +1331,6 @@ export default function Index({ accountAddress }) {
 
       <div
         style={{
-          // marginLeft:'25px',
           width: '100%',
           minWidth: '300px',
           border: '1px solid rgb(115, 115, 115)',
@@ -1408,7 +1376,6 @@ export default function Index({ accountAddress }) {
 
       <div
         style={{
-          // marginLeft:'25px',
           width: '100%',
           minWidth: '300px',
           marginTop: '20px',
