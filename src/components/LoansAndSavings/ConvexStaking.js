@@ -1,13 +1,14 @@
-/******************************************************************************************
+/**************************************************************************************************
 Purpose : This component is used to get stake token value from Aave Protocol
 Developed by : Prabhakaran.R
 Version log:
-------------------------------------------------------------------------------------------
-Version      Date                Description                             Developed/Fixed 
-------------------------------------------------------------------------------------------
-1.0          8/Sep/2021          Initial Development                     Prabhakaran.R
+---------------------------------------------------------------------------------------------------
+Version      Date                Description                                    Developed/Fixed 
+----------------------------------------------------------------------------------------------------
+1.0          8/Sep/2021          Initial Development                             Prabhakaran.R
+1.1         22/Oct/2021          Chnages to split cvx and cvxCRV staking value   Prabhakaran.R 
 
-*******************************************************************************************/
+**************************************************************************************************/
 import React, { useEffect, useState } from 'react';
 import ConvexCVXStakingABI from '../../abi/ConvexCVXContract.json';
 import ConvexCvxCRVContractABI from '../../abi/ConvexCvxCRVContract.json';
@@ -183,9 +184,25 @@ export default function ConvexStaking({ accountAddress }) {
                 display: 'inline-block',
                 marginLeft: '15px',
               }}>
-              Convex &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{' '}
-              {(parseFloat(ConvexCVXStakeAmt) + parseFloat(ConvexCvxCRVStakeAmt)).toLocaleString()}
-              USD
+              <br />
+              {parseFloat(ConvexCVXStakeAmt) ? (
+                <div>
+                  Convex CVX &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{' '}
+                  {parseFloat(ConvexCVXStakeAmt).toLocaleString()}
+                  USD
+                </div>
+              ) : (
+                ''
+              )}
+              {parseInt(ConvexCvxCRVStakeAmt) ? (
+                <div>
+                  Convex cvxCRV &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{' '}
+                  {parseFloat(ConvexCvxCRVStakeAmt).toLocaleString()}
+                  USD
+                </div>
+              ) : (
+                ''
+              )}
             </div>
           </div>
         </div>
