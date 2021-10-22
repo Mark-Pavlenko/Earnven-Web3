@@ -10,7 +10,7 @@ import AaveStaking from './AaveStaking';
 import SushiStaking from './SushiStaking';
 import LiquityStaking from './LiquityStaking';
 import ConvexStaking from './ConvexStaking';
-
+import { SnowSwapStaking } from './SnowSwapStaking';
 export default function Index({ accountAddress }) {
   const [SavingsContent, setSavingsContent] = useState([]); // aave v2
   const [LoansContent, setLoansContent] = useState([]); // aave v2
@@ -1612,6 +1612,8 @@ export default function Index({ accountAddress }) {
         <LiquityStaking accountAddress={accountAddress} />
         <br />
         <ConvexStaking accountAddress={accountAddress} />
+        <br />
+        <SnowSwapStaking accountAddress={accountAddress} />
       </div>
     </div>
   );
