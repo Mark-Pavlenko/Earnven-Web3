@@ -64,7 +64,7 @@ export default function Index({ accountAddress }) {
   const [CurveStakeData, setCurveStakeData] = useState([]); // Curve
   const [CurveStakeContent, setCurveStakeContent] = useState([]); // Curve
 
-  const [CurveStakeTotal, setCurveStakeTotal] = useState([]); // Curve Total
+  const [CurveStakeTotal, setCurveStakeTotal] = useState([0]); // Curve Total
 
   useEffect(() => {
     const content = SavingsData.map((object) => (
@@ -1015,7 +1015,7 @@ export default function Index({ accountAddress }) {
             query: `{
                     users(
                      where:{
-                       id:"0x84fb6f0a5969a5ce2cde8606235b40b39baedd4f"
+                       id:"${accountAddress}"
                      }
                    ){
                      liquidityPositions(first:1000
@@ -1049,27 +1049,31 @@ export default function Index({ accountAddress }) {
             if (response.data.data.users[0]) {
               let tot = 0;
               const pools = [];
-              const res = response.data.data.users[0].liquidityPositions;
-              for (let i = 0; i < res.length; i++) {
-                const object = {};
-                object.id = res[i].pair.id;
-                object.tokenBalance = res[i].liquidityTokenBalance;
-                object.tokenSupply = res[i].pair.totalSupply;
-                object.token0name = res[i].pair.token0.name;
-                object.token1name = res[i].pair.token1.name;
-                object.token0Symbol = res[i].pair.token0.symbol;
-                object.token1Symbol = res[i].pair.token1.symbol;
-                object.liquidity = res[i].pair.reserveUSD;
-                object.totalInvestment = (
-                  (res[i].liquidityTokenBalance / res[i].pair.totalSupply) *
-                  res[i].pair.reserveUSD
-                ).toFixed(2);
-                tot += parseFloat(object.totalInvestment);
-                pools.push(object);
+              try {
+                const res = response.data.data.users[0].liquidityPositions;
+                for (let i = 0; i < res.length; i++) {
+                  const object = {};
+                  object.id = res[i].pair.id;
+                  object.tokenBalance = res[i].liquidityTokenBalance;
+                  object.tokenSupply = res[i].pair.totalSupply;
+                  object.token0name = res[i].pair.token0.name;
+                  object.token1name = res[i].pair.token1.name;
+                  object.token0Symbol = res[i].pair.token0.symbol;
+                  object.token1Symbol = res[i].pair.token1.symbol;
+                  object.liquidity = res[i].pair.reserveUSD;
+                  object.totalInvestment = (
+                    (res[i].liquidityTokenBalance / res[i].pair.totalSupply) *
+                    res[i].pair.reserveUSD
+                  ).toFixed(2);
+                  tot += parseFloat(object.totalInvestment);
+                  pools.push(object);
+                }
+                pools.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
+                setSushiV2Total(tot);
+                setSushiPoolsData(pools);
+              } catch (err) {
+                console.log(err);
               }
-              pools.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
-              setSushiV2Total(tot);
-              setSushiPoolsData(pools);
             }
           }
         });
@@ -1168,7 +1172,7 @@ export default function Index({ accountAddress }) {
                 (
                   where:
                   {
-                    id:"0xdcabb0ea407cefeab0d1c149cc54c6539253541c"
+                    id:"${accountAddress}"
                   }
                 )
                 {
@@ -1196,23 +1200,27 @@ export default function Index({ accountAddress }) {
               const res = response.data.data.accounts[0].gauges;
               const stakings = [];
               let tot = 0;
-              for (let i = 0; i < res.length; i++) {
-                const object = {};
-                object.decimals = res[0].gauge.pool.lpToken.decimals;
-                object.symbol = res[0].gauge.pool.lpToken.symbol;
-                object.name = res[0].gauge.pool.lpToken.name;
-                object.balance = res[0].originalBalance / 10 ** object.decimals;
-                object.price = res[0].gauge.pool.virtualPrice;
-                object.totalInvestment = parseFloat(object.price * object.balance).toFixed(2);
-                tot += parseFloat(object.totalInvestment);
-                if (object.totalInvestment > 0) {
-                  stakings.push(object);
+              try {
+                for (let i = 0; i < res.length; i++) {
+                  const object = {};
+                  object.decimals = res[0].gauge.pool.lpToken.decimals;
+                  object.symbol = res[0].gauge.pool.lpToken.symbol;
+                  object.name = res[0].gauge.pool.lpToken.name;
+                  object.balance = res[0].originalBalance / 10 ** object.decimals;
+                  object.price = res[0].gauge.pool.virtualPrice;
+                  object.totalInvestment = parseFloat(object.price * object.balance).toFixed(2);
+                  tot += parseFloat(object.totalInvestment);
+                  if (object.totalInvestment > 0) {
+                    stakings.push(object);
+                  }
                 }
-              }
 
-              stakings.sort(
-                (a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment)
-              );
+                stakings.sort(
+                  (a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment)
+                );
+              } catch (err) {
+                console.log('Err from Curve staking process', err);
+              }
               setCurveStakeData(stakings);
               setCurveStakeTotal(tot);
             }
@@ -1548,7 +1556,6 @@ export default function Index({ accountAddress }) {
           height: 'auto',
           minHeight: '170px',
           borderRadius: '10px',
-          display: CurveStakeData.length > 0 ? '' : 'none',
         }}>
         <br />
         <center>
