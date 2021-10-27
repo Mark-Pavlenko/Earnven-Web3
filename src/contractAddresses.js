@@ -16,6 +16,9 @@ const addresses = {
   convexStakingcvxCRV: '0x3Fe65692bfCD0e6CF84cB1E7d24108E434A7587e',
   alchemyAPI: 'wss://eth-mainnet.alchemyapi.io/v2/ivCp0kXZjI8E554gL_Ti_kClfVr_kAj1',
   snowSwap: '0x7d2c8B58032844F222e2c80219975805DcE1921c',
+  compoundCDai: '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643',
+  compoundCUsdt: '0xf650C3d88D12dB855b8bf7D11Be6C55A4e07dCC9',
+  compoundCUsdc: '0x39aa39c021dfbae8fac545936693ac917d5e7563',
 };
 
 export default addresses;

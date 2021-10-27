@@ -11,7 +11,12 @@ import SushiStaking from './SushiStaking';
 import LiquityStaking from './LiquityStaking';
 import ConvexStaking from './ConvexStaking';
 import { SnowSwapStaking } from './SnowSwapStaking';
+// Below code is for task https://app.clickup.com/t/1je2y9d
+// import CompoundData from './Compound';
 export default function Index({ accountAddress }) {
+  // Below code is for task https://app.clickup.com/t/1je2y9d
+  // const [DisplaySavings, setDisplaySavings] = useState(null);
+  // const [TotalCompoundSavings, setTotalCompoundSavings] = useState(0);
   const [SavingsContent, setSavingsContent] = useState([]); // aave v2
   const [LoansContent, setLoansContent] = useState([]); // aave v2
   const [SavingsData, setSavingsData] = useState([]); // aave v2
@@ -901,7 +906,6 @@ export default function Index({ accountAddress }) {
             pools.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
             setBalancerTotal(tot);
             setBalancerPoolsData(pools);
-            // console.log(pools)
           }
         });
     }
@@ -1301,6 +1305,9 @@ export default function Index({ accountAddress }) {
           height: 'auto',
           minHeight: '200px',
           borderRadius: '10px',
+          // Below code is for task https://app.clickup.com/t/1je2y9d
+          // display:
+          //   SavingsData.length > 0 || CompoundSavingsData > 0 || DisplaySavings ? '' : 'none',
           display: SavingsData.length > 0 || CompoundSavingsData > 0 ? '' : 'none',
         }}>
         <br />
@@ -1308,7 +1315,9 @@ export default function Index({ accountAddress }) {
           <div style={{ fontSize: '25px' }}>
             Savings
             <br />
-            Total : {parseFloat(AaveSavingsTotal + CompSavingsTotal).toFixed(2)} USD
+            Total : {/* Below code is for task https://app.clickup.com/t/1je2y9d */}
+            {/* {parseFloat(AaveSavingsTotal + CompSavingsTotal + TotalCompoundSavings).toFixed(2)} USD */}
+            {parseFloat(AaveSavingsTotal + CompSavingsTotal).toFixed(2)} USD
             <br />
             <br />
           </div>
@@ -1324,6 +1333,12 @@ export default function Index({ accountAddress }) {
         </div>
         {SavingsContent}
         <br />
+        {/* Below code is for task https://app.clickup.com/t/1je2y9d */}
+        {/* <CompoundData
+          accountAddress={accountAddress}
+          displayProp={setDisplaySavings}
+          totalSavings={setTotalCompoundSavings}
+        /> */}
 
         <div
           style={{
