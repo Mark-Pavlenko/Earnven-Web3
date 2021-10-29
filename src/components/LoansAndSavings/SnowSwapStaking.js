@@ -11,7 +11,7 @@ Version           Date                         Description
 import Web3 from 'web3';
 import React, { useEffect, useState } from 'react';
 import Addresses from '../../contractAddresses';
-import SnowSwapABI from '../../abi/SnowSwapContratct.json';
+import SnowSwapABI from '../../abi/SnowSwapContract.json';
 import axios from 'axios';
 import SnowSwapLogo from '../../assets/icons/snowswap-snow-logo.svg';
 
@@ -20,7 +20,7 @@ export const SnowSwapStaking = ({ accountAddress }) => {
   const [flag, setflag] = useState(false);
   const [USDStakeValue, setUSDStakeValue] = useState();
   const [finalValue, setfinalValue] = useState();
-
+  const [finalClaim, setfinalClaim] = useState();
   async function loadWeb3() {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
@@ -36,37 +36,49 @@ export const SnowSwapStaking = ({ accountAddress }) => {
     await loadWeb3();
     const web3 = window.web3;
     const SnowSwapStakingContract = new web3.eth.Contract(SnowSwapABI, Addresses.snowSwap);
-    console.log('address of snowSwapStakeContract', Addresses.snowSwap);
-    console.log('SnowSwapStakingContract-Contract', SnowSwapStakingContract);
     try {
       var SnowSwapBalaceAmount = await SnowSwapStakingContract.methods
         .balanceOf(accountAddress)
         .call();
-      console.log('SnowSwapStakingContract-result', SnowSwapBalaceAmount);
     } catch (errr) {
       console.log('calling method error', errr);
     }
     return SnowSwapBalaceAmount;
   }
+
+  async function checkSnowSwapClaimStake() {
+    await loadWeb3();
+    const web3 = window.web3;
+    const SnowSwapStakingContract = new web3.eth.Contract(SnowSwapABI, Addresses.snowSwap);
+    try {
+      var Claimable = await SnowSwapStakingContract.methods.earned(accountAddress).call();
+    } catch (errr) {
+      console.log('calling method error', errr);
+    }
+    return Claimable;
+  }
   let balance = 0;
+  let claimable = 0;
   useEffect(() => {
     checkSnowSwapStake();
+    checkSnowSwapClaimStake();
     async function getBlockchainData() {
-      console.log('inside SnowSwap');
       const SnowSwapBalaceAmount = await checkSnowSwapStake(accountAddress);
+      const Claimable = await checkSnowSwapClaimStake(accountAddress);
+      // console.log('retunred values ---------', SnowSwapBalaceAmount[0]);
       await axios
         .get(
           `https://api.coingecko.com/api/v3/coins/ethereum/contract/0xfe9A29aB92522D14Fc65880d817214261D8479AE`
         )
         .then(async ({ data }) => {
-          console.log('usd price=', data.market_data.current_price.usd);
           setUSDStakeValue(data.market_data.current_price.usd);
           console.log('SnowSwapTotalStake', SnowSwapBalaceAmount);
           SnowSwapBalaceAmount !== 0 && setStakeBalance(SnowSwapBalaceAmount);
           balance = USDStakeValue * (SnowSwapBalaceAmount / 10 ** 18);
+          claimable = USDStakeValue * (Claimable / 10 ** 18);
           setfinalValue(parseFloat(balance).toFixed(2));
+          setfinalClaim(parseFloat(claimable).toFixed(2));
           balance != 0 && setflag(true);
-          console.log('final value', finalValue);
         })
         .catch((err) => {
           console.log('error', err);
@@ -74,12 +86,12 @@ export const SnowSwapStaking = ({ accountAddress }) => {
     }
 
     getBlockchainData();
-  }, [accountAddress, finalValue]);
+  }, [accountAddress, finalValue, USDStakeValue]);
 
   return (
     <>
       <div>
-        {finalValue && StakeBalance > 0 && flag ? (
+        {finalValue && StakeBalance > 0 && flag && (
           <div>
             <div
               style={{
@@ -89,30 +101,45 @@ export const SnowSwapStaking = ({ accountAddress }) => {
               SnowSwap Staking --- {finalValue} USD
             </div>
             <div>
-              <img
-                src={SnowSwapLogo}
-                style={{
-                  height: '30px',
-                  marginTop: '20px',
-                  display: 'inline-block',
-                  marginLeft: '30px',
-                }}
-                alt=""
-              />
+              <tr>
+                <td>
+                  <div>
+                    <img
+                      src={SnowSwapLogo}
+                      style={{
+                        height: '30px',
+                        marginTop: '20px',
+                        display: 'inline-block',
+                        marginLeft: '30px',
+                      }}
+                      alt=""
+                    />
+                  </div>
+                </td>
+                <td style={{ marginTop: '-10px' }}>
+                  <div
+                    style={{
+                      fontSize: '12px',
+                      display: 'inline-block',
+                      marginLeft: '15px',
+                    }}>
+                    &nbsp;&nbsp;Snow
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{' '}
+                    {finalValue} USD
+                  </div>
+                </td>
+              </tr>
+
               <div
                 style={{
                   fontSize: '12px',
                   display: 'inline-block',
-                  marginLeft: '15px',
+                  marginLeft: '70px',
                 }}>
-                &nbsp;&nbsp;Snowstorm
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{' '}
-                {finalValue} USD
+                &nbsp;&nbsp; Claimable Snow &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {finalClaim} USD
               </div>
             </div>
           </div>
-        ) : (
-          ''
         )}
       </div>
     </>
