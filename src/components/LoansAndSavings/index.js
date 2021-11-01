@@ -71,6 +71,11 @@ export default function Index({ accountAddress }) {
 
   const [CurveStakeTotal, setCurveStakeTotal] = useState([0]); // Curve Total
 
+  // BalancerV2
+  const [BalancerTotalv2, setBalancerTotalv2] = useState([]);
+  const [BalancerPoolsDatav2, setBalancerPoolsDatav2] = useState([]);
+  const [BalancerPoolsContentv2, setBalancerPoolsContentv2] = useState([]);
+
   useEffect(() => {
     const content = SavingsData.map((object) => (
       <Tooltip
@@ -373,7 +378,7 @@ export default function Index({ accountAddress }) {
             Total Investment : {object.totalInvestment} USD
           </>
         }>
-        <div style={{ width: '90%', marginTop: '12px', marginLeft: '30px' }}>
+        <div style={{ width: '90%', marginTop: '12px', marginLeft: '20px' }}>
           <br />
           <div
             style={{
@@ -383,24 +388,95 @@ export default function Index({ accountAddress }) {
               wordBreak: 'break-word',
             }}>
             {object.tokens.map((obj) => (
-              <>${obj.symbol}-</>
+              <>
+                <>${obj.symbol}-</>
+              </>
+            ))}
+            {object.tokens.map((obj) => (
+              <>
+                <>{parseFloat(obj.balance).toFixed(2)}&nbsp;+</>
+              </>
             ))}
           </div>
 
-          <div style={{ display: 'inline-block', width: '10%' }}>
-            {/* {object.value} ${object.symbol} */}
-          </div>
+          {/* <div style={{ display: 'inline-block', width: '10%' }}>
+            {object.value} ${object.symbol}
+          </div> */}
 
-          <div style={{ display: 'inline-block', width: '30%', fontSize: '13px' }}>
+          <div
+            style={{ display: 'inline-block', width: '30%', fontSize: '15px', marginLeft: '20px' }}>
             {object.totalInvestment} USD
           </div>
-          <hr style={{ width: '30%' }} />
+          {/* <hr style={{ width: '30%' }} /> */}
         </div>
       </Tooltip>
     ));
 
     setBalancerPoolsContent(content);
   }, [BalancerPoolsData]);
+
+  useEffect(() => {
+    const content = BalancerPoolsDatav2.map((object) => (
+      <Tooltip
+        title={
+          <>
+            <div
+              style={{
+                display: 'inline-block',
+                textAlign: 'left',
+                wordBreak: 'break-word',
+              }}>
+              Tokens in Pool: <br />
+              {object.tokens.map((obj) => (
+                <>
+                  ${obj.symbol}
+                  <br />
+                </>
+              ))}
+            </div>
+            <br />
+            <br />
+            Pool Percentage : {parseFloat(object.poolPercentage).toFixed(2)} % <br />
+            Pool Liquidity : {parseFloat(object.liquidity).toFixed(2)} USD <br />
+            Total Investment : {object.totalInvestment} USD
+          </>
+        }>
+        <div style={{ width: '90%', marginTop: '12px', marginLeft: '20px' }}>
+          <br />
+          <div
+            style={{
+              display: 'inline-block',
+              width: '60%',
+              textAlign: 'left',
+              wordBreak: 'break-word',
+            }}>
+            {object.tokens.map((obj) => (
+              <>
+                <>${obj.symbol}-</>
+              </>
+            ))}
+            {object.tokens.map((obj) => (
+              <>
+                <>{parseFloat(obj.balance).toFixed(2)}&nbsp;+</>
+              </>
+            ))}
+          </div>
+
+          {/* <div style={{ display: 'inline-block', width: '10%' }}>
+            {object.value} ${object.symbol}
+          </div> */}
+
+          <div
+            style={{ display: 'inline-block', width: '30%', fontSize: '15px', marginLeft: '20px' }}>
+            {object.totalInvestment} USD
+          </div>
+          {/* <hr style={{ width: '30%' }} /> */}
+        </div>
+      </Tooltip>
+    ));
+
+    setBalancerPoolsContentv2(content);
+  }, [BalancerPoolsDatav2]);
 
   useEffect(() => {
     const content = BancorPoolsData.map((object) => (
@@ -884,7 +960,6 @@ export default function Index({ accountAddress }) {
         })
         .then(async (response) => {
           if (response.data.data.users[0]) {
-            // console.log(response.data.data.users[0].sharesOwned)
             const res = response.data.data.users[0].sharesOwned;
             const pools = [];
             let tot = parseInt(0);
@@ -896,7 +971,7 @@ export default function Index({ accountAddress }) {
               object.totalShares = res[i].poolId.totalShares;
               object.poolPercentage = (res[i].balance / res[i].poolId.totalShares) * 100;
               object.totalInvestment = parseFloat(
-                (res[i].balance / res[i].poolId.totalShares) * res[i].poolId.liquidity
+                (res[i].poolId.liquidity / res[i].poolId.totalShares) * res[i].balance
               ).toFixed(2);
               if (object.totalInvestment > 0) {
                 tot += parseFloat(object.totalInvestment).toFixed(2);
@@ -906,6 +981,65 @@ export default function Index({ accountAddress }) {
             pools.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
             setBalancerTotal(tot);
             setBalancerPoolsData(pools);
+          }
+        });
+    }
+    // v2
+    async function getBalancerV2Data() {
+      await axios
+        .post(`https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-v2`, {
+          query: `{
+            users
+            (
+              where:{
+                id:"${accountAddress}"
+              }
+            )
+            {
+              id
+              sharesOwned {
+                id
+                balance
+                poolId{
+                  symbol
+                  tokensList
+                  tokens{
+                    symbol
+                    balance
+                  }
+                  tokensList
+                  totalShares
+                  totalLiquidity
+                }
+              }
+            }
+          }`,
+        })
+        .then(async (response) => {
+          if (response.data.data.users[0]) {
+            const res = response.data.data.users[0].sharesOwned;
+            const pools = [];
+            let tot = parseInt(0);
+            for (let i = 0; i < res.length; i++) {
+              const object = {};
+              object.balance = res[i].balance;
+              object.liquidity = res[i].poolId.totalLiquidity;
+              object.tokens = res[i].poolId.tokens;
+              object.totalShares = res[i].poolId.totalShares;
+              object.poolPercentage = (res[i].balance / res[i].poolId.totalShares) * 100;
+              object.totalInvestment = parseFloat(
+                (res[i].poolId.totalLiquidity / res[i].poolId.totalShares) * res[i].balance
+              ).toFixed(2);
+              if (object.totalInvestment > 0) {
+                tot += parseFloat(object.totalInvestment).toFixed(2);
+                console.log('totalv2', tot, ' @ ');
+                pools.push(object);
+                console.log('objectv2', object);
+              }
+            }
+            pools.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
+            setBalancerTotalv2(parseFloat(tot).toFixed(2));
+            setBalancerPoolsDatav2(pools);
           }
         });
     }
@@ -1291,7 +1425,7 @@ export default function Index({ accountAddress }) {
     getSushiV2Data();
     getYearnData();
     getCurveData();
-
+    getBalancerV2Data();
     getBeaconData();
   }, [accountAddress]);
 
@@ -1418,9 +1552,10 @@ export default function Index({ accountAddress }) {
         <center>
           <div style={{ fontSize: '25px' }}>
             Pools <br />
-            Total : {parseFloat(UniV2Total + SushiV2Total + BalancerTotal + BancorTotal).toFixed(
-              2
-            )}{' '}
+            Total :{' '}
+            {parseFloat(
+              UniV2Total + SushiV2Total + BalancerTotal + BalancerTotalv2 + BancorTotal
+            ).toFixed(2)}{' '}
             USD
             <br />
             <br />
@@ -1458,6 +1593,17 @@ export default function Index({ accountAddress }) {
           Balancer --- {BalancerTotal} USD
         </div>
         {BalancerPoolsContent}
+        <br />
+
+        <div
+          style={{
+            fontSize: '12px',
+            marginLeft: '15px',
+            display: BalancerPoolsDatav2.length > 0 ? '' : 'none',
+          }}>
+          Balancer V2 --- {BalancerTotalv2} USD
+        </div>
+        {BalancerPoolsContentv2}
         <br />
 
         <div
