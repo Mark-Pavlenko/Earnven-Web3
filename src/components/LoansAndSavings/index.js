@@ -463,11 +463,12 @@ export default function Index({ accountAddress }) {
                 <>${obj.symbol}-</>
               </>
             ))}
-            {object.tokens.map((obj) => (
-              <>
-                <>{parseFloat(obj.balance).toFixed(2)}&nbsp;+</>
-              </>
-            ))}
+            <>
+              <>&nbsp;{parseFloat(object.balance).toFixed(2)}&nbsp;-</>
+            </>
+            <>
+              <>&nbsp;{parseFloat(object.price).toFixed(2)}&nbsp;USD</>
+            </>
           </div>
 
           {/* <div style={{ display: 'inline-block', width: '10%' }}>
@@ -1032,6 +1033,7 @@ export default function Index({ accountAddress }) {
               object.totalInvestment = parseFloat(
                 (res[i].poolId.totalLiquidity / res[i].poolId.totalShares) * res[i].balance
               ).toFixed(2);
+              object.price = object.totalInvestment / res[i].balance;
               if (object.totalInvestment > 0) {
                 tot += parseFloat(object.totalInvestment).toFixed(2);
                 pools.push(object);
