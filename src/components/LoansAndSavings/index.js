@@ -516,7 +516,7 @@ export default function Index({ accountAddress }) {
             </div> */}
 
           <div style={{ display: 'inline-block', width: '30%', fontSize: '13px' }}>
-            {object.value} Tokens
+            {object.value} {object.valueType}
           </div>
 
           <br />
@@ -677,7 +677,6 @@ export default function Index({ accountAddress }) {
   }, [CurveStakeData]);
 
   useEffect(() => {
-    console.log('addy:', accountAddress);
     async function getAaveV2Data() {
       await axios
         .post(`https://api.thegraph.com/subgraphs/name/aave/protocol-v2`, {
@@ -762,7 +761,6 @@ export default function Index({ accountAddress }) {
                 };
 
                 totDebt += parseFloat(t.totalInvestment);
-                console.log('debt:', totDebt);
                 loans.push(t);
               }
             }
@@ -870,7 +868,6 @@ export default function Index({ accountAddress }) {
             const loans = [];
             let totDebt = 0;
             let totSave = 0;
-            // console.log(response.data.data.accountCTokens)
             const res = response.data.data.accountCTokens;
             for (var i = 0; i < res.length; i++) {
               await axios
@@ -880,9 +877,7 @@ export default function Index({ accountAddress }) {
                   {}
                 )
                 .then(async (priceData) => {
-                  // console.log(priceData.data);
                   res[i].image = priceData.data.image.thumb;
-                  // console.log(res[i].image)
                   // res[i].price = priceData.data.market_data.current_price.usd
                 })
                 .catch((err) => {});
@@ -920,7 +915,6 @@ export default function Index({ accountAddress }) {
             }
             savings.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
             loans.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
-            // console.log(loans, savings)
             setCompLoansTotal(totDebt);
             setCompSavingsTotal(totSave);
             SetCompoundLoansData(loans);
@@ -1032,9 +1026,7 @@ export default function Index({ accountAddress }) {
               ).toFixed(2);
               if (object.totalInvestment > 0) {
                 tot += parseFloat(object.totalInvestment).toFixed(2);
-                console.log('totalv2', tot, ' @ ');
                 pools.push(object);
-                console.log('objectv2', object);
               }
             }
             pools.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
@@ -1078,18 +1070,38 @@ export default function Index({ accountAddress }) {
                   {},
                   {}
                 )
-                .then(async (priceData) => {
-                  res[i].image = priceData.data.image.thumb;
+                .then(async ({ data }) => {
+                  res[i].image = data.image.thumb;
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+
+              await axios
+                .get(`https://api-v2.bancor.network/pools`)
+                .then(async ({ data }) => {
+                  let pool = data.data.filter((item) => {
+                    return item.symbol === res[i].smartToken.symbol;
+                  });
+                  res[i].type = 'Token';
+                  if (pool.length > 0) {
+                    res[i].type = 'USD';
+                    res[i].usdPrice =
+                      parseFloat(pool[0].liquidity.usd) / parseFloat(pool[0].supply);
+                  }
                 })
                 .catch((err) => {});
 
               const object = {};
               object.name = res[i].smartToken.name;
-              object.value = parseFloat(res[i].balance / 10 ** res[i].smartToken.decimals).toFixed(
-                2
-              );
+              object.value = !res[i].usdPrice
+                ? parseFloat(res[i].balance / 10 ** res[i].smartToken.decimals).toFixed(2)
+                : parseFloat(
+                    parseFloat(res[i].balance / 10 ** res[i].smartToken.decimals) * res[i].usdPrice
+                  ).toFixed(2);
               object.symbol = res[i].smartToken.symbol;
               object.image = res[i].image;
+              object.valueType = res[i].type;
               pools.push(object);
               setBancorTotal(object.value);
             }
@@ -1408,7 +1420,6 @@ export default function Index({ accountAddress }) {
 
               object.totalInvestment = parseFloat(object.ethPrice * object.totalDeposit).toFixed(2);
               tot += parseFloat(object.totalInvestment).toFixed(2);
-              console.log(object);
               setBeaconTotal(tot);
               setBeaconData(object);
             }
