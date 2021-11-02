@@ -11,6 +11,7 @@ import SushiStaking from './SushiStaking';
 import LiquityStaking from './LiquityStaking';
 import ConvexStaking from './ConvexStaking';
 import { SnowSwapStaking } from './SnowSwapStaking';
+import CurveLpToken from './CurveLpToken';
 // Below code is for task https://app.clickup.com/t/1je2y9d
 // import CompoundData from './Compound';
 export default function Index({ accountAddress }) {
@@ -75,6 +76,13 @@ export default function Index({ accountAddress }) {
   const [BalancerTotalv2, setBalancerTotalv2] = useState([]);
   const [BalancerPoolsDatav2, setBalancerPoolsDatav2] = useState([]);
   const [BalancerPoolsContentv2, setBalancerPoolsContentv2] = useState([]);
+
+  //Curve Lp token
+  const [CurveLpdata, setCurveLpData] = useState([]); // get curve lp token data
+  //get the value from the child component of the curve lp token
+  const getCurveLpToken = (data) => {
+    setCurveLpData(data);
+  };
 
   useEffect(() => {
     const content = SavingsData.map((object) => (
@@ -1760,6 +1768,25 @@ export default function Index({ accountAddress }) {
         <ConvexStaking accountAddress={accountAddress} />
         <br />
         <SnowSwapStaking accountAddress={accountAddress} />
+      </div>
+
+      <div
+        style={{
+          // marginLeft:'25px',
+          width: '110%',
+          marginRight: '10px',
+          marginTop: '20px',
+          minWidth: '300px',
+          border: '1px solid rgb(115, 115, 115)',
+          height: 'auto',
+          minHeight: '170px',
+          borderRadius: '10px',
+          display: CurveLpdata.length > 0 ? '' : 'none',
+        }}>
+        <center> Curve Lp Token </center>
+        <br />
+        <CurveLpToken accountAddress={accountAddress} onCurveLptoken={getCurveLpToken} />
+        <br />
       </div>
     </div>
   );

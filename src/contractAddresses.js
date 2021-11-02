@@ -19,6 +19,7 @@ const addresses = {
   compoundCDai: '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643',
   compoundCUsdt: '0xf650C3d88D12dB855b8bf7D11Be6C55A4e07dCC9',
   compoundCUsdc: '0x39aa39c021dfbae8fac545936693ac917d5e7563',
+  CuvePoolRegistry: '0x7D86446dDb609eD0F5f8684AcF30380a356b2B4c',
 };
 
 export default addresses;
