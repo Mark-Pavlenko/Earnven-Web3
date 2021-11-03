@@ -1,13 +1,14 @@
-/** *********************************************************************************
+/** ***********************************************************************************************
 Purpose : This component is used to get stake token value from Aave Protocol
 Developed by : Prabhakaran.R
 Version log:
-----------------------------------------------------------------------------------
-Version           Date                         Description
----------------------------------------------------------------------------------
-1.0               8/Sep/2021                   Initial Development
+--------------------------------------------------------------------------------------------------
+Version           Date                         Description                    Developed by
+--------------------------------------------------------------------------------------------------
+1.0               8/Sep/2021                   Initial Development            Prabhakaran.R
+1.1               2/Nov/2021                   To include stkABPT             Prabhakaran.R
 
-*********************************************************************************** */
+**************************************************************************************************/
 import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
 import axios from 'axios';
@@ -18,9 +19,7 @@ import aaveLogo from '../../assets/icons/aave-logo.png';
 export default function AaveStaking({ accountAddress }) {
   const [AaveAmountUSD, setAaveAmountUSD] = useState(0);
   const [AaveUsdPrice, setAaveUsdPrice] = useState();
-  const [AaveBalanceAmt, setAaveBalanceAmt] = useState();
-
-  // const accountAddress = '0xc75a5f6add3763942631e1d41ba7024a36978779'
+  const [AaveStkABPTAmountUSD, setAaveStkABPTAmountUSD] = useState(0);
 
   async function loadWeb3() {
     if (window.ethereum) {
@@ -32,35 +31,47 @@ export default function AaveStaking({ accountAddress }) {
       window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
     }
   }
-
-  async function checkAaveStake(accountAddress) {
+  //This function is to get AaveStake value from the Aave Contract
+  async function checkAaveStake(accountAddress, contractAddress) {
     await loadWeb3();
     const { web3 } = window;
-    const AaveStakingContract = new web3.eth.Contract(AaveStakingABI, Addresses.aaveStakingV2);
+    const AaveStakingContract = new web3.eth.Contract(AaveStakingABI, contractAddress);
     const AaveBalaceAmount = await AaveStakingContract.methods.balanceOf(accountAddress).call();
-    // console.log('AaveStakingContract-', AaveStakingContract)
-
     return AaveBalaceAmount;
   }
-
+  //use this hook function to get the Aave staking value for the given user
   useEffect(() => {
     async function getBlockchainData() {
-      const AaveBalaceAmount = await checkAaveStake(accountAddress);
-      console.log('AaveTotalStake', AaveBalaceAmount);
-      setAaveBalanceAmt(AaveBalaceAmount);
-
+      //Call the contract to get the value for staked Aave
+      const AaveBalaceAmount = await checkAaveStake(accountAddress, Addresses.aaveStakingV2);
+      //call the contract to get the value from Staked Balancer LP
+      const stkABPTBalance = await checkAaveStake(accountAddress, Addresses.aavestkABPT);
       // get the Aave token USD price from aave api data pools
+      let statkeUSDValue;
+      let stkABPTUSDValue;
       await axios
         .get('https://aave-api-v2.aave.com/data/pools', {})
         .then(async (response) => {
-          const AaveUsdPrice = response.data[0].price.usd;
-          const stakeValue = AaveBalaceAmount / 10 ** 18;
-
-          const statkeUSDValue = AaveUsdPrice * stakeValue;
-          console.log('Aave USD Price', AaveUsdPrice.toFixed(3));
-          console.log('Aave Staking Value in USD', statkeUSDValue);
+          //To get value for staked Aave
+          if (AaveBalaceAmount != 0) {
+            if (response.data[0].symbol === 'stkAAVE') {
+              const AaveUsdPrice = response.data[0].price.usd;
+              const stakeValue = AaveBalaceAmount / 10 ** 18;
+              statkeUSDValue = AaveUsdPrice * stakeValue;
+            }
+          }
+          //To get value for  Staked Balancer LP - stkABPT
+          if (stkABPTBalance != 0) {
+            if (response.data[1].symbol === 'stkABPT') {
+              const AaveUsdPrice = response.data[1].price.usd;
+              const stakeValue = stkABPTBalance / 10 ** 18;
+              stkABPTUSDValue = AaveUsdPrice * stakeValue;
+            }
+          }
+          //store the calc Aave staking value into state variable
           setAaveUsdPrice(parseFloat(AaveUsdPrice).toFixed(3));
           setAaveAmountUSD(statkeUSDValue.toLocaleString());
+          setAaveStkABPTAmountUSD(stkABPTUSDValue.toLocaleString());
         })
         .catch((err) => {
           console.log('Error Message message', err);
@@ -72,14 +83,18 @@ export default function AaveStaking({ accountAddress }) {
 
   return (
     <div>
-      {parseInt(AaveAmountUSD) ? (
+      {parseInt(AaveAmountUSD) || parseInt(AaveStkABPTAmountUSD) ? (
         <div>
           <div
             style={{
               fontSize: '12px',
               marginLeft: '15px',
             }}>
-            Aave Staking --- {AaveAmountUSD} USD
+            Aave Staking ---{' '}
+            {parseFloat(AaveStkABPTAmountUSD) > 0
+              ? (parseFloat(AaveStkABPTAmountUSD) + parseFloat(AaveAmountUSD)).toLocaleString()
+              : AaveAmountUSD.toLocaleString()}{' '}
+            USD
           </div>
           <div>
             <img
@@ -88,7 +103,7 @@ export default function AaveStaking({ accountAddress }) {
                 height: '30px',
                 marginTop: '',
                 display: 'inline-block',
-                marginLeft: '15px',
+                marginLeft: '20px',
               }}
               alt=""
             />
@@ -98,7 +113,16 @@ export default function AaveStaking({ accountAddress }) {
                 display: 'inline-block',
                 marginLeft: '15px',
               }}>
-              AAVE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {AaveAmountUSD} USD
+              <br />
+              AAVE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {AaveAmountUSD} USD
+              <br />
+              {parseInt(AaveStkABPTAmountUSD) ? (
+                <React.Fragment>
+                  stkABPT &nbsp;&nbsp;&nbsp;&nbsp; {AaveStkABPTAmountUSD} USD
+                </React.Fragment>
+              ) : (
+                ''
+              )}
             </div>
           </div>
         </div>
