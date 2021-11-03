@@ -6,7 +6,9 @@ Version log:
 Version      Date                Description                                    Developed/Fixed 
 ----------------------------------------------------------------------------------------------------
 1.0          8/Sep/2021          Initial Development                             Prabhakaran.R
-1.1         22/Oct/2021          Chnages to split cvx and cvxCRV staking value   Prabhakaran.R 
+1.1         22/Oct/2021          Chanages to split cvx and cvxCRV staking value  Prabhakaran.R 
+1.2         03/Nov/2021          Fix to display cvxCRV staking value 
+                                 which get filtered while display in UI          Prabhakaran.R 
 
 **************************************************************************************************/
 import React, { useEffect, useState } from 'react';
@@ -49,8 +51,6 @@ export default function ConvexStaking({ accountAddress }) {
     var ConvexCVXBalaceAmount = await ConvexCVXStakingContract.methods
       .balanceOf(accountAddress)
       .call();
-    //console.log('AaveStakingContract-', AaveStakingContract)
-
     return ConvexCVXBalaceAmount;
   }
 
@@ -66,8 +66,6 @@ export default function ConvexStaking({ accountAddress }) {
     var ConvexCvxCRVBalaceAmount = await ConvexCvxCRVContract.methods
       .balanceOf(accountAddress)
       .call();
-    //console.log('AaveStakingContract-', AaveStakingContract)
-
     return ConvexCvxCRVBalaceAmount;
   }
 
@@ -76,11 +74,10 @@ export default function ConvexStaking({ accountAddress }) {
     async function getBlockchainData() {
       //below logic is get the CVX token staking value
       const ConvexCVXBalaceAmount = await checkConvexStake(accountAddress);
-      //if (parseInt(ConvexCVXBalaceAmount) != 0) {
+
       const ConvexCVXBalance = ConvexCVXBalaceAmount / 10 ** 18;
       setConvexCVXAmount(ConvexCVXBalance);
 
-      console.log('Convex CVX ', ConvexCVXBalance);
       try {
         //get the current price of the token 'Convex Token (CVX)' - 0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b
         await axios
@@ -94,10 +91,9 @@ export default function ConvexStaking({ accountAddress }) {
             let ConvexCVXprice = priceData.data.market_data.current_price.usd;
 
             const ConvexCVXStakeValue = parseFloat(ConvexCVXBalance * ConvexCVXprice).toFixed(2);
-            console.log('Convex CVX stake value', ConvexCVXStakeValue);
-            // console.log('Convex image url', ConvexImageUrl)
+
             setConvexCVXUsdPrice(ConvexCVXprice);
-            //setConvexCVXStakeAmt(parseFloat(ConvexCVXStakeValue).toLocaleString())
+
             setConvexCVXStakeAmt(ConvexCVXStakeValue);
             setConvexCVXImage(ConvexImageUrl);
           })
@@ -105,7 +101,6 @@ export default function ConvexStaking({ accountAddress }) {
       } catch (err) {
         console.log(err);
       }
-      //} //end of if not null validation
     }
 
     getBlockchainData();
@@ -117,11 +112,10 @@ export default function ConvexStaking({ accountAddress }) {
       //below logic is get the CVX token staking value
       const ConvexCvxCRVBalaceAmount = await checkCvxCRVStake(accountAddress);
       //proceed with to derive value only if the balance is available
-      //if (parseInt(ConvexCvxCRVBalaceAmount) != 0) {
+
       const ConvexCvxCRVBalance = ConvexCvxCRVBalaceAmount / 10 ** 18;
       setConvexCvxCRVAmount(ConvexCvxCRVBalance);
 
-      console.log('Convex cvxCRV', ConvexCvxCRVBalance);
       try {
         //get the current price of the token 'Convex Token (CVX)' - 0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7
         await axios
@@ -136,19 +130,15 @@ export default function ConvexStaking({ accountAddress }) {
             const ConvexCvxCRVStakeValue = parseFloat(ConvexCvxCRVBalance * ConvexCVXprice).toFixed(
               2
             );
-            console.log('Convex cvxCRV stake value', ConvexCvxCRVStakeValue);
-            // console.log('Convex image url', ConvexImageUrl)
+
             setConvexCvxCRVUsdPrice(ConvexCVXprice);
-            // setConvexCvxCRVStakeAmt(
-            //   parseFloat(ConvexCvxCRVStakeValue).toLocaleString(),
-            // )
+
             setConvexCvxCRVStakeAmt(ConvexCvxCRVStakeValue);
           })
           .catch((error) => console.log('Error message', error));
       } catch (err) {
         console.log(err);
       }
-      //} //end of if validation
     }
 
     getBlockchainData();
@@ -156,7 +146,7 @@ export default function ConvexStaking({ accountAddress }) {
 
   return (
     <div>
-      {parseInt(ConvexCVXStakeAmt + ConvexCvxCRVStakeAmt) ? (
+      {parseInt(ConvexCVXStakeAmt) || parseInt(ConvexCvxCRVStakeAmt) ? (
         <div>
           <div
             style={{
