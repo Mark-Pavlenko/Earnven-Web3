@@ -9,6 +9,7 @@ import UniStaking from './UniStaking';
 import AaveStaking from './AaveStaking';
 import SushiStaking from './SushiStaking';
 import LiquityStaking from './LiquityStaking';
+import CreamIronBank from './CreamIronBankSavings';
 import ConvexStaking from './ConvexStaking';
 import { SnowSwapStaking } from './SnowSwapStaking';
 import CurveLpToken from './CurveLpToken';
@@ -18,6 +19,7 @@ export default function Index({ accountAddress }) {
   // Below code is for task https://app.clickup.com/t/1je2y9d
   // const [DisplaySavings, setDisplaySavings] = useState(null);
   // const [TotalCompoundSavings, setTotalCompoundSavings] = useState(0);
+  const [IronBankSavings, setIronBankSavings] = useState(0);
   const [SavingsContent, setSavingsContent] = useState([]); // aave v2
   const [LoansContent, setLoansContent] = useState([]); // aave v2
   const [SavingsData, setSavingsData] = useState([]); // aave v2
@@ -1449,7 +1451,6 @@ export default function Index({ accountAddress }) {
     getBalancerV2Data();
     getBeaconData();
   }, [accountAddress]);
-
   return (
     <div>
       <div
@@ -1463,7 +1464,8 @@ export default function Index({ accountAddress }) {
           // Below code is for task https://app.clickup.com/t/1je2y9d
           // display:
           //   SavingsData.length > 0 || CompoundSavingsData > 0 || DisplaySavings ? '' : 'none',
-          display: SavingsData.length > 0 || CompoundSavingsData > 0 ? '' : 'none',
+          display:
+            SavingsData.length > 0 || CompoundSavingsData > 0 || IronBankSavings > 0 ? '' : 'none',
         }}>
         <br />
         <center>
@@ -1472,7 +1474,7 @@ export default function Index({ accountAddress }) {
             <br />
             Total : {/* Below code is for task https://app.clickup.com/t/1je2y9d */}
             {/* {parseFloat(AaveSavingsTotal + CompSavingsTotal + TotalCompoundSavings).toFixed(2)} USD */}
-            {parseFloat(AaveSavingsTotal + CompSavingsTotal).toFixed(2)} USD
+            {parseFloat(AaveSavingsTotal + CompSavingsTotal + IronBankSavings).toFixed(2)} USD
             <br />
             <br />
           </div>
@@ -1494,6 +1496,8 @@ export default function Index({ accountAddress }) {
           displayProp={setDisplaySavings}
           totalSavings={setTotalCompoundSavings}
         /> */}
+
+        <CreamIronBank totalSavings={setIronBankSavings} accountAddress={accountAddress} />
 
         <div
           style={{
