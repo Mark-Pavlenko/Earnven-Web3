@@ -5,39 +5,55 @@ import tradingLogo from '../../assets/icons/trading.svg';
 import bridgeLogo from '../../assets/icons/Bridge.svg';
 import safeFarmsLogo from '../../assets/icons/safefarm.svg';
 import multiSenderLogo from '../../assets/icons/multisender.svg';
+import home from '../../assets/icons/icon-park_home.svg';
+import dashboard_menu from '../../assets/icons/dashboard_menu.svg';
+import send_menu_icon from '../../assets/icons/send_menu_icon.svg';
+import exchange_menu_icon from '../../assets/icons/exchange_menu_icon.svg';
+import lp_menu_icon from '../../assets/icons/lp_menu_icon.svg';
+import yeild_farm_menu_icon from '../../assets/icons/yeild_farm_menu_icon.svg';
+import savings_menu_icon from '../../assets/icons/savings_menu_icon.svg';
 
-const getIcon = (name) => <img src={name} alt="" width={22} height={22} />;
+const getIcon = (name) => (
+  <div style={{ borderWidth: '10px 50px', backgroundColor: 'white', borderRadius: '5px' }}>
+    <img src={name} alt="no pic" />
+  </div>
+);
 
 const sidebarConfig = [
   {
     title: 'home',
     path: '/home',
-    icon: getIcon(defiMadeEasyLogo),
+    icon: getIcon(home),
   },
   {
     title: 'dashboard',
     path: '/dashboard',
-    icon: getIcon(dashboardLogo),
+    icon: getIcon(dashboard_menu),
+  },
+  {
+    title: 'send',
+    path: '/send',
+    icon: getIcon(send_menu_icon),
   },
   {
     title: 'exchange',
     path: '/exchange',
-    icon: getIcon(multiSenderLogo),
+    icon: getIcon(exchange_menu_icon),
   },
   {
     title: 'liquidity pools',
     path: '/liquiditypools',
-    icon: getIcon(tradingLogo),
+    icon: getIcon(lp_menu_icon),
   },
   {
     title: 'yield farm',
     path: '/yieldfarm',
-    icon: getIcon(bridgeLogo),
+    icon: getIcon(yeild_farm_menu_icon),
   },
   {
     title: 'savings',
     path: '/savings',
-    icon: getIcon(safeFarmsLogo),
+    icon: getIcon(savings_menu_icon),
   },
   // {
   //   title: 'history',

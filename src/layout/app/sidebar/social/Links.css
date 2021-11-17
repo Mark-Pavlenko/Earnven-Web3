@@ -1,0 +1,23 @@
+.links{
+    margin-top:auto;
+    margin-bottom:auto;
+    text-align:left;
+    margin-top: 3rem;
+    margin-left: 10%;
+}
+
+.link{
+    text-decoration: none;
+    color: black;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.link:hover{
+    color: #4453AD;
+}
+
+.List{
+    margin-top: 0.2rem;
+}
+

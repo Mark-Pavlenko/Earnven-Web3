@@ -11,15 +11,16 @@ import { Box, Collapse, List, ListItem, ListItemIcon, ListItemText } from '@mate
 const ListItemStyle = styled((props) => <ListItem button disableGutters {...props} />)(
   ({ theme }) => ({
     ...theme.typography.body2,
-    height: 48,
+    height: 39,
     position: 'relative',
     textTransform: 'capitalize',
     paddingLeft: theme.spacing(5),
     paddingRight: theme.spacing(2.5),
-    color: theme.palette.text.primary,
+    fontWeight: 'fontWeightBold',
+    color: 'theme.palette.text.primary',
   })
 );
-
+// icon styling
 const ListItemIconStyle = styled(ListItemIcon)({
   width: 22,
   height: 22,
@@ -46,15 +47,15 @@ function NavItem({ item, active, address }) {
   };
 
   const activeRootStyle = {
-    color: 'primary.main',
-    fontWeight: 'fontWeightRegular',
-
-    background: (theme) => theme.palette.gradients.custom,
+    color: (theme) => theme.palette.menu.text_color,
+    fontWeight: 'fontWeightBold',
+    background: (theme) => theme.palette.menu.light,
     borderRadius: '7px',
+    width: '13rem',
   };
 
   const activeSubStyle = {
-    color: 'text.primary',
+    color: '#f70707',
     fontWeight: 'fontWeightMedium',
   };
 
@@ -100,11 +101,11 @@ function NavItem({ item, active, address }) {
                         borderRadius: '50%',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        bgcolor: 'text.disabled',
+                        bgcolor: '#ff0000',
                         transition: (theme) => theme.transitions.create('transform'),
                         ...(isActiveSub && {
                           transform: 'scale(2)',
-                          bgcolor: 'primary.main',
+                          bgcolor: 'blue',
                         }),
                       }}
                     />
@@ -124,7 +125,7 @@ function NavItem({ item, active, address }) {
       component={RouterLink}
       to={`/${address}/${path}`}
       sx={{
-        mt: 2,
+        mt: 0.2,
         ...(isActiveRoot && activeRootStyle),
       }}>
       <ListItemIconStyle>{icon && icon}</ListItemIconStyle>
@@ -144,7 +145,7 @@ export default function NavSection({ navConfig, address, ...other }) {
   const match = (path) => (path ? !!matchPath({ path, end: false }, pathname) : false);
 
   return (
-    <Box {...other} sx={{ p: 4, mt: 4 }}>
+    <Box {...other} sx={{ pl: 7.5, mt: '10%' }}>
       <List disablePadding>
         {navConfig.map((item) => (
           <NavItem key={item.title} item={item} active={match} address={address} />

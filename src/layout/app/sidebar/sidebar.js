@@ -15,17 +15,16 @@ import {  useLocation } from 'react-router-dom';
 import { experimentalStyled as styled } from '@material-ui/core/styles';
 // import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@material-ui/core';
 import { Box, Drawer, Stack } from '@material-ui/core';
-
 import { useNavigate } from 'react-router-dom';
-
 import {MHidden} from '../../../components/@material-extend';
-
-import CompanyLogo from '../../../assets/icons/Subtract.svg';
-import Earnven from '../../../assets/icons/Earnven.svg';
+import CompanyLogo from '../../../assets/icons/logo_menu.svg';
+import Earnven from '../../../assets/icons/Earnven_menu_text.svg';
 import Account from './account/account';
+import './sidebar.css'
+import Links from './social/Links';
+import Accounts from './account/Accounts';
 
-
-const DRAWER_WIDTH = 280;
+const DRAWER_WIDTH = 315;
 
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('lg')]: {
@@ -63,9 +62,10 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar,address }){
   const renderContent = (
     <Scrollbar
       sx={{
-        height: '100%',
-        backgroundColor:'#000',
-        '& .simplebar-content': { height: '100%', display: 'flex', flexDirection: 'column' }
+        height: '100vh',
+        background: (theme) => theme.palette.gradients.background_sidemenu,
+        boxShadow: '0 2px 3px 30px #d2dcf6',
+        '& .simplebar-content': { display: 'flex', flexDirection: 'column' }
       }}
     >
       {/* <Box sx={{ px: 2.5, py: 3 }}>
@@ -73,23 +73,38 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar,address }){
           <Logo />
         </Box>
       </Box> */}
+  <Box sx={{ px: '38.91%', pb: 1, mt: '5%', ml: '-20px' }}>
+        <Stack
+          direction="row"
+          spacing={2}
+          sx={{
+            position: 'relative',
+            bgcolor: 'transparent'
+          }}
+        >
+         <img src={CompanyLogo} alt=""></img>
+         <img className='Earnven' src={Earnven} alt=""></img>
+        </Stack>
+        </Box>
+ 
+       
 
-      <Box sx={{ mb: 0, mx: 4, mt:3 }}>
+      <Box sx={{ px: 8}}>
           <Account address={address}/>
       </Box>
 
-      <NavSection  navConfig={sidebarConfig} address={address}/>
+      <NavSection  sx={{ px: 8, color: 'black'}} navConfig={sidebarConfig} address={address}/>
 
       <center>
-      <Accordion style={{width:'60%', background:'transparent'}}>
+      {/* <Accordion style={{width:'60%', background:'transparent'}}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
-        >
-          Tools
-        </AccordionSummary>
-        <AccordionDetails>
+        > */}
+          {/* Tools */}
+        {/* </AccordionSummary> */}
+        {/* <AccordionDetails>
           <div
           onMouseOver={(e)=>{mouseOver(e)}}
           onMouseOut={(e)=>{mouseOut(e)}}
@@ -118,37 +133,22 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar,address }){
           }}>
               Token Creator
           </div>
-        </AccordionDetails>
-      </Accordion>
+        </AccordionDetails> */}
+      {/* </Accordion> */}
       </center>
       {/* <Box sx={{ flexGrow: 1 }} /> */}
-
-      <Box sx={{ px: 2.5, pb: 3, mt: 5 }}>
-        <Stack
-          direction="row"
-          spacing={2}
-          sx={{
-            p: 2.5,
-            pt: 10,
-            position: 'relative',
-            bgcolor: 'black'
-          }}
-        >
-         <img src={CompanyLogo} alt=""></img>
-         <img src={Earnven} alt=""></img>
-        </Stack>
-        </Box>
+      <Links/>
     </Scrollbar>
   );
 
   return (
     <RootStyle>
-      <MHidden width="lgUp">
+      <MHidden width="lgUp" >
         <Drawer
           open={isOpenSidebar}
           onClose={onCloseSidebar}
           PaperProps={{
-            sx: { width: DRAWER_WIDTH }
+            sx: { width: DRAWER_WIDTH, overflow: 'auto', height: 'auto' }
           }}
         >
           {renderContent}
@@ -162,7 +162,8 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar,address }){
           PaperProps={{
             sx: {
               width: DRAWER_WIDTH,
-              bgcolor: 'background.default'
+              height: 'auto',
+              overflow: 'auto',
             }
           }}
         >
@@ -171,5 +172,4 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar,address }){
       </MHidden>
     </RootStyle>
   );
-
 }

@@ -69,8 +69,8 @@ function AccountBalance({ address }) {
   return (
     <>
       <Typography
-        sx={{ color: (theme) => theme.palette.menu.account_balance }}
-        variant="primaryFont1">
+        sx={{ color: (theme) => theme.palette.menu.account_font }}
+        variant="myWallet_font">
         ${totalValue}
       </Typography>
     </>

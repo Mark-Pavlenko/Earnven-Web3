@@ -90,6 +90,22 @@ export default function ConnectWallet() {
       }
     }
     localStorage.setItem('wallets', JSON.stringify(newDetails));
+    var jsonData = [];
+    const result = localStorage.getItem('wallets');
+    var jsondata = JSON.parse(result);
+    jsondata.map((option) => {
+      if (
+        option.provider == 'metamask' ||
+        option.provider == 'walletconnect' ||
+        option.provider == 'portis' ||
+        option.provider == 'coinbase' ||
+        option.provider == 'fortmatic' ||
+        option.provider == 'torus'
+      ) {
+        jsonData.push({ address: option.address, provider: option.provider });
+      }
+      localStorage.setItem('mywallet', JSON.stringify(jsonData));
+    });
 
     localStorage.setItem('selected-account', account);
     navigate(`/${account}/dashboard`);

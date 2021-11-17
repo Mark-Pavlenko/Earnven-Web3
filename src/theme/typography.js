@@ -96,6 +96,20 @@ const typography = {
     fontSize: pxToRem(14),
     textTransform: 'capitalize',
   },
+  primaryFont: {
+    fontSize: pxToRem(14),
+  },
+  primaryFont1: {
+    fontWeight: 500,
+    fontSize: pxToRem(20),
+  },
+  myWallet_font: {
+    fontWeight: 600,
+    fontSize: pxToRem(10),
+  },
+  myWallet_font_light: {
+    fontSize: pxToRem(10),
+  },
 };
 
 export default typography;

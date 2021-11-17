@@ -80,14 +80,27 @@ const ERROR = {
   darker: '#7A0C2E',
   contrastText: '#fff',
 };
+// Colors used in side menu
+const MENU = {
+  light: '#fcfcfc', // background color for currently selected option
+  text_color: '#171166', // text color of the side menu options
+  primary: '#000000', // text color used for texts in menu
+  background_sidemenu: createGradientHorizontal('#fafafa', '#b7c6eb'), // background color for menu
+  test: '#fa0000',
+  backgorundColor_wallet: 'rgba(255, 255, 255, 0.16)', // background color for the div of account photo, balance and user address
+  account_font: '#1E1E20', // front color for account user address
+  account_balance: '#4453AD', // font color for account user balance
+  accList_balance: '2px 2px 4px 0px #FFFFFF1A inset', // background color for Watchlist hover
+  backgorundColor_wallet_secondary: '#FFFFFF', // white for front menu wallet
+};
 
 const BACKGROUND = {
-  lighter: '#444342',
-  light: '#383737',
-  main: '#232222',
-  dark: '#141313',
-  darker: '#060606',
-  contrastText: '#fff',
+  lighter: MENU.background_sidemenu,
+  light: MENU.background_sidemenu,
+  main: MENU.background_sidemenu,
+  dark: MENU.background_sidemenu,
+  darker: MENU.background_sidemenu,
+  contrastText: MENU.background_sidemenu,
 };
 
 const GRADIENTS = {
@@ -98,8 +111,13 @@ const GRADIENTS = {
   error: createGradient(ERROR.light, ERROR.main),
   background: createGradient(BACKGROUND.light, BACKGROUND.dark),
   custom: createGradientHorizontal('#3b2959', '#1d282f'),
+  background_sidemenu: createGradientHorizontal('#fafafa', '#b7c6eb'), // background color for side menu
 };
 
+// background: 'rgba(255, 255, 255, 0.16)',
+// mixBlendMode: 'normal',
+// boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+// backdropFilter: 'blur(35px)',
 const palette = {
   common: { black: '#000', white: '#fff' },
   primary: { ...PRIMARY },
@@ -108,14 +126,15 @@ const palette = {
   success: { ...SUCCESS },
   warning: { ...WARNING },
   error: { ...ERROR },
+  menu: { ...MENU },
   grey: GREY,
   gradients: GRADIENTS,
   divider: GREY[500_24],
-  text: { primary: '#e5e5e5', secondary: GREY[600], disabled: GREY[500] },
-  background: { paper: '#fff', default: '#0E1214', neutral: GREY[200] },
+  text: { primary: '#000000', secondary: GREY[600], disabled: GREY[500] },
+  background: { paper: '#FFFFFF', default: '#abbcd6', neutral: GREY[200] },
   action: {
     active: GREY[600],
-    hover: GREY[500_8],
+    hover: '#FFFFFF',
     selected: GREY[500_16],
     disabled: GREY[500_80],
     disabledBackground: GREY[500_24],
