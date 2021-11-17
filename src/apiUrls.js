@@ -8,6 +8,16 @@ const urls = {
   UNI: 'https://api.coingecko.com/api/v3/coins/uniswap',
   SUSHI: 'https://api.coingecko.com/api/v3/coins/sushi',
   CREAM: 'https://api.coingecko.com/api/v3/coins/cream-2',
+  YFI: `https://api.coingecko.com/api/v3/coins/yearn-finance`,
+  SNX: `https://api.coingecko.com/api/v3/coins/havven`,
+  WBTC: `https://api.coingecko.com/api/v3/coins/wrapped-bitcoin`,
+  MUSD: `https://api.coingecko.com/api/v3/coins/musd`,
+  SUSD: `https://api.coingecko.com/api/v3/coins/nusd`,
+  EURS: `https://api.coingecko.com/api/v3/coins/stasis-eurs`,
+  SEUR: `https://api.coingecko.com/api/v3/coins/seur`,
+  DPI: `https://api.coingecko.com/api/v3/coins/defipulse-index`,
+  AAVE: `https://api.coingecko.com/api/v3/coins/aave`,
+  MIM: `https://api.coingecko.com/api/v3/coins/magic-internet-money`,
 };
 
 export default urls;

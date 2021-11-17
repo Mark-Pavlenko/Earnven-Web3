@@ -14,8 +14,6 @@ import axios from 'axios';
 import CreamIronBankContract from '../../abi/CreamIronBank.json';
 import Addresses from '../../contractAddresses';
 import ApiUrl from '../../apiUrls';
-import { toNumber } from 'lodash';
-import { symbol } from 'prop-types';
 
 export default function CreamIronBank({ accountAddress, totalSavings }) {
   const [TotalSavings, setTotalSavings] = useState(0);
@@ -28,6 +26,17 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
   const [CreamSUSHI, setCreamSUSHI] = useState({});
   const [CreamCRV, setCreamCRV] = useState({});
   const [Creamv2, setCreamv2] = useState({});
+  const [CreamYFI, setCreamYFI] = useState({});
+  const [CreamSNX, setCreamSNX] = useState({});
+  const [CreamWBTC, setCreamWBTC] = useState({});
+  const [CreamSUSD, setCreamSUSD] = useState({});
+  const [CreamMUSD, setCreamMUSD] = useState({});
+  const [CreamEURS, setCreamEURS] = useState({});
+  const [CreamSEUR, setCreamSEUR] = useState({});
+  const [CreamDPI, setCreamDPI] = useState({});
+  const [CreamAAVE, setCreamAAVE] = useState({});
+  const [CreamMIM, setCreamMIM] = useState({});
+  const [CreamZAR, setCreamZAR] = useState({});
 
   async function loadWeb3() {
     if (window.ethereum) {
@@ -78,6 +87,9 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
               symbol: CreamSymbol,
               price: parseFloat(IronBankUSDPrice),
               image: data.image.thumb,
+              pricePerToken: tokenPrice,
+              balance: tokenAmount,
+              protocol: 'Cream Iron Bank',
             });
           } else {
             setToken({
@@ -85,6 +97,9 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
               symbol: '',
               price: 0,
               image: '',
+              pricePerToken: 0,
+              balance: 0,
+              protocol: '',
             });
           }
         })
@@ -117,6 +132,7 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
         setToken
       );
     }
+    // USDT
     getCreamData(
       accountAddress,
       CreamIronBankContract,
@@ -124,6 +140,7 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
       ApiUrl.USDT,
       setCreamUSDT
     );
+    // DAI
     getCreamData(
       accountAddress,
       CreamIronBankContract,
@@ -131,6 +148,7 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
       ApiUrl.DAI,
       setCreamDAI
     );
+    // USDC
     getCreamData(
       accountAddress,
       CreamIronBankContract,
@@ -138,6 +156,7 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
       ApiUrl.USDC,
       setCreamUSDC
     );
+    // WETH
     getCreamData(
       accountAddress,
       CreamIronBankContract,
@@ -145,6 +164,7 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
       ApiUrl.ETH,
       setCreamWETH
     );
+    // LINK
     getCreamData(
       accountAddress,
       CreamIronBankContract,
@@ -152,6 +172,7 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
       ApiUrl.LINK,
       setCreamLINK
     );
+    // CRV
     getCreamData(
       accountAddress,
       CreamIronBankContract,
@@ -159,6 +180,7 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
       ApiUrl.CRV,
       setCreamCRV
     );
+    // CREAM
     getCreamData(
       accountAddress,
       CreamIronBankContract,
@@ -166,6 +188,7 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
       ApiUrl.CREAM,
       setCreamv2
     );
+    // UNI
     getCreamData(
       accountAddress,
       CreamIronBankContract,
@@ -173,6 +196,7 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
       ApiUrl.UNI,
       setCreamUNI
     );
+    // SUSHI
     getCreamData(
       accountAddress,
       CreamIronBankContract,
@@ -180,6 +204,94 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
       ApiUrl.SUSHI,
       setCreamSUSHI
     );
+    // YFI
+    getCreamData(
+      accountAddress,
+      CreamIronBankContract,
+      Addresses.CreamCYFI,
+      ApiUrl.YFI,
+      setCreamYFI
+    );
+    // SNX
+    getCreamData(
+      accountAddress,
+      CreamIronBankContract,
+      Addresses.CreamCSNX,
+      ApiUrl.SNX,
+      setCreamSNX
+    );
+    // WBTC
+    getCreamData(
+      accountAddress,
+      CreamIronBankContract,
+      Addresses.CreamCWBTC,
+      ApiUrl.WBTC,
+      setCreamWBTC
+    );
+    // SUSD
+    getCreamData(
+      accountAddress,
+      CreamIronBankContract,
+      Addresses.CreamCSUSD,
+      ApiUrl.SUSD,
+      setCreamSUSD
+    );
+    // MUSD
+    getCreamData(
+      accountAddress,
+      CreamIronBankContract,
+      Addresses.CreamCMUSD,
+      ApiUrl.MUSD,
+      setCreamMUSD
+    );
+    // EURS
+    getCreamData(
+      accountAddress,
+      CreamIronBankContract,
+      Addresses.CreamCEURS,
+      ApiUrl.EURS,
+      setCreamEURS
+    );
+    // SEUR
+    getCreamData(
+      accountAddress,
+      CreamIronBankContract,
+      Addresses.CreamCSEUR,
+      ApiUrl.SEUR,
+      setCreamSEUR
+    );
+    // DPI
+    getCreamData(
+      accountAddress,
+      CreamIronBankContract,
+      Addresses.CreamCDPI,
+      ApiUrl.DPI,
+      setCreamDPI
+    );
+    // AAVE
+    getCreamData(
+      accountAddress,
+      CreamIronBankContract,
+      Addresses.CreamCAAVE,
+      ApiUrl.AAVE,
+      setCreamAAVE
+    );
+    // MIM
+    getCreamData(
+      accountAddress,
+      CreamIronBankContract,
+      Addresses.CreamCMIM,
+      ApiUrl.MIM,
+      setCreamMIM
+    );
+    // // ZAR
+    // getCreamData(
+    //   accountAddress,
+    //   CreamIronBankContract,
+    //   Addresses.CreamCZAR,
+    //   ApiUrl.Z,
+    //   setCreamSUSHI
+    // );
   }, [accountAddress]);
 
   useEffect(() => {
@@ -197,7 +309,17 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
           CreamCRV.price +
           Creamv2.price +
           CreamUNI.price +
-          CreamSUSHI.price
+          CreamSUSHI.price +
+          CreamYFI.price +
+          CreamSNX.price +
+          CreamWBTC.price +
+          CreamSUSD.price +
+          CreamMUSD.price +
+          CreamEURS.price +
+          CreamSEUR.price +
+          CreamDPI.price +
+          CreamAAVE.price +
+          CreamMIM.price
       )
     );
   }, [
@@ -210,19 +332,29 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
     Creamv2.price,
     CreamUNI.price,
     CreamSUSHI.price,
+    CreamYFI.price,
+    CreamSNX.price,
+    CreamWBTC.price,
+    CreamSUSD.price,
+    CreamMUSD.price,
+    CreamEURS.price,
+    CreamSEUR.price,
+    CreamDPI.price,
+    CreamAAVE.price,
+    CreamMIM.price,
   ]);
 
   const IronBankLayout = (item) => {
     return (
       <div>
-        {parseFloat(item.price) ? (
+        {parseFloat(item.price) > 0 ? (
           <div>
             <div
               style={{
                 fontSize: '12px',
                 marginLeft: '15px',
               }}>
-              {item.tokenName} --- {item.price} USD
+              {item.protocol} --- {item.price} USD
             </div>
             <div>
               <img
@@ -242,6 +374,16 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
                   marginLeft: '10px',
                 }}>
                 {item.symbol} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {item.price} USD
+              </div>
+            </div>
+            <div>
+              <div
+                style={{
+                  fontSize: '13px',
+                  display: 'inline-block',
+                  marginLeft: '30px',
+                }}>
+                Tokens: {item.balance.toFixed(2)} &nbsp; Price: {item.pricePerToken.toFixed(2)} USD
               </div>
             </div>
             <br />
@@ -264,6 +406,16 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
       {IronBankLayout(CreamSUSHI)}
       {IronBankLayout(Creamv2)}
       {IronBankLayout(CreamCRV)}
+      {IronBankLayout(CreamYFI)}
+      {IronBankLayout(CreamSNX)}
+      {IronBankLayout(CreamWBTC)}
+      {IronBankLayout(CreamSUSD)}
+      {IronBankLayout(CreamMUSD)}
+      {IronBankLayout(CreamEURS)}
+      {IronBankLayout(CreamSEUR)}
+      {IronBankLayout(CreamDPI)}
+      {IronBankLayout(CreamAAVE)}
+      {IronBankLayout(CreamMIM)}
     </div>
   );
 }
