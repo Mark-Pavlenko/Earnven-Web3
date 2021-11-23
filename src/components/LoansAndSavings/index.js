@@ -1735,7 +1735,7 @@ export default function Index({ accountAddress }) {
       <div
         style={{
           // marginLeft:'25px',
-          width: '100%',
+          width: '110%',
           marginTop: '20px',
           minWidth: '300px',
           border: '1px solid rgb(115, 115, 115)',
@@ -1774,22 +1774,6 @@ export default function Index({ accountAddress }) {
         <ConvexStaking accountAddress={accountAddress} />
         <br />
         <SnowSwapStaking accountAddress={accountAddress} />
-      </div>
-
-      <div
-        style={{
-          // marginLeft:'25px',
-          width: '110%',
-          marginRight: '10px',
-          marginTop: '20px',
-          minWidth: '300px',
-          border: '1px solid rgb(115, 115, 115)',
-          height: 'auto',
-          minHeight: '170px',
-          borderRadius: '10px',
-          display: CurveLpdata.length > 0 ? '' : 'none',
-        }}>
-        <center> Curve Lp Token </center>
         <br />
         <CurveLpToken accountAddress={accountAddress} onCurveLptoken={getCurveLpToken} />
         <br />

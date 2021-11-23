@@ -75,6 +75,7 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
   let curveLpTokenAddress = [];
   let curveLpTokenPrice = [];
   let curveLpPoolData = [];
+  let curveLpTokenLiquidity = [];
 
   await loadWeb3();
   const web3 = window.web3;
@@ -89,12 +90,14 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     let Curve3CrvBalance = await Curve3CrvPoolContract.methods.balanceOf(accountAddress).call();
     let Curve3CrvName = await Curve3CrvPoolContract.methods.name().call();
     let CurveLpTokenVirtualPrice = await fetchCurveLpTokenVirtualPrice(contractAddress);
+    let curveLpTokenTotal = await Curve3CrvPoolContract.methods.totalSupply().call();
 
     //assign the value into the array by all the corresponding value
     curveLpTokenPrice = CurveLpTokenVirtualPrice; // pool virtual price
     curveLpTokenBalance = Curve3CrvBalance; //token balance of Lp for the given user
     curveLpTokenName = Curve3CrvName; // token name
     curveLpTokenAddress = Addresses.CrvPoolToken; //token address
+    curveLpTokenLiquidity = curveLpTokenTotal; //pool Liquidity
 
     console.log('Curve3CrvBalance', Curve3CrvBalance);
     console.log('Curve3CrvName', Curve3CrvName);
@@ -104,9 +107,10 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     const CurveAavePoolContract = new web3.eth.Contract(CurveAavePoolABI, Addresses.AAVEToken);
     let CurveAavePoolBalance = await CurveAavePoolContract.methods.balanceOf(accountAddress).call();
     let CurveAavePoolName = await CurveAavePoolContract.methods.name().call();
-
     //get virtual price of the pool
     let CurveLpTokenVirtualPrice = await fetchCurveLpTokenVirtualPrice(contractAddress);
+    let curveLpTokenTotal = await CurveAavePoolContract.methods.totalSupply().call();
+    curveLpTokenLiquidity = curveLpTokenTotal; //pool Liquidity
 
     //assign the value into the array by all the corresponding value
     curveLpTokenPrice = CurveLpTokenVirtualPrice; // pool virtual price
@@ -125,6 +129,8 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
 
     //get virtual price of the pool
     let CurveLpTokenVirtualPrice = await fetchCurveLpTokenVirtualPrice(contractAddress);
+    let curveLpTokenTotal = await CurveAnkrCRVContract.methods.totalSupply().call();
+    curveLpTokenLiquidity = curveLpTokenTotal; //pool Liquidity
 
     //assign the value into the array by all the corresponding value
     curveLpTokenPrice = CurveLpTokenVirtualPrice; // pool virtual price
@@ -143,6 +149,8 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
 
     //get virtual price of the pool
     let CurveLpTokenVirtualPrice = await fetchCurveLpTokenVirtualPrice(contractAddress);
+    let curveLpTokenTotal = await CurveBUSDPoolContract.methods.totalSupply().call();
+    curveLpTokenLiquidity = curveLpTokenTotal; //pool Liquidity
 
     //assign the value into the array by all the corresponding value
     curveLpTokenPrice = CurveLpTokenVirtualPrice; // pool virtual price
@@ -165,6 +173,8 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     let CurveCompoundPoolName = await CurveCompoundPoolContract.methods.name().call();
     //get virtual price of the pool
     let CurveLpTokenVirtualPrice = await fetchCurveLpTokenVirtualPrice(contractAddress);
+    let curveLpTokenTotal = await CurveCompoundPoolContract.methods.totalSupply().call();
+    curveLpTokenLiquidity = curveLpTokenTotal; //pool Liquidity
     //assign the value into the array by all the corresponding value
     curveLpTokenPrice = CurveLpTokenVirtualPrice; // pool virtual price
     curveLpTokenBalance = CurveCompoundPoolBalance;
@@ -181,6 +191,8 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     let CurveEURSPoolName = await CurveEURSPoolContract.methods.name().call();
     //get virtual price of the pool
     let CurveLpTokenVirtualPrice = await fetchCurveLpTokenVirtualPrice(contractAddress);
+    let curveLpTokenTotal = await CurveEURSPoolContract.methods.totalSupply().call();
+    curveLpTokenLiquidity = curveLpTokenTotal; //pool Liquidity
     //assign the value into the array by all the corresponding value
     curveLpTokenPrice = CurveLpTokenVirtualPrice; // pool virtual price
     curveLpTokenBalance = CurveEURSPoolBalance;
@@ -197,6 +209,8 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     let CurvehBTCPoolName = await CurvehBTCPoolContract.methods.name().call();
     //get virtual price of the pool
     let CurveLpTokenVirtualPrice = await fetchCurveLpTokenVirtualPrice(contractAddress);
+    let curveLpTokenTotal = await CurvehBTCPoolContract.methods.totalSupply().call();
+    curveLpTokenLiquidity = curveLpTokenTotal; //pool Liquidity
     //assign the value into the array by all the corresponding value
     curveLpTokenPrice = CurveLpTokenVirtualPrice; // pool virtual price
     curveLpTokenBalance = CurvehBTCPoolBalance;
@@ -218,6 +232,8 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     let CurveIronBankPoolName = await CurveIronBankPoolContract.methods.name().call();
     //get virtual price of the pool
     let CurveLpTokenVirtualPrice = await fetchCurveLpTokenVirtualPrice(contractAddress);
+    let curveLpTokenTotal = await CurveIronBankPoolContract.methods.totalSupply().call();
+    curveLpTokenLiquidity = curveLpTokenTotal; //pool Liquidity
     //assign the value into the array by all the corresponding value
     curveLpTokenPrice = CurveLpTokenVirtualPrice; // pool virtual price
     curveLpTokenBalance = CurveIronBankPoolBalance;
@@ -234,6 +250,8 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     let CurveLinkPoolName = await CurveLinkPoolContract.methods.name().call();
     //get virtual price of the pool
     let CurveLpTokenVirtualPrice = await fetchCurveLpTokenVirtualPrice(contractAddress);
+    let curveLpTokenTotal = await CurveLinkPoolContract.methods.totalSupply().call();
+    curveLpTokenLiquidity = curveLpTokenTotal; //pool Liquidity
     //assign the value into the array by all the corresponding value
     curveLpTokenPrice = CurveLpTokenVirtualPrice; // pool virtual price
     curveLpTokenBalance = CurveLinkPoolBalance;
@@ -250,6 +268,8 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     let CurvePAXPoolName = await CurvePAXPoolContract.methods.name().call();
     //get virtual price of the pool
     let CurveLpTokenVirtualPrice = await fetchCurveLpTokenVirtualPrice(contractAddress);
+    let curveLpTokenTotal = await CurvePAXPoolContract.methods.totalSupply().call();
+    curveLpTokenLiquidity = curveLpTokenTotal; //pool Liquidity
     //assign the value into the array by all the corresponding value
     curveLpTokenPrice = CurveLpTokenVirtualPrice; // pool virtual price
     curveLpTokenBalance = CurvePAXPoolBalance;
@@ -271,6 +291,8 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     let CurverenBTCPoolName = await CurverenBTCPoolContract.methods.name().call();
     //get virtual price of the pool
     let CurveLpTokenVirtualPrice = await fetchCurveLpTokenVirtualPrice(contractAddress);
+    let curveLpTokenTotal = await CurverenBTCPoolContract.methods.totalSupply().call();
+    curveLpTokenLiquidity = curveLpTokenTotal; //pool Liquidity
     //assign the value into the array by all the corresponding value
     curveLpTokenPrice = CurveLpTokenVirtualPrice; // pool virtual price
     curveLpTokenBalance = CurverenBTCPoolBalance;
@@ -287,6 +309,8 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     let CurverETHPoolName = await CurverETHPoolContract.methods.name().call();
     //get virtual price of the pool
     let CurveLpTokenVirtualPrice = await fetchCurveLpTokenVirtualPrice(contractAddress);
+    let curveLpTokenTotal = await CurverETHPoolContract.methods.totalSupply().call();
+    curveLpTokenLiquidity = curveLpTokenTotal; //pool Liquidity
     //assign the value into the array by all the corresponding value
     curveLpTokenPrice = CurveLpTokenVirtualPrice; // pool virtual price
     curveLpTokenBalance = CurverETHPoolBalance;
@@ -305,6 +329,8 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     let CurvesAAVEPoolName = await CurvesAAVEPoolContract.methods.name().call();
     //get virtual price of the pool
     let CurveLpTokenVirtualPrice = await fetchCurveLpTokenVirtualPrice(contractAddress);
+    let curveLpTokenTotal = await CurvesAAVEPoolContract.methods.totalSupply().call();
+    curveLpTokenLiquidity = curveLpTokenTotal; //pool Liquidity
     //assign the value into the array by all the corresponding value
     curveLpTokenPrice = CurveLpTokenVirtualPrice; // pool virtual price
     curveLpTokenBalance = CurvesAAVEPoolBalance;
@@ -323,6 +349,8 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
 
     //get virtual price of the pool
     let CurveLpTokenVirtualPrice = await fetchCurveLpTokenVirtualPrice(contractAddress);
+    let curveLpTokenTotal = await CurvesBTCPoolContract.methods.totalSupply().call();
+    curveLpTokenLiquidity = curveLpTokenTotal; //pool Liquidity
     //assign the value into the array by all the corresponding value
     curveLpTokenPrice = CurveLpTokenVirtualPrice; // pool virtual price
     curveLpTokenBalance = CurvesBTCPoolBalance; //token balance of Lp for the given user
@@ -341,6 +369,8 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     let CurvesETHPoolName = await CurvesETHPoolContract.methods.name().call();
     //get virtual price of the pool
     let CurveLpTokenVirtualPrice = await fetchCurveLpTokenVirtualPrice(contractAddress);
+    let curveLpTokenTotal = await CurvesETHPoolContract.methods.totalSupply().call();
+    curveLpTokenLiquidity = curveLpTokenTotal; //pool Liquidity
     //assign the value into the array by all the corresponding value
     curveLpTokenPrice = CurveLpTokenVirtualPrice; // pool virtual price
     curveLpTokenBalance = CurvesETHPoolBalance;
@@ -359,6 +389,8 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     let CurvestETHPoolName = await CurvestETHPoolContract.methods.name().call();
     //get virtual price of the pool
     let CurveLpTokenVirtualPrice = await fetchCurveLpTokenVirtualPrice(contractAddress);
+    let curveLpTokenTotal = await CurvestETHPoolContract.methods.totalSupply().call();
+    curveLpTokenLiquidity = curveLpTokenTotal; //pool Liquidity
     //assign the value into the array by all the corresponding value
     curveLpTokenPrice = CurveLpTokenVirtualPrice; // pool virtual price
     curveLpTokenBalance = CurvestETHPoolBalance;
@@ -375,6 +407,8 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     let CurvesUSDPoolName = await CurvesUSDPoolContract.methods.name().call();
     //get virtual price of the pool
     let CurveLpTokenVirtualPrice = await fetchCurveLpTokenVirtualPrice(contractAddress);
+    let curveLpTokenTotal = await CurvesUSDPoolContract.methods.totalSupply().call();
+    curveLpTokenLiquidity = curveLpTokenTotal; //pool Liquidity
     //assign the value into the array by all the corresponding value
     curveLpTokenPrice = CurveLpTokenVirtualPrice; // pool virtual price
     curveLpTokenBalance = CurvesUSDPoolBalance;
@@ -403,6 +437,8 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     } catch (err) {
       console.log('No virtual price is available for this pool', contractAddress);
     }
+    let curveLpTokenTotal = await CurveTriCryptoPoolContract.methods.totalSupply().call();
+    curveLpTokenLiquidity = curveLpTokenTotal; //pool Liquidity
     //assign the value into the array by all the corresponding value
     curveLpTokenPrice = CurveLpTokenVirtualPrice; // pool virtual price
     curveLpTokenBalance = CurveTriCryptoPoolBalance;
@@ -419,6 +455,8 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     let CurveUSDTPoolName = await CurveUSDTPoolContract.methods.name().call();
     //get virtual price of the pool
     let CurveLpTokenVirtualPrice = await fetchCurveLpTokenVirtualPrice(contractAddress);
+    let curveLpTokenTotal = await CurveUSDTPoolContract.methods.totalSupply().call();
+    curveLpTokenLiquidity = curveLpTokenTotal; //pool Liquidity
     //assign the value into the array by all the corresponding value
     curveLpTokenPrice = CurveLpTokenVirtualPrice; // pool virtual price
     curveLpTokenBalance = CurveUSDTPoolBalance;
@@ -435,6 +473,8 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     let CurveYPoolName = await CurveYPoolContract.methods.name().call();
     //get virtual price of the pool
     let CurveLpTokenVirtualPrice = await fetchCurveLpTokenVirtualPrice(contractAddress);
+    let curveLpTokenTotal = await CurveYPoolContract.methods.totalSupply().call();
+    curveLpTokenLiquidity = curveLpTokenTotal; //pool Liquidity
     //assign the value into the array by all the corresponding value
     curveLpTokenPrice = CurveLpTokenVirtualPrice; // pool virtual price
     curveLpTokenBalance = CurveYPoolBalance;
@@ -451,6 +491,8 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     let CurveYv2PoolName = await CurveYv2PoolContract.methods.name().call();
     //get virtual price of the pool
     let CurveLpTokenVirtualPrice = await fetchCurveLpTokenVirtualPrice(contractAddress);
+    let curveLpTokenTotal = await CurveYv2PoolContract.methods.totalSupply().call();
+    curveLpTokenLiquidity = curveLpTokenTotal; //pool Liquidity
     //assign the value into the array by all the corresponding value
     curveLpTokenPrice = CurveLpTokenVirtualPrice; // pool virtual price
     curveLpTokenBalance = CurveYv2PoolBalance;
@@ -497,8 +539,15 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
       //if(CurveLpTokenVirtualPrice > 0) {
 
       let tokenCalcValue = (curveLpTokenBalance / 10 ** 18) * (tokenPrice / 10 ** 18);
+      let LptokenLiquidityValue = (curveLpTokenLiquidity / 10 ** 18) * (tokenPrice / 10 ** 18);
 
-      curveLpPoolData = [curveTokenName, curveLpTokenBalance, tokenPrice, tokenCalcValue];
+      curveLpPoolData = [
+        curveTokenName,
+        curveLpTokenBalance,
+        tokenPrice,
+        tokenCalcValue,
+        LptokenLiquidityValue,
+      ];
     } catch (err) {
       console.log('Error', err.message);
     }
