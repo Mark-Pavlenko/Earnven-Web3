@@ -20,7 +20,6 @@ const RecentAddedTokens = async () => {
       qs: {
         start: '1',
         limit: '18',
-
         sort: 'date_added',
         sort_dir: 'desc',
       },
@@ -54,7 +53,7 @@ const RecentAddedTokens = async () => {
           //set the platform name based on the coming full name
           let platformData = data.platform ? data.platform.name : '';
           //replace if exist with fullname
-          bcPlatform = platformData.replaceAll('Binance Smart Chain (BEP20)', 'Binance Coin');
+          bcPlatform = platformData.replaceAll('Binance Smart Chain (BEP20)', 'BNB Coin');
 
           //get Token added timestamp in hours after checking with UTC date
           const tokenInUTCHrs = new Date(data.date_added).getUTCHours();
@@ -70,7 +69,7 @@ const RecentAddedTokens = async () => {
               if (tokenPrice != 0) {
                 break;
               } else if (tokenPrice == 0) {
-                tokenPrice = parseFloat(data.quote.USD.price).toFixed(2 + i);
+                tokenPrice = parseFloat(data.quote.USD.price).toFixed(7 + i);
               }
             }
           }
