@@ -86,6 +86,14 @@ export default function Index({ accountAddress }) {
     setCurveLpData(data);
   };
 
+  // function to get the number render with comma
+  const numberWithCommas = (x) => {
+    x = x.toString();
+    var pattern = /(-?\d+)(\d{3})/;
+    while (pattern.test(x)) x = x.replace(pattern, '$1,$2');
+    return x;
+  };
+
   useEffect(() => {
     const content = SavingsData.map((object) => (
       <Tooltip
@@ -1474,7 +1482,10 @@ export default function Index({ accountAddress }) {
             <br />
             Total : {/* Below code is for task https://app.clickup.com/t/1je2y9d */}
             {/* {parseFloat(AaveSavingsTotal + CompSavingsTotal + TotalCompoundSavings).toFixed(2)} USD */}
-            {parseFloat(AaveSavingsTotal + CompSavingsTotal + IronBankSavings).toFixed(2)} USD
+            {numberWithCommas(
+              parseFloat(AaveSavingsTotal + CompSavingsTotal + IronBankSavings).toFixed(2)
+            )}{' '}
+            USD
             <br />
             <br />
           </div>

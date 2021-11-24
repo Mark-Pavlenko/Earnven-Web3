@@ -38,6 +38,13 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
   const [CreamMIM, setCreamMIM] = useState({});
   const [CreamZAR, setCreamZAR] = useState({});
 
+  const numberWithCommas = (x) => {
+    x = x.toString();
+    var pattern = /(-?\d+)(\d{3})/;
+    while (pattern.test(x)) x = x.replace(pattern, '$1,$2');
+    return x;
+  };
+
   async function loadWeb3() {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
@@ -70,6 +77,12 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
         break;
       case 'cyDAI':
         decimals = 10 ** 10;
+        break;
+      case 'cyLINK':
+        decimals = 10 ** 14;
+        break;
+      case 'cyYFI':
+        decimals = 10 ** 13;
         break;
       default:
         decimals = 10 ** 10;
@@ -349,13 +362,6 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
       <div>
         {parseFloat(item.price) > 0 ? (
           <div>
-            <div
-              style={{
-                fontSize: '12px',
-                marginLeft: '15px',
-              }}>
-              {item.protocol} --- {item.price} USD
-            </div>
             <div>
               <img
                 src={item.image}
@@ -373,7 +379,8 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
                   display: 'inline-block',
                   marginLeft: '10px',
                 }}>
-                {item.symbol} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {item.price} USD
+                {item.symbol} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {numberWithCommas(item.price)}{' '}
+                USD
               </div>
             </div>
             <div>
@@ -383,7 +390,8 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
                   display: 'inline-block',
                   marginLeft: '30px',
                 }}>
-                Tokens: {item.balance.toFixed(2)} &nbsp; Price: {item.pricePerToken.toFixed(2)} USD
+                Tokens: {numberWithCommas(item.balance.toFixed(2))} &nbsp; Price:{' '}
+                {numberWithCommas(item.pricePerToken.toFixed(2))} USD
               </div>
             </div>
             <br />
@@ -397,6 +405,20 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
 
   return (
     <div>
+      <div
+        style={{
+          fontSize: '12px',
+          marginLeft: '15px',
+        }}>
+        Cream Iron Bank --- {numberWithCommas(TotalSavings.toFixed(2))} USD
+      </div>
+      <div
+        style={{
+          fontSize: '12px',
+          marginLeft: '15px',
+        }}>
+        <span> Network </span> : <span> Ethereum </span>
+      </div>
       {IronBankLayout(CreamUSDT)}
       {IronBankLayout(CreamDAI)}
       {IronBankLayout(CreamUSDC)}
