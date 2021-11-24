@@ -19,32 +19,7 @@ const getIcon = (name) => (
   </div>
 );
 
-const sidebarConfig = [
-  {
-    title: 'home',
-    path: '/home',
-    icon: getIcon(home),
-  },
-  {
-    title: 'dashboard',
-    path: '/dashboard',
-    icon: getIcon(dashboard_menu),
-  },
-  {
-    title: 'send',
-    path: '/send',
-    icon: getIcon(send_menu_icon),
-  },
-  {
-    title: 'exchange',
-    path: '/exchange',
-    icon: getIcon(exchange_menu_icon),
-  },
-  {
-    title: 'liquidity pools',
-    path: '/liquiditypools',
-    icon: getIcon(lp_menu_icon),
-  },
+const upcomingConfig = [
   {
     title: 'yield farm',
     path: '/yieldfarm',
@@ -57,4 +32,4 @@ const sidebarConfig = [
   },
 ];
 
-export default sidebarConfig;
+export default upcomingConfig;

@@ -18,8 +18,8 @@ function responsiveFontSizes({ sm, md, lg }) {
   };
 }
 
-const FONT_PRIMARY = 'Poppins, sans-serif';
-
+const FONT_PRIMARY = 'Saira, sans-serif';
+// fontFamily: 'Saira, sans-serif',
 const typography = {
   fontFamily: FONT_PRIMARY,
   fontWeightRegular: 400,
@@ -109,6 +109,9 @@ const typography = {
   },
   myWallet_font_light: {
     fontSize: pxToRem(10),
+  },
+  popupTitle: {
+    fontSize: pxToRem(26),
   },
 };
 

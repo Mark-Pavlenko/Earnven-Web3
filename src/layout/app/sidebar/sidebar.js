@@ -1,6 +1,7 @@
 /* eslint-disable */
 import Scrollbar from '../../../components/Scrollbar';
 import sidebarConfig from '../SidebarConfig';
+// import upcomingConfig from '../upcomingConfig';
 import NavSection from '../../../components/NavSection';
 
 import Accordion from '@material-ui/core/Accordion';
@@ -23,7 +24,6 @@ import Account from './account/account';
 import './sidebar.css'
 import Links from './social/Links';
 import Accounts from './account/Accounts';
-
 const DRAWER_WIDTH = 315;
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -41,7 +41,7 @@ Sidebar.propTypes = {
 };
 
 
-export default function Sidebar({ isOpenSidebar, onCloseSidebar,address }){
+export default function Sidebar({ isOpenSidebar, onCloseSidebar,address,name }){
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
@@ -90,11 +90,11 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar,address }){
        
 
       <Box sx={{ px: 8}}>
-          <Account address={address}/>
+          <Account address={address} name={name}/>
       </Box>
 
       <NavSection  sx={{ px: 8, color: 'black'}} navConfig={sidebarConfig} address={address}/>
-
+      {/* <NavSection  sx={{ px: 8, color: 'black'}} navConfig={upcomingConfig} address={address}/> */}
       <center>
       {/* <Accordion style={{width:'60%', background:'transparent'}}>
         <AccordionSummary

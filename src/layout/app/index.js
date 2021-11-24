@@ -37,6 +37,7 @@ export default function AppLayout() {
         isOpenSidebar={open}
         onCloseSidebar={() => setOpen(false)}
         address={localStorage.getItem('selected-account')}
+        name={localStorage.getItem('selected-name')}
       />
       <MainStyle>
         <Divider variant="middle" />

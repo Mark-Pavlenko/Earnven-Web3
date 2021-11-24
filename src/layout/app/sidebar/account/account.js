@@ -44,6 +44,7 @@ const AccountStyle = styled('div')(({ theme }) => ({
   fontWeight: 500,
   marginLeft: '26px',
   marginTop: '12px',
+  boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 2px 2px rgba(0,0,0,0.16)',
 }));
 
 const useStyles = makeStyles(() =>
@@ -60,7 +61,8 @@ const useStyles = makeStyles(() =>
     },
     accountAddress: {
       marginLeft: '0.02rem',
-      marginTop: '-14px',
+      marginTop: '-18px',
+      fontSize: '14px',
     },
     myWallet: {
       marginLeft: '1.5625rem',
@@ -84,14 +86,14 @@ const useStyles = makeStyles(() =>
   })
 );
 
-export default function Account({ address }) {
+export default function Account({ address, name }) {
   const classes = useStyles();
   const navigate = useNavigate();
   const anchorRef = useRef(null);
   const [account, setaccount] = useState(false);
   const [accountList, setaccountList] = useState([]);
   const [mywallet, setmywallet] = useState([]);
-
+  var mywallet_text = 'My Wallet';
   const [arrowicon, setarrowicon] = useState(false);
 
   function setdropDown() {
@@ -106,18 +108,19 @@ export default function Account({ address }) {
     const result = localStorage.getItem('wallets');
     var jsonData = [];
     var jsondata = JSON.parse(result);
-    jsondata.map((option) => {
-      if (
-        option.provider != 'metamask' ||
-        option.provider != 'walletconnect' ||
-        option.provider != 'portis' ||
-        option.provider != 'coinbase' ||
-        option.provider != 'fortmatic' ||
-        option.provider != 'torus'
-      ) {
-        jsonData.push({ address: option.address, provider: option.provider });
-      }
-    });
+    jsondata &&
+      jsondata.map((option) => {
+        if (
+          option.provider != 'metamask' &&
+          option.provider != 'walletconnect' &&
+          option.provider != 'portis' &&
+          option.provider != 'coinbase' &&
+          option.provider != 'fortmatic' &&
+          option.provider != 'torus'
+        ) {
+          jsonData.push({ address: option.address, provider: option.provider, name: option.name });
+        }
+      });
     setaccountList(jsonData);
     const myWallet = localStorage.getItem('mywallet');
     setmywallet(JSON.parse(myWallet));
@@ -138,8 +141,14 @@ export default function Account({ address }) {
     setaccount(false);
   };
 
-  const updateSelectedAccount = (address) => {
+  const updateSelectedAccount = (address, name) => {
     localStorage.setItem('selected-account', address);
+    if (name == null) {
+      localStorage.setItem('selected-account', address);
+    } else {
+      localStorage.setItem('selected-account', address);
+      localStorage.setItem('selected-name', name);
+    }
   };
 
   const routeToDashboard = () => {
@@ -147,25 +156,79 @@ export default function Account({ address }) {
     navigate(`/${address}/dashboard/`, { replace: true });
   };
 
-  function shortaddress(addy) {
+  function test1(address, name) {
+    if (name == 'null') {
+      return address.substring(0, 5) + '...';
+    } else {
+      return name.substring(0, 6) + '...';
+    }
+  }
+
+  function shortaddress(addy, name) {
     if (addy === '') {
       return addy;
+    } else {
+      let rename = '';
+      let wallets = localStorage.getItem('wallets');
+      wallets = JSON.parse(wallets);
+      wallets &&
+        wallets.map((option) => {
+          if (option.address == address && option.name != 'null') {
+            let shortAddress1 =
+              option.name.length >= 4
+                ? `${
+                    option.name[0] +
+                    option.name[1] +
+                    option.name[2] +
+                    option.name[3] +
+                    option.name[4] +
+                    option.name[5]
+                  }...`
+                : option.name;
+            rename = shortAddress1;
+            rename == 'undefiend' ? localStorage.setItem('selected-name', rename) : '';
+            // rename = option.name;
+          } else {
+            // rename = addy;
+            let shortAddress =
+              addy.length >= 4
+                ? `${addy[0] + addy[1] + addy[2] + addy[3] + addy[4] + addy[5]}...`
+                : addy;
+            rename = shortAddress;
+            // rename = shortAddress;
+          }
+        });
+      return localStorage.getItem('selected-name') == 'null'
+        ? rename
+        : localStorage.getItem('selected-name');
     }
-    if (addy) {
-      const l = addy.length;
-      const addynew = `${addy[0] + addy[1] + addy[2] + addy[3] + addy[4] + addy[5]}...${
-        addy[l - 4]
-      }${addy[l - 3]}${addy[l - 2]}${addy[l - 1]}`;
 
-      const shortAddress = `${addy[0] + addy[1] + addy[2] + addy[3] + addy[4] + addy[5]}...`;
-      return shortAddress;
-    }
+    // if (addy !== '' && name == 'null') {
+    //   const l = addy.length;
+    //   const addynew = `${addy[0] + addy[1] + addy[2] + addy[3] + addy[4] + addy[5]}...${
+    //     addy[l - 4]
+    //   }${addy[l - 3]}${addy[l - 2]}${addy[l - 1]}`;
+
+    //   const shortAddress = `${addy[0] + addy[1] + addy[2] + addy[3] + addy[4] + addy[5]}...`;
+    //   return shortAddress;
+    // } else {
+    //   let rename = '';
+    //   let wallets = localStorage.getItem('wallets');
+    //   wallets = JSON.parse(result);
+    //   wallets.map((option) => {
+    //     if (option.address == address && option.name != 'null') {
+    //       rename = option.name;
+    //     }
+    //   });
+    // }
   }
 
   function shortaddress1(addy) {
     if (addy === '') {
       return addy;
     }
+    let mywallet = localStorage.getItem('mywallet');
+    mywallet = JSON.parse(mywallet);
     const l = addy.length;
     const addynew = `${
       addy[0] + addy[1] + addy[2] + addy[3] + addy[4] + addy[5] + addy[6] + addy[7] + addy[8]
@@ -184,15 +247,15 @@ export default function Account({ address }) {
             <Typography
               variant="primaryFont"
               sx={{
-                color: (theme) => theme.palette.menu.account_font,
+                color: (theme) => theme.palette.menu.myWallet_font_light,
               }}
               className={classes.accountAddress}>
-              {shortaddress(localStorage.getItem('selected-account'))}
+              {test1(address, name)}
             </Typography>
             {arrowicon == true ? (
-              <ExpandLessIcon sx={{ ml: 4, mt: -2.1, color: 'fff' }} />
+              <ExpandLessIcon sx={{ ml: 4, mt: -2.1, color: '#4453AD' }} />
             ) : (
-              <ExpandMoreIcon sx={{ ml: 4, mt: -2.1, color: 'fff' }} />
+              <ExpandMoreIcon sx={{ ml: 4, mt: -2.1, color: '#4453AD' }} />
             )}
           </Stack>
           <Typography className={classes.accountBalance}>
@@ -201,13 +264,13 @@ export default function Account({ address }) {
         </Box>
       </AccountStyle>
       <MenuPopover
-        sx={{ ml: 5, mb: '1rem', width: '336px' }}
+        sx={{ ml: 9, mt: '0.2rem', width: '336px' }}
         open={account}
         onClose={hideAccountPopover}
         anchorEl={anchorRef.current}>
         <Box className={classes.myWallet}>
           <Typography variant="myWallet_font">
-            <p>My Wallet</p>
+            <p>{mywallet.length > 0 && mywallet_text}</p>
           </Typography>
         </Box>
         <Box sx={{ py: 1 }}>
@@ -225,20 +288,21 @@ export default function Account({ address }) {
                 {shortaddress1(option.address)}
               </ListItemText> */}
                 <Box>
-                  <Acc address={option.address} provider={option.provider} />
+                  <Acc address={option.address} provider={option.provider} name={option.name} />
                 </Box>
               </ListItem>
             ))}
         </Box>
         <Box className={classes.myWallet}>
           <Typography variant="myWallet_font">
-            <p>Watchlist</p>
+            <p>{accountList.length > 0 && 'Watchlist'}</p>
           </Typography>
         </Box>
         <Box sx={{ py: 1 }}>
-          {accountList.map((option) => (
-            <ListItem className={classes.hoverMenu}>
-              {/* <ListItemText
+          {accountList &&
+            accountList.map((option) => (
+              <ListItem className={classes.hoverMenu}>
+                {/* <ListItemText
                 onClick={() => {
                   hideAccountPopover();
                   updateSelectedAccount(option.address);
@@ -248,11 +312,11 @@ export default function Account({ address }) {
                 sx={{ px: 0.5, cursor: 'pointer' }}>
                 {shortaddress1(option.address)}
               </ListItemText> */}
-              <Box>
-                <Accounts address={option.address} />
-              </Box>
-            </ListItem>
-          ))}
+                <Box>
+                  <Accounts address={option.address} name={option.name} />
+                </Box>
+              </ListItem>
+            ))}
 
           <Divider variant="middle" />
           <MenuItem

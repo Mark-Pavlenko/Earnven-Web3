@@ -43,6 +43,12 @@ import copy_link_menu_icon from '../../../../assets/icons/copy_link_menu_icon.sv
 import disconnect_menu_icon from '../../../../assets/icons/disconnect_menu_icon.svg';
 import dots_menu_icon from '../../../../assets/icons/3dots_menu_icon.svg';
 
+import ThemeConfig from '../../../../theme';
+import Rename from './Rename';
+import { Disconnection_Mywallet } from './Disconnect_Mywallet';
+import Rename_Mywallet from './Rename_Mywallet';
+import Popup from './popup';
+
 const AccountStyle = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -111,7 +117,7 @@ const useStyles = makeStyles(() =>
       width: '306px',
     },
     icon: {
-      marginLeft: '38px',
+      marginLeft: '19px',
       marginTop: '12px',
       display: 'flex',
       width: '16px',
@@ -149,12 +155,14 @@ const CustomStyle = styled('a')(({ theme }) => ({
   },
 }));
 
-export default function Acc({ address, provider }) {
+export default function Acc({ address, provider, name }) {
   const classes = useStyles();
   const navigate = useNavigate();
   const anchorRef = useRef(null);
   const [account, setaccount] = useState(false);
   const [accountList, setaccountList] = useState([]);
+  const [openPopup, setOpenPopup] = useState(false);
+  const [openPopup_rename, setOpenPopup_rename] = useState(false);
 
   useEffect(() => {
     const result = localStorage.getItem('mywallet');
@@ -173,8 +181,18 @@ export default function Acc({ address, provider }) {
     setaccount(false);
   };
 
-  const updateSelectedAccount = (address) => {
+  const updateSelectedAccount = (address, name) => {
     localStorage.setItem('selected-account', address);
+    if (name == 'null') {
+      localStorage.setItem('selected-account', address);
+    } else {
+      localStorage.setItem('selected-account', address);
+      let shortAddress =
+        name && name.length >= 4
+          ? `${name[0] + name[1] + name[2] + name[3] + name[4] + name[5]}...`
+          : name;
+      localStorage.setItem('selected-name', name);
+    }
   };
 
   const routeToDashboard = () => {
@@ -182,22 +200,32 @@ export default function Acc({ address, provider }) {
     navigate(`/${address}/dashboard/`, { replace: true });
   };
 
-  function shortaddress(addy) {
+  function function_provider(provider) {
+    if (provider == 'metamask') {
+      return 'MetaMask';
+    }
+  }
+
+  function shortaddress(addy, name) {
     if (addy === '') {
       return addy;
     }
     if (addy) {
-      const l = addy.length;
-      const addynew = `${
-        addy[0] + addy[1] + addy[2] + addy[3] + addy[4] + addy[5] + addy[6] + addy[7] + addy[8]
-      }...${addy[l - 7]}${addy[l - 6]}${addy[l - 5]}${addy[l - 4]}${addy[l - 3]}${addy[l - 2]}${
-        addy[l - 1]
-      }`;
+      if (name == 'null') {
+        const l = addy.length;
+        const addynew = `${
+          addy[0] + addy[1] + addy[2] + addy[3] + addy[4] + addy[5] + addy[6] + addy[7] + addy[8]
+        }...${addy[l - 7]}${addy[l - 6]}${addy[l - 5]}${addy[l - 4]}${addy[l - 3]}${addy[l - 2]}${
+          addy[l - 1]
+        }`;
 
-      const shortAddress = `${
-        addy[0] + addy[1] + addy[2] + addy[3] + addy[4] + addy[5] + addy[6] + addy[7] + addy[8]
-      }...`;
-      return addynew;
+        const shortAddress = `${
+          addy[0] + addy[1] + addy[2] + addy[3] + addy[4] + addy[5] + addy[6] + addy[7] + addy[8]
+        }...`;
+        return addynew;
+      } else {
+        return name;
+      }
     }
   }
 
@@ -222,7 +250,7 @@ export default function Acc({ address, provider }) {
           <Stack
             onClick={() => {
               hideAccountPopover();
-              updateSelectedAccount(address);
+              updateSelectedAccount(address, name);
               routeToDashboard();
             }}
             direction="row">
@@ -232,7 +260,7 @@ export default function Acc({ address, provider }) {
                 color: (theme) => theme.palette.menu.myWallet_font_light,
               }}
               className={classes.accountAddress}>
-              {shortaddress(address)}
+              {shortaddress(address, name)}
             </Typography>
           </Stack>
           <div className={classes.icon1} onClick={showAccountPopover}>
@@ -241,11 +269,11 @@ export default function Acc({ address, provider }) {
           <Typography
             onClick={() => {
               hideAccountPopover();
-              updateSelectedAccount(address);
+              updateSelectedAccount(address, name);
               routeToDashboard();
             }}
             className={classes.accountBalance}>
-            <Provider>{provider}</Provider>
+            <Provider>{function_provider(provider)}</Provider>
           </Typography>
         </Box>
       </AccountStyle>
@@ -255,7 +283,11 @@ export default function Acc({ address, provider }) {
         onClose={hideAccountPopover}
         anchorEl={anchorRef.current}>
         <Box className={classes.menu}>
-          <List disablePadding>
+          <List
+            onClick={() => {
+              setOpenPopup_rename(true);
+            }}
+            disablePadding>
             <List_Menu_Pop_UP>
               <div className={classes.icon}>
                 <img src={rename_menu_icon} alt="no pic" />
@@ -263,15 +295,7 @@ export default function Acc({ address, provider }) {
               <div className={classes.text}>Rename Wallet</div>
             </List_Menu_Pop_UP>
           </List>
-          {/* <List className="List" disablePadding>
-            <List_Menu_Pop_UP>
-              <div className={classes.icon}>
-                <img src={copy_menu_icon} alt="no pic" />
-              </div>
-              <div className={classes.text}>Copy Address</div>
-            </List_Menu_Pop_UP>
-          </List> */}
-          <List disablePadding>
+          <List onClick={() => navigator.clipboard.writeText(address)} disablePadding>
             <List_Menu_Pop_UP>
               <div className={classes.icon}>
                 <img src={copy_menu_icon} alt="no pic" />
@@ -279,7 +303,7 @@ export default function Acc({ address, provider }) {
               <div className={classes.text}>Copy Address</div>
             </List_Menu_Pop_UP>
           </List>
-          <List disablePadding>
+          <List onClick={() => navigator.clipboard.writeText(window.location.href)} disablePadding>
             <List_Menu_Pop_UP>
               <div className={classes.icon}>
                 <img src={copy_link_menu_icon} alt="no pic" />
@@ -287,7 +311,11 @@ export default function Acc({ address, provider }) {
               <div className={classes.text}>Copy Link</div>
             </List_Menu_Pop_UP>
           </List>
-          <List disablePadding>
+          <List
+            onClick={() => {
+              setOpenPopup(true);
+            }}
+            disablePadding>
             <List_Menu_Pop_UP>
               <div className={classes.icon}>
                 <img src={disconnect_menu_icon} alt="no pic" />
@@ -297,6 +325,14 @@ export default function Acc({ address, provider }) {
           </List>
         </Box>
       </MenuPopover>
+      <ThemeConfig>
+        <Popup title="Disconnect" openPopup={openPopup} setOpenPopup={setOpenPopup}>
+          <Disconnection_Mywallet address={address} name={name} />
+        </Popup>
+        <Popup title="Rename" openPopup={openPopup_rename} setOpenPopup={setOpenPopup_rename}>
+          <Rename_Mywallet address={address} name={name} />
+        </Popup>
+      </ThemeConfig>
     </>
   );
 }
