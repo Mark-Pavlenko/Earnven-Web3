@@ -8,17 +8,25 @@ Version           Date                         Description                    De
 1.0               11/Nov/2021                   Initial Development            Prabhakaran.R
 
 ******************************************************************************************************/
+//import rp from 'request-promise';
 
 const rp = require('request-promise');
 
 const NewCryptoImages = async (symbol) => {
-  console.log('Inside the logo fetch process');
+  require('dotenv').config({ path: '../../../.env.local' });
+  //get the API key setup values
+  const API_IMG_URL = process.env.REACT_APP_API_IMG_URL;
+  const API_KEY_NAME = process.env.REACT_APP_API_KEY_NAME;
+  const API_KEY_VALUE = process.env.REACT_APP_API_KEY_VALUE;
+  console.log('API_IMG_URL', API_IMG_URL);
+  console.log('API_KEY_VALUE', API_KEY_VALUE);
   let newImageList;
   //get list of new tokens in the array
+
   try {
     newImageList = {
       method: 'GET',
-      uri: 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/info',
+      uri: `https://cmctoken-proxy.herokuapp.com/${API_IMG_URL}`,
       qs: {
         //pass symbol is an argument to the image url
         symbol: symbol,
@@ -26,7 +34,7 @@ const NewCryptoImages = async (symbol) => {
         aux: 'urls,logo,description,tags,platform,date_added,notice,status',
       },
       headers: {
-        'X-CMC_PRO_API_KEY': 'a49aa677-514a-4e14-8fe3-8a872b3dc2fa',
+        'X-CMC_PRO_API_KEY': API_KEY_VALUE,
       },
       json: true,
       gzip: true,
@@ -52,5 +60,7 @@ const NewCryptoImages = async (symbol) => {
   }
   return data[newSymbol].logo;
 }; //end of main function
+
+//NewCryptoImages('PN')
 
 export default NewCryptoImages;

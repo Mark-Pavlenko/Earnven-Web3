@@ -24,6 +24,7 @@
     "big-number": "^2.0.0",
     "chart.js": "^3.5.1",
     "coingecko-api": "^1.0.10",
+    "dotenv": "^10.0.0",
     "eth-permit": "^0.1.7",
     "eth-sig-util": "^3.0.1",
     "ethereumjs-util": "^7.1.0",

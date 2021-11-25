@@ -12,11 +12,20 @@ import rp from 'request-promise';
 import NewCryptoImages from './NewCryptoImages';
 
 const RecentAddedTokens = async () => {
+  console.log('CMC - i am inside the app');
+  require('dotenv').config({ path: '../../../.env.local' });
+  //get the API key setup values
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+  const API_KEY_NAME = process.env.REACT_APP_API_KEY_NAME;
+  const API_KEY_VALUE = process.env.REACT_APP_API_KEY_VALUE;
+  console.log('API_BASE_URL', API_BASE_URL);
+  console.log('API_KEY_VALUE', API_KEY_VALUE);
   let newTokensList;
+
   try {
     newTokensList = {
       method: 'GET',
-      uri: 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest',
+      uri: `https://cmctoken-proxy.herokuapp.com/${API_BASE_URL}`,
       qs: {
         start: '1',
         limit: '18',
@@ -24,9 +33,7 @@ const RecentAddedTokens = async () => {
         sort_dir: 'desc',
       },
       headers: {
-        'X-CMC_PRO_API_KEY': 'a49aa677-514a-4e14-8fe3-8a872b3dc2fa', //tpj
-        //'X-CMC_PRO_API_KEY': 'a6efe5bb-bf2b-4420-9b4b-694003a0980f', //ocp
-        //'X-CMC_PRO_API_KEY': 'cb24b7c2-395b-43f2-955c-b392650c61d4', //office
+        'X-CMC_PRO_API_KEY': API_KEY_VALUE,
       },
       json: true,
       gzip: true,
@@ -54,6 +61,7 @@ const RecentAddedTokens = async () => {
           let platformData = data.platform ? data.platform.name : '';
           //replace if exist with fullname
           bcPlatform = platformData.replaceAll('Binance Smart Chain (BEP20)', 'BNB Coin');
+          //bcPlatform = platformData.replaceAll('Avalanche C-Chain', 'Avalanche');
 
           //get Token added timestamp in hours after checking with UTC date
           const tokenInUTCHrs = new Date(data.date_added).getUTCHours();
