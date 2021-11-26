@@ -9,9 +9,7 @@ function createGradient(color1, color2) {
 function createGradientHorizontal(color1, color2) {
   return `linear-gradient(to right, ${color1}, ${color2})`;
 }
-function createGradientBottomToRight() {
-  return `linear-gradient(to right bottom, #ffffff, #f5f4ff, #e9eafe, #dbe1ff, #cbd8ff, #c2d9ff, #b9daff, #b0dbfd, #b8e4f9, #c6ebf5, #d7f1f3, #e9f6f5)`;
-}
+
 // SETUP COLORS
 const GREY = {
   0: '#FFFFFF',
@@ -84,17 +82,16 @@ const ERROR = {
 };
 // Colors used in side menu
 const MENU = {
-  light: '#fcfcfc', // background color for currently selected option
-  text_color: '#171166', // text color of the side menu options
-  primary: '#000000', // text color used for texts in menu
-  // background_sidemenu: createGradientHorizontal('#fafafa', '#b7c6eb'), // background color for menu
-  background_sidemenu: createGradientHorizontal('#fafafa', '#b7c6eb'),
+  light: '#012138', // background color for currently selected option
+  text_color: '#ffffff', // text color of the side menu options
+  primary: '#ffffff', // text color used for texts in menu
+  background_sidemenu: createGradientHorizontal('#000101', '#020c13'), // background color for menu
   test: '#fa0000',
-  backgorundColor_wallet: 'rgba(255, 255, 255, 0.16)', // background color for the div of account photo, balance and user address
-  account_font: '#1E1E20', // front color for account user address
-  account_balance: '#4453AD', // font color for account user balance
-  accList_balance: '2px 2px 4px 0px #FFFFFF1A inset', // background color for Watchlist hover
-  backgorundColor_wallet_secondary: '#FFFFFF', // white for front menu wallet
+  backgorundColor_wallet: 'rgba(0, 0, 139)', // background color for the div of account photo, balance and user address
+  account_font: '#ffffff', // front color for account user address
+  account_balance: '#ffffff', // font color for account user balance
+  accList_balance: '2px 2px 4px 0px #ffff9c inset', // background color for Watchlist hover
+  backgorundColor_wallet_secondary: '#043c74', // white for front menu wallet
 };
 
 const BACKGROUND = {
@@ -114,11 +111,14 @@ const GRADIENTS = {
   error: createGradient(ERROR.light, ERROR.main),
   background: createGradient(BACKGROUND.light, BACKGROUND.dark),
   custom: createGradientHorizontal('#3b2959', '#1d282f'),
-  // background_sidemenu:  createGradientHorizontal('rgba(227,237,255,1) ', 'rgba(255,255,255,1)'), // background color for side menu
-  background_sidemenu: createGradientBottomToRight(),
+  background_sidemenu: createGradientHorizontal('#000101', '#020c13'), // background color for side menu
 };
 
-const paletteWhite = {
+// background: 'rgba(255, 255, 255, 0.16)',
+// mixBlendMode: 'normal',
+// boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+// backdropFilter: 'blur(35px)',
+const paletteBlack = {
   common: { black: '#000', white: '#fff' },
   primary: { ...PRIMARY },
   secondary: { ...SECONDARY },
@@ -130,8 +130,8 @@ const paletteWhite = {
   grey: GREY,
   gradients: GRADIENTS,
   divider: GREY[500_24],
-  text: { primary: '#000000', secondary: GREY[600], disabled: GREY[500] },
-  background: { paper: '#e2edff', default: '#e2edff', neutral: GREY[200] },
+  text: { primary: '#fcfcfc', secondary: '#fcfcfc', disabled: '#fcfcfc' },
+  background: { paper: '#0B0E1D', default: '#0B0E1D', neutral: '#0B0E1D' },
   action: {
     active: GREY[600],
     hover: '#FFFFFF',
@@ -144,4 +144,4 @@ const paletteWhite = {
   },
 };
 
-export default paletteWhite;
+export default paletteBlack;

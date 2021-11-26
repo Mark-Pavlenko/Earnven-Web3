@@ -18,8 +18,8 @@ function responsiveFontSizes({ sm, md, lg }) {
   };
 }
 
-const FONT_PRIMARY = 'Saira, sans-serif';
-// fontFamily: 'Saira, sans-serif',
+const FONT_PRIMARY = 'saira, sans-serif';
+
 const typography = {
   fontFamily: FONT_PRIMARY,
   fontWeightRegular: 400,

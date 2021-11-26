@@ -11,17 +11,19 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
-import {  useLocation } from 'react-router-dom';
+import React from 'react';
+import { useLocation } from 'react-router-dom';
 // material
 import { experimentalStyled as styled } from '@material-ui/core/styles';
 // import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@material-ui/core';
 import { Box, Drawer, Stack } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
-import {MHidden} from '../../../components/@material-extend';
+import { MHidden } from '../../../components/@material-extend';
 import CompanyLogo from '../../../assets/icons/logo_menu.svg';
 import Earnven from '../../../assets/icons/Earnven_menu_text.svg';
+import Dark_Earnven_logo from '../../../assets/icons/Dark_Earnven_logo.svg';
 import Account from './account/account';
-import './sidebar.css'
+import './sidebar.css';
 import Links from './social/Links';
 import Accounts from './account/Accounts';
 const DRAWER_WIDTH = 315;
@@ -29,28 +31,26 @@ const DRAWER_WIDTH = 315;
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('lg')]: {
     flexShrink: 0,
-    width: DRAWER_WIDTH
-  }
+    width: DRAWER_WIDTH,
+  },
 }));
-
-
 
 Sidebar.propTypes = {
   isOpenSidebar: PropTypes.bool,
-  onCloseSidebar: PropTypes.func
+  onCloseSidebar: PropTypes.func,
+  setTheme: PropTypes.bool,
 };
 
-
-export default function Sidebar({ isOpenSidebar, onCloseSidebar,address,name }){
+export default function Sidebar({ isOpenSidebar, onCloseSidebar, address, setTheme }) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  function mouseOver(e){
-    e.target.style.background = '#242321'
+  function mouseOver(e) {
+    e.target.style.background = '#242321';
   }
 
-  function mouseOut(e){
-      e.target.style.background = 'transparent'
+  function mouseOut(e) {
+    e.target.style.background = 'transparent';
   }
 
   useEffect(() => {
@@ -63,46 +63,48 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar,address,name }){
     <Scrollbar
       sx={{
         height: '100vh',
-        background: (theme) => theme.palette.gradients.background_sidemenu,
+        background: (theme) => (setTheme ? '#10142c' : theme.palette.gradients.background_sidemenu),
         boxShadow: '0 2px 3px 30px #d2dcf6',
-        '& .simplebar-content': { display: 'flex', flexDirection: 'column' }
-      }}
-    >
+        'mix-blend-mode': 'normal',
+        '& .simplebar-content': { display: 'flex', flexDirection: 'column' },
+      }}>
       {/* <Box sx={{ px: 2.5, py: 3 }}>
         <Box component={RouterLink} to="/" sx={{ display: 'inline-flex' }}>
           <Logo />
         </Box>
       </Box> */}
-  <Box sx={{ px: '38.91%', pb: 1, mt: '5%', ml: '-20px' }}>
+      <Box sx={{ px: '38.91%', pb: 1, mt: '5%', ml: '-20px' }}>
         <Stack
           direction="row"
           spacing={2}
           sx={{
             position: 'relative',
-            bgcolor: 'transparent'
-          }}
-        >
-         <img src={CompanyLogo} alt=""></img>
-         <img className='Earnven' src={Earnven} alt=""></img>
+            bgcolor: 'transparent',
+          }}>
+          <img src={CompanyLogo} alt=""></img>
+          <img className="Earnven" src={setTheme ? Dark_Earnven_logo : Earnven} alt=""></img>
         </Stack>
-        </Box>
- 
-       
-
-      <Box sx={{ px: 8}}>
-          <Account address={address} name={name}/>
       </Box>
 
-      <NavSection  sx={{ px: 8, color: 'black'}} navConfig={sidebarConfig} address={address}/>
-      {/* <NavSection  sx={{ px: 8, color: 'black'}} navConfig={upcomingConfig} address={address}/> */}
+      <Box sx={{ px: 8 }}>
+        <Account address={address} name={name} />
+      </Box>
+
+      <NavSection
+        sx={{ px: 8, color: 'black' }}
+        navConfig={sidebarConfig}
+        address={address}
+        setTheme={setTheme}
+      />
+
       <center>
-      {/* <Accordion style={{width:'60%', background:'transparent'}}>
+        {/* <Accordion style={{width:'60%', background:'transparent'}}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
         > */}
-          {/* Tools */}
+        {/* Tools */}
         {/* </AccordionSummary> */}
         {/* <AccordionDetails>
           <div
@@ -134,23 +136,22 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar,address,name }){
               Token Creator
           </div>
         </AccordionDetails> */}
-      {/* </Accordion> */}
+        {/* </Accordion> */}
       </center>
       {/* <Box sx={{ flexGrow: 1 }} /> */}
-      <Links/>
+      <Links />
     </Scrollbar>
   );
 
   return (
     <RootStyle>
-      <MHidden width="lgUp" >
+      <MHidden width="lgUp">
         <Drawer
           open={isOpenSidebar}
           onClose={onCloseSidebar}
           PaperProps={{
-            sx: { width: DRAWER_WIDTH, overflow: 'auto', height: 'auto' }
-          }}
-        >
+            sx: { width: DRAWER_WIDTH, overflow: 'auto', height: 'auto' },
+          }}>
           {renderContent}
         </Drawer>
       </MHidden>
@@ -164,9 +165,8 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar,address,name }){
               width: DRAWER_WIDTH,
               height: 'auto',
               overflow: 'auto',
-            }
-          }}
-        >
+            },
+          }}>
           {renderContent}
         </Drawer>
       </MHidden>

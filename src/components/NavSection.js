@@ -17,10 +17,13 @@ const ListItemStyle = styled((props) => <ListItem button disableGutters {...prop
     paddingLeft: theme.spacing(5),
     paddingRight: theme.spacing(2.5),
     fontWeight: 'fontWeightBold',
-    color: 'theme.palette.text.primary',
+    color:
+      localStorage.getItem('selectedTheme') == 'Day' ? 'theme.palette.text.primary' : '#FFFFFF',
     '&:hover': {
       borderRadius: '10px',
       width: '209px',
+      color:
+        localStorage.getItem('selectedTheme') == 'Day' ? 'theme.palette.text.primary' : '#000000',
     },
   })
 );
@@ -167,7 +170,8 @@ function NavItemUpcomming({ item, active, address }) {
   };
 
   const activeRootStyle = {
-    color: (theme) => theme.palette.menu.text_color,
+    color: (theme) =>
+      localStorage.getItem('selectedTheme') == 'Day' ? theme.palette.menu.text_color : '#000000',
     fontWeight: 'fontWeightBold',
     background: (theme) => theme.palette.menu.light,
     borderRadius: '7px',
@@ -175,7 +179,7 @@ function NavItemUpcomming({ item, active, address }) {
   };
 
   const activeSubStyle = {
-    color: '#f70707',
+    color: localStorage.getItem('selectedTheme') == 'Day' ? '#f70707' : '#000000',
     fontWeight: 'fontWeightMedium',
   };
 
