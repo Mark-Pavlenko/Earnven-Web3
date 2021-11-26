@@ -252,6 +252,7 @@ export default function Accounts({ address, name }) {
     }${addy[l - 1]}`;
     return addynew;
   }
+  function Rename() {}
 
   return (
     <>

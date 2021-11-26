@@ -5,6 +5,7 @@ import { Divider } from '@material-ui/core';
 import Sidebar from './sidebar/sidebar';
 import Header from './header/header';
 import './app.css';
+import ThemeConfig from '../../theme/index';
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;
@@ -15,29 +16,33 @@ const RootStyle = styled('div')({
   overflow: 'hidden',
 });
 
-const MainStyle = styled('div')(({ theme }) => ({
+let MainStyle = styled('div')(({ theme }) => ({
   flexGrow: 1,
   overflow: 'auto',
   minHeight: '100%',
   paddingTop: APP_BAR_MOBILE + 15,
   paddingBottom: theme.spacing(10),
+  background: localStorage.getItem('selectedTheme') == 'Day' ? theme.palette.background : '#0B0E1D',
   [theme.breakpoints.up('lg')]: {
     paddingTop: APP_BAR_DESKTOP,
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
   },
 }));
-
 export default function AppLayout() {
   const [open, setOpen] = useState(false);
+  const [changeTheme, setChangeTheme] = useState(false);
   return (
     <RootStyle>
-      <Header onOpenSidebar={() => setOpen(true)} />
+      <Header
+        onOpenSidebar={() => setOpen(true)}
+        themeChanger={() => setChangeTheme(!changeTheme)}
+      />
       <Sidebar
         isOpenSidebar={open}
         onCloseSidebar={() => setOpen(false)}
         address={localStorage.getItem('selected-account')}
-        name={localStorage.getItem('selected-name')}
+        setTheme={changeTheme}
       />
       <MainStyle>
         <Divider variant="middle" />

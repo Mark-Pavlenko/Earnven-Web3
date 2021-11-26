@@ -5,7 +5,6 @@ import MenuListComposition from '../../../components/gasDropDownMenu';
 import LanguageDropDown from '../../../components/languageDropDown';
 import HelpDropDown from '../../../components/helpDropDown';
 import './header.css'
-
 export default class Header extends Component{
     render(){
         return(
@@ -49,6 +48,14 @@ import LanguageDropDown from '../../../components/languageDropDown';
 import HelpDropDown from '../../../components/helpDropDown';
 // import TransparentButton from '../../../components/TransparentButton'
 import SearchTokens from '../../../components/searchTokens';
+import Brightness3Icon from '@material-ui/icons/Brightness3';
+import Brightness7Icon from '@material-ui/icons/Brightness7';
+import EllipseDark from '../../../assets/icons/Ellipse230Dark.svg';
+import EllipseLight from '../../../assets/icons/EllipseLight.svg';
+import SubtractLight from '../../../assets/icons/SubtractLight.svg';
+import SubtractDark from '../../../assets/icons/SubtractDark.svg';
+import ThemeConfig from '../../../theme/index.js';
+import Sidebar from '../sidebar/sidebar';
 
 const DRAWER_WIDTH = 280;
 const APPBAR_MOBILE = 64;
@@ -58,7 +65,10 @@ const RootStyle = styled(AppBar)(({ theme }) => ({
   boxShadow: 'none',
   backdropFilter: 'blur(6px)',
   WebkitBackdropFilter: 'blur(6px)', // Fix on Mobile
-  backgroundColor: alpha(theme.palette.background.default, 0.72),
+  backgroundColor:
+    localStorage.getItem('selectedTheme') == 'Day'
+      ? alpha(theme.palette.background.default, 0.72)
+      : '#0B0E1D',
   // backgroundColor: theme.palette.gradients.success,
   [theme.breakpoints.up('lg')]: {
     width: `calc(100% - ${DRAWER_WIDTH + 1}px)`,
@@ -75,17 +85,29 @@ const ToolbarStyle = styled(Toolbar)(({ theme }) => ({
 
 Header.propTypes = {
   onOpenSidebar: PropTypes.func,
+  themeChanger: PropTypes.func,
 };
 
-export default function Header({ onOpenSidebar }) {
+export default function Header({ onOpenSidebar, themeChanger }) {
   const navigate = useNavigate();
   const { address } = useParams();
-
+  const [open, setOpen] = useState(false);
   const [Token, setToken] = useState('');
-
+  const [flag, setFlag] = useState(false);
+  const [theme, setTheme] = useState(false);
+  const icon = !theme ? <Brightness3Icon /> : <Brightness7Icon />;
   function callbackFunction(childData) {
     setToken(childData);
     navigate(`/${address}/token/${childData}`);
+  }
+  function setDynamicTheme() {
+    setTheme(!theme);
+    setFlag(true);
+    if (theme) {
+      localStorage.setItem('selectedTheme', 'Day');
+    } else {
+      localStorage.setItem('selectedTheme', 'Night');
+    }
   }
 
   return (
@@ -116,7 +138,45 @@ export default function Header({ onOpenSidebar }) {
         <div style={{ marginRight: '20px' }}>
           <HelpDropDown />
         </div>
-        {/* </Stack> */}
+        <div style={{ marginRight: '20px' }}>
+          <IconButton
+            edge="end"
+            color="inherit"
+            aria-label="mode"
+            onClick={() => {
+              setDynamicTheme();
+              themeChanger();
+            }}>
+            {!theme ? (
+              <div style={{ height: '42px', 'margin-left': '-15px' }}>
+                <img
+                  style={{ position: 'absolute', 'margin-left': '6px' }}
+                  src={SubtractDark}
+                  alt=""></img>
+                <img src={EllipseLight} alt=""></img>
+              </div>
+            ) : (
+              <div style={{ height: '42px', 'margin-left': '-15px' }}>
+                <img
+                  style={{
+                    position: 'absolute',
+                    'margin-left': '15px',
+                    'margin-top': '5px',
+                    width: '20px',
+                  }}
+                  src={SubtractLight}
+                  alt=""></img>
+                <img
+                  style={{ 'margin-right': '19px', width: '39px' }}
+                  src={EllipseDark}
+                  alt=""></img>
+              </div>
+            )}
+          </IconButton>
+        </div>
+        <div>
+          <ThemeConfig themeSelection={theme}></ThemeConfig>
+        </div>
       </ToolbarStyle>
     </RootStyle>
   );
