@@ -12,14 +12,12 @@ import rp from 'request-promise';
 import NewCryptoImages from './NewCryptoImages';
 
 const RecentAddedTokens = async () => {
-  console.log('CMC - i am inside the app');
   require('dotenv').config({ path: '../../../.env.local' });
   //get the API key setup values
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const API_KEY_NAME = process.env.REACT_APP_API_KEY_NAME;
   const API_KEY_VALUE = process.env.REACT_APP_API_KEY_VALUE;
-  console.log('API_BASE_URL', API_BASE_URL);
-  console.log('API_KEY_VALUE', API_KEY_VALUE);
+
   let newTokensList;
 
   try {
@@ -54,14 +52,22 @@ const RecentAddedTokens = async () => {
           let bcPlatform;
           //get UTC hours
           const UTCHrs = new Date().getUTCHours();
-          console.log('UTC Hrs', UTCHrs);
 
           const data = response.data[i];
           //set the platform name based on the coming full name
-          let platformData = data.platform ? data.platform.name : '';
-          //replace if exist with fullname
-          bcPlatform = platformData.replaceAll('Binance Smart Chain (BEP20)', 'BNB Coin');
-          //bcPlatform = platformData.replaceAll('Avalanche C-Chain', 'Avalanche');
+
+          let platformData;
+          if (data.platform != null) {
+            platformData = data.platform ? data.platform.name : '';
+            //replace if exist with fullname
+            if (platformData === 'Binance Smart Chain (BEP20)')
+              bcPlatform = platformData.replaceAll('Binance Smart Chain (BEP20)', 'Binance Coin');
+            else if (platformData === 'Avalanche C-Chain') {
+              bcPlatform = platformData.replaceAll('Avalanche C-Chain', 'Avalanche');
+            } else {
+              bcPlatform = platformData;
+            }
+          }
 
           //get Token added timestamp in hours after checking with UTC date
           const tokenInUTCHrs = new Date(data.date_added).getUTCHours();
@@ -77,20 +83,34 @@ const RecentAddedTokens = async () => {
               if (tokenPrice != 0) {
                 break;
               } else if (tokenPrice == 0) {
-                tokenPrice = parseFloat(data.quote.USD.price).toFixed(7 + i);
+                tokenPrice = parseFloat(data.quote.USD.price).toFixed(i);
+                if (tokenPrice != 0) {
+                  tokenPrice = parseFloat(data.quote.USD.price).toFixed(i + 4);
+                  break;
+                }
               }
             }
           }
-
+          //all the decimals are zeros like (0.000000000..) make it simple 0.0
+          if (tokenPrice == 0) {
+            tokenPrice = 0.0;
+          }
           //call the NewCyptoImage process to get the relevant image for each platform/blockchian cryptos
-          if (checkPlatformSymbol != data.platform.symbol) {
-            blockChainLogoUrl = await NewCryptoImages(data.platform.symbol);
+          if (data.platform != null) {
+            if (checkPlatformSymbol != data.platform.symbol) {
+              blockChainLogoUrl = await NewCryptoImages(data.platform.symbol);
+            }
+          }
+          //if platform data is not found just give null
+          if (data.platform == null) {
+            blockChainLogoUrl = '';
+            bcPlatform = '';
           }
 
           //create the object with data set
           object.no = i + 1;
           object.name = data.name;
-          object.symbol = data.symbol;
+          object.symbol = data.symbol ? data.symbol : '';
           object.price = tokenPrice;
           object.change_1hr = data.quote.USD.percent_change_1h;
           object.change_24hr = data.quote.USD.percent_change_24h;
