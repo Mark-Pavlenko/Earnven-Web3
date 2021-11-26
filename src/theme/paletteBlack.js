@@ -118,7 +118,7 @@ const GRADIENTS = {
 // mixBlendMode: 'normal',
 // boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
 // backdropFilter: 'blur(35px)',
-const paletteB = {
+const paletteBlack = {
   common: { black: '#000', white: '#fff' },
   primary: { ...PRIMARY },
   secondary: { ...SECONDARY },
@@ -144,4 +144,4 @@ const paletteB = {
   },
 };
 
-export default paletteB;
+export default paletteBlack;

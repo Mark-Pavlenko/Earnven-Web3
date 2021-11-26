@@ -5,13 +5,13 @@ import { CssBaseline } from '@material-ui/core';
 import { createTheme, StyledEngineProvider, ThemeProvider } from '@material-ui/core/styles';
 //
 import shape from './shape';
-import paletteW from './palette';
+import paletteWhite from './palette';
 import paletteB from './paletteBlack';
 import typography from './typography';
 import breakpoints from './breakpoints';
 import GlobalStyles from './globalStyles';
 import componentsOverride from './overrides';
-import shadows, { customShadows } from './shadowsW';
+import shadows, { customShadows } from './shadowsWhite';
 
 // ----------------------------------------------------------------------
 
@@ -21,11 +21,11 @@ ThemeConfig.propTypes = {
 };
 
 export default function ThemeConfig({ children, themeSelection }) {
-  let palette = paletteW;
+  let palette = paletteWhite;
   if (themeSelection) {
-    palette = paletteB;
+    palette = paletteBlack;
   } else {
-    palette = paletteW;
+    palette = paletteWhite;
   }
   const themeOptions = {
     palette,

@@ -1,5 +1,5 @@
 import { alpha } from '@material-ui/core/styles';
-import paletteB from './paletteBlack';
+import paletteBlack from './paletteBlack';
 
 // ----------------------------------------------------------------------
 
@@ -48,12 +48,12 @@ const createCustomShadow = (color) => {
     z16: `0 0 2px 0 ${transparent}, 0 16px 32px -4px ${transparent}`,
     z20: `0 0 2px 0 ${transparent}, 0 20px 40px -4px ${transparent}`,
     z24: `0 0 4px 0 ${transparent}, 0 24px 48px 0 ${transparent}`,
-    primary: `0 8px 16px 0 ${alpha(paletteW.primary.main, 0.24)}`,
-    secondary: `0 8px 16px 0 ${alpha(paletteW.secondary.main, 0.24)}`,
-    info: `0 8px 16px 0 ${alpha(paletteW.info.main, 0.24)}`,
-    success: `0 8px 16px 0 ${alpha(paletteW.success.main, 0.24)}`,
-    warning: `0 8px 16px 0 ${alpha(paletteW.warning.main, 0.24)}`,
-    error: `0 8px 16px 0 ${alpha(paletteW.error.main, 0.24)}`,
+    primary: `0 8px 16px 0 ${alpha(paletteWhite.primary.main, 0.24)}`,
+    secondary: `0 8px 16px 0 ${alpha(paletteWhite.secondary.main, 0.24)}`,
+    info: `0 8px 16px 0 ${alpha(paletteWhite.info.main, 0.24)}`,
+    success: `0 8px 16px 0 ${alpha(paletteWhite.success.main, 0.24)}`,
+    warning: `0 8px 16px 0 ${alpha(paletteWhite.warning.main, 0.24)}`,
+    error: `0 8px 16px 0 ${alpha(paletteWhite.error.main, 0.24)}`,
   };
 };
 

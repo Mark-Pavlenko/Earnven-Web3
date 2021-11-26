@@ -118,7 +118,7 @@ const GRADIENTS = {
   background_sidemenu: createGradientBottomToRight(),
 };
 
-const paletteW = {
+const paletteWhite = {
   common: { black: '#000', white: '#fff' },
   primary: { ...PRIMARY },
   secondary: { ...SECONDARY },
@@ -144,4 +144,4 @@ const paletteW = {
   },
 };
 
-export default paletteW;
+export default paletteWhite;
