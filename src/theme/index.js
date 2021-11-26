@@ -6,7 +6,7 @@ import { createTheme, StyledEngineProvider, ThemeProvider } from '@material-ui/c
 //
 import shape from './shape';
 import paletteWhite from './palette';
-import paletteB from './paletteBlack';
+import paletteBlack from './paletteBlack';
 import typography from './typography';
 import breakpoints from './breakpoints';
 import GlobalStyles from './globalStyles';
