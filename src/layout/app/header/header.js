@@ -50,12 +50,11 @@ import HelpDropDown from '../../../components/helpDropDown';
 import SearchTokens from '../../../components/searchTokens';
 import Brightness3Icon from '@material-ui/icons/Brightness3';
 import Brightness7Icon from '@material-ui/icons/Brightness7';
-import EllipseDark from '../../../assets/icons/Ellipse230Dark.svg';
-import EllipseLight from '../../../assets/icons/EllipseLight.svg';
-import SubtractLight from '../../../assets/icons/SubtractLight.svg';
-import SubtractDark from '../../../assets/icons/SubtractDark.svg';
+import darkIcon from '../../../assets/icons/darkIcon.svg';
+import lightIcon from '../../../assets/icons/lightIcon.svg';
 import ThemeConfig from '../../../theme/index.js';
 import Sidebar from '../sidebar/sidebar';
+import lightDashboard from '../../../assets/images/lightDashboard.jpg';
 
 const DRAWER_WIDTH = 280;
 const APPBAR_MOBILE = 64;
@@ -64,12 +63,8 @@ const APPBAR_DESKTOP = 92;
 const RootStyle = styled(AppBar)(({ theme }) => ({
   boxShadow: 'none',
   backdropFilter: 'blur(6px)',
-  WebkitBackdropFilter: 'blur(6px)', // Fix on Mobile
-  backgroundColor:
-    localStorage.getItem('selectedTheme') == 'Day'
-      ? alpha(theme.palette.background.default, 0.72)
-      : '#0B0E1D',
-  // backgroundColor: theme.palette.gradients.success,
+  WebkitBackdropFilter: 'blur(10px)', // Fix on Mobile
+  background: localStorage.getItem('selectedTheme') == 'Day' ? `url(${lightDashboard})` : `#0B0E1D`,
   [theme.breakpoints.up('lg')]: {
     width: `calc(100% - ${DRAWER_WIDTH + 1}px)`,
   },
@@ -148,29 +143,12 @@ export default function Header({ onOpenSidebar, themeChanger }) {
               themeChanger();
             }}>
             {!theme ? (
-              <div style={{ height: '42px', 'margin-left': '-15px' }}>
-                <img
-                  style={{ position: 'absolute', 'margin-left': '6px' }}
-                  src={SubtractDark}
-                  alt=""></img>
-                <img src={EllipseLight} alt=""></img>
-              </div>
+              <img
+                style={{ 'margin-bottom': '-24px', 'margin-right': '1px' }}
+                src={lightIcon}
+                alt=""></img>
             ) : (
-              <div style={{ height: '42px', 'margin-left': '-15px' }}>
-                <img
-                  style={{
-                    position: 'absolute',
-                    'margin-left': '15px',
-                    'margin-top': '5px',
-                    width: '20px',
-                  }}
-                  src={SubtractLight}
-                  alt=""></img>
-                <img
-                  style={{ 'margin-right': '19px', width: '39px' }}
-                  src={EllipseDark}
-                  alt=""></img>
-              </div>
+              <img style={{ 'margin-right': '15px' }} src={darkIcon} alt=""></img>
             )}
           </IconButton>
         </div>

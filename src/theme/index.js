@@ -35,6 +35,7 @@ export default function ThemeConfig({ children, themeSelection }) {
     shadows,
     customShadows,
   };
+  console.log('themeChanged', palette);
 
   const theme = createTheme(themeOptions);
   theme.components = componentsOverride(theme);
