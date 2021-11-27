@@ -65,7 +65,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar, address, setThe
     <Scrollbar
       sx={{
         height: '100vh',
-        // backdropFilter: 'saturate(180%) blur(60px)',
+        backdropFilter: 'saturate(180%) blur(160px)',
         // WebkitBackdropFilter: 'blur(100px)',
         'background-image': (theme) => (setTheme ? `url(${darkTheme})` : `url(${lightTheme})`),
         boxShadow: '0 2px 3px 30px #d2dcf6',
