@@ -113,6 +113,7 @@ export default function Header({ onOpenSidebar, themeChanger }) {
             <Icon icon={menu2Fill} />
           </IconButton>
         </MHidden>
+        <h2 style={{ marginRight: '-106px', color: !theme ? 'black' : 'white' }}>Dashboard</h2>
         <div>
           <span style={{ visibility: 'hidden' }}>{Token}</span>
           <SearchTokens parentCallback={callbackFunction} />

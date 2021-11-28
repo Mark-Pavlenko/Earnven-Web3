@@ -23,7 +23,7 @@ const ListItemStyle = styled((props) => <ListItem button disableGutters {...prop
       borderRadius: '10px',
       width: '209px',
       color:
-        localStorage.getItem('selectedTheme') == 'Day' ? 'theme.palette.text.primary' : '#000000',
+        localStorage.getItem('selectedTheme') == 'Day' ? '#141838' : 'theme.palette.text.primary',
     },
   })
 );
@@ -72,11 +72,19 @@ function NavItem({ item, active, address }) {
   };
 
   const activeRootStyle = {
-    color: (theme) => theme.palette.menu.text_color,
+    color: (theme) =>
+      localStorage.getItem('selectedTheme') == 'Day' ? theme.palette.menu.text_color : 'white',
     fontWeight: 'fontWeightBold',
-    background: (theme) => theme.palette.menu.light,
+    background: (theme) =>
+      localStorage.getItem('selectedTheme') == 'Day' ? theme.palette.menu.light : '#141838',
     borderRadius: '7px',
     width: '13rem',
+    '&:hover': {
+      borderRadius: '10px',
+      width: '209px',
+      color:
+        localStorage.getItem('selectedTheme') == 'Day' ? '#141838' : 'theme.palette.text.primary',
+    },
   };
 
   const activeSubStyle = {
@@ -98,7 +106,7 @@ function NavItem({ item, active, address }) {
           <Box
             component={Icon}
             icon={open ? arrowIosDownwardFill : arrowIosForwardFill}
-            sx={{ width: 16, height: 16, ml: 1 }}
+            sx={{ width: 16, height: 16, ml: 1, background: 'black' }}
           />
         </ListItemStyle>
 

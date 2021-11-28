@@ -1,6 +1,6 @@
 /* eslint-disable */
 import Scrollbar from '../../../components/Scrollbar';
-import sidebarConfig from '../SidebarConfig';
+import sidebarConfig, { getRecall } from '../SidebarConfig';
 // import upcomingConfig from '../upcomingConfig';
 import NavSection from '../../../components/NavSection';
 
@@ -46,7 +46,10 @@ Sidebar.propTypes = {
 export default function Sidebar({ isOpenSidebar, onCloseSidebar, address, setTheme }) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-
+  let newSideBard = [];
+  if (!setTheme || setTheme) {
+    newSideBard = getRecall();
+  }
   function mouseOver(e) {
     e.target.style.background = '#242321';
   }
@@ -65,7 +68,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar, address, setThe
     <Scrollbar
       sx={{
         height: '100vh',
-        backdropFilter: 'saturate(180%) blur(160px)',
+        // backdropFilter: 'saturate(180%) blur(160px)',
         // WebkitBackdropFilter: 'blur(100px)',
         'background-image': (theme) => (setTheme ? `url(${darkTheme})` : `url(${lightTheme})`),
         boxShadow: '0 2px 3px 30px #d2dcf6',
@@ -91,12 +94,12 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar, address, setThe
       </Box>
 
       <Box sx={{ px: 8 }}>
-        <Account address={address} name={name} />
+        <Account address={address} name={name} setTheme={setTheme} />
       </Box>
 
       <NavSection
         sx={{ px: 8, color: 'black' }}
-        navConfig={sidebarConfig}
+        navConfig={newSideBard}
         address={address}
         setTheme={setTheme}
       />
