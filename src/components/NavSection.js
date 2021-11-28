@@ -254,13 +254,20 @@ function NavItemUpcomming({ item, active, address }) {
           ...(isActiveRoot && activeRootStyle),
         }}>
         <ListItemIconStyle>{icon && icon}</ListItemIconStyle>
-        <ListItemText sx={{ color: '#1E1E20', opacity: '0.5' }} disableTypography primary={title} />
+        <ListItemText
+          sx={{
+            color: localStorage.getItem('selectedTheme') == 'Day' ? '#000000' : '#CCCFCF',
+            opacity: '0.5',
+          }}
+          disableTypography
+          primary={title}
+        />
 
         {info && info}
       </ListItemStyleUpcoming>
       <ListItemText
         sx={{
-          color: '#1E1E20',
+          color: localStorage.getItem('selectedTheme') == 'Day' ? '#000000' : '#CCCFCF',
           opacity: '0.5',
           display: 'flex',
           marginLeft: '4.8rem',

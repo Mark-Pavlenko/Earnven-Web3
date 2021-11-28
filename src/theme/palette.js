@@ -10,7 +10,7 @@ function createGradientHorizontal(color1, color2) {
   return `linear-gradient(to right, ${color1}, ${color2})`;
 }
 function createGradientBottomToRight() {
-  return `linear-gradient(to right bottom, #ffffff, #f5f4ff, #e9eafe, #dbe1ff, #cbd8ff, #c2d9ff, #b9daff, #b0dbfd, #b8e4f9, #c6ebf5, #d7f1f3, #e9f6f5)`;
+  return `linear-gradient(to right bottom, #ffffff, #fbfbff, #f7f8ff, #f1f4ff, #ebf1ff, #e9f2ff, #e7f2ff, #e5f3fe, #e9f7fd, #effafd, #f6fcfe, #fdffff)`;
 }
 // SETUP COLORS
 const GREY = {
@@ -131,7 +131,8 @@ const paletteWhite = {
   gradients: GRADIENTS,
   divider: GREY[500_24],
   text: { primary: '#000000', secondary: GREY[600], disabled: GREY[500] },
-  background: { paper: '#e2edff', default: '#e2edff', neutral: GREY[200] },
+  // background: { paper: '#e2edff', default: '#e2edff', neutral: GREY[200] },
+  background: { paper: ('#e2edff', '25%'), default: ('#e2edff', '25%'), neutral: GREY[200] },
   action: {
     active: GREY[600],
     hover: '#FFFFFF',

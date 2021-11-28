@@ -26,6 +26,8 @@ import Account from './account/account';
 import './sidebar.css';
 import Links from './social/Links';
 import Accounts from './account/Accounts';
+import darkTheme from '../../../assets/images/darkTheme.jpg';
+import lightTheme from '../../../assets/images/lightTheme.jpg';
 const DRAWER_WIDTH = 315;
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -63,7 +65,9 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar, address, setThe
     <Scrollbar
       sx={{
         height: '100vh',
-        background: (theme) => (setTheme ? '#10142c' : theme.palette.gradients.background_sidemenu),
+        backdropFilter: 'saturate(180%) blur(160px)',
+        // WebkitBackdropFilter: 'blur(100px)',
+        'background-image': (theme) => (setTheme ? `url(${darkTheme})` : `url(${lightTheme})`),
         boxShadow: '0 2px 3px 30px #d2dcf6',
         'mix-blend-mode': 'normal',
         '& .simplebar-content': { display: 'flex', flexDirection: 'column' },
@@ -139,7 +143,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar, address, setThe
         {/* </Accordion> */}
       </center>
       {/* <Box sx={{ flexGrow: 1 }} /> */}
-      <Links />
+      <Links setTheme={setTheme} />
     </Scrollbar>
   );
 

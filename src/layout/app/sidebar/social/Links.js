@@ -20,7 +20,7 @@ import { experimentalStyled as styled } from '@material-ui/core/styles';
 const useStyles = makeStyles(() =>
   createStyles({
     root: {
-      color: 'black',
+      color: localStorage.getItem('selectedTheme') == 'Day' ? '#000000' : '#FDFFFF',
       fontWeight: 400,
       fontSize: '14px',
       textDecoration: 'none',
@@ -29,7 +29,7 @@ const useStyles = makeStyles(() =>
 );
 
 const CustomStyle = styled('a')(({ theme }) => ({
-  color: 'black',
+  color: localStorage.getItem('selectedTheme') == 'Day' ? '#000000' : '#FDFFFF',
   fontWeight: 400,
   fontSize: '14px',
   textDecoration: 'none',
@@ -39,7 +39,8 @@ const CustomStyle = styled('a')(({ theme }) => ({
 }));
 
 const theme = createTheme();
-const Links = () => {
+const Links = ({ setTheme }) => {
+  console.log('theme selecteiom', setTheme);
   const preventDefault = (event) => event.preventDefault();
   const classes = useStyles();
 
@@ -47,22 +48,34 @@ const Links = () => {
     <div className="links">
       <Box sx={{ pl: '4em', mt: '-2rem' }}>
         <List disablePadding>
-          <CustomStyle className={classes.root} href="url">
+          <CustomStyle
+            className={classes.root}
+            style={{ color: setTheme ? '#FDFFFF' : '#000000' }}
+            href="url">
             Suggest protocol
           </CustomStyle>
         </List>
         <List disablePadding>
-          <CustomStyle className={classes.root} href="url">
+          <CustomStyle
+            className={classes.root}
+            style={{ color: setTheme ? '#FDFFFF' : '#000000' }}
+            href="url">
             FAQ
           </CustomStyle>
         </List>
         <List disablePadding>
-          <CustomStyle className={classes.root} href="url">
+          <CustomStyle
+            className={classes.root}
+            style={{ color: setTheme ? '#FDFFFF' : '#000000' }}
+            href="url">
             About Earven
           </CustomStyle>
         </List>
         <List disablePadding>
-          <CustomStyle className={classes.root} href="url">
+          <CustomStyle
+            className={classes.root}
+            style={{ color: setTheme ? '#FDFFFF' : '#000000' }}
+            href="url">
             Supported platforms
           </CustomStyle>
         </List>

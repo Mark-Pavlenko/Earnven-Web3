@@ -5,7 +5,10 @@ import { Divider } from '@material-ui/core';
 import Sidebar from './sidebar/sidebar';
 import Header from './header/header';
 import './app.css';
+import darkTheme from '../../assets/images/darkTheme.jpg';
+import lightTheme from '../../assets/images/lightTheme.jpg';
 import ThemeConfig from '../../theme/index';
+import lightDashboard from '../../assets/images/lightDashboard.jpg';
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;
@@ -22,7 +25,7 @@ let MainStyle = styled('div')(({ theme }) => ({
   minHeight: '100%',
   paddingTop: APP_BAR_MOBILE + 15,
   paddingBottom: theme.spacing(10),
-  background: localStorage.getItem('selectedTheme') == 'Day' ? theme.palette.background : '#0B0E1D',
+  background: localStorage.getItem('selectedTheme') == 'Day' ? `url(${lightDashboard})` : `#0B0E1D`,
   [theme.breakpoints.up('lg')]: {
     paddingTop: APP_BAR_DESKTOP,
     paddingLeft: theme.spacing(2),
@@ -45,7 +48,7 @@ export default function AppLayout() {
         setTheme={changeTheme}
       />
       <MainStyle>
-        <Divider variant="middle" />
+        {/* <Divider variant="middle" /> */}
         <Outlet />
       </MainStyle>
     </RootStyle>
