@@ -85,7 +85,7 @@ const RecentAddedTokens = async () => {
               } else if (tokenPrice == 0) {
                 tokenPrice = parseFloat(data.quote.USD.price).toFixed(i);
                 if (tokenPrice != 0) {
-                  tokenPrice = parseFloat(data.quote.USD.price).toFixed(i + 4);
+                  tokenPrice = parseFloat(data.quote.USD.price).toFixed(i + 3);
                   break;
                 }
               }
@@ -123,8 +123,10 @@ const RecentAddedTokens = async () => {
 
           //push the data set into the arracy
           recentTokenData.push(object);
-          //assign the value for further check
-          checkPlatformSymbol = data.platform.symbol;
+          //assign the value for further check only when platform data is not null
+          if (data.platform != null) {
+            checkPlatformSymbol = data.platform.symbol;
+          }
         } //end of for loop
       } //end of if loop
     } catch (err) {
