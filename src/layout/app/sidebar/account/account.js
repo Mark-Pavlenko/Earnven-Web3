@@ -40,7 +40,10 @@ const AccountStyle = styled('div')(({ theme }) => ({
   cursor: 'pointer',
   width: '186px',
   height: '74px',
-  backgroundColor: theme.palette.menu.backgorundColor_wallet_secondary,
+  backgroundColor:
+    localStorage.getItem('selectedTheme') == 'Day'
+      ? theme.palette.menu.backgorundColor_wallet_secondary
+      : '#141838',
   fontWeight: 500,
   marginLeft: '26px',
   marginTop: '12px',
@@ -86,7 +89,7 @@ const useStyles = makeStyles(() =>
   })
 );
 
-export default function Account({ address, name }) {
+export default function Account({ address, name, setTheme }) {
   const classes = useStyles();
   const navigate = useNavigate();
   const anchorRef = useRef(null);
@@ -247,7 +250,7 @@ export default function Account({ address, name }) {
             <Typography
               variant="primaryFont"
               sx={{
-                color: (theme) => theme.palette.menu.myWallet_font_light,
+                color: (theme) => (setTheme ? theme.palette.menu.myWallet_font_light : '#141838'),
               }}
               className={classes.accountAddress}>
               {test1(address, name)}

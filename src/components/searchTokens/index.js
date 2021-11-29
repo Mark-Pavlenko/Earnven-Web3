@@ -111,7 +111,13 @@ class App extends Component {
     // }
 
     return (
-      <div style={{ width: '400px' }}>
+      <div
+        style={{
+          width: '242px',
+          backgroundColor: localStorage.getItem('selectedTheme') == 'Day' ? 'white' : '#10142c',
+          marginLeft: '586px',
+          borderRadius: '11%',
+        }}>
         <div>
           {console.log('autocomplete re render')}
           <Autocomplete

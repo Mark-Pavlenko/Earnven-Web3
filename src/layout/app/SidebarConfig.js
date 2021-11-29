@@ -13,48 +13,81 @@ import lp_menu_icon from '../../assets/icons/lp_menu_icon.svg';
 import yeild_farm_menu_icon from '../../assets/icons/yeild_farm_menu_icon.svg';
 import savings_menu_icon from '../../assets/icons/savings_menu_icon.svg';
 
+import homeDark from '../../assets/icons/homeDark.svg';
+import dashboardDark from '../../assets/icons/dashboardDark.svg';
+import navigationDark from '../../assets/icons/navigationDark.svg';
+import exchangeDark from '../../assets/icons/exchangeDark.svg';
+import iconoir_flashDark from '../../assets/icons/iconoir_flashDark.svg';
+import sketchDark from '../../assets/icons/sketchDark.svg';
+import cubeDark from '../../assets/icons/cubeDark.svg';
+
 const getIcon = (name) => (
-  <div style={{ borderWidth: '10px 50px', backgroundColor: 'white', borderRadius: '5px' }}>
+  <div
+    style={{
+      borderWidth: '10px 50px',
+      backgroundColor: localStorage.getItem('selectedTheme') == 'Day' ? 'white' : '#141838',
+      borderRadius: '5px',
+    }}>
     <img src={name} alt="no pic" />
   </div>
 );
-
-const sidebarConfig = [
-  {
-    title: 'home',
-    path: '/home',
-    icon: getIcon(home),
-  },
-  {
-    title: 'dashboard',
-    path: '/dashboard',
-    icon: getIcon(dashboard_menu),
-  },
-  {
-    title: 'send',
-    path: '/send',
-    icon: getIcon(send_menu_icon),
-  },
-  {
-    title: 'exchange',
-    path: '/exchange',
-    icon: getIcon(exchange_menu_icon),
-  },
-  {
-    title: 'liquidity pools',
-    path: '/liquiditypools',
-    icon: getIcon(lp_menu_icon),
-  },
-  {
-    title: 'yield farm',
-    path: '/yieldfarm',
-    icon: getIcon(yeild_farm_menu_icon),
-  },
-  {
-    title: 'savings',
-    path: '/savings',
-    icon: getIcon(savings_menu_icon),
-  },
-];
+let sidebarConfig = [];
+export const getRecall = () => {
+  return [
+    {
+      title: 'home',
+      path: '/home',
+      icon: localStorage.getItem('selectedTheme') == 'Day' ? getIcon(home) : getIcon(homeDark),
+    },
+    {
+      title: 'dashboard',
+      path: '/dashboard',
+      icon:
+        localStorage.getItem('selectedTheme') == 'Day'
+          ? getIcon(dashboard_menu)
+          : getIcon(dashboardDark),
+    },
+    {
+      title: 'send',
+      path: '/send',
+      icon:
+        localStorage.getItem('selectedTheme') == 'Day'
+          ? getIcon(send_menu_icon)
+          : getIcon(navigationDark),
+    },
+    {
+      title: 'exchange',
+      path: '/exchange',
+      icon:
+        localStorage.getItem('selectedTheme') == 'Day'
+          ? getIcon(exchange_menu_icon)
+          : getIcon(exchangeDark),
+    },
+    {
+      title: 'liquidity pools',
+      path: '/liquiditypools',
+      icon:
+        localStorage.getItem('selectedTheme') == 'Day'
+          ? getIcon(lp_menu_icon)
+          : getIcon(iconoir_flashDark),
+    },
+    {
+      title: 'yield farm',
+      path: '/yieldfarm',
+      icon:
+        localStorage.getItem('selectedTheme') == 'Day'
+          ? getIcon(yeild_farm_menu_icon)
+          : getIcon(sketchDark),
+    },
+    {
+      title: 'savings',
+      path: '/savings',
+      icon:
+        localStorage.getItem('selectedTheme') == 'Day'
+          ? getIcon(savings_menu_icon)
+          : getIcon(cubeDark),
+    },
+  ];
+};
 
 export default sidebarConfig;
