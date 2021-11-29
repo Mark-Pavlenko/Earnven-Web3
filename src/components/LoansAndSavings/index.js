@@ -13,6 +13,7 @@ import CreamIronBank from './CreamIronBankSavings';
 import ConvexStaking from './ConvexStaking';
 import { SnowSwapStaking } from './SnowSwapStaking';
 import CurveLpToken from './CurveLpToken';
+import BancorPools from './BancorPools';
 // Below code is for task https://app.clickup.com/t/1je2y9d
 // import CompoundData from './Compound';
 export default function Index({ accountAddress }) {
@@ -49,10 +50,8 @@ export default function Index({ accountAddress }) {
 
   const [BalancerTotal, setBalancerTotal] = useState([]); // Balancer Total
 
-  const [BancorPoolsData, setBancorPoolsData] = useState([]); // bancor
-  const [BancorPoolsContent, setBancorPoolsContent] = useState([]); // bancor
-
-  const [BancorTotal, setBancorTotal] = useState([]); // Bancor Total
+  const [BancorPoolTotal, setBancorPoolTotal] = useState(0);
+  const [DisplayBancor, setDisplayBancor] = useState(false);
 
   const [YearnData, setYearnData] = useState([]); // Yearn
   const [YearnContent, setYearnContent] = useState([]); // Yearn
@@ -496,55 +495,6 @@ export default function Index({ accountAddress }) {
 
     setBalancerPoolsContentv2(content);
   }, [BalancerPoolsDatav2]);
-
-  useEffect(() => {
-    const content = BancorPoolsData.map((object) => (
-      <Tooltip
-        title={
-          <>
-            {object.name} <br />
-            {/* Token Price : {parseFloat(object.price).toFixed(4)} USD <br/>
-              Total Tokens : {object.value} ${object.symbol} <br/>
-              Total Investment : {object.totalInvestment} USD */}
-          </>
-        }>
-        <div style={{ width: '90%', marginTop: '12px', marginLeft: '30px' }}>
-          <div style={{ display: 'inline-block', width: '15%' }}>
-            <div
-              style={{
-                height: '40px',
-                padding: '5px',
-                borderRadius: '10px',
-                backgroundImage:
-                  'linear-gradient(to right,  rgba(20,24,30,.1), rgba(173,204,151,.5), rgba(20,24,30,.1))',
-              }}>
-              <center>
-                <img src={object.image} style={{ height: '30px', marginTop: '' }} alt="" />
-              </center>
-            </div>
-          </div>
-
-          <div style={{ display: 'inline-block', width: '10%' }} />
-
-          <div style={{ display: 'inline-block', width: '40%', textAlign: 'left' }}>
-            ${object.symbol}
-          </div>
-
-          {/* <div style={{display:'inline-block', width:'30%'}}>
-                {object.value} ${object.symbol}
-            </div> */}
-
-          <div style={{ display: 'inline-block', width: '30%', fontSize: '13px' }}>
-            {object.value} {object.valueType}
-          </div>
-
-          <br />
-        </div>
-      </Tooltip>
-    ));
-
-    setBancorPoolsContent(content);
-  }, [BancorPoolsData]);
 
   useEffect(() => {
     const content = SynthetixData.map((object) => (
@@ -1055,80 +1005,6 @@ export default function Index({ accountAddress }) {
           }
         });
     }
-    async function getBancorData() {
-      await axios
-        .post(`https://api.thegraph.com/subgraphs/name/blocklytics/bancor`, {
-          query: `{
-                    users
-                    (
-                      where:{
-                        id:"${accountAddress}"
-                      }
-                    )
-                    {
-                      id
-                      smartTokenBalances{
-                        smartToken{
-                          id
-                          name
-                          symbol
-                          decimals
-                        }
-                        balance
-                      }
-                    }
-                  }`,
-        })
-        .then(async (response) => {
-          if (response.data.data.users[0]) {
-            const res = response.data.data.users[0].smartTokenBalances;
-            const pools = [];
-            for (var i = 0; i < res.length; i++) {
-              await axios
-                .get(
-                  `https://api.coingecko.com/api/v3/coins/ethereum/contract/${res[i].smartToken.id}`,
-                  {},
-                  {}
-                )
-                .then(async ({ data }) => {
-                  res[i].image = data.image.thumb;
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
-
-              await axios
-                .get(`https://api-v2.bancor.network/pools`)
-                .then(async ({ data }) => {
-                  let pool = data.data.filter((item) => {
-                    return item.symbol === res[i].smartToken.symbol;
-                  });
-                  res[i].type = 'Token';
-                  if (pool.length > 0) {
-                    res[i].type = 'USD';
-                    res[i].usdPrice =
-                      parseFloat(pool[0].liquidity.usd) / parseFloat(pool[0].supply);
-                  }
-                })
-                .catch((err) => {});
-
-              const object = {};
-              object.name = res[i].smartToken.name;
-              object.value = !res[i].usdPrice
-                ? parseFloat(res[i].balance / 10 ** res[i].smartToken.decimals).toFixed(2)
-                : parseFloat(
-                    parseFloat(res[i].balance / 10 ** res[i].smartToken.decimals) * res[i].usdPrice
-                  ).toFixed(2);
-              object.symbol = res[i].smartToken.symbol;
-              object.image = res[i].image;
-              object.valueType = res[i].type;
-              pools.push(object);
-              setBancorTotal(object.value);
-            }
-            setBancorPoolsData(pools);
-          }
-        });
-    }
 
     async function getSynthetixData() {
       await axios
@@ -1451,7 +1327,6 @@ export default function Index({ accountAddress }) {
     getAaveV2Data();
     getUniV2Data();
     getBalancerData();
-    getBancorData();
     getSynthetixData();
     getSushiV2Data();
     getYearnData();
@@ -1580,7 +1455,7 @@ export default function Index({ accountAddress }) {
             PoolsData.length > 0 ||
             BalancerPoolsData.length > 0 ||
             SushiPoolsData.length > 0 ||
-            BancorPoolsData.length > 0
+            DisplayBancor
               ? ''
               : 'none',
         }}>
@@ -1590,7 +1465,7 @@ export default function Index({ accountAddress }) {
             Pools <br />
             Total :{' '}
             {parseFloat(
-              UniV2Total + SushiV2Total + BalancerTotal + BalancerTotalv2 + BancorTotal
+              UniV2Total + SushiV2Total + BalancerTotal + BalancerTotalv2 + BancorPoolTotal
             ).toFixed(2)}{' '}
             USD
             <br />
@@ -1607,6 +1482,12 @@ export default function Index({ accountAddress }) {
           Uniswap V2 --- {UniV2Total} USD
         </div>
         {PoolsContent}
+        <br />
+        <BancorPools
+          setPoolTotal={setBancorPoolTotal}
+          setDisplay={setDisplayBancor}
+          accountAddress={accountAddress}
+        />
         <br />
 
         <div
@@ -1640,17 +1521,6 @@ export default function Index({ accountAddress }) {
           Balancer V2 --- {BalancerTotalv2} USD
         </div>
         {BalancerPoolsContentv2}
-        <br />
-
-        <div
-          style={{
-            fontSize: '12px',
-            marginLeft: '15px',
-            display: BancorPoolsData.length > 0 ? '' : 'none',
-          }}>
-          Bancor --- {BancorTotal} USD
-        </div>
-        {BancorPoolsContent}
         <br />
       </div>
 
