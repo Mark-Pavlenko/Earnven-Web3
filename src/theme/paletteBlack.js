@@ -130,7 +130,7 @@ const paletteBlack = {
   grey: GREY,
   gradients: GRADIENTS,
   divider: GREY[500_24],
-  text: { primary: '#fcfcfc', secondary: '#fcfcfc', disabled: '#fcfcfc' },
+  text: { primary: '#FFFFFF', secondary: '#FFFFFF', disabled: '#FFFFFF' },
   background: { paper: '#0B0E1D', default: '#0B0E1D', neutral: '#0B0E1D' },
   action: {
     active: GREY[600],

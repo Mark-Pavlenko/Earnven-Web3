@@ -18,8 +18,8 @@ function responsiveFontSizes({ sm, md, lg }) {
   };
 }
 
-const FONT_PRIMARY = 'saira, sans-serif';
-
+const FONT_PRIMARY = 'Saira, sans-serif';
+// fontFamily: 'Saira, sans-serif',
 const typography = {
   fontFamily: FONT_PRIMARY,
   fontWeightRegular: 400,
@@ -105,13 +105,28 @@ const typography = {
   },
   myWallet_font: {
     fontWeight: 600,
-    fontSize: pxToRem(10),
+    fontSize: pxToRem(14),
   },
   myWallet_font_light: {
     fontSize: pxToRem(10),
   },
+  fontSize: pxToRem(10),
+  myWallet_font_watchlist: {
+    fontWeight: 600,
+    fontSize: pxToRem(10),
+  },
   popupTitle: {
     fontSize: pxToRem(26),
+  },
+  myWallet_font_address: {
+    fontSize: pxToRem(14),
+  },
+  WaltchList_font_address: {
+    fontSize: pxToRem(10),
+  },
+  watchlist_font_balance: {
+    fontSize: pxToRem(10),
+    fontWeight: 600,
   },
 };
 

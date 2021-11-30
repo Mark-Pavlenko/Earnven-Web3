@@ -30,6 +30,7 @@ import { fontSize, fontStyle, fontWeight } from '@material-ui/system';
 import Accounts from './Accounts';
 import Acc from './Acc';
 import theme1 from '../../../../../src/theme/palette';
+import menurender_customhook from './menurender_customhook';
 
 const AccountStyle = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -42,7 +43,9 @@ const AccountStyle = styled('div')(({ theme }) => ({
   height: '74px',
   backgroundColor:
     localStorage.getItem('selectedTheme') == 'Day'
-      ? theme.palette.menu.backgorundColor_wallet_secondary
+      ? localStorage.getItem('PopUp_Menu') == true
+        ? 'green'
+        : theme.palette.menu.backgorundColor_wallet_secondary
       : '#141838',
   fontWeight: 500,
   marginLeft: '26px',
@@ -71,6 +74,12 @@ const useStyles = makeStyles(() =>
       marginLeft: '1.5625rem',
       marginTop: '0.3rem',
     },
+    watchlist: {
+      marginLeft: '1.5625rem',
+      marginTop: '0.3rem',
+      color: '#1E1E20',
+      opacity: 0.5,
+    },
     hoverMenu: {
       '&:hover': {
         background: 'white',
@@ -81,15 +90,17 @@ const useStyles = makeStyles(() =>
     hoverMenu11: {
       '&:hover': {
         background: 'white',
-        color: 'green',
-        height: '39px',
+        color: 'blue',
+        height: '46px',
         fontWeight: '900',
       },
     },
   })
 );
 
-export default function Account({ address, name, setTheme }) {
+export default function Account({ address, name, global_wallet, setTheme }) {
+  const { flag_menu } = menurender_customhook();
+
   const classes = useStyles();
   const navigate = useNavigate();
   const anchorRef = useRef(null);
@@ -98,6 +109,7 @@ export default function Account({ address, name, setTheme }) {
   const [mywallet, setmywallet] = useState([]);
   var mywallet_text = 'My Wallet';
   const [arrowicon, setarrowicon] = useState(false);
+  const [reRender, setReRender] = useState(false);
 
   function setdropDown() {
     setarrowicon(true);
@@ -111,6 +123,9 @@ export default function Account({ address, name, setTheme }) {
     const result = localStorage.getItem('wallets');
     var jsonData = [];
     var jsondata = JSON.parse(result);
+    if (flag_menu == true) {
+      setaccount(false);
+    }
     jsondata &&
       jsondata.map((option) => {
         if (
@@ -128,15 +143,22 @@ export default function Account({ address, name, setTheme }) {
     const myWallet = localStorage.getItem('mywallet');
     setmywallet(JSON.parse(myWallet));
     // setmywallet(myWallet);
-  }, [account]);
+  }, [account, flag_menu, name, global_wallet]);
 
   const showAccountPopover = () => {
     setaccount(true);
     setarrowicon(true);
+    localStorage.setItem('PopUp_Menu', false);
   };
+
+  const handleReRender = () => {
+    setReRender(!reRender); // state change will re-render parent
+  };
+
   const hideAccountPopover = () => {
     setaccount(false);
     setarrowicon(false);
+    localStorage.setItem('PopUp_Menu', true);
   };
 
   const routeToConnectWallet = () => {
@@ -272,51 +294,45 @@ export default function Account({ address, name, setTheme }) {
         onClose={hideAccountPopover}
         anchorEl={anchorRef.current}>
         <Box className={classes.myWallet}>
-          <Typography variant="myWallet_font">
-            <p>{mywallet.length > 0 && mywallet_text}</p>
+          <Typography variant="myWallet_font_watchlist">
+            <p>{mywallet && mywallet.length > 0 && mywallet_text}</p>
           </Typography>
         </Box>
         <Box sx={{ py: 1 }}>
           {mywallet &&
             mywallet.map((option) => (
               <ListItem className={classes.hoverMenu}>
-                {/* <ListItemText
-                onClick={() => {
-                  hideAccountPopover();
-                  updateSelectedAccount(option.address);
-                  routeToDashboard();
-                }}
-                primaryTypographyProps={{ variant: 'body2', color: 'green' }}
-                sx={{ px: 0.5, cursor: 'pointer' }}>
-                {shortaddress1(option.address)}
-              </ListItemText> */}
                 <Box>
-                  <Acc address={option.address} provider={option.provider} name={option.name} />
+                  <Acc
+                    address={option.address}
+                    provider={option.provider}
+                    global_wallet={global_wallet}
+                    name={option.name}
+                  />
                 </Box>
               </ListItem>
             ))}
         </Box>
-        <Box className={classes.myWallet}>
-          <Typography variant="myWallet_font">
+        <Box className={classes.watchlist}>
+          <Typography variant="myWallet_font_watchlist">
             <p>{accountList.length > 0 && 'Watchlist'}</p>
           </Typography>
         </Box>
-        <Box sx={{ py: 1 }}>
+        <Box sx={{ py: 1, mt: 1 }}>
           {accountList &&
             accountList.map((option) => (
               <ListItem className={classes.hoverMenu}>
-                {/* <ListItemText
-                onClick={() => {
-                  hideAccountPopover();
-                  updateSelectedAccount(option.address);
-                  routeToDashboard();
-                }}
-                primaryTypographyProps={{ variant: 'body2', color: 'green' }}
-                sx={{ px: 0.5, cursor: 'pointer' }}>
-                {shortaddress1(option.address)}
-              </ListItemText> */}
                 <Box>
-                  <Accounts address={option.address} name={option.name} />
+                  <Accounts
+                    setaccount_menuclose={(w) => setaccount(w)}
+                    onClick={() => {
+                      hideAccountPopover();
+                    }}
+                    onReRender={handleReRender}
+                    address={option.address}
+                    name={option.name}
+                    global_wallet={global_wallet}
+                  />
                 </Box>
               </ListItem>
             ))}
@@ -327,35 +343,25 @@ export default function Account({ address, name, setTheme }) {
             sx={{
               py: 1,
               px: 1,
-              mx: 2,
+              mx: 1,
               my: 1,
+              ml: 2,
+              height: '50px',
               borderRadius: '8px',
             }}
             className={classes.hoverMenu11}>
-            <ListItemIcon sx={{ mr: 1, minWidth: '17px' }}>
-              <VscAdd style={{ color: 'black' }} />
+            <ListItemIcon sx={{ mr: 1, minWidth: '17px', opacity: 0.5 }}>
+              <VscAdd style={{ color: (theme) => theme.palette.menu.account_font, opacity: 0.5 }} />
             </ListItemIcon>
-            <ListItemText primaryTypographyProps={{ variant: 'body2', color: '#202020' }}>
-              {' '}
+            <ListItemText
+              primaryTypographyProps={{
+                variant: 'watchlist_font_balance',
+                color: (theme) => theme.palette.menu.account_font,
+              }}
+              sx={{ opacity: 0.5 }}>
               New Wallet
             </ListItemText>
           </MenuItem>
-          {/* <MenuItem
-            onClick={hideAccountPopover}
-            sx={{
-              py: 1,
-              px: 1,
-              mx: 2,
-              borderRadius: '8px',
-              background: (theme) => theme.palette.gradients.custom,
-            }}>
-            <ListItemIcon sx={{ mr: 1, minWidth: '17px' }}>
-              <RiSettings5Line style={{ color: 'fff' }} />
-            </ListItemIcon>
-            <ListItemText primaryTypographyProps={{ variant: 'body2', color: '#fff' }}>
-              Manage account
-            </ListItemText>
-          </MenuItem> */}
         </Box>
       </MenuPopover>
     </>

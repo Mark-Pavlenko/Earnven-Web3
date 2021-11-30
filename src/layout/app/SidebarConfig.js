@@ -12,7 +12,6 @@ import exchange_menu_icon from '../../assets/icons/exchange_menu_icon.svg';
 import lp_menu_icon from '../../assets/icons/lp_menu_icon.svg';
 import yeild_farm_menu_icon from '../../assets/icons/yeild_farm_menu_icon.svg';
 import savings_menu_icon from '../../assets/icons/savings_menu_icon.svg';
-
 import homeDark from '../../assets/icons/homeDark.svg';
 import dashboardDark from '../../assets/icons/dashboardDark.svg';
 import navigationDark from '../../assets/icons/navigationDark.svg';
@@ -72,7 +71,7 @@ export const getRecall = () => {
           : getIcon(iconoir_flashDark),
     },
     {
-      title: 'yield farm',
+      title: 'yield farms',
       path: '/yieldfarm',
       icon:
         localStorage.getItem('selectedTheme') == 'Day'
@@ -89,5 +88,4 @@ export const getRecall = () => {
     },
   ];
 };
-
 export default sidebarConfig;

@@ -11,11 +11,10 @@ import Mytheme from './theme';
 
 const useStyles = makeStyles((theme) => ({
   dialogWrapper: {
-    background: 'rgba(255, 255, 255, 0.16)',
+    background: 'rgba(255, 255, 255, 0.02)',
     position: 'absolute',
     width: '51.875rem',
     height: '24.375rem',
-    backdropFilter: 'blur(34px)',
     boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
     mixBlendMode: 'normal',
   },
@@ -23,15 +22,18 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '3px',
   },
   outer: {
-    backdropFilter: 'blur(34px)',
+    background: 'rgba(255, 255, 255, 0.16)',
     boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
     mixBlendMode: 'normal',
+    backdropFilter: 'blur(6px)',
   },
   close: {
     border: '0px',
     marginRight: '10px',
     marginTop: '5px',
     cursor: 'pointer',
+    width: '14px',
+    height: '14px',
   },
 }));
 

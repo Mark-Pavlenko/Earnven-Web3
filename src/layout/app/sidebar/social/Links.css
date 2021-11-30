@@ -1,9 +1,15 @@
 .links{
-    margin-top:auto;
-    margin-bottom:auto;
     text-align:left;
-    margin-top: 3rem;
-    margin-left: 10%;
+    position: absolute;
+    bottom: 16%;
+    margin-left: 35px;
+    overflow: hidden;
+}
+
+@media screen and (max-height: 700px) {
+    .links {
+        z-index: -12;
+    }
 }
 
 .link{
@@ -17,7 +23,4 @@
     color: #4453AD;
 }
 
-.List{
-    margin-top: 0.2rem;
-}
 

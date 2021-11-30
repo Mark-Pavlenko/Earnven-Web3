@@ -94,28 +94,16 @@ export default function ConnectWallet() {
     }
     localStorage.setItem('wallets', JSON.stringify(newDetails));
     var jsonData = [];
-    const result = localStorage.getItem('wallets');
-    var jsondata = JSON.parse(result);
-
-    let newMywalletDeails = [];
-    if (existingWallet_mywallet == null) {
-      newMywalletDeails.push(newWallet);
+    var jsondata = [];
+    const result = localStorage.getItem('mywallet');
+    const result_wallets = localStorage.getItem('wallets');
+    if (result != null && result != []) {
+      jsondata = JSON.parse(result);
     } else {
-      newMywalletDeails = [...parsedExistingWallet];
+      jsondata = JSON.parse(result_wallets);
     }
-    //----------- code to be reused later ------------------------
-    // else {
-    //   const isAddressPresent = parsedWallet_mywallet.findIndex(
-    //     (element) => element.address === account
-    //   );
-    //   if (isAddressPresent === -1) {
-    //     newMywalletDeails.push(newWallet);
-    //     newMywalletDeails = [...parsedWallet_mywallet, newWallet];
-    //   } else {
-    //     newMywalletDeails = [...parsedExistingWallet];
-    //   }
-    // }
-    // localStorage.setItem('mywallet', JSON.stringify(newMywalletDeails))
+    localStorage.setItem('selected-name', 'null');
+
     jsondata.map((option) => {
       if (
         option.provider == 'metamask' ||
@@ -123,7 +111,7 @@ export default function ConnectWallet() {
         option.provider == 'portis' ||
         option.provider == 'coinbase' ||
         option.provider == 'fortmatic' ||
-        (option.provider == 'torus' && option.address != account)
+        option.provider == 'torus'
       ) {
         jsonData.push({
           address: option.address,
@@ -136,18 +124,21 @@ export default function ConnectWallet() {
     let selectedacc = '';
     let mywallet = localStorage.getItem('mywallet');
     mywallet = JSON.parse(mywallet);
-    mywallet.map((option) => {
-      if (option.address == account) {
-        if (option.name == null) {
-          selectedacc = account;
-        } else {
-          selectedacc = option.address;
-          localStorage.setItem('selected-name', 'null');
+    mywallet &&
+      mywallet.map((option) => {
+        if (option.address == account) {
+          if (option.name == null) {
+            selectedacc = account;
+            localStorage.setItem('selected-name', option.name);
+          } else {
+            selectedacc = option.address;
+            localStorage.setItem('selected-name', option.name);
+          }
         }
-      }
-    });
+      });
     localStorage.setItem('selected-account', account);
-    localStorage.setItem('selected-name', 'null');
+    // localStorage.setItem('selected-name', 'null');
+    localStorage.setItem('setnavigation', '/dashboard');
     navigate(`/${account}/dashboard`);
   };
 

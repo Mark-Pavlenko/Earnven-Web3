@@ -20,16 +20,17 @@ import { experimentalStyled as styled } from '@material-ui/core/styles';
 const useStyles = makeStyles(() =>
   createStyles({
     root: {
-      color: localStorage.getItem('selectedTheme') == 'Day' ? '#000000' : '#FDFFFF',
+      color: 'black',
       fontWeight: 400,
       fontSize: '14px',
       textDecoration: 'none',
+      paddingBottom: '2px',
     },
   })
 );
 
 const CustomStyle = styled('a')(({ theme }) => ({
-  color: localStorage.getItem('selectedTheme') == 'Day' ? '#000000' : '#FDFFFF',
+  color: 'green',
   fontWeight: 400,
   fontSize: '14px',
   textDecoration: 'none',
@@ -39,49 +40,38 @@ const CustomStyle = styled('a')(({ theme }) => ({
 }));
 
 const theme = createTheme();
-const Links = ({ setTheme }) => {
-  console.log('theme selecteiom', setTheme);
+const Links = () => {
   const preventDefault = (event) => event.preventDefault();
   const classes = useStyles();
 
   return (
-    <div className="links">
-      <Box sx={{ pl: '4em', mt: '-2rem' }}>
-        <List disablePadding>
-          <CustomStyle
-            className={classes.root}
-            style={{ color: setTheme ? '#FDFFFF' : '#000000' }}
-            href="url">
-            Suggest protocol
-          </CustomStyle>
-        </List>
-        <List disablePadding>
-          <CustomStyle
-            className={classes.root}
-            style={{ color: setTheme ? '#FDFFFF' : '#000000' }}
-            href="url">
-            FAQ
-          </CustomStyle>
-        </List>
-        <List disablePadding>
-          <CustomStyle
-            className={classes.root}
-            style={{ color: setTheme ? '#FDFFFF' : '#000000' }}
-            href="url">
-            About Earven
-          </CustomStyle>
-        </List>
-        <List disablePadding>
-          <CustomStyle
-            className={classes.root}
-            style={{ color: setTheme ? '#FDFFFF' : '#000000' }}
-            href="url">
-            Supported platforms
-          </CustomStyle>
-        </List>
-      </Box>
+    <>
+      <div className="links">
+        <Box sx={{ ml: '4em' }}>
+          <List disablePadding>
+            <CustomStyle className={classes.root} href="url">
+              Suggest protocol
+            </CustomStyle>
+          </List>
+          <List disablePadding>
+            <CustomStyle className={classes.root} href="url">
+              FAQ
+            </CustomStyle>
+          </List>
+          <List disablePadding>
+            <CustomStyle className={classes.root} href="url">
+              About Earven
+            </CustomStyle>
+          </List>
+          <List disablePadding>
+            <CustomStyle className={classes.root} href="url">
+              Supported platforms
+            </CustomStyle>
+          </List>
+        </Box>
+      </div>
       <Social />
-    </div>
+    </>
   );
 };
 

@@ -46,6 +46,9 @@ import ThemeConfig from '../../../../theme';
 import { Disconnection } from './Disconnection';
 import Rename from './Rename';
 import Popup from './popup';
+import green_got_menu from '../../../../assets/icons/green_got_menu.svg';
+import menurender_customhook from './menurender_customhook';
+import copy_notification_menu from '../../../../assets/icons/copy_notification_menu.svg';
 
 const AccountStyle = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -69,7 +72,7 @@ const List_Menu_Pop_UP = styled('div')(({ theme }) => ({
     color: theme.palette.menu.account_balance,
     fontWeight: 600,
   },
-  marginLeft: '15px',
+  marginLeft: '12px',
   borderRadius: '10px',
   cursor: 'pointer',
 }));
@@ -77,19 +80,19 @@ const List_Menu_Pop_UP = styled('div')(({ theme }) => ({
 const useStyles = makeStyles(() =>
   createStyles({
     accountlLogo: {
-      width: '1.5rem',
-      height: '1.5rem',
+      width: '1.3125rem',
+      height: '1.3125rem',
       marginTop: '-3rem',
       marginRight: '-0.063rem',
     },
     accountBalance: {
-      marginLeft: '-29px',
+      marginLeft: '-26.4px',
       textAlign: 'left',
-      marginTop: '-4px',
+      marginTop: '-3px',
     },
     accountAddress: {
       marginLeft: '0.02rem',
-      marginTop: '-1.3rem',
+      marginTop: '-1.21rem',
     },
     myWallet: {
       marginLeft: '25px',
@@ -107,6 +110,7 @@ const useStyles = makeStyles(() =>
     },
     menu: {
       width: '306px',
+      height: '197px',
     },
     icon: {
       marginLeft: '19px',
@@ -127,12 +131,17 @@ const useStyles = makeStyles(() =>
       fontSize: '10px',
       display: 'flex',
     },
-    hoverMenu: {
-      '&:hover': {
-        background: 'white',
-        color: 'black',
-        height: '20px',
-      },
+    copy_notification: {
+      width: '306px',
+      height: '197px',
+    },
+    copy_notification_menu: {
+      position: 'fixed',
+      left: '42%',
+      top: '39.6%',
+    },
+    menupopUp_list: {
+      padding: '5px',
     },
   })
 );
@@ -147,20 +156,22 @@ const CustomStyle = styled('a')(({ theme }) => ({
   },
 }));
 
-export default function Accounts({ address, name }) {
+export default function Accounts({ address, name, setaccount_menuclose, global_wallet }, props) {
+  const { onReRender } = props;
+  const { flag_menu, change_flag } = menurender_customhook();
   const classes = useStyles();
   const navigate = useNavigate();
   const anchorRef = useRef(null);
   const [account, setaccount] = useState(false);
   const [accountList, setaccountList] = useState([]);
-  const [flag, setflag] = useState(0);
+  const [flag, setflag] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
   const [openPopup_rename, setOpenPopup_rename] = useState(false);
 
   useEffect(() => {
     const result = localStorage.getItem('wallets');
     setaccountList(JSON.parse(result));
-  }, [account]);
+  }, [account, name, address, global_wallet]);
 
   const showAccountPopover = () => {
     setaccount(true);
@@ -182,6 +193,14 @@ export default function Accounts({ address, name }) {
     });
     localStorage.setItem('wallets', JSON.stringify(output));
   };
+
+  function copy_notification() {
+    setflag(true);
+  }
+
+  function close_copy_notification() {
+    setTimeout(() => setflag(false), 1000);
+  }
 
   const Rename1 = (address) => {
     let result = localStorage.getItem('wallets');
@@ -240,6 +259,10 @@ export default function Accounts({ address, name }) {
     }
   }
 
+  function MenuClose() {
+    change_flag();
+  }
+
   function shortaddress1(addy) {
     if (addy === '') {
       return addy;
@@ -252,7 +275,6 @@ export default function Accounts({ address, name }) {
     }${addy[l - 1]}`;
     return addynew;
   }
-  function Rename() {}
 
   return (
     <>
@@ -267,12 +289,26 @@ export default function Accounts({ address, name }) {
             }}
             direction="row">
             <Typography
-              variant="myWallet_font"
+              variant="WaltchList_font_address"
               sx={{
                 color: (theme) => theme.palette.menu.myWallet_font_light,
               }}
               className={classes.accountAddress}>
-              {shortaddress(address, name)}
+              {shortaddress(address, name)}{' '}
+              {localStorage.getItem('selected-account') == address ? (
+                <img
+                  style={{
+                    display: 'flex',
+                    float: 'right',
+                    marginTop: '2.09px',
+                    marginLeft: '10px',
+                  }}
+                  src={green_got_menu}
+                  alt="no pic"
+                />
+              ) : (
+                ''
+              )}
             </Typography>
           </Stack>
           <div className={classes.icon1} onClick={showAccountPopover}>
@@ -294,78 +330,98 @@ export default function Accounts({ address, name }) {
         open={account}
         onClose={hideAccountPopover}
         anchorEl={anchorRef.current}>
-        <Box className={classes.menu}>
-          <List
-            onClick={() => {
-              setOpenPopup_rename(true);
-            }}
-            disablePadding>
-            <List_Menu_Pop_UP>
-              <div className={classes.icon}>
-                <img src={rename_menu_icon} alt="no pic" />
-              </div>
-              <div
-                onClick={() => {
-                  Rename1(address);
-                }}
-                className={classes.text}>
-                Rename Wallet
-              </div>
-            </List_Menu_Pop_UP>
-          </List>
-          {/* <List className="List" disablePadding>
-            <List_Menu_Pop_UP>
-              <div className={classes.icon}>
-                <img src={copy_menu_icon} alt="no pic" />
-              </div>
-              <ListItem
-                secondaryAction={
-                  <CopyToClipboard text={address}>
-                    <MdContentCopy style={{ color: 'transparent' }} />
-                  </CopyToClipboard>
-                }
-                className={classes.text}>
-                Copy Address
-                <CopyToClipboard text={address}>Copy Address</CopyToClipboard>
-              </ListItem>
-            </List_Menu_Pop_UP>
-          </List> */}
-          <List onClick={() => navigator.clipboard.writeText(address)} disablePadding>
-            <List_Menu_Pop_UP>
-              <div className={classes.icon}>
-                <img src={copy_menu_icon} alt="no pic" />
-              </div>
-              <div className={classes.text}>Copy Address</div>
-            </List_Menu_Pop_UP>
-          </List>
-          <List onClick={() => navigator.clipboard.writeText(window.location.href)} disablePadding>
-            <List_Menu_Pop_UP>
-              <div className={classes.icon}>
-                <img src={copy_link_menu_icon} alt="no pic" />
-              </div>
-              <div className={classes.text}>Copy Link</div>
-            </List_Menu_Pop_UP>
-          </List>
-          <List
-            onClick={() => {
-              setOpenPopup(true);
-            }}
-            disablePadding>
-            <List_Menu_Pop_UP>
-              <div className={classes.icon}>
-                <img src={disconnect_menu_icon} alt="no pic" />
-              </div>
-              <div className={classes.text}>Disconnect</div>
-            </List_Menu_Pop_UP>
-          </List>
-        </Box>
+        {flag == true ? (
+          <Box className={classes.copy_notification}>
+            <img
+              className={classes.copy_notification_menu}
+              width="40px"
+              height="40px"
+              style={{ margin: 'auto' }}
+              src={copy_notification_menu}
+              alt="no pic"
+            />
+          </Box>
+        ) : (
+          <Box className={classes.menu}>
+            <List
+              onClick={() => {
+                setOpenPopup_rename(true);
+              }}
+              className={classes.menupopUp_list}
+              disablePadding>
+              <List_Menu_Pop_UP>
+                <div className={classes.icon}>
+                  <img src={rename_menu_icon} alt="no pic" />
+                </div>
+                <div
+                  onClick={() => {
+                    Rename1(address);
+                  }}
+                  className={classes.text}>
+                  Rename Wallet
+                </div>
+              </List_Menu_Pop_UP>
+            </List>
+            <List
+              onClick={() => {
+                navigator.clipboard.writeText(address);
+                copy_notification();
+                close_copy_notification();
+              }}
+              className={classes.menupopUp_list}
+              disablePadding>
+              <List_Menu_Pop_UP>
+                <div className={classes.icon}>
+                  <img src={copy_menu_icon} alt="no pic" />
+                </div>
+                <div className={classes.text}>Copy Address</div>
+              </List_Menu_Pop_UP>
+            </List>
+            <List
+              onClick={() => {
+                navigator.clipboard.writeText(window.location.href);
+                copy_notification();
+                close_copy_notification();
+              }}
+              className={classes.menupopUp_list}
+              disablePadding>
+              <List_Menu_Pop_UP>
+                <div className={classes.icon}>
+                  <img src={copy_link_menu_icon} alt="no pic" />
+                </div>
+                <div className={classes.text}>Copy Link</div>
+              </List_Menu_Pop_UP>
+            </List>
+            <List
+              onClick={() => {
+                MenuClose();
+                setOpenPopup(true);
+                setaccount(true);
+                setaccount_menuclose(true);
+              }}
+              className={classes.menupopUp_list}
+              disablePadding>
+              <List_Menu_Pop_UP>
+                <div className={classes.icon}>
+                  <img src={disconnect_menu_icon} alt="no pic" />
+                </div>
+                <div onClick={onReRender} className={classes.text}>
+                  Disconnect
+                </div>
+              </List_Menu_Pop_UP>
+            </List>
+          </Box>
+        )}
       </MenuPopover>
       <ThemeConfig>
         <Popup title="Disconnect" openPopup={openPopup} setOpenPopup={setOpenPopup}>
-          <Disconnection address={address} name={name} />
+          <Disconnection setOpenPopup={(w) => setOpenPopup(w)} address={address} name={name} />
         </Popup>
-        <Popup title="Rename" openPopup={openPopup_rename} setOpenPopup={setOpenPopup_rename}>
-          <Rename address={address} name={name} />
+        <Popup
+          title="Rename Wallet"
+          openPopup={openPopup_rename}
+          setOpenPopup={setOpenPopup_rename}>
+          <Rename setOpenPopup={(w) => setOpenPopup_rename(w)} address={address} name={name} />
         </Popup>
       </ThemeConfig>
     </>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from '@iconify/react';
 import { matchPath, NavLink as RouterLink, useLocation } from 'react-router-dom';
@@ -66,10 +66,13 @@ function NavItem({ item, active, address }) {
   const { title, path, icon, info, children } = item;
   const isActiveRoot = active(`/${address}${path}`);
   const [open, setOpen] = useState(isActiveRoot);
-
   const handleOpen = () => {
     setOpen((prev) => !prev);
   };
+
+  function setNavigation() {
+    localStorage.setItem('setnavigation', item.path);
+  }
 
   const activeRootStyle = {
     color: (theme) =>
@@ -155,6 +158,9 @@ function NavItem({ item, active, address }) {
 
   return (
     <ListItemStyle
+      onClick={() => {
+        setNavigation();
+      }}
       component={RouterLink}
       to={`/${address}/${path}`}
       sx={{
@@ -255,8 +261,9 @@ function NavItemUpcomming({ item, active, address }) {
   return (
     <>
       <ListItemStyleUpcoming
-        component={RouterLink}
-        to={`/${address}/${path}`}
+        // upcoming feature, enable below two comments for adding new features
+        // component={RouterLink}
+        // to={`/${address}/${path}`}
         sx={{
           mt: 0.2,
           ...(isActiveRoot && activeRootStyle),
@@ -270,7 +277,6 @@ function NavItemUpcomming({ item, active, address }) {
           disableTypography
           primary={title}
         />
-
         {info && info}
       </ListItemStyleUpcoming>
       <ListItemText
@@ -302,7 +308,7 @@ export default function NavSection({ navConfig, address, ...other }) {
     <Box {...other} sx={{ pl: 7.5, mt: '10%' }}>
       <List disablePadding>
         {navConfig.map((item) =>
-          item.title == 'yield farm' || item.title == 'savings' ? (
+          item.title == 'yield farms' || item.title == 'savings' ? (
             <NavItemUpcomming key={item.title} item={item} active={match} address={address} />
           ) : (
             <NavItem key={item.title} item={item} active={match} address={address} />

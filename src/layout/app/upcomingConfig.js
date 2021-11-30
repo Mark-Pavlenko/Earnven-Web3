@@ -21,8 +21,8 @@ const getIcon = (name) => (
 
 const upcomingConfig = [
   {
-    title: 'yield farm',
-    path: '/yieldfarm',
+    title: 'yield farms',
+    path: '/yieldfarms',
     icon: getIcon(yeild_farm_menu_icon),
   },
   {

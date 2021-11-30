@@ -17,65 +17,88 @@ import discord_menu_logo from '../../../../assets/icons/discord_menu_logo.svg';
 import logo_4_menu from '../../../../assets/icons/logo_4_menu.svg';
 import twitter_menu_logo from '../../../../assets/icons/twitter_menu_logo.svg';
 import telegram_menu_logo from '../../../../assets/icons/telegram_menu_logo.svg';
+import { experimentalStyled as styled } from '@material-ui/core/styles';
+
+const Image_Social = styled('img')(({ theme }) => ({
+  height: '29px',
+  display: 'inline-block',
+  paddingTop: '5px',
+  paddingLeft: '3px',
+  paddingRight: '3px',
+  '&:hover': {
+    background: theme.palette.menu.backgorundColor_wallet_secondary,
+  },
+}));
+
+const List_Social = styled(List)(({ theme }) => ({
+  '&:hover': {
+    background: theme.palette.menu.backgorundColor_wallet_secondary,
+    borderTopLeftRadius: '10px',
+    borderTopRightRadius: '10px',
+    borderBottomLeftRadius: '10px',
+    borderBottomRightRadius: '10px',
+    overflow: 'hidden',
+  },
+}));
 
 const Social = () => {
   return (
-    <div>
-      <tr style={{ marginTop: '100px' }}>
+    <div className="maindiv">
+      <tr>
         <td>
-          <Box className="box1" sx={{ pl: 7.5 }}>
-            <List className="List" disablePadding>
-              <a className="link" href="url">
-                <img src={logo_4_menu} className="imageCSS" alt="" />
+          <Box sx={{ pl: 7.5 }}>
+            <List_Social disablePadding>
+              <a href="url">
+                <Image_Social src={logo_4_menu} className="imageCSS" alt="" />
               </a>
-            </List>
+            </List_Social>
           </Box>
         </td>
         <td className="td">
-          <Box sx={{ pl: 2.5, mt: 6 }}>
-            <List className="List" disablePadding>
+          <Box sx={{ pl: 2.5 }}>
+            <List_Social disablePadding>
               <a className="link" href="url">
-                <img src={twitter_menu_logo} className="imageCSS" alt="" />
+                <Image_Social src={twitter_menu_logo} className="imageCSS" alt="" />
               </a>
-            </List>
+            </List_Social>
           </Box>
         </td>
         <td className="td">
-          <Box sx={{ pl: 2.5, mt: 3 }}>
-            <List className="List" disablePadding>
+          <Box sx={{ pl: 2.5 }}>
+            <List_Social disablePadding>
               <a className="link" href="url">
-                <img src={telegram_menu_logo} className="imageCSS" alt="" />
+                <Image_Social src={telegram_menu_logo} className="imageCSS" alt="" />
               </a>
-            </List>
+            </List_Social>
           </Box>
         </td>
       </tr>
       <tr>
         <td>
-          <Box sx={{ pl: 7.5, mt: -10 }}>
-            <List className="List" disablePadding>
+          <Box sx={{ pl: 7.5 }}>
+            <List_Social disablePadding>
               <a className="link" href="url">
-                <img src={github} className="imageCSS" alt="" />
+                <Image_Social src={github} className="imageCSS" alt="" />
               </a>
-            </List>
+            </List_Social>
           </Box>
         </td>
         <td className="td">
-          <Box sx={{ pl: 2.5, mt: -10 }}>
-            <List className="List" disablePadding>
+          <Box sx={{ pl: 2.5 }}>
+            <List_Social disablePadding>
               <a className="link" href="url">
-                <img src={discord_menu_logo} className="imageCSS" alt="" />
+                <Image_Social src={discord_menu_logo} className="imageCSS" alt="" />
               </a>
-            </List>
+            </List_Social>
           </Box>
         </td>
         <td className="td">
-          <Box sx={{ pl: 2.5, mt: -10 }}>
-            <List className="List" disablePadding>
+          <Box sx={{ pl: 2.5 }}>
+            <List_Social disablePadding>
               <a className="link" href="url">
-                <img src={fb_menu_icon} className="imageCSS" alt="" />
+                <Image_Social src={fb_menu_icon} className="imageCSS" alt="" />
               </a>
-            </List>
+            </List_Social>
           </Box>
         </td>
       </tr>
