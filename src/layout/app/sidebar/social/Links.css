@@ -1,8 +1,8 @@
 .links{
     text-align:left;
     position: absolute;
-    bottom: 16%;
-    margin-left: 35px;
+    bottom: 13%;
+    margin-left: 40px;
     overflow: hidden;
 }
 
@@ -23,4 +23,8 @@
     color: #4453AD;
 }
 
+
+.List {
+    padding-top: 7%;
+}
 

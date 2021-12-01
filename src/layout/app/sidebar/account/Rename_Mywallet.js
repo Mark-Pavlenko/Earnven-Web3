@@ -16,6 +16,7 @@ const Input_Rename = styled('input')(({ theme }) => ({
   color: theme.palette.menu.account_font,
   fontFamily: 'Saira, sans-serif',
   height: '60px',
+  paddingLeft: '1rem',
   width: '475px',
   borderRadius: '10px',
   border: '0px',

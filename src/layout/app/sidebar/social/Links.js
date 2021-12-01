@@ -24,7 +24,6 @@ const useStyles = makeStyles(() =>
       fontWeight: 400,
       fontSize: '14px',
       textDecoration: 'none',
-      paddingBottom: '2px',
     },
   })
 );
@@ -47,23 +46,23 @@ const Links = () => {
   return (
     <>
       <div className="links">
-        <Box sx={{ ml: '4em' }}>
+        <Box sx={{ ml: '4em', pt: '4em' }}>
           <List disablePadding>
             <CustomStyle className={classes.root} href="url">
               Suggest protocol
             </CustomStyle>
           </List>
-          <List disablePadding>
+          <List className="List" disablePadding>
             <CustomStyle className={classes.root} href="url">
               FAQ
             </CustomStyle>
           </List>
-          <List disablePadding>
+          <List className="List" disablePadding>
             <CustomStyle className={classes.root} href="url">
               About Earven
             </CustomStyle>
           </List>
-          <List disablePadding>
+          <List className="List" disablePadding>
             <CustomStyle className={classes.root} href="url">
               Supported platforms
             </CustomStyle>

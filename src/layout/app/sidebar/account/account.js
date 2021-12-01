@@ -49,8 +49,8 @@ const AccountStyle = styled('div')(({ theme }) => ({
       : '#141838',
   fontWeight: 500,
   marginLeft: '26px',
-  marginTop: '12px',
-  boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 2px 2px rgba(0,0,0,0.16)',
+  marginTop: '20px',
+  boxShadow: '4px 6px 20px -5px rgba(51, 78, 131, 0.17)',
 }));
 
 const useStyles = makeStyles(() =>

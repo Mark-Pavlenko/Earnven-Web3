@@ -20,10 +20,10 @@ import telegram_menu_logo from '../../../../assets/icons/telegram_menu_logo.svg'
 import { experimentalStyled as styled } from '@material-ui/core/styles';
 
 const Image_Social = styled('img')(({ theme }) => ({
-  height: '29px',
+  height: '22px',
   display: 'inline-block',
-  paddingTop: '5px',
-  paddingLeft: '3px',
+  paddingTop: '15px',
+  paddingLeft: '1px',
   paddingRight: '3px',
   '&:hover': {
     background: theme.palette.menu.backgorundColor_wallet_secondary,
@@ -33,10 +33,10 @@ const Image_Social = styled('img')(({ theme }) => ({
 const List_Social = styled(List)(({ theme }) => ({
   '&:hover': {
     background: theme.palette.menu.backgorundColor_wallet_secondary,
-    borderTopLeftRadius: '10px',
-    borderTopRightRadius: '10px',
-    borderBottomLeftRadius: '10px',
-    borderBottomRightRadius: '10px',
+    borderTopLeftRadius: '15px',
+    borderTopRightRadius: '15px',
+    borderBottomLeftRadius: '15px',
+    borderBottomRightRadius: '15px',
     overflow: 'hidden',
   },
 }));
@@ -46,7 +46,7 @@ const Social = () => {
     <div className="maindiv">
       <tr>
         <td>
-          <Box sx={{ pl: 7.5 }}>
+          <Box sx={{ pl: 8.3 }}>
             <List_Social disablePadding>
               <a href="url">
                 <Image_Social src={logo_4_menu} className="imageCSS" alt="" />
@@ -75,7 +75,7 @@ const Social = () => {
       </tr>
       <tr>
         <td>
-          <Box sx={{ pl: 7.5 }}>
+          <Box sx={{ pl: 8.3 }}>
             <List_Social disablePadding>
               <a className="link" href="url">
                 <Image_Social src={github} className="imageCSS" alt="" />

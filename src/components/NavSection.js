@@ -11,17 +11,17 @@ import { Box, Collapse, List, ListItem, ListItemIcon, ListItemText } from '@mate
 const ListItemStyle = styled((props) => <ListItem button disableGutters {...props} />)(
   ({ theme }) => ({
     ...theme.typography.body2,
-    height: 39,
     position: 'relative',
+    marginLeft: '36px',
+    paddingLeft: '10px',
     textTransform: 'capitalize',
-    paddingLeft: theme.spacing(5),
-    paddingRight: theme.spacing(2.5),
     fontWeight: 'fontWeightBold',
     color:
       localStorage.getItem('selectedTheme') == 'Day' ? 'theme.palette.text.primary' : '#FFFFFF',
     '&:hover': {
       borderRadius: '10px',
-      width: '209px',
+      width: '180px',
+      boxShadow: '4px 6px 20px -5px rgba(51, 78, 131, 0.17)',
       color:
         localStorage.getItem('selectedTheme') == 'Day' ? '#141838' : 'theme.palette.text.primary',
     },
@@ -31,11 +31,11 @@ const ListItemStyle = styled((props) => <ListItem button disableGutters {...prop
 const ListItemStyleUpcoming = styled((props) => <ListItem button disableGutters {...props} />)(
   ({ theme }) => ({
     ...theme.typography.body2,
-    height: 39,
     position: 'relative',
+    marginLeft: '36px',
+    paddingLeft: '10px',
+    height: '52px',
     textTransform: 'capitalize',
-    paddingLeft: theme.spacing(5),
-    paddingRight: theme.spacing(2.5),
     fontWeight: 'fontWeightBold',
     color: 'theme.palette.text.primary',
     '&:hover': {
@@ -47,11 +47,21 @@ const ListItemStyleUpcoming = styled((props) => <ListItem button disableGutters 
 );
 // icon styling
 const ListItemIconStyle = styled(ListItemIcon)({
-  width: 22,
-  height: 22,
+  width: 28,
+  height: 28,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+});
+
+const ListItemIconStyle_upcoming = styled(ListItemIcon)({
+  width: 28,
+  height: 28,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  boxShadow: '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',
+  opacity: 0.5,
 });
 
 // ----------------------------------------------------------------------
@@ -81,10 +91,10 @@ function NavItem({ item, active, address }) {
     background: (theme) =>
       localStorage.getItem('selectedTheme') == 'Day' ? theme.palette.menu.light : '#141838',
     borderRadius: '7px',
-    width: '13rem',
+    width: '180px',
     '&:hover': {
       borderRadius: '10px',
-      width: '209px',
+      width: '180px',
       color:
         localStorage.getItem('selectedTheme') == 'Day' ? '#141838' : 'theme.palette.text.primary',
     },
@@ -268,7 +278,7 @@ function NavItemUpcomming({ item, active, address }) {
           mt: 0.2,
           ...(isActiveRoot && activeRootStyle),
         }}>
-        <ListItemIconStyle>{icon && icon}</ListItemIconStyle>
+        <ListItemIconStyle_upcoming>{icon && icon}</ListItemIconStyle_upcoming>
         <ListItemText
           sx={{
             color: localStorage.getItem('selectedTheme') == 'Day' ? '#000000' : '#CCCFCF',
@@ -284,9 +294,9 @@ function NavItemUpcomming({ item, active, address }) {
           color: localStorage.getItem('selectedTheme') == 'Day' ? '#000000' : '#CCCFCF',
           opacity: '0.5',
           display: 'flex',
-          marginLeft: '4.8rem',
+          marginLeft: '5.6rem',
           fontSize: '10px',
-          marginTop: '-10px',
+          marginTop: '-17px',
         }}
         disableTypography
         primary="Coming soon"
@@ -305,7 +315,7 @@ export default function NavSection({ navConfig, address, ...other }) {
   const match = (path) => (path ? !!matchPath({ path, end: false }, pathname) : false);
 
   return (
-    <Box {...other} sx={{ pl: 7.5, mt: '10%' }}>
+    <Box {...other} sx={{ pl: 7, overflow: 'hidden', mt: 2 }}>
       <List disablePadding>
         {navConfig.map((item) =>
           item.title == 'yield farms' || item.title == 'savings' ? (

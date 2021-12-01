@@ -83,7 +83,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar, address, name, 
           <Logo />
         </Box>
       </Box> */}
-  <Box sx={{ px: '38.91%', pb: 1, mt: '5%', ml: '-20px' }}>
+  <Box sx={{ px: '38.91%', pb: 1, mt: '8%', ml: '-20px' }}>
         <Stack
           direction="row"
           spacing={2}

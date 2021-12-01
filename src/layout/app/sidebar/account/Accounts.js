@@ -346,6 +346,7 @@ export default function Accounts({ address, name, setaccount_menuclose, global_w
             <List
               onClick={() => {
                 setOpenPopup_rename(true);
+                hideAccountPopover();
               }}
               className={classes.menupopUp_list}
               disablePadding>
@@ -398,6 +399,7 @@ export default function Accounts({ address, name, setaccount_menuclose, global_w
                 setOpenPopup(true);
                 setaccount(true);
                 setaccount_menuclose(true);
+                hideAccountPopover();
               }}
               className={classes.menupopUp_list}
               disablePadding>
