@@ -409,6 +409,7 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
         style={{
           fontSize: '12px',
           marginLeft: '15px',
+          display: TotalSavings ? '' : 'none',
         }}>
         Cream Iron Bank --- {numberWithCommas(TotalSavings.toFixed(2))} USD
       </div>
@@ -416,6 +417,7 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
         style={{
           fontSize: '12px',
           marginLeft: '15px',
+          display: TotalSavings ? '' : 'none',
         }}>
         <span> Network </span> : <span> Ethereum </span>
       </div>

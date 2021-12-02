@@ -13,6 +13,7 @@ import CreamIronBank from './CreamIronBankSavings';
 import ConvexStaking from './ConvexStaking';
 import { SnowSwapStaking } from './SnowSwapStaking';
 import CurveLpToken from './CurveLpToken';
+import Cream from './Cream';
 import BancorPools from './BancorPools';
 // Below code is for task https://app.clickup.com/t/1je2y9d
 // import CompoundData from './Compound';
@@ -32,6 +33,9 @@ export default function Index({ accountAddress }) {
   const [PoolsContent, setPoolsContent] = useState([]); // UNI v2
   const [PoolsData, setPoolsData] = useState([]); // UNI v2
   const [UniV2Total, setUniV2Total] = useState([]); // UNI v2 total
+
+  const [CreamDisplay, setCreamDisplay] = useState(false);
+  const [CreamTotal, setCreamTotal] = useState(false);
 
   const [SushiPoolsContent, setSushiPoolsContent] = useState([]); // Sushi v2
   const [SushiPoolsData, setSushiPoolsData] = useState([]); // Sushi v2
@@ -1348,7 +1352,9 @@ export default function Index({ accountAddress }) {
           // display:
           //   SavingsData.length > 0 || CompoundSavingsData > 0 || DisplaySavings ? '' : 'none',
           display:
-            SavingsData.length > 0 || CompoundSavingsData > 0 || IronBankSavings > 0 ? '' : 'none',
+            SavingsData.length > 0 || CompoundSavingsData > 0 || IronBankSavings > 0 || CreamDisplay
+              ? ''
+              : 'none',
         }}>
         <br />
         <center>
@@ -1358,13 +1364,22 @@ export default function Index({ accountAddress }) {
             Total : {/* Below code is for task https://app.clickup.com/t/1je2y9d */}
             {/* {parseFloat(AaveSavingsTotal + CompSavingsTotal + TotalCompoundSavings).toFixed(2)} USD */}
             {numberWithCommas(
-              parseFloat(AaveSavingsTotal + CompSavingsTotal + IronBankSavings).toFixed(2)
+              parseFloat(
+                AaveSavingsTotal + CompSavingsTotal + IronBankSavings + parseFloat(CreamTotal)
+              ).toFixed(2)
             )}{' '}
             USD
             <br />
             <br />
           </div>
         </center>
+
+        <Cream
+          setTotal={setCreamTotal}
+          setDisplay={setCreamDisplay}
+          accountAddress={accountAddress}
+        />
+        <br />
 
         <div
           style={{
