@@ -32,11 +32,13 @@ export default class PortfolioPerf extends Component {
       console.log(`response:::${response.data.history.timestamp}`);
       result = response.data.history.data;
 
-      for (let i = 0; i < result.length; i++) {
-        var temp = [];
-        temp.push(result[i].date);
-        temp.push(result[i].max.toFixed(2));
-        data.push(temp);
+      if (result && result.length > 0) {
+        for (let i = 0; i < result.length; i++) {
+          var temp = [];
+          temp.push(result[i].date);
+          temp.push(result[i].max.toFixed(2));
+          data.push(temp);
+        }
       }
       c = { data };
       // points
