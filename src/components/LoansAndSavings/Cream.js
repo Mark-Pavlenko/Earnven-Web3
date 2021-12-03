@@ -29,7 +29,11 @@ export default function Cream({ setTotal, setDisplay, accountAddress }) {
       {},
       {}
     );
-    return data.image.thumb;
+    console.log('usd price: ', token.symbol, data.market_data.current_price.usd);
+    return {
+      image: data.image.thumb,
+      usdPrice: data.market_data.current_price.usd,
+    };
   };
 
   useEffect(() => {
@@ -115,8 +119,9 @@ export default function Cream({ setTotal, setDisplay, accountAddress }) {
               };
             });
             for (let i = 0; i < tokens.length; i++) {
-              let image = await getImage(tokens[i]);
+              let { image, usdPrice } = await getImage(tokens[i]);
               tokens[i].image = image;
+              tokens[i].usdPrice = parseFloat(usdPrice).toFixed(2);
             }
             setCreamTokens(tokens);
           }
