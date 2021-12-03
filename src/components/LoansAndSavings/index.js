@@ -502,7 +502,13 @@ export default function Index({ accountAddress }) {
 
   useEffect(() => {
     const content = SynthetixData.map((object) => (
-      <div style={{ width: '90%', marginTop: '12px', marginLeft: '30px' }}>
+      <div
+        style={{
+          width: '90%',
+          marginTop: '12px',
+          marginLeft: '30px',
+          display: parseFloat(object.balance) > 0 ? '' : 'none',
+        }}>
         <div style={{ display: 'inline-block', width: '15%' }}>
           <div
             style={{
@@ -1550,7 +1556,7 @@ export default function Index({ accountAddress }) {
           minHeight: '170px',
           borderRadius: '10px',
           display:
-            SynthetixData.length > 0 || YearnData.length > 0 || BeaconData.totalInvestment
+            parseFloat(SynthetixTotal) > 0 || YearnData.length > 0 || BeaconData.totalInvestment
               ? ''
               : 'none',
         }}>
@@ -1567,12 +1573,11 @@ export default function Index({ accountAddress }) {
             <br />
           </div>
         </center>
-
         <div
           style={{
             fontSize: '12px',
             marginLeft: '15px',
-            display: SynthetixData.length > 0 ? '' : 'none',
+            display: parseFloat(SynthetixTotal) > 0 ? '' : 'none',
           }}>
           <br /> Synthetix --- {SynthetixTotal} USD
           <br />
