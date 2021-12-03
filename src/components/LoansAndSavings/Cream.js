@@ -29,7 +29,6 @@ export default function Cream({ setTotal, setDisplay, accountAddress }) {
       {},
       {}
     );
-    console.log('usd price: ', token.symbol, data.market_data.current_price.usd);
     return {
       image: data.image.thumb,
       usdPrice: data.market_data.current_price.usd,
@@ -122,6 +121,18 @@ export default function Cream({ setTotal, setDisplay, accountAddress }) {
               let { image, usdPrice } = await getImage(tokens[i]);
               tokens[i].image = image;
               tokens[i].usdPrice = parseFloat(usdPrice).toFixed(2);
+              tokens[i].totalSuppliedvalue = (
+                parseFloat(tokens[i].totalSupplied) * parseFloat(usdPrice)
+              ).toFixed(2);
+              tokens[i].totalBorrowedValue = (
+                parseFloat(tokens[i].totalBorrowed) * parseFloat(usdPrice)
+              ).toFixed(2);
+              tokens[i].totalRedeemedValue = (
+                parseFloat(tokens[i].totalRedeemed) * parseFloat(usdPrice)
+              ).toFixed(2);
+              tokens[i].cTokenValue = (
+                parseFloat(tokens[i].cTokenBalance) * parseFloat(usdPrice)
+              ).toFixed(2);
             }
             setCreamTokens(tokens);
           }
