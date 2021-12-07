@@ -29,7 +29,7 @@ const LightTooltip = styled(({ className, ...props }) => (
     backgroundColor: theme.palette.common.white,
     color: 'rgba(0, 0, 0, 0.87)',
     boxShadow: theme.shadows[1],
-    fontSize: 11,
+    fontSize: '11px',
   },
 }));
 

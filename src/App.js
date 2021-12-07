@@ -1,7 +1,8 @@
 import React from 'react';
-// import {BrowserRouter, Switch, Route} from 'react-router-dom'
+import { Provider } from 'react-redux';
 
-// import Home from './screens/home'
+// import {BrowserRouter, Switch, Route} from 'react-router-dom';
+// import Home from './screens/home';
 // import TestingPage from './screens/testingPage';
 // import Landing from './screens/landing/landing';
 
@@ -10,6 +11,7 @@ import { Contract, ethers } from 'ethers';
 import Router from './routes';
 import ThemeConfig from './theme';
 import ScrollToTop from './components/ScrollToTop';
+import { store } from './store/rootReducer';
 
 const ethersConfig = {
   ethers: { Contract },
@@ -27,14 +29,14 @@ function App() {
            </Switch>
      </BrowserRouter>
      </> */
-    <ThemeConfig>
-      <ScrollToTop />
-      <NftProvider fetcher={['ethers', ethersConfig]}>
-        <Router />
-      </NftProvider>
-    </ThemeConfig>
-
-    /* <Router /> */
+    <Provider store={store}>
+      <ThemeConfig>
+        <ScrollToTop />
+        <NftProvider fetcher={['ethers', ethersConfig]}>
+          <Router />
+        </NftProvider>
+      </ThemeConfig>
+    </Provider>
   );
 }
 

@@ -24,8 +24,8 @@ export default class Header extends Component{
                 <div className='help-dropdown'>
                     <HelpDropDown />
                 </div>
-                
-            
+
+
             </div>
         )
     }
@@ -55,6 +55,8 @@ import lightIcon from '../../../assets/icons/lightIcon.svg';
 import ThemeConfig from '../../../theme/index.js';
 import Sidebar from '../sidebar/sidebar';
 import lightDashboard from '../../../assets/images/lightDashboard.jpg';
+import { getThemeTask } from '../../../store/themeChanger/reducer';
+import { connect, useDispatch } from 'react-redux';
 
 const DRAWER_WIDTH = 280;
 const APPBAR_MOBILE = 64;
@@ -83,8 +85,10 @@ Header.propTypes = {
   themeChanger: PropTypes.func,
 };
 
-export default function Header({ onOpenSidebar, themeChanger }) {
+function Header({ onOpenSidebar, themeChanger }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const { address } = useParams();
   const [open, setOpen] = useState(false);
   const [Token, setToken] = useState('');
@@ -95,14 +99,20 @@ export default function Header({ onOpenSidebar, themeChanger }) {
     setToken(childData);
     navigate(`/${address}/token/${childData}`);
   }
+
+  // const setEvent = payload => ({ type: timelineCalenderConstants.SET_EVENT, payload });
+
   function setDynamicTheme() {
     setTheme(!theme);
-    setFlag(true);
+    // setFlag(true);
     if (theme) {
       localStorage.setItem('selectedTheme', 'Day');
+      setFlag(false);
     } else {
       localStorage.setItem('selectedTheme', 'Night');
+      setFlag(true);
     }
+    dispatch(getThemeTask(flag));
   }
 
   return (
@@ -160,3 +170,5 @@ export default function Header({ onOpenSidebar, themeChanger }) {
     </RootStyle>
   );
 }
+
+export default connect()(Header);
