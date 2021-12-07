@@ -8,9 +8,7 @@ Version      Date                Description                                    
 1.0         26/Oct/2021          Initial Development                             Prabhakaran.R
 
 **************************************************************************************************/
-//import React, { useEffect, useState } from 'react';
-//import Tooltip from '@material-ui/core/Tooltip';
-//const { useState } = require('react');
+
 //List all Curve LpToken ABI to interact with respective contract
 import Curve3CrvPoolABI from '../../abi/CurveLpContracts/Curve3CrvPool.json'; //DAI/USDC/USDT(3Crv)
 import CurveAavePoolABI from '../../abi/CurveLpContracts/CurveAavePool.json'; //ankrCRV
@@ -76,16 +74,15 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
   let curveLpTokenPrice = [];
   let curveLpPoolData = [];
   let curveLpTokenLiquidity = [];
+  let dailyVolume;
+  let dailyUSDVolume = [];
 
   await loadWeb3();
   const web3 = window.web3;
-  console.log('Contract address', contractAddress);
-  //console.log('Pool Address', Addresses.CrvPoolToken)
 
   //call below list of curve lp token contracts to get lp value of the given user
   //1) DAI/USDC/USDT(3Crv)
   if (contractAddress === Addresses.CrvPoolToken.toUpperCase()) {
-    console.log('Inside fetching contract data for 3CRV');
     const Curve3CrvPoolContract = new web3.eth.Contract(Curve3CrvPoolABI, Addresses.CrvPoolToken);
     let Curve3CrvBalance = await Curve3CrvPoolContract.methods.balanceOf(accountAddress).call();
     let Curve3CrvName = await Curve3CrvPoolContract.methods.name().call();
@@ -98,9 +95,6 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     curveLpTokenName = Curve3CrvName; // token name
     curveLpTokenAddress = Addresses.CrvPoolToken; //token address
     curveLpTokenLiquidity = curveLpTokenTotal; //pool Liquidity
-
-    console.log('Curve3CrvBalance', Curve3CrvBalance);
-    console.log('Curve3CrvName', Curve3CrvName);
   }
   //2) ankrCRV
   if (contractAddress === Addresses.AAVEToken) {
@@ -117,8 +111,6 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     curveLpTokenBalance = CurveAavePoolBalance;
     curveLpTokenName = CurveAavePoolName;
     curveLpTokenAddress = Addresses.AAVEToken;
-    //console.log('CurveAavePoolBalance', CurveAavePoolBalance);
-    //console.log('CurveAavePoolName', CurveAavePoolName);
   }
 
   //3) ETH/aETH
@@ -137,8 +129,6 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     curveLpTokenBalance = CurveAnkrCRVBalance;
     curveLpTokenName = CurveAnkrCRVName;
     curveLpTokenAddress = Addresses.ankrETHToken;
-    //console.log('CurveAnkrCRVBalance', CurveAnkrCRVBalance);
-    //console.log('CurveAnkrCRVName', CurveAnkrCRVName);
   }
 
   //4) yDAI/yUSDC/yUSDT/yBUSD
@@ -157,8 +147,6 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     curveLpTokenBalance = CurveBUSDPoolBalance;
     curveLpTokenName = CurveBUSDPoolName;
     curveLpTokenAddress = Addresses.BUSDToken;
-    //console.log('CurveBUSDPoolBalance', CurveBUSDPoolBalance);
-    //console.log('CurveBUSDPoolName', CurveBUSDPoolName);
   }
 
   //5) cDAI/cUSDC
@@ -180,8 +168,6 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     curveLpTokenBalance = CurveCompoundPoolBalance;
     curveLpTokenName = CurveCompoundPoolName;
     curveLpTokenAddress = Addresses.CompoundToken;
-    //console.log('CurveCompoundPoolBalance', CurveCompoundPoolBalance);
-    //console.log('CurveCompoundPoolName', CurveCompoundPoolName);
   }
 
   //6) EURS/sEUR
@@ -198,8 +184,6 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     curveLpTokenBalance = CurveEURSPoolBalance;
     curveLpTokenName = CurveEURSPoolName;
     curveLpTokenAddress = Addresses.EURSToken;
-    //console.log('CurveEURSPoolBalance', CurveEURSPoolBalance);
-    //console.log('CurveEURSPoolName', CurveEURSPoolName);
   }
 
   //7) hBTC/wBTC
@@ -216,8 +200,6 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     curveLpTokenBalance = CurvehBTCPoolBalance;
     curveLpTokenName = CurvehBTCPoolName;
     curveLpTokenAddress = Addresses.hBTCToken;
-    //console.log('CurvehBTCPoolBalance', CurvehBTCPoolBalance);
-    //console.log('CurvehBTCPoolName', CurvehBTCPoolName);
   }
 
   //8) cyDAI/cyUSDC/cyUSDT
@@ -239,8 +221,6 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     curveLpTokenBalance = CurveIronBankPoolBalance;
     curveLpTokenName = CurveIronBankPoolName;
     curveLpTokenAddress = Addresses.IronBankToken;
-    //console.log('CurveIronBankPoolBalance', CurveIronBankPoolBalance);
-    //console.log('CurveIronBankPoolName', CurveIronBankPoolName);
   }
 
   //9) LINK/sLINK
@@ -257,8 +237,6 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     curveLpTokenBalance = CurveLinkPoolBalance;
     curveLpTokenName = CurveLinkPoolName;
     curveLpTokenAddress = Addresses.LinkToken;
-    //console.log('CurveLinkPoolBalance', CurveLinkPoolBalance);
-    //console.log('CurveLinkPoolName', CurveLinkPoolName);
   }
 
   //10) DAI/USDC/USDT/PAX
@@ -275,8 +253,6 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     curveLpTokenBalance = CurvePAXPoolBalance;
     curveLpTokenName = CurvePAXPoolName;
     curveLpTokenAddress = Addresses.PAXToken;
-    //console.log('CurvePAXPoolBalance', CurvePAXPoolBalance);
-    //console.log('CurvePAXPoolName', CurvePAXPoolName);
   }
 
   //11) renBTC/wBTC
@@ -298,8 +274,6 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     curveLpTokenBalance = CurverenBTCPoolBalance;
     curveLpTokenName = CurverenBTCPoolName;
     curveLpTokenAddress = Addresses.renBTCToken;
-    //console.log('CurverenBTCPoolBalance', CurverenBTCPoolBalance);
-    //console.log('CurverenBTCPoolName', CurverenBTCPoolName);
   }
 
   //12) ETH/rETH
@@ -316,8 +290,6 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     curveLpTokenBalance = CurverETHPoolBalance;
     curveLpTokenName = CurverETHPoolName;
     curveLpTokenAddress = Addresses.rETHToken;
-    //console.log('CurverETHPoolBalance', CurverETHPoolBalance);
-    //console.log('CurverETHPoolName', CurverETHPoolName);
   }
 
   //13) aDAI/aSUSD
@@ -336,8 +308,6 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     curveLpTokenBalance = CurvesAAVEPoolBalance;
     curveLpTokenName = CurvesAAVEPoolName;
     curveLpTokenAddress = Addresses.sAAVEToken;
-    //console.log('CurvesAAVEPoolBalance', CurvesAAVEPoolBalance);
-    //console.log('CurvesAAVEPoolName', CurvesAAVEPoolName);
   }
 
   //14) renBTC/wBTC/sBTC
@@ -356,10 +326,6 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     curveLpTokenBalance = CurvesBTCPoolBalance; //token balance of Lp for the given user
     curveLpTokenName = CurvesBTCPoolName; // token name
     curveLpTokenAddress = Addresses.sBTCToken; //token address
-
-    console.log('CurvesBTCPoolBalance', CurvesBTCPoolBalance);
-    console.log('CurvesBTCPoolName', CurvesBTCPoolName);
-    console.log('Curve lp token virutal price', CurveLpTokenVirtualPrice);
   }
 
   //15) ETH/sETH
@@ -376,8 +342,6 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     curveLpTokenBalance = CurvesETHPoolBalance;
     curveLpTokenName = CurvesETHPoolName;
     curveLpTokenAddress = Addresses.sETHToken;
-    //console.log('CurvesETHPoolBalance', CurvesETHPoolBalance);
-    //console.log('CurvesETHPoolName', CurvesETHPoolName);
   }
 
   //16) ETH/stETH
@@ -396,8 +360,6 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     curveLpTokenBalance = CurvestETHPoolBalance;
     curveLpTokenName = CurvestETHPoolName;
     curveLpTokenAddress = Addresses.stETHToken;
-    //console.log('CurvestETHPoolBalance', CurvestETHPoolBalance);
-    //console.log('CurvestETHPoolName', CurvestETHPoolName);
   }
 
   //17) DAI/USDC/USDT/sUSD
@@ -414,13 +376,10 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     curveLpTokenBalance = CurvesUSDPoolBalance;
     curveLpTokenName = CurvesUSDPoolName;
     curveLpTokenAddress = Addresses.sUSDToken;
-    //console.log('CurvesUSDPoolBalance', CurvesUSDPoolBalance);
-    //console.log('CurvesUSDPoolName', CurvesUSDPoolName);
   }
 
   //18) USD-BTC-ETH
   if (contractAddress === Addresses.TriCryptoToken) {
-    console.log("Inside of the 'USD-BTC-ETH contract");
     const CurveTriCryptoPoolContract = new web3.eth.Contract(
       CurveTriCryptoPoolABI,
       Addresses.TriCryptoToken.toLowerCase()
@@ -429,13 +388,13 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
       .balanceOf(accountAddress)
       .call();
     let CurveTriCryptoPoolName = await CurveTriCryptoPoolContract.methods.name().call();
-    console.log("value fetched for the 'USD-BTC-ETH contract", CurveTriCryptoPoolName);
+
     //get virtual price of the pool
     let CurveLpTokenVirtualPrice;
     try {
       CurveLpTokenVirtualPrice = await fetchCurveLpTokenVirtualPrice(contractAddress);
     } catch (err) {
-      console.log('No virtual price is available for this pool', contractAddress);
+      console.log(err.message);
     }
     let curveLpTokenTotal = await CurveTriCryptoPoolContract.methods.totalSupply().call();
     curveLpTokenLiquidity = curveLpTokenTotal; //pool Liquidity
@@ -444,8 +403,6 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     curveLpTokenBalance = CurveTriCryptoPoolBalance;
     curveLpTokenName = CurveTriCryptoPoolName;
     curveLpTokenAddress = Addresses.TriCryptoToken;
-    console.log('CurveTriCryptoPoolBalance', CurveTriCryptoPoolBalance);
-    console.log('CurveTriCryptoPoolName', CurveTriCryptoPoolName);
   }
 
   //19) cDAI/cUSDC/USDT
@@ -462,8 +419,6 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     curveLpTokenBalance = CurveUSDTPoolBalance;
     curveLpTokenName = CurveUSDTPoolName;
     curveLpTokenAddress = Addresses.USDTToken;
-    //console.log('CurveUSDTPoolBalance', CurveUSDTPoolBalance);
-    //console.log('CurveUSDTPoolName', CurveUSDTPoolName);
   }
 
   //20) yDAI/yUSDC/yUSDT/yTUSD
@@ -480,8 +435,6 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     curveLpTokenBalance = CurveYPoolBalance;
     curveLpTokenName = CurveYPoolName;
     curveLpTokenAddress = Addresses.YToken;
-    //console.log('CurveYPoolBalance', CurveYPoolBalance);
-    //console.log('CurveYPoolName', CurveYPoolName);
   }
 
   //21) cyDAI/cyUSDC/cyUSDT
@@ -500,20 +453,66 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
     curveLpTokenAddress = Addresses.Yv2Token;
   }
 
+  //function to get epoch time stamp
+  const getEpoch = () => {
+    var d = new Date();
+    var day = d.getUTCDate();
+    var month = d.getUTCMonth();
+    var year = d.getUTCFullYear();
+    var offset = new Date(year, month, day).getTimezoneOffset() * 60;
+    var epoch = new Date(year, month, day).getTime() / 1000 - offset;
+    return epoch;
+  };
+
+  let timeStamp = await getEpoch();
+  const timeStamp_gte = timeStamp - 86400; // get one day prior date
+
+  const getVolumeData = async (contractAddress) => {
+    //get the daily USD volume of the pool token
+    try {
+      const result = await axios.post(
+        `https://gateway.thegraph.com/api/c9596ce7bc47f7544cc808c3881427ed/subgraphs/id/0x2382ab6c2099474cf424560a370ed1b1fdb65253-0`,
+        {
+          query: `{
+                 
+                    lpTokens
+                    (where :{id : "${contractAddress}"}) 
+                    {
+                    id
+                      pool {
+                        name  
+                        dailyVolumes(where :  
+                          {timestamp_gte : ${timeStamp_gte} timestamp_lt :${timeStamp} }
+                        ) {
+                      
+                          volume
+                          timestamp
+                          
+                        }
+                      }
+                    
+                  }
+                }`,
+        }
+      );
+      //console.log('curve lp volume result-', result.data.data.lpTokens[0].pool.dailyVolumes[0].volume)
+      dailyVolume = result.data.data.lpTokens[0].pool.dailyVolumes[0].volume;
+
+      return dailyVolume;
+    } catch (err) {
+      console.log('No data found for the give paired token');
+    }
+  };
+
+  dailyUSDVolume = await getVolumeData(contractAddress.toLowerCase());
+  //end of getting volume data
   let tokenPrice = 0;
   //Go thru all the lp token contracts and get the balance from each contract pool
-  //for (let i = 0 ; i < curveLpTokenBalance.length ; i++ ) {
+
   var object = {};
   var poolTokenValue;
   //Procced to get the USD value of the token only If balance exist for that pool
   if (parseInt(curveLpTokenBalance) > 0) {
-    //curveLpTokenBalance,curveLpTokenName,curveLpTokenAddress
-    console.log('Curve Lp Token name ', curveLpTokenName);
-    console.log('Curve Lp Token Balance', curveLpTokenBalance);
-    console.log('Curve Lp Token Address', curveLpTokenAddress);
-    console.log('Curve lp token virtual price', curveLpTokenPrice);
-    //console.log("Curve Lp Token Virtual price",CurveLpTokenVirtualPrice)
-
     //calling the coinGecko API to get the given token/coin data from this we can get token market price
     try {
       let curveTokenName = curveLpTokenName.replace('Curve.fi ', '');
@@ -523,30 +522,22 @@ const getCurveLpData = async (accountAddress, contractAddress) => {
         //assign the receiving token price into local variable
         tokenPrice = await tokenData.data.market_data.current_price.usd;
       }
-      //if tokeprice is available then calc and get the tokenprice from its pool virtual price
-      if (tokenPrice != 0) {
-        console.log('Checking the token price in if');
-        let calcTokenPrice = tokenPrice * curveLpTokenPrice;
-        tokenPrice = calcTokenPrice;
-      }
-      //if token price is not available for that pool then use the virtual price alone to get the
-      //token value
-      else {
-        console.log('Checking the token price in elseif');
+      //if tokenPrice is not get from coingecko then use the lptoken virtual price
+      if (tokenPrice == 0) {
         tokenPrice = curveLpTokenPrice;
       }
 
       //if(CurveLpTokenVirtualPrice > 0) {
-
-      let tokenCalcValue = (curveLpTokenBalance / 10 ** 18) * (tokenPrice / 10 ** 18);
-      let LptokenLiquidityValue = (curveLpTokenLiquidity / 10 ** 18) * (tokenPrice / 10 ** 18);
+      let tokenCalcValue = (curveLpTokenBalance / 10 ** 18) * tokenPrice;
+      let LptokenLiquidityValue = (curveLpTokenLiquidity / 10 ** 18) * tokenPrice;
 
       curveLpPoolData = [
-        curveTokenName,
-        curveLpTokenBalance,
-        tokenPrice,
-        tokenCalcValue,
-        LptokenLiquidityValue,
+        curveTokenName, //0
+        curveLpTokenBalance, //1
+        tokenPrice, //2
+        tokenCalcValue, //3
+        LptokenLiquidityValue, //4
+        dailyUSDVolume, //5
       ];
     } catch (err) {
       console.log('Error', err.message);

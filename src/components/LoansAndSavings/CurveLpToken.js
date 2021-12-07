@@ -53,30 +53,33 @@ export default function CurveLpToken({ accountAddress, onCurveLptoken }) {
               <React.Fragment
                 style={{
                   display: 'inline-block',
-                  width: '110%',
+                  width: '100%',
                   //textAlign: 'left',
                   wordBreak: 'break-all',
                 }}>
                 {/*Get the Curve lp token Name */}
                 <CurveLpImage lpToken={object[0]} /> ${object[0]}
-                &nbsp; &nbsp;{parseFloat(object[3]).toFixed(2)} USD
+                &nbsp; &nbsp;{parseFloat(object[3].toFixed(2)).toLocaleString()} USD
               </React.Fragment>
             </AccordionSummary>
             <AccordionDetails>
               <div style={{ display: 'inline-block', width: '70%', fontSize: '13px' }}>
                 {/*Get the Curve lp token price */}
-                Value &nbsp;&nbsp;&nbsp;&nbsp;{parseFloat(object[3]).toFixed(2)}
+                Value : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                {parseFloat(object[3].toFixed(2)).toLocaleString()}
                 <br />
-                LP Price &nbsp;&nbsp;&nbsp;&nbsp;{parseFloat((object[2] / 10 ** 18).toFixed(2))}
+                LP Price : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{parseFloat(object[2].toFixed(4))}
                 <br />
                 {/*Get the Curve lp token balance */}
-                LP Balance &nbsp; {parseFloat(object[1] / 10 ** 18).toFixed(4)}
+                LP Balance : &nbsp; {parseFloat(object[1] / 10 ** 18).toFixed(4)}
                 <br />
-                Liquidity &nbsp; {parseFloat(object[4].toFixed(2)).toLocaleString()}
+                Liquidity : &nbsp; &nbsp;{parseFloat(object[4].toFixed(2)).toLocaleString()}
                 <br />
-                Chain &nbsp;&nbsp;Ethereum
+                Volume : &nbsp;&nbsp; {parseFloat(object[5]).toLocaleString()}
                 <br />
-                Protocol &nbsp;Curve
+                Chain : &nbsp;&nbsp;&nbsp;Ethereum
+                <br />
+                Protocol : &nbsp;&nbsp; Curve
               </div>
             </AccordionDetails>
           </Accordion>
@@ -131,7 +134,7 @@ export default function CurveLpToken({ accountAddress, onCurveLptoken }) {
         style={{
           fontSize: '12px',
           marginRight: '15px',
-
+          color: 'white',
           display: CurveLpTokenData.length > 0 ? '' : 'none',
         }}>
         <img
@@ -143,7 +146,7 @@ export default function CurveLpToken({ accountAddress, onCurveLptoken }) {
           }}
           alt=""
         />
-        &nbsp;&nbsp;Curve Lp token --- {CurveLpTokenTotal} USD
+        &nbsp;&nbsp;Curve Lp token --- {parseFloat(CurveLpTokenTotal).toLocaleString()} USD
         {CurveLpTokenContent}
       </div>
       <br />
