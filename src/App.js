@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-
+import Web3Wrapper from './modules/web3/containers/Web3Wrapper';
 // import {BrowserRouter, Switch, Route} from 'react-router-dom';
 // import Home from './screens/home';
 // import TestingPage from './screens/testingPage';
@@ -20,23 +20,16 @@ const ethersConfig = {
 
 function App() {
   return (
-    /*  <>
-     <BrowserRouter>
-           <Switch>
-             <Route exact path="/"> <Home/> </Route>
-             <Route exact path="/"><Landing/></Route>
-             <Route exact path="/test"> <TestingPage/> </Route>
-           </Switch>
-     </BrowserRouter>
-     </> */
-    <Provider store={store}>
-      <ThemeConfig>
-        <ScrollToTop />
-        <NftProvider fetcher={['ethers', ethersConfig]}>
-          <Router />
-        </NftProvider>
-      </ThemeConfig>
-    </Provider>
+    <Web3Wrapper>
+      <Provider store={store}>
+        <ThemeConfig>
+          <ScrollToTop />
+          <NftProvider fetcher={['ethers', ethersConfig]}>
+            <Router />
+          </NftProvider>
+        </ThemeConfig>
+      </Provider>
+    </Web3Wrapper>
   );
 }
 

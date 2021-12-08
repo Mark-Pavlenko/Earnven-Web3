@@ -18,7 +18,7 @@ export default class MenuListComposition extends React.Component {
 
   loadGasPrices = async() => {
     
-    await axios.get('https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W',{},{})
+    await axios.get('https://api-rinkeby.etherscan.io/api?module=gastracker&action=gasoracle&apikey=JZ5GX21E3KAZ3B826R5ZUYMZ6VXPMEIUYU',{},{})
         .then(async(response) => {
             // console.log(response)
             this.state.gasData = response.data.result;
@@ -164,7 +164,7 @@ export default function GasDropDownMenu() {
     async function getData() {
       try {
         const response = await axios.get(
-          'https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W'
+          'https://api-rinkeby.etherscan.io/api?module=gastracker&action=gasoracle&apikey=JZ5GX21E3KAZ3B826R5ZUYMZ6VXPMEIUYU'
         );
         // console.log("api response::", response);
         const { result } = response.data;

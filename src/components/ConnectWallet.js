@@ -1,4 +1,5 @@
 import { Box, Button, Grid, Stack, TextField, Typography } from '@material-ui/core';
+import { ethers } from 'ethers';
 import Web3 from 'web3';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowRight } from 'react-icons/fa';
@@ -14,6 +15,13 @@ import coinbaseWalletLogo from '../assets/icons/coinbase-wallet.png';
 import fortmaticLogo from '../assets/icons/fortmatic.png';
 import walletConnectLogo from '../assets/icons/walletconnect-logo.svg';
 import metamask from '../assets/icons/metamask.svg';
+
+import { useWeb3React } from '@web3-react/core';
+
+//test connection
+// import { useWeb3React } from '@web3-react/core';
+// import { InjectedConnector } from '@web3-react/injected-connector';
+// const injected = new InjectedConnector({ supportedChainIds: [1, 3, 4, 5, 42] });
 
 export default function ConnectWallet() {
   const navigate = useNavigate();
@@ -57,21 +65,38 @@ export default function ConnectWallet() {
   const loadMetamask = async () => {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
-      await window.ethereum.enable();
-      const accounts = await window.web3.eth.getAccounts();
-      routeToDashboard(accounts[0], 'metamask');
+      // await window.ethereum.enable();
+      // const accounts = await window.web3.eth.getAccounts();
+      // console.log('the whole accounts list', accounts);
+      const provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
+      await provider.send('eth_requestAccounts', []);
+      const signer = provider.getSigner();
+      console.log('Account:', await signer.getAddress());
+      // routeToDashboard(await signer.getAddress(), 'metamask');
     } else if (window.web3) {
       window.web3 = new Web3(window.web3.currentProvider);
     } else {
       window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
     }
+
+    // check if we connected to the metamask
+    // const { ethereum } = window;
+    // if (!ethereum) {
+    //   console.log('no metamask installed!');
+    // } else {
+    //   console.log('metamask is installed!');
+    // }
   };
 
   const routeToDashboard = async (account, provider) => {
+    const web3React = useWeb3React();
+
     const existingWallet = localStorage.getItem('wallets');
     const parsedExistingWallet = JSON.parse(existingWallet);
     const existingWallet_mywallet = localStorage.getItem('mywallet');
     const parsedWallet_mywallet = JSON.parse(existingWallet_mywallet);
+
+    console.log(web3React);
 
     const newWallet = {
       address: account,
@@ -183,10 +208,10 @@ export default function ConnectWallet() {
         <Box sx={{ mt: 2 }}>
           <Typography variant="h3">Connect To Earnven</Typography>
           <Box sx={{ mt: 2 }}>
-            <Typography variant="caption">Connect Wallet</Typography>
+            <Typography variant="caption">Connect Wallet 123</Typography>
             <Button
               variant="contained"
-              sx={{ backgroundColor: (theme) => theme.palette.primary.dark }}
+              sx={{ backgroundColor: (theme) => theme.palette.primary.dark, color: 'black' }}
               onClick={loadMetamask}
               disableElevation
               fullWidth

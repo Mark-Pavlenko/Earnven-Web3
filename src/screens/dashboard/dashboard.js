@@ -13,6 +13,7 @@ import bxNavLight from '../../assets/icons/bxNavLight.svg';
 import bxNavDark from '../../assets/icons/bxNavDark.svg';
 import Frame221 from '../../assets/icons/Frame221.svg';
 import Frame222 from '../../assets/icons/Frame222.svg';
+import axios from 'axios';
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -38,8 +39,21 @@ function a11yProps(index) {
 export default function Dashboard() {
   const { address } = useParams();
   const [value, setValue] = useState(0);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+
+  const getMetaMaskWalletInfo = () => {
+    // axios
+    //   .get(
+    //     'https://api-rinkeby.etherscan.io/api?module=account&action=balance&address=0x67319Bdcd070180b9FABE4DFC4e47a9454aC22DE&tag=latest&apikey=JZ5GX21E3KAZ3B826R5ZUYMZ6VXPMEIUYU'
+    //   )
+    //   .then((res) => {
+    //     console.log('res data from etherscan request', res.data);
+    //   });
+
+    axios.get(``);
   };
 
   return (
@@ -49,6 +63,7 @@ export default function Dashboard() {
           <Tab label="Assets" {...a11yProps(0)} />
           <Tab label="Nft Collection" {...a11yProps(1)} />
           <Tab label="History" {...a11yProps(2)} />
+          <button onClick={getMetaMaskWalletInfo}>Get hardcode wallet info</button>
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>

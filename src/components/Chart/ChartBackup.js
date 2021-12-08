@@ -1,6 +1,6 @@
 // import { ResponsiveLine } from '@nivo/line'
 // eslint-disable-next-line
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import parse from 'html-react-parser';
 import { useParams } from 'react-router-dom';
@@ -27,7 +27,7 @@ export const Chart = () => {
   const [Selection, setSelection] = useState(null);
   const [tokenAddress, setTokenAddress] = useState('');
   // eslint-disable-next-line
-  const [View, setView] = useState('Month View')
+  const [View, setView] = useState('Month View');
 
   // const [Token, setToken] = useState('aave')
 
@@ -65,7 +65,7 @@ export const Chart = () => {
 
     axios
       .get(
-        `https://api.etherscan.io/api?module=account&action=tokentx&contractaddress=${tokenAddress}&address=${address}&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W`
+        `https://api-rinkeby.etherscan.io/api?module=account&action=tokentx&contractaddress=${tokenAddress}&address=${address}&apikey=JZ5GX21E3KAZ3B826R5ZUYMZ6VXPMEIUYU`
       )
       .then(async (response) => {
         var res1 = response.data.result;
@@ -73,7 +73,7 @@ export const Chart = () => {
 
         axios
           .get(
-            `https://api.etherscan.io/api?module=account&action=txlist&address=${address}&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W`
+            `https://api-rinkeby.etherscan.io/api?module=account&action=txlist&address=${address}&apikey=JZ5GX21E3KAZ3B826R5ZUYMZ6VXPMEIUYU`
           )
           .then(async (response) => {
             res2 = response.data.result;
