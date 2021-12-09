@@ -9,6 +9,7 @@ const useEagerConnect = () => {
 
   const checkIsActive = async () => {
     const isAuthorized = await injected.isAuthorized();
+    // console.log('is metamask wallet is connected', isAuthorized);
     if (isAuthorized) {
       activate(injected)
         .then(() => {

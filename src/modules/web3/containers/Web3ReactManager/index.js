@@ -14,8 +14,10 @@ export default function Web3ReactManager({ children }) {
 
   // after eagerly trying injected, if the network connect ever isn't active or in an error state, activate itd
   useEffect(() => {
+    // console.log('web3 react manager - is metamask wallet connected', active);
+
     if (triedEager && !error && !active) {
-      activate(network);
+      activate(network).then((r) => console.log('network if metamask is deactivate', network));
     }
   }, [triedEager, activate, error, active]);
 

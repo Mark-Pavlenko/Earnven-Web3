@@ -16,14 +16,13 @@ import fortmaticLogo from '../assets/icons/fortmatic.png';
 import walletConnectLogo from '../assets/icons/walletconnect-logo.svg';
 import metamask from '../assets/icons/metamask.svg';
 
-import { useWeb3React } from '@web3-react/core';
-
-//test connection
-// import { useWeb3React } from '@web3-react/core';
-// import { InjectedConnector } from '@web3-react/injected-connector';
-// const injected = new InjectedConnector({ supportedChainIds: [1, 3, 4, 5, 42] });
+//correct web3 connection
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 
 export default function ConnectWallet() {
+  //correct web3 connection
+  const { activate, account, connector, deactivate, error } = useWeb3React();
+
   const navigate = useNavigate();
   const [address, setstate] = useState('');
   const [errorMsg, seterrorMsg] = useState(false);
@@ -63,6 +62,10 @@ export default function ConnectWallet() {
   };
 
   const loadMetamask = async () => {
+    // web3-react methods
+    console.log(activate);
+    console.log(connector);
+
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
       // await window.ethereum.enable();

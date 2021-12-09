@@ -6,8 +6,8 @@ export const POLLING_INTERVAL = 12000;
 export const DEFAULT_CHAIN_ID = Number(process.env.REACT_APP_DEFAULT_CHAIN_ID);
 
 export const NETWORK_URLS = {
-  1: 'https://mainnet.infura.io/v3/63ba253e7f2a47c1a5ec0e0ae14ea833',
-  4: 'https://rinkeby.infura.io/v3/63ba253e7f2a47c1a5ec0e0ae14ea833',
+  1: 'https://mainnet.infura.io/v3/7d04749d215847c58d58fd4ecde4c3f7',
+  4: 'https://rinkeby.infura.io/v3/7d04749d215847c58d58fd4ecde4c3f7',
 };
 
 export const injected = new InjectedConnector({
@@ -16,8 +16,8 @@ export const injected = new InjectedConnector({
 
 export const network = new NetworkConnector({
   urls: { 1: NETWORK_URLS[1], 4: NETWORK_URLS[4] },
-  // defaultChainId: DEFAULT_CHAIN_ID,
-  defaultChainId: 4,
+  defaultChainId: DEFAULT_CHAIN_ID,
+  // defaultChainId: 4,
 });
 
 export const walletConnect = new WalletConnectConnector({
