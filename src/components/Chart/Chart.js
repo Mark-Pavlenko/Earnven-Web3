@@ -65,7 +65,7 @@ export const Chart = () => {
 
     axios
       .get(
-        `https://api-rinkeby.etherscan.io/api?module=account&action=tokentx&contractaddress=${tokenAddress}&address=${address}&apikey=JZ5GX21E3KAZ3B826R5ZUYMZ6VXPMEIUYU`
+        `https://api.etherscan.io/api?module=account&action=tokentx&contractaddress=${tokenAddress}&address=${address}&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W`
       )
       .then(async (response) => {
         var res1 = response.data.result;

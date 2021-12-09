@@ -61,7 +61,7 @@ export default class index extends Component {
 
     await axios
       .get(
-        `https://api-rinkeby.etherscan.io/api?module=account&action=tokentx&address=${accounts}&startblock=0&endblock=999999999&sort=asc&apikey=JZ5GX21E3KAZ3B826R5ZUYMZ6VXPMEIUYU`,
+        `https://api.etherscan.io/api?module=account&action=tokentx&address=${accounts}&startblock=0&endblock=999999999&sort=asc&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W`,
         {},
         {}
       )

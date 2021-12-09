@@ -47,7 +47,7 @@ export default function Dashboard() {
   const getMetaMaskWalletInfo = () => {
     // axios
     //   .get(
-    //     'https://api-rinkeby.etherscan.io/api?module=account&action=balance&address=0x67319Bdcd070180b9FABE4DFC4e47a9454aC22DE&tag=latest&apikey=JZ5GX21E3KAZ3B826R5ZUYMZ6VXPMEIUYU'
+    //     'https://api.etherscan.io/api?module=account&action=balance&address=0x67319Bdcd070180b9FABE4DFC4e47a9454aC22DE&tag=latest&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W'
     //   )
     //   .then((res) => {
     //     console.log('res data from etherscan request', res.data);

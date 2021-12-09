@@ -88,10 +88,10 @@ function NFTpage() {
       setAccount(account);
       console.log(Account);
 
-      // axios.get(`https://api-rinkeby.etherscan.io/api?module=account&action=tokennfttx&address=0x6975be450864c02b4613023c2152ee0743572325&startblock=0&endblock=999999999&sort=asc&apikey=JZ5GX21E3KAZ3B826R5ZUYMZ6VXPMEIUYU`,{},{})
+      // axios.get(`https://api.etherscan.io/api?module=account&action=tokennfttx&address=0x6975be450864c02b4613023c2152ee0743572325&startblock=0&endblock=999999999&sort=asc&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W`,{},{})
       await axios
         .get(
-          `https://api-rinkeby.etherscan.io/api?module=account&action=tokennfttx&address=${account}&startblock=0&endblock=999999999&sort=asc&apikey=JZ5GX21E3KAZ3B826R5ZUYMZ6VXPMEIUYU`,
+          `https://api.etherscan.io/api?module=account&action=tokennfttx&address=${account}&startblock=0&endblock=999999999&sort=asc&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W`,
           {},
           {}
         )
