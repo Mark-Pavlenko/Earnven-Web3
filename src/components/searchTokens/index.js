@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -6,6 +7,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { withStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
 import { Box, Typography } from '@material-ui/core';
+import { getThemeTask } from '../../store/themeChanger/reducer';
 // import { Redirect } from 'react-router'
 
 let allTokens = [];
@@ -98,6 +100,17 @@ class App extends Component {
     };
   }
 
+  // themeHandler() {
+  // componentDidMount() {
+  //   const isLightTheme = localStorage.getItem('selectedTheme') === 'Day';
+  //   console.log('isLightTheme', isLightTheme);
+  //
+  //   console.log('123');
+  //   // this.props.dispatch(getThemeTask(isLightTheme));
+  // }
+
+  // }
+
   render() {
     const { classes } = this.props;
 
@@ -118,6 +131,9 @@ class App extends Component {
           marginLeft: '586px',
           borderRadius: '11%',
         }}>
+        {/*<button type="button" onClick={this.themeHandler}>*/}
+        {/*  123*/}
+        {/*</button>*/}
         <div>
           {console.log('autocomplete re render')}
           <Autocomplete
@@ -186,4 +202,4 @@ App.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(App);
+export default withStyles(styles)(connect()(App));

@@ -12,6 +12,8 @@ import lightDashboard from '../../assets/images/lightDashboard.jpg';
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;
 
+export const ThemeChangeContext = React.createContext();
+
 const RootStyle = styled('div')({
   display: 'flex',
 });
@@ -47,6 +49,7 @@ export default function AppLayout() {
       />
       <MainStyle>
         {/* <Divider variant="middle" /> */}
+
         <Outlet />
       </MainStyle>
     </RootStyle>

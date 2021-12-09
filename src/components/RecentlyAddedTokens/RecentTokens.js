@@ -1,102 +1,96 @@
 /** ****************************************************************************************************
-Purpose : This component is used to display newly added tokens in the home page 
-Developed by : Prabhakaran.R
-Version log:
--------------------------------------------------------------------------------------------------------
-Version           Date                         Description                    Developed by
---------------------------------------------------------------------------------------------------
-1.0               8/Nov/2021                   Initial Development            Prabhakaran.R
+ Purpose : This component is used to display newly added tokens in the home page
+ Developed by : Prabhakaran.R
+ Version log:
+ -------------------------------------------------------------------------------------------------------
+ Version           Date                         Description                    Developed by
+ --------------------------------------------------------------------------------------------------
+ 1.0               8/Nov/2021                   Initial Development            Prabhakaran.R
 
-******************************************************************************************************/
-import React, { useState, useEffect } from 'react';
+ ******************************************************************************************************/
+import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { createStyles } from '@material-ui/styles';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Stack,
-  Container,
-  Typography,
-  Grid,
-} from '@material-ui/core';
-import Box from '@material-ui/core/Box';
+import { Table, TableBody, TableHead, TableRow } from '@material-ui/core';
 import RecentAddedTokens from './RecentAddedTokens';
 import Pagination from '@material-ui/lab/Pagination';
-import { MobileView, BrowserView } from 'react-device-detect';
-import './RecentlyAddedToken.css';
+import { BlockChainName, TokensTableCell, TokensTableHeader } from './styles';
+import {
+  LoadingBlock,
+  MainBlock,
+  TokenTableLightContainer,
+  TableTokenTitle,
+  TokenImg,
+  BlockChainImg,
+  TokenInfoNameBlock,
+  TokenTableCellBlockChain,
+  TokenNameSymbol,
+  TokenTableCellValue,
+} from './styles';
+import './recentlyAddedToken.css';
+
+// import { ThemeContext } from '../../../src/layout/app/index';
 
 const useStyles = makeStyles(() =>
   createStyles({
-    tableCell: {
-      color: '#1E1E20',
-      fontfamily: 'saira',
-      fontstyle: 'normal',
-      fontweight: '600',
-      fontsize: '10px',
-      lineheight: '16px',
-      alignitems: 'center',
-      opacity: '0.5',
-    },
-
-    tableCellValue: {
-      fontfamily: 'Saira',
-      fontstyle: 'normal',
-      fontweight: 'normal',
-      fontsize: '14px',
-      lineheight: '22px',
-      alignitems: 'center',
-      color: '#1E1E20',
-    },
-    cellBlockChain: {
-      width: '136px',
-      height: '50px',
-      background: '#FFFFFF',
-      boxShadow: '7px 21px 22px 15px rgba(51, 78, 131, 0.17)',
-      borderRadius: '10px',
-      boxSizing: 'border-box',
-      fontfamily: 'Saira',
-      fontstyle: 'normal',
-      fontweight: 'normal',
-      fontsize: '14px',
-      alignitems: 'center',
-      lineHeight: '50px',
-    },
-
-    headerRecentAddedToken: {
-      fontFamily: 'Saira',
-      fontstyle: 'normal',
-      fontWeight: '500',
-      fontSize: '20px',
-      lineHeight: '31px',
-      color: '#1E1E20',
-    },
-
     root: {
+      float: 'right',
+      marginTop: '35px',
+      marginRight: '40px',
+      marginBottom: '20px',
+
       '& .MuiPaginationItem-outlined': {
         backgroundColor: 'transparent',
         color: 'black',
+        border: 'none',
+      },
+
+      '& .MuiPaginationItem-icon': {
+        color: '#4453AD',
+      },
+
+      '@media(max-width: 1200px)': {
+        display: 'flex',
+        float: 'none',
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+    },
+    selected: {
+      '& .Mui-selected': {
+        backgroundColor: '#FFFFFF',
+        color: '#4453AD',
       },
     },
   })
 );
-export default function RecentTokens() {
+
+import ThemeContext from '../../ThemeContext';
+import { useSelector } from 'react-redux';
+import { themeReducer } from '../../store/themeChanger/reducer';
+
+export default function RecentTokens({ themeType }) {
+  // const themeRecentTokens = useContext(ThemeContext);
+  // console.log('themeRecentTokens', themeRecentTokens);
+
+  console.log(themeType);
+
+  const themeMode = useContext(ThemeContext);
+  console.log('current theme mode', themeMode);
+
   const [recentTokenData, setRecentTokenData] = useState([]);
   const [Loading, setLoading] = useState(false);
   const classes = useStyles();
+
+  useEffect(() => {}, []);
 
   //pagination process
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(6);
-  const [pageContent, setPageContent] = useState();
 
   //This function is used to get new cypto token data by callying the respective function
   useEffect(() => {
-    let recentTokens = [];
     async function getData() {
       setLoading(true);
       console.log('Calling RecentAddedTokens process');
@@ -114,13 +108,11 @@ export default function RecentTokens() {
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   let currentPosts;
   let listOfPages;
-  let message;
   try {
     currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
     listOfPages = Math.ceil(recentTokenData.length / postsPerPage);
   } catch (err) {
     console.log('Error Message', err.message);
-    message = <p1>Opps something went wrong, please retry</p1>;
     return true;
   }
 
@@ -128,37 +120,33 @@ export default function RecentTokens() {
     setCurrentPage(value);
   };
 
-  return (
-    <React.Fragment>
-      <div>
-        {Loading && (
-          <center>
-            {' '}
-            <p> Loading...</p>{' '}
-          </center>
-        )}
-      </div>
-      {!Loading && (
-        <Box className="boxSize">
-          <TableContainer
-            style={{
-              background: 'radial-gradient(lightblue, white)',
-              border: '0px',
-            }}>
-            <h3 className={classes.headerRecentAddedToken}>Recently added tokens</h3>
+  const isLightTheme = !themeType;
+  // console.log('isLightTheme', isLightTheme);
 
-            <Table>
+  return (
+    <>
+      <LoadingBlock>{Loading && <p> Loading...</p>}</LoadingBlock>
+      {!Loading && (
+        <MainBlock className="boxSize">
+          {/*<ThemeContext.Consumer>{value}</ThemeContext.Consumer>*/}
+          <TokenTableLightContainer isLightTheme={isLightTheme}>
+            <TableTokenTitle isLightTheme={isLightTheme}>Recently added tokens</TableTokenTitle>
+            <Table style={{ opacity: '0.8' }}>
               <TableHead>
                 <TableRow>
-                  <TableCell className={classes.tableCell}>No</TableCell>
-                  <TableCell className={classes.tableCell}>Name</TableCell>
-                  <TableCell className={classes.tableCell}>Price</TableCell>
-                  <TableCell className={classes.tableCell}>1H</TableCell>
-                  <TableCell className={classes.tableCell}>24H</TableCell>
-                  <TableCell className={classes.tableCell}>Fully Diluted Market Cap</TableCell>
-                  <TableCell className={classes.tableCell}>Volume</TableCell>
-                  <TableCell className={classes.tableCell}>Blockchain</TableCell>
-                  <TableCell className={classes.tableCell}>Added</TableCell>
+                  <TokensTableHeader isLightTheme={isLightTheme}>№</TokensTableHeader>
+                  <TokensTableHeader isLightTheme={isLightTheme}>Name</TokensTableHeader>
+                  <TokensTableHeader isLightTheme={isLightTheme} className="price-title">
+                    Price
+                  </TokensTableHeader>
+                  <TokensTableHeader isLightTheme={isLightTheme}>1H</TokensTableHeader>
+                  <TokensTableHeader isLightTheme={isLightTheme}>24H</TokensTableHeader>
+                  <TokensTableHeader isLightTheme={isLightTheme}>
+                    Fully Diluted Market Cap
+                  </TokensTableHeader>
+                  <TokensTableHeader isLightTheme={isLightTheme}>Volume</TokensTableHeader>
+                  <TokensTableHeader isLightTheme={isLightTheme}>Blockchain</TokensTableHeader>
+                  <TokensTableHeader isLightTheme={isLightTheme}>Added</TokensTableHeader>
                 </TableRow>
               </TableHead>
 
@@ -169,80 +157,55 @@ export default function RecentTokens() {
                   {recentTokenData.length > 0
                     ? currentPosts.map((row) => (
                         <TableRow key={row.name}>
-                          <TableCell
-                            style={{ color: 'black' }}
+                          <TokensTableCell
                             align="center"
                             component="th"
-                            scope="row">
+                            scope="row"
+                            isLightTheme={isLightTheme}>
                             {row.no}
-                          </TableCell>
-
-                          <TableCell className={classes.tableCellValue}>
-                            <img
-                              src={row.logoUrl}
-                              style={{
-                                width: '20px',
-                                height: '20px',
-                                display: 'inline',
-                                verticalAlign: 'top',
-                                left: '200px',
-                              }}
-                              alt=""
-                            />
-                            &nbsp;
-                            {row.name}
-                            <br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{row.symbol}
-                          </TableCell>
-                          <TableCell className={classes.tableCellValue} style={{ left: '5px' }}>
+                          </TokensTableCell>
+                          <TokenTableCellValue isLightTheme={isLightTheme}>
+                            <TokenInfoNameBlock>
+                              <TokenImg src={row.logoUrl} alt="" />
+                              <TokenNameSymbol isLightTheme={isLightTheme}>
+                                <p>{row.name}</p>
+                                <p>{row.symbol}</p>
+                              </TokenNameSymbol>
+                            </TokenInfoNameBlock>
+                          </TokenTableCellValue>
+                          <TokenTableCellValue isLightTheme={isLightTheme} className="price">
                             ${row.price}
-                          </TableCell>
-                          <TableCell className={classes.tableCellValue}>
-                            {' '}
+                          </TokenTableCellValue>
+                          <TokenTableCellValue>
                             <font color={parseInt(row.change_1hr) >= 0 ? '00DFD1' : '#EC3D3D'}>
-                              {' '}
                               {parseFloat(row.change_1hr).toFixed(2)}%{' '}
                             </font>
-                          </TableCell>
-                          <TableCell className={classes.tableCellValue}>
+                          </TokenTableCellValue>
+                          <TokenTableCellValue>
                             <font color={parseInt(row.change_24hr) >= 0 ? '00DFD1' : '#EC3D3D'}>
-                              {' '}
                               {parseFloat(row.change_24hr).toFixed(2)}%{' '}
                             </font>
-                          </TableCell>
-                          <TableCell className={classes.tableCellValue}>
+                          </TokenTableCellValue>
+                          <TokenTableCellValue isLightTheme={isLightTheme}>
                             ${parseInt(row.fully_diluted_market_cap).toLocaleString()}
-                          </TableCell>
-                          <TableCell className={classes.tableCellValue}>
+                          </TokenTableCellValue>
+                          <TokenTableCellValue isLightTheme={isLightTheme}>
                             ${parseInt(row.volume).toLocaleString()}
-                          </TableCell>
+                          </TokenTableCellValue>
 
-                          <TableCell className={classes.tableCellValue}>
-                            <div className={classes.cellBlockChain}>
-                              &nbsp;
-                              {row.blockchainLogoUrl.length > 0 ? (
-                                <img
-                                  style={{
-                                    width: '20px',
-                                    height: '20px',
-                                    display: 'inline',
-                                    verticalAlign: 'middle',
-                                    lineHeight: '50px',
-                                  }}
-                                  src={row.blockchainLogoUrl}
-                                  alt=""
-                                />
-                              ) : (
-                                ''
+                          <TokenTableCellValue isLightTheme={isLightTheme}>
+                            <TokenTableCellBlockChain isLightTheme={isLightTheme}>
+                              {row.blockchainLogoUrl.length > 0 && (
+                                <BlockChainImg src={row.blockchainLogoUrl} alt="" />
                               )}
-                              &nbsp;
-                              {row.platform}
-                            </div>
-                          </TableCell>
-
-                          <TableCell className={classes.tableCellValue}>
+                              <BlockChainName isLightTheme={isLightTheme}>
+                                {row.platform}
+                              </BlockChainName>
+                            </TokenTableCellBlockChain>
+                          </TokenTableCellValue>
+                          <TokenTableCellValue isLightTheme={isLightTheme}>
                             {row.added} hrs ago
-                          </TableCell>
+                          </TokenTableCellValue>
                         </TableRow>
                       ))
                     : ''}
@@ -251,19 +214,19 @@ export default function RecentTokens() {
             </Table>
             <div>
               <Pagination
-                className={classes.root}
-                onChange={paginate}
+                classes={{
+                  root: classes.root,
+                  ul: classes.selected,
+                }}
                 count={listOfPages}
                 variant="outlined"
                 shape="rounded"
-                color="secondary"
-                style={{ marginLeft: '80%' }}
+                onChange={paginate}
               />
             </div>
-          </TableContainer>
-        </Box>
+          </TokenTableLightContainer>
+        </MainBlock>
       )}
-      {message}
-    </React.Fragment>
+    </>
   );
 }

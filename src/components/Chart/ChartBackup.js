@@ -1,6 +1,6 @@
 // import { ResponsiveLine } from '@nivo/line'
 // eslint-disable-next-line
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import parse from 'html-react-parser';
 import { useParams } from 'react-router-dom';
@@ -27,7 +27,7 @@ export const Chart = () => {
   const [Selection, setSelection] = useState(null);
   const [tokenAddress, setTokenAddress] = useState('');
   // eslint-disable-next-line
-  const [View, setView] = useState('Month View')
+  const [View, setView] = useState('Month View');
 
   // const [Token, setToken] = useState('aave')
 

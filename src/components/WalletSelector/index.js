@@ -45,7 +45,7 @@ class App extends Component {
     window.web3 = web3;
   }
 
-  async loadMetamask() {
+  async connectMetamask() {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
       await window.ethereum.enable();
@@ -101,7 +101,7 @@ class App extends Component {
 
               <TransparentButton
                 onClick={async (e) => {
-                  await this.loadMetamask();
+                  await this.connectMetamask();
                   await this.loadBlockchainData();
                   this.closeModal();
                 }}

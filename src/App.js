@@ -1,7 +1,8 @@
 import React from 'react';
-// import {BrowserRouter, Switch, Route} from 'react-router-dom'
-
-// import Home from './screens/home'
+import { Provider } from 'react-redux';
+import Web3Wrapper from './modules/web3/containers/Web3Wrapper';
+// import {BrowserRouter, Switch, Route} from 'react-router-dom';
+// import Home from './screens/home';
 // import TestingPage from './screens/testingPage';
 // import Landing from './screens/landing/landing';
 
@@ -10,6 +11,7 @@ import { Contract, ethers } from 'ethers';
 import Router from './routes';
 import ThemeConfig from './theme';
 import ScrollToTop from './components/ScrollToTop';
+import { store } from './store/rootReducer';
 
 const ethersConfig = {
   ethers: { Contract },
@@ -18,23 +20,16 @@ const ethersConfig = {
 
 function App() {
   return (
-    /*  <>
-     <BrowserRouter>
-           <Switch>
-             <Route exact path="/"> <Home/> </Route>
-             <Route exact path="/"><Landing/></Route>
-             <Route exact path="/test"> <TestingPage/> </Route>
-           </Switch>
-     </BrowserRouter>
-     </> */
-    <ThemeConfig>
-      <ScrollToTop />
-      <NftProvider fetcher={['ethers', ethersConfig]}>
-        <Router />
-      </NftProvider>
-    </ThemeConfig>
-
-    /* <Router /> */
+    <Web3Wrapper>
+      <Provider store={store}>
+        <ThemeConfig>
+          <ScrollToTop />
+          <NftProvider fetcher={['ethers', ethersConfig]}>
+            <Router />
+          </NftProvider>
+        </ThemeConfig>
+      </Provider>
+    </Web3Wrapper>
   );
 }
 
