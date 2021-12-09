@@ -1,5 +1,5 @@
 import { Box, Button, Grid, Stack, TextField, Typography } from '@material-ui/core';
-import { ethers } from 'ethers';
+
 import Web3 from 'web3';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowRight } from 'react-icons/fa';
@@ -18,14 +18,48 @@ import metamask from '../assets/icons/metamask.svg';
 
 //correct web3 connection
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
+import { injected } from '../utils/connectors';
 
 export default function ConnectWallet() {
   //correct web3 connection
-  const { activate, account, connector, deactivate, error } = useWeb3React();
+  const { active, account, library, connector, activate, deactivate } = useWeb3React();
 
   const navigate = useNavigate();
   const [address, setstate] = useState('');
   const [errorMsg, seterrorMsg] = useState(false);
+
+  // console.log('is metamask wallet connect', active);
+
+  //metamask web3-react connection
+  const connectMetamask = async () => {
+    try {
+      await activate(injected);
+      if (window.ethereum && account !== null) {
+        // window.web3 = new Web3(window.ethereum);
+        // await window.ethereum.enable();
+        // const accounts = await window.web3.eth.getAccounts();
+        // console.log(accounts[0]);
+        // routeToDashboard(accounts[0], 'metamask');
+        await routeToDashboard(account, 'metamask');
+      } else if (window.web3) {
+        window.web3 = new Web3(window.web3.currentProvider);
+      } else {
+        window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
+      }
+      // console.log('web3-react connection', account);
+      // await routeToDashboard(account, 'metamask');
+    } catch (ex) {
+      console.log(ex);
+    }
+  };
+
+  const disconnectMetamask = () => {
+    try {
+      deactivate();
+    } catch (ex) {
+      console.log(ex);
+    }
+  };
 
   const loadWalletConnect = async () => {
     const provider = new WalletConnectProvider({
@@ -61,45 +95,11 @@ export default function ConnectWallet() {
     routeToDashboard(accounts[0], 'metamask');
   };
 
-  const loadMetamask = async () => {
-    // web3-react methods
-    console.log(activate);
-    console.log(connector);
-
-    if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum);
-      // await window.ethereum.enable();
-      // const accounts = await window.web3.eth.getAccounts();
-      // console.log('the whole accounts list', accounts);
-      const provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
-      await provider.send('eth_requestAccounts', []);
-      const signer = provider.getSigner();
-      console.log('Account:', await signer.getAddress());
-      // routeToDashboard(await signer.getAddress(), 'metamask');
-    } else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider);
-    } else {
-      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
-    }
-
-    // check if we connected to the metamask
-    // const { ethereum } = window;
-    // if (!ethereum) {
-    //   console.log('no metamask installed!');
-    // } else {
-    //   console.log('metamask is installed!');
-    // }
-  };
-
   const routeToDashboard = async (account, provider) => {
-    const web3React = useWeb3React();
-
     const existingWallet = localStorage.getItem('wallets');
     const parsedExistingWallet = JSON.parse(existingWallet);
     const existingWallet_mywallet = localStorage.getItem('mywallet');
     const parsedWallet_mywallet = JSON.parse(existingWallet_mywallet);
-
-    console.log(web3React);
 
     const newWallet = {
       address: account,
@@ -209,13 +209,32 @@ export default function ConnectWallet() {
       style={{ minHeight: '100vh' }}>
       <Grid item>
         <Box sx={{ mt: 2 }}>
-          <Typography variant="h3">Connect To Earnven</Typography>
+          <div>
+            <Typography variant="h3">Connect To Earnven</Typography>
+            {active ? (
+              <span>
+                Metamask wallet address{' '}
+                <b>
+                  (get on main app pages: <br />
+                  first click - connect to MetaMask wallet, s4econd click - go on main pages <br />-
+                  useState hooks bug, will going to fix later)
+                </b>{' '}
+                <br />
+                <b>{account}</b>
+                <br />
+                <br />
+                <b>Sign in with ethereum address - without changes</b>
+              </span>
+            ) : (
+              <span>Not connected</span>
+            )}
+          </div>
           <Box sx={{ mt: 2 }}>
             <Typography variant="caption">Connect Wallet 123</Typography>
             <Button
               variant="contained"
               sx={{ backgroundColor: (theme) => theme.palette.primary.dark, color: 'black' }}
-              onClick={loadMetamask}
+              onClick={connectMetamask}
               disableElevation
               fullWidth
               startIcon={<img src={metamask} alt="" style={{ height: '14px', width: '14px' }} />}>
@@ -293,6 +312,28 @@ export default function ConnectWallet() {
                 </Button>
               </Stack>
               <ErrorComponent isWrongAddress={errorMsg} />
+              <br />
+              <div>
+                <p>
+                  The MetaMask Wallet connection was made through global library
+                  <a target="_blank" href="https://github.com/NoahZinsmeister/web3-react">
+                    {' '}
+                    web3-react
+                  </a>
+                </p>
+                <p>
+                  It allows to create just one global web3 instance around root component - just
+                  like Context API
+                </p>
+                <p>
+                  With the help of it we can get access to all web3 methods just with the help of
+                  useWeb3React hook
+                </p>
+                <p>
+                  Web3-react inits just when the app started - it allows us to decrease app loading
+                  and make our code cleaner and faster
+                </p>
+              </div>
             </Box>
           </Box>
         </Box>
