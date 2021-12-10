@@ -44,18 +44,6 @@ export default function Dashboard() {
     setValue(newValue);
   };
 
-  const getMetaMaskWalletInfo = () => {
-    // axios
-    //   .get(
-    //     'https://api.etherscan.io/api?module=account&action=balance&address=0x67319Bdcd070180b9FABE4DFC4e47a9454aC22DE&tag=latest&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W'
-    //   )
-    //   .then((res) => {
-    //     console.log('res data from etherscan request', res.data);
-    //   });
-
-    axios.get(``);
-  };
-
   return (
     <Box sx={{ width: '100%', mt: 3 }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -63,7 +51,6 @@ export default function Dashboard() {
           <Tab label="Assets" {...a11yProps(0)} />
           <Tab label="Nft Collection" {...a11yProps(1)} />
           <Tab label="History" {...a11yProps(2)} />
-          <button onClick={getMetaMaskWalletInfo}>Get hardcode wallet info</button>
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>

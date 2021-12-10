@@ -67,13 +67,12 @@ const useStyles = makeStyles(() =>
 
 import ThemeContext from '../../ThemeContext';
 import { useSelector } from 'react-redux';
-import { themeReducer } from '../../store/themeChanger/reducer';
 
 export default function RecentTokens({ themeType }) {
   // const themeRecentTokens = useContext(ThemeContext);
   // console.log('themeRecentTokens', themeRecentTokens);
 
-  console.log(themeType);
+  console.log(' set light theme', themeType);
 
   const themeMode = useContext(ThemeContext);
   console.log('current theme mode', themeMode);
@@ -120,8 +119,8 @@ export default function RecentTokens({ themeType }) {
     setCurrentPage(value);
   };
 
-  const isLightTheme = !themeType;
-  // console.log('isLightTheme', isLightTheme);
+  const isLightTheme = themeType;
+  console.log('isLightTheme', isLightTheme);
 
   return (
     <>

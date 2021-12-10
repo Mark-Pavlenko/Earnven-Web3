@@ -112,7 +112,7 @@ function Header({ onOpenSidebar, themeChanger }) {
       localStorage.setItem('selectedTheme', 'Night');
       setFlag(true);
     }
-    dispatch(getThemeTask(flag));
+    dispatch({ type: 'GET_THEME', isLightTheme: flag });
   }
 
   return (

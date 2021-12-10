@@ -15,11 +15,11 @@ export const LoadingBlock = styled.div`
 
 export const MainBlock = styled(Box)`
   box-sizing: border-box;
-  width: 82%;
+  //width: 82%;
   background: rgba(255, 255, 255, 0.16);
   border-radius: 10px;
   border: 5rem;
-  position: absolute;
+  //position: absolute;
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(35px);
 
