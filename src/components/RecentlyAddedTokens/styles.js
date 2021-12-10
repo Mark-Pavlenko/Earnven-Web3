@@ -2,11 +2,14 @@ import styled from 'styled-components';
 import Box from '@material-ui/core/Box';
 import { TableContainer, TableCell } from '@material-ui/core';
 
+export const TestBlock = styled.div`
+  color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
+`;
+
 export const LoadingBlock = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  //margin-top: 30px;
 
   p {
     color: red;

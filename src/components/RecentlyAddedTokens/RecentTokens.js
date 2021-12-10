@@ -16,6 +16,7 @@ import RecentAddedTokens from './RecentAddedTokens';
 import Pagination from '@material-ui/lab/Pagination';
 import { BlockChainName, TokensTableCell, TokensTableHeader } from './styles';
 import {
+  TestBlock,
   LoadingBlock,
   MainBlock,
   TokenTableLightContainer,
@@ -125,6 +126,7 @@ export default function RecentTokens({ themeType }) {
   return (
     <>
       <LoadingBlock>{Loading && <p> Loading...</p>}</LoadingBlock>
+      <TestBlock isLightTheme={isLightTheme}>Test block</TestBlock>
       {!Loading && (
         <MainBlock className="boxSize">
           {/*<ThemeContext.Consumer>{value}</ThemeContext.Consumer>*/}
