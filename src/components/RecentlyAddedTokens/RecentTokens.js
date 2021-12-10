@@ -126,10 +126,8 @@ export default function RecentTokens({ themeType }) {
   return (
     <>
       <LoadingBlock>{Loading && <p> Loading...</p>}</LoadingBlock>
-      <TestBlock isLightTheme={isLightTheme}>Test block</TestBlock>
       {!Loading && (
         <MainBlock className="boxSize">
-          {/*<ThemeContext.Consumer>{value}</ThemeContext.Consumer>*/}
           <TokenTableLightContainer isLightTheme={isLightTheme}>
             <TableTokenTitle isLightTheme={isLightTheme}>Recently added tokens</TableTokenTitle>
             <Table style={{ opacity: '0.8' }}>
