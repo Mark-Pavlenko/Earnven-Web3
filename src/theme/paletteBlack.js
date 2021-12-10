@@ -103,6 +103,22 @@ const BACKGROUND = {
   contrastText: MENU.background_sidemenu,
 };
 
+const NFT_Light = {
+  background: '#FFFFFF',
+  NFT_Name_color: '#4453AD',
+  NFT_popup_background: 'rgba(255, 255, 255, 0.9)',
+  NFT_popup_name: '#4453AD',
+  NFT_bodyFont: '#1E1E20',
+};
+
+const NFT_dark = {
+  background: '#FFFFFF',
+  NFT_Name_color: 'green',
+  NFT_popup_background: '#0B0E1D',
+  NFT_popup_name: '#8F86FF',
+  NFT_bodyFont: '#FFFFFF',
+};
+
 const GRADIENTS = {
   primary: createGradient(PRIMARY.light, PRIMARY.main),
   info: createGradient(INFO.light, INFO.main),
@@ -127,6 +143,8 @@ const paletteBlack = {
   warning: { ...WARNING },
   error: { ...ERROR },
   menu: { ...MENU },
+  nft_light: { ...NFT_Light },
+  nft_dark: { ...NFT_dark },
   grey: GREY,
   gradients: GRADIENTS,
   divider: GREY[500_24],

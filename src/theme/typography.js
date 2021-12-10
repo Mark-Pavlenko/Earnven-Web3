@@ -128,6 +128,36 @@ const typography = {
     fontSize: pxToRem(10),
     fontWeight: 600,
   },
+  NFT_name: {
+    fontSize: pxToRem(20),
+    fontWeight: 500,
+  },
+  NFT_networth: {
+    fontSize: pxToRem(40),
+    fontWeight: 600,
+  },
+  NFT_networth_text: {
+    fontSize: pxToRem(10),
+    fontWeight: 'normal',
+  },
+  NFT_Name_text: {
+    fontSize: pxToRem(20),
+    fontWeight: 600,
+  },
+  AboutBody: {
+    fontSize: pxToRem(14),
+    fontWeight: 400,
+    opacity: '0.5',
+  },
+  tranfer_title: {
+    fontSize: pxToRem(30),
+    fontWeight: 400,
+    opacity: '0.5',
+  },
+  transferbody: {
+    fontSize: pxToRem(14),
+    fontWeight: 400,
+  },
 };
 
 export default typography;

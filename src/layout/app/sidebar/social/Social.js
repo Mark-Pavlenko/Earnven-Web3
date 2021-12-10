@@ -31,12 +31,14 @@ const Image_Social = styled('img')(({ theme }) => ({
 }));
 
 const List_Social = styled(List)(({ theme }) => ({
+  padding: '1px',
   '&:hover': {
+    padding: '1px',
     background: theme.palette.menu.backgorundColor_wallet_secondary,
     borderTopLeftRadius: '15px',
     borderTopRightRadius: '15px',
-    borderBottomLeftRadius: '15px',
-    borderBottomRightRadius: '15px',
+    borderBottomLeftRadius: '20px',
+    borderBottomRightRadius: '20px',
     overflow: 'hidden',
   },
 }));

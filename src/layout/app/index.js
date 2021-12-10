@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { experimentalStyled as styled } from '@material-ui/core/styles';
 import { Divider } from '@material-ui/core';
@@ -30,14 +30,20 @@ const MainStyle = styled('div')(({ theme }) => ({
   },
 }));
 
-export default function AppLayout() {
+export default function AppLayout({ propChangeTheme }) {
   const [open, setOpen] = useState(false);
   const [changeTheme, setChangeTheme] = useState(false);
+  const [setTheme, setsetTheme] = useState(false);
+  useEffect(() => {
+    console.log('testforthemesathya', setTheme);
+    propChangeTheme(setTheme);
+  }, [setTheme]);
   return (
     <RootStyle>
       <Header
         onOpenSidebar={() => setOpen(true)}
         themeChanger={() => setChangeTheme(!changeTheme)}
+        ChangeTheme={(w) => setsetTheme(w)}
       />
       <Sidebar
         isOpenSidebar={open}

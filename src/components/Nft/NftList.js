@@ -16,13 +16,24 @@ NftList.propTypes = {
   nftTokenIdList: PropTypes.array.isRequired,
 };
 
-export default function NftList({ nftTokenIdList, contractAddress, ...other }) {
+export default function NftList({
+  nftTokenIdList,
+  contractAddress,
+  changeTheme,
+  NFTDATA,
+  ...other
+}) {
   return (
-    <Grid container spacing={3} {...other}>
-      {nftTokenIdList.map((tokenId) => (
+    <Grid container spacing={3}>
+      {NFTDATA.map((tokenId) => (
         <Grid key={tokenId} item xs={12} sm={6} md={3}>
           <NftProvider fetcher={['ethers', ethersConfig]}>
-            <NftCard tokenId={tokenId} contractAddress={contractAddress} />
+            <NftCard
+              tokenId={tokenId.token}
+              contractAddress={tokenId.address}
+              changeTheme={changeTheme}
+              NFTDATA={NFTDATA}
+            />
           </NftProvider>
         </Grid>
       ))}
