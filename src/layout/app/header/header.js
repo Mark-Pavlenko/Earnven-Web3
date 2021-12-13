@@ -85,7 +85,7 @@ Header.propTypes = {
   themeChanger: PropTypes.func,
 };
 
-function Header({ onOpenSidebar, themeChanger }) {
+function Header({ onOpenSidebar, themeChanger, ChangeTheme }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -152,6 +152,7 @@ function Header({ onOpenSidebar, themeChanger }) {
             onClick={() => {
               setDynamicTheme();
               themeChanger();
+              ChangeTheme(theme);
             }}>
             {!theme ? (
               <img

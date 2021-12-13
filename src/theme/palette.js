@@ -97,6 +97,26 @@ const MENU = {
   backgorundColor_wallet_secondary: '#FFFFFF', // white for front menu wallet
 };
 
+const NFT_Light = {
+  background: '#FFFFFF',
+  NFT_Name_color: '#4453AD',
+  NFT_popup_background: 'rgba(255, 255, 255, 0.9)',
+  NFT_popup_name: '#4453AD',
+  NFT_bodyFont: '#1E1E20',
+  noNFT_background: 'rgba(255, 255, 255, 0.3)',
+  hoverNFTdata: 'rgba(255, 255, 255, 0.16)',
+};
+
+const NFT_dark = {
+  background: '#FFFFFF',
+  NFT_Name_color: 'green',
+  NFT_popup_background: '#0B0E1D',
+  NFT_popup_name: '#8F86FF',
+  NFT_bodyFont: '#FFFFFF',
+  noNFT_background: 'rgba(31, 38, 92, 0.24)',
+  hoverNFTdata: 'rgba(31, 38, 92, 0.24)',
+};
+
 const BACKGROUND = {
   lighter: MENU.background_sidemenu,
   light: MENU.background_sidemenu,
@@ -104,6 +124,10 @@ const BACKGROUND = {
   dark: MENU.background_sidemenu,
   darker: MENU.background_sidemenu,
   contrastText: MENU.background_sidemenu,
+};
+
+const test = {
+  test: 'black',
 };
 
 const GRADIENTS = {
@@ -127,6 +151,9 @@ const paletteWhite = {
   warning: { ...WARNING },
   error: { ...ERROR },
   menu: { ...MENU },
+  test: { ...test },
+  nft_light: { ...NFT_Light },
+  nft_dark: { ...NFT_dark },
   grey: GREY,
   gradients: GRADIENTS,
   divider: GREY[500_24],

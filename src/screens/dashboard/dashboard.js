@@ -36,7 +36,7 @@ function a11yProps(index) {
   };
 }
 
-export default function Dashboard() {
+export default function Dashboard({ test, changeTheme }) {
   const { address } = useParams();
   const [value, setValue] = useState(0);
 
@@ -79,7 +79,7 @@ export default function Dashboard() {
         </Page>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <NFT />
+        <NFT changeTheme={changeTheme} />
       </TabPanel>
       <TabPanel value={value} index={2}>
         <History />

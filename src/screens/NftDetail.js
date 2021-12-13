@@ -15,16 +15,161 @@ import {
 import { useNft } from 'use-nft';
 import axios from 'axios';
 import abi from '../abi/NftAbi.json';
+import { experimentalStyled as styled } from '@material-ui/core/styles';
+import close_NFT_popup from '../assets/icons/close_NFT_popup.svg';
+import arrow_nft from '../assets/icons/arrow_nft.svg';
+import nft_popup_1 from '../assets/icons/nft_popup_1.svg';
+import nft_popup_2 from '../assets/icons/nft_popup_2.svg';
+import nft_popup_3 from '../assets/icons/nft_popup_3.svg';
+import nft_left_popup from '../assets/icons/nft_left_popup.svg';
+import nft_right_popup from '../assets/icons/nft_right_popup.svg';
+import nft_dark_1 from '../assets/icons/nft_dark_1.svg';
+import nft_dark_2 from '../assets/icons/nft_dark_2.svg';
+import nft_dark_3 from '../assets/icons/nft_dark_3.svg';
+import nft_close_dark from '../assets/icons/nft_close_dark.svg';
+import nft_arrow_dark from '../assets/icons/nft_arrow_dark.svg';
+import nft_right_pop from '../assets/icons/nft_right_pop.svg';
+import nft_left_pop from '../assets/icons/nft_left_pop.svg';
+
+const ImageBorder = styled(Grid)(({ theme }) => ({
+  borderRadius: '10px',
+  width: '499px',
+  height: '555px',
+  marginTop: '9px',
+  marginLeft: '-1.4rem',
+}));
+
+const Image = styled('img')(({ theme }) => ({
+  background: 'grren',
+}));
+
+const Image_Close = styled('img')(({ theme }) => ({
+  marginTop: '-3.5rem',
+  marginLeft: '520px',
+  cursor: 'pointer',
+  opacity: 1,
+}));
+
+const Image_Close_dark = styled('img')(({ theme }) => ({
+  marginTop: '-3rem',
+  marginLeft: '520px',
+  cursor: 'pointer',
+}));
+
+const Arrow_dark = styled('img')(({ theme }) => ({
+  marginTop: '1rem',
+  marginLeft: '520px',
+  cursor: 'pointer',
+}));
+
+const Arrow = styled('img')(({ theme }) => ({
+  marginTop: '-0.4rem',
+  marginLeft: '520px',
+  cursor: 'pointer',
+}));
+
+const LeftArrow = styled('img')(({ theme }) => ({
+  position: 'absolute',
+  top: '42%',
+  marginLeft: '-7rem',
+  cursor: 'pointer',
+}));
+
+const RightArrow = styled('img')(({ theme }) => ({
+  position: 'absolute',
+  top: '42%',
+  marginLeft: '67.8rem',
+  cursor: 'pointer',
+}));
+
+const NFT_Title = styled(Typography)(({ theme }) => ({
+  fontSize: '20px',
+  fontWeight: 700,
+  lineHeight: '31px',
+  color:
+    localStorage.getItem('selectedTheme') == 'Day'
+      ? theme.palette.nft_light.NFT_popup_name
+      : theme.palette.nft_dark.NFT_popup_name,
+  marginLeft: '41px',
+  marginTop: '10px',
+}));
+
+const NFT_Title_sub = styled(Typography)(({ theme }) => ({
+  fontSize: '10px',
+  lineHeight: '16px',
+  marginLeft: '41px',
+  marginTop: '3px',
+  opacity: 0.5,
+}));
+
+const Balance = styled(Typography)(({ theme }) => ({
+  fontSize: '26px',
+  fontWeight: 600,
+  lineHeight: '40px',
+  marginLeft: '2.5rem',
+  marginTop: '-2.2rem',
+}));
+
+const About = styled(Typography)(({ theme }) => ({
+  fontSize: '16px',
+  fontWeight: 600,
+  lineHeight: '26px',
+  marginLeft: '2.5rem',
+  marginTop: '18px',
+}));
+
+const About_Body = styled(Typography)(({ theme }) => ({
+  marginLeft: '2.5rem',
+  marginTop: '10px',
+}));
+
+const TransferHistory = styled(Typography)(({ theme }) => ({
+  fontSize: '16px',
+  fontWeight: 600,
+  lineHeight: '26px',
+  marginLeft: '2.5rem',
+  marginTop: '30px',
+}));
+
+const Tranfer_body = styled(List)(({ theme }) => ({
+  marginLeft: '2.3rem',
+}));
+
+const Tranfer_Body = styled(ListItemText)(({ theme }) => ({
+  // color: (theme) => theme.palette.menu.backgorundColor_wallet;
+  color:
+    localStorage.getItem('selectedTheme') == 'Day'
+      ? theme.palette.nft_light.NFT_bodyFont
+      : theme.palette.nft_dark.NFT_bodyFont,
+}));
+
+const Social = styled(Stack)(({ theme }) => ({
+  // color: (theme) => theme.palette.menu.backgorundColor_wallet;
+  marginLeft: '2.5rem',
+  position: 'absolute',
+  bottom: '15px',
+  cursor: 'pointer',
+}));
+
+const Container_nft = styled(Container)(({ theme }) => ({
+  // color: (theme) => theme.palette.menu.backgorundColor_wallet;
+  color:
+    localStorage.getItem('selectedTheme') == 'Day'
+      ? theme.palette.nft_light.NFT_bodyFont
+      : theme.palette.nft_dark.NFT_bodyFont,
+}));
 
 // let nftImageUrl = "";
-export default function NftDetails() {
+export default function NftDetails({ contract, id, changeNFT, setOpenPopup, flagNFT }) {
   // eslint-disable-next-line no-unused-vars
-  const { address, contract, id } = useParams();
+  // const { address, contract, id } = useParams();
   const web3 = new Web3(
     new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/8b2159b7b0944586b64f0280c927d0a8')
   );
   const [tokenHistory, settokenHistory] = useState([]);
   const [imgUrl, setimgUrl] = useState();
+  const [nftName, setnftName] = useState('');
+  const [assestName, setassestName] = useState('');
 
   // eslint-disable-next-line no-unused-vars
   const { loading, error, nft } = useNft(contract, id);
@@ -36,6 +181,11 @@ export default function NftDetails() {
 
   const etherscanTxLink = (hash) => {
     return `https://etherscan.io/tx/${hash}`;
+  };
+
+  const nftclose = () => {
+    sessionStorage.setItem('nftCount', 0);
+    sessionStorage.setItem('nftCount_left', 0);
   };
 
   const shortaddress = (addy) => {
@@ -71,9 +221,6 @@ export default function NftDetails() {
         nftHistoryData.push(object);
       }
       settokenHistory(nftHistoryData);
-
-      console.log('nft history details:::', events);
-      console.log('formatted data:::', nftHistoryData);
     }
 
     getEvents();
@@ -81,74 +228,121 @@ export default function NftDetails() {
 
   useEffect(() => {
     const nftDetail = async () => {
-      const response = await axios.get(
-        `https://api.opensea.io/api/v1/assets?token_ids=${id}&asset_contract_addresses=${contract}`
-      );
-      setimgUrl(response.data.assets[0].image_url);
+      try {
+        const response = await axios.get(
+          `https://api.opensea.io/api/v1/assets?token_ids=${id}&asset_contract_addresses=${contract}`
+        );
+        setimgUrl(response.data.assets[0].image_url);
+        setnftName(response.data.assets[0].name);
+        setassestName(response.data.assets[0].asset_contract.name);
+      } catch (err) {
+        console.log('error', err);
+      }
     };
 
     nftDetail();
-  }, [contract, id]);
+  }, [contract, id, changeNFT, nftName, assestName]);
 
   return (
-    <Container>
-      {console.log('value of nft::', nft)}
-      <Typography variant="h2" align="center">
-        {loading ? '' : nft !== undefined ? nft.name : ''}
-      </Typography>
-      <Grid container spacing={3} sx={{ mt: 4 }}>
-        <Grid item xs={12} md={6} sx={{ border: '1px solid #737373', borderRadius: '10px' }}>
-          {/* <img alt="nft-image" style={{height:'96%'}} src={loading ? spinner : (nft !== undefined ? (nft.image !== "" ? nft.image : block) : block)}></img> */}
-          <img alt="nft-image" style={{ height: '96%' }} src={imgUrl} />
-        </Grid>
-        {/* <Grid itme md={1}></Grid> */}
-        <Grid item xs={12} md={5} sx={{ border: '1px solid #737373', ml: 3, borderRadius: '10px' }}>
-          {/* {tokenHistory.length > 0 ?
-                        <Box sx={{ border: '1px solid red' }}>
-                            <Typography variant='h5' align='center' sx={{ mt: 2 }}>Token History</Typography>
-                            <Stack direction='row' spacing={15} sx={{ mt: 2, ml: 5 }}>
-                                <Typography variant='body1' align='left'>Date</Typography>
-                                <Typography variant='body1' align='left'>From</Typography>
-                                <Typography variant='body1' align='left'>To</Typography>
-                            </Stack>
-                            {tokenHistory.map((object) => (
-                                <div>
-                                    <Stack direction='row' spacing={15} sx={{ mt: 2, ml: 5 }}>
-                                        <Typography variant='body1' align='left'>{convertTimestampToDate(object.timestamp)}</Typography>
-                                        <Typography variant='body1' align='left'>{shortaddress(object.from)}</Typography>
-                                        <Typography variant='body1' align='left'>{shortaddress(object.to)}</Typography>
-                                    </Stack>
-                                </div>
-                            ))}
-                        </Box> :
-                        <div></div>
-                    } */}
+    <Container_nft>
+      <Grid container spacing={1}>
+        {/* <Typography variant="h2" align="center">
+          {loading ? '' : nft !== undefined ? nft.name : ''}
+        </Typography> */}
+        <ImageBorder>
+          <Image
+            alt="Loading"
+            style={{ height: '100%', width: '100%', borderRadius: '10px' }}
+            src={imgUrl}
+          />
+        </ImageBorder>
+        {/* <div style={{ display: 'flex' }}>
+          <NFT_Title>Token Hunter</NFT_Title>
+          <Image_Close src={close_NFT_popup} />
+          <a href="url">
+            <img src={arrow_nft} className="imageCSS" alt="" />
+          </a>
+        </div> */}
+        <Grid item md={6.4}>
+          <Stack direction="row">
+            <Stack>
+              <NFT_Title>
+                {loading ? 'loading...' : nftName !== '' ? nftName : 'loading...'}
+              </NFT_Title>
+              <NFT_Title_sub>
+                {loading ? 'loading...' : assestName !== '' ? assestName : 'loading...'}
+              </NFT_Title_sub>
+              {localStorage.getItem('selectedTheme') == 'Day' ? (
+                <Stack>
+                  <Image_Close
+                    onClick={() => {
+                      setOpenPopup(false);
+                      nftclose();
+                      changeNFT('');
+                    }}
+                    style={{ height: '60px', width: '60px', opacity: 0.9 }}
+                    src={close_NFT_popup}
+                    alt="no pic"
+                  />
+                  <Arrow
+                    style={{ height: '60px', width: '60px', px: '100%' }}
+                    src={arrow_nft}
+                    alt="no pic"
+                  />
+                  <Balance align="left">$ 5,457.36</Balance>
+                </Stack>
+              ) : (
+                <Stack>
+                  <Image_Close_dark
+                    onClick={() => {
+                      setOpenPopup(false);
+                      nftclose();
+                    }}
+                    style={{ height: '40px', width: '40px' }}
+                    src={nft_close_dark}
+                    alt="no pic"
+                  />
+                  <Arrow_dark
+                    style={{ height: '40px', width: '40px', px: '100%' }}
+                    src={nft_arrow_dark}
+                    alt="no pic"
+                  />
+                  <Balance align="left">$ 5,457.36</Balance>
+                </Stack>
+              )}
+            </Stack>
+          </Stack>
           <Stack>
-            <Typography variant="h6" align="center" sx={{ color: '#737373' }}>
-              About
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{
-                mt: 4,
-                color: '#737373',
-              }}>
+            <About>{loading ? '' : nft !== undefined ? 'About' : ''}</About>
+            <About_Body variant="AboutBody">
               {loading ? '' : nft !== undefined ? nft.description : ''}
-            </Typography>
-            <Divider variant="middle" sx={{ mt: 5 }} />
-            <Typography variant="h6" align="center" sx={{ mt: 4, color: '#737373' }}>
-              Transfer History
-            </Typography>
+            </About_Body>
+            {/* <Divider variant="middle" sx={{ mt: 5 }} /> */}
+            <TransferHistory>Transfer History</TransferHistory>
             {tokenHistory.length > 0 ? (
-              <List>
-                <ListItem>
-                  <ListItemText variant="body1" align="left" sx={{ color: '#737373' }}>
+              <Tranfer_body>
+                <ListItem
+                  sx={{
+                    color:
+                      localStorage.getItem('selectedTheme') == 'Day'
+                        ? (theme) => theme.palette.nft_light.NFT_bodyFont
+                        : (theme) => theme.palette.nft_dark.NFT_bodyFont,
+                    '&:hover': {
+                      background: 'none',
+                      color:
+                        localStorage.getItem('selectedTheme') == 'Day'
+                          ? (theme) => theme.palette.nft_light.NFT_bodyFont
+                          : (theme) => theme.palette.nft_dark.NFT_bodyFont,
+                      cursor: 'pointer',
+                    },
+                  }}>
+                  <ListItemText sx={{ opacity: 0.5, fontSize: '40px' }} align="left">
                     Date
                   </ListItemText>
-                  <ListItemText variant="body1" align="left" sx={{ color: '#737373' }}>
+                  <ListItemText variant="tranfer_title" style={{ opacity: 0.5 }} align="left">
                     From
                   </ListItemText>
-                  <ListItemText variant="body1" align="left" sx={{ color: '#737373' }}>
+                  <ListItemText variant="tranfer_title" style={{ opacity: 0.5 }} align="left">
                     To
                   </ListItemText>
                 </ListItem>
@@ -158,29 +352,96 @@ export default function NftDetails() {
                       divider
                       sx={{
                         '&:hover': {
-                          background: (theme) => theme.palette.gradients.custom,
+                          background:
+                            localStorage.getItem('selectedTheme') == 'Day'
+                              ? (theme) => theme.palette.nft_light.hoverNFTdata
+                              : (theme) => theme.palette.nft_dark.hoverNFTdata,
                           cursor: 'pointer',
                         },
                       }}>
-                      <ListItemText variant="body1" align="left" sx={{ color: '#737373' }}>
+                      <Tranfer_Body variant="transferbody" align="left">
                         {convertTimestampToDate(object.timestamp)}
-                      </ListItemText>
-                      <ListItemText variant="body1" align="left" sx={{ color: '#737373' }}>
+                      </Tranfer_Body>
+                      <Tranfer_Body variant="transferbody" align="left">
                         {shortaddress(object.from)}
-                      </ListItemText>
-                      <ListItemText variant="body1" align="left" sx={{ color: '#737373' }}>
+                      </Tranfer_Body>
+                      <Tranfer_Body variant="transferbody" align="left">
                         {shortaddress(object.to)}
-                      </ListItemText>
+                      </Tranfer_Body>
                     </ListItem>
                   </Link>
                 ))}
-              </List>
+              </Tranfer_body>
             ) : (
               <div />
             )}
           </Stack>
+          {localStorage.getItem('selectedTheme') == 'Day' ? (
+            <Social direction="row" spacing={1}>
+              <img src={nft_popup_1} alt="" />
+              <img src={nft_popup_2} alt="" />
+              <img src={nft_popup_3} alt="" />
+            </Social>
+          ) : (
+            <Social direction="row" spacing={4}>
+              <img src={nft_dark_1} alt="" />
+              <img src={nft_dark_2} alt="" />
+              <img src={nft_dark_3} alt="" />
+            </Social>
+          )}
+          {/* <button
+            onClick={() => {
+              changeNFT('minus');
+            }}>
+            satya -
+          </button>
+          <button
+            onClick={() => {
+              changeNFT('contract');
+            }}>
+            satya +
+          </button> */}
         </Grid>
       </Grid>
-    </Container>
+      {localStorage.getItem('selectedTheme') == 'Day' ? (
+        <>
+          <LeftArrow
+            onClick={() => {
+              changeNFT('minus');
+              flagNFT(Math.random());
+            }}
+            src={nft_left_popup}
+            alt=""
+          />
+          <RightArrow
+            onClick={() => {
+              changeNFT('plus');
+              flagNFT(Math.random());
+            }}
+            src={nft_right_popup}
+            alt=""
+          />
+        </>
+      ) : (
+        <>
+          <LeftArrow
+            onClick={() => {
+              changeNFT('minus');
+              flagNFT(Math.random());
+            }}
+            src={nft_left_pop}
+            alt=""
+          />
+          <RightArrow
+            onClick={() => {
+              changeNFT('plus');
+              flagNFT(Math.random());
+            }}
+            src={nft_right_pop}
+            alt=""
+          />
+        </>
+      )}
+    </Container_nft>
   );
 }

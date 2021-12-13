@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
 // import { BrowserRouter , Routes, Route, Link } from 'react-router-dom'
 import Landing from './screens/landingPage';
@@ -45,7 +45,12 @@ export default function Router() {
   //             <Route exact path="/lol" render={<></>} />
   //         </Routes>
   // )
-
+  // const [globaltheme, setglobaltheme] = useState(false);
+  const [changeTheme, setChangeTheme] = useState(false);
+  useEffect(() => {
+    console.log('sathyatestforthemecgangeinrouter', changeTheme);
+    setChangeTheme(changeTheme);
+  }, [changeTheme]);
   return useRoutes([
     {
       path: '/',
@@ -53,11 +58,11 @@ export default function Router() {
     },
     {
       path: '/:address',
-      element: <AppLayout />,
+      element: <AppLayout propChangeTheme={(w) => setChangeTheme(w)} />,
       children: [
         { path: '/', element: <Navigate to="/:address/dashboard" replace /> },
         { path: 'home', element: <Home /> },
-        { path: 'dashboard', element: <Dashboard /> },
+        { path: 'dashboard', element: <Dashboard changeTheme={changeTheme} /> },
         { path: 'liquiditypools', element: <LiquidityPools /> },
         { path: 'yieldfarm', element: <YieldFarm /> },
         { path: 'savings', element: <Savings /> },

@@ -4,14 +4,20 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import NftGroup from '../components/Nft/NftGroup';
 import Page from '../components/Page';
+import NftNetworth from '../components/Nft/NftNetworth';
+import NoNft from '../components/Nft/NoNft';
 
-export default function NFT() {
+export default function NFT({ changeTheme }) {
   const { address } = useParams();
   const [Account, setAccount] = useState('0x0');
   const [data, setdata] = useState(null);
-
+  const [flag_data, setflag_data] = useState([]);
+  const [flag_theme, setflagtheme] = useState('');
+  const [nftData, setnftData] = useState([]);
+  let flag = '';
   useEffect(() => {
     async function getData() {
+      console.log('sathya in render top');
       const account = address;
       setAccount(account);
       console.log(Account);
@@ -24,7 +30,8 @@ export default function NFT() {
         .then(async (response) => {
           const b = {};
           const res = response.data.result;
-          console.log(res);
+          setflag_data(res);
+          console.log('sathya inside nft res', flag_data);
           for (const i in res) {
             if (b[res[i].tokenName] === undefined) {
               b[res[i].tokenName] = {};
@@ -57,6 +64,31 @@ export default function NFT() {
 
           const temp = Object.values(b);
           console.log('value of all nfts', temp);
+          let NFTData = [];
+          for (var i = 0; i < temp.length; i++) {
+            if (temp[i].tokens.length > 1) {
+              console.log('sathya in number of tokens');
+              for (var j = 0; j < temp[i].tokens.length; j++) {
+                let newData = {
+                  token: temp[i].tokens[j],
+                  name: temp[i].name,
+                  address: temp[i].address,
+                };
+                NFTData.push(newData);
+              }
+            } else {
+              let newData = {
+                token: temp[i].tokens[0],
+                name: temp[i].name,
+                address: temp[i].address,
+              };
+              NFTData.push(newData);
+            }
+            console.log('sathyain NFTdata', NFTData);
+          }
+          setnftData(NFTData);
+          let lFtdata = JSON.stringify(NFTData);
+          localStorage.setItem('nftdata', lFtdata);
           const finalObject = [];
           for (const i in temp) {
             if (temp[i].tokens.length > 0) {
@@ -64,37 +96,49 @@ export default function NFT() {
             }
           }
           setdata(finalObject);
-
-          /* for (let i in temp) {
-                        if (temp[i].tokens.length > 0) {
-                            for (let j in temp[i].tokens) {
-                                let tempTokenObject = {}
-                                tempTokenObject.tokenID = temp[i].tokens[j]
-                                tempTokenObject.contractAddress = temp[i].address
-                                tempTokenObject.txHash = temp[i].txHash[j]
-                                allTokens.push(tempTokenObject)
-                            }
-                        }
-                    }
-
-                    console.log("all nft tokens",allTokens)
-                    setdata(allTokens); */
+          console.log('sathya inside nft data 2', data);
         });
     }
 
     getData();
   }, [Account, address]);
+  const [currentTheme, setCurrentTheme] = React.useState('');
+  React.useEffect(() => {
+    console.log('sathya in render');
+    window.addEventListener('storage', () => {
+      const theme = localStorage.getItem('selectedTheme');
+      console.log('sathyatheme', theme);
+      setCurrentTheme(theme);
+    });
+  }, []);
 
+  useEffect(() => {
+    console.log('sathya selected theme in useeffect test', changeTheme);
+  }, [changeTheme]);
   return (
-    <Page title="Nft">
-      <Container>
-        {/* <Typography variant="h2" sx={{ mb: 2 }}>
-                    NFT
-                </Typography> */}
-
-        {data === null ? <div>Loading</div> : <NftGroup nftData={data} />}
-      </Container>
-    </Page>
+    <>
+      <NftNetworth changeTheme={changeTheme} />
+      {flag_data.length == 0 ? (
+        <NoNft changeTheme={changeTheme} />
+      ) : (
+        <Page>
+          <Container sx={{ marginLeft: '-0.6rem' }}>
+            {data === null ? (
+              <div>
+                <p>Loading</p>
+              </div>
+            ) : (
+              <NftGroup
+                style={{ width: '100%' }}
+                changeTheme={changeTheme}
+                nftData={data}
+                NFTDATA={nftData}
+              />
+            )}
+          </Container>
+        </Page>
+      )}
+    </>
   );
 
   /*  return (
