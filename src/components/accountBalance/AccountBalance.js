@@ -3,8 +3,14 @@ import axios from 'axios';
 import Web3 from 'web3';
 import { Typography } from '@material-ui/core';
 import { string } from 'prop-types';
+import actionTypes from '../../constants/actionTypes';
 
-function AccountBalance({ address }) {
+import dispatch, { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+
+function AccountBalance({ address, tokens }) {
+  console.log('tokens', tokens);
+  const dispatch = useDispatch();
   const [totalValue, settotalValue] = useState('00.00');
 
   function CommaFormatted(amount) {
@@ -44,12 +50,16 @@ function AccountBalance({ address }) {
     let total = 0;
     const web3 = new Web3();
     const accountAddress = address;
+    console.log('account address', accountAddress);
     const totalAccountValue = async () => {
       try {
+        dispatch({ type: actionTypes.SET_ACCOUNT_ADDRESS, payload: accountAddress });
+
         const path = `https://api.ethplorer.io/getAddressInfo/${accountAddress}?apiKey=EK-qSPda-W9rX7yJ-UY93y`;
         const response = await axios.get(path);
         const { tokens } = response.data;
-        // console.log('account balance token data', tokens);
+        console.log('response.data', response.data);
+
         total =
           response.data.ETH.price.rate * web3.utils.fromWei(response.data.ETH.rawBalance, 'ether');
         if (tokens !== undefined) {
@@ -67,11 +77,16 @@ function AccountBalance({ address }) {
     };
     totalAccountValue();
   }, [totalValue, address]);
+
+  // const tokens = useSelector((state) => state);
+  // console.log('account balance token data', tokens);
+
   return (
     <>
+      <div id="hleb">dsfsfdscvsdcefdscds</div>
       <Typography
-        sx={{ color: (theme) => theme.palette.menu.account_font }}
-        variant="watchlist_font_balance">
+        sx={{ color: (theme) => theme.palette.menu.account_balance }}
+        variant="primaryFont1">
         ${totalValue}
       </Typography>
     </>

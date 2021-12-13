@@ -49,7 +49,7 @@ function AccountBalance({ address }) {
         const path = `https://api.ethplorer.io/getAddressInfo/${accountAddress}?apiKey=EK-qSPda-W9rX7yJ-UY93y`;
         const response = await axios.get(path);
         const { tokens } = response.data;
-        console.log('account balance token data', tokens);
+        // console.log('account balance token data', tokens);
         total =
           response.data.ETH.price.rate * web3.utils.fromWei(response.data.ETH.rawBalance, 'ether');
         if (tokens !== undefined) {
@@ -60,6 +60,7 @@ function AccountBalance({ address }) {
             }
           }
         }
+
         settotalValue(CommaFormatted(total.toFixed(2)));
       } catch (error) {
         console.log(error);
@@ -70,8 +71,8 @@ function AccountBalance({ address }) {
   return (
     <>
       <Typography
-        sx={{ color: (theme) => theme.palette.menu.account_balance }}
-        variant="primaryFont1">
+        sx={{ color: (theme) => theme.palette.menu.account_font }}
+        variant="watchlist_font_balance">
         ${totalValue}
       </Typography>
     </>

@@ -1,6 +1,6 @@
 import { all, call } from 'redux-saga/effects';
-import { getThemeTypeSagaWatcher } from './homeSaga';
+import { getAccountBalanceSagaWatcher } from './accountBalance';
 
 export default function* watchRootSaga() {
-  yield all([call(getThemeTypeSagaWatcher)]);
+  yield all([call(getAccountBalanceSagaWatcher)]);
 }

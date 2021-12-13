@@ -22,7 +22,7 @@ import './account.css';
 import { useNavigate } from 'react-router-dom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { MdContentCopy } from 'react-icons/md';
-import AccountBalance from '../../../../components/AccountBalance';
+import AccountBalance from '../../../../components/accountBalance/index';
 import MenuPopover from '../../../../components/MenuPopover';
 import { makeStyles } from '@material-ui/styles';
 import { createTheme, StyledEngineProvider, ThemeProvider } from '@material-ui/core/styles';
@@ -31,6 +31,8 @@ import Accounts from './Accounts';
 import Acc from './Acc';
 import theme1 from '../../../../../src/theme/palette';
 import menurender_customhook from './menurender_customhook';
+
+import { useSelector } from 'react-redux';
 
 const AccountStyle = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -100,6 +102,9 @@ const useStyles = makeStyles(() =>
 
 export default function Account({ address, name, global_wallet, setTheme }) {
   const { flag_menu } = menurender_customhook();
+
+  // const tokens = useSelector((state) => state);
+  // console.log('the main tokens', tokens);
 
   const classes = useStyles();
   const navigate = useNavigate();
@@ -265,6 +270,9 @@ export default function Account({ address, name, global_wallet, setTheme }) {
 
   return (
     <>
+      {/*<Typography className={classes.accountBalance}>*/}
+      {/*  <AccountBalance address={address} />*/}
+      {/*</Typography>*/}
       <AccountStyle ref={anchorRef} onClick={showAccountPopover}>
         <Avatar className={classes.accountlLogo} src={accountLogo} alt="photoURL" />
         <Box sx={{ ml: 2 }}>
