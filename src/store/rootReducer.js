@@ -1,10 +1,10 @@
 import { themeReducer } from './themeChanger/reducer';
 import { web3Reducer } from './web3Connect/reducer';
-import { combineReducers, createStore } from 'redux';
+import { combineReducers } from 'redux';
+import { accountBalance } from './accountBalance/reducer';
 
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
   web3Reducer,
   themeReducer,
+  accountBalance,
 });
-
-export const store = createStore(rootReducer);

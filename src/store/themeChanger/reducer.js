@@ -1,4 +1,5 @@
 import GET_THEME from '../../constants/actionTypes';
+import dispatch from 'react-redux';
 
 const initialState = {
   isLightTheme: true,
@@ -6,8 +7,8 @@ const initialState = {
 
 export const themeReducer = (state = initialState, action) => {
   switch (action.type) {
-    case GET_THEME:
-      console.log('action from reducer', action);
+    case 'GET_THEME':
+      console.log('action from reducer', action.type);
       return {
         ...state,
         isLightTheme: action.isLightTheme,
@@ -17,7 +18,7 @@ export const themeReducer = (state = initialState, action) => {
   }
 };
 
-export const getThemeTask = (isLightTheme) => {
-  console.log('isLightTheme', isLightTheme);
-  return { type: 'GET_THEME', isLightTheme: isLightTheme };
-};
+// export const getThemeTask = (isLightTheme) => (dispatch) => {
+//   console.log('isLightTheme', isLightTheme);
+//   return dispatch({ type: 'GET_THEME', isLightTheme: isLightTheme });
+// };

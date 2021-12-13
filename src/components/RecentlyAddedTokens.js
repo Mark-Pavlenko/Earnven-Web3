@@ -34,7 +34,7 @@ export default async function RecentAddedTokens() {
         //'X-CMC_PRO_API_KEY': 'b54bcf4d-1bca-4e8e-9a24-22ff2c3d462c', //test key/sample data from API
       },
       json: true,
-      gzip: true,
+      // gzip: true,
     };
     console.log('url request using keys', newTokensList);
   } catch (err) {

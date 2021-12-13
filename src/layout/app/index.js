@@ -53,7 +53,7 @@ export default function AppLayout({ propChangeTheme }) {
         global_wallet={localStorage.getItem('wallets')}
         setTheme={changeTheme}
       />
-      <MainStyle>
+      <MainStyle setTheme={changeTheme}>
         {/* <Divider variant="middle" /> */}
 
         <Outlet />

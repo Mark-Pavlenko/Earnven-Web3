@@ -16,6 +16,7 @@ import RecentAddedTokens from './RecentAddedTokens';
 import Pagination from '@material-ui/lab/Pagination';
 import { BlockChainName, TokensTableCell, TokensTableHeader } from './styles';
 import {
+  TestBlock,
   LoadingBlock,
   MainBlock,
   TokenTableLightContainer,
@@ -67,13 +68,12 @@ const useStyles = makeStyles(() =>
 
 import ThemeContext from '../../ThemeContext';
 import { useSelector } from 'react-redux';
-import { themeReducer } from '../../store/themeChanger/reducer';
 
 export default function RecentTokens({ themeType }) {
   // const themeRecentTokens = useContext(ThemeContext);
   // console.log('themeRecentTokens', themeRecentTokens);
 
-  console.log(themeType);
+  console.log(' set light theme', themeType);
 
   const themeMode = useContext(ThemeContext);
   console.log('current theme mode', themeMode);
@@ -120,15 +120,14 @@ export default function RecentTokens({ themeType }) {
     setCurrentPage(value);
   };
 
-  const isLightTheme = !themeType;
-  // console.log('isLightTheme', isLightTheme);
+  const isLightTheme = themeType;
+  console.log('isLightTheme', isLightTheme);
 
   return (
     <>
       <LoadingBlock>{Loading && <p> Loading...</p>}</LoadingBlock>
       {!Loading && (
         <MainBlock className="boxSize">
-          {/*<ThemeContext.Consumer>{value}</ThemeContext.Consumer>*/}
           <TokenTableLightContainer isLightTheme={isLightTheme}>
             <TableTokenTitle isLightTheme={isLightTheme}>Recently added tokens</TableTokenTitle>
             <Table style={{ opacity: '0.8' }}>

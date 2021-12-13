@@ -34,7 +34,7 @@ const RecentAddedTokens = async () => {
         'X-CMC_PRO_API_KEY': API_KEY_VALUE,
       },
       json: true,
-      gzip: true,
+      // gzip: true,
     };
   } catch (err) {
     console.log('Error Message from CMC API fetch process', err.message);
