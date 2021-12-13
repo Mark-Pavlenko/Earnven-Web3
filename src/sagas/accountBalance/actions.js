@@ -7,3 +7,11 @@ export const getAccountBalance = (payload) => {
     payload,
   };
 };
+
+export const getAccountLoader = (payload) => {
+  // console.log(payload);
+  return {
+    type: actionTypes.SET_ACCOUNT_LOADER,
+    payload,
+  };
+};

@@ -3,9 +3,9 @@ import * as selectors from './selectors';
 import AccountBalance from './AccountBalance';
 
 export const mapStateToProps = (state) => {
-  // console.log('state from mainStateToProps for accountBalance', state);
+  console.log('state from mainStateToProps for accountBalance', state);
   return {
-    tokens: selectors.getTokens(state),
+    accountBalance: selectors.getAccountBalance(state),
   };
 };
 
