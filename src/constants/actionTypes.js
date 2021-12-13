@@ -3,6 +3,7 @@ export default {
   SET_ACCOUNT_ADDRESS: 'SET_ACCOUNT_ADDRESS',
   SET_ACCOUNT_LOADER: 'SET_ACCOUNT_LOADER',
   //non-actual
+  //non-actual
   GET_THEME: 'GET_THEME',
   GET_WEB3_OBJECT: 'GET_WEB3_OBJECT',
 };
