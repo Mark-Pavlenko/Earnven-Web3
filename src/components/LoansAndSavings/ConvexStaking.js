@@ -9,14 +9,24 @@ Version      Date                Description                                    
 1.1         22/Oct/2021          Chanages to split cvx and cvxCRV staking value  Prabhakaran.R 
 1.2         03/Nov/2021          Fix to display cvxCRV staking value 
                                  which get filtered while display in UI          Prabhakaran.R 
+1.3         10/Dec/2021          Modified to get new additional fields including
+                                 with claimable value                             Prabhakaran.R                                 
 
 **************************************************************************************************/
 import React, { useEffect, useState } from 'react';
-import ConvexCVXStakingABI from '../../abi/ConvexCVXContract.json';
+import ConvexContractABI from '../../abi/ConvexCVXContract.json';
 import ConvexCvxCRVContractABI from '../../abi/ConvexCvxCRVContract.json';
 import Addresses from '../../contractAddresses';
 import Web3 from 'web3';
 import axios from 'axios';
+import ConvexLpTokenList from '../../contractAddress/ConvexTokenAdddressList';
+import ConvexStakingContractABI from '../../abi/ConvexStakingContract.json';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { useWeb3React } from '@web3-react/core';
 
 export default function ConvexStaking({ accountAddress }) {
   const [ConvexCVXAmount, setConvexCVXAmount] = useState(0);
@@ -27,74 +37,342 @@ export default function ConvexStaking({ accountAddress }) {
   const [ConvexCvxCRVUsdPrice, setConvexCvxCRVUsdPrice] = useState();
   const [ConvexCvxCRVStakeAmt, setConvexCvxCRVStakeAmt] = useState();
 
-  //this function is used to get web3 that is used to connect with ethereum network
-  async function loadWeb3() {
-    if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum);
-      await window.ethereum.enable();
-    } else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider);
-    } else {
-      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
+  //State varaibles added for claimable and for additional fields
+  const [convexStakingBalance, setconvexStakingBalance] = useState();
+  const [earnedClaimbale, setearnedClaimbale] = useState();
+  const [rewardTokenAddress, setrewardTokenAddress] = useState();
+  const [stakingTokenAddress, setstakingTokenAddress] = useState();
+  const [stakingContent, setstakingContent] = useState([0]);
+  const [cvxStakingDataAttributes, setcvxStakingDataAttributes] = useState([]);
+  const [cvxStakingTotalAmount, setcvxStakingTotalAmount] = useState(0);
+  const [CVXTokenImage, setCVXTokenImage] = useState(0);
+  const [CvxTotalSupply, setCvxTotalSupply] = useState();
+
+  //get useWeb3React hook
+  const { account, activate, active, chainId, connector, deactivate, error, provider, setError } =
+    useWeb3React();
+
+  let ConvexImageUrl;
+  let ConvexCVXprice = 0;
+
+  //logic implementing for web3 provider connection using web3 React hook
+  async function getWeb3() {
+    const provider = await connector.getProvider();
+    const web3 = await new Web3(provider);
+    return web3;
+  }
+
+  //this function is used to get the stake amount for given contract address by calling
+  //the respective contract methods
+  async function getConvexStakes(accountAddress, contractAddress) {
+    //get the web3 connection provider by calling the web3 react hook
+    const web3 = await getWeb3();
+    //ConvexCvxStaking contract
+    const ConvexCVXStakingContract = new web3.eth.Contract(ConvexContractABI, contractAddress);
+    //call the CVX contract to get the balance of CVX token staking value
+    let ConvexBalaceAmount = await ConvexCVXStakingContract.methods
+      .balanceOf(accountAddress)
+      .call();
+    let ConvexEarnedBalance = await ConvexCVXStakingContract.methods.earned(accountAddress).call();
+    let ConvexRewardTokenAddress = await ConvexCVXStakingContract.methods.rewardToken().call();
+    let ConvexStakingTokenAddress = await ConvexCVXStakingContract.methods.stakingToken().call();
+    let ConvexTotalSupply = await ConvexCVXStakingContract.methods.totalSupply().call();
+
+    //update the state varaibles
+    setconvexStakingBalance(ConvexBalaceAmount); //balanceOf(user)
+    setearnedClaimbale(ConvexEarnedBalance); //earned(user) - rewarded/claimable
+    setrewardTokenAddress(ConvexRewardTokenAddress); //claimable token Address
+    setstakingTokenAddress(ConvexStakingTokenAddress); //staking token address
+    setCvxTotalSupply(ConvexTotalSupply);
+
+    //retrun the value as object
+    return {
+      convexStakingBalance: ConvexBalaceAmount,
+      earnedClaimbale: ConvexEarnedBalance,
+      rewardTokenAddress: ConvexRewardTokenAddress,
+      stakingTokenAddress: ConvexStakingTokenAddress,
+      cvxTotalSupply: ConvexTotalSupply,
+    };
+  }
+
+  //Call the ConvexReward/staking Contract data such as symbol
+  //this symbol is used to display in the UI to show the staked token and claimable token
+  async function getRewardTokenSymbol(contractAddress) {
+    //get the web3 connection provider by calling the web3 react hook
+    const web3 = await getWeb3();
+    //get the contract instance
+    const ConvexStakingContract = new web3.eth.Contract(ConvexStakingContractABI, contractAddress);
+    //call the below method to get the symbol of the token
+    const symbol = await ConvexStakingContract.methods.symbol().call();
+    console.log('Convex staking data symbol', symbol);
+    return symbol;
+  }
+
+  //get the price of the given token address
+  async function getCvxCrvTokenPrice(cvxProtocol, tokenAddress, stakedAddress) {
+    let result;
+    let tokenPrice = 0;
+    try {
+      if (
+        cvxProtocol == 'cvxCRV' ||
+        cvxProtocol == 'cvxankrCRV' ||
+        cvxProtocol == 'cvxalETH+ETH-f'
+      ) {
+        result = await fetch(
+          `https://api.ethplorer.io/getAddressInfo/${tokenAddress}?apiKey=EK-qSPda-W9rX7yJ-UY93y`,
+          {}
+        );
+      }
+      const data = await result.json();
+      if (cvxProtocol == 'cvxCRV') {
+        for (let i = 0; i < data.tokens.length; i++) {
+          const curveLpData = data.tokens[i];
+          const returnAddress = curveLpData.tokenInfo.address.toLowerCase();
+          if (stakedAddress.toLowerCase() == returnAddress.toLowerCase()) {
+            tokenPrice = curveLpData.tokenInfo.price.rate;
+          }
+        }
+      }
+      //get the ether price
+      if (cvxProtocol == 'cvxankrCRV' || cvxProtocol == 'cvxalETH+ETH-f') {
+        const cvxaEthPrice = data.ETH.price.rate;
+
+        tokenPrice = cvxaEthPrice;
+      }
+    } catch (err) {
+      console.log(err.message);
+    }
+    return tokenPrice;
+  }
+
+  //get the price of the convex token based on the given contract address
+  async function getConvexTokenPrice(contractAddress) {
+    let result;
+
+    try {
+      result = await axios.get(
+        `https://api.coingecko.com/api/v3/coins/ethereum/contract/${contractAddress}`
+      );
+
+      return result;
+    } catch (err) {
+      console.log('Error message from Convex staking process', err.message);
     }
   }
-  //this function is used to get the stake amount for CVX token by calling the respective contract
-  //for the give userAddress
-  async function checkConvexStake(accountAddress) {
-    await loadWeb3();
-    const web3 = window.web3;
-    const ConvexCVXStakingContract = new web3.eth.Contract(
-      ConvexCVXStakingABI,
-      Addresses.convexStakingCRV
-    );
-    //call the CVX contract to get the balance of CVX token staking value
-    var ConvexCVXBalaceAmount = await ConvexCVXStakingContract.methods
-      .balanceOf(accountAddress)
-      .call();
-    return ConvexCVXBalaceAmount;
-  }
+  let stakingTokenSymbol;
 
-  //this function is used to get the stake amount for cvxCRV token by calling the respective contract
-  async function checkCvxCRVStake(accountAddress) {
-    await loadWeb3();
-    const web3 = window.web3;
-    const ConvexCvxCRVContract = new web3.eth.Contract(
-      ConvexCvxCRVContractABI,
-      Addresses.convexStakingcvxCRV
-    );
-    //call the CVX contract to get the balance of CVX token staking value
-    var ConvexCvxCRVBalaceAmount = await ConvexCvxCRVContract.methods
-      .balanceOf(accountAddress)
-      .call();
-    return ConvexCvxCRVBalaceAmount;
-  }
-
-  //below function is used to get 'CVX' token staking value
+  //get convex reward/claimable contract data
   useEffect(() => {
-    async function getBlockchainData() {
-      //below logic is get the CVX token staking value
-      const ConvexCVXBalaceAmount = await checkConvexStake(accountAddress);
-
-      const ConvexCVXBalance = ConvexCVXBalaceAmount / 10 ** 18;
-      setConvexCVXAmount(ConvexCVXBalance);
+    async function fetchCurvePoolData() {
+      let convexStakingBalanceValue = 0;
+      let convexStakingClaimable = 0;
+      let convexTokenPrice = 0;
+      let staking = [];
+      let totalStaking = 0;
+      let CvxTokenImageUrl;
+      let cvxCrvTokenPrice = 0;
+      let cvxTotalSupplyAmt = 0;
+      let response;
 
       try {
-        //get the current price of the token 'Convex Token (CVX)' - 0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b
+        response = await axios.get(
+          `https://api.ethplorer.io/getAddressInfo/${accountAddress}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
+        );
+        const data = await response.data;
+
+        for (let i = 0; i < data.tokens.length; i++) {
+          const curveLpData = data.tokens[i];
+          const tokenAddress = curveLpData.tokenInfo.address.toLowerCase();
+
+          if (ConvexLpTokenList.indexOf(tokenAddress) != -1) {
+            let object = {};
+
+            //get the convex staking values
+            const ConvexStakedData = await getConvexStakes(accountAddress, tokenAddress);
+
+            //get the contract token
+            const rewardTokenSymbol = await getRewardTokenSymbol(
+              ConvexStakedData.rewardTokenAddress
+            );
+
+            //get the contract token
+            stakingTokenSymbol = await getRewardTokenSymbol(ConvexStakedData.stakingTokenAddress);
+
+            const convexTokenPriceReturn = await getConvexTokenPrice(
+              ConvexStakedData.rewardTokenAddress
+            );
+            convexTokenPrice = convexTokenPriceReturn.data.market_data.current_price.usd;
+            CvxTokenImageUrl = convexTokenPriceReturn.data.image.thumb;
+
+            if (
+              (stakingTokenSymbol == 'cvxCRV' ||
+                stakingTokenSymbol == 'cvxankrCRV' ||
+                stakingTokenSymbol == 'cvxalETH+ETH-f') &&
+              cvxCrvTokenPrice == 0
+            ) {
+              cvxCrvTokenPrice = await getCvxCrvTokenPrice(
+                stakingTokenSymbol,
+                tokenAddress,
+                ConvexStakedData.stakingTokenAddress
+              );
+            }
+            //get price for cvx3Crv, cvxalUSD3CRV-f
+            if (
+              (stakingTokenSymbol == 'cvx3Crv' || stakingTokenSymbol == 'cvxalUSD3CRV-f') &&
+              cvxCrvTokenPrice == 0
+            ) {
+              const Crv3CrvPoolAddress = '0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490'; //3crvPool
+              //console.log('TestFF, looking for staking token', Crv3CrvPoolAddress)
+              const cvxCrvTokenPriceData = await getConvexTokenPrice(Crv3CrvPoolAddress);
+              cvxCrvTokenPrice = cvxCrvTokenPriceData.data.market_data.current_price.usd;
+            }
+            //get price for CVX
+            if (stakingTokenSymbol == 'CVX' && cvxCrvTokenPrice == 0) {
+              const cvxContract = '0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b'; //cvx contract
+              //console.log('TestFF, looking for staking token', cvxContract)
+              const cvxCrvTokenPriceData = await getConvexTokenPrice(cvxContract);
+              cvxCrvTokenPrice = cvxCrvTokenPriceData.data.market_data.current_price.usd;
+              CvxTokenImageUrl = cvxCrvTokenPriceData.data.image.thumb;
+            }
+
+            //get price for 'cvxMIM-UST-f' by checking UST contract
+            if (stakingTokenSymbol == 'cvxMIM-UST-f' && cvxCrvTokenPrice == 0) {
+              const cvxContract = '0xa47c8bf37f92abed4a126bda807a7b7498661acd'; //ust contract
+              //console.log('TestFF, looking for staking token', cvxContract)
+              const cvxCrvTokenPriceData = await getConvexTokenPrice(cvxContract);
+              cvxCrvTokenPrice = cvxCrvTokenPriceData.data.market_data.current_price.usd;
+            }
+            //if derived price is null then assign the convextokenprice
+            if (cvxCrvTokenPrice == 0) {
+              cvxCrvTokenPrice = convexTokenPrice;
+            }
+            //store all the fetched data
+            if (cvxCrvTokenPrice) {
+              convexStakingBalanceValue =
+                (ConvexStakedData.convexStakingBalance / 10 ** 18) * cvxCrvTokenPrice;
+              convexStakingClaimable =
+                (ConvexStakedData.earnedClaimbale / 10 ** 18) * cvxCrvTokenPrice;
+              cvxTotalSupplyAmt = (ConvexStakedData.cvxTotalSupply / 10 ** 18) * cvxCrvTokenPrice;
+              object.cvxStakingAmt = convexStakingBalanceValue;
+              object.cvxStakingBalance = ConvexStakedData.convexStakingBalance / 10 ** 18;
+              object.cvxPrice = cvxCrvTokenPrice;
+              //if token is 'cvxalETH+ETH-f' then claimable price should be crv token price
+              if (stakingTokenSymbol == 'cvxalETH+ETH-f' || stakingTokenSymbol == 'cvxankrCRV') {
+                const cvxCrvTokenPriceData = await getConvexTokenPrice(
+                  '0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490'
+                );
+                cvxCrvTokenPrice = cvxCrvTokenPriceData.data.market_data.current_price.usd;
+              }
+              object.cvxStakingClaimable =
+                (ConvexStakedData.earnedClaimbale / 10 ** 18) * cvxCrvTokenPrice;
+
+              object.cvxStakingToken = stakingTokenSymbol;
+              object.cvxChain = 'Ethereum';
+              object.cvxProtocol = stakingTokenSymbol;
+              object.cvxTokenImgurl = CvxTokenImageUrl;
+              object.cvxTokenAddress = tokenAddress;
+              object.cvxStakingContractAddress = ConvexStakedData.stakingTokenAddress;
+              object.cvxTotalSupplyValue = cvxTotalSupplyAmt;
+              object.cvxTotal = parseFloat(
+                object.cvxStakingAmt + parseFloat(object.cvxStakingClaimable)
+              );
+              totalStaking += parseFloat(
+                object.cvxStakingAmt + parseFloat(object.cvxStakingClaimable)
+              );
+              staking.push(object);
+            }
+
+            //Reset the variables
+            cvxCrvTokenPrice = 0;
+            CvxTokenImageUrl = '';
+          }
+        } //end of for loop
+
+        setcvxStakingDataAttributes(staking);
+        setcvxStakingTotalAmount(parseFloat(totalStaking).toFixed(2));
+        setCVXTokenImage(CvxTokenImageUrl);
+        staking = [];
+      } catch (err) {
+        console.log('testcc No curve lp token holding for this user', accountAddress);
+        console.log('testcc', err.message);
+      }
+    } //end of function
+    fetchCurvePoolData();
+    //for timebeing this log need to check the value from tha main app
+    console.log('Staking data from state', cvxStakingDataAttributes);
+  }, [accountAddress]);
+
+  //use below function to render in UI after updated the state
+  useEffect(() => {
+    var content = cvxStakingDataAttributes.map((object) => (
+      <React.Fragment>
+        <Accordion
+          style={{
+            background: 'transparent',
+            marginRight: '1px',
+            color: 'black',
+            width: '100%',
+            border: '1px',
+            borderColor: 'black',
+            borderStyle: 'hidden',
+          }}>
+          <AccordionSummary>
+            <React.Fragment>
+              <img
+                src={object.cvxTokenImgurl}
+                style={{
+                  height: '20px',
+                  display: 'inline-block',
+                }}
+                alt=""
+              />
+              {object.cvxStakingToken} -- {parseFloat(object.cvxTotal).toFixed(2)}
+            </React.Fragment>
+          </AccordionSummary>
+
+          <AccordionDetails>
+            <div
+              style={{
+                fontSize: '12px',
+                display: 'inline-block',
+                marginLeft: '15px',
+              }}>
+              <br />
+              {object.cvxStakingToken} &nbsp;&nbsp;&nbsp;&nbsp;{' '}
+              {parseFloat(object.cvxStakingAmt).toFixed(2)} USD
+              <br />
+              Claimable &nbsp;&nbsp;&nbsp; {parseFloat(object.cvxStakingClaimable).toFixed(2)}
+              <br />
+              Price &nbsp;&nbsp;&nbsp;&nbsp; {parseFloat(object.cvxPrice).toFixed(2)}
+              <br />
+              Balance &nbsp;&nbsp;&nbsp;&nbsp; {parseFloat(object.cvxStakingBalance).toFixed(2)}
+              <br />
+              Liquidity &nbsp;&nbsp;&nbsp; {parseFloat(object.cvxTotalSupplyValue).toFixed(2)}
+              <br />
+              Chain &nbsp;&nbsp;&nbsp;&nbsp; {object.cvxChain}
+              <br />
+              Protocol &nbsp;&nbsp;&nbsp;&nbsp; {object.cvxProtocol}
+              <br />
+            </div>
+          </AccordionDetails>
+        </Accordion>
+      </React.Fragment>
+    ));
+    setstakingContent(content);
+  }, [cvxStakingDataAttributes]);
+
+  useEffect(() => {
+    async function getCvxTokenImageUrl() {
+      try {
+        //get the cvx image url
         await axios
           .get(
             `https://api.coingecko.com/api/v3/coins/ethereum/contract/0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b`,
             {},
             {}
           )
-          .then(async (priceData) => {
-            let ConvexImageUrl = priceData.data.image.thumb;
-            let ConvexCVXprice = priceData.data.market_data.current_price.usd;
-
-            const ConvexCVXStakeValue = parseFloat(ConvexCVXBalance * ConvexCVXprice).toFixed(2);
-
-            setConvexCVXUsdPrice(ConvexCVXprice);
-
-            setConvexCVXStakeAmt(ConvexCVXStakeValue);
+          .then(async (response) => {
+            let ConvexImageUrl = response.data.image.thumb;
             setConvexCVXImage(ConvexImageUrl);
           })
           .catch((error) => console.log('Error message', error));
@@ -103,102 +381,27 @@ export default function ConvexStaking({ accountAddress }) {
       }
     }
 
-    getBlockchainData();
-  }, [accountAddress]);
-
-  //below function is used to get 'cvxCRV' token staking value
-  useEffect(() => {
-    async function getBlockchainData() {
-      //below logic is get the CVX token staking value
-      const ConvexCvxCRVBalaceAmount = await checkCvxCRVStake(accountAddress);
-      //proceed with to derive value only if the balance is available
-
-      const ConvexCvxCRVBalance = ConvexCvxCRVBalaceAmount / 10 ** 18;
-      setConvexCvxCRVAmount(ConvexCvxCRVBalance);
-
-      try {
-        //get the current price of the token 'Convex Token (CVX)' - 0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7
-        await axios
-          .get(
-            `https://api.coingecko.com/api/v3/coins/ethereum/contract/0x62B9c7356A2Dc64a1969e19C23e4f579F9810Aa7`,
-            {},
-            {}
-          )
-          .then(async (priceData) => {
-            let ConvexCVXprice = priceData.data.market_data.current_price.usd;
-
-            const ConvexCvxCRVStakeValue = parseFloat(ConvexCvxCRVBalance * ConvexCVXprice).toFixed(
-              2
-            );
-
-            setConvexCvxCRVUsdPrice(ConvexCVXprice);
-
-            setConvexCvxCRVStakeAmt(ConvexCvxCRVStakeValue);
-          })
-          .catch((error) => console.log('Error message', error));
-      } catch (err) {
-        console.log(err);
-      }
-    }
-
-    getBlockchainData();
+    getCvxTokenImageUrl();
   }, [accountAddress]);
 
   return (
-    <div>
-      {parseInt(ConvexCVXStakeAmt) || parseInt(ConvexCvxCRVStakeAmt) ? (
+    <React.Fragment>
+      {parseFloat(cvxStakingTotalAmount) > 0 ? (
         <div>
-          <div
+          <img
+            src={ConvexCVXImage}
             style={{
-              fontSize: '12px',
-              marginLeft: '15px',
-            }}>
-            Convex Staking ---{' '}
-            {(parseFloat(ConvexCVXStakeAmt) + parseFloat(ConvexCvxCRVStakeAmt)).toLocaleString()}
-            USD
-          </div>
-          <div>
-            <img
-              src={ConvexCVXImage}
-              style={{
-                height: '30px',
-                marginTop: '',
-                display: 'inline-block',
-                marginLeft: '15px',
-              }}
-              alt=""
-            />
-            <div
-              style={{
-                fontSize: '12px',
-                display: 'inline-block',
-                marginLeft: '15px',
-              }}>
-              <br />
-              {parseFloat(ConvexCVXStakeAmt) ? (
-                <div>
-                  Convex CVX &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{' '}
-                  {parseFloat(ConvexCVXStakeAmt).toLocaleString()}
-                  USD
-                </div>
-              ) : (
-                ''
-              )}
-              {parseInt(ConvexCvxCRVStakeAmt) ? (
-                <div>
-                  Convex cvxCRV &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{' '}
-                  {parseFloat(ConvexCvxCRVStakeAmt).toLocaleString()}
-                  USD
-                </div>
-              ) : (
-                ''
-              )}
-            </div>
-          </div>
+              height: '20px',
+              display: 'inline-block',
+            }}
+            alt=""
+          />
+          Convex Total -- {parseFloat(cvxStakingTotalAmount).toLocaleString()}
         </div>
       ) : (
         ''
       )}
-    </div>
+      {stakingContent}
+    </React.Fragment>
   );
 }
