@@ -7,7 +7,7 @@ export default function NftGroup({ nftData, changeTheme, NFTDATA }) {
   return (
     <>
       {/* {nftData.map((object) => ( */}
-      <Stack style={{ width: '100%' }} spacing={0}>
+      <Stack spacing={0}>
         {/* <Typography variant="NFT_Name_text" sx={{ mb: 2, mt: 4 }}>
             {object.name}
           </Typography> */}
