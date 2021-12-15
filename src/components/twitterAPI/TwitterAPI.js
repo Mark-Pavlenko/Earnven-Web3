@@ -21,6 +21,7 @@ import {
   TweetDescription,
   PlayerLayout,
   Player,
+  LoadMoreTweetsBtn,
   TwitterWidget,
   TwitterWidgetTitle,
 } from './styles';
@@ -37,6 +38,9 @@ const streamTweet =
 export default function TwitterAPI() {
   const [tweetAvatarContent, setTweetAvatarContent] = useState();
   const [tweetDataContent, setTweetDataContent] = useState();
+
+  const [limit, setLimit] = useState(2);
+  const [btnDisabled, setBtnDisabled] = useState(false);
 
   var headers = {
     'content-type': 'application/json',
@@ -157,13 +161,24 @@ export default function TwitterAPI() {
   console.log(firstColumn);
   console.log(secondColumn);
 
+  const loadMoreTweets = () => {
+    setLimit(limit + 2);
+    // console.log('limit', limit);
+    // console.log('mockData.length', mockData.length);
+    if (limit + 6 === mockData.length) {
+      setBtnDisabled(true);
+      console.log('if data ended', btnDisabled);
+    }
+    console.log('btn disabled', btnDisabled);
+  };
+
   return (
     <>
       {mockData !== undefined && (
         <MainLayout>
           <GridTweetsNewsBlock>
             <TweetsNewsColumns>
-              {firstColumn.map((tweet) => {
+              {firstColumn.slice(0, limit).map((tweet) => {
                 return (
                   <TweetBlock>
                     <TweetBlockHeader>
@@ -190,15 +205,13 @@ export default function TwitterAPI() {
               })}
             </TweetsNewsColumns>
             <TweetsNewsColumns>
-              {secondColumn.map((tweet) => {
+              {secondColumn.slice(0, limit).map((tweet) => {
                 return (
                   <TweetBlock>
                     <TweetBlockHeader>
-                      {/*<div>*/}
                       <HeaderAvatar src={tweet.profile_image_url} alt="Profile image" />
                       <HeaderName>{tweet.name}</HeaderName>
                       <HeaderUsername>@{tweet.username}</HeaderUsername>
-                      {/*</div>*/}
                       <a
                         href={`https://twitter.com/anyuser/status/${tweet.pinned_tweet_id}`}
                         target="_blank">
@@ -227,6 +240,9 @@ export default function TwitterAPI() {
               Tweets by Earnvenfinance
             </a>
           </TwitterWidget>
+          {!btnDisabled && (
+            <LoadMoreTweetsBtn onClick={loadMoreTweets}>Load more</LoadMoreTweetsBtn>
+          )}
         </MainLayout>
       )}
     </>

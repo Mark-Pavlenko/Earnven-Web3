@@ -27,6 +27,7 @@ export const TweetBlock = styled.div`
   width: 475px;
   height: 325px;
   background: #e5efff;
+  //background: red;
   mix-blend-mode: normal;
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(35px);
@@ -99,13 +100,32 @@ export const Player = styled(ReactPlayer)`
   padding-bottom: 20px;
 `;
 
+export const LoadMoreTweetsBtn = styled.button`
+  display: block;
+  margin: 0 auto;
+  width: 150px;
+  height: 40px;
+  font-family: 'Saira', sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px;
+  background: #ffffff;
+  color: #4453ad;
+  border: none !important;
+  border-radius: 10px;
+  cursor: pointer;
+`;
+
 export const TwitterWidget = styled.div`
   background: #e3efff;
+  //background: #ffffff;
+  border-radius: 10px;
+  //margin-top: 30px;
 `;
 
 export const TwitterWidgetTitle = styled.p`
-  margin-top: 20px;
-  margin-left: 25px;
+  margin: 20px 0 25px 20px;
   font-family: 'Saira', sans-serif;
   font-style: normal;
   font-weight: 500;
