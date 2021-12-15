@@ -18,8 +18,8 @@ const NewCryptoImages = async (symbol) => {
   const API_IMG_URL = process.env.REACT_APP_API_IMG_URL;
   const API_KEY_NAME = process.env.REACT_APP_API_KEY_NAME;
   const API_KEY_VALUE = process.env.REACT_APP_API_KEY_VALUE;
-  console.log('API_IMG_URL', API_IMG_URL);
-  console.log('API_KEY_VALUE', API_KEY_VALUE);
+  // console.log('API_IMG_URL', API_IMG_URL);
+  // console.log('API_KEY_VALUE', API_KEY_VALUE);
   let newImageList;
   //get list of new tokens in the array
 
@@ -49,11 +49,11 @@ const NewCryptoImages = async (symbol) => {
   let tokenSybmol = {
     newSymbol: 'newSymbol',
   };
-  console.log('looking for new crpto image for symbol', symbol);
+  // console.log('looking for new crpto image for symbol', symbol);
   try {
     await rp(newImageList).then((response) => {
       data = response.data;
-      console.log('New token image', data[newSymbol].logo);
+      // console.log('New token image', data[newSymbol].logo);
     });
   } catch (err) {
     console.log('No record found and null data array', err.message);

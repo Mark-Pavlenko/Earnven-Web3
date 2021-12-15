@@ -6,6 +6,24 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 const { useState, useEffect } = require('react');
 const { Buffer } = require('buffer');
 const request = require('request');
+import twitterIcon from '../../assets/icons/twitter.png';
+import mockData from './mockData.json';
+
+import {
+  MainLayout,
+  GridTweetsNewsBlock,
+  TweetsNewsColumns,
+  TweetBlock,
+  TweetBlockHeader,
+  HeaderAvatar,
+  HeaderName,
+  HeaderUsername,
+  TweetDescription,
+  PlayerLayout,
+  Player,
+  TwitterWidget,
+  TwitterWidgetTitle,
+} from './styles';
 
 const TOKEN =
   'AAAAAAAAAAAAAAAAAAAAAJKDUQEAAAAAdjHNlWVUmUvOCPqh05Vgo8bQouo%3DJY7PJWMZfUwejLcXHXKraQE9O9QDUQptUwtHVYIbSK0PFFmYzE';
@@ -44,7 +62,6 @@ export default function TwitterAPI() {
     //call the below function to get tweet data given streamUrl(with all the params)
     let chunks = [];
     let tweeterAvatarData;
-    let content;
     async function getData() {
       //let chunks ;
       try {
@@ -60,34 +77,12 @@ export default function TwitterAPI() {
             });
 
             res.on('end', function () {
-              var buffer = Buffer.concat(chunks);
+              let buffer = Buffer.concat(chunks);
               tweeterAvatarData = JSON.parse(Buffer.from(buffer).toString());
-              console.log('Defi_Dad_Avatar', tweeterAvatarData.data);
-
-              content = tweeterAvatarData.data.map((object) => (
-                <Accordion
-                  key={Object.id}
-                  style={{
-                    background: 'transparent',
-                    marginRight: '1px',
-                    color: 'white',
-                    width: '100%',
-                    border: '1px',
-                    borderColor: 'black',
-                    borderStyle: 'hidden', //solid
-                  }}>
-                  <AccordionDetails>
-                    {object.username}
-                    <br />
-                    {object.name}
-                    <img src={object.profile_image_url} alt="" />
-                  </AccordionDetails>
-                </Accordion>
-              ));
-              setTweetAvatarContent(content);
+              // setTweetAvatarContent(tweeterAvatarData.data);
+              setTweetAvatarContent(mockData);
             });
           });
-          //callback when there is an error
           req.on('error', function (err) {
             callback(err);
           });
@@ -125,30 +120,9 @@ export default function TwitterAPI() {
             });
 
             res.on('end', function () {
-              var buffer = Buffer.concat(chunks);
+              let buffer = Buffer.concat(chunks);
               tweetData = JSON.parse(Buffer.from(buffer).toString());
-              console.log('Tweet Data', tweetData.data);
-
-              content = tweetData.data.map((object) => (
-                <Accordion
-                  key={Object.id}
-                  style={{
-                    background: 'transparent',
-                    marginRight: '1px',
-                    color: 'white',
-                    width: '100%',
-                    border: '1px',
-                    borderColor: 'black',
-                    borderStyle: 'hidden', //solid
-                  }}>
-                  <AccordionDetails>
-                    {object.created_at}
-                    <br />
-                    {object.text}
-                  </AccordionDetails>
-                </Accordion>
-              ));
-              setTweetDataContent(content);
+              setTweetDataContent(tweetData.data);
             });
           });
           //callback when there is an error
@@ -167,11 +141,94 @@ export default function TwitterAPI() {
     getData();
   }, []);
 
+  console.log('tweetDataContent', tweetAvatarContent);
+
+  function valuesSelector(array, startElem) {
+    const newArray = [];
+    for (let i = startElem; i <= array.length; i += 2) {
+      newArray.push(i);
+    }
+    return array.filter((el, index) => newArray.includes(index));
+  }
+
+  const firstColumn = valuesSelector(mockData, 0);
+  const secondColumn = valuesSelector(mockData, 1);
+
+  console.log(firstColumn);
+  console.log(secondColumn);
+
   return (
-    <div>
-      testing twitter
-      {tweetAvatarContent}
-      {tweetDataContent}
-    </div>
+    <>
+      {mockData !== undefined && (
+        <MainLayout>
+          <GridTweetsNewsBlock>
+            <TweetsNewsColumns>
+              {firstColumn.map((tweet) => {
+                return (
+                  <TweetBlock>
+                    <TweetBlockHeader>
+                      <HeaderAvatar src={tweet.profile_image_url} alt="Profile image" />
+                      <HeaderName>{tweet.name}</HeaderName>
+                      <HeaderUsername>@{tweet.username}</HeaderUsername>
+                      <a
+                        href={`https://twitter.com/anyuser/status/${tweet.pinned_tweet_id}`}
+                        target="_blank">
+                        <img src={twitterIcon} alt="fireSpot" />
+                      </a>
+                    </TweetBlockHeader>
+                    <TweetDescription>{tweet.text}</TweetDescription>
+                    {/*<YouTube videoId="0QRlXt_yL8I" style={{ width: '20% !important' }} />*/}
+                    <PlayerLayout>
+                      <Player
+                        url="https://www.youtube.com/watch?v=0QRlXt_yL8I"
+                        width="100%"
+                        height="100%"
+                      />
+                    </PlayerLayout>
+                  </TweetBlock>
+                );
+              })}
+            </TweetsNewsColumns>
+            <TweetsNewsColumns>
+              {secondColumn.map((tweet) => {
+                return (
+                  <TweetBlock>
+                    <TweetBlockHeader>
+                      {/*<div>*/}
+                      <HeaderAvatar src={tweet.profile_image_url} alt="Profile image" />
+                      <HeaderName>{tweet.name}</HeaderName>
+                      <HeaderUsername>@{tweet.username}</HeaderUsername>
+                      {/*</div>*/}
+                      <a
+                        href={`https://twitter.com/anyuser/status/${tweet.pinned_tweet_id}`}
+                        target="_blank">
+                        <img src={twitterIcon} alt="fireSpot" />
+                      </a>
+                    </TweetBlockHeader>
+                    <TweetDescription>{tweet.text}</TweetDescription>
+                    {/*<YouTube videoId="0QRlXt_yL8I" style={{ width: '20% !important' }} />*/}
+                    <PlayerLayout>
+                      <Player
+                        url="https://www.youtube.com/watch?v=0QRlXt_yL8I"
+                        width="100%"
+                        height="100%"
+                      />
+                    </PlayerLayout>
+                  </TweetBlock>
+                );
+              })}
+            </TweetsNewsColumns>
+          </GridTweetsNewsBlock>
+          <TwitterWidget>
+            <TwitterWidgetTitle>Our Twitter</TwitterWidgetTitle>
+            <a
+              className="twitter-timeline"
+              href="https://twitter.com/Earnvenfinance?ref_src=twsrc%5Etfw">
+              Tweets by Earnvenfinance
+            </a>
+          </TwitterWidget>
+        </MainLayout>
+      )}
+    </>
   );
 }
