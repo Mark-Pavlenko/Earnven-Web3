@@ -90,6 +90,7 @@ export default function NftCard({ tokenId, contractAddress, txHash, changeTheme,
   const [tokenId_NFT, settokenId_NFT] = useState(tokenId);
   const [Theme_NFT, setTheme_NFT] = useState(localStorage.getItem('selectedTheme'));
   const [flagKill, setflagKill] = useState(1);
+  const image12 = 'https://assets.coingecko.com/coins/images/15290/small/cwbtc.png?1620371929';
   let temp_Address = '';
   let temp_TokenId = '';
   const showAccountPopover = () => {
@@ -111,6 +112,7 @@ export default function NftCard({ tokenId, contractAddress, txHash, changeTheme,
       background: changeTheme
         ? theme.palette.nft_light.hoverNFTdata
         : theme.palette.nft_dark.hoverNFTdata,
+      color: changeTheme ? '#4453AD' : 'white',
       backdropFilter: 'blur(30px)',
       // border: (theme) => `solid 1px ${theme.palette.grey[500_8]}`,
       mixBlendMode: 'normal',
@@ -288,7 +290,7 @@ export default function NftCard({ tokenId, contractAddress, txHash, changeTheme,
         </Popup>
       ) : (
         <PopupMobile title="Disconnect" openPopup={openPopup} setOpenPopup={setOpenPopup}>
-          <p>sathya</p>
+          <p style={{ textAlign: 'center' }}>under dev</p>
         </PopupMobile>
       )}
     </>

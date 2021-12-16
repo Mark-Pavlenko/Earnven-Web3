@@ -347,7 +347,11 @@ export default function NftDetails({ contract, id, changeNFT, setOpenPopup, flag
                   </ListItemText>
                 </ListItem>
                 {tokenHistory.map((object, index) => (
-                  <Link key={index} href={etherscanTxLink(object.hash)} underline="none">
+                  <Link
+                    key={index}
+                    target="_blank"
+                    href={etherscanTxLink(object.hash)}
+                    underline="none">
                     <ListItem
                       divider
                       sx={{
