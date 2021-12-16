@@ -9,22 +9,26 @@ import MenuPopover from '../MenuPopover';
 import NftDetails from '../../screens/NftDetail';
 import NFT_Popover from '../NFT_Popover';
 import Popup from '../PopUp';
+import PopupMobile from '../PopUpMobile';
 
 const NftImgStyle = styled('img')({
   top: 0,
   width: '100%',
   height: '100%',
   objectFit: 'cover',
-  position: 'absolute',
 });
 
 const Image_Grid = styled(Box)(({ theme }) => ({
   borderRadius: '10px',
-  ['@media (max-width:400px)']: {
+  width: '325px',
+  height: '334px',
+  marginLeft: '12px',
+  ['@media (max-width:600px)']: {
     // eslint-disable-line no-useless-computed-key
     margin: 'auto',
-    marginTop: '10px',
     textAlign: 'center',
+    width: '170px',
+    height: '170px',
   },
 }));
 
@@ -33,12 +37,28 @@ const NFT_Name = styled(Typography)(({ theme }) => ({
   fontSize: '20px',
   lineHeight: '31px',
   marginTop: '16px',
+  marginLeft: '11px',
+  ['@media (max-width:600px)']: {
+    // eslint-disable-line no-useless-computed-key
+    textAlign: 'left',
+    fontSize: '14px',
+    marginTop: '1px',
+    marginLeft: '1px',
+  },
 }));
 
 const NFT_Price = styled(Typography)(({ theme }) => ({
   fontWeight: 'normal',
   fontSize: '14px',
   lineHeight: '22px',
+  ['@media (max-width:600px)']: {
+    // eslint-disable-line no-useless-computed-key
+    textAlign: 'left',
+    fontSize: '10px',
+    opacity: 0.5,
+    marginTop: '-10px',
+    marginLeft: '-12px',
+  },
 }));
 
 // const Card_NFT = styled('div')(({ theme }) => ({
@@ -79,8 +99,14 @@ export default function NftCard({ tokenId, contractAddress, txHash, changeTheme,
     setaccount(false);
   };
 
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
+
   const Card_NFT = styled('div')(({ theme }) => ({
     cursor: 'pointer',
+    width: '379px',
+    height: '451px',
     '&:hover': {
       background: changeTheme
         ? theme.palette.nft_light.hoverNFTdata
@@ -90,6 +116,14 @@ export default function NftCard({ tokenId, contractAddress, txHash, changeTheme,
       mixBlendMode: 'normal',
       boxShadow: '7px 21px 22px -15px rgba(51, 78, 131, 0.1)',
     },
+    ['@media (max-width:600px)']: {
+      // eslint-disable-line no-useless-computed-key
+      margin: 'auto',
+      marginTop: '80px',
+      textAlign: 'center',
+      width: '170px',
+      height: '170px',
+    },
     borderRadius: '10px',
     paddingLeft: '15px',
     paddingRight: '15px',
@@ -97,22 +131,34 @@ export default function NftCard({ tokenId, contractAddress, txHash, changeTheme,
   }));
 
   useEffect(() => {
+    const wait = (ms) => new Promise((resolve, reject) => setTimeout(resolve, ms));
     const nftDetail = async () => {
+      var count = 0;
       try {
+        await wait(1000);
         const response = await axios.get(
           `https://api.opensea.io/api/v1/assets?token_ids=${tokenId}&asset_contract_addresses=${contractAddress}`
         );
         const tempObject = {};
-        tempObject.name = response.data.assets[0].name;
-        tempObject.img = response.data.assets[0].image_url;
-        setnftDetails(tempObject);
-        sessionStorage.setItem('nftCount', 0);
-        sessionStorage.setItem('nftCount_left', 0);
-      } catch {
-        // do smth.
+        console.log(
+          'sathuaurl',
+          `https://api.opensea.io/api/v1/assets?token_ids=${tokenId}&asset_contract_addresses=${contractAddress}`
+        );
+        if (response.data.assets[0].name) {
+          tempObject.name = response.data.assets[0].name;
+          tempObject.img = response.data.assets[0].image_url;
+          setnftDetails(tempObject);
+          console.log('responsecode', response);
+          sessionStorage.setItem('nftCount', 0);
+          sessionStorage.setItem('nftCount_left', 0);
+          // count++;
+        }
+      } catch (err) {
+        console.log('error in card', err);
       }
     };
     nftDetail();
+    // console.log('countsathya', count);
   }, [contractAddress, tokenId]);
 
   const getTransactionValue = async (hash) => {
@@ -138,72 +184,6 @@ export default function NftCard({ tokenId, contractAddress, txHash, changeTheme,
     var index = keys.indexOf(parsed_nftdata);
     let contractAddress_nft = '';
     let name = '';
-    // for (let i = 0; i < parsed_nftdata.length; i++) {
-    //   if (contractAddress == parsed_nftdata[i].address) {
-    //     contractAddress_nft = parsed_nftdata[i + 1].address;
-    //     name = parsed_nftdata[i + 1].name;
-    //   }
-    // }
-    // let count_tokenId = 0;
-    // if (flag_nft !== '' && flag_nft == 'plus') {
-    //   let count = 0;
-    //   let count_flag = 3;
-    //   let session_count = 0;
-    //   session_count = sessionStorage.getItem('nftCount');
-    //   session_count = parseInt(session_count) + 1;
-    //   sessionStorage.setItem('nftCount', session_count);
-    //   parsed_nftdata.map((obj) => {
-    //     count++;
-    //     if (obj.address == contractAddress) {
-    //       count_flag = session_count;
-    //     }
-    //   });
-    //   console.log('sathya map countflag ', count_flag);
-    //   if (count_flag > -1 && count_flag < parsed_nftdata.length) {
-    //     contractAddress_nft = parsed_nftdata[count_flag].address;
-    //     name = parsed_nftdata[count_flag].name;
-    //     count_tokenId = parsed_nftdata[count_flag].token;
-    //     // console.log('token is sathya', parsed_nftdata[count_flag].tokens[0]);
-    //   }
-    //   console.log(
-    //     'sathyacontractaddress and name and id',
-    //     contractAddress_nft,
-    //     name,
-    //     count_tokenId
-    //   );
-    //   setAddress_NFT(contractAddress_nft);
-    //   settokenId_NFT(count_tokenId);
-    // }
-    // if (flag_nft !== '' && flag_nft == 'minus') {
-    //   let count = 0;
-    //   let count_flag = 3;
-    //   let session_count = 0;
-    //   session_count = sessionStorage.getItem('nftCount');
-    //   session_count = parseInt(session_count) - 1;
-    //   sessionStorage.setItem('nftCount', session_count);
-    //   parsed_nftdata.map((obj) => {
-    //     count++;
-    //     if (obj.address == contractAddress) {
-    //       count_flag = session_count;
-    //     }
-    //   });
-    //   console.log('sathya map countflag ', count_flag);
-    //   if (count_flag > -1 && count_flag < parsed_nftdata.length) {
-    //     contractAddress_nft = parsed_nftdata[count_flag].address;
-    //     name = parsed_nftdata[count_flag].name;
-    //     count_tokenId = parsed_nftdata[count_flag].tokens[0];
-    //     console.log('token is sathya', parsed_nftdata[count_flag].tokens[0]);
-    //   }
-    //   console.log(
-    //     'sathyacontractaddress and name and id',
-    //     contractAddress_nft,
-    //     name,
-    //     count_tokenId
-    //   );
-    //   setAddress_NFT(contractAddress_nft);
-    //   settokenId_NFT(count_tokenId);
-    // }
-    //////////////////////////////////////// to be used later
     let count_session = sessionStorage.getItem('nftCount');
     try {
       if (
@@ -257,9 +237,13 @@ export default function NftCard({ tokenId, contractAddress, txHash, changeTheme,
           // getTransactionValue(txHash);
           setOpenPopup(true);
         }}>
-        <Image_Grid sx={{ pt: '100%', position: 'relative' }}>
+        <Image_Grid sx={{ position: 'relative' }}>
           {nftDetails !== undefined ? (
-            <NftImgStyle alt=" " style={{ borderRadius: '10px' }} src={nftDetails.img} />
+            <NftImgStyle
+              alt=" "
+              style={{ height: '100%', width: '100%', borderRadius: '10px' }}
+              src={nftDetails.img}
+            />
           ) : (
             <NftImgStyle alt=" " src={spinner} />
           )}
@@ -268,7 +252,13 @@ export default function NftCard({ tokenId, contractAddress, txHash, changeTheme,
         <Stack spacing={0.5}>
           {/* <Link to="#" color="inherit" underline="hover" component={RouterLink}> */}
           <NFT_Name noWrap>{nftDetails !== undefined ? nftDetails.name : 'loading'}</NFT_Name>
-          {price == 0 ? <NFT_Price align="left">$ 2,234.23</NFT_Price> : <div />}
+          {price == 0 ? (
+            <div style={{ marginLeft: '13px' }}>
+              <NFT_Price align="left">$ 2,234.23</NFT_Price>
+            </div>
+          ) : (
+            <div />
+          )}
 
           <Stack direction="row" alignItems="center" justifyContent="space-between" />
         </Stack>
@@ -284,17 +274,23 @@ export default function NftCard({ tokenId, contractAddress, txHash, changeTheme,
           id={temp_TokenId == '' ? tokenId_NFT : temp_TokenId}
         />
       </Popup> */}
-      <Popup title="Disconnect" openPopup={openPopup} setOpenPopup={setOpenPopup}>
-        <NftDetails
-          setOpenPopup={(w) => setOpenPopup(w)}
-          changeNFT={(flag_nft) => setflag_nft(flag_nft)}
-          flagNFT={(w) => setflagKill(w)}
-          // contract={temp_Address == '' ? Address_NFT : temp_Address}
-          // id={temp_TokenId == '' ? tokenId_NFT : temp_TokenId}
-          contract={Address_NFT}
-          id={tokenId_NFT}
-        />
-      </Popup>
+      {!isMobile ? (
+        <Popup title="Disconnect" openPopup={openPopup} setOpenPopup={setOpenPopup}>
+          <NftDetails
+            setOpenPopup={(w) => setOpenPopup(w)}
+            changeNFT={(flag_nft) => setflag_nft(flag_nft)}
+            flagNFT={(w) => setflagKill(w)}
+            // contract={temp_Address == '' ? Address_NFT : temp_Address}
+            // id={temp_TokenId == '' ? tokenId_NFT : temp_TokenId}
+            contract={Address_NFT}
+            id={tokenId_NFT}
+          />
+        </Popup>
+      ) : (
+        <PopupMobile title="Disconnect" openPopup={openPopup} setOpenPopup={setOpenPopup}>
+          <p>sathya</p>
+        </PopupMobile>
+      )}
     </>
   );
 }

@@ -236,7 +236,7 @@ export default function NftDetails({ contract, id, changeNFT, setOpenPopup, flag
         setnftName(response.data.assets[0].name);
         setassestName(response.data.assets[0].asset_contract.name);
       } catch (err) {
-        console.log('error', err);
+        console.log('errorinnftdetaILS', err);
       }
     };
 
@@ -267,10 +267,10 @@ export default function NftDetails({ contract, id, changeNFT, setOpenPopup, flag
           <Stack direction="row">
             <Stack>
               <NFT_Title>
-                {loading ? 'loading...' : nftName !== '' ? nftName : 'loading...'}
+                {loading ? 'loading...' : assestName !== '' ? assestName : 'loading...'}
               </NFT_Title>
               <NFT_Title_sub>
-                {loading ? 'loading...' : assestName !== '' ? assestName : 'loading...'}
+                {loading ? 'loading...' : nftName !== '' ? nftName : 'loading...'}
               </NFT_Title_sub>
               {localStorage.getItem('selectedTheme') == 'Day' ? (
                 <Stack>
@@ -336,14 +336,14 @@ export default function NftDetails({ contract, id, changeNFT, setOpenPopup, flag
                       cursor: 'pointer',
                     },
                   }}>
-                  <ListItemText sx={{ opacity: 0.5, fontSize: '40px' }} align="left">
-                    Date
+                  <ListItemText sx={{ opacity: 0.5, fontSize: 4 }} align="left">
+                    <p style={{ fontSize: '10px' }}>Date </p>
                   </ListItemText>
                   <ListItemText variant="tranfer_title" style={{ opacity: 0.5 }} align="left">
-                    From
+                    <p style={{ fontSize: '10px' }}>From </p>
                   </ListItemText>
                   <ListItemText variant="tranfer_title" style={{ opacity: 0.5 }} align="left">
-                    To
+                    <p style={{ fontSize: '10px' }}>To </p>
                   </ListItemText>
                 </ListItem>
                 {tokenHistory.map((object, index) => (

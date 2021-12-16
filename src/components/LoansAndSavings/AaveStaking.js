@@ -22,6 +22,7 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { useWeb3React } from '@web3-react/core';
 
 export default function AaveStaking({ accountAddress }) {
   //varaible for AaveV2
@@ -43,22 +44,21 @@ export default function AaveStaking({ accountAddress }) {
   const [AaveLiquidityEth, setAaveLiquidityEth] = useState();
   const [AaveStkABPTImage, setAaveStkABPTImage] = useState();
 
-  //get the web3 instance to interact with contract
-  async function loadWeb3() {
-    if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum);
-      await window.ethereum.enable();
-    } else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider);
-    } else {
-      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
-    }
+  //get useWeb3React hook
+  const { account, activate, active, chainId, connector, deactivate, error, provider, setError } =
+    useWeb3React();
+
+  //logic implementing for web3 provider connection using web3 React hook
+  async function getWeb3() {
+    const provider = await connector.getProvider();
+    const web3 = await new Web3(provider);
+    return web3;
   }
 
   //get the Aave Contract instance
   async function getAaveContractInstance(contractAddress) {
-    await loadWeb3();
-    const { web3 } = window;
+    //get the web3 provider instance
+    const web3 = await getWeb3();
     const AaveStakingContract = new web3.eth.Contract(AaveStakingABI, contractAddress);
     return AaveStakingContract;
   }
@@ -67,7 +67,6 @@ export default function AaveStaking({ accountAddress }) {
   async function checkAaveStake(accountAddress, contractAddress) {
     const AaveStakingContract = await getAaveContractInstance(contractAddress); //new web3.eth.Contract(AaveStakingABI, contractAddress);
     const AaveBalaceAmount = await AaveStakingContract.methods.balanceOf(accountAddress).call();
-    // console.log('AaveStakingContract-', AaveStakingContract)
     return AaveBalaceAmount;
   }
 
@@ -224,7 +223,7 @@ export default function AaveStaking({ accountAddress }) {
             style={{
               background: 'transparent',
               marginRight: '1px',
-              color: 'white',
+              color: 'black',
               width: '100%',
               border: '1px',
               borderColor: 'black',
@@ -278,9 +277,9 @@ export default function AaveStaking({ accountAddress }) {
                 <br />
                 Liquidity &nbsp;&nbsp;&nbsp; {AaveLiquidityEth}
                 <br />
-                Protocol &nbsp;&nbsp;&nbsp;&nbsp; Ethereum
+                Protocol &nbsp;&nbsp;&nbsp;&nbsp; Aave
                 <br />
-                Chain &nbsp;&nbsp;&nbsp;&nbsp; Aave
+                Chain &nbsp;&nbsp;&nbsp;&nbsp; Ethereum
                 <br />
                 {parseInt(AaveStkABPTAmountUSD) ? (
                   <React.Fragment>

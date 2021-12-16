@@ -12,7 +12,7 @@ import { Button } from '@material-ui/core';
 //   background: theme.palette.menu.backgorundColor_wallet_secondary,
 // }));
 
-export default function Popup(props) {
+export default function PopupMobile(props) {
   const { title, children, openPopup, setOpenPopup } = props;
   const [Theme_NFT, setTheme_NFT] = useState(localStorage.getItem('selectedTheme'));
   const useStyles = makeStyles((theme) => ({
@@ -24,19 +24,16 @@ export default function Popup(props) {
                 ? theme.palette.nft_light.NFT_popup_background
                 : theme.palette.nft_dark.NFT_popup_background,
             // background: 'rgba(255, 255, 255, 0.9)',
-            minWidth: '1110px',
-            minHeight: '595px',
             mixBlendMode: 'normal',
             // backdropFilter: 'blur(20px)',
             boxShadow: '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',
             borderRadius: '10px',
             overflow: 'visible',
             opacity: 0.9,
+            width: '100%',
           }
         : {
             background: '#0B0E1D',
-            minWidth: '1110px',
-            minHeight: '595px',
             mixBlendMode: 'normal',
             // backdropFilter: 'blur(20px)',
             boxShadow: '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',
@@ -46,13 +43,6 @@ export default function Popup(props) {
           },
     dialogTitle: {
       marginTop: '3px',
-    },
-    outer: {
-      background: 'rgba(68, 83, 173, 0.1)',
-      mixBlendMode: 'normal',
-      backdropFilter: 'blur(8px)',
-      boxShadow: '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',
-      borderRadius: '10px',
     },
     close: {
       border: '0px',
@@ -69,12 +59,7 @@ export default function Popup(props) {
     setOpenPopup(false);
   }
   return (
-    <Dialog
-      open={openPopup}
-      onClose={handleClose}
-      maxWidth="md"
-      sx={{}}
-      classes={{ container: classes.outer, paper: classes.dialogWrapper }}>
+    <Dialog open={openPopup} onClose={handleClose} classes={{ paper: classes.dialogWrapper }}>
       {/* <DialogTitle className={classes.dialogTitle}>
         <div style={{ display: 'flex' }}>
           <Typography

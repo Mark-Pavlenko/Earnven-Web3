@@ -14,6 +14,7 @@ export default function NFT({ changeTheme }) {
   const [flag_data, setflag_data] = useState([]);
   const [flag_theme, setflagtheme] = useState('');
   const [nftData, setnftData] = useState([]);
+  const [halfNFTdata, sethalfNFTdata] = useState([]);
   let flag = '';
   useEffect(() => {
     async function getData() {
@@ -87,6 +88,17 @@ export default function NFT({ changeTheme }) {
             console.log('sathyain NFTdata', NFTData);
           }
           setnftData(NFTData);
+          // let halfdata = [];
+          // for (var k = 0; k < NFTData.length / 2; k++) {
+          //   let newData = {
+          //     token: temp[k].token,
+          //     name: temp[k].name,
+          //     address: temp[k].address,
+          //   };
+          //   halfdata.push(newData);
+          // }
+          // sethalfNFTdata(halfdata);
+          // console.log('half data', halfNFTdata);
           let lFtdata = JSON.stringify(NFTData);
           localStorage.setItem('nftdata', lFtdata);
           const finalObject = [];
@@ -117,26 +129,23 @@ export default function NFT({ changeTheme }) {
   }, [changeTheme]);
   return (
     <>
-      <NftNetworth changeTheme={changeTheme} />
+      <div>
+        <NftNetworth changeTheme={changeTheme} />
+      </div>
       {flag_data.length == 0 ? (
         <NoNft changeTheme={changeTheme} />
       ) : (
-        <Page>
-          <Container sx={{ marginLeft: '-0.6rem' }}>
+        <div>
+          <div>
             {data === null ? (
               <div>
                 <p>Loading</p>
               </div>
             ) : (
-              <NftGroup
-                style={{ width: '100%' }}
-                changeTheme={changeTheme}
-                nftData={data}
-                NFTDATA={nftData}
-              />
+              <NftGroup changeTheme={changeTheme} nftData={data} NFTDATA={nftData} />
             )}
-          </Container>
-        </Page>
+          </div>
+        </div>
       )}
     </>
   );
