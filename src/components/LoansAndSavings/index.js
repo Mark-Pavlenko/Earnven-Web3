@@ -408,27 +408,56 @@ export default function Index({ accountAddress }) {
               textAlign: 'left',
               wordBreak: 'break-word',
             }}>
+            <div style={{ display: 'flex' }}>
+              {object.imageData.map((obj) => (
+                <div style={{ display: 'flex', marginLeft: '-10px' }}>
+                  <img
+                    src={obj}
+                    alt="noimage"
+                    style={{ maxWidth: '100%', maxHeight: '100%' }}
+                    width="30px"
+                    height="30px"></img>
+                  {/* <>${obj.symbol}-</> */}
+                </div>
+              ))}
+            </div>
             {object.tokens.map((obj) => (
               <>
-                <>${obj.symbol}-</>
+                <>{obj.symbol}-</>
               </>
             ))}
-            {object.tokens.map((obj) => (
-              <>
-                <>{parseFloat(obj.balance).toFixed(2)}&nbsp;+</>
-              </>
-            ))}
+            <div style={{ display: 'flex', width: '300px' }}>
+              <p>Value</p>
+              <>&nbsp;-&nbsp;{parseFloat(object.priceSum).toFixed(2)}&nbsp;USD</>
+            </div>
+            <div style={{ display: 'flex', width: '300px' }}>
+              <p>LP price</p>
+              <>&nbsp;-&nbsp;{parseFloat(object.price).toFixed(2)}&nbsp;USD</>
+            </div>
+            <div style={{ display: 'flex', width: '300px' }}>
+              <p>LP balance</p>
+              <>&nbsp;-&nbsp;{parseFloat(object.balance).toFixed(3)}&nbsp;</>
+            </div>
+            <div style={{ display: 'flex', width: '300px' }}>
+              <p>Liquidity</p>
+              <>&nbsp;-&nbsp;{parseFloat(object.liquidity).toFixed(2)}&nbsp;</>
+            </div>
+            <div style={{ display: 'flex', width: '300px' }}>
+              <p>Chain</p>
+              <>&nbsp;-&nbsp;Ethereum&nbsp;</>
+            </div>
+            <div style={{ display: 'flex', width: '300px' }}>
+              <p>Protocol</p>
+              <>&nbsp;-&nbsp;Balancer-V1&nbsp;</>
+            </div>
+            {/* <>
+              <>&nbsp;{parseFloat(object.totalInvestment).toFixed(2)}&nbsp;USD</>
+            </> */}
           </div>
-
-          {/* <div style={{ display: 'inline-block', width: '10%' }}>
-            {object.value} ${object.symbol}
-          </div> */}
-
-          <div
+          {/* <div
             style={{ display: 'inline-block', width: '30%', fontSize: '15px', marginLeft: '20px' }}>
-            {object.totalInvestment} USD
-          </div>
-          {/* <hr style={{ width: '30%' }} /> */}
+            {parseFloat(object.price).toFixed(2)} USD
+          </div> */}
         </div>
       </Tooltip>
     ));
@@ -923,8 +952,13 @@ export default function Index({ accountAddress }) {
                             symbol
                             balance
                           }
+                          tokensList
                           totalShares
                           liquidity
+                          cap
+                          tokensCount
+                          totalSwapVolume
+                          tx
                         }
                       }
                       
@@ -946,9 +980,41 @@ export default function Index({ accountAddress }) {
               object.totalInvestment = parseFloat(
                 (res[i].poolId.liquidity / res[i].poolId.totalShares) * res[i].balance
               ).toFixed(2);
+              object.price = object.totalInvestment / res[i].balance;
+              object.tokenList = res[i].poolId.tokensList;
               if (object.totalInvestment > 0) {
                 tot += parseFloat(object.totalInvestment).toFixed(2);
                 pools.push(object);
+                let Images = [];
+                let CurrentPrice = [];
+                let TokenPoolPrice = [];
+                let sum = 0;
+                for (var k = 0; k < object.tokenList.length; k++) {
+                  await axios
+                    .get(
+                      `https://api.coingecko.com/api/v3/coins/ethereum/contract/${object.tokenList[k]}`
+                    )
+                    .then(async ({ data }) => {
+                      CurrentPrice.push(data.market_data.current_price.usd);
+                      CurrentPrice.push(object.tokenList[k]);
+                      for (var l = 0; l < object.tokenList.length; l++) {
+                        if (data.symbol.toLowerCase() == object.tokens[l].symbol.toLowerCase()) {
+                          TokenPoolPrice.push(
+                            data.market_data.current_price.usd * object.tokens[l].balance
+                          );
+                          sum = sum + data.market_data.current_price.usd * object.tokens[l].balance;
+                        }
+                      }
+                      Images.push(data.image.large);
+                    })
+                    .catch((err) => {
+                      console.log('error in fetching', err);
+                    });
+                }
+                object.imageData = Images;
+                object.currentPrice = CurrentPrice;
+                object.tokenPoolPrice = TokenPoolPrice;
+                object.priceSum = sum;
               }
             }
             pools.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
