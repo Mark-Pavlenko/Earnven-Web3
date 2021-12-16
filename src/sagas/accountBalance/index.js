@@ -14,13 +14,14 @@ function* getAccountBalanceSagaWorker(accountAddress) {
   // console.log('saga accountAddress', accountAddress);
 
   const web3 = new Web3();
+  console.log('web3', web3);
 
   yield put({ type: actionTypes.SET_ACCOUNT_LOADER, payload: true });
   const { data } = yield call(API.getAccountBalance, accountAddress.payload);
 
   yield put({ type: actionTypes.SET_ACCOUNT_LOADER, payload: false });
 
-  // console.log('account balance saga', data);
+  console.log('account balance saga', data);
 
   let total = 0;
 

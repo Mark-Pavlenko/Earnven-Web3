@@ -9,6 +9,7 @@ import darkTheme from '../../assets/images/darkTheme.jpg';
 import lightTheme from '../../assets/images/lightTheme.jpg';
 import ThemeConfig from '../../theme/index';
 import lightDashboard from '../../assets/images/lightDashboard.jpg';
+
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;
 

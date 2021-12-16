@@ -1,8 +1,7 @@
 import GET_THEME from '../../constants/actionTypes';
-import dispatch from 'react-redux';
 
 const initialState = {
-  isLightTheme: true,
+  isLightTheme: localStorage.getItem('selectedTheme') == 'Day',
 };
 
 export const themeReducer = (state = initialState, action) => {

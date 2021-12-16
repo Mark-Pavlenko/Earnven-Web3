@@ -34,7 +34,6 @@ export const MainBlock = styled(Box)`
 `;
 
 export const TokenTableLightContainer = styled(TableContainer)`
-  //background:;
   background: ${(props) => (props.isLightTheme ? '#DEEAFF' : '#10142D')};
   mix-blend-mode: normal;
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
@@ -66,7 +65,7 @@ export const TokensTableHeader = styled(TableCell)`
   color: ${(props) => (props.isLightTheme ? '#6E6E6E' : '#ffffff')};
   font-family: 'Saira', sans-serif;
   font-style: normal;
-  font-weight: 600;
+  font-weight: ${(props) => (props.isLightTheme ? 'normal' : 'bold')};
   font-size: 10px;
   line-height: 16px;
   align-items: center;
@@ -74,6 +73,7 @@ export const TokensTableHeader = styled(TableCell)`
 
 export const TokensTableCell = styled(TableCell)`
   color: ${(props) => (props.isLightTheme ? ' #1E1E20' : '#ffffff')};
+  font-weight: ${(props) => (props.isLightTheme ? 'normal' : 'bold')};
 `;
 
 export const TokenImg = styled.img`
@@ -107,7 +107,7 @@ export const TokenTableCellValue = styled(TableCell)`
   color: ${(props) => (props.isLightTheme ? ' #1e1e20' : '#ffffff')};
   font-weight: ${(props) => (props.isLightTheme ? 'normal' : 'bold')};
   font-family: 'Saira', sans-serif;
-  font-style: normal;
+  //font-style: normal;
   //font-weight: normal;
   font-size: 14px;
   line-height: 22px;

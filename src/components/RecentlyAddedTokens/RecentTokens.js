@@ -8,7 +8,7 @@
  1.0               8/Nov/2021                   Initial Development            Prabhakaran.R
 
  ******************************************************************************************************/
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { createStyles } from '@material-ui/styles';
 import { Table, TableBody, TableHead, TableRow } from '@material-ui/core';
@@ -74,9 +74,6 @@ export default function RecentTokens({ themeType }) {
   // console.log('themeRecentTokens', themeRecentTokens);
 
   console.log(' set light theme', themeType);
-
-  const themeMode = useContext(ThemeContext);
-  console.log('current theme mode', themeMode);
 
   const [recentTokenData, setRecentTokenData] = useState([]);
   const [Loading, setLoading] = useState(false);
