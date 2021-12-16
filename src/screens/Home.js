@@ -3,7 +3,7 @@ import RecentTokens from '../components/RecentlyAddedTokens/RecentTokens';
 import TwitterAPI from '../components/twitterAPI/TwitterAPI';
 import { useSelector } from 'react-redux';
 
-export default function Home({ setTheme }) {
+export default function Home() {
   const themeType = useSelector((state) => state.themeReducer.isLightTheme);
 
   return (

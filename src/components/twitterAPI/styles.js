@@ -4,18 +4,35 @@ import ReactPlayer from 'react-player';
 export const MainLayout = styled.div`
   display: grid;
   grid-template-columns: 65% 35%;
-  margin-top: 35px;
+
+  @media screen and (max-width: 900px) {
+    grid-template-columns: none !important;
+  }
+
+  @media screen and (min-width: 910px) and (max-width: 1200px) { {
+    grid-template-columns: 50% 50%;
+  }
 `;
 
-export const GridTweetsNewsBlock = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  max-width: 100%;
+export const GridTweetsNewsRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+
+  @media screen and (max-width: 900px) {
+    flex-direction: column;
+  }
 `;
 
 export const TweetsNewsColumns = styled.div`
-  align-self: center;
-  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  @media screen and (max-width: 900px) {
+    margin-top: 35px;
+  }
 `;
 
 export const TweetBlock = styled.div`
@@ -32,6 +49,12 @@ export const TweetBlock = styled.div`
   backdrop-filter: blur(35px);
   border-radius: 10px;
   color: black;
+
+  @media screen and (max-width: 900px) {
+    width: 365px;
+    margin-left: 5px;
+    //background-color: red;
+  }
 `;
 
 export const TweetBlockHeader = styled.div`
@@ -90,6 +113,10 @@ export const PlayerLayout = styled.div`
   width: 365px;
   height: 150px;
   margin: 0 auto;
+
+  @media screen and (max-width: 900px) {
+    width: 300px;
+  }
 `;
 
 export const Player = styled(ReactPlayer)`
@@ -120,6 +147,14 @@ export const LoadMoreTweetsBtn = styled.button`
 export const TwitterWidget = styled.div`
   background-color: ${(props) => (props.isLightTheme ? '#e3efff' : '#10142D')};
   border-radius: 10px;
+  mix-blend-mode: normal;
+  box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(35px);
+
+  @media screen and (max-width: 900px) {
+    width: 365px;
+    margin-left: 5px;
+  }
 `;
 
 export const TwitterWidgetTitle = styled.p`

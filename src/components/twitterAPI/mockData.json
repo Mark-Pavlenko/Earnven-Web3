@@ -1,6 +1,6 @@
 [
   {
-    "username": "First (column1)",
+    "username": "First   ",
     "profile_image_url": "https://pbs.twimg.com/profile_images/991746793946824705/lfz4pg9j_normal.jpg",
     "url": "https://t.co/OLJgM3U8e4",
     "public_metrics": {
@@ -16,7 +16,7 @@
     "text": "This is some text This is some text This is some text This is some text"
   },
   {
-    "username": "second (column2)",
+    "username": "second  ",
     "profile_image_url": "https://pbs.twimg.com/profile_images/991746793946824705/lfz4pg9j_normal.jpg",
     "url": "https://t.co/OLJgM3U8e4",
     "public_metrics": {
@@ -32,7 +32,7 @@
     "text": "This is some text This is some text This is some text This is some text"
   },
   {
-    "username": "third(column1)",
+    "username": "third  ",
     "profile_image_url": "https://pbs.twimg.com/profile_images/991746793946824705/lfz4pg9j_normal.jpg",
     "url": "https://t.co/OLJgM3U8e4",
     "public_metrics": {
@@ -48,7 +48,7 @@
     "text": "This is some text This is some text This is some text This is some text"
   },
   {
-    "username": "fourth(column2)",
+    "username": "fourth ",
     "profile_image_url": "https://pbs.twimg.com/profile_images/991746793946824705/lfz4pg9j_normal.jpg",
     "url": "https://t.co/OLJgM3U8e4",
     "public_metrics": {
@@ -64,7 +64,7 @@
     "text": "This is some text This is some text This is some text This is some text"
   },
   {
-    "username": "fifth(column1)",
+    "username": "fifth  ",
     "profile_image_url": "https://pbs.twimg.com/profile_images/991746793946824705/lfz4pg9j_normal.jpg",
     "url": "https://t.co/OLJgM3U8e4",
     "public_metrics": {
@@ -80,7 +80,7 @@
     "text": "This is some text This is some text This is some text This is some text"
   },
   {
-    "username": "sixth(column2)",
+    "username": "sixth ",
     "profile_image_url": "https://pbs.twimg.com/profile_images/991746793946824705/lfz4pg9j_normal.jpg",
     "url": "https://t.co/OLJgM3U8e4",
     "public_metrics": {
@@ -96,7 +96,7 @@
     "text": "This is some text This is some text This is some text This is some text"
   },
   {
-    "username": "DeFi_Dad (column1)",
+    "username": "DeFi_Dad   ",
     "profile_image_url": "https://pbs.twimg.com/profile_images/991746793946824705/lfz4pg9j_normal.jpg",
     "url": "https://t.co/OLJgM3U8e4",
     "public_metrics": {
@@ -112,7 +112,7 @@
     "text": "This is some text This is some text This is some text This is some text"
   },
   {
-    "username": "DeFi_Dad_Son 111(column2)",
+    "username": "DeFi_Dad_Son 111 ",
     "profile_image_url": "https://pbs.twimg.com/profile_images/991746793946824705/lfz4pg9j_normal.jpg",
     "url": "https://t.co/OLJgM3U8e4",
     "public_metrics": {
@@ -128,7 +128,7 @@
     "text": "This is some text This is some text This is some text This is some text"
   },
   {
-    "username": "DeFi_Dad 2323(column1)",
+    "username": "DeFi_Dad 232",
     "profile_image_url": "https://pbs.twimg.com/profile_images/991746793946824705/lfz4pg9j_normal.jpg",
     "url": "https://t.co/OLJgM3U8e4",
     "public_metrics": {
@@ -144,7 +144,7 @@
     "text": "This is some text This is some text This is some text This is some text"
   },
   {
-    "username": "last name(column2)",
+    "username": "last name",
     "profile_image_url": "https://pbs.twimg.com/profile_images/991746793946824705/lfz4pg9j_normal.jpg",
     "url": "https://t.co/OLJgM3U8e4",
     "public_metrics": {

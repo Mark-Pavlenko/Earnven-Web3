@@ -8,11 +8,11 @@ const { Buffer } = require('buffer');
 const request = require('request');
 import twitterIcon from '../../assets/icons/twitter.png';
 import mockData from './mockData.json';
-import { useSelector } from 'react-redux';
+import Media from 'react-media';
 
 import {
   MainLayout,
-  GridTweetsNewsBlock,
+  GridTweetsNewsRow,
   TweetsNewsColumns,
   TweetBlock,
   TweetBlockHeader,
@@ -176,80 +176,103 @@ export default function TwitterAPI({ themeType }) {
   };
 
   return (
-    <>
-      {mockData !== undefined && (
-        <MainLayout>
-          <GridTweetsNewsBlock>
-            <TweetsNewsColumns>
-              {firstColumn.slice(0, limit).map((tweet) => {
-                return (
-                  <TweetBlock isLightTheme={themeType}>
-                    <TweetBlockHeader>
-                      <HeaderAvatar src={tweet.profile_image_url} alt="Profile image" />
-                      <HeaderName>{tweet.name}</HeaderName>
-                      <HeaderUsername>@{tweet.username}</HeaderUsername>
+    <Media
+      queries={{
+        small: '(max-width: 599px)',
+        medium: '(min-width: 600px) and (max-width: 1199px)',
+        large: '(min-width: 1200px)',
+      }}>
+      {(matches) => (
+        <>
+          {mockData !== undefined && (
+            <MainLayout>
+              <div>
+                <GridTweetsNewsRow>
+                  {matches.small && (
+                    <TwitterWidget isLightTheme={themeType}>
+                      <TwitterWidgetTitle isLightTheme={themeType}>Our Twitter</TwitterWidgetTitle>
                       <a
-                        href={`https://twitter.com/anyuser/status/${tweet.pinned_tweet_id}`}
-                        target="_blank">
-                        <img src={twitterIcon} alt="fireSpot" />
+                        className="twitter-timeline"
+                        href="https://twitter.com/Earnvenfinance?ref_src=twsrc%5Etfw">
+                        Tweets by Earnvenfinance
                       </a>
-                    </TweetBlockHeader>
-                    <TweetDescription isLightTheme={themeType}>{tweet.text}</TweetDescription>
-                    {/*<YouTube videoId="0QRlXt_yL8I" style={{ width: '20% !important' }} />*/}
-                    <PlayerLayout>
-                      <Player
-                        url="https://www.youtube.com/watch?v=0QRlXt_yL8I"
-                        width="100%"
-                        height="100%"
-                      />
-                    </PlayerLayout>
-                  </TweetBlock>
-                );
-              })}
-            </TweetsNewsColumns>
-            <TweetsNewsColumns>
-              {secondColumn.slice(0, limit).map((tweet) => {
-                return (
-                  <TweetBlock isLightTheme={themeType}>
-                    <TweetBlockHeader>
-                      <HeaderAvatar src={tweet.profile_image_url} alt="Profile image" />
-                      <HeaderName>{tweet.name}</HeaderName>
-                      <HeaderUsername>@{tweet.username}</HeaderUsername>
-                      <a
-                        href={`https://twitter.com/anyuser/status/${tweet.pinned_tweet_id}`}
-                        target="_blank">
-                        <img src={twitterIcon} alt="fireSpot" />
-                      </a>
-                    </TweetBlockHeader>
-                    <TweetDescription isLightTheme={themeType}>{tweet.text}</TweetDescription>
-                    {/*<YouTube videoId="0QRlXt_yL8I" style={{ width: '20% !important' }} />*/}
-                    <PlayerLayout>
-                      <Player
-                        url="https://www.youtube.com/watch?v=0QRlXt_yL8I"
-                        width="100%"
-                        height="100%"
-                      />
-                    </PlayerLayout>
-                  </TweetBlock>
-                );
-              })}
-            </TweetsNewsColumns>
-          </GridTweetsNewsBlock>
-          <TwitterWidget isLightTheme={themeType}>
-            <TwitterWidgetTitle isLightTheme={themeType}>Our Twitter</TwitterWidgetTitle>
-            <a
-              className="twitter-timeline"
-              href="https://twitter.com/Earnvenfinance?ref_src=twsrc%5Etfw">
-              Tweets by Earnvenfinance
-            </a>
-          </TwitterWidget>
-          {!btnDisabled && (
-            <LoadMoreTweetsBtn onClick={loadMoreTweets} isLightTheme={themeType}>
-              Load more
-            </LoadMoreTweetsBtn>
+                    </TwitterWidget>
+                  )}
+                  <TweetsNewsColumns>
+                    {firstColumn.slice(0, limit).map((tweet) => {
+                      return (
+                        <TweetBlock isLightTheme={themeType}>
+                          <TweetBlockHeader>
+                            <HeaderAvatar src={tweet.profile_image_url} alt="Profile image" />
+                            <HeaderName>{tweet.name}</HeaderName>
+                            <HeaderUsername>@{tweet.username}</HeaderUsername>
+                            <a
+                              href={`https://twitter.com/anyuser/status/${tweet.pinned_tweet_id}`}
+                              target="_blank">
+                              <img src={twitterIcon} alt="fireSpot" />
+                            </a>
+                          </TweetBlockHeader>
+                          <TweetDescription isLightTheme={themeType}>{tweet.text}</TweetDescription>
+                          {/*<YouTube videoId="0QRlXt_yL8I" style={{ width: '20% !important' }} />*/}
+                          <PlayerLayout>
+                            <Player
+                              url="https://www.youtube.com/watch?v=0QRlXt_yL8I"
+                              width="100%"
+                              height="100%"
+                            />
+                          </PlayerLayout>
+                        </TweetBlock>
+                      );
+                    })}
+                  </TweetsNewsColumns>
+                  <TweetsNewsColumns>
+                    {secondColumn.slice(0, limit).map((tweet) => {
+                      return (
+                        <TweetBlock isLightTheme={themeType}>
+                          <TweetBlockHeader>
+                            <HeaderAvatar src={tweet.profile_image_url} alt="Profile image" />
+                            <HeaderName>{tweet.name}</HeaderName>
+                            <HeaderUsername>@{tweet.username}</HeaderUsername>
+                            <a
+                              href={`https://twitter.com/anyuser/status/${tweet.pinned_tweet_id}`}
+                              target="_blank">
+                              <img src={twitterIcon} alt="fireSpot" />
+                            </a>
+                          </TweetBlockHeader>
+                          <TweetDescription isLightTheme={themeType}>{tweet.text}</TweetDescription>
+                          {/*<YouTube videoId="0QRlXt_yL8I" style={{ width: '20% !important' }} />*/}
+                          <PlayerLayout>
+                            <Player
+                              url="https://www.youtube.com/watch?v=0QRlXt_yL8I"
+                              width="100%"
+                              height="100%"
+                            />
+                          </PlayerLayout>
+                        </TweetBlock>
+                      );
+                    })}
+                  </TweetsNewsColumns>
+                </GridTweetsNewsRow>
+                {!btnDisabled && (
+                  <LoadMoreTweetsBtn onClick={loadMoreTweets} isLightTheme={themeType}>
+                    Load more
+                  </LoadMoreTweetsBtn>
+                )}
+              </div>
+              {matches.large && (
+                <TwitterWidget isLightTheme={themeType}>
+                  <TwitterWidgetTitle isLightTheme={themeType}>Our Twitter</TwitterWidgetTitle>
+                  <a
+                    className="twitter-timeline"
+                    href="https://twitter.com/Earnvenfinance?ref_src=twsrc%5Etfw">
+                    Tweets by Earnvenfinance
+                  </a>
+                </TwitterWidget>
+              )}
+            </MainLayout>
           )}
-        </MainLayout>
+        </>
       )}
-    </>
+    </Media>
   );
 }
