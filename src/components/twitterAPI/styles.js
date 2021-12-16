@@ -4,13 +4,11 @@ import ReactPlayer from 'react-player';
 export const MainLayout = styled.div`
   display: grid;
   grid-template-columns: 65% 35%;
+  margin-top: 35px;
 
-  @media screen and (max-width: 900px) {
-    grid-template-columns: none !important;
-  }
-
-  @media screen and (min-width: 910px) and (max-width: 1200px) { {
-    grid-template-columns: 50% 50%;
+  @media screen and (min-width: 710px) and (max-width: 1600px) {
+    display: grid;
+    grid-template-columns: 100%;
   }
 `;
 
@@ -20,8 +18,8 @@ export const GridTweetsNewsRow = styled.div`
   flex-wrap: wrap;
   width: 100%;
 
-  @media screen and (max-width: 900px) {
-    //flex-direction: column;
+  @media screen and (max-width: 400px) {
+    width: 400px;
   }
 `;
 
@@ -30,8 +28,11 @@ export const TweetsNewsColumns = styled.div`
   flex-direction: column;
   flex: 1;
 
-  @media screen and (max-width: 900px) {
-    margin-top: 35px;
+  @media screen and (min-width: 1000px) and (max-width: 1600px) {
+    flex: 0;
+    display: grid;
+    grid-template-columns: 50% 20% 30%;
+    column-gap: 30px;
   }
 `;
 
@@ -50,10 +51,14 @@ export const TweetBlock = styled.div`
   border-radius: 10px;
   color: black;
 
-  @media screen and (max-width: 900px) {
-    width: 365px;
+  @media screen and (max-width: 400px) {
+    width: 390px;
     margin-left: 5px;
-    //background-color: red;
+    // background-color: red;
+  }
+
+  @media screen and (min-width: 710px) and (max-width: 900px) {
+    width: 100vw;
   }
 `;
 
@@ -111,11 +116,15 @@ export const TweetDescription = styled.p`
 export const PlayerLayout = styled.div`
   position: relative;
   width: 365px;
-  height: 150px;
+  height: 190px;
   margin: 0 auto;
 
   @media screen and (max-width: 900px) {
     width: 300px;
+  }
+
+  @media screen and (min-width: 710px) and (max-width: 900px) {
+    width: 450px;
   }
 `;
 
@@ -142,6 +151,14 @@ export const LoadMoreTweetsBtn = styled.button`
   border: none !important;
   border-radius: 10px;
   cursor: pointer;
+
+  @media screen and (max-width: 1600px) {
+    margin-bottom: 30px;
+  }
+
+  @media screen and (max-width: 400px) {
+    margin-left: 120px;
+  }
 `;
 
 export const TwitterWidget = styled.div`
@@ -150,17 +167,23 @@ export const TwitterWidget = styled.div`
   mix-blend-mode: normal;
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(35px);
-  width: 100% !important;
+
   @media screen and (min-width: 1700px) {
     iframe {
       width: 28.6vw !important;
     }
   }
 
-  @media screen and (min-width: 710px) and (max-width: 900px) {
-    //margin-top: 30px;
-    margin: 0 auto;
-    width: 98% !important;
+  @media screen and (max-width: 400px) {
+    margin-left: 10px;
+  }
+  @media screen and (max-width: 1025px) {
+    width: 100vw;
+    margin-bottom: 40px;
+  }
+
+  @media screen and (min-width: 1026px) and (max-width: 1600px) {
+    width: 75vw;
   }
 `;
 
@@ -172,4 +195,8 @@ export const TwitterWidgetTitle = styled.p`
   font-size: 20px;
   line-height: 31px;
   color: ${(props) => (props.isLightTheme ? '#000000' : '#ffffff')};
+
+  @media screen and (max-width: 1600px) {
+    padding-top: 20px;
+  }
 `;
