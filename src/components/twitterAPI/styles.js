@@ -21,7 +21,7 @@ export const GridTweetsNewsRow = styled.div`
   width: 100%;
 
   @media screen and (max-width: 900px) {
-    flex-direction: column;
+    //flex-direction: column;
   }
 `;
 
@@ -150,10 +150,17 @@ export const TwitterWidget = styled.div`
   mix-blend-mode: normal;
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(35px);
+  width: 100% !important;
+  @media screen and (min-width: 1700px) {
+    iframe {
+      width: 28.6vw !important;
+    }
+  }
 
-  @media screen and (max-width: 900px) {
-    width: 365px;
-    margin-left: 5px;
+  @media screen and (min-width: 710px) and (max-width: 900px) {
+    //margin-top: 30px;
+    margin: 0 auto;
+    width: 98% !important;
   }
 `;
 

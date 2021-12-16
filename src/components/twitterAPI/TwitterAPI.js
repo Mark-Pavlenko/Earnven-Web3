@@ -187,6 +187,16 @@ export default function TwitterAPI({ themeType }) {
           {mockData !== undefined && (
             <MainLayout>
               <div>
+                {matches.medium && (
+                  <TwitterWidget isLightTheme={themeType}>
+                    <TwitterWidgetTitle isLightTheme={themeType}>Our Twitter</TwitterWidgetTitle>
+                    <a
+                      className="twitter-timeline"
+                      href="https://twitter.com/Earnvenfinance?ref_src=twsrc%5Etfw">
+                      Tweets by Earnvenfinance
+                    </a>
+                  </TwitterWidget>
+                )}
                 <GridTweetsNewsRow>
                   {matches.small && (
                     <TwitterWidget isLightTheme={themeType}>
