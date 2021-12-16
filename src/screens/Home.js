@@ -9,7 +9,7 @@ export default function Home({ setTheme }) {
   return (
     <>
       <RecentTokens themeType={themeType} />
-      <TwitterAPI />
+      <TwitterAPI themeType={themeType} />
     </>
   );
 }

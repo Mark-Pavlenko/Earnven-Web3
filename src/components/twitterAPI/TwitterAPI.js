@@ -8,6 +8,7 @@ const { Buffer } = require('buffer');
 const request = require('request');
 import twitterIcon from '../../assets/icons/twitter.png';
 import mockData from './mockData.json';
+import { useSelector } from 'react-redux';
 
 import {
   MainLayout,
@@ -35,9 +36,11 @@ const streamAvatar =
 const streamTweet =
   'https://cmctoken-proxy.herokuapp.com/https://api.twitter.com/2/users/991745162274467840/tweets?expansions=author_id&tweet.fields=created_at,author_id,conversation_id&media.fields=media_key,url&user.fields=username&max_results=20';
 
-export default function TwitterAPI() {
+export default function TwitterAPI({ themeType }) {
   const [tweetAvatarContent, setTweetAvatarContent] = useState();
   const [tweetDataContent, setTweetDataContent] = useState();
+
+  console.log('isLightTheme in TwitterAPI comp', themeType);
 
   const [limit, setLimit] = useState(2);
   const [btnDisabled, setBtnDisabled] = useState(false);
@@ -180,7 +183,7 @@ export default function TwitterAPI() {
             <TweetsNewsColumns>
               {firstColumn.slice(0, limit).map((tweet) => {
                 return (
-                  <TweetBlock>
+                  <TweetBlock isLightTheme={themeType}>
                     <TweetBlockHeader>
                       <HeaderAvatar src={tweet.profile_image_url} alt="Profile image" />
                       <HeaderName>{tweet.name}</HeaderName>
@@ -191,7 +194,7 @@ export default function TwitterAPI() {
                         <img src={twitterIcon} alt="fireSpot" />
                       </a>
                     </TweetBlockHeader>
-                    <TweetDescription>{tweet.text}</TweetDescription>
+                    <TweetDescription isLightTheme={themeType}>{tweet.text}</TweetDescription>
                     {/*<YouTube videoId="0QRlXt_yL8I" style={{ width: '20% !important' }} />*/}
                     <PlayerLayout>
                       <Player
@@ -207,7 +210,7 @@ export default function TwitterAPI() {
             <TweetsNewsColumns>
               {secondColumn.slice(0, limit).map((tweet) => {
                 return (
-                  <TweetBlock>
+                  <TweetBlock isLightTheme={themeType}>
                     <TweetBlockHeader>
                       <HeaderAvatar src={tweet.profile_image_url} alt="Profile image" />
                       <HeaderName>{tweet.name}</HeaderName>
@@ -218,7 +221,7 @@ export default function TwitterAPI() {
                         <img src={twitterIcon} alt="fireSpot" />
                       </a>
                     </TweetBlockHeader>
-                    <TweetDescription>{tweet.text}</TweetDescription>
+                    <TweetDescription isLightTheme={themeType}>{tweet.text}</TweetDescription>
                     {/*<YouTube videoId="0QRlXt_yL8I" style={{ width: '20% !important' }} />*/}
                     <PlayerLayout>
                       <Player
@@ -232,8 +235,8 @@ export default function TwitterAPI() {
               })}
             </TweetsNewsColumns>
           </GridTweetsNewsBlock>
-          <TwitterWidget>
-            <TwitterWidgetTitle>Our Twitter</TwitterWidgetTitle>
+          <TwitterWidget isLightTheme={themeType}>
+            <TwitterWidgetTitle isLightTheme={themeType}>Our Twitter</TwitterWidgetTitle>
             <a
               className="twitter-timeline"
               href="https://twitter.com/Earnvenfinance?ref_src=twsrc%5Etfw">
@@ -241,7 +244,9 @@ export default function TwitterAPI() {
             </a>
           </TwitterWidget>
           {!btnDisabled && (
-            <LoadMoreTweetsBtn onClick={loadMoreTweets}>Load more</LoadMoreTweetsBtn>
+            <LoadMoreTweetsBtn onClick={loadMoreTweets} isLightTheme={themeType}>
+              Load more
+            </LoadMoreTweetsBtn>
           )}
         </MainLayout>
       )}

@@ -26,8 +26,7 @@ export const TweetBlock = styled.div`
   padding-bottom: 5px;
   width: 475px;
   height: 325px;
-  background: #e5efff;
-  //background: red;
+  background-color: ${(props) => (props.isLightTheme ? '#e5efff' : '#10142D')};
   mix-blend-mode: normal;
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(35px);
@@ -61,7 +60,7 @@ export const HeaderAvatar = styled.img`
 `;
 
 export const HeaderName = styled.p`
-  color: #4453ad;
+  color: #8f86ff;
   font-family: 'Saira', sans-serif;
   font-weight: 550;
   font-size: 18px;
@@ -83,6 +82,7 @@ export const TweetDescription = styled.p`
   font-style: normal;
   font-weight: normal;
   padding: 0 55px 0 55px;
+  color: ${(props) => (props.isLightTheme ? '#000000' : '#ffffff')};
 `;
 
 export const PlayerLayout = styled.div`
@@ -110,18 +110,16 @@ export const LoadMoreTweetsBtn = styled.button`
   font-style: normal;
   font-weight: 600;
   line-height: 22px;
-  background: #ffffff;
-  color: #4453ad;
+  background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#8F86FF')};
+  color: ${(props) => (props.isLightTheme ? '#4453ad' : '#ffffff')};
   border: none !important;
   border-radius: 10px;
   cursor: pointer;
 `;
 
 export const TwitterWidget = styled.div`
-  background: #e3efff;
-  //background: #ffffff;
+  background-color: ${(props) => (props.isLightTheme ? '#e3efff' : '#10142D')};
   border-radius: 10px;
-  //margin-top: 30px;
 `;
 
 export const TwitterWidgetTitle = styled.p`
@@ -131,4 +129,5 @@ export const TwitterWidgetTitle = styled.p`
   font-weight: 500;
   font-size: 20px;
   line-height: 31px;
+  color: ${(props) => (props.isLightTheme ? '#000000' : '#ffffff')};
 `;
