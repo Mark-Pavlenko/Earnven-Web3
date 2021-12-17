@@ -25,6 +25,7 @@ import {
   LoadMoreTweetsBtn,
   TwitterWidget,
   TwitterWidgetTitle,
+  TestLayout,
 } from './styles';
 
 const TOKEN =
@@ -186,7 +187,7 @@ export default function TwitterAPI({ themeType }) {
         <>
           {mockData !== undefined && (
             <MainLayout>
-              <div>
+              <TestLayout>
                 {matches.medium && (
                   <TwitterWidget isLightTheme={themeType}>
                     <TwitterWidgetTitle isLightTheme={themeType}>Our Twitter</TwitterWidgetTitle>
@@ -268,7 +269,7 @@ export default function TwitterAPI({ themeType }) {
                     Load more
                   </LoadMoreTweetsBtn>
                 )}
-              </div>
+              </TestLayout>
               {matches.large && (
                 <TwitterWidget isLightTheme={themeType}>
                   <TwitterWidgetTitle isLightTheme={themeType}>Our Twitter</TwitterWidgetTitle>

@@ -3,23 +3,43 @@ import ReactPlayer from 'react-player';
 
 export const MainLayout = styled.div`
   display: grid;
-  grid-template-columns: 65% 35%;
+  grid-template-columns: 70% 30%;
   margin-top: 35px;
+  background-color: pink;
+
+  @media screen and (min-width: 1601px) {
+    grid-gap: 8px;
+  }
 
   @media screen and (min-width: 710px) and (max-width: 1600px) {
     display: grid;
     grid-template-columns: 100%;
+    //margin-left: 35px;
   }
+`;
+
+export const TestLayout = styled.div`
+  background-color: yellow;
 `;
 
 export const GridTweetsNewsRow = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  width: 100%;
+  //width: 100%;
+  background-color: red;
 
-  @media screen and (max-width: 400px) {
-    width: 400px;
+  @media screen and (max-width: 709px) {
+    display: grid;
+    grid-template-columns: 100%;
+  }
+
+  @media screen and (min-width: 710px) and (max-width: 1600px) {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    justify-items: center;
+
+    margin-bottom: 30px;
   }
 `;
 
@@ -27,11 +47,16 @@ export const TweetsNewsColumns = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
+  margin-top: 30px;
 
-  @media screen and (min-width: 1000px) and (max-width: 1600px) {
-    flex: 0;
+  @media screen and (max-width: 709px) {
     display: grid;
-    grid-template-columns: 50% 20% 30%;
+    justify-items: center;
+  }
+
+  @media screen and (min-width: 1000px) and (max-width: 1800px) {
+    //flex: 0;
+    display: grid;
     column-gap: 30px;
   }
 `;
@@ -52,7 +77,7 @@ export const TweetBlock = styled.div`
   color: black;
 
   @media screen and (max-width: 400px) {
-    width: 390px;
+    width: 375px;
     margin-left: 5px;
     // background-color: red;
   }
@@ -73,8 +98,8 @@ export const TweetBlockHeader = styled.div`
 
   a:last-of-type {
     margin-left: auto;
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
     margin-right: 40px;
   }
 
@@ -85,6 +110,8 @@ export const TweetBlockHeader = styled.div`
 
 export const HeaderAvatar = styled.img`
   margin-right: 15px;
+  width: 35px;
+  height: 35px;
 `;
 
 export const HeaderName = styled.p`
@@ -151,9 +178,9 @@ export const LoadMoreTweetsBtn = styled.button`
   border: none !important;
   border-radius: 10px;
   cursor: pointer;
+  margin-bottom: 30px;
 
   @media screen and (max-width: 1600px) {
-    margin-bottom: 30px;
   }
 
   @media screen and (max-width: 400px) {
@@ -162,28 +189,41 @@ export const LoadMoreTweetsBtn = styled.button`
 `;
 
 export const TwitterWidget = styled.div`
-  background-color: ${(props) => (props.isLightTheme ? '#e3efff' : '#10142D')};
+  // background-color: ${(props) => (props.isLightTheme ? '#e3efff' : '#10142D')};
+  background-color: orange;
   border-radius: 10px;
   mix-blend-mode: normal;
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(35px);
+  width: 458px;
+
+  @media screen and (max-width: 400px) {
+  }
 
   @media screen and (min-width: 1700px) {
     iframe {
-      width: 28.6vw !important;
+      //width: 28.6vw !important;
     }
   }
 
-  @media screen and (max-width: 400px) {
-    margin-left: 10px;
-  }
-  @media screen and (max-width: 1025px) {
-    width: 100vw;
-    margin-bottom: 40px;
+  @media screen and (max-width: 710px) {
+    width: 100%;
   }
 
-  @media screen and (min-width: 1026px) and (max-width: 1600px) {
-    width: 75vw;
+  @media screen and (min-width: 710px) and (max-width: 1600px) {
+    width: auto;
+    margin-bottom: 40px;
+
+    iframe {
+      //width: 100vw !important;
+    }
+
+    //iframe {
+    //  width: auto;
+    //  display: grid;
+    //  margin: 0 auto !important;
+    //  justify-items: center;
+    //}
   }
 `;
 
