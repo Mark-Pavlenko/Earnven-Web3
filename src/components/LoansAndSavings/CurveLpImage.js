@@ -16,7 +16,7 @@ export default function CurveLpImage(token) {
           let tokens = fetchedTokens.map((token) => ({
             logoURI: data.find((x) => x.symbol.toUpperCase() === token.toUpperCase())
               ? data.find((x) => x.symbol.toUpperCase() === token.toUpperCase()).logoURI
-              : '',
+              : 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png', //get ether symbol
           }));
           setCurveLpTokenImageUrl(tokens);
         });
