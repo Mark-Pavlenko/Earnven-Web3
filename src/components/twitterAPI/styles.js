@@ -3,18 +3,21 @@ import ReactPlayer from 'react-player';
 
 export const MainLayout = styled.div`
   display: grid;
-  grid-template-columns: 70% 30%;
   margin-top: 35px;
   //background-color: pink;
 
   @media screen and (min-width: 1601px) {
-    //grid-gap: 8px;
+    grid-template-columns: 65% 35%;
   }
 
   @media screen and (min-width: 710px) and (max-width: 1600px) {
     display: grid;
     grid-template-columns: 100%;
     //margin-left: 35px;
+  }
+
+  @media screen and (min-width: 2000px) {
+    grid-template-columns: 66% 33%;
   }
 `;
 
@@ -26,20 +29,20 @@ export const GridTweetsNewsRow = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  //width: 100%;
-  //background-color: red;
 
   @media screen and (max-width: 709px) {
     display: grid;
     grid-template-columns: 100%;
   }
 
-  @media screen and (min-width: 710px) and (max-width: 1600px) {
+  @media screen and (min-width: 710px) {
     display: grid;
     grid-template-columns: 50% 50%;
     justify-items: center;
-
     margin-bottom: 30px;
+  }
+
+  @media screen and (min-width: 2000px) {
   }
 `;
 
@@ -47,7 +50,9 @@ export const TweetsNewsColumns = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
-  margin-top: 30px;
+  @media screen and (min-width: 710px) and (max-width: 1600px) {
+    margin-top: 30px;
+  }
 
   @media screen and (min-width: 450px) and (max-width: 709px) {
     display: grid;
@@ -84,6 +89,10 @@ export const TweetBlock = styled.div`
 
   @media screen and (min-width: 710px) and (max-width: 900px) {
     width: 100vw;
+  }
+
+  @media screen and (min-width: 2000px) {
+    width: 90%;
   }
 `;
 
@@ -197,13 +206,8 @@ export const TwitterWidget = styled.div`
   backdrop-filter: blur(35px);
   width: 468px;
 
-  @media screen and (max-width: 400px) {
-  }
-
-  @media screen and (min-width: 1700px) {
-    iframe {
-      //width: 28.6vw !important;
-    }
+  @media screen and (min-width: 1601px) and (max-width: 2000px) {
+    margin-left: 35px;
   }
 
   @media screen and (max-width: 449px) {
@@ -221,13 +225,11 @@ export const TwitterWidget = styled.div`
     iframe {
       //width: 100vw !important;
     }
+  }
 
-    //iframe {
-    //  width: auto;
-    //  display: grid;
-    //  margin: 0 auto !important;
-    //  justify-items: center;
-    //}
+  @media screen and (min-width: 2000px) {
+    width: 100%;
+    margin-left: 20px;
   }
 `;
 
