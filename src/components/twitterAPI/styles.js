@@ -5,10 +5,10 @@ export const MainLayout = styled.div`
   display: grid;
   grid-template-columns: 70% 30%;
   margin-top: 35px;
-  background-color: pink;
+  //background-color: pink;
 
   @media screen and (min-width: 1601px) {
-    grid-gap: 8px;
+    //grid-gap: 8px;
   }
 
   @media screen and (min-width: 710px) and (max-width: 1600px) {
@@ -19,7 +19,7 @@ export const MainLayout = styled.div`
 `;
 
 export const TestLayout = styled.div`
-  background-color: yellow;
+  //background-color: yellow;
 `;
 
 export const GridTweetsNewsRow = styled.div`
@@ -27,7 +27,7 @@ export const GridTweetsNewsRow = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
   //width: 100%;
-  background-color: red;
+  //background-color: red;
 
   @media screen and (max-width: 709px) {
     display: grid;
@@ -49,7 +49,7 @@ export const TweetsNewsColumns = styled.div`
   flex: 1;
   margin-top: 30px;
 
-  @media screen and (max-width: 709px) {
+  @media screen and (min-width: 450px) and (max-width: 709px) {
     display: grid;
     justify-items: center;
   }
@@ -67,7 +67,7 @@ export const TweetBlock = styled.div`
   justify-content: space-around;
   margin-bottom: 30px;
   padding-bottom: 5px;
-  width: 475px;
+  width: 458px;
   height: 325px;
   background-color: ${(props) => (props.isLightTheme ? '#e5efff' : '#10142D')};
   mix-blend-mode: normal;
@@ -189,13 +189,13 @@ export const LoadMoreTweetsBtn = styled.button`
 `;
 
 export const TwitterWidget = styled.div`
-  // background-color: ${(props) => (props.isLightTheme ? '#e3efff' : '#10142D')};
-  background-color: orange;
+  background-color: ${(props) => (props.isLightTheme ? '#e3efff' : '#10142D')};
+  //background-color: orange;
   border-radius: 10px;
   mix-blend-mode: normal;
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(35px);
-  width: 458px;
+  width: 468px;
 
   @media screen and (max-width: 400px) {
   }
@@ -206,7 +206,11 @@ export const TwitterWidget = styled.div`
     }
   }
 
-  @media screen and (max-width: 710px) {
+  @media screen and (max-width: 449px) {
+    width: 375px;
+  }
+
+  @media screen and (min-width: 450px) and (max-width: 710px) {
     width: 100%;
   }
 

@@ -48,6 +48,10 @@ const useStyles = makeStyles(() =>
         height: '20px',
       },
 
+      '& .MuiPaginationItem-outlined:hover': {
+        background: 'none !important',
+      },
+
       '& .MuiPaginationItem-icon': {
         color: '#4453AD',
         width: '20px',
@@ -59,6 +63,13 @@ const useStyles = makeStyles(() =>
         float: 'none',
         justifyContent: 'center',
         alignItems: 'center',
+      },
+
+      '@media(max-width: 450px)': {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: ' start',
+        marginLeft: '25vw',
       },
     },
     selected: {
