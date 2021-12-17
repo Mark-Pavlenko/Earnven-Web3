@@ -9,6 +9,7 @@ const request = require('request');
 import twitterIcon from '../../assets/icons/twitter.png';
 import mockData from './mockData.json';
 import Media from 'react-media';
+import '../RecentlyAddedTokens/recentlyAddedToken.css';
 
 import {
   MainLayout,

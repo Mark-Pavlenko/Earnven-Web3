@@ -48,8 +48,8 @@ const useStyles = makeStyles(() =>
         height: '20px',
       },
 
-      '& .MuiPaginationItem-outlined:hover': {
-        background: 'none !important',
+      '& .MuiPaginationItem-hover': {
+        backgroundColor: '#ff0000 !important',
       },
 
       '& .MuiPaginationItem-icon': {
@@ -76,11 +76,9 @@ const useStyles = makeStyles(() =>
       '& .Mui-selected': {
         backgroundColor: '#FFFFFF',
         color: '#4453AD',
-
-        li: {
-          width: '20px',
-          height: '20px',
-        },
+      },
+      '& .Mui-hover': {
+        backgroundColor: '#ff0000',
       },
       li: {
         width: '20px',
@@ -240,6 +238,7 @@ export default function RecentTokens({ themeType }) {
             </MainTable>
             <div>
               <Pagination
+                className="paginationItemStyle"
                 sx={{
                   '&. MuiPaginationItem-root': {
                     width: '20px',
