@@ -61,7 +61,7 @@ export const TweetsNewsColumns = styled.div`
 
   @media screen and (min-width: 1000px) and (max-width: 1800px) {
     //flex: 0;
-    display: grid;
+    //display: grid;
     column-gap: 30px;
   }
 `;
