@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Box from '@material-ui/core/Box';
-import { TableContainer, TableCell } from '@material-ui/core';
+import { Table, TableContainer, TableCell } from '@material-ui/core';
 
 export const TestBlock = styled.div`
   color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
@@ -18,34 +18,28 @@ export const LoadingBlock = styled.div`
 
 export const MainBlock = styled(Box)`
   box-sizing: border-box;
-  //width: 82%;
-  background: rgba(255, 255, 255, 0.16);
+  //margin-left: 35px;
   border-radius: 10px;
   border: 5rem;
-  //position: absolute;
-  box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(35px);
+  //box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
+  //backdrop-filter: blur(35px);
+
+  width: auto;
 
   @media (max-width: 980px) {
     width: 100%;
+    margin-left: 0px;
     padding-right: 10px;
     padding-left: 10px;
   }
 `;
 
 export const TokenTableLightContainer = styled(TableContainer)`
-  background: ${(props) => (props.isLightTheme ? '#DEEAFF' : '#10142D')};
+  background: ${(props) => (props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : '#10142D')};
+  //background-color: red;
   mix-blend-mode: normal;
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(35px);
-  border-radius: 10px;
-`;
-
-export const TokenTableDarkContainer = styled(TableContainer)`
-  background: #141838;
-  mix-blend-mode: normal;
-  box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(35px);
+  //backdrop-filter: blur(35px);
   border-radius: 10px;
 `;
 
@@ -59,6 +53,10 @@ export const TableTokenTitle = styled.p`
   font-size: 20px;
   line-height: 30px;
   color: ${(props) => (props.isLightTheme ? ' #1e1e20' : '#ffffff')};
+`;
+
+export const MainTable = styled(Table)`
+  opacity: 0.8;
 `;
 
 export const TokensTableHeader = styled(TableCell)`
@@ -78,11 +76,12 @@ export const TokensTableCell = styled(TableCell)`
 
 export const TokenImg = styled.img`
    {
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
     display: inline;
     vertical-align: top;
     left: 200px;
+    margin-top: -20px;
     margin-right: 10px;
   }
 `;
@@ -107,11 +106,18 @@ export const TokenTableCellValue = styled(TableCell)`
   color: ${(props) => (props.isLightTheme ? ' #1e1e20' : '#ffffff')};
   font-weight: ${(props) => (props.isLightTheme ? 'normal' : 'bold')};
   font-family: 'Saira', sans-serif;
-  //font-style: normal;
-  //font-weight: normal;
   font-size: 14px;
   line-height: 22px;
   align-items: center;
+  border-bottom: 1px solid #f5f5f5;
+
+  //:first-child {
+  //  border: none !important;
+  //}
+  //
+  //:last-child {
+  //  margin-right: 20px;
+  //}
 `;
 
 export const TokenTableCellBlockChain = styled.div`
@@ -121,7 +127,7 @@ export const TokenTableCellBlockChain = styled.div`
   align-items: center;
   height: 50px;
   background: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
-  box-shadow: 7px 21px 22px 15px rgba(51, 78, 131, 0.17);
+  //box-shadow: 7px 21px 22px 15px rgba(51, 78, 131, 0.17);
   border-radius: 10px;
   box-sizing: border-box;
   font-family: 'Saira', sans-serif;

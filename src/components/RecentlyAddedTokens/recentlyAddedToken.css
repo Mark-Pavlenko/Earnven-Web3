@@ -14,7 +14,7 @@
 /*@media only screen and (max-width: 1920px ) and (min-width: 1465px) {*/
 @media only screen and (max-width: 1050px) and (min-width: 300px) {
 
-    .price-title{
+    .price-title {
         padding-left: 55px;
     }
 
@@ -22,4 +22,19 @@
         padding-left: 30px;
         text-align: center;
     }
+}
+
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: none;
+    color: black!important;
+    /*change the hover text color*/
+}
+
+
+/*below block of css for change style when active*/
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:active {
+    background: none;
+    color: black!important;
 }

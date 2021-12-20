@@ -14,7 +14,7 @@ import { createStyles } from '@material-ui/styles';
 import { Table, TableBody, TableHead, TableRow } from '@material-ui/core';
 import RecentAddedTokens from './RecentAddedTokens';
 import Pagination from '@material-ui/lab/Pagination';
-import { BlockChainName, TokensTableCell, TokensTableHeader } from './styles';
+import { BlockChainName, MainTable, TokensTableCell, TokensTableHeader } from './styles';
 import {
   TestBlock,
   LoadingBlock,
@@ -34,6 +34,10 @@ import './recentlyAddedToken.css';
 
 const useStyles = makeStyles(() =>
   createStyles({
+    tableRow: {
+      // height: '613px',
+      // backgroundColor: 'red';
+    },
     root: {
       float: 'right',
       marginTop: '35px',
@@ -44,10 +48,18 @@ const useStyles = makeStyles(() =>
         backgroundColor: 'transparent',
         color: 'black',
         border: 'none',
+        width: '20px',
+        height: '20px',
+      },
+
+      '& .MuiPaginationItem-hover': {
+        backgroundColor: '#ff0000 !important',
       },
 
       '& .MuiPaginationItem-icon': {
         color: '#4453AD',
+        width: '20px',
+        right: '20px',
       },
 
       '@media(max-width: 1200px)': {
@@ -56,11 +68,25 @@ const useStyles = makeStyles(() =>
         justifyContent: 'center',
         alignItems: 'center',
       },
+
+      '@media(max-width: 450px)': {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: ' start',
+        marginLeft: '25vw',
+      },
     },
     selected: {
       '& .Mui-selected': {
         backgroundColor: '#FFFFFF',
         color: '#4453AD',
+      },
+      '& .Mui-hover': {
+        backgroundColor: '#ff0000',
+      },
+      li: {
+        width: '20px',
+        height: '20px',
       },
     },
   })
@@ -127,7 +153,7 @@ export default function RecentTokens({ themeType }) {
         <MainBlock className="boxSize">
           <TokenTableLightContainer isLightTheme={isLightTheme}>
             <TableTokenTitle isLightTheme={isLightTheme}>Recently added tokens</TableTokenTitle>
-            <Table style={{ opacity: '0.8' }}>
+            <MainTable className={classes.tableRow}>
               <TableHead>
                 <TableRow>
                   <TokensTableHeader isLightTheme={isLightTheme}>№</TokensTableHeader>
@@ -189,13 +215,19 @@ export default function RecentTokens({ themeType }) {
                             ${parseInt(row.volume).toLocaleString()}
                           </TokenTableCellValue>
 
-                          <TokenTableCellValue isLightTheme={isLightTheme}>
-                            <TokenTableCellBlockChain isLightTheme={isLightTheme}>
+                          <TokenTableCellValue
+                            isLightTheme={isLightTheme}
+                            style={{ borderBottom: 'none !important' }}>
+                            <TokenTableCellBlockChain
+                              isLightTheme={isLightTheme}
+                              style={{ borderBottom: 'none !important' }}>
                               {row.blockchainLogoUrl.length > 0 && (
                                 <BlockChainImg src={row.blockchainLogoUrl} alt="" />
                               )}
                               <BlockChainName isLightTheme={isLightTheme}>
+                                {/*<span style={{ borderBottom: 'none !important' }}>*/}
                                 {row.platform}
+                                {/*</span>*/}
                               </BlockChainName>
                             </TokenTableCellBlockChain>
                           </TokenTableCellValue>
@@ -207,9 +239,16 @@ export default function RecentTokens({ themeType }) {
                     : ''}
                 </TableBody>
               )}
-            </Table>
+            </MainTable>
             <div>
               <Pagination
+                className="paginationItemStyle"
+                sx={{
+                  '&. MuiPaginationItem-root': {
+                    width: '20px',
+                    height: '20px',
+                  },
+                }}
                 classes={{
                   root: classes.root,
                   ul: classes.selected,

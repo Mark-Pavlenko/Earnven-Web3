@@ -9,6 +9,8 @@ const request = require('request');
 import twitterIcon from '../../assets/icons/twitter.png';
 import mockData from './mockData.json';
 import Media from 'react-media';
+import '../RecentlyAddedTokens/recentlyAddedToken.css';
+import axios from 'axios';
 
 import {
   MainLayout,
@@ -25,130 +27,39 @@ import {
   LoadMoreTweetsBtn,
   TwitterWidget,
   TwitterWidgetTitle,
+  TestLayout,
 } from './styles';
-
-const TOKEN =
-  'AAAAAAAAAAAAAAAAAAAAAJKDUQEAAAAAdjHNlWVUmUvOCPqh05Vgo8bQouo%3DJY7PJWMZfUwejLcXHXKraQE9O9QDUQptUwtHVYIbSK0PFFmYzE';
-
-const streamAvatar =
-  'https://cmctoken-proxy.herokuapp.com/https://api.twitter.com/2/users/by?usernames=DeFi_Dad&user.fields=created_at,profile_image_url,url,public_metrics&expansions=pinned_tweet_id&tweet.fields=author_id,text,created_at';
-
-const streamTweet =
-  'https://cmctoken-proxy.herokuapp.com/https://api.twitter.com/2/users/991745162274467840/tweets?expansions=author_id&tweet.fields=created_at,author_id,conversation_id&media.fields=media_key,url&user.fields=username&max_results=20';
+import actionTypes from '../../constants/actionTypes';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function TwitterAPI({ themeType }) {
-  const [tweetAvatarContent, setTweetAvatarContent] = useState();
-  const [tweetDataContent, setTweetDataContent] = useState();
+  const dispatch = useDispatch();
+
+  const tweetsArray = useSelector((state) => state.twitterPosts.twitterPosts);
+  console.log('tweetsArray', tweetsArray);
 
   console.log('isLightTheme in TwitterAPI comp', themeType);
 
   const [limit, setLimit] = useState(2);
   const [btnDisabled, setBtnDisabled] = useState(false);
 
-  var headers = {
-    'content-type': 'application/json',
-    Authorization: `Bearer ${TOKEN}`,
-    accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-    'Access-Control-Request-Headers': 'Content-Type, x-requested-with',
-    //'Origin': 'http://localhost:3000',
-    'accept-encoding': 'identity',
-  };
+  const mockTwitterObject = { userTwitterId: '991745162274467840', count: 10 };
 
-  var optionsAvatar = {
-    url: streamAvatar,
-    headers: headers,
-  };
-
-  var optionsTweet = {
-    url: streamTweet,
-    headers: headers,
-  };
-
-  //Avatar data
   useEffect(() => {
-    //call the below function to get tweet data given streamUrl(with all the params)
-    let chunks = [];
-    let tweeterAvatarData;
-    async function getData() {
-      //let chunks ;
+    console.log('activated');
+
+    const getTwitterData = async () => {
       try {
-        const requestWithEncoding = function (optionsAvatar, callback) {
-          let req = request.get(optionsAvatar);
-          req.on('response', function (res) {
-            res.on('data', function (chunk) {
-              try {
-                chunks.push(chunk);
-              } catch (err) {
-                console.log(err.message);
-              }
-            });
-
-            res.on('end', function () {
-              let buffer = Buffer.concat(chunks);
-              tweeterAvatarData = JSON.parse(Buffer.from(buffer).toString());
-              // setTweetAvatarContent(tweeterAvatarData.data);
-              setTweetAvatarContent(mockData);
-            });
-          });
-          req.on('error', function (err) {
-            callback(err);
-          });
-        };
-        //call the above function to get the tweet dat
-        requestWithEncoding(optionsAvatar, function (err, data) {
-          if (err) console.log(err.message);
-        }); //end of the function
-      } catch (err) {
-        console.log(err.message);
+        dispatch({
+          type: actionTypes.SET_TWITTER_DATA,
+          payload: mockTwitterObject,
+        });
+      } catch (error) {
+        console.log(error);
       }
-    }
-    getData();
+    };
+    getTwitterData();
   }, []);
-
-  //Tweet Data
-  useEffect(() => {
-    //call the below function to get tweet data given streamUrl(with all the params)
-    let chunks = [];
-
-    let tweetData;
-    let content;
-    async function getData() {
-      //let chunks ;
-      try {
-        const requestWithEncoding = function (optionsTweet, callback) {
-          let req = request.get(optionsTweet);
-          req.on('response', function (res) {
-            res.on('data', function (chunk) {
-              try {
-                chunks.push(chunk);
-              } catch (err) {
-                console.log(err.message);
-              }
-            });
-
-            res.on('end', function () {
-              let buffer = Buffer.concat(chunks);
-              tweetData = JSON.parse(Buffer.from(buffer).toString());
-              setTweetDataContent(tweetData.data);
-            });
-          });
-          //callback when there is an error
-          req.on('error', function (err) {
-            callback(err);
-          });
-        };
-        //call the above function to get the tweet dat
-        requestWithEncoding(optionsTweet, function (err, data) {
-          if (err) console.log(err.message);
-        }); //end of the function
-      } catch (err) {
-        console.log(err.message);
-      }
-    }
-    getData();
-  }, []);
-
-  console.log('tweetDataContent', tweetAvatarContent);
 
   function valuesSelector(array, startElem) {
     const newArray = [];
@@ -158,17 +69,15 @@ export default function TwitterAPI({ themeType }) {
     return array.filter((el, index) => newArray.includes(index));
   }
 
-  const firstColumn = valuesSelector(mockData, 0);
-  const secondColumn = valuesSelector(mockData, 1);
+  const firstColumn = valuesSelector(tweetsArray, 0);
+  const secondColumn = valuesSelector(tweetsArray, 1);
 
   console.log(firstColumn);
   console.log(secondColumn);
 
   const loadMoreTweets = () => {
     setLimit(limit + 2);
-    // console.log('limit', limit);
-    // console.log('mockData.length', mockData.length);
-    if (limit + 6 === mockData.length) {
+    if (limit + 6 === tweetsArray.length) {
       setBtnDisabled(true);
       console.log('if data ended', btnDisabled);
     }
@@ -184,9 +93,9 @@ export default function TwitterAPI({ themeType }) {
       }}>
       {(matches) => (
         <>
-          {mockData !== undefined && (
+          {tweetsArray !== undefined && (
             <MainLayout>
-              <div>
+              <TestLayout>
                 {matches.medium && (
                   <TwitterWidget isLightTheme={themeType}>
                     <TwitterWidgetTitle isLightTheme={themeType}>Our Twitter</TwitterWidgetTitle>
@@ -268,7 +177,7 @@ export default function TwitterAPI({ themeType }) {
                     Load more
                   </LoadMoreTweetsBtn>
                 )}
-              </div>
+              </TestLayout>
               {matches.large && (
                 <TwitterWidget isLightTheme={themeType}>
                   <TwitterWidgetTitle isLightTheme={themeType}>Our Twitter</TwitterWidgetTitle>
