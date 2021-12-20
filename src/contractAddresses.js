@@ -41,6 +41,7 @@ const addresses = {
   CreamCAAVE: `0x30190a3B52b5AB1daF70D46D72536F5171f22340`,
   CreamCMIM: `0x9e8E207083ffd5BDc3D99A1F32D1e6250869C1A9`,
   CreamCZAR: `0x672473908587b10e65DAB177Dbaeadcbb30BF40B`,
+  snxTokenAddress: '0xDC01020857afbaE65224CfCeDb265d1216064c59',
 };
 
 export default addresses;

@@ -15,6 +15,8 @@ import { SnowSwapStaking } from './SnowSwapStaking';
 import CurveLpToken from './CurveLpToken';
 import Cream from './Cream';
 import BancorPools from './BancorPools';
+import Synthetix from './Synthetix';
+
 // Below code is for task https://app.clickup.com/t/1je2y9d
 // import CompoundData from './Compound';
 export default function Index({ accountAddress }) {
@@ -62,11 +64,6 @@ export default function Index({ accountAddress }) {
 
   const [YearnTotal, setYearnTotal] = useState([]); // Yearn Total
 
-  const [SynthetixData, setSynthetixData] = useState([]); // Synthetix
-  const [SynthetixContent, setSynthetixContent] = useState([]); // Synethetix
-
-  const [SynthetixTotal, setSynthetixTotal] = useState([]); // Synthetix Total
-
   const [BeaconData, setBeaconData] = useState({}); // Beacon (Ethereum 2.0 Staking)
 
   const [BeaconTotal, setBeaconTotal] = useState([]); // Beacon Total
@@ -84,9 +81,17 @@ export default function Index({ accountAddress }) {
 
   //Curve Lp token
   const [CurveLpdata, setCurveLpData] = useState([]); // get curve lp token data
+  //Synthetix data points
+  const [SynthetixData, setSynthetixData] = useState([]); // get curve lp token data
+
   //get the value from the child component of the curve lp token
   const getCurveLpToken = (data) => {
     setCurveLpData(data);
+  };
+
+  //get the value from the synthetix child component
+  const getSynthetixTokenData = (data) => {
+    setSynthetixData(data);
   };
 
   // function to get the number render with comma
@@ -528,45 +533,6 @@ export default function Index({ accountAddress }) {
 
     setBalancerPoolsContentv2(content);
   }, [BalancerPoolsDatav2]);
-
-  useEffect(() => {
-    const content = SynthetixData.map((object) => (
-      <div
-        style={{
-          width: '90%',
-          marginTop: '12px',
-          marginLeft: '30px',
-          display: parseFloat(object.balance) > 0 ? '' : 'none',
-        }}>
-        <div style={{ display: 'inline-block', width: '15%' }}>
-          <div
-            style={{
-              height: '40px',
-              padding: '5px',
-              borderRadius: '10px',
-              backgroundImage:
-                'linear-gradient(to right,  rgba(20,24,30,.1), rgba(173,204,151,.5), rgba(20,24,30,.1))',
-            }}>
-            <center>
-              <img src={object.image} style={{ height: '30px', marginTop: '' }} alt="" />
-            </center>
-          </div>
-        </div>
-
-        <div style={{ display: 'inline-block', width: '10%', textAlign: 'left' }} />
-
-        <div style={{ display: 'inline-block', width: '30%', textAlign: 'left' }}>Synthetix</div>
-
-        <div style={{ display: 'inline-block', width: '10%' }} />
-
-        <div style={{ display: 'inline-block', width: '30%', fontSize: '13px' }}>
-          {object.balance} $SNX
-        </div>
-      </div>
-    ));
-
-    setSynthetixContent(content);
-  }, [SynthetixData]);
 
   useEffect(() => {
     const content = YearnData.map((object) => (
@@ -1082,53 +1048,6 @@ export default function Index({ accountAddress }) {
         });
     }
 
-    async function getSynthetixData() {
-      await axios
-        .post(`https://api.thegraph.com/subgraphs/name/synthetixio-team/synthetix`, {
-          query: `{
-                    snxholders
-                    (
-                      where:{
-                          id:"${accountAddress}"
-                      }
-                    )
-                    {
-                      id
-                      collateral
-                      balanceOf
-                    }
-                  }
-                  `,
-        })
-        .then(async (response) => {
-          const assets = [];
-          let tot = 0;
-          if (response.data.data.snxholders[0]) {
-            const res = response.data.data.snxholders[0];
-            const object = {};
-            await axios
-              .get(
-                `https://api.coingecko.com/api/v3/coins/ethereum/contract/0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f`,
-                {},
-                {}
-              )
-              .then(async (priceData) => {
-                res.image = priceData.data.image.thumb;
-              })
-              .catch((err) => {});
-
-            object.image = res.image;
-            object.balance = parseFloat(res.balanceOf / 10 ** 18).toFixed(2);
-            if (object.balance > 0) {
-              tot += parseFloat(object.balance).toFixed(2);
-            }
-            assets.push(object);
-          }
-          setSynthetixData(assets);
-          setSynthetixTotal(tot);
-        });
-    }
-
     async function getSushiV2Data() {
       await axios
         .post(
@@ -1403,7 +1322,6 @@ export default function Index({ accountAddress }) {
     getAaveV2Data();
     getUniV2Data();
     getBalancerData();
-    getSynthetixData();
     getSushiV2Data();
     getYearnData();
     getCurveData();
@@ -1622,7 +1540,7 @@ export default function Index({ accountAddress }) {
           minHeight: '170px',
           borderRadius: '10px',
           display:
-            parseFloat(SynthetixTotal) > 0 || YearnData.length > 0 || BeaconData.totalInvestment
+            parseFloat(SynthetixData) > 0 || YearnData.length > 0 || BeaconData.totalInvestment
               ? ''
               : 'none',
         }}>
@@ -1632,7 +1550,7 @@ export default function Index({ accountAddress }) {
             Other Assets <br />
             Total :{' '}
             {parseFloat(
-              parseFloat(SynthetixTotal) + parseFloat(BeaconTotal) + parseFloat(YearnTotal)
+              parseFloat(SynthetixData) + parseFloat(BeaconTotal) + parseFloat(YearnTotal)
             ).toFixed(2)}{' '}
             USD
             <br />
@@ -1643,12 +1561,9 @@ export default function Index({ accountAddress }) {
           style={{
             fontSize: '12px',
             marginLeft: '15px',
-            display: parseFloat(SynthetixTotal) > 0 ? '' : 'none',
-          }}>
-          <br /> Synthetix --- {SynthetixTotal} USD
-          <br />
-        </div>
-        {SynthetixContent}
+          }}></div>
+
+        <Synthetix accountAddress={accountAddress} onSynthetixTokenValue={getSynthetixTokenData} />
 
         <div
           style={{
