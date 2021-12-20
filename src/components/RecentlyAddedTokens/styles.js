@@ -36,6 +36,7 @@ export const MainBlock = styled(Box)`
 
 export const TokenTableLightContainer = styled(TableContainer)`
   background: ${(props) => (props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : '#10142D')};
+  //background-color: red;
   mix-blend-mode: normal;
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
   //backdrop-filter: blur(35px);

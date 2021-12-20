@@ -34,6 +34,10 @@ import './recentlyAddedToken.css';
 
 const useStyles = makeStyles(() =>
   createStyles({
+    tableRow: {
+      // height: '613px',
+      // backgroundColor: 'red';
+    },
     root: {
       float: 'right',
       marginTop: '35px',
@@ -149,7 +153,7 @@ export default function RecentTokens({ themeType }) {
         <MainBlock className="boxSize">
           <TokenTableLightContainer isLightTheme={isLightTheme}>
             <TableTokenTitle isLightTheme={isLightTheme}>Recently added tokens</TableTokenTitle>
-            <MainTable>
+            <MainTable className={classes.tableRow}>
               <TableHead>
                 <TableRow>
                   <TokensTableHeader isLightTheme={isLightTheme}>№</TokensTableHeader>
