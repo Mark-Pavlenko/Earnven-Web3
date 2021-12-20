@@ -207,7 +207,8 @@ export const TwitterWidget = styled.div`
   width: 468px;
 
   @media screen and (min-width: 1601px) and (max-width: 2000px) {
-    margin-left: 35px;
+    //margin-left: 35px;
+    justify-self: end;
   }
 
   @media screen and (max-width: 449px) {

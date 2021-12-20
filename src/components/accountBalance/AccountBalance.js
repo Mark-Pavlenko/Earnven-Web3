@@ -16,33 +16,11 @@ function AccountBalance({ address, accountBalance }) {
   console.log('isLoading', isLoading);
 
   useEffect(() => {
-    let total = 0;
-    const web3 = new Web3();
     const accountAddress = address;
     // console.log('account address', accountAddress);
     const totalAccountValue = async () => {
       try {
         dispatch({ type: actionTypes.SET_ACCOUNT_ADDRESS, payload: accountAddress });
-        // console.log(accountBalance.total);
-
-        // implement totalValue send immediaately from redux (with the help of web3-react)
-
-        // const path = `https://api.ethplorer.io/getAddressInfo/${accountAddress}?apiKey=EK-qSPda-W9rX7yJ-UY93y`;
-        // const response = await axios.get(path);
-        // const { tokens } = response.data;
-        // console.log('response.data', response.data);
-
-        // total =
-        //   response.data.ETH.price.rate * web3.utils.fromWei(response.data.ETH.rawBalance, 'ether');
-        // if (tokens !== undefined) {
-        //   for (let i = 0; i < tokens.length; i++) {
-        //     if (tokens[i].tokenInfo.price !== false) {
-        //       total +=
-        //         tokens[i].tokenInfo.price.rate * web3.utils.fromWei(tokens[i].rawBalance, 'ether');
-        //     }
-        //   }
-        // }
-        // setTotalValue(CommaFormatted(total.toFixed(2)));
       } catch (error) {
         console.log(error);
       }
