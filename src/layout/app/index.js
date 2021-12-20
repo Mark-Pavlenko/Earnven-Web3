@@ -9,6 +9,7 @@ import darkTheme from '../../assets/images/darkTheme.jpg';
 import lightTheme from '../../assets/images/lightTheme.jpg';
 import ThemeConfig from '../../theme/index';
 import lightDashboard from '../../assets/images/lightDashboard.jpg';
+import { useSelector } from 'react-redux';
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;
@@ -32,6 +33,18 @@ const MainStyle = styled('div')(({ theme }) => ({
 }));
 
 export default function AppLayout({ propChangeTheme }) {
+  const headerTitles = useSelector((state) => state.headerTitlesReducer.headerTitles);
+  console.log('headerTitles', headerTitles);
+
+  const title = useSelector((state) => state.headerTitlesReducer.currentRouteTitle);
+  console.log('middle title', title);
+
+  function capitalizeFirstLetter(string) {
+    return string?.charAt(0).toUpperCase() + string?.slice(1);
+  }
+
+  const finalTitle = capitalizeFirstLetter(title);
+
   const [open, setOpen] = useState(false);
   const [changeTheme, setChangeTheme] = useState(false);
   const [setTheme, setsetTheme] = useState(false);
@@ -45,6 +58,7 @@ export default function AppLayout({ propChangeTheme }) {
         onOpenSidebar={() => setOpen(true)}
         themeChanger={() => setChangeTheme(!changeTheme)}
         ChangeTheme={(w) => setsetTheme(w)}
+        finalTitle={finalTitle}
       />
       <Sidebar
         isOpenSidebar={open}
@@ -56,7 +70,6 @@ export default function AppLayout({ propChangeTheme }) {
       />
       <MainStyle setTheme={changeTheme}>
         {/* <Divider variant="middle" /> */}
-
         <Outlet />
       </MainStyle>
     </RootStyle>
