@@ -18,7 +18,6 @@ export default function NFT({ changeTheme }) {
   let flag = '';
   useEffect(() => {
     async function getData() {
-      console.log('sathya in render top');
       const account = address;
       setAccount(account);
       console.log(Account);
@@ -32,7 +31,6 @@ export default function NFT({ changeTheme }) {
           const b = {};
           const res = response.data.result;
           setflag_data(res);
-          console.log('sathya inside nft res', flag_data);
           for (const i in res) {
             if (b[res[i].tokenName] === undefined) {
               b[res[i].tokenName] = {};
@@ -68,7 +66,6 @@ export default function NFT({ changeTheme }) {
           let NFTData = [];
           for (var i = 0; i < temp.length; i++) {
             if (temp[i].tokens.length > 1) {
-              console.log('sathya in number of tokens');
               for (var j = 0; j < temp[i].tokens.length; j++) {
                 let newData = {
                   token: temp[i].tokens[j],
@@ -85,7 +82,6 @@ export default function NFT({ changeTheme }) {
               };
               NFTData.push(newData);
             }
-            console.log('sathyain NFTdata', NFTData);
           }
           setnftData(NFTData);
           // let halfdata = [];
@@ -108,7 +104,6 @@ export default function NFT({ changeTheme }) {
             }
           }
           setdata(finalObject);
-          console.log('sathya inside nft data 2', data);
         });
     }
 
@@ -116,17 +111,12 @@ export default function NFT({ changeTheme }) {
   }, [Account, address]);
   const [currentTheme, setCurrentTheme] = React.useState('');
   React.useEffect(() => {
-    console.log('sathya in render');
     window.addEventListener('storage', () => {
       const theme = localStorage.getItem('selectedTheme');
-      console.log('sathyatheme', theme);
       setCurrentTheme(theme);
     });
   }, []);
 
-  useEffect(() => {
-    console.log('sathya selected theme in useeffect test', changeTheme);
-  }, [changeTheme]);
   return (
     <>
       <div>

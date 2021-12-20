@@ -10,6 +10,7 @@ import NftDetails from '../../screens/NftDetail';
 import NFT_Popover from '../NFT_Popover';
 import Popup from '../PopUp';
 import PopupMobile from '../PopUpMobile';
+import NftDetailsMobile from '../../screens/NFTDetailMobile';
 
 const NftImgStyle = styled('img')({
   top: 0,
@@ -20,8 +21,8 @@ const NftImgStyle = styled('img')({
 
 const Image_Grid = styled(Box)(({ theme }) => ({
   borderRadius: '10px',
-  width: '325px',
-  height: '334px',
+  width: '255px', // 325
+  height: '264px', // 334
   marginLeft: '12px',
   ['@media (max-width:600px)']: {
     // eslint-disable-line no-useless-computed-key
@@ -61,21 +62,6 @@ const NFT_Price = styled(Typography)(({ theme }) => ({
   },
 }));
 
-// const Card_NFT = styled('div')(({ theme }) => ({
-//   cursor: 'pointer',
-//   '&:hover': {
-//     background: 'rgba(31, 38, 92, 0.24)',
-//     // border: (theme) => `solid 1px ${theme.palette.grey[500_8]}`,
-//     mixBlendMode: 'normal',
-//     // backdropFilter: 'blur(30px)',
-//     boxShadow: '7px 21px 22px -15px rgba(51, 78, 131, 0.1)',
-//   },
-//   borderRadius: '10px',
-//   paddingLeft: '15px',
-//   paddingRight: '15px',
-//   paddingTop: '15px',
-// }));
-
 // ----------------------------------------------------------------------
 
 export default function NftCard({ tokenId, contractAddress, txHash, changeTheme, NFTDATA }) {
@@ -90,7 +76,6 @@ export default function NftCard({ tokenId, contractAddress, txHash, changeTheme,
   const [tokenId_NFT, settokenId_NFT] = useState(tokenId);
   const [Theme_NFT, setTheme_NFT] = useState(localStorage.getItem('selectedTheme'));
   const [flagKill, setflagKill] = useState(1);
-  const image12 = 'https://assets.coingecko.com/coins/images/15290/small/cwbtc.png?1620371929';
   let temp_Address = '';
   let temp_TokenId = '';
   const showAccountPopover = () => {
@@ -106,8 +91,8 @@ export default function NftCard({ tokenId, contractAddress, txHash, changeTheme,
 
   const Card_NFT = styled('div')(({ theme }) => ({
     cursor: 'pointer',
-    width: '379px',
-    height: '451px',
+    width: '309px', //379
+    height: '381px', // 451
     '&:hover': {
       background: changeTheme
         ? theme.palette.nft_light.hoverNFTdata
@@ -160,7 +145,6 @@ export default function NftCard({ tokenId, contractAddress, txHash, changeTheme,
       }
     };
     nftDetail();
-    // console.log('countsathya', count);
   }, [contractAddress, tokenId]);
 
   const getTransactionValue = async (hash) => {
@@ -265,32 +249,25 @@ export default function NftCard({ tokenId, contractAddress, txHash, changeTheme,
           <Stack direction="row" alignItems="center" justifyContent="space-between" />
         </Stack>
       </Card_NFT>
-      {/* <NFT_Popover open={account} onClose={hideAccountPopover}>
-        <NftDetails contract={contractAddress} id={tokenId} />
-      </NFT_Popover> */}
-      {/* <Popup title="Disconnect" openPopup={openPopup} setOpenPopup={setOpenPopup}>
-        <NftDetails
-          setOpenPopup={(w) => setOpenPopup(w)}
-          changeNFT={(flag_nft) => setflag_nft(flag_nft)}
-          contract={temp_Address == '' ? Address_NFT : temp_Address}
-          id={temp_TokenId == '' ? tokenId_NFT : temp_TokenId}
-        />
-      </Popup> */}
       {!isMobile ? (
         <Popup title="Disconnect" openPopup={openPopup} setOpenPopup={setOpenPopup}>
           <NftDetails
             setOpenPopup={(w) => setOpenPopup(w)}
             changeNFT={(flag_nft) => setflag_nft(flag_nft)}
             flagNFT={(w) => setflagKill(w)}
-            // contract={temp_Address == '' ? Address_NFT : temp_Address}
-            // id={temp_TokenId == '' ? tokenId_NFT : temp_TokenId}
             contract={Address_NFT}
             id={tokenId_NFT}
           />
         </Popup>
       ) : (
         <PopupMobile title="Disconnect" openPopup={openPopup} setOpenPopup={setOpenPopup}>
-          <p style={{ textAlign: 'center' }}>under dev</p>
+          <NftDetailsMobile
+            setOpenPopup={(w) => setOpenPopup(w)}
+            changeNFT={(flag_nft) => setflag_nft(flag_nft)}
+            flagNFT={(w) => setflagKill(w)}
+            contract={Address_NFT}
+            id={tokenId_NFT}
+          />
         </PopupMobile>
       )}
     </>

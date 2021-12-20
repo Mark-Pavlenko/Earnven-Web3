@@ -983,7 +983,6 @@ export default function Index({ accountAddress }) {
               object.price = object.totalInvestment / res[i].balance;
               object.tokenList = res[i].poolId.tokensList;
               if (object.totalInvestment > 0) {
-                tot += parseFloat(object.totalInvestment).toFixed(2);
                 pools.push(object);
                 let Images = [];
                 let CurrentPrice = [];
@@ -1015,6 +1014,7 @@ export default function Index({ accountAddress }) {
                 object.currentPrice = CurrentPrice;
                 object.tokenPoolPrice = TokenPoolPrice;
                 object.priceSum = sum;
+                tot += object.priceSum;
               }
             }
             pools.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
@@ -1594,7 +1594,7 @@ export default function Index({ accountAddress }) {
             marginLeft: '15px',
             display: BalancerPoolsData.length > 0 ? '' : 'none',
           }}>
-          Balancer --- {BalancerTotal} USD
+          Balancer ---{parseFloat(BalancerTotal).toFixed(2)} USD
         </div>
         {BalancerPoolsContent}
         <br />

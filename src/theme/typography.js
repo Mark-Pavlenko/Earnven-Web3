@@ -147,7 +147,6 @@ const typography = {
   AboutBody: {
     fontSize: pxToRem(14),
     fontWeight: 400,
-    opacity: '0.5',
   },
   tranfer_title: {
     fontSize: pxToRem(30),
@@ -156,6 +155,10 @@ const typography = {
   },
   transferbody: {
     fontSize: pxToRem(14),
+    fontWeight: 400,
+  },
+  transferbody_mobile: {
+    fontSize: pxToRem(10),
     fontWeight: 400,
   },
 };

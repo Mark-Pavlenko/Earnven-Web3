@@ -36,7 +36,6 @@ export default function AppLayout({ propChangeTheme }) {
   const [changeTheme, setChangeTheme] = useState(false);
   const [setTheme, setsetTheme] = useState(false);
   useEffect(() => {
-    console.log('testforthemesathya', setTheme);
     propChangeTheme(setTheme);
   }, [setTheme]);
   return (

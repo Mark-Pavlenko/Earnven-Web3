@@ -48,7 +48,6 @@ export default function Router() {
   // const [globaltheme, setglobaltheme] = useState(false);
   const [changeTheme, setChangeTheme] = useState(false);
   useEffect(() => {
-    console.log('sathyatestforthemecgangeinrouter', changeTheme);
     setChangeTheme(changeTheme);
   }, [changeTheme]);
   return useRoutes([

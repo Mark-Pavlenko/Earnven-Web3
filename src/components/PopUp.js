@@ -21,7 +21,7 @@ export default function Popup(props) {
         ? {
             background:
               localStorage.getItem('selectedTheme') == 'Day'
-                ? theme.palette.nft_light.NFT_popup_background
+                ? theme.palette.nft_light.background
                 : theme.palette.nft_dark.NFT_popup_background,
             // background: 'rgba(255, 255, 255, 0.9)',
             minWidth: '1110px',
@@ -31,7 +31,7 @@ export default function Popup(props) {
             boxShadow: '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',
             borderRadius: '10px',
             overflow: 'visible',
-            opacity: 0.9,
+            opacity: 0.8,
           }
         : {
             background: '#0B0E1D',

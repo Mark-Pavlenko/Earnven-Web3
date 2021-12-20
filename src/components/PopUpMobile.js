@@ -19,18 +19,24 @@ export default function PopupMobile(props) {
     dialogWrapper:
       localStorage.getItem('selectedTheme') == 'Day'
         ? {
-            background:
-              localStorage.getItem('selectedTheme') == 'Day'
-                ? theme.palette.nft_light.NFT_popup_background
-                : theme.palette.nft_dark.NFT_popup_background,
+            background: localStorage.getItem('selectedTheme') == 'Day' ? '#FFFFFF' : '#FFFFFF',
             // background: 'rgba(255, 255, 255, 0.9)',
             mixBlendMode: 'normal',
+            minWidth: '78%',
             // backdropFilter: 'blur(20px)',
             boxShadow: '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',
             borderRadius: '10px',
             overflow: 'visible',
-            opacity: 0.9,
-            width: '100%',
+            opacity: 0.8,
+            ['@media (max-width:500px)']: {
+              position: 'absolute',
+              bottom: '-2.3rem',
+              borderRadius: '15px',
+              fill: 'white',
+              stroke: 'green',
+              strokeWidth: 1,
+              minWidth: '100%',
+            },
           }
         : {
             background: '#0B0E1D',
@@ -39,7 +45,17 @@ export default function PopupMobile(props) {
             boxShadow: '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',
             borderRadius: '10px',
             overflow: 'visible',
+            minWidth: '78%',
             opacity: 0.8,
+            ['@media (max-width:500px)']: {
+              position: 'absolute',
+              bottom: '-2.3rem',
+              borderRadius: '15px',
+              fill: 'white',
+              stroke: 'green',
+              strokeWidth: 1,
+              minWidth: '100%',
+            },
           },
     dialogTitle: {
       marginTop: '3px',
@@ -52,6 +68,13 @@ export default function PopupMobile(props) {
       width: '14px',
       height: '14px',
     },
+    outer: {
+      background: 'rgba(68, 83, 173, 0.1)',
+      mixBlendMode: 'normal',
+      backdropFilter: 'blur(8px)',
+      boxShadow: '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',
+      borderRadius: '10px',
+    },
   }));
 
   const classes = useStyles();
@@ -59,26 +82,15 @@ export default function PopupMobile(props) {
     setOpenPopup(false);
   }
   return (
-    <Dialog open={openPopup} onClose={handleClose} classes={{ paper: classes.dialogWrapper }}>
-      {/* <DialogTitle className={classes.dialogTitle}>
-        <div style={{ display: 'flex' }}>
-          <Typography
-            className={classes.title}
-            variant="popupTitle"
-            component="div"
-            style={{ flexGrow: 1, fontFamily: 'Saira, sans-serif' }}>
-            {title}
-          </Typography>
-          <button
-            className={classes.close}
-            classes={{ container: classes.outer, paper: classes.close }}
-            onClick={() => {
-              setOpenPopup(false);
-            }}>
-            <CloseIcon />
-          </button>
-        </div>
-      </DialogTitle> */}
+    <Dialog
+      modal={true}
+      contentStyle={{
+        width: window.innerHeight,
+        maxWidth: 'none',
+      }}
+      open={openPopup}
+      onClose={handleClose}
+      classes={{ paper: classes.dialogWrapper, container: classes.outer }}>
       <DialogContent>{children}</DialogContent>
     </Dialog>
   );
