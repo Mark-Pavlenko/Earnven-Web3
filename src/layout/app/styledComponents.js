@@ -25,25 +25,3 @@ export const MainStyle = styled('div')`
         : `#0B0E1D`};
   }
 `;
-// flexGrow: 1,
-// paddingTop: APP_BAR_MOBILE + 15,
-// paddingBottom: theme.spacing(10),
-// background:
-//   localStorage.getItem('selectedTheme') === 'Day' ? `url(${lightDashboard})` : `#0B0E1D`,
-// [theme.breakpoints.up('lg')]: {
-//   paddingTop: APP_BAR_DESKTOP,
-//   paddingLeft: theme.spacing(2),
-//   paddingRight: theme.spacing(2),
-
-// export const MainStyle = styled('div')(({ theme }) => ({
-//   flexGrow: 1,
-//   paddingTop: APP_BAR_MOBILE + 15,
-//   paddingBottom: theme.spacing(10),
-//   background:
-//     localStorage.getItem('selectedTheme') === 'Day' ? `url(${lightDashboard})` : `#0B0E1D`,
-//   [theme.breakpoints.up('lg')]: {
-//     paddingTop: APP_BAR_DESKTOP,
-//     paddingLeft: theme.spacing(2),
-//     paddingRight: theme.spacing(2),
-//   },
-// }));
