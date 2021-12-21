@@ -108,7 +108,7 @@ function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle }) {
             <Icon icon={menu2Fill} />
           </IconButton>
         </MHidden>
-        <h2 style={{ marginRight: '-106px', color: 'red' }}>{finalTitle}</h2>
+        <h2 style={{ marginLeft: '300px', color: 'red' }}>{finalTitle}</h2>
         <div>
           <span style={{ visibility: 'hidden' }}>{Token}</span>
           <SearchTokens parentCallback={callbackFunction} />
