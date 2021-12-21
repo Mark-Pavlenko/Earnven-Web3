@@ -1,37 +1,4 @@
-/* import React,{Component} from 'react';
-import SearchInput from '../../../components/searchInput';
-import NetworkDropDown from '../../../components/networkDropDown';
-import MenuListComposition from '../../../components/gasDropDownMenu';
-import LanguageDropDown from '../../../components/languageDropDown';
-import HelpDropDown from '../../../components/helpDropDown';
-import './header.css'
-export default class Header extends Component{
-    render(){
-        return(
-            <div className='header'>
-                <div className='search-bar'>
-                     <SearchInput placeholder='Search Tokens...'/>
-                </div>
-                <div className='network-dropdown'>
-                    <NetworkDropDown />
-                </div>
-                <div className='gas-dropdown'>
-                    <MenuListComposition/>
-                </div>
-                <div className='language-dropdown'>
-                    <LanguageDropDown />
-                </div>
-                <div className='help-dropdown'>
-                    <HelpDropDown />
-                </div>
-
-
-            </div>
-        )
-    }
-} */
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
@@ -94,12 +61,17 @@ Header.propTypes = {
   themeChanger: PropTypes.func,
 };
 
-function Header({ onOpenSidebar, themeChanger, ChangeTheme }) {
+import { useSelector } from 'react-redux';
+import { headerTitlesReducer } from '../../../store/headerTitlesReducer/reducer';
+
+function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  console.log('finalTitle', finalTitle);
+
   const { address } = useParams();
-  const [open, setOpen] = useState(false);
+  const [pageTitle, setPageTitle] = useState(false);
   const [Token, setToken] = useState('');
   const [flag, setFlag] = useState(false);
   const [theme, setTheme] = useState(false);
@@ -108,6 +80,10 @@ function Header({ onOpenSidebar, themeChanger, ChangeTheme }) {
     setToken(childData);
     navigate(`/${address}/token/${childData}`);
   }
+
+  // useEffect(() => {
+  //   finalTitle = capitalizeFirstLetter(title);
+  // }, []);
 
   // const setEvent = payload => ({ type: timelineCalenderConstants.SET_EVENT, payload });
 
@@ -132,7 +108,7 @@ function Header({ onOpenSidebar, themeChanger, ChangeTheme }) {
             <Icon icon={menu2Fill} />
           </IconButton>
         </MHidden>
-        <h2 style={{ marginRight: '-106px', color: !theme ? 'black' : 'white' }}>Dashboard</h2>
+        <h2 style={{ marginRight: '-106px', color: 'red' }}>{finalTitle}</h2>
         <div>
           <span style={{ visibility: 'hidden' }}>{Token}</span>
           <SearchTokens parentCallback={callbackFunction} />
