@@ -39,17 +39,58 @@ import SushiswapPoolDetail from './components/sushiSwapPoolDetails/DetailLoadPag
 // import ExchangeTemp from './screens/ExchangeTemp/exchange'
 
 export default function Router() {
-  // return(
-  //         <Routes>
-  //             {/* <AppLayout/> */}
-  //             <Route exact path="/lol" render={<></>} />
-  //         </Routes>
-  // )
-  // const [globaltheme, setglobaltheme] = useState(false);
   const [changeTheme, setChangeTheme] = useState(false);
+
+  const routesArr = [
+    { path: '/', element: <Navigate to="/:address/dashboard" replace /> },
+    { path: 'home', element: <Home /> },
+    { path: 'dashboard', element: <Dashboard changeTheme={changeTheme} /> },
+    { path: 'liquiditypools', element: <LiquidityPools /> },
+    { path: 'yieldfarm', element: <YieldFarm /> },
+    { path: 'savings', element: <Savings /> },
+    { path: 'history', element: <History /> },
+    { path: 'defimadeasy', element: <DefiMadeEasy /> },
+    { path: 'assets', element: <AllAssetsPage /> },
+    { path: 'token/:tokenid', element: <TokenDetailsPage /> },
+    { path: 'token', element: <TokenDetailsPage /> },
+    {
+      path: 'uniswap/address/:token0/:token1',
+      element: <UniswapLiquidityPool />,
+    },
+    { path: 'uniswap/pair/:tokenid', element: <UniswapPoolDetail /> },
+    {
+      path: 'sushiswap/address/:token0/:token1',
+      element: <SushiwapLiquidityPool />,
+    },
+    {
+      path: 'sushiswap/pair/:tokenid',
+      element: <SushiswapPoolDetail />,
+    },
+    { path: 'bridge', element: <Bridge /> },
+    { path: 'multisender', element: <Multisender /> },
+    { path: 'safefarm', element: <SafeFarm /> },
+    { path: 'exchange', element: <Trading /> },
+    // {path:'exchange',element:<ExchangeTemp />},
+    { path: 'nft', element: <NFTpage /> },
+    // {path:'nft-token',element:<NFTTokenPage/>},
+    { path: 'nft-token/:contract/:id', element: <NFTTokenPage /> },
+    { path: 'connect-wallet', element: <ConnectWallet /> },
+    { path: 'approvals', element: <AllTokensApprovals /> },
+    { path: 'approvals/:tokenAddress', element: <TokenApproval /> },
+    { path: 'graphtools', element: <CubicleGraphs /> },
+    { path: 'earn', element: <LiquidityPools /> },
+    { path: 'airdrop', element: <Airdrop /> },
+    { path: 'create-token', element: <TokenCreator /> },
+    { path: 'nftdesign', element: <NFT /> },
+    { path: 'nftdetails/:contract/:id', element: <NftDetails /> },
+    { path: '*', element: <Navigate to="/404" replace /> },
+  ];
+
   useEffect(() => {
+    console.log('sathya test for the mecgan gein router', changeTheme);
     setChangeTheme(changeTheme);
   }, [changeTheme]);
+
   return useRoutes([
     {
       path: '/',
@@ -58,51 +99,10 @@ export default function Router() {
     {
       path: '/:address',
       element: <AppLayout propChangeTheme={(w) => setChangeTheme(w)} />,
-      children: [
-        { path: '/', element: <Navigate to="/:address/dashboard" replace /> },
-        { path: 'home', element: <Home /> },
-        { path: 'dashboard', element: <Dashboard changeTheme={changeTheme} /> },
-        { path: 'liquiditypools', element: <LiquidityPools /> },
-        { path: 'yieldfarm', element: <YieldFarm /> },
-        { path: 'savings', element: <Savings /> },
-        { path: 'history', element: <History /> },
-        { path: 'defimadeasy', element: <DefiMadeEasy /> },
-        { path: 'assets', element: <AllAssetsPage /> },
-        { path: 'token/:tokenid', element: <TokenDetailsPage /> },
-        { path: 'token', element: <TokenDetailsPage /> },
-        {
-          path: 'uniswap/address/:token0/:token1',
-          element: <UniswapLiquidityPool />,
-        },
-        { path: 'uniswap/pair/:tokenid', element: <UniswapPoolDetail /> },
-        {
-          path: 'sushiswap/address/:token0/:token1',
-          element: <SushiwapLiquidityPool />,
-        },
-
-        {
-          path: 'sushiswap/pair/:tokenid',
-          element: <SushiswapPoolDetail />,
-        },
-        { path: 'bridge', element: <Bridge /> },
-        { path: 'multisender', element: <Multisender /> },
-        { path: 'safefarm', element: <SafeFarm /> },
-        { path: 'exchange', element: <Trading /> },
-        // {path:'exchange',element:<ExchangeTemp />},
-        { path: 'nft', element: <NFTpage /> },
-        // {path:'nft-token',element:<NFTTokenPage/>},
-        { path: 'nft-token/:contract/:id', element: <NFTTokenPage /> },
-        { path: 'connect-wallet', element: <ConnectWallet /> },
-        { path: 'approvals', element: <AllTokensApprovals /> },
-        { path: 'approvals/:tokenAddress', element: <TokenApproval /> },
-        { path: 'graphtools', element: <CubicleGraphs /> },
-        { path: 'earn', element: <LiquidityPools /> },
-        { path: 'airdrop', element: <Airdrop /> },
-        { path: 'create-token', element: <TokenCreator /> },
-        { path: 'nftdesign', element: <NFT /> },
-        { path: 'nftdetails/:contract/:id', element: <NftDetails /> },
-        { path: '*', element: <Navigate to="/404" replace /> },
-      ],
+      children: routesArr.map((el) => ({
+        path: el.path,
+        element: el.element,
+      })),
     },
     { path: '/404', element: <PageNotFound /> },
     { path: '*', element: <Navigate to="/404" replace /> },

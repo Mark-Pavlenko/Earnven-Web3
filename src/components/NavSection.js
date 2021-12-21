@@ -7,6 +7,7 @@ import arrowIosDownwardFill from '@iconify/icons-eva/arrow-ios-downward-fill';
 // material
 import { experimentalStyled as styled } from '@material-ui/core/styles';
 import { Box, Collapse, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
 
 const ListItemStyle = styled((props) => <ListItem button disableGutters {...props} />)(
   ({ theme }) => ({
@@ -78,6 +79,7 @@ function NavItem({ item, active, address }) {
   const [open, setOpen] = useState(isActiveRoot);
   const handleOpen = () => {
     setOpen((prev) => !prev);
+    console.log('clicked');
   };
 
   function setNavigation() {
@@ -170,6 +172,7 @@ function NavItem({ item, active, address }) {
     <ListItemStyle
       onClick={() => {
         setNavigation();
+        console.log('setNavigaation click');
       }}
       component={RouterLink}
       to={`/${address}/${path}`}
@@ -191,6 +194,7 @@ function NavItemUpcomming({ item, active, address }) {
 
   const handleOpen = () => {
     setOpen((prev) => !prev);
+    console.log('setOpen');
   };
 
   const activeRootStyle = {
@@ -311,19 +315,44 @@ NavSection.propTypes = {
 };
 
 export default function NavSection({ navConfig, address, ...other }) {
+  const dispatch = useDispatch();
+
+  console.log('navConfig', navConfig);
+
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+  console.log(capitalizeFirstLetter('foo')); // Foo
+
+  useEffect(() => {
+    dispatch({ type: 'GET_HEADER_TITLES', payload: navConfig });
+  }, []);
+
   const { pathname } = useLocation();
   const match = (path) => (path ? !!matchPath({ path, end: false }, pathname) : false);
+
+  const getRouteTitle = () => {
+    const currentRouteTitle = pathname.replace(`/${address}/`, '');
+    dispatch({ type: 'SET_CURRENT_ROUTE_TITLE', payload: currentRouteTitle });
+  };
 
   return (
     <Box {...other} sx={{ pl: 7, overflow: 'hidden', mt: 2 }}>
       <List disablePadding>
-        {navConfig.map((item) =>
-          item.title == 'yield farms' || item.title == 'savings' ? (
+        {navConfig.map((item) => {
+          // console.log('itemTitle', item.title);
+          return item.title === 'yield farms' || item.title === 'savings' ? (
             <NavItemUpcomming key={item.title} item={item} active={match} address={address} />
           ) : (
-            <NavItem key={item.title} item={item} active={match} address={address} />
-          )
-        )}
+            <NavItem
+              key={item.title}
+              item={item}
+              active={match}
+              address={address}
+              onClick={getRouteTitle()}
+            />
+          );
+        })}
       </List>
     </Box>
   );
