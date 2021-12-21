@@ -55,6 +55,7 @@ import lightIcon from '../../../assets/icons/lightIcon.svg';
 import ThemeConfig from '../../../theme/index.js';
 import Sidebar from '../sidebar/sidebar';
 import lightDashboard from '../../../assets/images/lightDashboard.jpg';
+import lightDashboardBig from '../../../assets/images/lightDashboardBig.jpg';
 import { getThemeTask } from '../../../store/themeChanger/reducer';
 import { connect, useDispatch } from 'react-redux';
 
@@ -62,15 +63,23 @@ const DRAWER_WIDTH = 280;
 const APPBAR_MOBILE = 64;
 const APPBAR_DESKTOP = 92;
 
-const RootStyle = styled(AppBar)(({ theme }) => ({
-  boxShadow: 'none',
-  backdropFilter: 'blur(6px)',
-  WebkitBackdropFilter: 'blur(10px)', // Fix on Mobile
-  background: localStorage.getItem('selectedTheme') == 'Day' ? `url(${lightDashboard})` : `#0B0E1D`,
-  [theme.breakpoints.up('lg')]: {
-    width: `calc(100% - ${DRAWER_WIDTH + 1}px)`,
-  },
-}));
+const RootStyle = styled(AppBar)`
+  box-shadow: none;
+  backdrop-filter: blur(6px);
+  webkit-backdrop-filter: blur(10px); // Fix on Mobile
+  background: ${localStorage.getItem('selectedTheme') === 'Day'
+    ? `url(${lightDashboard})`
+    : `#0B0E1D`};
+  @media (min-width: 1880px) {
+    background-image: ${localStorage.getItem('selectedTheme') === 'Day'
+      ? `url(${lightDashboardBig})`
+      : `#0B0E1D`};
+  }
+`;
+
+// [theme.breakpoints.up('lg')]: {
+//   width: `calc(100% - ${DRAWER_WIDTH + 1}px)`,
+// },
 
 const ToolbarStyle = styled(Toolbar)(({ theme }) => ({
   minHeight: APPBAR_MOBILE,
@@ -158,14 +167,15 @@ function Header({ onOpenSidebar, themeChanger, ChangeTheme }) {
               <img
                 style={{ 'margin-bottom': '-24px', 'margin-right': '1px' }}
                 src={lightIcon}
-                alt=""></img>
+                alt=""
+              />
             ) : (
-              <img style={{ 'margin-right': '15px' }} src={darkIcon} alt=""></img>
+              <img style={{ 'margin-right': '15px' }} src={darkIcon} alt="" />
             )}
           </IconButton>
         </div>
         <div>
-          <ThemeConfig themeSelection={theme}></ThemeConfig>
+          <ThemeConfig themeSelection={theme} />
         </div>
       </ToolbarStyle>
     </RootStyle>
