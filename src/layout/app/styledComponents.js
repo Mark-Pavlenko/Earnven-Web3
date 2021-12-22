@@ -17,7 +17,7 @@ export const MainStyle = styled('div')`
     return props.appBarDesktop + 15;
   }};
   padding-left: ${(props) => props.theme.spacing(2)};
-  padding-right: ${(props) => props.theme.spacing(2)};
+  padding-right: ${(props) => props.theme.spacing(20)};
   padding-top: ${(props) => props.theme.spacing(14)};
   @media (min-width: 1880px) {
     background-image: ${(props) =>
