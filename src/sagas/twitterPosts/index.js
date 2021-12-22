@@ -9,33 +9,32 @@ export function* getTwitterPostsSagaWatcher() {
 
 function* twitterPostsWorker(mockTwitterObject) {
   const attributes = mockTwitterObject.payload;
+
   const twitterPosts = yield call(API.getTwitterPosts, attributes);
-  // console.log('twitter posts', twitterPosts);
 
   let tweetArrayOfData = [];
-
-  for (let i = 0; i < twitterPosts.length; i++) {
-    let object = {};
-
-    const tweetId = twitterPosts[i].id;
-    const result = yield call(API.getTweetsByUsers, tweetId);
-    // console.log('tweetsByUser', result);
-
-    const tweetData = result.tweetDataUsers[1];
-    if (tweetData != null) {
-      object.username = tweetData.username ? tweetData.username : '';
-      object.profile_image_url = tweetData.profile_image_url ? tweetData.profile_image_url : '';
-      object.url = tweetData.url ? tweetData.url : '';
-      object.public_metrics = tweetData.public_metrics ? tweetData.public_metrics : '';
-      object.created_at = tweetData.created_at ? tweetData.created_at : '';
-      object.id = tweetData.id;
-      object.name = tweetData.name;
-      object.pinned_tweet_id = tweetData.pinned_tweet_id ? tweetData.pinned_tweet_id : '';
-      object.text = result.tweetDataText.text ? result.tweetDataText.text : '';
-      tweetArrayOfData.push(object);
+  for (let i = 1; i < twitterPosts.data.data.length; i++) {
+    //get the tweets data
+    const tweeterTweets = twitterPosts.data.includes.tweets[i];
+    if (tweeterTweets != null) {
+      //get the respective user data
+      for (let j = 0; j < twitterPosts.data.includes.users.length; j++) {
+        let object = {};
+        const tweetData = twitterPosts.data.includes.users[j];
+        if (tweeterTweets.author_id === tweetData.id) {
+          object.username = tweetData.username ? tweetData.username : '';
+          object.profile_image_url = tweetData.profile_image_url ? tweetData.profile_image_url : '';
+          object.url = tweetData.url ? tweetData.url : '';
+          object.public_metrics = tweetData.public_metrics ? tweetData.public_metrics : '';
+          object.created_at = tweeterTweets.created_at ? tweeterTweets.created_at : '';
+          object.id = tweeterTweets.id;
+          object.name = tweetData.name;
+          object.pinned_tweet_id = tweetData.pinned_tweet_id ? tweetData.pinned_tweet_id : '';
+          object.text = tweeterTweets.text ? tweeterTweets.text : '';
+          tweetArrayOfData.push(object);
+        }
+      }
     }
   }
-  // console.log('tweetArrayOfData', tweetArrayOfData);
   yield put(actions.getTwitterPosts(tweetArrayOfData));
-  // return tweetArrayOfData;
 }

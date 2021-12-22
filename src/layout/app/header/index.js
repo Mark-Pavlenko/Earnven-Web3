@@ -14,7 +14,7 @@ import MenuListComposition from '../../../components/gasDropDownMenu';
 import LanguageDropDown from '../../../components/languageDropDown';
 import HelpDropDown from '../../../components/helpDropDown';
 // import TransparentButton from '../../../components/TransparentButton'
-import SearchTokens from '../../../components/searchTokens';
+import SearchTokens from '../../../components/searchTokens/searchTokens';
 import Brightness3Icon from '@material-ui/icons/Brightness3';
 import Brightness7Icon from '@material-ui/icons/Brightness7';
 import darkIcon from '../../../assets/icons/darkIcon.svg';
@@ -26,29 +26,13 @@ import lightDashboardBig from '../../../assets/images/lightDashboardBig.jpg';
 import { getThemeTask } from '../../../store/themeChanger/reducer';
 import { connect, useDispatch } from 'react-redux';
 
+import { AppBarLayout, HeaderTitle } from './styles';
+
 const DRAWER_WIDTH = 280;
 const APPBAR_MOBILE = 64;
 const APPBAR_DESKTOP = 92;
 
-const RootStyle = styled(AppBar)`
-  box-shadow: none;
-  backdrop-filter: blur(6px);
-  webkit-backdrop-filter: blur(10px); // Fix on Mobile
-  background: ${localStorage.getItem('selectedTheme') === 'Day'
-    ? `url(${lightDashboard})`
-    : `#0B0E1D`};
-  @media (min-width: 1880px) {
-    background-image: ${localStorage.getItem('selectedTheme') === 'Day'
-      ? `url(${lightDashboardBig})`
-      : `#0B0E1D`};
-  }
-`;
-
-// [theme.breakpoints.up('lg')]: {
-//   width: `calc(100% - ${DRAWER_WIDTH + 1}px)`,
-// },
-
-const ToolbarStyle = styled(Toolbar)(({ theme }) => ({
+const ToolbarLayout = styled(Toolbar)(({ theme }) => ({
   minHeight: APPBAR_MOBILE,
   [theme.breakpoints.up('lg')]: {
     minHeight: APPBAR_DESKTOP,
@@ -61,35 +45,25 @@ Header.propTypes = {
   themeChanger: PropTypes.func,
 };
 
-import { useSelector } from 'react-redux';
-import { headerTitlesReducer } from '../../../store/headerTitlesReducer/reducer';
-
-function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle }) {
+function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle, themeType }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   console.log('finalTitle', finalTitle);
+  console.log('isLightTheme', themeType);
+  const isLightTheme = themeType;
 
   const { address } = useParams();
-  const [pageTitle, setPageTitle] = useState(false);
   const [Token, setToken] = useState('');
   const [flag, setFlag] = useState(false);
   const [theme, setTheme] = useState(false);
-  const icon = !theme ? <Brightness3Icon /> : <Brightness7Icon />;
   function callbackFunction(childData) {
     setToken(childData);
     navigate(`/${address}/token/${childData}`);
   }
 
-  // useEffect(() => {
-  //   finalTitle = capitalizeFirstLetter(title);
-  // }, []);
-
-  // const setEvent = payload => ({ type: timelineCalenderConstants.SET_EVENT, payload });
-
   function setDynamicTheme() {
     setTheme(!theme);
-    // setFlag(true);
     if (theme) {
       localStorage.setItem('selectedTheme', 'Day');
       setFlag(false);
@@ -100,17 +74,18 @@ function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle }) {
     dispatch({ type: 'GET_THEME', isLightTheme: flag });
   }
 
+  console.log('token header', Token);
+
   return (
-    <RootStyle>
-      <ToolbarStyle>
-        <MHidden width="lgUp">
-          <IconButton onClick={onOpenSidebar} sx={{ mr: 1, color: 'text.primary' }}>
-            <Icon icon={menu2Fill} />
-          </IconButton>
-        </MHidden>
-        <h2 style={{ marginLeft: '300px', color: 'red' }}>{finalTitle}</h2>
+    <AppBarLayout isLightTheme={isLightTheme}>
+      <ToolbarLayout>
+        {/*<MHidden width="lgUp">*/}
+        {/*  <IconButton onClick={onOpenSidebar} sx={{ mr: 1, color: 'text.primary' }}>*/}
+        {/*    <Icon icon={menu2Fill} />*/}
+        {/*  </IconButton>*/}
+        {/*</MHidden>*/}
+        <HeaderTitle isLightTheme={isLightTheme}> {finalTitle}</HeaderTitle>
         <div>
-          <span style={{ visibility: 'hidden' }}>{Token}</span>
           <SearchTokens parentCallback={callbackFunction} />
         </div>
 
@@ -153,8 +128,8 @@ function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle }) {
         <div>
           <ThemeConfig themeSelection={theme} />
         </div>
-      </ToolbarStyle>
-    </RootStyle>
+      </ToolbarLayout>
+    </AppBarLayout>
   );
 }
 

@@ -7,8 +7,8 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { withStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
 import { Box, Typography } from '@material-ui/core';
-import { getThemeTask } from '../../store/themeChanger/reducer';
-// import { Redirect } from 'react-router'
+import { getAllTokens, getSearchedTokens } from '../../store/searchedTokens/actions';
+import { chosenTokensList, tokensList } from '../../store/searchedTokens/reducer';
 
 let allTokens = [];
 
@@ -44,14 +44,12 @@ const styles = () => ({
   },
 });
 
-class App extends Component {
+export class SearchTokens extends Component {
   async componentWillMount() {
-    await axios
-      .get(`https://api.coingecko.com/api/v3/coins/list`, {}, {})
-      .then(async (response) => {
-        allTokens = response.data;
-        console.log('all tokens:::', allTokens);
-      });
+    // await axios.get(`https://api.coingecko.com/api/v3/coins/list`).then(async (response) => {
+    //   allTokens = response.data;
+    //   console.log('all tokens:::', allTokens);
+    // });
   }
 
   sendData = () => {
@@ -59,18 +57,23 @@ class App extends Component {
   };
 
   searchTokens = async (event) => {
+    // console.log('change input value');
     event.preventDefault();
-    console.log('search token method called');
+    // console.log('search token method called');
+
+    // console.log('output the entered value in search string', event.target.value);
+    this.props.getSearchedTokens(event.target.value);
+
     const arr = [];
-    for (let i = 0; i < allTokens.length; i++) {
+    for (let i = 0; i < this.props.chosenTokensList.length; i++) {
       const searchPattern = new RegExp(`^${event.target.value}`, 'i');
-      if (searchPattern.test(allTokens[i].id)) {
-        arr.push(allTokens[i]);
+      if (searchPattern.test(this.props.chosenTokensList[i].id) && event.target.value) {
+        arr.push(this.props.chosenTokensList[i]);
       }
     }
-    console.log('value of arr', arr);
+    // console.log('value of arr', arr);
     if (arr.length < 1000) {
-      console.log('value in autocomplete', this.state.results);
+      // console.log('value in autocomplete', this.state.results);
       await this.setState({ results: arr });
     }
     // console.log(event)
@@ -78,6 +81,7 @@ class App extends Component {
   };
 
   submitSearch = async (event, value) => {
+    // console.log('input change value');
     event.preventDefault();
     // console.log(value)
     if (value) {
@@ -123,6 +127,8 @@ class App extends Component {
     //         }}/>;
     // }
 
+    // console.log('final tokensList', this.props.chosenTokensList);
+
     return (
       <div
         style={{
@@ -135,9 +141,18 @@ class App extends Component {
         {/*  123*/}
         {/*</button>*/}
         <div>
-          {console.log('autocomplete re render')}
+          {/*{console.log('autocomplete re render')}*/}
           <Autocomplete
             // style={{ width: '100%', float: 'left' }}
+            onFocus={() => {
+              // console.log('focus on input');
+              this.props.getAllTokens();
+              // saga to get all Tokens
+              // in saga - send to redux
+            }}
+            // onBlur={() => {
+            //   console.log('remove input');
+            // }}
             freeSolo
             blurOnSelect
             // autoSelect
@@ -198,8 +213,17 @@ class App extends Component {
   }
 }
 
-App.propTypes = {
+SearchTokens.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(connect()(App));
+const mapStateToProps = (state) => ({
+  chosenTokensList: state.chosenTokensList.chosenTokensList,
+});
+
+const mapDispatchToProps = {
+  getSearchedTokens,
+  getAllTokens,
+};
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(SearchTokens));

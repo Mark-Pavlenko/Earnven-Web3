@@ -200,6 +200,7 @@ export default function GasDropDownMenu() {
       <IconButton
         ref={anchorRef}
         onClick={() => {
+          console.log('gas click');
           handleOpen();
         }}
         sx={{
