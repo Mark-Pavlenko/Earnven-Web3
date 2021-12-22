@@ -47,10 +47,10 @@ export default function AppLayout({ propChangeTheme }) {
         address={localStorage.getItem('selected-account')}
         name={localStorage.getItem('selected-name')}
         global_wallet={localStorage.getItem('wallets')}
-        setTheme={changeTheme}
+        setTheme={() => setChangeTheme(!changeTheme)}
       />
       <MainStyle
-        setTheme={changeTheme}
+        setTheme={() => setChangeTheme(!changeTheme)}
         appBarMobile={64}
         appBarDesktop={92}
         themeBG={theme}

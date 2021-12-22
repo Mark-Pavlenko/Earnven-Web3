@@ -26,7 +26,7 @@ import lightDashboardBig from '../../../assets/images/lightDashboardBig.jpg';
 import { getThemeTask } from '../../../store/themeChanger/reducer';
 import { connect, useDispatch } from 'react-redux';
 
-import { AppBarLayout, HeaderTitle } from './styles';
+import { AppBarLayout, HeaderLayout, HeaderTitle } from './styles';
 
 const DRAWER_WIDTH = 280;
 const APPBAR_MOBILE = 64;
@@ -79,55 +79,46 @@ function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle, themeTyp
   return (
     <AppBarLayout isLightTheme={isLightTheme}>
       <ToolbarLayout>
-        <MHidden width="lgUp">
-          <IconButton onClick={onOpenSidebar} sx={{ mr: 1, color: 'text.primary' }}>
-            <Icon icon={menu2Fill} />
-          </IconButton>
-        </MHidden>
-        <HeaderTitle isLightTheme={isLightTheme}> {finalTitle}</HeaderTitle>
-        <div>
-          <SearchTokens parentCallback={callbackFunction} />
-        </div>
-
-        <Box sx={{ flexGrow: 1 }} />
-
-        {/* <Stack direction="row" spacing={{ xs: 1.5, sm: 3.5 }}> */}
-        <div style={{ marginRight: '20px' }}>
-          <NetworkDropDown />
-        </div>
-        <div style={{ marginRight: '20px' }}>
-          <MenuListComposition />
-        </div>
-        <div style={{ marginRight: '20px' }}>
-          <LanguageDropDown />
-        </div>
-        <div style={{ marginRight: '20px' }}>
-          <HelpDropDown />
-        </div>
-        <div style={{ marginRight: '20px' }}>
-          <IconButton
-            edge="end"
-            color="inherit"
-            aria-label="mode"
-            onClick={() => {
-              setDynamicTheme();
-              themeChanger();
-              ChangeTheme(theme);
-            }}>
-            {!theme ? (
-              <img
-                style={{ 'margin-bottom': '-24px', 'margin-right': '1px' }}
-                src={lightIcon}
-                alt=""
-              />
-            ) : (
-              <img style={{ 'margin-right': '15px' }} src={darkIcon} alt="" />
-            )}
-          </IconButton>
-        </div>
-        <div>
-          <ThemeConfig themeSelection={theme} />
-        </div>
+        <HeaderLayout>
+          <MHidden width="lgUp">
+            <IconButton onClick={onOpenSidebar} sx={{ mr: 1, color: 'text.primary' }}>
+              <Icon icon={menu2Fill} />
+            </IconButton>
+          </MHidden>
+          <div>
+            <HeaderTitle isLightTheme={isLightTheme}> {finalTitle}</HeaderTitle>
+          </div>
+          <div>
+            <SearchTokens parentCallback={callbackFunction} isLightTheme={isLightTheme} />
+          </div>
+          {/*<Box sx={{ flexGrow: 1 }} />*/}
+          {/* <Stack direction="row" spacing={{ xs: 1.5, sm: 3.5 }}> */}
+          <div>
+            <NetworkDropDown />
+            <MenuListComposition />
+            <LanguageDropDown />
+            <HelpDropDown />
+            <IconButton
+              edge="end"
+              color="inherit"
+              aria-label="mode"
+              onClick={() => {
+                setDynamicTheme();
+                themeChanger();
+                ChangeTheme(theme);
+              }}>
+              {!theme ? (
+                <img
+                  style={{ 'margin-bottom': '-24px', 'margin-right': '1px' }}
+                  src={lightIcon}
+                  alt=""
+                />
+              ) : (
+                <img style={{ 'margin-right': '15px' }} src={darkIcon} alt="" />
+              )}
+            </IconButton>
+          </div>
+        </HeaderLayout>
       </ToolbarLayout>
     </AppBarLayout>
   );

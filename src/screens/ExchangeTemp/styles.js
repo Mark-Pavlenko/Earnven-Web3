@@ -98,7 +98,7 @@ export const StyledHomePageContainer = styled.div`
       }
       .swap-page-container {
         position: relative;
-        padding: 8px;
+        padding: 18px;
         .swap-page-wrapper {
           display: grid;
           grid-auto-rows: auto;

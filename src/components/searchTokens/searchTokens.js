@@ -8,9 +8,8 @@ import { withStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
 import { Box, Typography } from '@material-ui/core';
 import { getAllTokens, getSearchedTokens } from '../../store/searchedTokens/actions';
-import { chosenTokensList, tokensList } from '../../store/searchedTokens/reducer';
 
-let allTokens = [];
+import { MainLayout } from './styles';
 
 const styles = () => ({
   root: {
@@ -80,61 +79,21 @@ export class SearchTokens extends Component {
     };
   }
 
-  // themeHandler() {
-  // componentDidMount() {
-  //   const isLightTheme = localStorage.getItem('selectedTheme') === 'Day';
-  //   console.log('isLightTheme', isLightTheme);
-  //
-  //   console.log('123');
-  //   // this.props.dispatch(getThemeTask(isLightTheme));
-  // }
-
-  // }
-
   render() {
+    const isLightTheme = this.props.isLightTheme;
+    console.log('search field light theme', isLightTheme);
+
     const { classes } = this.props;
 
-    // if (this.state.redirect===true) {
-    //     this.setState({redirect:false})
-    //     return <Redirect
-    //       to={{
-    //           pathname: '/test',
-    //           state: {searchValue : this.state.searchContent}
-    //         }}/>;
-    // }
-
-    // console.log('final tokensList', this.props.chosenTokensList);
-
     return (
-      <div
-        style={{
-          width: '242px',
-          backgroundColor: localStorage.getItem('selectedTheme') == 'Day' ? 'white' : '#10142c',
-          marginLeft: '586px',
-          borderRadius: '11%',
-        }}>
-        {/*<button type="button" onClick={this.themeHandler}>*/}
-        {/*  123*/}
-        {/*</button>*/}
+      <MainLayout isLightTheme={isLightTheme}>
         <div>
-          {/*{console.log('autocomplete re render')}*/}
           <Autocomplete
-            style={{
-              borderColor: 'red',
-            }}
-            // style={{ width: '100%', float: 'left' }}
             onFocus={() => {
-              // console.log('focus on input');
               this.props.getAllTokens();
-              // saga to get all Tokens
-              // in saga - send to redux
             }}
-            // onBlur={() => {
-            //   console.log('remove input');
-            // }}
             freeSolo
             blurOnSelect
-            // autoSelect
             fullWidth
             autoComplete
             autoHighlight
@@ -148,15 +107,13 @@ export class SearchTokens extends Component {
               <Box
                 component="li"
                 sx={{
-                  // fontSize: 14,
                   fontWeight: 600,
                   fontFamily: 'Poppins, sans-serif',
-                  // backgroundColor: (theme)=> theme.palette.background.default,
-                  '& > span': { mr: '10px', fontSize: 18 },
+                  '& > span': { mr: '10px', fontSize: 40 },
+                  '& .MuiTextField-root': { m: 1, height: '250ch' },
                 }}
                 {...props}>
                 <Typography variant="body2">{option.name}</Typography>
-                {/* {console.log("value of option in render:::",option)} */}
               </Box>
             )}
             renderInput={(params) => (
@@ -165,29 +122,20 @@ export class SearchTokens extends Component {
                 id="filled-search"
                 onChange={this.searchTokens}
                 variant="outlined"
-                size="medium"
                 label="Search Tokens..."
                 style={{
                   borderColor: 'red',
-                  backgroundColor: 'white',
+                  backgroundColor: this.props.isLightTheme ? '#ffffff' : '#10142c',
                   border: '0px',
                   borderStyle: 'solid',
-                  borderRadius: '7px',
+                  borderRadius: '10px',
                 }}
+                size="small"
               />
-              // <SearchInput {...params}
-              //      onChange={this.searchTokens}></SearchInput>
             )}
           />
         </div>
-        {/*  <div style={{float:'left'}}>
-                        &nbsp;
-                        <Button style={{height:'60px', borderRadius:'50px'}} variant="contained">
-                            Search
-                        </Button>
-                        </div>
-                        </form>  */}
-      </div>
+      </MainLayout>
     );
   }
 }

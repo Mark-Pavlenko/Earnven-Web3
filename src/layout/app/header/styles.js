@@ -9,8 +9,15 @@ export const AppBarLayout = styled(AppBar)`
   webkit-backdrop-filter: blur(10px); // Fix on Mobile
   background: ${(props) => (props.isLightTheme ? `url(${lightDashboard})` : `#0B0E1D`)};
   @media (min-width: 1880px) {
-    background-image: ${(props) => (props.isLightTheme ? `url(${lightDashboardBig})` : `#0B0E1D`)};
+    background: ${(props) => (props.isLightTheme ? `url(${lightDashboardBig})` : `#0B0E1D`)};
   }
+`;
+
+export const HeaderLayout = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  justify-items: center;
 `;
 
 export const HeaderTitle = styled.div`
