@@ -45,13 +45,6 @@ const styles = () => ({
 });
 
 export class SearchTokens extends Component {
-  async componentWillMount() {
-    // await axios.get(`https://api.coingecko.com/api/v3/coins/list`).then(async (response) => {
-    //   allTokens = response.data;
-    //   console.log('all tokens:::', allTokens);
-    // });
-  }
-
   sendData = () => {
     this.props.parentCallback(this.state.token);
   };
@@ -59,29 +52,12 @@ export class SearchTokens extends Component {
   searchTokens = async (event) => {
     // console.log('change input value');
     event.preventDefault();
-    // console.log('search token method called');
-
-    // console.log('output the entered value in search string', event.target.value);
     this.props.getSearchedTokens(event.target.value);
-
-    const arr = [];
-    for (let i = 0; i < this.props.chosenTokensList.length; i++) {
-      const searchPattern = new RegExp(`^${event.target.value}`, 'i');
-      if (searchPattern.test(this.props.chosenTokensList[i].id) && event.target.value) {
-        arr.push(this.props.chosenTokensList[i]);
-      }
-    }
-    // console.log('value of arr', arr);
-    if (arr.length < 1000) {
-      // console.log('value in autocomplete', this.state.results);
-      await this.setState({ results: arr });
-    }
-    // console.log(event)
+    await this.setState({ results: this.props.chosenTokensList });
     this.setState({ searchContent: event.target.value.id });
   };
 
   submitSearch = async (event, value) => {
-    // console.log('input change value');
     event.preventDefault();
     // console.log(value)
     if (value) {
@@ -143,6 +119,9 @@ export class SearchTokens extends Component {
         <div>
           {/*{console.log('autocomplete re render')}*/}
           <Autocomplete
+            style={{
+              borderColor: 'red',
+            }}
             // style={{ width: '100%', float: 'left' }}
             onFocus={() => {
               // console.log('focus on input');
@@ -189,8 +168,8 @@ export class SearchTokens extends Component {
                 size="medium"
                 label="Search Tokens..."
                 style={{
-                  borderColor: 'white',
-                  color: 'white',
+                  borderColor: 'red',
+                  backgroundColor: 'white',
                   border: '0px',
                   borderStyle: 'solid',
                   borderRadius: '7px',

@@ -79,11 +79,11 @@ function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle, themeTyp
   return (
     <AppBarLayout isLightTheme={isLightTheme}>
       <ToolbarLayout>
-        {/*<MHidden width="lgUp">*/}
-        {/*  <IconButton onClick={onOpenSidebar} sx={{ mr: 1, color: 'text.primary' }}>*/}
-        {/*    <Icon icon={menu2Fill} />*/}
-        {/*  </IconButton>*/}
-        {/*</MHidden>*/}
+        <MHidden width="lgUp">
+          <IconButton onClick={onOpenSidebar} sx={{ mr: 1, color: 'text.primary' }}>
+            <Icon icon={menu2Fill} />
+          </IconButton>
+        </MHidden>
         <HeaderTitle isLightTheme={isLightTheme}> {finalTitle}</HeaderTitle>
         <div>
           <SearchTokens parentCallback={callbackFunction} />
