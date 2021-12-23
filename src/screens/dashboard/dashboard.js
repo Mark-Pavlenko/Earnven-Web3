@@ -7,13 +7,14 @@ import Page from '../../components/Page';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import Balance from '../../components/Balance';
+import sendIcon from '../../assets/icons/send-icon.svg';
 import { Box, Container, Grid } from '@material-ui/core';
 import AllAssets from '../../components/allAssets/index copy';
 import LoansAndSavings from '../../components/LoansAndSavings';
-import { TokenButtonsBlock, TokenButton } from './styledComponents';
-import PortfolioPerf from '../../components/portfolioperf/portfolioperf';
-import sendIcon from '../../assets/icons/send-icon.svg';
 import etherScanIcon from '../../assets/icons/etherScan-icon.svg';
+import etherScanDark from '../../assets/icons/etherScanDark-icon.svg';
+import PortfolioPerf from '../../components/portfolioperf/portfolioperf';
+import { TokenButtonsBlock, SendButton, EtherScanButton } from './styledComponents';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -35,6 +36,9 @@ export default function Dashboard({ test, changeTheme }) {
   const { address } = useParams();
   const [value, setValue] = useState(0);
 
+  const ownWallet = '0x49a2dcc237a65cc1f412ed47e0594602f6141936';
+  const currentWallet = localStorage.getItem('selected-account');
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -44,8 +48,12 @@ export default function Dashboard({ test, changeTheme }) {
       <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <DashboardTabs isLightTheme={theme} toggleTabsHandler={handleChange} />
         <TokenButtonsBlock>
-          <TokenButton icon={sendIcon} />
-          <TokenButton icon={etherScanIcon} />
+          {currentWallet === ownWallet && <SendButton isLightTheme={theme} icon={sendIcon} />}
+          <EtherScanButton
+            isLightTheme={theme}
+            icon={etherScanIcon}
+            etherScanDark={etherScanDark}
+          />
         </TokenButtonsBlock>
       </Box>
       <TabPanel value={value} index={0}>
