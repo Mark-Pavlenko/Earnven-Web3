@@ -6,11 +6,11 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import TransparentButton from '../../components/TransparentButton';
-import EthereumIcon from '../../assets/icons/ethereum.svg'
-import BinanceIcon from '../../assets/icons/binance.svg'
-import Solana from '../../assets/icons/solana.svg'
-import Polkadot from '../../assets/icons/polkadot.svg'
-import Polygon from '../../assets/icons/polygon.svg'
+import EthereumIcon from '../../generalAssets/icons/ethereum.svg'
+import BinanceIcon from '../../generalAssets/icons/binance.svg'
+import Solana from '../../generalAssets/icons/solana.svg'
+import Polkadot from '../../generalAssets/icons/polkadot.svg'
+import Polygon from '../../generalAssets/icons/polygon.svg'
 
 import {data} from '../../globalStore'
 
@@ -93,8 +93,8 @@ import { Box, MenuItem, ListItemIcon, ListItemText, IconButton } from '@material
 // components
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MenuPopover from '../MenuPopover';
-// import globe from '../../assets/icons/globe.svg'
-// import languageImg from '../../assets/icons/language.png'
+// import globe from '../../generalAssets/icons/globe.svg'
+// import languageImg from '../../generalAssets/icons/language.png'
 // import { IoIosHelpCircleOutline } from "react-icons/io";
 
 import EthereumIcon from '../../assets/icons/ethereum.svg';

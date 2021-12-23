@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom';
 import Balance from '../../components/Balance';
 import sendIcon from '../../assets/icons/send-icon.svg';
 import { Box, Container, Grid } from '@material-ui/core';
-import AllAssets from '../../components/allAssets/index copy';
+import AllAssets from '../../components/allAssets/generalAssets/assets';
 import LoansAndSavings from '../../components/LoansAndSavings';
 import etherScanIcon from '../../assets/icons/etherScan-icon.svg';
 import etherScanDark from '../../assets/icons/etherScanDark-icon.svg';

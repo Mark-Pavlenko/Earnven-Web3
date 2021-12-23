@@ -19,10 +19,10 @@ import {
   Tooltip,
   Typography,
 } from '@material-ui/core';
-// import exchangeIcon from '../../assets/icons/exchange.png'
-// import Curve from '../../assets/icons/Curve.webp';
-// import SushiSwap from '../../assets/icons/Sushiswap.webp';
-// import Bancor from '../../assets/icons/Bancor.webp';
+// import exchangeIcon from '../../generalAssets/icons/exchange.png'
+// import Curve from '../../generalAssets/icons/Curve.webp';
+// import SushiSwap from '../../generalAssets/icons/Sushiswap.webp';
+// import Bancor from '../../generalAssets/icons/Bancor.webp';
 import styled from 'styled-components';
 import { ethers } from 'ethers';
 import { formatUnits } from '@ethersproject/units';
@@ -351,7 +351,7 @@ export default function ExchangeMini() {
             protocolQuote.netReceived =
               parseFloat(protocolQuote.receivedValueInDollar) - parseFloat(protocolQuote.gas);
             protocolQuote.transactObject = response.data;
-            // protocolQuote.image = `../../assets/icons/${protocolsList[i]}.webp`;
+            // protocolQuote.image = `../../generalAssets/icons/${protocolsList[i]}.webp`;
             if (protocolsList[i] === 'Bancor') {
               protocolQuote.image =
                 'https://assets.coingecko.com/coins/images/14053/small/bancorvbnt_32.png?1614048819';

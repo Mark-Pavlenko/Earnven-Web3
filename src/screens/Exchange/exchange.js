@@ -22,11 +22,11 @@ import {
     TextField,
     Typography
 } from '@material-ui/core';
-// import exchangeIcon from '../../assets/icons/exchange.png'
+// import exchangeIcon from '../../generalAssets/icons/exchange.png'
 import Uniswap from '../../assets/icons/Uniswap.webp';
-// import Curve from '../../assets/icons/Curve.webp';
-// import SushiSwap from '../../assets/icons/Sushiswap.webp';
-// import Bancor from '../../assets/icons/Bancor.webp';
+// import Curve from '../../generalAssets/icons/Curve.webp';
+// import SushiSwap from '../../generalAssets/icons/Sushiswap.webp';
+// import Bancor from '../../generalAssets/icons/Bancor.webp';
 import Balancer from '../../assets/icons/balancer.png';
 import styled from 'styled-components'
 import {ethers} from "ethers";
@@ -418,7 +418,7 @@ export default function Exchange() {
                         protocolQuote.receivedValueInDollar = ((parseInt(response.data.buyAmount) * Math.pow(10, -TokenTo.decimals)) * tokenToDollarValue).toFixed(3);
                         protocolQuote.netReceived = parseFloat(protocolQuote.receivedValueInDollar) - parseFloat(protocolQuote.gas);
                         protocolQuote.transactObject = response.data;
-                        // protocolQuote.image = `../../assets/icons/${protocolsList[i]}.webp`;
+                        // protocolQuote.image = `../../generalAssets/icons/${protocolsList[i]}.webp`;
                         if (protocolsList[i] === 'Bancor') {
                             protocolQuote.image = "https://assets.coingecko.com/coins/images/14053/small/bancorvbnt_32.png?1614048819";
                         }
