@@ -7,17 +7,17 @@ export const MainLayout = styled.div`
   //background-color: pink;
 
   @media screen and (min-width: 1601px) {
-    grid-template-columns: 65% 35%;
+    grid-template-columns: 70% 30%;
   }
 
-  @media screen and (min-width: 710px) and (max-width: 1600px) {
+  @media screen and (min-width: 710px) and (max-width: 1850px) {
     display: grid;
     grid-template-columns: 100%;
     //margin-left: 35px;
   }
 
   @media screen and (min-width: 2000px) {
-    grid-template-columns: 66% 33%;
+    //grid-template-columns: 66% 33%;
   }
 `;
 
@@ -38,11 +38,8 @@ export const GridTweetsNewsRow = styled.div`
   @media screen and (min-width: 710px) {
     display: grid;
     grid-template-columns: 50% 50%;
-    justify-items: center;
+    //justify-items: center;
     margin-bottom: 30px;
-  }
-
-  @media screen and (min-width: 2000px) {
   }
 `;
 
@@ -71,7 +68,7 @@ export const TweetBlock = styled.div`
   margin-bottom: 30px;
   padding-bottom: 5px;
   width: 458px;
-  height: 325px;
+  height: auto;
   background-color: ${(props) => (props.isLightTheme ? '#e5efff' : '#10142D')};
   mix-blend-mode: normal;
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
@@ -143,7 +140,7 @@ export const TweetDescription = styled.p`
   font-family: 'Saira', sans-serif;
   font-style: normal;
   font-weight: normal;
-  padding: 0 55px 0 55px;
+  padding: 10px 55px 30px 55px;
   color: ${(props) => (props.isLightTheme ? '#000000' : '#ffffff')};
 `;
 
@@ -228,7 +225,7 @@ export const TwitterWidget = styled.div`
 
   @media screen and (min-width: 2000px) {
     width: 100%;
-    margin-left: 20px;
+    //margin-left: 20px;
   }
 `;
 
