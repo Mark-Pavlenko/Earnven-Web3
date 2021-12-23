@@ -101,10 +101,6 @@ const useStyles = makeStyles(() =>
 );
 
 export default function Account({ address, name, global_wallet, setTheme }) {
-  console.log('address', address);
-  console.log('name', name);
-  console.log('global_wallet', global_wallet);
-  console.log('setTheme', setTheme);
   const { flag_menu } = menurender_customhook();
 
   const classes = useStyles();
