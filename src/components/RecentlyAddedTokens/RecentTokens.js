@@ -96,6 +96,7 @@ import ThemeContext from '../../ThemeContext';
 import { useSelector } from 'react-redux';
 
 export default function RecentTokens({ themeType }) {
+  console.log('light hemeType in recent tokens table', themeType);
   // const themeRecentTokens = useContext(ThemeContext);
   // console.log('themeRecentTokens', themeRecentTokens);
 

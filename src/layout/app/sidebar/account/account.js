@@ -103,6 +103,8 @@ const useStyles = makeStyles(() =>
 export default function Account({ address, name, global_wallet, setTheme }) {
   const { flag_menu } = menurender_customhook();
 
+  console.log('account setLight theme', setTheme);
+
   // const tokens = useSelector((state) => state);
   // console.log('the main tokens', tokens);
 

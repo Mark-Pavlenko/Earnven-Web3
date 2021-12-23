@@ -26,35 +26,22 @@ export default function AppLayout({ propChangeTheme }) {
   const [setTheme, setSetTheme] = useState(false);
   const [changeTheme, setChangeTheme] = useState(false);
 
-  const theme = localStorage.getItem('selectedTheme');
-
   useEffect(() => {
     propChangeTheme(setTheme);
   }, [setTheme]);
 
   return (
     <RootStyle>
-      <Header
-        ChangeTheme={(w) => setSetTheme(w)}
-        onOpenSidebar={() => setOpen(true)}
-        themeChanger={() => setChangeTheme(!changeTheme)}
-        themeType={themeType}
-        finalTitle={finalTitle}
-      />
+      <Header onOpenSidebar={() => setOpen(true)} themeType={themeType} finalTitle={finalTitle} />
       <Sidebar
         isOpenSidebar={open}
         onCloseSidebar={() => setOpen(false)}
         address={localStorage.getItem('selected-account')}
         name={localStorage.getItem('selected-name')}
         global_wallet={localStorage.getItem('wallets')}
-        setTheme={() => setChangeTheme(!changeTheme)}
+        themeType={themeType}
       />
-      <MainStyle
-        setTheme={() => setChangeTheme(!changeTheme)}
-        appBarMobile={64}
-        appBarDesktop={92}
-        themeBG={theme}
-        lightDashboard={lightDashboard}>
+      <MainStyle isLightTheme={themeType} appBarMobile={64} appBarDesktop={92}>
         <Outlet />
       </MainStyle>
     </RootStyle>

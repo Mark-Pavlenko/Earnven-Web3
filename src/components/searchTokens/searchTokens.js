@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
-import axios from 'axios';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-// import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
+import searchIcon from '../../assets/icons/searchIcon.png';
 import { Box, Typography } from '@material-ui/core';
 import { getAllTokens, getSearchedTokens } from '../../store/searchedTokens/actions';
 
@@ -22,10 +21,11 @@ const styles = () => ({
   },
   inputRoot: {
     color: 'white',
+    borderRadius: 10,
     // This matches the specificity of the default styles at https://github.com/mui-org/material-ui/blob/v4.11.3/packages/material-ui-lab/src/Autocomplete/Autocomplete.js#L90
     '&[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child': {
       // Default left padding is 6px
-      paddingLeft: 26,
+      // paddingLeft: 26,
     },
     '& .MuiOutlinedInput-notchedOutline': {
       borderColor: '#737373',
@@ -36,6 +36,12 @@ const styles = () => ({
     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
       borderColor: '#737373',
     },
+  },
+  labelRoot: {
+    fontSize: 14,
+    fontWeight: 400,
+    marginTop: -10,
+    marginLeft: -15,
   },
   option: {
     color: '#000',
@@ -123,6 +129,12 @@ export class SearchTokens extends Component {
                 onChange={this.searchTokens}
                 variant="outlined"
                 label="Search Tokens..."
+                InputLabelProps={{
+                  classes: {
+                    root: classes.labelRoot,
+                    // focused: classes.labelFocused,
+                  },
+                }}
                 style={{
                   borderColor: 'red',
                   backgroundColor: this.props.isLightTheme ? '#ffffff' : '#10142c',
@@ -130,8 +142,9 @@ export class SearchTokens extends Component {
                   borderStyle: 'solid',
                   borderRadius: '10px',
                 }}
-                size="small"
-              />
+                size="small">
+                {searchIcon}
+              </TextField>
             )}
           />
         </div>

@@ -5,7 +5,8 @@ import { Icon } from '@iconify/react';
 import menu2Fill from '@iconify/icons-eva/menu-2-fill';
 // material
 import { alpha, experimentalStyled as styled } from '@material-ui/core/styles';
-import { Box, AppBar, Toolbar, IconButton } from '@material-ui/core';
+import { Box, AppBar, Toolbar } from '@material-ui/core';
+import IconButton from '@mui/material/IconButton';
 // components
 import { MHidden } from '../../../components/@material-extend';
 // import SearchInput from '../../../components/searchInput';
@@ -24,7 +25,7 @@ import Sidebar from '../sidebar/sidebar';
 import lightDashboard from '../../../assets/images/lightDashboard.jpg';
 import lightDashboardBig from '../../../assets/images/lightDashboardBig.jpg';
 import { getThemeTask } from '../../../store/themeChanger/reducer';
-import { connect, useDispatch } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 
 import { HeaderLayout, HeaderTitle, HeaderItemsBlock } from './styles';
 
@@ -40,18 +41,27 @@ const ToolbarLayout = styled(Toolbar)(({ theme }) => ({
   },
 }));
 
+const CustomIconBtn = styled(IconButton)({
+  '&:hover': {
+    backgroundColor: 'none !important',
+    // borderColor: '#0062cc',
+    boxShadow: 'none',
+  },
+});
+
 Header.propTypes = {
   onOpenSidebar: PropTypes.func,
   themeChanger: PropTypes.func,
 };
 
-function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle, themeType }) {
+function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
+  console.log('true lightTheme', isLightTheme);
+
   console.log('finalTitle', finalTitle);
-  console.log('isLightTheme', themeType);
-  const isLightTheme = themeType;
 
   const { address } = useParams();
   const [Token, setToken] = useState('');
@@ -77,7 +87,7 @@ function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle, themeTyp
   console.log('token header', Token);
 
   return (
-    <HeaderLayout>
+    <HeaderLayout isLightTheme={isLightTheme}>
       <MHidden width="lgUp">
         <IconButton onClick={onOpenSidebar} sx={{ mr: 1, color: 'text.primary' }}>
           <Icon icon={menu2Fill} />
@@ -94,25 +104,12 @@ function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle, themeTyp
         <MenuListComposition />
         <LanguageDropDown />
         <HelpDropDown />
-        <IconButton
-          edge="end"
-          color="inherit"
-          aria-label="mode"
+        <CustomIconBtn
           onClick={() => {
             setDynamicTheme();
-            themeChanger();
-            ChangeTheme(theme);
           }}>
-          {!theme ? (
-            <img
-              style={{ 'margin-bottom': '-24px', 'margin-right': '1px' }}
-              src={lightIcon}
-              alt=""
-            />
-          ) : (
-            <img style={{ 'margin-right': '15px' }} src={darkIcon} alt="" />
-          )}
-        </IconButton>
+          {isLightTheme ? <img src={lightIcon} alt="" /> : <img src={darkIcon} alt="" />}
+        </CustomIconBtn>
       </HeaderItemsBlock>
     </HeaderLayout>
   );

@@ -3,7 +3,7 @@ import ReactPlayer from 'react-player';
 
 export const MainLayout = styled.div`
   display: grid;
-  margin-top: 35px;
+  //margin-top: 35px;
   //background-color: pink;
 
   @media screen and (min-width: 1601px) {

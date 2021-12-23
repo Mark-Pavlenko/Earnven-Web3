@@ -19,6 +19,7 @@ export const LoadingBlock = styled.div`
 export const MainBlock = styled(Box)`
   box-sizing: border-box;
   margin-top: 30px;
+  margin-bottom: 35px;
   border-radius: 10px;
   border: 5rem;
   width: auto;

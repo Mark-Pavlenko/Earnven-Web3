@@ -9,23 +9,18 @@ export const AppBarLayout = styled(AppBar)`
   background-color: red;
   display: flex;
   flex-direction: row;
-
-  // webkit-backdrop-filter: blur(10px); // Fix on Mobile
-  // background: ${(props) => (props.isLightTheme ? `url(${lightDashboard})` : `#0B0E1D`)};
-  // @media (min-width: 1880px) {
-  //   background: ${(props) => (props.isLightTheme ? `url(${lightDashboardBig})` : `#0B0E1D`)};
-  // }
 `;
 
 export const HeaderLayout = styled.div`
   display: grid;
   grid-template-columns: 50% 50%;
-  margin-left: 315px;
+  margin-left: 314px;
   height: 102px;
-  //display: flex;
-  //flex-direction: row;
-  //justify-content: space-between;
-  //justify-items: center;
+  webkit-backdrop-filter: blur(10px); // Fix on Mobile
+  background: ${(props) => (props.isLightTheme ? `url(${lightDashboard})` : `#0B0E1D`)};
+  @media (min-width: 1880px) {
+    background: ${(props) => (props.isLightTheme ? `url(${lightDashboardBig})` : `#0B0E1D`)};
+  }
 `;
 
 export const HeaderTitle = styled.div`
@@ -39,13 +34,17 @@ export const HeaderTitle = styled.div`
   line-height: 41px;
   text-align: left;
   color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#ffffff')};
-  background-color: green;
+  //background-color: green;
+
+  p {
+    font-weight: 1000;
+  }
 `;
 
 export const HeaderItemsBlock = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding-right: 35px;
-  background-color: red;
+  //padding-right: 30px;
+  //background-color: red;
 `;

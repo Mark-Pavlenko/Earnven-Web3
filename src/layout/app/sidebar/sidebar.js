@@ -28,6 +28,7 @@ import Links from './social/Links';
 import Accounts from './account/Accounts';
 import darkTheme from '../../../assets/images/darkTheme.jpg';
 import lightTheme from '../../../assets/images/lightTheme.jpg';
+import { useSelector } from 'react-redux';
 const DRAWER_WIDTH = 315;
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -51,6 +52,9 @@ export default function Sidebar({
   setTheme,
   global_wallet,
 }) {
+  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
+  // console.log('light theme type in sidebar', isLightTheme);
+
   const { pathname } = useLocation();
   const navigate = useNavigate();
   let newSideBard = [];
@@ -75,7 +79,7 @@ export default function Sidebar({
     <Scrollbar
       sx={{
         height: '100vh',
-        'background-image': (theme) => (setTheme ? `url(${darkTheme})` : `url(${lightTheme})`),
+        'background-image': () => (!isLightTheme ? `url(${darkTheme})` : `url(${lightTheme})`),
         boxShadow: '0 2px 3px 30px #d2dcf6',
         '& .simplebar-content': { display: 'flex', flexDirection: 'column' },
       }}>
@@ -87,12 +91,17 @@ export default function Sidebar({
             position: 'relative',
             bgcolor: 'transparent',
           }}>
-          <img src={CompanyLogo} alt=""></img>
-          <img className="Earnven" src={setTheme ? Dark_Earnven_logo : Earnven} alt=""></img>
+          <img src={CompanyLogo} alt="" />
+          <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
         </Stack>
       </Box>
       <Box sx={{ px: 8 }}>
-        <Account address={address} name={name} setTheme={setTheme} global_wallet={global_wallet} />
+        <Account
+          address={address}
+          name={name}
+          setTheme={isLightTheme}
+          global_wallet={global_wallet}
+        />
       </Box>
 
       <NavSection
