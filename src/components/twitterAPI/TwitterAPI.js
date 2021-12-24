@@ -32,7 +32,7 @@ export default function TwitterAPI({ themeType }) {
   const dispatch = useDispatch();
 
   const tweetsArray = useSelector((state) => state.twitterPosts.twitterPosts);
-  console.log('tweetsArray', tweetsArray);
+  // console.log('tweetsArray', tweetsArray);
 
   // console.log('isLightTheme in TwitterAPI comp', themeType);
 
@@ -68,8 +68,8 @@ export default function TwitterAPI({ themeType }) {
   const firstColumn = valuesSelector(tweetsArray, 0);
   const secondColumn = valuesSelector(tweetsArray, 1);
 
-  console.log(firstColumn);
-  console.log(secondColumn);
+  // console.log(firstColumn);
+  // console.log(secondColumn);
 
   const loadMoreTweets = () => {
     setLimit(limit + 2);

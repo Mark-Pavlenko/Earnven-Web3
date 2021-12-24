@@ -61,7 +61,7 @@ function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle }) {
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
   console.log('true lightTheme', isLightTheme);
 
-  console.log('finalTitle', finalTitle);
+  // console.log('finalTitle', finalTitle);
 
   const { address } = useParams();
   const [Token, setToken] = useState('');
@@ -73,15 +73,13 @@ function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle }) {
   }
 
   function setDynamicTheme() {
-    setTheme(!theme);
-    if (theme) {
+    if (!isLightTheme) {
       localStorage.setItem('selectedTheme', 'Day');
-      setFlag(false);
+      dispatch({ type: 'GET_THEME', isLightTheme: true });
     } else {
       localStorage.setItem('selectedTheme', 'Night');
-      setFlag(true);
+      dispatch({ type: 'GET_THEME', isLightTheme: false });
     }
-    dispatch({ type: 'GET_THEME', isLightTheme: flag });
   }
 
   console.log('token header', Token);
@@ -96,8 +94,6 @@ function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle }) {
       <HeaderTitle isLightTheme={isLightTheme}>
         <p>{finalTitle}</p>
       </HeaderTitle>
-      {/*<Box sx={{ flexGrow: 1 }} />*/}
-      {/* <Stack direction="row" spacing={{ xs: 1.5, sm: 3.5 }}> */}
       <HeaderItemsBlock>
         <SearchTokens parentCallback={callbackFunction} isLightTheme={isLightTheme} />
         <NetworkDropDown />

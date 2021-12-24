@@ -96,11 +96,11 @@ import ThemeContext from '../../ThemeContext';
 import { useSelector } from 'react-redux';
 
 export default function RecentTokens({ themeType }) {
-  console.log('light hemeType in recent tokens table', themeType);
+  // console.log('light hemeType in recent tokens table', themeType);
   // const themeRecentTokens = useContext(ThemeContext);
   // console.log('themeRecentTokens', themeRecentTokens);
 
-  console.log(' set light theme', themeType);
+  // console.log(' set light theme', themeType);
 
   const [recentTokenData, setRecentTokenData] = useState([]);
   const [Loading, setLoading] = useState(false);
@@ -145,7 +145,7 @@ export default function RecentTokens({ themeType }) {
   };
 
   const isLightTheme = themeType;
-  console.log('isLightTheme', isLightTheme);
+  // console.log('isLightTheme', isLightTheme);
 
   return (
     <>
