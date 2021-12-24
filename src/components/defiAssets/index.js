@@ -56,7 +56,7 @@ export default function DefiAssets() {
   return (
     /* <div style={{ border: '1px solid #737373', borderRadius: '7px', width: '260px', height: '253px' }}>
                 <div style={{ margin: '30px', color: '#f5f5f5', fontFamily: 'Poppins', fontStyle: 'normal', fontWeight: '300', letterSpacing: '0.025em',fontSize:'12px' }}>
-                    <h4 style={{ margin: '5px',color:'#737373' ,fontSize:'14px'}}>Defi assets</h4>
+                    <h4 style={{ margin: '5px',color:'#737373' ,fontSize:'14px'}}>Defi generalAssets</h4>
                     <div style={{  height: '28px', marginTop: '17px' }}>
                         <BiIcons.BiWallet className='icons' style={{ float: 'left', paddingTop: '0px' }} />
                         <p style={{ float: 'left', position: 'relative', margin: '0px', marginLeft: '11px' }}>Wallet</p>

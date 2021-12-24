@@ -5,18 +5,36 @@ import { BrowserView, MobileView } from 'react-device-detect';
 import { Link } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
 import { experimentalStyled as styled } from '@material-ui/core/styles';
-// import { Avatar } from "@material-ui/core";
 import Avatar from 'react-avatar';
-import ethImage from '../../assets/icons/eth.png';
+import ethImage from '../../../assets/icons/eth.png';
+import {
+  Header,
+  TotalValueField,
+  TotalTitle,
+  TotalValue,
+  Main,
+  Title,
+  EthereumTokenImage,
+  TokenImage,
+  TokenName,
+  NameWrapper,
+  APYPercent,
+  APYWrapper,
+} from './styledComponents';
+import { ToggleButton } from '../../styled/styledComponents';
 
 const CustomStyle = styled('div')(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
   height: '50px',
   background: 'transparent',
   cursor: 'pointer',
   lineHeight: '1',
   marginBottom: '5px',
   '&:hover': {
-    background: theme.palette.gradients.custom,
+    background: '#FFFFFF',
+    boxShadow: 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
+    borderRadius: '10px',
   },
 }));
 
@@ -24,7 +42,8 @@ let contents = '';
 const stage1Tokens = [];
 let arr2 = [];
 let arr1 = [];
-export default class index extends Component {
+
+export default class Assets extends Component {
   async componentWillMount() {
     // console.log(this.props)
     if (this.state.account !== this.props.address) {
@@ -46,19 +65,12 @@ export default class index extends Component {
   }
 
   loadBlockchainData = async () => {
-    // const web3 = window.web3;
-    // const accounts = await web3.eth.getAccounts();
     const web3 = new Web3();
     const accounts = this.props.address;
     // const accounts = '0xbfbe5822a880a41c2075dc7e1d92663739cf119e'
     this.setState({ account: accounts });
     arr2 = [];
-    /* await axios
-          .get(
-            `https://api.ethplorer.io/getAddressInfo/0x32Be343B94f860124dC4fEe278FDCBD38C102D88?apiKey=EK-qSPda-W9rX7yJ-UY93y`,
-            {},
-            {}
-          ) */
+
     await axios
       .get(
         `https://api.ethplorer.io/getAddressInfo/${accounts}?apiKey=EK-qSPda-W9rX7yJ-UY93y`,
@@ -157,10 +169,6 @@ export default class index extends Component {
               } else if (tx[j].from.toLowerCase() === accounts.toLowerCase()) {
                 erc20data[tx[j].contractAddress].balance -= tx[j].value / 10 ** tx[j].tokenDecimal;
               }
-
-              // if(tx[j].contractAddress==='0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'){
-              //     console.log(erc20data[tx[j].contractAddress].balance)
-              // }
             }
           }
 
@@ -276,17 +284,11 @@ export default class index extends Component {
                 });
             }
           }
-
-          // this.update();
         }
       });
   };
 
   update = () => {
-    const web3 = new Web3();
-    // await arr1.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
-    // console.log(this.state.page)
-    // var start = (this.state.page - 1) * 10;
     let end;
     if (this.state.page === 1) {
       arr2 = [];
@@ -294,9 +296,7 @@ export default class index extends Component {
     } else {
       end = this.state.page * 10;
     }
-    // if (this.state.page === 2) {
-    //     start = 6
-    // }
+
     if (end > arr1.length) {
       end = arr1.length;
       this.setState({ hideShowMore: true });
@@ -328,16 +328,9 @@ export default class index extends Component {
           object.totalInvestment = '-';
         }
 
-        // if(arr1.indexOf(object)===-1){
-        //     arr1.push(object);
-        //     console.log(arr2)
-        //     console.log(object)
-        // }
         arr2.push(object);
       }
     }
-    // console.log(arr2)
-
     this.change(arr2);
     this.setState({ contents });
   };
@@ -348,41 +341,19 @@ export default class index extends Component {
         <BrowserView>
           <Link to={`/${this.state.account}/token/${object.coingecko}`}>
             <CustomStyle>
-              <div style={{ width: '7%', height: '50px', float: 'left', paddingLeft: '13px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  width: '7%',
+                  height: '50px',
+                  float: 'left',
+                  paddingLeft: '13px',
+                }}>
                 {object.image ? (
                   object.name === 'Ethereum' ? (
-                    <img
-                      style={{
-                        display: 'inline',
-                        maxWidth: '25px',
-                        verticalAlign: 'top',
-                        // marginLeft: "10px",
-                        height: '25px',
-                        // width: "30px",
-                        // marginTop: "15px",
-                        margin: '11.3px',
-                        marginLeft: '15px',
-                        borderRadius: '50%',
-                        // backgroundColor: '#737373'
-                      }}
-                      alt=""
-                      src={ethImage}
-                    />
+                    <EthereumTokenImage alt="" src={ethImage} />
                   ) : (
-                    <img
-                      style={{
-                        display: 'inline',
-                        maxWidth: '25px',
-                        verticalAlign: 'top',
-                        // marginLeft: "10px",
-                        height: '25px',
-                        // width: "30px",
-                        // marginTop: "15px",
-                        margin: '11.3px',
-                        marginLeft: '15px',
-                        borderRadius: '50%',
-                        backgroundColor: '#e5e5e5',
-                      }}
+                    <TokenImage
                       alt=""
                       src={
                         object.image
@@ -411,65 +382,33 @@ export default class index extends Component {
                     />
                   </div>
                 )}
-                {/* <Avatar 
-                                    alt=""
-                                    src={object.image ? object.image[0] === '/' ? `https://ethplorer.io${object.image}` : `${object.image}` : ''}
-                                    sx={{
-                                        // display: 'inline',
-                                        // maxWidth: '20',
-                                        // verticalAlign: 'top',
-                                        // marginLeft: "10px",
-                                        height: "25px",
-                                        width: "25px",
-                                        // marginTop: "15px",
-                                        margin: '5px'
-                                    }}
-                                > 
-
-                                </Avatar> */}
+                <NameWrapper>
+                  <TokenName>{object.name}</TokenName>
+                </NameWrapper>
               </div>
 
-              <div
-                style={{
-                  width: '23%',
-                  height: '50px',
-                  float: 'left',
-                  textAlign: 'initial',
-                  paddingLeft: '18px',
-                }}>
-                <font
-                  color="#e5e5e5"
-                  style={{ fontSize: '15px', fontWeight: '0', lineHeight: '13px' }}>
-                  {' '}
-                  <br />
-                  {object.name}
-                </font>
-              </div>
-
-              <div style={{ width: '15%', height: '50px', float: 'left' }}>
-                <font color="#e5e5e5" style={{ fontSize: '13px' }}>
-                  {' '}
-                  <br />
+              <APYWrapper>
+                <APYPercent>
                   {((object.totalInvestment / this.state.totalValue) * 100).toFixed(2)} %
-                </font>
-              </div>
+                </APYPercent>
+              </APYWrapper>
 
-              <div
-                style={{
-                  width: '30%',
-                  height: '50px',
-                  float: 'left',
-                  textAlign: 'initial',
-                  paddingLeft: '40px',
-                }}>
-                <font color="#737373" style={{ fontSize: '13px' }}>
-                  {' '}
-                  <br /> {object.balance} {object.symbol} - ${object.rate}{' '}
-                </font>
-              </div>
+              {/*<div*/}
+              {/*  style={{*/}
+              {/*    width: '30%',*/}
+              {/*    height: '50px',*/}
+              {/*    float: 'left',*/}
+              {/*    textAlign: 'initial',*/}
+              {/*    paddingLeft: '40px',*/}
+              {/*  }}>*/}
+              {/*  <font color="#737373" style={{ fontSize: '13px' }}>*/}
+              {/*    {' '}*/}
+              {/*    <br /> {object.balance} {object.symbol} - ${object.rate}{' '}*/}
+              {/*  </font>*/}
+              {/*</div>*/}
 
               <div style={{ width: '25%', height: '50px', float: 'left' }}>
-                <font color="#e5e5e5" style={{ fontSize: '14px' }}>
+                <font color="black" style={{ fontSize: '14px' }}>
                   <br /> ${object.totalInvestment}{' '}
                 </font>
                 <font
@@ -481,26 +420,12 @@ export default class index extends Component {
                 </font>
               </div>
             </CustomStyle>
-            {/* <center>
-                            <Stack direction='row' spacing={10}>
-                                <Avatar alt='token-img' src={`https://ethplorer.io${object.image}`}></Avatar>
-                                <Typography variant="body1">Uniswap</Typography>
-                                <Typography variant="body1">10.18%</Typography>
-                                <Typography variant="body1">1000UNI-$12.45</Typography>
-                                <Stack direction='column'>
-                                    <Typography variant="body1">$1234</Typography>
-                                    <Typography variant="body1">+7.6</Typography>
-                                </Stack>
-                            </Stack>
-                        </center> */}
           </Link>
         </BrowserView>
         <MobileView>
           <Link to={`/app/token/${object.coingecko}`}>
             <div
               style={{
-                // height:'75px',
-                // width:'678px',
                 background: 'transparent',
                 cursor: 'pointer',
               }}>
@@ -541,14 +466,11 @@ export default class index extends Component {
               </div>
 
               <br />
-
-              {/* <hr></hr> */}
             </div>
           </Link>
         </MobileView>
       </div>
     ));
-    // console.log(contents)
   };
 
   constructor(props) {
@@ -559,97 +481,62 @@ export default class index extends Component {
       page: 1,
       totalValue: '00.00',
       hideShowMore: false,
+      isOpen: false,
     };
   }
-
-  lol = (e) => {
-    console.log('haha');
-  };
-
-  mouseOver = (e) => {
-    e.target.style.background = '#BB86FC';
-  };
-
-  mouseOut = (e) => {
-    e.target.style.background = 'transparent';
-  };
 
   render() {
     this.change(arr2);
     return (
-      <div>
-        <div
-          style={{
-            // width:'800px',
-            // height:'720px',
-            background: 'transparent',
-            border: '1px solid #737373',
-            borderRadius: '10px',
-          }}>
-          <Typography
-            align="justify"
-            variant="subtitle1"
-            style={{ marginTop: '15px', marginLeft: '27px' }}>
-            All Assets
-          </Typography>
-
-          <center style={{ marginTop: '5px' }}>
-            {/* <div
-            style={{
-              marginTop: "30px",
-              marginRight: "80%",
-              fontSize: "16px",
-              marginBottom: "10px",
+      <Main>
+        <Header>
+          <Title>{'Ethereum Assets'}</Title>
+          <ToggleButton
+            onClick={() => {
+              this.setState({ isOpen: !this.state.isOpen });
             }}
-          >
-            <font color="white"> All Assets </font>
-          </div> */}
+            isOpen={this.state.isOpen}
+          />
+        </Header>
+        <TotalValueField>
+          <TotalTitle>{'Total Value'}</TotalTitle>
+          <TotalValue>{`$${this.state.totalValue}`}</TotalValue>
+        </TotalValueField>
 
-            {/* <br /><font color='white'>
-                        <button
-                            onClick={async (e) => { if (this.state.page !== 1) { await this.setState({ page: this.state.page - 1 }); this.update() } }}
-                        > &lt; </button> &nbsp;&nbsp;&nbsp;
-
-                        {this.state.page} &nbsp;&nbsp;&nbsp;
-
-                        <button
-                            onClick={async (e) => { await this.setState({ page: this.state.page + 1 }); this.update() }}
-                        > &gt; </button>
-
-                    </font><br /><br /> */}
-
-            {/* <hr /> */}
-
+        {this.state.isOpen && (
+          <center style={{ marginTop: '5px' }}>
             {this.state.contents}
+            {!this.state.hideShowMore && (
+              <div>
+                <Typography
+                  variant="caption"
+                  align="right"
+                  style={{ cursor: 'pointer' }}
+                  onClick={async (e) => {
+                    await this.setState({ page: this.state.page + 1 });
+                    this.update();
+                  }}>
+                  <button
+                    style={{
+                      height: '25px',
+                      width: '100px',
+                      background: 'white',
+                      border: 'none',
+                      cursor: 'pointer',
+                      color: '#4453AD',
+                      borderRadius: '10px',
+                      fontSize: '14px',
+                      lineHeight: '22px',
+                      boxShadow: '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',
+                    }}>
+                    Show More
+                  </button>
+                </Typography>
+              </div>
+            )}
           </center>
-        </div>{' '}
-        <br />
-        {!this.state.hideShowMore && (
-          <div style={{ float: 'right', marginRight: '5px' }}>
-            <Typography
-              variant="caption"
-              align="right"
-              style={{ cursor: 'pointer' }}
-              onClick={async (e) => {
-                await this.setState({ page: this.state.page + 1 });
-                this.update();
-              }}>
-              <button
-                style={{
-                  height: '25px',
-                  width: '100px',
-                  background: 'transparent',
-                  border: '1px solid #ac6afc',
-                  cursor: 'pointer',
-                  color: 'white',
-                  borderRadius: '10px',
-                }}>
-                Show More
-              </button>
-            </Typography>
-          </div>
         )}
-      </div>
+      </Main>
     );
   }
 }

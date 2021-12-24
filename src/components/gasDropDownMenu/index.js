@@ -8,7 +8,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import axios from 'axios'
 import {data} from '../../globalStore';
-import gas from '../../assets/icons/gas.svg'
+import gas from '../../generalAssets/icons/gas.svg'
 
 export default class MenuListComposition extends React.Component {
 
