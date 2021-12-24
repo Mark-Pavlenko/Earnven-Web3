@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Input from '@mui/material/Input';
 import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { withStyles } from '@material-ui/styles';
+import IconButton from '@material-ui/core/IconButton';
+import SearchIcon from '@material-ui/icons/Search';
 import PropTypes from 'prop-types';
 import searchIcon from '../../assets/icons/searchIcon.png';
 import { Box, Typography } from '@material-ui/core';
 import { getAllTokens, getSearchedTokens } from '../../store/searchedTokens/actions';
 
 import { MainLayout } from './styles';
+import { chosenTokensList } from '../../store/searchedTokens/reducer';
 
 const styles = () => ({
   root: {
@@ -28,13 +33,13 @@ const styles = () => ({
       // paddingLeft: 26,
     },
     '& .MuiOutlinedInput-notchedOutline': {
-      borderColor: '#737373',
+      // borderColor: '#737373',
     },
     '&:hover .MuiOutlinedInput-notchedOutline': {
-      borderColor: '#737373',
+      // borderColor: '#737373',
     },
     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-      borderColor: '#737373',
+      // borderColor: '#737373',
     },
   },
   labelRoot: {
@@ -55,10 +60,11 @@ export class SearchTokens extends Component {
   };
 
   searchTokens = async (event) => {
-    // console.log('change input value');
+    console.log('change input value');
     event.preventDefault();
     this.props.getSearchedTokens(event.target.value);
     await this.setState({ results: this.props.chosenTokensList });
+    console.log('chosenTokenList', this.props.chosenTokensList);
     this.setState({ searchContent: event.target.value.id });
   };
 
@@ -67,12 +73,8 @@ export class SearchTokens extends Component {
     // console.log(value)
     if (value) {
       await this.setState({ token: value.id });
-      // window.location.href = '/test'
       this.sendData();
     }
-
-    // console.log(window.token)
-    // await this.setState({searchContent:value, redirect:true})
   };
 
   constructor(props) {
@@ -93,61 +95,66 @@ export class SearchTokens extends Component {
 
     return (
       <MainLayout isLightTheme={isLightTheme}>
-        <div>
-          <Autocomplete
-            onFocus={() => {
-              this.props.getAllTokens();
-            }}
-            freeSolo
-            blurOnSelect
-            fullWidth
-            autoComplete
-            autoHighlight
-            classes={classes}
-            onChange={(event, value) => {
-              this.submitSearch(event, value);
-            }}
-            options={this.state.results}
-            getOptionLabel={(option) => option.name}
-            renderOption={(props, option) => (
-              <Box
-                component="li"
-                sx={{
-                  fontWeight: 600,
-                  fontFamily: 'Poppins, sans-serif',
-                  '& > span': { mr: '10px', fontSize: 40 },
-                  '& .MuiTextField-root': { m: 1, height: '250ch' },
-                }}
-                {...props}>
-                <Typography variant="body2">{option.name}</Typography>
-              </Box>
-            )}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                id="filled-search"
-                onChange={this.searchTokens}
-                variant="outlined"
-                label="Search Tokens..."
-                InputLabelProps={{
-                  classes: {
-                    root: classes.labelRoot,
-                    // focused: classes.labelFocused,
-                  },
-                }}
-                style={{
-                  borderColor: 'red',
-                  backgroundColor: this.props.isLightTheme ? '#ffffff' : '#10142c',
-                  border: '0px',
-                  borderStyle: 'solid',
-                  borderRadius: '10px',
-                }}
-                size="small">
-                {searchIcon}
-              </TextField>
-            )}
-          />
-        </div>
+        {isLightTheme ? (
+          <div>
+            <Autocomplete
+              onFocus={() => {
+                this.props.getAllTokens();
+              }}
+              onChange={(event, value) => {
+                this.submitSearch(event, value);
+              }}
+              options={this.state.results}
+              getOptionLabel={(option) => option.name}
+              renderOption={(props, option) => (
+                <Box
+                  component="li"
+                  sx={{
+                    fontWeight: 600,
+                    fontFamily: 'Poppins, sans-serif',
+                    '& > span': { mr: '10px', fontSize: 40 },
+                    '& .MuiTextField-root': { m: 1, height: '250ch' },
+                  }}
+                  {...props}>
+                  <Typography variant="body2">{option.name}</Typography>
+                </Box>
+              )}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="standard"
+                  InputProps={{
+                    ...params.InputProps,
+                    endAdornment: (
+                      <>
+                        <SearchIcon />
+                      </>
+                    ),
+                  }}
+                  id="filled-search"
+                  onChange={this.searchTokens}
+                  // variant="outlined"
+                  label="Search Tokens..."
+                  InputLabelProps={{
+                    classes: {
+                      root: classes.labelRoot,
+                    },
+                  }}
+                  style={{
+                    backgroundColor: this.props.isLightTheme ? '#ffffff' : '#10142c',
+                    border: '0px',
+                    borderStyle: 'solid',
+                    borderRadius: '10px',
+                  }}
+                  size="small">
+                  <img src={searchIcon} alt="" />
+                </TextField>
+              )}
+            />
+          </div>
+        ) : (
+          <p>Here will be dark theme search field</p>
+        )}
       </MainLayout>
     );
   }
