@@ -7,17 +7,34 @@ import { Typography } from '@material-ui/core';
 import { experimentalStyled as styled } from '@material-ui/core/styles';
 import Avatar from 'react-avatar';
 import ethImage from '../../../assets/icons/eth.png';
-import { Header, TotalValueField, TotalTitle, TotalValue, Main, Title } from './styledComponents';
+import {
+  Header,
+  TotalValueField,
+  TotalTitle,
+  TotalValue,
+  Main,
+  Title,
+  EthereumTokenImage,
+  TokenImage,
+  TokenName,
+  NameWrapper,
+  APYPercent,
+  APYWrapper,
+} from './styledComponents';
 import { ToggleButton } from '../../styled/styledComponents';
 
 const CustomStyle = styled('div')(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
   height: '50px',
   background: 'transparent',
   cursor: 'pointer',
   lineHeight: '1',
   marginBottom: '5px',
   '&:hover': {
-    background: theme.palette.gradients.custom,
+    background: '#FFFFFF',
+    boxShadow: 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
+    borderRadius: '10px',
   },
 }));
 
@@ -25,6 +42,7 @@ let contents = '';
 const stage1Tokens = [];
 let arr2 = [];
 let arr1 = [];
+
 export default class Assets extends Component {
   async componentWillMount() {
     // console.log(this.props)
@@ -323,41 +341,19 @@ export default class Assets extends Component {
         <BrowserView>
           <Link to={`/${this.state.account}/token/${object.coingecko}`}>
             <CustomStyle>
-              <div style={{ width: '7%', height: '50px', float: 'left', paddingLeft: '13px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  width: '7%',
+                  height: '50px',
+                  float: 'left',
+                  paddingLeft: '13px',
+                }}>
                 {object.image ? (
                   object.name === 'Ethereum' ? (
-                    <img
-                      style={{
-                        display: 'inline',
-                        maxWidth: '25px',
-                        verticalAlign: 'top',
-                        // marginLeft: "10px",
-                        height: '25px',
-                        // width: "30px",
-                        // marginTop: "15px",
-                        margin: '11.3px',
-                        marginLeft: '15px',
-                        borderRadius: '50%',
-                        // backgroundColor: '#737373'
-                      }}
-                      alt=""
-                      src={ethImage}
-                    />
+                    <EthereumTokenImage alt="" src={ethImage} />
                   ) : (
-                    <img
-                      style={{
-                        display: 'inline',
-                        maxWidth: '25px',
-                        verticalAlign: 'top',
-                        // marginLeft: "10px",
-                        height: '25px',
-                        // width: "30px",
-                        // marginTop: "15px",
-                        margin: '11.3px',
-                        marginLeft: '15px',
-                        borderRadius: '50%',
-                        backgroundColor: '#e5e5e5',
-                      }}
+                    <TokenImage
                       alt=""
                       src={
                         object.image
@@ -386,49 +382,33 @@ export default class Assets extends Component {
                     />
                   </div>
                 )}
+                <NameWrapper>
+                  <TokenName>{object.name}</TokenName>
+                </NameWrapper>
               </div>
 
-              <div
-                style={{
-                  width: '23%',
-                  height: '50px',
-                  float: 'left',
-                  textAlign: 'initial',
-                  paddingLeft: '18px',
-                }}>
-                <font
-                  color="#e5e5e5"
-                  style={{ fontSize: '15px', fontWeight: '0', lineHeight: '13px' }}>
-                  {' '}
-                  <br />
-                  {object.name}
-                </font>
-              </div>
-
-              <div style={{ width: '15%', height: '50px', float: 'left' }}>
-                <font color="#e5e5e5" style={{ fontSize: '13px' }}>
-                  {' '}
-                  <br />
+              <APYWrapper>
+                <APYPercent>
                   {((object.totalInvestment / this.state.totalValue) * 100).toFixed(2)} %
-                </font>
-              </div>
+                </APYPercent>
+              </APYWrapper>
 
-              <div
-                style={{
-                  width: '30%',
-                  height: '50px',
-                  float: 'left',
-                  textAlign: 'initial',
-                  paddingLeft: '40px',
-                }}>
-                <font color="#737373" style={{ fontSize: '13px' }}>
-                  {' '}
-                  <br /> {object.balance} {object.symbol} - ${object.rate}{' '}
-                </font>
-              </div>
+              {/*<div*/}
+              {/*  style={{*/}
+              {/*    width: '30%',*/}
+              {/*    height: '50px',*/}
+              {/*    float: 'left',*/}
+              {/*    textAlign: 'initial',*/}
+              {/*    paddingLeft: '40px',*/}
+              {/*  }}>*/}
+              {/*  <font color="#737373" style={{ fontSize: '13px' }}>*/}
+              {/*    {' '}*/}
+              {/*    <br /> {object.balance} {object.symbol} - ${object.rate}{' '}*/}
+              {/*  </font>*/}
+              {/*</div>*/}
 
               <div style={{ width: '25%', height: '50px', float: 'left' }}>
-                <font color="#e5e5e5" style={{ fontSize: '14px' }}>
+                <font color="black" style={{ fontSize: '14px' }}>
                   <br /> ${object.totalInvestment}{' '}
                 </font>
                 <font
@@ -446,8 +426,6 @@ export default class Assets extends Component {
           <Link to={`/app/token/${object.coingecko}`}>
             <div
               style={{
-                // height:'75px',
-                // width:'678px',
                 background: 'transparent',
                 cursor: 'pointer',
               }}>
@@ -488,14 +466,11 @@ export default class Assets extends Component {
               </div>
 
               <br />
-
-              {/* <hr></hr> */}
             </div>
           </Link>
         </MobileView>
       </div>
     ));
-    // console.log(contents)
   };
 
   constructor(props) {
@@ -525,14 +500,14 @@ export default class Assets extends Component {
         </Header>
         <TotalValueField>
           <TotalTitle>{'Total Value'}</TotalTitle>
-          <TotalValue>{'42324234'}</TotalValue>
+          <TotalValue>{`$${this.state.totalValue}`}</TotalValue>
         </TotalValueField>
 
         {this.state.isOpen && (
           <center style={{ marginTop: '5px' }}>
             {this.state.contents}
             {!this.state.hideShowMore && (
-              <div style={{ float: 'right', marginRight: '5px' }}>
+              <div>
                 <Typography
                   variant="caption"
                   align="right"
@@ -545,11 +520,14 @@ export default class Assets extends Component {
                     style={{
                       height: '25px',
                       width: '100px',
-                      background: 'transparent',
-                      border: '1px solid #ac6afc',
+                      background: 'white',
+                      border: 'none',
                       cursor: 'pointer',
-                      color: 'white',
+                      color: '#4453AD',
                       borderRadius: '10px',
+                      fontSize: '14px',
+                      lineHeight: '22px',
+                      boxShadow: '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',
                     }}>
                     Show More
                   </button>

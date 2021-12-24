@@ -47,3 +47,60 @@ export const Title = styled.div`
   margin-top: 15px;
   margin-left: 27px;
 `;
+
+export const EthereumTokenImage = styled.img`
+  display: inline;
+  max-width: 25px;
+  vertical-align: top;
+  height: 25px;
+  margin: 11.3px;
+  margin-left: 15px;
+  border-radius: 50%;
+`;
+
+export const TokenImage = styled.img`
+  display: inline;
+  max-width: 25px;
+  vertical-align: top;
+  height: 25px;
+  margin: 11.3px;
+  margin-left: 15px;
+  border-radius: 50%;
+  background-color: #e5e5e5;
+`;
+
+export const TokenName = styled.div`
+  font-family: Saira, sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 25px;
+  color: #1e1e20;
+`;
+
+export const NameWrapper = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 23%;
+  height: 50px;
+  float: left;
+  text-align: initial;
+`;
+
+export const APYPercent = styled.div`
+  font-family: Saira, serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 22px;
+  color: #1e1e20;
+`;
+
+export const APYWrapper = styled.div`
+  height: 50px;
+  float: left;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
