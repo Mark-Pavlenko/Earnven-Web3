@@ -9,4 +9,7 @@ export default {
   //non-actual
   GET_THEME: 'GET_THEME',
   GET_WEB3_OBJECT: 'GET_WEB3_OBJECT',
+  //eth2.0 protocol
+  GET_ETH2_STAKE_DATA: 'GET_ETH2_STAKE_DATA',
+  GET_ETH2_STAKE_TOTAL: 'GET_ETH2_STAKE_TOTAL',
 };

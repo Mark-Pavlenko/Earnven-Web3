@@ -82,7 +82,6 @@ export const NameWrapper = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  width: 23%;
   height: 50px;
   float: left;
   text-align: initial;
@@ -98,6 +97,7 @@ export const APYPercent = styled.div`
 `;
 
 export const APYWrapper = styled.div`
+  width: 33%;
   height: 50px;
   float: left;
   display: flex;

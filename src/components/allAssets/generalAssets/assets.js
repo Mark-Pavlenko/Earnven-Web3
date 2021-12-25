@@ -343,8 +343,8 @@ export default class Assets extends Component {
             <CustomStyle>
               <div
                 style={{
+                  width: '33%',
                   display: 'flex',
-                  width: '7%',
                   height: '50px',
                   float: 'left',
                   paddingLeft: '13px',
@@ -407,17 +407,32 @@ export default class Assets extends Component {
               {/*  </font>*/}
               {/*</div>*/}
 
-              <div style={{ width: '25%', height: '50px', float: 'left' }}>
-                <font color="black" style={{ fontSize: '14px' }}>
-                  <br /> ${object.totalInvestment}{' '}
-                </font>
-                <font
-                  color={parseFloat(object.profit) > 0 ? '#03DAC6' : '#ff1f1f'}
-                  style={{ fontSize: '10px' }}>
-                  {' '}
-                  <br />
-                  {object.profit} %
-                </font>
+              <div
+                style={{
+                  width: '33%',
+                  height: '50px',
+                  float: 'left',
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                }}>
+                <div
+                  style={{
+                    width: '44%',
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    flexDirection: 'column',
+                  }}>
+                  <font color="black" style={{ fontSize: '14px' }}>
+                    <br /> ${object.totalInvestment}{' '}
+                  </font>
+                  <font
+                    color={parseFloat(object.profit) > 0 ? '#03DAC6' : '#ff1f1f'}
+                    style={{ fontSize: '10px' }}>
+                    {' '}
+                    <br />
+                    {object.profit} %
+                  </font>
+                </div>
               </div>
             </CustomStyle>
           </Link>
