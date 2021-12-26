@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import SearchTokens from '../searchTokens/searchTokens';
+import SearchTokens from '../searchTokens/searchTokensLight';
 import { Chart } from '../Chart/chartCubicle';
 
 export default function Index() {

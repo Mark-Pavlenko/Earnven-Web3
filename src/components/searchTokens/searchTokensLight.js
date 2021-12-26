@@ -50,7 +50,7 @@ const styles = () => ({
   },
 });
 
-export class SearchTokens extends Component {
+export class SearchTokensLight extends Component {
   sendData = () => {
     this.props.parentCallback(this.state.token);
   };
@@ -111,11 +111,12 @@ export class SearchTokens extends Component {
                 sx={{
                   fontFamily: 'Saira, sans-serif',
                   fontSize: '10px',
-                  backgroundColor: '#E5E5E5',
+                  backgroundColor: '#F2F8FF',
                   '&:hover': {
                     backgroundColor: '#ffffff',
                     borderRadius: '10px',
                   },
+                  '& > div': { height: '25px' },
                   // '& > span': { mr: '10px', fontSize: 40 },
                   // '& .MuiTextField-root': { m: 1, height: '250ch' },
                 }}
@@ -168,7 +169,7 @@ export class SearchTokens extends Component {
   }
 }
 
-SearchTokens.propTypes = {
+SearchTokensLight.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
@@ -181,4 +182,4 @@ const mapDispatchToProps = {
   getAllTokens,
 };
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(SearchTokens));
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(SearchTokensLight));

@@ -20,7 +20,7 @@ export default function Index() {
   return (
     <div style={{ margin: 'auto' }}>
       {/* <span style={{visibility:'hidden'}}>{Token}
-            <SearchTokens parentCallback = {callbackFunction}/> </span> */}
+            <SearchTokensLight parentCallback = {callbackFunction}/> </span> */}
       {/* <br/><br/><br/><br/> */}
       {/*  <center><hr width='80%'/></center> */}
       {/* {address} */}

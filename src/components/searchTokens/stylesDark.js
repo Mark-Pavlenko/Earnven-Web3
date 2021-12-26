@@ -25,6 +25,7 @@ export const CoinItem = styled.div`
 
   span {
     margin-left: 10px;
+    color: white;
   }
 
   :hover {

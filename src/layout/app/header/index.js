@@ -15,8 +15,9 @@ import MenuListComposition from '../../../components/gasDropDownMenu';
 import LanguageDropDown from '../../../components/languageDropDown';
 import HelpDropDown from '../../../components/helpDropDown';
 
-import SearchTokens from '../../../components/searchTokens/searchTokens';
-// import SearchTokens from '../../../components/searchTokens/index';
+import SearchTokensLight from '../../../components/searchTokens/searchTokensLight';
+import SearchTokensDark from '../../../components/searchTokens/searchTokensDark';
+import SearchTokens from '../../../components/searchTokens/index';
 
 import darkIcon from '../../../assets/icons/darkIcon.svg';
 import lightIcon from '../../../assets/icons/lightIcon.svg';
@@ -77,6 +78,7 @@ function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle }) {
     }
   }
 
+  console.log('isLightTheme', isLightTheme);
   console.log('token header', Token);
 
   return (
@@ -90,7 +92,14 @@ function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle }) {
         <p>{finalTitle}</p>
       </HeaderTitle>
       <HeaderItemsBlock>
-        <SearchTokens parentCallback={callbackFunction} isLightTheme={isLightTheme} />
+        {/*<SearchTokens />*/}
+
+        {isLightTheme ? (
+          <SearchTokensLight parentCallback={callbackFunction} isLightTheme={isLightTheme} />
+        ) : (
+          <SearchTokensDark />
+        )}
+
         <NetworkDropDown />
         <MenuListComposition />
         <LanguageDropDown />
