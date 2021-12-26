@@ -77,16 +77,22 @@ const useStyles = makeStyles(() =>
       },
     },
     selected: {
+      '&:hover': {
+        // backgroundColor: 'red !important',
+        // color: 'green !important',
+      },
+
       '& .Mui-selected': {
         backgroundColor: '#FFFFFF',
-        color: '#4453AD',
+        // color: '#4453AD',
       },
-      '& .Mui-hover': {
-        backgroundColor: '#ff0000',
-      },
+
       li: {
         width: '20px',
         height: '20px',
+        // '&:hover': {
+        //   backgroundColor: '#ff0000',
+        // },
       },
     },
   })

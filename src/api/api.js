@@ -1,4 +1,6 @@
 import axios from 'axios';
+import CoinGecko from 'coingecko-api';
+const CoinGeckoClient = new CoinGecko();
 
 const TOKEN =
   'AAAAAAAAAAAAAAAAAAAAAJKDUQEAAAAAdjHNlWVUmUvOCPqh05Vgo8bQouo%3DJY7PJWMZfUwejLcXHXKraQE9O9QDUQptUwtHVYIbSK0PFFmYzE';
@@ -12,8 +14,11 @@ const headers = {
 };
 
 export const getTokens = async () => {
-  const response = await axios.get('https://api.coingecko.com/api/v3/coins/list');
-  return response.data;
+  // const response = await axios.get('https://api.coingecko.com/api/v3/coins/markets');
+  // return response.data;
+  let data = await CoinGeckoClient.coins.all();
+  // console.log('coingecko data', data.data);
+  return data.data;
 };
 
 export const getAccountBalance = async (accountAddress) => {

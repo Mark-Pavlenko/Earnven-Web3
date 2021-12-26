@@ -9,7 +9,7 @@ import searchIcon from '../../assets/icons/searchIcon.png';
 import { Box, Typography } from '@material-ui/core';
 import { getAllTokens, getSearchedTokens } from '../../store/searchedTokens/actions';
 
-import { MainLayout, SearchIcon } from './styles';
+import { MainLayout, SearchIcon, CoinItem } from './styles';
 
 const styles = () => ({
   root: (props) => ({
@@ -17,12 +17,12 @@ const styles = () => ({
       // Default transform is "translate(14px, 20px) scale(1)""
       // This lines up the label with the initial cursor position in the input
       // after changing its padding-left.
-      // transform: 'translate(34px, 20px) scale(1);',
+      transform: 'translate(34px, 20px) scale(1);',
     },
   }),
   inputRoot: (props) => ({
     color: 'white',
-    borderRadius: 10,
+    // borderRadius: 10,
     // padding: 10,
     // This matches the specificity of the default styles at https://github.com/mui-org/material-ui/blob/v4.11.3/packages/material-ui-lab/src/Autocomplete/Autocomplete.js#L90
     '&[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child': {
@@ -118,16 +118,26 @@ export class SearchTokens extends Component {
             getOptionLabel={(option) => option.name}
             renderOption={(props, option) => (
               <Box
-                component="li"
+                component="div"
                 sx={{
-                  fontWeight: 600,
-                  fontFamily: 'Poppins, sans-serif',
-                  '& :hover': { backgroundColor: 'red !important' },
-                  '& > span': { mr: '10px', fontSize: 40 },
+                  // fontWeight: 600,
+                  fontFamily: 'Saira, sans-serif',
+                  fontSize: '10px',
+                  backgroundColor: '#E5E5E5',
+                  '&:hover': {
+                    backgroundColor: '#ffffff',
+                    borderRadius: '10px',
+                    // paddingLeft: 20,
+                    // paddingRight: 20,
+                  },
+                  // '& > span': { mr: '10px', fontSize: 40 },
                   '& .MuiTextField-root': { m: 1, height: '250ch' },
                 }}
                 {...props}>
-                <Typography variant="body2">{option.name}</Typography>
+                <CoinItem>
+                  <img src={option.image.small} alt="coin icon" /> &nbsp;
+                  <span>{option.name}</span>
+                </CoinItem>
               </Box>
             )}
             renderInput={(params) => (
@@ -155,9 +165,9 @@ export class SearchTokens extends Component {
                   width: 242,
                   height: 40,
                   borderRadius: '10px',
-                  boxShadow:
-                    this.props.isLightTheme === false &&
-                    'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+                  // boxShadow:
+                  //   this.props.isLightTheme === false &&
+                  //   'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
                 }}
                 size="small"
               />

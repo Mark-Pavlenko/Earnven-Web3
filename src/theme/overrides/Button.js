@@ -6,7 +6,7 @@ export default function Button(theme) {
       styleOverrides: {
         root: {
           '&:hover': {
-            boxShadow: 'none',
+            // boxShadow: 'none',
           },
         },
         sizeLarge: {
@@ -16,7 +16,7 @@ export default function Button(theme) {
           color: theme.palette.grey[800],
           boxShadow: theme.customShadows.z8,
           '&:hover': {
-            backgroundColor: theme.palette.grey[400],
+            // backgroundColor: theme.palette.grey[400],
           },
         },
         containedPrimary: {
@@ -28,12 +28,12 @@ export default function Button(theme) {
         outlinedInherit: {
           border: `1px solid ${theme.palette.grey[500_32]}`,
           '&:hover': {
-            backgroundColor: theme.palette.action.hover,
+            // backgroundColor: theme.palette.action.hover,
           },
         },
         textInherit: {
           '&:hover': {
-            backgroundColor: theme.palette.action.hover,
+            // backgroundColor: theme.palette.action.hover,
           },
         },
       },

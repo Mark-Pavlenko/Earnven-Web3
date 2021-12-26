@@ -9,22 +9,17 @@ import { Box, AppBar, Toolbar } from '@material-ui/core';
 import IconButton from '@mui/material/IconButton';
 // components
 import { MHidden } from '../../../components/@material-extend';
-// import SearchInput from '../../../components/searchInput';
+
 import NetworkDropDown from '../../../components/networkDropDown';
 import MenuListComposition from '../../../components/gasDropDownMenu';
 import LanguageDropDown from '../../../components/languageDropDown';
 import HelpDropDown from '../../../components/helpDropDown';
-// import TransparentButton from '../../../components/TransparentButton'
+
 import SearchTokens from '../../../components/searchTokens/searchTokens';
-import Brightness3Icon from '@material-ui/icons/Brightness3';
-import Brightness7Icon from '@material-ui/icons/Brightness7';
+// import SearchTokens from '../../../components/searchTokens/index';
+
 import darkIcon from '../../../assets/icons/darkIcon.svg';
 import lightIcon from '../../../assets/icons/lightIcon.svg';
-import ThemeConfig from '../../../theme/index.js';
-import Sidebar from '../sidebar/sidebar';
-import lightDashboard from '../../../assets/images/lightDashboard.jpg';
-import lightDashboardBig from '../../../assets/images/lightDashboardBig.jpg';
-import { getThemeTask } from '../../../store/themeChanger/reducer';
 import { connect, useDispatch, useSelector } from 'react-redux';
 
 import { HeaderLayout, HeaderTitle, HeaderItemsBlock } from './styles';
