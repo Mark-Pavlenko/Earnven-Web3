@@ -11,11 +11,12 @@ export const SearchIcon = styled.img`
 `;
 
 export const CoinItem = styled.div`
-  width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 5px;
+  width: 221px;
+  height: 30px;
+  padding-right: 10px;
 
   img {
     width: 20px;

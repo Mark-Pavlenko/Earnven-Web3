@@ -88,20 +88,9 @@ export class SearchTokens extends Component {
     console.log('search field light theme', isLightTheme);
 
     const { classes } = this.props;
-    // let styleProps;
-    //
-    // if (isLightTheme) {
-    //   styleProps = { color: 'black' };
-    // } else {
-    //   styleProps = { color: 'white' };
-    // }
-    //
-    // console.log('styleProps', styleProps);
 
     return (
       <MainLayout isLightTheme={isLightTheme}>
-        {/*{isLightTheme ? (*/}
-
         <div>
           <Autocomplete
             freeSolo
@@ -120,18 +109,15 @@ export class SearchTokens extends Component {
               <Box
                 component="div"
                 sx={{
-                  // fontWeight: 600,
                   fontFamily: 'Saira, sans-serif',
                   fontSize: '10px',
                   backgroundColor: '#E5E5E5',
                   '&:hover': {
                     backgroundColor: '#ffffff',
                     borderRadius: '10px',
-                    // paddingLeft: 20,
-                    // paddingRight: 20,
                   },
                   // '& > span': { mr: '10px', fontSize: 40 },
-                  '& .MuiTextField-root': { m: 1, height: '250ch' },
+                  // '& .MuiTextField-root': { m: 1, height: '250ch' },
                 }}
                 {...props}>
                 <CoinItem>
