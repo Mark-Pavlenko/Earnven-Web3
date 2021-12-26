@@ -7,7 +7,7 @@ export const MainLayout = styled.div`
   //background-color: pink;
 
   @media screen and (min-width: 1601px) {
-    grid-template-columns: 70% 30%;
+    grid-template-columns: 65% 35%;
   }
 
   @media screen and (min-width: 710px) and (max-width: 1850px) {
@@ -47,6 +47,11 @@ export const TweetsNewsColumns = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
+  @media screen and (min-width: 1850px) {
+    //justify-content: end;
+    display: grid;
+  }
+
   @media screen and (min-width: 710px) and (max-width: 1600px) {
     margin-top: 30px;
   }
@@ -87,7 +92,7 @@ export const TweetBlock = styled.div`
   }
 
   @media screen and (min-width: 2000px) {
-    width: 90%;
+    //width: 90%;
   }
 `;
 
@@ -201,8 +206,13 @@ export const TwitterWidget = styled.div`
   backdrop-filter: blur(35px);
   width: 468px;
 
-  @media screen and (min-width: 1601px) and (max-width: 2000px) {
+  @media screen and (min-width: 1601px) and (max-width: 1850px) {
     //margin-left: 35px;
+    //justify-self: end;
+    width: 100%;
+  }
+
+  @media screen and (min-width: 1851px) {
     justify-self: end;
   }
 

@@ -1,7 +1,16 @@
 import styled from 'styled-components';
 
 export const MainLayout = styled.div`
-  width: 242px;
+  display: flex;
+`;
+
+export const SearchIcon = styled.img`
+  height: 20px;
+  width: 17px;
+  margin-right: 10px;
+
+  //padding-bottom: 15px;
+  //margin-top: -13px;
 `;
 
 export const MainSearchElement = styled.div`
@@ -10,5 +19,3 @@ export const MainSearchElement = styled.div`
           margin-left: 586px;
           border-radius: 11%;
 `;
-
-// background: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
