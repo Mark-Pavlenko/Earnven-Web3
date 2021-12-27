@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom';
 import Balance from '../../components/Balance';
 import sendIcon from '../../assets/icons/send-icon.svg';
 import { Box, Container, Grid } from '@material-ui/core';
-import AllAssets from '../../components/allAssets/generalAssets/assets';
+import AllAssets from '../../components/allAssets/generalAssets/assets/assets';
 import LoansAndSavings from '../../components/LoansAndSavings';
 import etherScanIcon from '../../assets/icons/etherScan-icon.svg';
 import etherScanDark from '../../assets/icons/etherScanDark-icon.svg';
@@ -67,7 +67,7 @@ export default function Dashboard({ test, changeTheme }) {
                     <PortfolioPerf address={address} />
                   </Grid>
                   <Grid item xs={12} md={12}>
-                    <AllAssets address={address} />
+                    <AllAssets isLightTheme={theme} address={address} />
                     <br />
                   </Grid>
                 </Grid>

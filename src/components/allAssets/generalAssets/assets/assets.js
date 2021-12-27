@@ -1,42 +1,39 @@
 import React, { Component } from 'react';
 import Web3 from 'web3';
 import axios from 'axios';
-import { BrowserView, MobileView } from 'react-device-detect';
+import Avatar from 'react-avatar';
 import { Link } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
-import { experimentalStyled as styled } from '@material-ui/core/styles';
-import Avatar from 'react-avatar';
-import ethImage from '../../../assets/icons/eth.png';
+import ethImage from '../../../../assets/icons/eth.png';
 import {
-  Header,
-  TotalValueField,
-  TotalTitle,
-  TotalValue,
+  Part,
   Main,
   Title,
-  EthereumTokenImage,
-  TokenImage,
+  Value,
+  Header,
   TokenName,
-  NameWrapper,
+  AssetName,
+  AssetValue,
+  TotalTitle,
+  TotalValue,
+  TokenImage,
   APYPercent,
+  Percentage,
   APYWrapper,
+  MainMobile,
+  NameWrapper,
+  AssetsColumn,
+  AssetDataRaw,
+  ColumnHeader,
+  TotalEmptyCell,
+  AddGroupButton,
+  TotalValueField,
+  AssetImageMobile,
+  AssetValueWrapper,
+  EthereumTokenImage,
 } from './styledComponents';
-import { ToggleButton } from '../../styled/styledComponents';
-
-const CustomStyle = styled('div')(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'space-between',
-  height: '50px',
-  background: 'transparent',
-  cursor: 'pointer',
-  lineHeight: '1',
-  marginBottom: '5px',
-  '&:hover': {
-    background: '#FFFFFF',
-    boxShadow: 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
-    borderRadius: '10px',
-  },
-}));
+import { ToggleButton } from '../../../styled/styledComponents';
+import { BrowserView, MobileView } from 'react-device-detect';
 
 let contents = '';
 const stage1Tokens = [];
@@ -331,162 +328,127 @@ export default class Assets extends Component {
         arr2.push(object);
       }
     }
-    this.change(arr2);
+    // this.change(arr2);
     this.setState({ contents });
   };
 
-  change = (arr) => {
-    contents = arr.map((object) => (
-      <div>
-        <BrowserView>
-          <Link to={`/${this.state.account}/token/${object.coingecko}`}>
-            <CustomStyle>
-              <div
-                style={{
-                  width: '33%',
-                  display: 'flex',
-                  height: '50px',
-                  float: 'left',
-                  paddingLeft: '13px',
-                }}>
-                {object.image ? (
-                  object.name === 'Ethereum' ? (
-                    <EthereumTokenImage alt="" src={ethImage} />
-                  ) : (
-                    <TokenImage
-                      alt=""
-                      src={
-                        object.image
-                          ? object.image[0] === '/'
-                            ? `https://ethplorer.io${object.image}`
-                            : `${object.image}`
-                          : ''
-                      }
-                    />
-                  )
-                ) : (
-                  <div style={{ marginLeft: '14px', marginTop: '-5px' }}>
-                    <Avatar
-                      style={{
-                        display: 'inline',
-                        maxWidth: '20px',
-                        verticalAlign: 'top',
-                        height: '20px',
-                        marginLeft: '11px',
-                      }}
-                      color="#737373"
-                      name={object.name}
-                      round
-                      size="25"
-                      textSizeRatio={1}
-                    />
-                  </div>
-                )}
-                <NameWrapper>
-                  <TokenName>{object.name}</TokenName>
-                </NameWrapper>
-              </div>
-
-              <APYWrapper>
-                <APYPercent>
-                  {((object.totalInvestment / this.state.totalValue) * 100).toFixed(2)} %
-                </APYPercent>
-              </APYWrapper>
-
-              {/*<div*/}
-              {/*  style={{*/}
-              {/*    width: '30%',*/}
-              {/*    height: '50px',*/}
-              {/*    float: 'left',*/}
-              {/*    textAlign: 'initial',*/}
-              {/*    paddingLeft: '40px',*/}
-              {/*  }}>*/}
-              {/*  <font color="#737373" style={{ fontSize: '13px' }}>*/}
-              {/*    {' '}*/}
-              {/*    <br /> {object.balance} {object.symbol} - ${object.rate}{' '}*/}
-              {/*  </font>*/}
-              {/*</div>*/}
-
-              <div
-                style={{
-                  width: '33%',
-                  height: '50px',
-                  float: 'left',
-                  display: 'flex',
-                  justifyContent: 'flex-end',
-                }}>
-                <div
-                  style={{
-                    width: '44%',
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    flexDirection: 'column',
-                  }}>
-                  <font color="black" style={{ fontSize: '14px' }}>
-                    <br /> ${object.totalInvestment}{' '}
-                  </font>
-                  <font
-                    color={parseFloat(object.profit) > 0 ? '#03DAC6' : '#ff1f1f'}
-                    style={{ fontSize: '10px' }}>
-                    {' '}
-                    <br />
-                    {object.profit} %
-                  </font>
-                </div>
-              </div>
-            </CustomStyle>
-          </Link>
-        </BrowserView>
-        <MobileView>
-          <Link to={`/app/token/${object.coingecko}`}>
-            <div
-              style={{
-                background: 'transparent',
-                cursor: 'pointer',
-              }}>
-              <div style={{ height: '50px' }}>
-                <img
-                  style={{
-                    marginLeft: '10px',
-                    height: '30px',
-                    width: '30px',
-                    marginTop: '15px',
-                    display: 'inline-block',
-                  }}
-                  alt=""
-                  src={`https://ethplorer.io${object.image}`}
-                />
-                &nbsp;&nbsp;<font color="white">{object.name}</font>
-              </div>
-
-              <div style={{ height: '50px' }}>
-                <font color="white">
-                  {' '}
-                  <br />
-                  {object.profit} %
-                </font>
-              </div>
-
-              <div style={{ height: '50px' }}>
-                <font color="white">
-                  {' '}
-                  <br /> {object.balance} {object.symbol} | ${object.rate}{' '}
-                </font>
-              </div>
-
-              <div style={{ height: '50px' }}>
-                <font color="white">
-                  <br /> ${object.totalInvestment}{' '}
-                </font>
-              </div>
-
-              <br />
-            </div>
-          </Link>
-        </MobileView>
-      </div>
-    ));
-  };
+  // change = (arr) => {
+  //   contents = arr.map((object) => (
+  //     <div>
+  //       <BrowserView>
+  //         <Link to={`/${this.state.account}/token/${object.coingecko}`}>
+  //           <AssetDataRaw>
+  //             <AssetsColumn>
+  //               {object.image ? (
+  //                 object.name === 'Ethereum' ? (
+  //                   <EthereumTokenImage alt="" src={ethImage} />
+  //                 ) : (
+  //                   <TokenImage
+  //                     alt=""
+  //                     src={
+  //                       object.image
+  //                         ? object.image[0] === '/'
+  //                           ? `https://ethplorer.io${object.image}`
+  //                           : `${object.image}`
+  //                         : ''
+  //                     }
+  //                   />
+  //                 )
+  //               ) : (
+  //                 <div>
+  //                   <Avatar
+  //                     style={{
+  //                       display: 'inline',
+  //                       maxWidth: '20px',
+  //                       verticalAlign: 'top',
+  //                       height: '20px',
+  //                     }}
+  //                     color="#737373"
+  //                     name={object.name}
+  //                     round
+  //                     size="25"
+  //                     textSizeRatio={1}
+  //                   />
+  //                 </div>
+  //               )}
+  //               <NameWrapper>
+  //                 <TokenName isLight={this.props.isLightTheme}>{object.name}</TokenName>
+  //                 <Part>{'17%'}</Part>
+  //               </NameWrapper>
+  //             </AssetsColumn>
+  //
+  //             <APYWrapper>
+  //               <APYPercent isLight={this.props.isLightTheme}>
+  //                 {((object.totalInvestment / this.state.totalValue) * 100).toFixed(2)} %
+  //               </APYPercent>
+  //             </APYWrapper>
+  //
+  //             {/*<div*/}
+  //             {/*  style={{*/}
+  //             {/*    width: '30%',*/}
+  //             {/*    height: '50px',*/}
+  //             {/*    float: 'left',*/}
+  //             {/*    textAlign: 'initial',*/}
+  //             {/*    paddingLeft: '40px',*/}
+  //             {/*  }}>*/}
+  //             {/*  <font color="#737373" style={{ fontSize: '13px' }}>*/}
+  //             {/*    {' '}*/}
+  //             {/*    <br /> {object.balance} {object.symbol} - ${object.rate}{' '}*/}
+  //             {/*  </font>*/}
+  //             {/*</div>*/}
+  //
+  //             <AssetValueWrapper>
+  //               <AssetValue>
+  //                 <font color="black" style={{ fontSize: '14px' }}>
+  //                   <br /> ${object.totalInvestment}{' '}
+  //                 </font>
+  //                 <font
+  //                   color={parseFloat(object.profit) > 0 ? '#03DAC6' : '#ff1f1f'}
+  //                   style={{ fontSize: '10px' }}>
+  //                   {' '}
+  //                   <br />
+  //                   {object.profit} %
+  //                 </font>
+  //               </AssetValue>
+  //             </AssetValueWrapper>
+  //           </AssetDataRaw>
+  //         </Link>
+  //       </BrowserView>
+  //       <MobileView>
+  //         <Link to={`/app/token/${object.coingecko}`}>
+  //           <MainMobile>
+  //             <div style={{ height: '50px' }}>
+  //               <AssetImageMobile alt="" src={`https://ethplorer.io${object.image}`} />
+  //               &nbsp;&nbsp;<font color="white">{object.name}</font>
+  //             </div>
+  //
+  //             <div style={{ height: '50px' }}>
+  //               <font color="white">
+  //                 {' '}
+  //                 <br />
+  //                 {object.profit} %
+  //               </font>
+  //             </div>
+  //
+  //             <div style={{ height: '50px' }}>
+  //               <font color="white">
+  //                 {' '}
+  //                 <br /> {object.balance} {object.symbol} | ${object.rate}{' '}
+  //               </font>
+  //             </div>
+  //
+  //             <div style={{ height: '50px' }}>
+  //               <font color="white">
+  //                 <br /> ${object.totalInvestment}{' '}
+  //               </font>
+  //             </div>
+  //             <br />
+  //           </MainMobile>
+  //         </Link>
+  //       </MobileView>
+  //     </div>
+  //   ));
+  // };
 
   constructor(props) {
     super(props);
@@ -501,9 +463,9 @@ export default class Assets extends Component {
   }
 
   render() {
-    this.change(arr2);
+    // this.change(arr2);
     return (
-      <Main>
+      <Main isLight={this.props.isLightTheme}>
         <Header>
           <Title>{'Ethereum Assets'}</Title>
           <ToggleButton
@@ -513,43 +475,154 @@ export default class Assets extends Component {
             isOpen={this.state.isOpen}
           />
         </Header>
-        <TotalValueField>
-          <TotalTitle>{'Total Value'}</TotalTitle>
-          <TotalValue>{`$${this.state.totalValue}`}</TotalValue>
+        <TotalValueField isLight={this.props.isLightTheme}>
+          <TotalTitle isLight={this.props.isLightTheme}>{'Total Value'}</TotalTitle>
+          <TotalEmptyCell></TotalEmptyCell>
+          <TotalValue isLight={this.props.isLightTheme}>{`$${this.state.totalValue}`}</TotalValue>
         </TotalValueField>
 
         {this.state.isOpen && (
-          <center style={{ marginTop: '5px' }}>
-            {this.state.contents}
-            {!this.state.hideShowMore && (
-              <div>
-                <Typography
-                  variant="caption"
-                  align="right"
-                  style={{ cursor: 'pointer' }}
-                  onClick={async (e) => {
-                    await this.setState({ page: this.state.page + 1 });
-                    this.update();
-                  }}>
-                  <button
-                    style={{
-                      height: '25px',
-                      width: '100px',
-                      background: 'white',
-                      border: 'none',
-                      cursor: 'pointer',
-                      color: '#4453AD',
-                      borderRadius: '10px',
-                      fontSize: '14px',
-                      lineHeight: '22px',
-                      boxShadow: '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',
+          <div>
+            <ColumnHeader>
+              <AssetName isLight={this.props.isLightTheme}>{'Assets'}</AssetName>
+              <Percentage isLight={this.props.isLightTheme}>{'APY'}</Percentage>
+              <Value isLight={this.props.isLightTheme}>{'Value'}</Value>
+            </ColumnHeader>
+            <center>
+              {arr2.map((object) => (
+                <div>
+                  <BrowserView>
+                    <Link to={`/${this.state.account}/token/${object.coingecko}`}>
+                      <AssetDataRaw isLight={this.props.isLightTheme}>
+                        <AssetsColumn>
+                          {object.image ? (
+                            object.name === 'Ethereum' ? (
+                              <EthereumTokenImage alt="" src={ethImage} />
+                            ) : (
+                              <TokenImage
+                                alt=""
+                                src={
+                                  object.image
+                                    ? object.image[0] === '/'
+                                      ? `https://ethplorer.io${object.image}`
+                                      : `${object.image}`
+                                    : ''
+                                }
+                              />
+                            )
+                          ) : (
+                            <div>
+                              <Avatar
+                                style={{
+                                  display: 'inline',
+                                  maxWidth: '20px',
+                                  verticalAlign: 'top',
+                                  height: '20px',
+                                }}
+                                color="#737373"
+                                name={object.name}
+                                round
+                                size="25"
+                                textSizeRatio={1}
+                              />
+                            </div>
+                          )}
+                          <NameWrapper>
+                            <TokenName isLight={this.props.isLightTheme}>{object.name}</TokenName>
+                            <Part>{'17%'}</Part>
+                          </NameWrapper>
+                        </AssetsColumn>
+
+                        <APYWrapper>
+                          <APYPercent isLight={this.props.isLightTheme}>
+                            {((object.totalInvestment / this.state.totalValue) * 100).toFixed(2)} %
+                          </APYPercent>
+                        </APYWrapper>
+
+                        {/*<div*/}
+                        {/*  style={{*/}
+                        {/*    width: '30%',*/}
+                        {/*    height: '50px',*/}
+                        {/*    float: 'left',*/}
+                        {/*    textAlign: 'initial',*/}
+                        {/*    paddingLeft: '40px',*/}
+                        {/*  }}>*/}
+                        {/*  <font color="#737373" style={{ fontSize: '13px' }}>*/}
+                        {/*    {' '}*/}
+                        {/*    <br /> {object.balance} {object.symbol} - ${object.rate}{' '}*/}
+                        {/*  </font>*/}
+                        {/*</div>*/}
+
+                        <AssetValueWrapper>
+                          <AssetValue>
+                            <font
+                              color={this.props.isLightTheme ? 'black' : '#ffffff'}
+                              style={{ fontSize: '14px' }}>
+                              <br /> ${object.totalInvestment}{' '}
+                            </font>
+                            <font
+                              color={parseFloat(object.profit) > 0 ? '#03DAC6' : '#ff1f1f'}
+                              style={{ fontSize: '10px' }}>
+                              {' '}
+                              <br />
+                              {object.profit} %
+                            </font>
+                          </AssetValue>
+                        </AssetValueWrapper>
+                      </AssetDataRaw>
+                    </Link>
+                  </BrowserView>
+                  <MobileView>
+                    <Link to={`/app/token/${object.coingecko}`}>
+                      <MainMobile>
+                        <div style={{ height: '50px' }}>
+                          <AssetImageMobile alt="" src={`https://ethplorer.io${object.image}`} />
+                          &nbsp;&nbsp;<font color="white">{object.name}</font>
+                        </div>
+
+                        <div style={{ height: '50px' }}>
+                          <font color="white">
+                            {' '}
+                            <br />
+                            {object.profit} %
+                          </font>
+                        </div>
+
+                        <div style={{ height: '50px' }}>
+                          <font color="white">
+                            {' '}
+                            <br /> {object.balance} {object.symbol} | ${object.rate}{' '}
+                          </font>
+                        </div>
+
+                        <div style={{ height: '50px' }}>
+                          <font color="white">
+                            <br /> ${object.totalInvestment}{' '}
+                          </font>
+                        </div>
+                        <br />
+                      </MainMobile>
+                    </Link>
+                  </MobileView>
+                </div>
+              ))}
+              {/*{this.state.contents}*/}
+              {!this.state.hideShowMore && (
+                <div>
+                  <Typography
+                    variant="caption"
+                    align="right"
+                    style={{ cursor: 'pointer' }}
+                    onClick={async (e) => {
+                      await this.setState({ page: this.state.page + 1 });
+                      this.update();
                     }}>
-                    Show More
-                  </button>
-                </Typography>
-              </div>
-            )}
-          </center>
+                    <AddGroupButton isLight={this.props.isLightTheme}>{'Show More'}</AddGroupButton>
+                  </Typography>
+                </div>
+              )}
+            </center>
+          </div>
         )}
       </Main>
     );
