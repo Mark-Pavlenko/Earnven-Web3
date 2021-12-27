@@ -103,7 +103,6 @@ export default function Sidebar({
           global_wallet={global_wallet}
         />
       </Box>
-
       <NavSection
         sx={{ px: 8, color: 'black' }}
         navConfig={newSideBard}

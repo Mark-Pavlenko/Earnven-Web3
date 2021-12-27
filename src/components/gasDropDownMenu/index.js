@@ -1,10 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, MenuItem, ListItemIcon, ListItemText, IconButton } from '@material-ui/core';
 import { alpha } from '@material-ui/core/styles';
-
 import MenuPopover from './MenuPopover';
-import languageImg from '../../assets/icons/language.png';
 import gasIcon from '../../assets/icons/gasIcon.svg';
 import { data } from '../../globalStore';
 import SlowGweiGasIcon from '../../assets/icons/slowGweiGasIcon.png';
@@ -52,7 +49,7 @@ export default function GasDropDownMenu({ isLightTheme }) {
         const response = await axios.get(
           'https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W'
         );
-        console.log('gas item response', response);
+        // console.log('gas item response', response);
         const { result } = response.data;
         gasType[0].value = result.FastGasPrice;
         gasType[1].value = result.ProposeGasPrice;
@@ -60,7 +57,7 @@ export default function GasDropDownMenu({ isLightTheme }) {
         data.gasSelected = result.ProposeGasPrice;
         // setGasPrices([])
         setGasPrices([...gasType]);
-        console.log('gasType', gasType);
+        // console.log('gasType', gasType);
       } catch (error) {
         console.log(error);
       }

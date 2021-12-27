@@ -29,17 +29,17 @@ export const GridTweetsNewsRow = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  margin-bottom: 30px;
 
-  @media screen and (max-width: 709px) {
+  @media screen and (max-width: 1023px) {
     display: grid;
     grid-template-columns: 100%;
   }
 
-  @media screen and (min-width: 710px) {
+  @media screen and (min-width: 1024px) {
     display: grid;
     grid-template-columns: 50% 50%;
     //justify-items: center;
-    margin-bottom: 30px;
   }
 `;
 
@@ -87,12 +87,10 @@ export const TweetBlock = styled.div`
     // background-color: red;
   }
 
-  @media screen and (min-width: 710px) and (max-width: 900px) {
-    width: 100vw;
-  }
-
-  @media screen and (min-width: 2000px) {
-    //width: 90%;
+  @media (max-width: 1023px) {
+    width: auto;
+    margin-left: 20px;
+    margin-right: 20px;
   }
 `;
 

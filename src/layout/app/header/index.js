@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import menu2Fill from '@iconify/icons-eva/menu-2-fill';
+import sidebarBurgerLightIcon from '../../../assets/icons/sidebarBurgerLightIcon.png';
 // material
 import { alpha, experimentalStyled as styled } from '@material-ui/core/styles';
 import { Box, AppBar, Toolbar } from '@material-ui/core';
@@ -24,7 +25,7 @@ import darkIcon from '../../../assets/icons/darkIcon.svg';
 import lightIcon from '../../../assets/icons/lightIcon.svg';
 import { connect, useDispatch, useSelector } from 'react-redux';
 
-import { HeaderLayout, HeaderTitle, HeaderItemsBlock } from './styles';
+import { HeaderLayoutBig, HeaderTitleBig, BurgerIcon, HeaderItemsBlockBig } from './styles';
 
 const DRAWER_WIDTH = 280;
 const APPBAR_MOBILE = 64;
@@ -78,37 +79,37 @@ function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle }) {
   console.log('token header', Token);
 
   return (
-    <HeaderLayout isLightTheme={isLightTheme}>
-      <MHidden width="lgUp">
-        <IconButton onClick={onOpenSidebar} sx={{ mr: 1, color: 'text.primary' }}>
-          <Icon icon={menu2Fill} />
-        </IconButton>
-      </MHidden>
-      <HeaderTitle isLightTheme={isLightTheme}>
-        <p>{finalTitle}</p>
-      </HeaderTitle>
-      <HeaderItemsBlock>
-        {/*<SearchTokens />*/}
-
-        {isLightTheme ? (
-          <SearchTokensLight parentCallback={callbackFunction} isLightTheme={isLightTheme} />
-        ) : (
-          <SearchTokensDark />
-        )}
-
-        {/*<NetworkDropDown />*/}
-        <NetworkSelect isLightTheme={isLightTheme} />
-        <GasDropdownMenu isLightTheme={isLightTheme} />
-        <LanguageDropDown />
-        {/*<HelpDropDown />*/}
-        <CustomIconBtn
-          onClick={() => {
-            setDynamicTheme();
-          }}>
-          {isLightTheme ? <img src={lightIcon} alt="" /> : <img src={darkIcon} alt="" />}
-        </CustomIconBtn>
-      </HeaderItemsBlock>
-    </HeaderLayout>
+    <>
+      <HeaderLayoutBig isLightTheme={isLightTheme}>
+        <div style={{ display: 'flex' }}>
+          <BurgerIcon onClick={onOpenSidebar} sx={{ mr: 1, color: 'text.primary' }}>
+            <img src={sidebarBurgerLightIcon} alt="burger_img" />
+          </BurgerIcon>
+          <HeaderTitleBig isLightTheme={isLightTheme}>
+            <p>{finalTitle}</p>
+          </HeaderTitleBig>
+        </div>
+        <HeaderItemsBlockBig>
+          {/*<SearchTokens />*/}
+          {isLightTheme ? (
+            <SearchTokensLight parentCallback={callbackFunction} isLightTheme={isLightTheme} />
+          ) : (
+            <SearchTokensDark />
+          )}
+          {/*<NetworkDropDown />*/}
+          <NetworkSelect isLightTheme={isLightTheme} />
+          <GasDropdownMenu isLightTheme={isLightTheme} />
+          <LanguageDropDown />
+          {/*<HelpDropDown />*/}
+          <CustomIconBtn
+            onClick={() => {
+              setDynamicTheme();
+            }}>
+            {isLightTheme ? <img src={lightIcon} alt="" /> : <img src={darkIcon} alt="" />}
+          </CustomIconBtn>
+        </HeaderItemsBlockBig>
+      </HeaderLayoutBig>
+    </>
   );
 }
 
