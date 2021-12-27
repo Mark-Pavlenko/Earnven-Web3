@@ -13,7 +13,6 @@ export const MainStyle = styled('div')`
       ? `url(${require(`../../assets/images/lightDashboard.jpg`).default})`
       : `#0B0E1D`};
   padding-top: ${(props) => {
-    console.log('=======>', props);
     return props.appBarDesktop + 15;
   }};
   padding-left: ${(props) => props.theme.spacing(2)};
