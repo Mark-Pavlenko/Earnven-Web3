@@ -122,7 +122,13 @@ const TestSelect = ({ isLightTheme }) => {
                 : null,
               boxShadow: isSelected ? 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)' : null,
               fontSize: 14,
-              color: isLightTheme ? 'black' : 'white',
+              color: isSelected
+                ? isLightTheme
+                  ? 'black'
+                  : '#8F86FF'
+                : isLightTheme
+                ? 'black'
+                : 'white',
               // width: isSelected ? '150px' : '160px',
               borderRadius: isSelected ? '10px' : '0',
               // color: '#000000',
