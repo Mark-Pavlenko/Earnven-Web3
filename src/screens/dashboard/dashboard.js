@@ -61,21 +61,24 @@ export default function Dashboard({ test, changeTheme }) {
           <Container maxWidth="xl">
             <Balance address={address} />
             <Grid container spacing={6}>
-              <Grid item xs={12} md={8}>
+              <Grid item xs={12} md={6}>
                 <Grid container spacing={1}>
+                  {/*chart=========>*/}
                   <Grid item xs={12} md={12}>
                     <PortfolioPerf address={address} />
                   </Grid>
+                  {/*ethAssets=========>*/}
                   <Grid item xs={12} md={12}>
-                    <AllAssets isLightTheme={theme} address={address} />
-                    <br />
+                    <Grid container spacing={1}>
+                      <LoansAndSavings accountAddress={address} />
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item xs={12} md={4}>
-                <Grid container spacing={1}>
-                  <LoansAndSavings accountAddress={address} />
-                </Grid>
+              {/*investment=============>*/}
+              <Grid item xs={12} md={6}>
+                <AllAssets isLightTheme={theme} address={address} />
+                <br />
               </Grid>
             </Grid>
           </Container>
