@@ -5,6 +5,7 @@ import { accountBalance } from './accountBalance/reducer';
 import { twitterPosts } from './twitterPosts/reducer';
 import { headerTitlesReducer } from './headerTitlesReducer/reducer';
 import { eth2Stake } from './eth2Stake/reducer';
+import { sushiStaking } from './sushiStaking/reducer';
 
 export const rootReducer = combineReducers({
   web3Reducer,
@@ -13,4 +14,5 @@ export const rootReducer = combineReducers({
   twitterPosts,
   headerTitlesReducer,
   eth2Stake,
+  sushiStaking,
 });

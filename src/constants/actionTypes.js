@@ -12,4 +12,7 @@ export default {
   //eth2.0 protocol
   GET_ETH2_STAKE_DATA: 'GET_ETH2_STAKE_DATA',
   GET_ETH2_STAKE_TOTAL: 'GET_ETH2_STAKE_TOTAL',
+  //sushiStake LP toke (SLP) protocol
+  GET_SLP_STAKE_DATA: 'GET_SLP_STAKE_DATA',
+  GET_SLP_STAKE_TOTAL: 'GET_SLP_STAKE_TOTAL',
 };
