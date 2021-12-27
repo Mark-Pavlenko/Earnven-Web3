@@ -3,6 +3,7 @@ import { getAccountBalanceSagaWatcher } from './accountBalance';
 import { getTwitterPostsSagaWatcher } from './twitterPosts';
 import { getETH2StakeSagaWatcher } from './eth2Stake';
 import { getSushiStakeSagaWatcher } from './sushiStaking';
+import { getNftDataSagaWatcher } from './nftData';
 
 export default function* watchRootSaga() {
   yield all([
@@ -10,5 +11,6 @@ export default function* watchRootSaga() {
     call(getTwitterPostsSagaWatcher),
     call(getETH2StakeSagaWatcher),
     call(getSushiStakeSagaWatcher),
+    call(getNftDataSagaWatcher),
   ]);
 }

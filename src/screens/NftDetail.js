@@ -353,7 +353,7 @@ const Container_nft = styled(Container)(({ theme }) => ({
 }));
 
 // let nftImageUrl = "";
-export default function NftDetails({ contract, id, changeNFT, setOpenPopup, flagNFT }) {
+export default function NftDetails({ contract, id, changeNFT, setOpenPopup, flagNFT, NFT_Price }) {
   // eslint-disable-next-line no-unused-vars
   // const { address, contract, id } = useParams();
   const web3 = new Web3(
@@ -363,6 +363,9 @@ export default function NftDetails({ contract, id, changeNFT, setOpenPopup, flag
   const [imgUrl, setimgUrl] = useState();
   const [nftName, setnftName] = useState('');
   const [assestName, setassestName] = useState('');
+  const [eLink, seteLink] = useState('');
+  const [openseaLink, setopenseaLink] = useState('');
+  const [raribleLink, setraribleLink] = useState('');
 
   // eslint-disable-next-line no-unused-vars
   const { loading, error, nft } = useNft(contract, id);
@@ -414,6 +417,9 @@ export default function NftDetails({ contract, id, changeNFT, setOpenPopup, flag
         nftHistoryData.push(object);
       }
       settokenHistory(nftHistoryData);
+      seteLink(`https://etherscan.io/token/${contract}`);
+      setopenseaLink(`https://opensea.io/assets/${contract}/${id}`);
+      setraribleLink(`https://rarible.com/token/${contract}:${id}?tab=details`);
     }
 
     getEvents();
@@ -429,7 +435,7 @@ export default function NftDetails({ contract, id, changeNFT, setOpenPopup, flag
         setnftName(response.data.assets[0].name);
         setassestName(response.data.assets[0].asset_contract.name);
       } catch (err) {
-        console.log('errorinnftdetaILS', err);
+        console.log('error in nft page', err);
       }
     };
 
@@ -485,9 +491,15 @@ export default function NftDetails({ contract, id, changeNFT, setOpenPopup, flag
                     />
                   </Image_Close_Div>
                   <Arrow_Close_Div>
-                    <Arrow style={{ height: '14px', width: '14px' }} src={arrownft} alt="no pic" />
+                    <a href="#">
+                      <Arrow
+                        style={{ height: '14px', width: '14px' }}
+                        src={arrownft}
+                        alt="no pic"
+                      />
+                    </a>
                   </Arrow_Close_Div>
-                  <Balance align="left">$ 5,457.36</Balance>
+                  <Balance align="left">$ {NFT_Price}</Balance>
                 </Stack>
               ) : (
                 <Stack>
@@ -509,9 +521,15 @@ export default function NftDetails({ contract, id, changeNFT, setOpenPopup, flag
                     />
                   </Image_Close_Div_dark>
                   <Arrow_Close_Div_dark>
-                    <Arrow style={{ height: '14px', width: '14px' }} src={arrordark} alt="no pic" />
+                    <a href="#">
+                      <Arrow
+                        style={{ height: '14px', width: '14px' }}
+                        src={arrordark}
+                        alt="no pic"
+                      />
+                    </a>
                   </Arrow_Close_Div_dark>
-                  <Balance align="left">$ 5,457.36</Balance>
+                  <Balance align="left">$ {NFT_Price}</Balance>
                 </Stack>
               )}
             </Stack>
@@ -586,15 +604,27 @@ export default function NftDetails({ contract, id, changeNFT, setOpenPopup, flag
           </Stack>
           {localStorage.getItem('selectedTheme') == 'Day' ? (
             <Social_light direction="row" spacing={4}>
-              <img src={nft_popup_1} alt="" />
-              <img src={nft_popup_2} alt="" />
-              <img src={nft_popup_3} alt="" />
+              <a href={eLink} target="_blank">
+                <img src={nft_popup_1} alt="" />
+              </a>
+              <a href={openseaLink} target="_blank">
+                <img src={nft_popup_2} alt="" />
+              </a>
+              <a href={raribleLink} target="_blank">
+                <img src={nft_popup_3} alt="" />
+              </a>
             </Social_light>
           ) : (
             <Social direction="row" spacing={4}>
-              <img src={nft_dark_1} alt="" />
-              <img src={nft_dark_2} alt="" />
-              <img src={nft_dark_3} alt="" />
+              <a href={eLink} target="_blank">
+                <img src={nft_dark_1} alt="" />
+              </a>
+              <a href={openseaLink} target="_blank">
+                <img src={nft_dark_2} alt="" />
+              </a>
+              <a href={raribleLink} target="_blank">
+                <img src={nft_dark_3} alt="" />
+              </a>
             </Social>
           )}
           {/* <button

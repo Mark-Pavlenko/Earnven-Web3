@@ -30,3 +30,11 @@ export const getTweetsByUsers = async (twitterId) => {
   const response = await axios.get(streamURL, { headers });
   return { tweetDataText: response.data.data, tweetDataUsers: response.data.includes.users };
 };
+
+export const getNFTdata = async (attributes) => {
+  // console.log('attributes', attributes);
+  const response = await axios.get(
+    `https://api.opensea.io/api/v1/assets?token_ids=${attributes.tokenId}&asset_contract_addresses=${attributes.contractAddress}`
+  );
+  return response;
+};

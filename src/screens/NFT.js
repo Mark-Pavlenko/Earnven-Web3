@@ -7,7 +7,7 @@ import Page from '../components/Page';
 import NftNetworth from '../components/Nft/NftNetworth';
 import NoNft from '../components/Nft/NoNft';
 
-export default function NFT({ changeTheme }) {
+export default function NFT({ changeTheme, nftDataFlag }) {
   const { address } = useParams();
   const [Account, setAccount] = useState('0x0');
   const [data, setdata] = useState(null);
@@ -15,7 +15,15 @@ export default function NFT({ changeTheme }) {
   const [flag_theme, setflagtheme] = useState('');
   const [nftData, setnftData] = useState([]);
   const [halfNFTdata, sethalfNFTdata] = useState([]);
+  const [ethUSDPrice, setethUSDPrice] = useState(0);
+  const [netWorth, setnetWorth] = useState(0);
+
   let flag = '';
+
+  useEffect(() => {
+    setnetWorth(netWorth);
+  }, [netWorth]);
+
   useEffect(() => {
     async function getData() {
       const account = address;
@@ -58,43 +66,35 @@ export default function NFT({ changeTheme }) {
               b[res[i].tokenName].txHash.push(res[i].hash);
             }
           }
-          // console.log("final data:::", Object.values(b).filter((object) => object.tokens.length > 0))
-          // setdata(Object.values(b).filter((object) => object.tokens.length > 0));
-
+          let count_flag = 0;
           const temp = Object.values(b);
-          console.log('value of all nfts', temp);
           let NFTData = [];
           for (var i = 0; i < temp.length; i++) {
             if (temp[i].tokens.length > 1) {
               for (var j = 0; j < temp[i].tokens.length; j++) {
+                count_flag = count_flag + 1;
                 let newData = {
                   token: temp[i].tokens[j],
                   name: temp[i].name,
                   address: temp[i].address,
+                  txHash: temp[i].txHash,
+                  count_flag: count_flag,
                 };
                 NFTData.push(newData);
               }
             } else {
+              count_flag = count_flag + 1;
               let newData = {
                 token: temp[i].tokens[0],
                 name: temp[i].name,
                 address: temp[i].address,
+                txHash: temp[i].txHash,
+                count_flag: count_flag,
               };
               NFTData.push(newData);
             }
           }
           setnftData(NFTData);
-          // let halfdata = [];
-          // for (var k = 0; k < NFTData.length / 2; k++) {
-          //   let newData = {
-          //     token: temp[k].token,
-          //     name: temp[k].name,
-          //     address: temp[k].address,
-          //   };
-          //   halfdata.push(newData);
-          // }
-          // sethalfNFTdata(halfdata);
-          // console.log('half data', halfNFTdata);
           let lFtdata = JSON.stringify(NFTData);
           localStorage.setItem('nftdata', lFtdata);
           const finalObject = [];
@@ -107,21 +107,46 @@ export default function NFT({ changeTheme }) {
         });
     }
 
+    async function getUSDPrice() {
+      try {
+        const response = await axios.get(
+          `https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=BTC,USD,EUR`
+        );
+        setethUSDPrice(response.data.USD);
+      } catch (err) {
+        console.log('error in usd price', err);
+      }
+    }
     getData();
+    getUSDPrice();
   }, [Account, address]);
-  const [currentTheme, setCurrentTheme] = React.useState('');
-  React.useEffect(() => {
-    window.addEventListener('storage', () => {
-      const theme = localStorage.getItem('selectedTheme');
-      setCurrentTheme(theme);
-    });
-  }, []);
 
   return (
     <>
-      <div>
-        <NftNetworth changeTheme={changeTheme} />
-      </div>
+      {nftData.length == 0 ? (
+        <p>
+          {' '}
+          <NftNetworth
+            ethUSDPrice={ethUSDPrice}
+            Account={Account}
+            address={address}
+            netWorth={netWorth}
+            changeTheme={changeTheme}
+            NFTDATA={nftData}
+          />
+        </p>
+      ) : (
+        <div>
+          <NftNetworth
+            ethUSDPrice={ethUSDPrice}
+            Account={Account}
+            address={address}
+            netWorth={netWorth}
+            changeTheme={changeTheme}
+            NFTDATA={nftData}
+          />
+        </div>
+      )}
       {flag_data.length == 0 ? (
         <NoNft changeTheme={changeTheme} />
       ) : (
@@ -132,7 +157,14 @@ export default function NFT({ changeTheme }) {
                 <p>Loading</p>
               </div>
             ) : (
-              <NftGroup changeTheme={changeTheme} nftData={data} NFTDATA={nftData} />
+              <NftGroup
+                changeTheme={changeTheme}
+                nftData={data}
+                NFTDATA={nftData}
+                ethUSDPrice={ethUSDPrice}
+                propnetWorth2={(w) => setnetWorth(w)}
+                // nftDataFlag={nftDataFlag}
+              />
             )}
           </div>
         </div>

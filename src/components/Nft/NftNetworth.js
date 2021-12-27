@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { experimentalStyled as styled } from '@material-ui/core/styles';
 import { Box, Card, Typography, Stack } from '@material-ui/core';
+import Web3 from 'web3';
 // import { Stack } from '@material-ui/core';
+import { useWeb3React } from '@web3-react/core';
+const NftNetworth = ({ changeTheme, NFTDATA, Account, address, ethUSDPrice }) => {
+  const [netWorth, setnetWorth] = useState(0);
+  const { activate, active, chainId, connector, deactivate, error, provider, setError } =
+    useWeb3React();
 
-const NftNetworth = ({ changeTheme }) => {
   const NetWorth = styled('div')(({ theme }) => ({
     background: !changeTheme
       ? theme.palette.nft_dark.noNFT_background
@@ -46,6 +51,12 @@ const NftNetworth = ({ changeTheme }) => {
       textAlign: 'center',
     },
   }));
+  let sum = 0;
+  useEffect(() => {
+    NFTDATA.map((over) => {
+      getTransactionValue(over.txHash[0]);
+    });
+  }, [NFTDATA]);
 
   const NetWorthText = styled(Typography)(({ theme }) => ({
     marginLeft: '22px',
@@ -59,11 +70,55 @@ const NftNetworth = ({ changeTheme }) => {
       textAlign: 'center',
     },
   }));
+
+  async function getWeb3() {
+    const provider = await connector.getProvider(
+      'https://mainnet.infura.io/v3/8b2159b7b0944586b64f0280c927d0a8'
+    );
+    const web3 = await new Web3(provider);
+    return web3;
+  }
+
+  const getTransactionValue = async (hash) => {
+    const web3 = await getWeb3();
+    // const tx = await web3.eth.getTransaction(
+    //   '0x3dbf57317b11b83ce4365ba2642aaf707bd7ee22ed7a441870e9e99e2fccd713'
+    // )
+    var tx = '';
+    try {
+      // tx = await web3.eth.getTransaction(hash);
+      tx = await web3.eth.getTransaction(hash);
+    } catch (err) {
+      console.log('eerr', err);
+    }
+    let usdPrice = 1;
+    if (tx !== '') {
+      if (tx.value > 0) {
+        const valueInWei = parseInt(tx.value);
+        // settestName(tx.value);
+        try {
+          const response = await axios.get(
+            `https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=BTC,USD,EUR`
+          );
+          usdPrice = response.data.USD;
+        } catch (err) {
+          console.log('error in usd price', err);
+        }
+        // setprice(parseFloat((valueInWei / 10 ** 18) * 3948.79).toFixed(2));
+        // setnetWorth(parseFloat(localStorage.getItem('netWorth')) + price);
+        sum = parseFloat(sum);
+        let floatPrice = parseFloat(parseFloat((valueInWei / 10 ** 18) * ethUSDPrice).toFixed(2));
+        sum = sum + floatPrice;
+        localStorage.setItem('netWorth', sum);
+        setnetWorth(sum);
+      }
+    }
+  };
   return (
     <div style={{ display: 'flex' }}>
       <NetWorth>
         <Stack direction="column">
-          <AccountNetWorth>$ 21,010.17</AccountNetWorth>
+          <AccountNetWorth>$ {parseFloat(netWorth.toFixed(3))}</AccountNetWorth>
           <NetWorthText variant="NFT_networth_text">Net Worth</NetWorthText>
         </Stack>
       </NetWorth>

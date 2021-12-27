@@ -15,4 +15,8 @@ export default {
   //sushiStake LP toke (SLP) protocol
   GET_SLP_STAKE_DATA: 'GET_SLP_STAKE_DATA',
   GET_SLP_STAKE_TOTAL: 'GET_SLP_STAKE_TOTAL',
+  // nftData
+  SET_NFT_DATA: 'SET_NFT_DATA',
+  GET_NFT_DATA: 'GET_NFT_DATA',
+  INITIAL_NFT_DATA: 'INITIAL_NFT_DATA',
 };

@@ -6,6 +6,7 @@ import { twitterPosts } from './twitterPosts/reducer';
 import { headerTitlesReducer } from './headerTitlesReducer/reducer';
 import { eth2Stake } from './eth2Stake/reducer';
 import { sushiStaking } from './sushiStaking/reducer';
+import { nftData } from './nftData/reducer';
 
 export const rootReducer = combineReducers({
   web3Reducer,
@@ -15,4 +16,5 @@ export const rootReducer = combineReducers({
   headerTitlesReducer,
   eth2Stake,
   sushiStaking,
+  nftData,
 });
