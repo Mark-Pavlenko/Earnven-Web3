@@ -11,6 +11,8 @@ import IconButton from '@mui/material/IconButton';
 import { MHidden } from '../../../components/@material-extend';
 
 import NetworkDropDown from '../../../components/networkDropDown';
+import TestSelect from '../../../components/networkDropDown/selectTest';
+
 import MenuListComposition from '../../../components/gasDropDownMenu';
 import LanguageDropDown from '../../../components/languageDropDown';
 import HelpDropDown from '../../../components/helpDropDown';
@@ -100,7 +102,8 @@ function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle }) {
           <SearchTokensDark />
         )}
 
-        <NetworkDropDown />
+        {/*<NetworkDropDown />*/}
+        <TestSelect />
         <MenuListComposition />
         <LanguageDropDown />
         <HelpDropDown />
