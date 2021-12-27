@@ -20,6 +20,7 @@ import Ethereum2Staking from './Ethereum2Staking';
 import YearnFinance from './YearnFinance';
 import BalancerV2 from './LiqudityPools/BalancerV2';
 import { useSelector } from 'react-redux';
+import Investment from '../common/investment/investment';
 
 // Below code is for task https://app.clickup.com/t/1je2y9d
 // import CompoundData from './Compound';
@@ -75,6 +76,8 @@ export default function Index({ accountAddress }) {
   //YearnToken
   const [YearnTokenValue, setYearnTokenValue] = useState([]);
 
+  console.log('BalancerPoolsContent', BalancerPoolsContent);
+
   //get the value from the child component of the curve lp token
   const getCurveLpToken = (data) => {
     setCurveLpData(data);
@@ -111,6 +114,8 @@ export default function Index({ accountAddress }) {
     while (pattern.test(x)) x = x.replace(pattern, '$1,$2');
     return x;
   };
+
+  console.log('fffffffffff', IronBankSavings);
 
   useEffect(() => {
     const content = SavingsData.map((object) => (
@@ -385,6 +390,7 @@ export default function Index({ accountAddress }) {
   }, [CompoundSavingsData]);
 
   useEffect(() => {
+    console.log('BalancerPoolsData', BalancerPoolsData);
     const content = BalancerPoolsData.map((object) => (
       <Tooltip
         title={
@@ -396,12 +402,6 @@ export default function Index({ accountAddress }) {
                 wordBreak: 'break-word',
               }}>
               Tokens in Pool: <br />
-              {object.tokens.map((obj) => (
-                <>
-                  ${obj.symbol}
-                  <br />
-                </>
-              ))}
             </div>
             <br />
             <br />
@@ -415,7 +415,7 @@ export default function Index({ accountAddress }) {
           <div
             style={{
               display: 'inline-block',
-              width: '60%',
+              width: '100%',
               textAlign: 'left',
               wordBreak: 'break-word',
             }}>
@@ -427,8 +427,8 @@ export default function Index({ accountAddress }) {
                     alt="noimage"
                     style={{ maxWidth: '100%', maxHeight: '100%' }}
                     width="30px"
-                    height="30px"></img>
-                  {/* <>${obj.symbol}-</> */}
+                    height="30px"
+                  />
                 </div>
               ))}
             </div>
@@ -461,14 +461,9 @@ export default function Index({ accountAddress }) {
               <p>Protocol</p>
               <>&nbsp;-&nbsp;Balancer-V1&nbsp;</>
             </div>
-            {/* <>
-              <>&nbsp;{parseFloat(object.totalInvestment).toFixed(2)}&nbsp;USD</>
-            </> */}
+            <Investment />
+            <Investment />
           </div>
-          {/* <div
-            style={{ display: 'inline-block', width: '30%', fontSize: '15px', marginLeft: '20px' }}>
-            {parseFloat(object.price).toFixed(2)} USD
-          </div> */}
         </div>
       </Tooltip>
     ));
@@ -584,7 +579,7 @@ export default function Index({ accountAddress }) {
                 .catch((err) => {});
 
               if (res[i].currentATokenBalance > 0) {
-                var object = {};
+                const object = {};
                 object.name = res[i].reserve.name;
                 object.symbol = res[i].reserve.symbol;
                 object.tokenAddress = res[i].reserve.aToken.underlyingAssetAddress;
@@ -1024,9 +1019,6 @@ export default function Index({ accountAddress }) {
           height: 'auto',
           minHeight: '200px',
           borderRadius: '10px',
-          // Below code is for task https://app.clickup.com/t/1je2y9d
-          // display:
-          //   SavingsData.length > 0 || CompoundSavingsData > 0 || DisplaySavings ? '' : 'none',
           display:
             SavingsData.length > 0 || CompoundSavingsData > 0 || IronBankSavings > 0 || CreamDisplay
               ? ''
@@ -1049,14 +1041,12 @@ export default function Index({ accountAddress }) {
             <br />
           </div>
         </center>
-
         <Cream
           setTotal={setCreamTotal}
           setDisplay={setCreamDisplay}
           accountAddress={accountAddress}
         />
         <br />
-
         <div
           style={{
             fontSize: '12px',
@@ -1067,9 +1057,7 @@ export default function Index({ accountAddress }) {
         </div>
         {SavingsContent}
         <br />
-
         <CreamIronBank totalSavings={setIronBankSavings} accountAddress={accountAddress} />
-
         <div
           style={{
             fontSize: '12px',
@@ -1185,7 +1173,6 @@ export default function Index({ accountAddress }) {
         </div>
         {SushiPoolsContent}
         <br />
-
         <div
           style={{
             fontSize: '12px',
@@ -1202,7 +1189,6 @@ export default function Index({ accountAddress }) {
 
       <div
         style={{
-          // marginLeft:'25px',
           width: '100%',
           marginTop: '20px',
           minWidth: '300px',
