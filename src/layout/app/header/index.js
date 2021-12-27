@@ -10,7 +10,6 @@ import IconButton from '@mui/material/IconButton';
 // components
 import { MHidden } from '../../../components/@material-extend';
 
-// import NetworkDropDown from '../../../components/networkDropDown';
 import NetworkSelect from '../../../components/networkDropDown';
 
 import GasDropdownMenu from '../../../components/gasDropDownMenu';
@@ -57,14 +56,9 @@ function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle }) {
   const dispatch = useDispatch();
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
-  console.log('true lightTheme', isLightTheme);
-
-  // console.log('finalTitle', finalTitle);
 
   const { address } = useParams();
   const [Token, setToken] = useState('');
-  const [flag, setFlag] = useState(false);
-  const [theme, setTheme] = useState(false);
   function callbackFunction(childData) {
     setToken(childData);
     navigate(`/${address}/token/${childData}`);

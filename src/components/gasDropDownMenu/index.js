@@ -140,9 +140,8 @@ export default function GasDropDownMenu({ isLightTheme }) {
         isLightTheme={isLightTheme}
         open={open}
         onClose={handleClose}
-        anchorEl={anchorRef.current}
-        style={{ marginLeft: '122px' }}>
-        <MenuPopoverBox isLightTheme={isLightTheme} sx={{ py: 1, width: 320, height: 255 }}>
+        anchorEl={anchorRef.current}>
+        <MenuPopoverBox isLightTheme={isLightTheme} sx={{ py: 1 }}>
           <MenuPopoverBoxTitle isLightTheme={isLightTheme}>Realtime Gas Prices</MenuPopoverBoxTitle>
           {GasPricesContent}
           <MenuPopoverBoxNote>

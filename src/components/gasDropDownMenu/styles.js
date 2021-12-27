@@ -11,9 +11,13 @@ export const GasButton = styled(Button)`
     props.isLightTheme ? 'none' : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
 `;
 
-export const GasMenuPopover = styled(Popover)``;
+export const GasMenuPopover = styled(Popover)`
+  margin-left: 122px;
+`;
 
 export const MenuPopoverBox = styled(Box)`
+  width: 320px;
+  height: 255px;
   border-radius: 10px;
   background-color: ${(props) => (props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : '#11152D')};
   box-shadow: ${(props) =>
