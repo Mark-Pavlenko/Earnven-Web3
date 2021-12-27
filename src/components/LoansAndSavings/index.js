@@ -194,10 +194,6 @@ export default function Index({ accountAddress }) {
             ${object.symbol}
           </div>
 
-          {/* <div style={{display:'inline-block', width:'30%'}}>
-    {object.value} ${object.symbol}
-</div> */}
-
           <div style={{ display: 'inline-block', width: '40%', fontSize: '13px' }}>
             {object.totalInvestment} USD
           </div>
@@ -1071,12 +1067,6 @@ export default function Index({ accountAddress }) {
         </div>
         {SavingsContent}
         <br />
-        {/* Below code is for task https://app.clickup.com/t/1je2y9d */}
-        {/* <CompoundData
-          accountAddress={accountAddress}
-          displayProp={setDisplaySavings}
-          totalSavings={setTotalCompoundSavings}
-        /> */}
 
         <CreamIronBank totalSavings={setIronBankSavings} accountAddress={accountAddress} />
 
