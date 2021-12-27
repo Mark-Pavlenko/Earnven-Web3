@@ -50,7 +50,7 @@ const Option = (props) => (
 );
 
 const TestSelect = ({ isLightTheme }) => {
-  console.log('isLightThemeNetworkToggler', isLightTheme);
+  // console.log('isLightThemeNetworkToggler', isLightTheme);
   const [selectedCountry, setSelectedCountry] = useState(networks[0]);
 
   const handleChange = (value) => {

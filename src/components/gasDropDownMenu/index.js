@@ -1,29 +1,45 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Box, MenuItem, ListItemIcon, ListItemText, IconButton } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { alpha } from '@material-ui/core/styles';
 import axios from 'axios';
-import MenuPopover from '../MenuPopover';
+import { Box, MenuItem, ListItemIcon, ListItemText, IconButton } from '@material-ui/core';
+import { alpha } from '@material-ui/core/styles';
+
+import MenuPopover from './MenuPopover';
 import languageImg from '../../assets/icons/language.png';
-import gas from '../../assets/icons/gas.svg';
+import gasIcon from '../../assets/icons/gasIcon.svg';
 import { data } from '../../globalStore';
+import SlowGweiGasIcon from '../../assets/icons/slowGweiGasIcon.png';
+import MiddleGweiGasIcon from '../../assets/icons/middleGweiGasIcon.png';
+import FastGweiGasIcon from '../../assets/icons/fastGweiGasIcon.png';
+
+import {
+  GasButton,
+  GasMenuItem,
+  MenuPopoverBox,
+  MenuPopoverBoxTitle,
+  MenuPopoverBoxNote,
+} from './styles';
 
 const gasType = [
   {
     value: '',
     label: 'Fast',
+    icon: FastGweiGasIcon,
   },
   {
     value: '',
     label: 'Average',
+    icon: MiddleGweiGasIcon,
   },
   {
     value: '',
     label: 'Slow',
+    icon: SlowGweiGasIcon,
   },
 ];
 
-export default function GasDropDownMenu() {
+const MINUTE_MS = 10000;
+
+export default function GasDropDownMenu({ isLightTheme }) {
   const anchorRef = useRef(null);
   const [open, setopen] = useState(false);
   const [selected, setselected] = useState('Average');
@@ -31,45 +47,12 @@ export default function GasDropDownMenu() {
   const [GasPricesContent, setGasPricesContent] = useState([]);
 
   useEffect(() => {
-    // console.log('Updating Layout....')
-    const content = GasPrices.map((option) => (
-      <MenuItem
-        // key={option.value}
-        selected={option.label === selected}
-        onClick={() => {
-          handleClose();
-          updateGasValue(option.value, option.label);
-        }}
-        sx={{ py: 1, px: 2.5 }}>
-        <ListItemIcon>
-          <Box component="img" alt={option.label} src={languageImg} />
-        </ListItemIcon>
-        <ListItemText primaryTypographyProps={{ variant: 'body2', color: '#fff' }}>
-          {`${option.label}-${option.value} Gwei`}
-        </ListItemText>
-      </MenuItem>
-    ));
-
-    setGasPricesContent(content);
-  }, [GasPrices]);
-
-  const handleOpen = () => {
-    setopen(true);
-  };
-
-  const handleClose = () => {
-    setopen(false);
-  };
-
-  const MINUTE_MS = 10000;
-
-  useEffect(() => {
     async function getData() {
       try {
         const response = await axios.get(
           'https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W'
         );
-        // console.log("api response::", response);
+        console.log('gas item response', response);
         const { result } = response.data;
         gasType[0].value = result.FastGasPrice;
         gasType[1].value = result.ProposeGasPrice;
@@ -77,7 +60,7 @@ export default function GasDropDownMenu() {
         data.gasSelected = result.ProposeGasPrice;
         // setGasPrices([])
         setGasPrices([...gasType]);
-        // console.log("gasType::",gasType);
+        console.log('gasType', gasType);
       } catch (error) {
         console.log(error);
       }
@@ -93,35 +76,83 @@ export default function GasDropDownMenu() {
     return () => clearInterval(interval);
   }, []);
 
-  const updateGasValue = (val, label) => {
-    data.gasSelected = val;
-    setselected(label);
+  useEffect(() => {
+    const updateGasValue = (val, label) => {
+      data.gasSelected = val;
+      setselected(label);
+    };
+
+    // console.log('Updating Layout....')
+    const content = GasPrices.map((option) => (
+      <div
+        // key={option.value}
+        selected={option.label === selected}
+        onClick={() => {
+          handleClose();
+          updateGasValue(option.value, option.label);
+        }}
+        sx={{ py: 1, px: 2.5 }}>
+        {/*<ListItemIcon>*/}
+        {/*  <Box component="img" alt={option.label} src={languageImg} />*/}
+        {/*</ListItemIcon>*/}
+        <GasMenuItem isLightTheme={isLightTheme}>
+          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            <img src={option.icon} alt="" />
+            <span>{`${option.label} `}</span>
+          </div>
+          <div>
+            <span>{`${option.value} Gwei`}</span>
+          </div>
+        </GasMenuItem>
+      </div>
+    ));
+
+    setGasPricesContent(content);
+  }, [GasPrices]);
+
+  const handleOpen = () => {
+    setopen(true);
+  };
+
+  const handleClose = () => {
+    setopen(false);
   };
 
   return (
     <>
-      <IconButton
+      <GasButton
+        isLightTheme={isLightTheme}
+        startIcon={<img src={gasIcon} alt="" />}
         ref={anchorRef}
         onClick={() => {
           console.log('gas click');
           handleOpen();
         }}
         sx={{
-          padding: 0,
-          width: 44,
-          height: 44,
           ...(open && {
             bgcolor: (theme) =>
               alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
           }),
         }}>
-        <img src={gas} alt="" />
-        <ExpandMoreIcon style={{ color: '#fff' }} />
-
-        {/* <IoIosHelpCircleOutline style={{color:'#fff'}}/><ExpandMoreIcon style={{color:'#fff'}}/> */}
-      </IconButton>
-      <MenuPopover open={open} onClose={handleClose} anchorEl={anchorRef.current}>
-        <Box sx={{ py: 1 }}>{GasPricesContent}</Box>
+        39
+      </GasButton>
+      <MenuPopover
+        isLightTheme={isLightTheme}
+        open={open}
+        onClose={handleClose}
+        anchorEl={anchorRef.current}
+        style={{ marginLeft: '122px' }}>
+        <MenuPopoverBox isLightTheme={isLightTheme} sx={{ py: 1, width: 320, height: 255 }}>
+          <MenuPopoverBoxTitle isLightTheme={isLightTheme}>Realtime Gas Prices</MenuPopoverBoxTitle>
+          {GasPricesContent}
+          <MenuPopoverBoxNote>
+            Provided by
+            <a href={'https://etherscan.io/'} target="_blank">
+              {' '}
+              etherscan.io
+            </a>
+          </MenuPopoverBoxNote>
+        </MenuPopoverBox>
       </MenuPopover>
     </>
   );

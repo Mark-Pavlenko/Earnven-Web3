@@ -11,9 +11,9 @@ import IconButton from '@mui/material/IconButton';
 import { MHidden } from '../../../components/@material-extend';
 
 // import NetworkDropDown from '../../../components/networkDropDown';
-import TestSelect from '../../../components/networkDropDown';
+import NetworkSelect from '../../../components/networkDropDown';
 
-import MenuListComposition from '../../../components/gasDropDownMenu';
+import GasDropdownMenu from '../../../components/gasDropDownMenu';
 import LanguageDropDown from '../../../components/languageDropDown';
 import HelpDropDown from '../../../components/helpDropDown';
 
@@ -103,10 +103,10 @@ function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle }) {
         )}
 
         {/*<NetworkDropDown />*/}
-        <TestSelect isLightTheme={isLightTheme} />
-        <MenuListComposition />
+        <NetworkSelect isLightTheme={isLightTheme} />
+        <GasDropdownMenu isLightTheme={isLightTheme} />
         <LanguageDropDown />
-        <HelpDropDown />
+        {/*<HelpDropDown />*/}
         <CustomIconBtn
           onClick={() => {
             setDynamicTheme();
