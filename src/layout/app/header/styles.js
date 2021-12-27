@@ -18,7 +18,7 @@ export const HeaderLayout = styled.div`
   height: 102px;
   webkit-backdrop-filter: blur(10px); // Fix on Mobile
   background: ${(props) => (props.isLightTheme ? `url(${lightDashboard})` : `#0B0E1D`)};
-  @media (min-width: 1880px) {
+  @media (min-width: 2100px) {
     background: ${(props) => (props.isLightTheme ? `url(${lightDashboardBig})` : `#0B0E1D`)};
   }
 `;

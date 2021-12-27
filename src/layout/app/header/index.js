@@ -10,8 +10,8 @@ import IconButton from '@mui/material/IconButton';
 // components
 import { MHidden } from '../../../components/@material-extend';
 
-import NetworkDropDown from '../../../components/networkDropDown';
-import TestSelect from '../../../components/networkDropDown/selectTest';
+// import NetworkDropDown from '../../../components/networkDropDown';
+import TestSelect from '../../../components/networkDropDown';
 
 import MenuListComposition from '../../../components/gasDropDownMenu';
 import LanguageDropDown from '../../../components/languageDropDown';
@@ -103,7 +103,7 @@ function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle }) {
         )}
 
         {/*<NetworkDropDown />*/}
-        <TestSelect />
+        <TestSelect isLightTheme={isLightTheme} />
         <MenuListComposition />
         <LanguageDropDown />
         <HelpDropDown />
