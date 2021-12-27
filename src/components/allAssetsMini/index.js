@@ -28,7 +28,7 @@ export default class index extends Component {
 
   componentDidUpdate() {
     if (this.state.account !== this.props.address) {
-      console.log('all assets mini should re render');
+      console.log('all generalAssets mini should re render');
       this.loadBlockchainData();
     }
   }

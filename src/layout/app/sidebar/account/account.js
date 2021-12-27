@@ -103,11 +103,6 @@ const useStyles = makeStyles(() =>
 export default function Account({ address, name, global_wallet, setTheme }) {
   const { flag_menu } = menurender_customhook();
 
-  // console.log('account setLight theme', setTheme);
-
-  // const tokens = useSelector((state) => state);
-  // console.log('the main tokens', tokens);
-
   const classes = useStyles();
   const navigate = useNavigate();
   const anchorRef = useRef(null);
@@ -287,7 +282,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
               className={classes.accountAddress}>
               {test1(address, name)}
             </Typography>
-            {arrowicon == true ? (
+            {arrowicon === true ? (
               <ExpandLessIcon sx={{ ml: 4, mt: -2.1, color: '#4453AD' }} />
             ) : (
               <ExpandMoreIcon sx={{ ml: 4, mt: -2.1, color: '#4453AD' }} />

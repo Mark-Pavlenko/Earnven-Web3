@@ -1,15 +1,20 @@
-import { Box, Container, Grid, Tab, Tabs } from '@material-ui/core';
-import Page from '../../components/Page';
-import AllAssets from '../../components/allAssets/index copy';
-import PortfolioPerf from '../../components/portfolioperf/portfolioperf';
-import Balance from '../../components/Balance';
-import './dashboard.css';
-import { useParams } from 'react-router-dom';
-import LoansAndSavings from '../../components/LoansAndSavings';
 import React, { useState } from 'react';
-import History from '../History';
+import './dashboard.css';
 import NFT from '../NFT';
-import UnstyledTabsCustomized from './tabs/tabs';
+import History from '../History';
+import DashboardTabs from './tabs/tabs';
+import Page from '../../components/Page';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import Balance from '../../components/Balance';
+import sendIcon from '../../assets/icons/send-icon.svg';
+import { Box, Container, Grid } from '@material-ui/core';
+import AllAssets from '../../components/allAssets/generalAssets/assets/assets';
+import LoansAndSavings from '../../components/LoansAndSavings';
+import etherScanIcon from '../../assets/icons/etherScan-icon.svg';
+import etherScanDark from '../../assets/icons/etherScanDark-icon.svg';
+import PortfolioPerf from '../../components/portfolioperf/portfolioperf';
+import { TokenButtonsBlock, SendButton, EtherScanButton } from './styledComponents';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -26,16 +31,13 @@ function TabPanel(props) {
   );
 }
 
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
-
 export default function Dashboard({ test, changeTheme }) {
+  const theme = useSelector((state) => state.themeReducer.isLightTheme);
   const { address } = useParams();
   const [value, setValue] = useState(0);
+
+  const ownWallet = '0x49a2dcc237a65cc1f412ed47e0594602f6141936';
+  const currentWallet = localStorage.getItem('selected-account');
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -43,13 +45,16 @@ export default function Dashboard({ test, changeTheme }) {
 
   return (
     <Box sx={{ width: '100%', mt: 3 }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <UnstyledTabsCustomized toggleTabsHandler={handleChange} />
-        {/*<Tabs value={value} aria-label="basic tabs example">*/}
-        {/*  <Tab label="Assets" {...a11yProps(0)} />*/}
-        {/*  <Tab label="Nft Collection" {...a11yProps(1)} />*/}
-        {/*  <Tab label="History" {...a11yProps(2)} />*/}
-        {/*</Tabs>*/}
+      <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <DashboardTabs isLightTheme={theme} toggleTabsHandler={handleChange} />
+        <TokenButtonsBlock>
+          {currentWallet === ownWallet && <SendButton isLightTheme={theme} icon={sendIcon} />}
+          <EtherScanButton
+            isLightTheme={theme}
+            icon={etherScanIcon}
+            etherScanDark={etherScanDark}
+          />
+        </TokenButtonsBlock>
       </Box>
       <TabPanel value={value} index={0}>
         <Page title="Dashboard">
@@ -62,7 +67,7 @@ export default function Dashboard({ test, changeTheme }) {
                     <PortfolioPerf address={address} />
                   </Grid>
                   <Grid item xs={12} md={12}>
-                    <AllAssets address={address} />
+                    <AllAssets isLightTheme={theme} address={address} />
                     <br />
                   </Grid>
                 </Grid>

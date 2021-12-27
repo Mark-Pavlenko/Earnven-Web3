@@ -371,7 +371,14 @@ const Container_nft = styled(Container)(({ theme }) => ({
 }));
 
 // let nftImageUrl = "";
-export default function NftDetailsMobile({ contract, id, changeNFT, setOpenPopup, flagNFT }) {
+export default function NftDetailsMobile({
+  contract,
+  id,
+  changeNFT,
+  setOpenPopup,
+  flagNFT,
+  NFT_Price,
+}) {
   // eslint-disable-next-line no-unused-vars
   // const { address, contract, id } = useParams();
   const web3 = new Web3(
@@ -381,6 +388,9 @@ export default function NftDetailsMobile({ contract, id, changeNFT, setOpenPopup
   const [imgUrl, setimgUrl] = useState();
   const [nftName, setnftName] = useState('');
   const [assestName, setassestName] = useState('');
+  const [eLink, seteLink] = useState('');
+  const [openseaLink, setopenseaLink] = useState('');
+  const [raribleLink, setraribleLink] = useState('');
 
   // eslint-disable-next-line no-unused-vars
   const { loading, error, nft } = useNft(contract, id);
@@ -449,6 +459,9 @@ export default function NftDetailsMobile({ contract, id, changeNFT, setOpenPopup
       } catch (err) {
         console.log('errorinnftdetaILS', err);
       }
+      seteLink(`https://etherscan.io/token/${contract}`);
+      setopenseaLink(`https://opensea.io/assets/${contract}/${id}`);
+      setraribleLink(`https://rarible.com/token/${contract}:${id}?tab=details`);
     };
 
     nftDetail();
@@ -485,9 +498,11 @@ export default function NftDetailsMobile({ contract, id, changeNFT, setOpenPopup
                   />
                 </Image_Close_Div>
                 <Arrow_Close_Div>
-                  <Arrow style={{ height: '14px', width: '14px' }} src={arrownft} alt="no pic" />
+                  <a href="#">
+                    <Arrow style={{ height: '14px', width: '14px' }} src={arrownft} alt="no pic" />
+                  </a>
                 </Arrow_Close_Div>
-                <Balance align="left">$ 5,457.36</Balance>
+                <Balance align="left">$ {NFT_Price}</Balance>
               </Stack>
             ) : (
               <Stack>
@@ -509,9 +524,11 @@ export default function NftDetailsMobile({ contract, id, changeNFT, setOpenPopup
                   />
                 </Image_Close_Div_dark>
                 <Arrow_Close_Div_dark>
-                  <Arrow style={{ height: '14px', width: '14px' }} src={arrordark} alt="no pic" />
+                  <a href="#">
+                    <Arrow style={{ height: '14px', width: '14px' }} src={arrordark} alt="no pic" />
+                  </a>
                 </Arrow_Close_Div_dark>
-                <Balance align="left">$ 5,457.36</Balance>
+                <Balance align="left">{NFT_Price}</Balance>
               </Stack>
             )}
           </Stack>
@@ -595,15 +612,27 @@ export default function NftDetailsMobile({ contract, id, changeNFT, setOpenPopup
       <div style={{ margin: 'auto' }}>
         {localStorage.getItem('selectedTheme') == 'Day' ? (
           <Social_light direction="row" spacing={2}>
-            <img style={{ margin: 'auto' }} src={nft_popup_1} alt="" />
-            <img style={{ margin: 'auto' }} src={nft_popup_2} alt="" />
-            <img style={{ margin: 'auto' }} src={nft_popup_3} alt="" />
+            <a style={{ margin: 'auto' }} href={eLink} target="_blank">
+              <img style={{ margin: 'auto' }} src={nft_popup_1} alt="" />
+            </a>
+            <a style={{ margin: 'auto' }} href={openseaLink} target="_blank">
+              <img style={{ margin: 'auto' }} src={nft_popup_2} alt="" />
+            </a>
+            <a style={{ margin: 'auto' }} href={raribleLink} target="_blank">
+              <img style={{ margin: 'auto' }} src={nft_popup_3} alt="" />
+            </a>
           </Social_light>
         ) : (
           <Social direction="row" spacing={4}>
-            <img style={{ margin: 'auto' }} src={nft_dark_1} alt="" />
-            <img style={{ margin: 'auto' }} src={nft_dark_2} alt="" />
-            <img style={{ margin: 'auto' }} src={nft_dark_3} alt="" />
+            <a style={{ margin: 'auto' }} href={eLink} target="_blank">
+              <img style={{ margin: 'auto' }} src={nft_dark_1} alt="" />
+            </a>
+            <a style={{ margin: 'auto' }} href={openseaLink} target="_blank">
+              <img style={{ margin: 'auto' }} src={nft_dark_2} alt="" />
+            </a>
+            <a style={{ margin: 'auto' }} href={raribleLink} target="_blank">
+              <img style={{ margin: 'auto' }} src={nft_dark_3} alt="" />
+            </a>
           </Social>
         )}
       </div>

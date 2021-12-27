@@ -1,16 +1,16 @@
 import { all, call } from 'redux-saga/effects';
 import { getAccountBalanceSagaWatcher } from './accountBalance';
 import { getTwitterPostsSagaWatcher } from './twitterPosts';
-import {
-  getALlTokensSagaWatcher,
-  getSearchedTokensSagaWatcher,
-} from '../store/searchedTokens/sagas';
+import { getETH2StakeSagaWatcher } from './eth2Stake';
+import { getSushiStakeSagaWatcher } from './sushiStaking';
+import { getNftDataSagaWatcher } from './nftData';
 
 export default function* watchRootSaga() {
   yield all([
     call(getAccountBalanceSagaWatcher),
     call(getTwitterPostsSagaWatcher),
-    call(getSearchedTokensSagaWatcher),
-    call(getALlTokensSagaWatcher),
+    call(getETH2StakeSagaWatcher),
+    call(getSushiStakeSagaWatcher),
+    call(getNftDataSagaWatcher),
   ]);
 }

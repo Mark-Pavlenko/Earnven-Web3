@@ -16,6 +16,7 @@ import CurveLpToken from './CurveLpToken';
 import Cream from './Cream';
 import BancorPools from './BancorPools';
 import Synthetix from './Synthetix';
+import Ethereum2Staking from './Ethereum2Staking';
 
 // Below code is for task https://app.clickup.com/t/1je2y9d
 // import CompoundData from './Compound';
@@ -63,11 +64,6 @@ export default function Index({ accountAddress }) {
   const [YearnContent, setYearnContent] = useState([]); // Yearn
 
   const [YearnTotal, setYearnTotal] = useState([]); // Yearn Total
-
-  const [BeaconData, setBeaconData] = useState({}); // Beacon (Ethereum 2.0 Staking)
-
-  const [BeaconTotal, setBeaconTotal] = useState([]); // Beacon Total
-  // const [BeaconContent, setBeaconContent] = useState([]) //Beacon (Ethereum 2.0 Staking)
 
   const [CurveStakeData, setCurveStakeData] = useState([]); // Curve
   const [CurveStakeContent, setCurveStakeContent] = useState([]); // Curve
@@ -1269,55 +1265,6 @@ export default function Index({ accountAddress }) {
         });
     }
 
-    async function getBeaconData() {
-      await axios
-        .post(
-          `https://gateway.thegraph.com/api/${addresses.graph_API}/subgraphs/id/0x540b14e4bd871cfe59e48d19254328b5ff11d820-0`,
-          {
-            query: `{
-                depositors
-                (
-                  where:{
-                    id:"0x000000005dcee11e13fb536fa40d65450f53c5a8"
-                  }
-                ) {
-                  id
-                  totalAmountDeposited
-                  depositCount
-                  deposits {
-                    id
-                    amount
-                  }
-                }
-              }
-              `,
-          }
-        )
-        .then(async (response) => {
-          if (response.data.data) {
-            if (response.data.data.depositors) {
-              const res = response.data.data.depositors[0];
-              let tot = 0;
-              const object = {};
-              object.totalDeposit = res.totalAmountDeposited / 10 ** 9;
-
-              await axios
-                .get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd')
-                .then(async (response2) => {
-                  if (response2.data) {
-                    object.ethPrice = response2.data.ethereum.usd;
-                  }
-                });
-
-              object.totalInvestment = parseFloat(object.ethPrice * object.totalDeposit).toFixed(2);
-              tot += parseFloat(object.totalInvestment).toFixed(2);
-              setBeaconTotal(tot);
-              setBeaconData(object);
-            }
-          }
-        });
-    }
-
     getCompoundV2Data();
     getAaveV2Data();
     getUniV2Data();
@@ -1326,7 +1273,6 @@ export default function Index({ accountAddress }) {
     getYearnData();
     getCurveData();
     getBalancerV2Data();
-    getBeaconData();
   }, [accountAddress]);
   return (
     <div>
@@ -1539,20 +1485,13 @@ export default function Index({ accountAddress }) {
           height: 'auto',
           minHeight: '170px',
           borderRadius: '10px',
-          display:
-            parseFloat(SynthetixData) > 0 || YearnData.length > 0 || BeaconData.totalInvestment
-              ? ''
-              : 'none',
+          display: parseFloat(SynthetixData) > 0 || YearnData.length > 0 ? '' : 'none',
         }}>
         <br />
         <center>
           <div style={{ fontSize: '25px' }}>
             Other Assets <br />
-            Total :{' '}
-            {parseFloat(
-              parseFloat(SynthetixData) + parseFloat(BeaconTotal) + parseFloat(YearnTotal)
-            ).toFixed(2)}{' '}
-            USD
+            Total : {parseFloat(parseFloat(SynthetixData) + parseFloat(YearnTotal)).toFixed(2)} USD
             <br />
             <br />
           </div>
@@ -1564,41 +1503,6 @@ export default function Index({ accountAddress }) {
           }}></div>
 
         <Synthetix accountAddress={accountAddress} onSynthetixTokenValue={getSynthetixTokenData} />
-
-        <div
-          style={{
-            fontSize: '12px',
-            marginLeft: '15px',
-            display: BeaconData.totalInvestment ? '' : 'none',
-          }}>
-          <br /> Ethereum 2.0 Staking --- {BeaconTotal} USD
-          <br />
-        </div>
-
-        <div style={{ width: '90%', marginTop: '12px', marginLeft: '30px' }}>
-          <div style={{ display: 'inline-block', width: '15%' }}>
-            <div
-              style={{
-                height: '40px',
-                padding: '5px',
-                borderRadius: '10px',
-                backgroundImage:
-                  'linear-gradient(to right,  rgba(20,24,30,.1), rgba(173,204,151,.5), rgba(20,24,30,.1))',
-              }}>
-              <center>
-                <img src={ETHLogo} style={{ height: '30px', marginTop: '' }} alt="" />
-              </center>
-            </div>
-          </div>
-
-          <div style={{ display: 'inline-block', width: '10%', textAlign: 'left' }} />
-
-          <div style={{ display: 'inline-block', width: '30%' }}>{BeaconData.totalDeposit} ETH</div>
-
-          <div style={{ display: 'inline-block', width: '40%', fontSize: '13px' }}>
-            {BeaconData.totalInvestment} USD
-          </div>
-        </div>
 
         <br />
 
@@ -1616,7 +1520,6 @@ export default function Index({ accountAddress }) {
 
       <div
         style={{
-          // marginLeft:'25px',
           width: '110%',
           marginTop: '20px',
           minWidth: '300px',
@@ -1644,6 +1547,8 @@ export default function Index({ accountAddress }) {
           Curve Staking --- {CurveStakeTotal} USD
         </div>
         {CurveStakeContent}
+        <br />
+        <Ethereum2Staking accountAddress={accountAddress} />
         <br />
         <AaveStaking accountAddress={accountAddress} />
         <br />

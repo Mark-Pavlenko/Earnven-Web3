@@ -11,6 +11,7 @@ import NFT_Popover from '../NFT_Popover';
 import Popup from '../PopUp';
 import PopupMobile from '../PopUpMobile';
 import NftDetailsMobile from '../../screens/NFTDetailMobile';
+import { useWeb3React } from '@web3-react/core';
 
 const NftImgStyle = styled('img')({
   top: 0,
@@ -62,9 +63,32 @@ const NFT_Price = styled(Typography)(({ theme }) => ({
   },
 }));
 
+const NFT_Price_data = styled('div')(({ theme }) => ({
+  fontWeight: 'normal',
+  fontSize: '14px',
+  lineHeight: '22px',
+  marginLeft: '-40px',
+  ['@media (max-width:600px)']: {
+    // eslint-disable-line no-useless-computed-key
+    textAlign: 'left',
+    fontSize: '10px',
+    opacity: 0.5,
+    marginTop: '-10px',
+    marginLeft: '-12px',
+  },
+}));
+
 // ----------------------------------------------------------------------
 
-export default function NftCard({ tokenId, contractAddress, txHash, changeTheme, NFTDATA }) {
+export default function NftCard({
+  tokenId,
+  contractAddress,
+  txHash,
+  ethUSDPrice,
+  changeTheme,
+  NFTDATA,
+  propnetWorth,
+}) {
   const navigate = useNavigate();
   const { address } = useParams();
   const [price, setprice] = useState(0);
@@ -76,6 +100,8 @@ export default function NftCard({ tokenId, contractAddress, txHash, changeTheme,
   const [tokenId_NFT, settokenId_NFT] = useState(tokenId);
   const [Theme_NFT, setTheme_NFT] = useState(localStorage.getItem('selectedTheme'));
   const [flagKill, setflagKill] = useState(1);
+  const [testName, settestName] = useState('');
+  const [netWorth, setnetWorth] = useState(0);
   let temp_Address = '';
   let temp_TokenId = '';
   const showAccountPopover = () => {
@@ -85,9 +111,16 @@ export default function NftCard({ tokenId, contractAddress, txHash, changeTheme,
     setaccount(false);
   };
 
+  const { activate, active, chainId, connector, deactivate, error, provider, setError } =
+    useWeb3React();
+
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
     navigator.userAgent
   );
+
+  useEffect(() => {
+    propnetWorth(netWorth);
+  }, [netWorth]);
 
   const Card_NFT = styled('div')(({ theme }) => ({
     cursor: 'pointer',
@@ -121,21 +154,24 @@ export default function NftCard({ tokenId, contractAddress, txHash, changeTheme,
     const wait = (ms) => new Promise((resolve, reject) => setTimeout(resolve, ms));
     const nftDetail = async () => {
       var count = 0;
+      // console.log('hash sathya tracs', txHash, contractAddress);
       try {
         await wait(1000);
         const response = await axios.get(
           `https://api.opensea.io/api/v1/assets?token_ids=${tokenId}&asset_contract_addresses=${contractAddress}`
         );
+        await wait(1000);
         const tempObject = {};
-        console.log(
-          'sathuaurl',
-          `https://api.opensea.io/api/v1/assets?token_ids=${tokenId}&asset_contract_addresses=${contractAddress}`
-        );
+        // console.log(
+        //   txHash,
+        //   'sathuaurl',
+        //   `https://api.opensea.io/api/v1/assets?token_ids=${tokenId}&asset_contract_addresses=${contractAddress}`
+        // );
         if (response.data.assets[0].name) {
           tempObject.name = response.data.assets[0].name;
           tempObject.img = response.data.assets[0].image_url;
           setnftDetails(tempObject);
-          console.log('responsecode', response);
+          // console.log('responsecode', response);
           sessionStorage.setItem('nftCount', 0);
           sessionStorage.setItem('nftCount_left', 0);
           // count++;
@@ -147,23 +183,73 @@ export default function NftCard({ tokenId, contractAddress, txHash, changeTheme,
     nftDetail();
   }, [contractAddress, tokenId]);
 
+  // useEffect(async () => {
+  //   const tempObject1 = {};
+  //   const responce_price = await axios.get(
+  //     `https://api.opensea.io/api/v1/asset/${contractAddress}/${tokenId}/`
+  //   );
+  //   tempObject1.name = responce_price.data.asset_contract.name;
+  //   // tempObject1.usd_price = responce_price.data.last_sale.payment_token.usd_price;
+  //   tempObject1.price = responce_price.data.collection.stats.average_price;
+  //   // tempObject1.img = responce_price.data.image_original_url;
+  //   // setnftDetails(tempObject1);
+  //   settestName(tempObject1.name);
+  //   setprice(tempObject1.price);
+  //   console.log('test sathya name2', responce_price);
+  // }, [contractAddress, tokenId]);
+  async function getWeb3() {
+    const provider = await connector.getProvider(
+      'https://mainnet.infura.io/v3/8b2159b7b0944586b64f0280c927d0a8'
+    );
+    const web3 = await new Web3(provider);
+    return web3;
+  }
+
   const getTransactionValue = async (hash) => {
-    const web3 = new Web3(
-      new Web3.providers.HttpProvider(
-        'https://mainnet.infura.io/v3/8b2159b7b0944586b64f0280c927d0a8'
-      )
-    );
-    const tx = await web3.eth.getTransaction(
-      '0x196b3dcbe5274f843258de2f0f95dd2a92b32eb779aa4ae352dc72f5b6eecd9b'
-    );
+    const web3 = await getWeb3();
+    // const tx = await web3.eth.getTransaction(
+    //   '0x3dbf57317b11b83ce4365ba2642aaf707bd7ee22ed7a441870e9e99e2fccd713'
+    // )
+    var tx = '';
+    try {
+      // tx = await web3.eth.getTransaction(hash);
+      tx = await web3.eth.getTransaction(txHash[0]);
+      // console.log('tx sathya', tx);
+    } catch (err) {
+      console.log('eerr sathya', err);
+    }
+    let usdPrice = 1;
     if (tx.value > 0) {
       const valueInWei = parseInt(tx.value);
-      setprice(parseFloat(web3.utils.fromWei(valueInWei.toString(), 'ether')).toFixed(3));
+      settestName(tx.value);
+      // try {
+      //   const response = await axios.get(
+      //     `https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=BTC,USD,EUR`
+      //   );
+      //   usdPrice = response.data.USD;
+      // } catch (err) {
+      //   console.log('error in usd price', err);
+      // }
+      // console.log('sathyakrihna', usdPrice);
+      setprice(parseFloat((valueInWei / 10 ** 18) * ethUSDPrice).toFixed(2));
+      // setnetWorth(parseFloat(localStorage.getItem('netWorth')) + price);
+      let sum = localStorage.getItem('netWorth');
+      sum = parseFloat(sum);
+      let floatPrice = parseFloat(parseFloat((valueInWei / 10 ** 18) * ethUSDPrice).toFixed(2));
+      sum = sum + floatPrice;
+      // console.log('value of wei', valueInWei, 'value of eth', valueInWei / 10 ** 18);
+      // console.log('float price sum sathya', floatPrice);
+      localStorage.setItem('netWorth', sum);
+      // console.log('resulrt sum sathya', sum);
+      setnetWorth(sum);
     }
   };
+  useEffect(async () => {
+    // console.log('inside useefect sathya');
+    await getTransactionValue(txHash);
+  }, [contractAddress, tokenId]);
 
   useEffect(async () => {
-    await getTransactionValue(txHash);
     let nftdata = localStorage.getItem('nftdata');
     let parsed_nftdata = JSON.parse(nftdata);
     var keys = Object.keys(parsed_nftdata);
@@ -240,10 +326,12 @@ export default function NftCard({ tokenId, contractAddress, txHash, changeTheme,
           <NFT_Name noWrap>{nftDetails !== undefined ? nftDetails.name : 'loading'}</NFT_Name>
           {price == 0 ? (
             <div style={{ marginLeft: '13px' }}>
-              <NFT_Price align="left">$ 2,234.23</NFT_Price>
+              <NFT_Price align="left">$ 0.00</NFT_Price>
             </div>
           ) : (
-            <div />
+            <NFT_Price_data style={{ marginLeft: '10px' }}>
+              <Typography>$ {price}</Typography>
+            </NFT_Price_data>
           )}
 
           <Stack direction="row" alignItems="center" justifyContent="space-between" />
@@ -257,6 +345,7 @@ export default function NftCard({ tokenId, contractAddress, txHash, changeTheme,
             flagNFT={(w) => setflagKill(w)}
             contract={Address_NFT}
             id={tokenId_NFT}
+            NFT_Price={price}
           />
         </Popup>
       ) : (
@@ -267,6 +356,7 @@ export default function NftCard({ tokenId, contractAddress, txHash, changeTheme,
             flagNFT={(w) => setflagKill(w)}
             contract={Address_NFT}
             id={tokenId_NFT}
+            NFT_Price={price}
           />
         </PopupMobile>
       )}

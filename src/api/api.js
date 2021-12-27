@@ -31,3 +31,11 @@ export const getTwitterPosts = async (attributes) => {
   const streamURL = `https://cmctoken-proxy.herokuapp.com/https://api.twitter.com/2/tweets/search/recent?query=from%3A${attributes.userTwitterId}&max_results=${attributes.count}&expansions=author_id,referenced_tweets.id,attachments.media_keys,entities.mentions.username,referenced_tweets.id.author_id&tweet.fields=id,created_at,text,author_id,attachments,public_metrics,source,context_annotations&user.fields=id,name,username,profile_image_url,url,pinned_tweet_id,public_metrics&media.fields=preview_image_url,url,public_metrics`;
   return await axios.get(streamURL, { headers });
 };
+
+export const getNFTdata = async (attributes) => {
+  // console.log('attributes', attributes);
+  const response = await axios.get(
+    `https://api.opensea.io/api/v1/assets?token_ids=${attributes.tokenId}&asset_contract_addresses=${attributes.contractAddress}`
+  );
+  return response;
+};

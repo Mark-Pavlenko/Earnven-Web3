@@ -1,151 +1,152 @@
-/** *********************************************************************************
-Purpose : This component is used to get stake token value from Sushi Protocol
-Developed by : Prabhakaran.R
-procedures/packages/components used in this process
-1)Using the graph sushi api materChef to get users staked list of pools
-    https://api.thegraph.com/subgraphs/name/sushiswap/master-chef
-
-Version log:
-----------------------------------------------------------------------------------
-Version           Date                         Description
----------------------------------------------------------------------------------
-1.0               8/Sep/2021                   Initial Development
-
-*********************************************************************************** */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Addresses from '../../contractAddresses';
 import SushiSwapLogo from '../../assets/icons/Sushiswap.webp';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { useDispatch, useSelector } from 'react-redux';
+import actionTypes from '../../constants/actionTypes';
 
 export default function SushiStaking({ accountAddress }) {
-  const [SushiAmountUSD, setSushiAmountUSD] = useState(0);
-  // const [sushiUsdPrice, setAaveUsdPrice] = useState()
-  // const [sushiBalanceAmt, setAaveBalanceAmt] = useState()
-
-  // const accountAddress = '0xc75a5f6add3763942631e1d41ba7024a36978779'
+  const [SLPTokenDataContent, setSLPTokenDataContent] = useState([]);
+  const getEpoch = () => {
+    const d = new Date();
+    const day = d.getUTCDate();
+    const month = d.getUTCMonth();
+    const year = d.getUTCFullYear();
+    const offset = new Date(year, month, day).getTimezoneOffset() * 60;
+    const epoch = new Date(year, month, day).getTime() / 1000 - offset;
+    return epoch;
+  };
+  //use useSelector hook to get the current state from store
+  const SLPTokenData = useSelector((state) => state.sushiStaking.sushiStakeData);
+  const SLPTokenTotalValue = useSelector((state) => state.sushiStaking.sushiStakeTotal);
+  //then make dispatch/send an action
+  const dispatch = useDispatch();
+  //below function is used to get sushi staking balance from the subgraph
 
   useEffect(() => {
-    async function getStakeData() {
-      // use below query to get user staked list of pools w
-      await axios
-        .post('https://api.thegraph.com/subgraphs/name/sushiswap/master-chef', {
-          query: `
-          {
-                users (where :{
-                            address :"${accountAddress}",
-                            pool_not : null
-                      })
-                {
-                    id
-                    address
-                    amount
-                    pool 
-                    {
-                        id
-                        pair
-                        balance
-                    }
-                }
-            }`,
-        })
-        .then(async (response) => {
-          if (response.data.data) {
-            const res = response.data.data;
-            // console.log('Sushi response', res)
-            // console.log('Sushi data length', res.users.length)
-            const amount = [];
-            const poolId = [];
-            let sushiStakingValue = 0;
-            for (var i = 0; i < res.users.length; i++) {
-              amount[i] = response.data.data.users[i].amount;
-              poolId[i] = response.data.data.users[i].pool.pair;
-
-              // console.log('start fetching from sushi mainnet token value')
-
-              // console.log('Sushi data', amount[i])
-              // user below api / http request to get correspoing pair token mv
-              await axios
-                .post(
-                  `https://gateway.thegraph.com/api/c9596ce7bc47f7544cc808c3881427ed/subgraphs/id/0x4bb4c1b0745ef7b4642feeccd0740dec417ca0a0-0`,
-                  {
-                    query: `{
-                        pairs
-                              (where:
-                                  { id : "${poolId[i]}"
-                               })
-                              {
-                                  reserveUSD
-                                  totalSupply
-                              }
-                      }`,
-                  }
-                )
-                .then(async (pairResponse) => {
-                  const pairData = pairResponse.data.data.pairs;
-                  // console.log('Sushi pair data', pairData)
-                  const sushiStakeAmount = parseInt(amount[i]) / 10 ** 18;
-                  const sushiTokenValue =
-                    parseInt(pairData[0].reserveUSD) / parseInt(pairData[0].totalSupply);
-                  sushiStakingValue += sushiStakeAmount * sushiTokenValue;
-                  // console.log('Sushi Staking value', sushiStakingValue)
-                  console.log('Sushi pair data', sushiTokenValue.toFixed(2));
-                  console.log('Sushi amount', sushiStakeAmount.toFixed(2));
-
-                  // console.log('Sushi Token Value', sushiTokenValue)
-                  // pairResponse = null
-                })
-                .catch((error) => {
-                  console.log('Error message', error);
-                });
-            }
-            const sushiStake = parseFloat(sushiStakingValue).toFixed(2);
-            console.log('Sushi Staking value', parseFloat(sushiStakingValue).toFixed(2));
-            setSushiAmountUSD(parseFloat(sushiStake).toLocaleString());
-            // console.log('Sushi amount', amount)
-            // console.log('Sushi Pool', poolId)
-          }
-        })
-        .catch((error) => console.log('Error message-', error));
-    }
-    getStakeData();
+    const getSushiStakeData = async () => {
+      const epocDate = await getEpoch();
+      const sushiStakingObjects = { accountAddress: accountAddress, epocDate: epocDate };
+      try {
+        dispatch({
+          type: actionTypes.GET_SLP_STAKE_DATA,
+          payload: sushiStakingObjects,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getSushiStakeData();
   }, [accountAddress]);
 
-  return (
-    <div>
-      {parseInt(SushiAmountUSD) ? (
-        <div>
-          <div
+  //use below process to fetch slp token data to intergrate in UI
+  useEffect(() => {
+    if (SLPTokenData.length > 0) {
+      try {
+        var content = SLPTokenData.map((object) => (
+          <Accordion
             style={{
-              fontSize: '12px',
-              marginLeft: '15px',
+              background: 'transparent',
+              marginRight: '1px',
+              color: 'black',
+              width: '100%',
+              border: '1px',
+              borderColor: 'black',
+              borderStyle: 'hidden', //solid
             }}>
-            Sushi Staking --- {SushiAmountUSD} USD
-          </div>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header">
+              <React.Fragment
+                style={{
+                  display: 'inline-block',
+                  width: '100%',
+                  //textAlign: 'left',
+                  wordBreak: 'break-all',
+                }}>
+                <React.Fragment>
+                  <img
+                    style={{
+                      height: '20px',
+                      width: '20px',
+                      display: 'inline-block',
+                    }}
+                    src={object.sushiLPToken0ImageUrl}
+                    alt=""
+                  />
+                  <img
+                    style={{
+                      height: '20px',
+                      width: '20px',
+                      display: 'inline-block',
+                    }}
+                    src={object.sushiLPToken1ImageUrl}
+                    alt=""
+                  />
+                </React.Fragment>
+                {object.sushiLpTokenSymbol}&nbsp;
+                {parseFloat(object.sushiLpTokenValue).toLocaleString()} USD
+              </React.Fragment>
+            </AccordionSummary>
+            <AccordionDetails>
+              <div style={{ display: 'inline-block', width: '70%', fontSize: '12px' }}>
+                Staked token &nbsp;&nbsp; {object.sushiLpTokenSymbol}
+                <br />
+                Balance &nbsp; {parseFloat(object.sushiLpTokenBalance).toFixed(5)}
+                <br />
+                Price &nbsp;&nbsp;&nbsp;&nbsp;${object.sushiLpTokenPrice}
+                <br />
+                Value &nbsp;&nbsp;&nbsp;&nbsp;$
+                {parseFloat(object.sushiLpTokenValue).toLocaleString()}
+                <br />
+                Volume &nbsp;&nbsp;&nbsp;&nbsp;$
+                {parseFloat(object.sushiLpTokenVolume).toLocaleString()}
+                <br />
+                Liquidity &nbsp;&nbsp;&nbsp;&nbsp;$
+                {parseFloat(object.sushiLpTokenLiquidity).toLocaleString()}
+                <br />
+                Chain &nbsp;&nbsp;&nbsp;&nbsp; {object.sushiLpProtocol}
+                <br />
+                Protocol &nbsp;&nbsp; {object.sushiLpChain}
+              </div>
+            </AccordionDetails>
+          </Accordion>
+        ));
+      } catch (err) {
+        console.log('No Curve LP token data found');
+      }
+    }
+    setSLPTokenDataContent(content);
+  }, [SLPTokenData]);
 
-          <div>
-            <img
-              src={SushiSwapLogo}
-              style={{
-                height: '30px',
-                marginTop: '',
-                display: 'inline-block',
-                marginLeft: '15px',
-              }}
-              alt=""
-            />
-            <div
-              style={{
-                fontSize: '12px',
-                display: 'inline-block',
-                marginLeft: '15px',
-              }}>
-              Sushi &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {SushiAmountUSD} USD
-            </div>
-          </div>
-        </div>
-      ) : (
-        ''
-      )}
-    </div>
+  return (
+    <React.Fragment>
+      <div
+        style={{
+          fontSize: '15px',
+          marginRight: '15px',
+          display: SLPTokenData.length > 0 ? '' : 'none',
+        }}>
+        <img
+          src={SushiSwapLogo}
+          style={{
+            height: '30px',
+            marginTop: '',
+            marginLeft: '15px',
+            display: 'inline-block',
+          }}
+          alt=""
+        />
+        Sushi staking -- {SLPTokenTotalValue.toLocaleString()} USD
+        {SLPTokenDataContent}
+      </div>
+      <br />
+    </React.Fragment>
   );
 }
