@@ -65,11 +65,6 @@ export default function Index({ accountAddress }) {
 
   const [YearnTotal, setYearnTotal] = useState([]); // Yearn Total
 
-  // const [BeaconData, setBeaconData] = useState({}); // Beacon (Ethereum 2.0 Staking)
-
-  // const [BeaconTotal, setBeaconTotal] = useState([]); // Beacon Total
-  // // const [BeaconContent, setBeaconContent] = useState([]) //Beacon (Ethereum 2.0 Staking)
-
   const [CurveStakeData, setCurveStakeData] = useState([]); // Curve
   const [CurveStakeContent, setCurveStakeContent] = useState([]); // Curve
 
@@ -1270,55 +1265,6 @@ export default function Index({ accountAddress }) {
         });
     }
 
-    // async function getBeaconData() {
-    //   await axios
-    //     .post(
-    //       `https://gateway.thegraph.com/api/${addresses.graph_API}/subgraphs/id/0x540b14e4bd871cfe59e48d19254328b5ff11d820-0`,
-    //       {
-    //         query: `{
-    //             depositors
-    //             (
-    //               where:{
-    //                 id:"0x000000005dcee11e13fb536fa40d65450f53c5a8"
-    //               }
-    //             ) {
-    //               id
-    //               totalAmountDeposited
-    //               depositCount
-    //               deposits {
-    //                 id
-    //                 amount
-    //               }
-    //             }
-    //           }
-    //           `,
-    //       }
-    //     )
-    //     .then(async (response) => {
-    //       if (response.data.data) {
-    //         if (response.data.data.depositors) {
-    //           const res = response.data.data.depositors[0];
-    //           let tot = 0;
-    //           const object = {};
-    //           object.totalDeposit = res.totalAmountDeposited / 10 ** 9;
-
-    //           await axios
-    //             .get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd')
-    //             .then(async (response2) => {
-    //               if (response2.data) {
-    //                 object.ethPrice = response2.data.ethereum.usd;
-    //               }
-    //             });
-
-    //           object.totalInvestment = parseFloat(object.ethPrice * object.totalDeposit).toFixed(2);
-    //           tot += parseFloat(object.totalInvestment).toFixed(2);
-    //           setBeaconTotal(tot);
-    //           setBeaconData(object);
-    //         }
-    //       }
-    //     });
-    // }
-
     getCompoundV2Data();
     getAaveV2Data();
     getUniV2Data();
@@ -1327,7 +1273,6 @@ export default function Index({ accountAddress }) {
     getYearnData();
     getCurveData();
     getBalancerV2Data();
-    //getBeaconData();
   }, [accountAddress]);
   return (
     <div>
@@ -1575,7 +1520,6 @@ export default function Index({ accountAddress }) {
 
       <div
         style={{
-          // marginLeft:'25px',
           width: '110%',
           marginTop: '20px',
           minWidth: '300px',
