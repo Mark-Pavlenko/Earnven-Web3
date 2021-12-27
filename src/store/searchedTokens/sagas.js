@@ -1,12 +1,6 @@
 import { call, put, select, takeEvery, takeLatest } from 'redux-saga/effects';
 import * as API from '../../api/api';
-import {
-  getSearchedTokens,
-  GET_ALL_TOKENS,
-  GET_SEARCHED_TOKENS_LOADING,
-  GET_SEARCHED_TOKENS_SUCCESS,
-  GET_SEARCHED_TOKENS_ERROR,
-} from './actions';
+import { GET_ALL_TOKENS, GET_SEARCHED_TOKENS_LOADING } from './actions';
 
 const getTokensList = (state) => state.tokensList.tokensList;
 
@@ -22,17 +16,14 @@ export function* getSearchedTokensSagaWatcher() {
 
 export function* getAllTokensWorker() {
   const tokensList = yield call(API.getTokens);
+  // console.log('tokensList', tokensList);
   yield put(actions.setAllTokens(tokensList));
 }
 
 function* searchedTokensWorker(data) {
   const inputSearchValue = data.payload;
-  // console.log('inputSearchValue', inputSearchValue);
-
   const tokensList = yield select(getTokensList);
-
-  // console.log('tokensList', tokensList);
-
+  // console.log('search tokens list', tokensList);
   const selectedTokensList = [];
   for (let i = 0; i < tokensList.length; i++) {
     const searchPattern = new RegExp(`^${inputSearchValue}`, 'i');
@@ -42,7 +33,7 @@ function* searchedTokensWorker(data) {
   }
 
   // if (selectedTokensList.length < 1000) {
-  // console.log('selectedTokensList', selectedTokensList);
+  //   console.log('selectedTokensList', selectedTokensList);
   // }
 
   yield put(actions.setChosenTokensList(selectedTokensList));

@@ -6,6 +6,7 @@ export const GET_SEARCHED_TOKENS_ERROR = 'GET_SEARCHED_TOKENS_ERROR';
 export const SET_CHOSEN_TOKENS_LIST = 'SET_CHOSEN_TOKENS_LIST';
 
 export const getAllTokens = () => {
+  // console.log('getAllTokensTriggered');
   return {
     type: GET_ALL_TOKENS,
   };
