@@ -49,7 +49,7 @@ const Option = (props) => (
   </components.Option>
 );
 
-const TestSelect = ({ isLightTheme }) => {
+const NetworkSelect = ({ isLightTheme }) => {
   // console.log('isLightThemeNetworkToggler', isLightTheme);
   const [selectedCountry, setSelectedCountry] = useState(networks[0]);
 
@@ -145,4 +145,4 @@ const TestSelect = ({ isLightTheme }) => {
   );
 };
 
-export default TestSelect;
+export default NetworkSelect;

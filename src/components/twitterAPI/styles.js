@@ -82,8 +82,9 @@ export const TweetBlock = styled.div`
   color: black;
 
   @media screen and (max-width: 400px) {
-    width: 375px;
-    margin-left: 5px;
+    width: 100vw;
+    //width: 375px;
+    //margin-left: 5px;
     // background-color: red;
   }
 
@@ -215,14 +216,15 @@ export const TwitterWidget = styled.div`
   }
 
   @media screen and (max-width: 449px) {
-    width: 375px;
+    //width: 375px;
+    width: 100vw;
   }
 
   @media screen and (min-width: 450px) and (max-width: 710px) {
     width: 100%;
   }
 
-  @media screen and (min-width: 710px) and (max-width: 1600px) {
+  @media (max-width: 1600px) {
     width: auto;
     margin-bottom: 40px;
 

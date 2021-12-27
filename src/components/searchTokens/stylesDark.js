@@ -2,6 +2,9 @@ import styled from 'styled-components';
 
 export const MainLayout = styled.div`
   display: flex;
+  @media (max-width: 1000px) {
+    display: none;
+  }
 `;
 
 export const SearchIcon = styled.img`

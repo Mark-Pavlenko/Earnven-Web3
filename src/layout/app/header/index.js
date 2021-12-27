@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
-import menu2Fill from '@iconify/icons-eva/menu-2-fill';
 import sidebarBurgerLightIcon from '../../../assets/icons/sidebarBurgerLightIcon.png';
+import sidebarBurgerDarkIcon from '../../../assets/icons/sidebarBurgerDarkIcon.png';
+import userMockAvatar from '../../../assets/icons/userMockAvatar.png';
 // material
 import { alpha, experimentalStyled as styled } from '@material-ui/core/styles';
-import { Box, AppBar, Toolbar } from '@material-ui/core';
 import IconButton from '@mui/material/IconButton';
-// components
-import { MHidden } from '../../../components/@material-extend';
 
+import SearchTokensMobile from '../../../components/searchTokensMobile/index';
 import NetworkSelect from '../../../components/networkDropDown';
 
 import GasDropdownMenu from '../../../components/gasDropDownMenu';
@@ -25,27 +23,17 @@ import darkIcon from '../../../assets/icons/darkIcon.svg';
 import lightIcon from '../../../assets/icons/lightIcon.svg';
 import { connect, useDispatch, useSelector } from 'react-redux';
 
-import { HeaderLayoutBig, HeaderTitleBig, BurgerIcon, HeaderItemsBlockBig } from './styles';
-
-const DRAWER_WIDTH = 280;
-const APPBAR_MOBILE = 64;
-const APPBAR_DESKTOP = 92;
-
-const ToolbarLayout = styled(Toolbar)(({ theme }) => ({
-  minHeight: APPBAR_MOBILE,
-  [theme.breakpoints.up('lg')]: {
-    minHeight: APPBAR_DESKTOP,
-    padding: theme.spacing(0, 5),
-  },
-}));
-
-const CustomIconBtn = styled(IconButton)({
-  '&:hover': {
-    backgroundColor: 'none !important',
-    // borderColor: '#0062cc',
-    boxShadow: 'none',
-  },
-});
+import {
+  HeaderLayoutBig,
+  HeaderLayoutMobile,
+  MobileSubLayout,
+  HeaderTitle,
+  BurgerIcon,
+  HeaderItemsBlock,
+  HeaderFirstLayout,
+  MockUserMobileAvatar,
+  ChangeThemeBtn,
+} from './styles';
 
 Header.propTypes = {
   onOpenSidebar: PropTypes.func,
@@ -81,34 +69,61 @@ function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle }) {
   return (
     <>
       <HeaderLayoutBig isLightTheme={isLightTheme}>
-        <div style={{ display: 'flex' }}>
+        <HeaderFirstLayout>
           <BurgerIcon onClick={onOpenSidebar} sx={{ mr: 1, color: 'text.primary' }}>
-            <img src={sidebarBurgerLightIcon} alt="burger_img" />
+            {isLightTheme ? (
+              <img src={sidebarBurgerLightIcon} alt="burger_img" />
+            ) : (
+              <img src={sidebarBurgerDarkIcon} alt="burger_img" />
+            )}
           </BurgerIcon>
-          <HeaderTitleBig isLightTheme={isLightTheme}>
+          <MockUserMobileAvatar src={userMockAvatar} alt="mockAvatar" />
+          <HeaderTitle isLightTheme={isLightTheme}>
             <p>{finalTitle}</p>
-          </HeaderTitleBig>
-        </div>
-        <HeaderItemsBlockBig>
+          </HeaderTitle>
+        </HeaderFirstLayout>
+        <HeaderItemsBlock>
           {/*<SearchTokens />*/}
           {isLightTheme ? (
             <SearchTokensLight parentCallback={callbackFunction} isLightTheme={isLightTheme} />
           ) : (
             <SearchTokensDark />
           )}
-          {/*<NetworkDropDown />*/}
+          <SearchTokensMobile isLightTheme={isLightTheme} />
           <NetworkSelect isLightTheme={isLightTheme} />
           <GasDropdownMenu isLightTheme={isLightTheme} />
           <LanguageDropDown />
           {/*<HelpDropDown />*/}
-          <CustomIconBtn
+          <ChangeThemeBtn
             onClick={() => {
               setDynamicTheme();
             }}>
             {isLightTheme ? <img src={lightIcon} alt="" /> : <img src={darkIcon} alt="" />}
-          </CustomIconBtn>
-        </HeaderItemsBlockBig>
+          </ChangeThemeBtn>
+        </HeaderItemsBlock>
       </HeaderLayoutBig>
+      <HeaderLayoutMobile isLightTheme={isLightTheme}>
+        <MobileSubLayout>
+          <MockUserMobileAvatar src={userMockAvatar} alt="mockAvatar" />
+          <SearchTokensMobile isLightTheme={isLightTheme} />
+          <ChangeThemeBtn
+            onClick={() => {
+              setDynamicTheme();
+            }}>
+            {isLightTheme ? <img src={lightIcon} alt="" /> : <img src={darkIcon} alt="" />}
+          </ChangeThemeBtn>
+          <BurgerIcon onClick={onOpenSidebar} sx={{ mr: 1, color: 'text.primary' }}>
+            {isLightTheme ? (
+              <img src={sidebarBurgerLightIcon} alt="burger_img" />
+            ) : (
+              <img src={sidebarBurgerDarkIcon} alt="burger_img" />
+            )}
+          </BurgerIcon>
+        </MobileSubLayout>
+        <HeaderTitle isLightTheme={isLightTheme}>
+          <p>{finalTitle}</p>
+        </HeaderTitle>
+      </HeaderLayoutMobile>
     </>
   );
 }

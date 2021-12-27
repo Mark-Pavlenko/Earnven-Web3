@@ -26,9 +26,9 @@ export const MainBlock = styled(Box)`
 
   @media (max-width: 980px) {
     width: 100%;
-    margin-left: 0px;
-    padding-right: 10px;
-    padding-left: 10px;
+    //margin-left: 0px;
+    //padding-right: 10px;
+    //padding-left: 10px;
   }
 `;
 
