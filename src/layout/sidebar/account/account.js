@@ -247,30 +247,38 @@ export default function Account({ address, name, global_wallet, setTheme }) {
     return addynew;
   }
 
-  return address ? (
+  return (
     <>
       <AccountStyle ref={anchorRef} onClick={showAccountPopover}>
-        <Avatar className={classes.accountlLogo} src={accountLogo} alt="photoURL" />
-        <Box sx={{ ml: 2 }}>
-          <Stack direction="row">
-            <Typography
-              variant="primaryFont"
-              sx={{
-                color: (theme) => (setTheme ? theme.palette.menu.myWallet_font_light : '#141838'),
-              }}
-              className={classes.accountAddress}>
-              {test1(address, name)}
-            </Typography>
-            {arrowicon === true ? (
-              <ExpandLessIcon sx={{ ml: 4, mt: -2.1, color: '#4453AD' }} />
-            ) : (
-              <ExpandMoreIcon sx={{ ml: 4, mt: -2.1, color: '#4453AD' }} />
-            )}
-          </Stack>
-          <Typography className={classes.accountBalance}>
-            <AccountBalance address={address} />
-          </Typography>
-        </Box>
+        {address ? (
+          <>
+            {' '}
+            <Avatar className={classes.accountlLogo} src={accountLogo} alt="photoURL" />
+            <Box sx={{ ml: 2 }}>
+              <Stack direction="row">
+                <Typography
+                  variant="primaryFont"
+                  sx={{
+                    color: (theme) =>
+                      setTheme ? theme.palette.menu.myWallet_font_light : '#141838',
+                  }}
+                  className={classes.accountAddress}>
+                  {test1(address, name)}
+                </Typography>
+                {arrowicon === true ? (
+                  <ExpandLessIcon sx={{ ml: 4, mt: -2.1, color: '#4453AD' }} />
+                ) : (
+                  <ExpandMoreIcon sx={{ ml: 4, mt: -2.1, color: '#4453AD' }} />
+                )}
+              </Stack>
+              <Typography className={classes.accountBalance}>
+                <AccountBalance address={address} />
+              </Typography>
+            </Box>
+          </>
+        ) : (
+          <div style={{ color: 'red' }}>Enter the account </div>
+        )}
       </AccountStyle>
       <MenuPopover
         sx={{ ml: 9, mt: '0.2rem', width: '336px' }}
@@ -348,10 +356,6 @@ export default function Account({ address, name, global_wallet, setTheme }) {
           </MenuItem>
         </Box>
       </MenuPopover>
-    </>
-  ) : (
-    <>
-      <div style={{ color: 'red' }}>Enter the account </div>
     </>
   );
 }
