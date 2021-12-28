@@ -23,8 +23,8 @@ const ListItemStyle = styled((props) => <ListItem button disableGutters {...prop
       borderRadius: '10px',
       width: '180px',
       boxShadow: '4px 6px 20px -5px rgba(51, 78, 131, 0.17)',
-      color:
-        localStorage.getItem('selectedTheme') == 'Day' ? '#141838' : 'theme.palette.text.primary',
+      // color:
+      //   localStorage.getItem('selectedTheme') == 'Day' ? '#141838' : 'theme.palette.text.primary',
     },
   })
 );
@@ -90,15 +90,15 @@ function NavItem({ item, active, address }) {
     color: (theme) =>
       localStorage.getItem('selectedTheme') == 'Day' ? theme.palette.menu.text_color : 'white',
     fontWeight: 'fontWeightBold',
-    background: (theme) =>
-      localStorage.getItem('selectedTheme') == 'Day' ? theme.palette.menu.light : '#141838',
+    // background: (theme) =>
+    //   localStorage.getItem('selectedTheme') == 'Day' ? theme.palette.menu.light : '#141838',
     borderRadius: '7px',
     width: '180px',
     '&:hover': {
       borderRadius: '10px',
       width: '180px',
-      color:
-        localStorage.getItem('selectedTheme') == 'Day' ? '#141838' : 'theme.palette.text.primary',
+      // color:
+      //   localStorage.getItem('selectedTheme') == 'Day' ? '#141838' : 'theme.palette.text.primary',
     },
   };
 

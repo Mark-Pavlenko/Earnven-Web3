@@ -9,6 +9,10 @@ const RootStyle = styled('div')({
   flexGrow: 1,
   height: '100%',
   overflow: 'hidden',
+
+  // '@media screen and (max-width:400px)': {
+  //   display: 'none',
+  // },
 });
 
 const SimpleBarStyle = styled(SimpleBarReact)(({ theme }) => ({

@@ -10,7 +10,7 @@ export const LoadingBlock = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
+  margin-bottom: 30px;
   p {
     color: red;
   }
@@ -18,24 +18,22 @@ export const LoadingBlock = styled.div`
 
 export const MainBlock = styled(Box)`
   box-sizing: border-box;
-  //margin-left: 35px;
+  margin-top: 30px;
+  margin-bottom: 35px;
   border-radius: 10px;
   border: 5rem;
-  //box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
-  //backdrop-filter: blur(35px);
-
   width: auto;
 
   @media (max-width: 980px) {
     width: 100%;
-    margin-left: 0px;
-    padding-right: 10px;
-    padding-left: 10px;
+    //margin-left: 0px;
+    //padding-right: 10px;
+    //padding-left: 10px;
   }
 `;
 
 export const TokenTableLightContainer = styled(TableContainer)`
-  background: ${(props) => (props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : '#10142D')};
+  background: ${(props) => (props.isLightTheme ? '#F2F8FF' : '#10142D')};
   //background-color: red;
   mix-blend-mode: normal;
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);

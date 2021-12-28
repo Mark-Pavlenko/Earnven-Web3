@@ -1,8 +1,4 @@
 import React from 'react';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 const { useState, useEffect } = require('react');
 const { Buffer } = require('buffer');
 const request = require('request');
@@ -36,14 +32,14 @@ export default function TwitterAPI({ themeType }) {
   const dispatch = useDispatch();
 
   const tweetsArray = useSelector((state) => state.twitterPosts.twitterPosts);
-  console.log('tweetsArray', tweetsArray);
+  // console.log('tweetsArray', tweetsArray);
 
-  console.log('isLightTheme in TwitterAPI comp', themeType);
+  // console.log('isLightTheme in TwitterAPI comp', themeType);
 
   const [limit, setLimit] = useState(2);
   const [btnDisabled, setBtnDisabled] = useState(false);
 
-  const mockTwitterObject = { userTwitterId: '991745162274467840', count: 10 };
+  const mockTwitterObject = { userTwitterId: '991745162274467840', count: 15 };
 
   useEffect(() => {
     console.log('activated');
@@ -72,8 +68,8 @@ export default function TwitterAPI({ themeType }) {
   const firstColumn = valuesSelector(tweetsArray, 0);
   const secondColumn = valuesSelector(tweetsArray, 1);
 
-  console.log(firstColumn);
-  console.log(secondColumn);
+  // console.log(firstColumn);
+  // console.log(secondColumn);
 
   const loadMoreTweets = () => {
     setLimit(limit + 2);

@@ -28,6 +28,8 @@ const LANGS = [
   },
 ];
 
+import { LanguageButton } from './styles';
+
 // ----------------------------------------------------------------------
 
 export default function LanguagePopover() {
@@ -44,7 +46,7 @@ export default function LanguagePopover() {
 
   return (
     <>
-      <IconButton
+      <LanguageButton
         ref={anchorRef}
         onClick={handleOpen}
         sx={{
@@ -58,7 +60,7 @@ export default function LanguagePopover() {
         }}>
         <img src={globe} alt="" />
         <ExpandMoreIcon style={{ color: '#fff' }} />
-      </IconButton>
+      </LanguageButton>
 
       <MenuPopover open={open} onClose={handleClose} anchorEl={anchorRef.current}>
         <Box sx={{ py: 1 }}>

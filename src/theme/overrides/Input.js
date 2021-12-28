@@ -31,7 +31,7 @@ export default function Input(theme) {
         root: {
           backgroundColor: theme.palette.grey[500_12],
           '&:hover': {
-            backgroundColor: theme.palette.grey[500_16],
+            // backgroundColor: theme.palette.grey[500_16],
           },
           '&.Mui-focused': {
             backgroundColor: theme.palette.action.focus,

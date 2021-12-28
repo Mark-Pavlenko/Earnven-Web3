@@ -1,192 +1,148 @@
-/* import React, { useState } from 'react';
-// import { makeStyles } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import TransparentButton from '../../components/TransparentButton';
-import EthereumIcon from '../../generalAssets/icons/ethereum.svg'
-import BinanceIcon from '../../generalAssets/icons/binance.svg'
-import Solana from '../../generalAssets/icons/solana.svg'
-import Polkadot from '../../generalAssets/icons/polkadot.svg'
-import Polygon from '../../generalAssets/icons/polygon.svg'
-
-import {data} from '../../globalStore'
-
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100px',
-    background:'transparent'
-  },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
-    background:'transparent'
-  },
-}));
-
-
-
-export default function SimpleAccordion() {
-  const classes = useStyles();
-
-  const [network, setNetwork] = useState(EthereumIcon)
-
-  return (
-    <div className={classes.root}>
-      <Accordion style={{background:'transparent',}}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon style={{fill:'white'}}/>}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-        
-        <img src={network} alt=''></img>
-       
-          
-
-        </AccordionSummary>
-        <AccordionDetails style={{backgroundColor:'transparent', width:'150px'}}>
-          <ul style={{listStyleType:'none'}}>
-            <li>
-              <TransparentButton
-              onClick={(e)=>{data.network='ethereum';setNetwork(EthereumIcon)}}
-              value={<><img src={EthereumIcon} alt='' height='25px'></img> &nbsp; <span style={{fontSize:'18px'}}>Ethereum</span></>}/> 
-            </li>
-
-            <li> 
-              <TransparentButton aria-controls="panel1a-content" 
-              onClick={(e)=>{data.network='binance';setNetwork(BinanceIcon)}}
-              value={<><img src={BinanceIcon} alt='' height='25px'></img> &nbsp; <span style={{fontSize:'18px'}}>Binance Smart Chain</span></>}/>
-            </li>
-            <li> 
-              <TransparentButton 
-              onClick={(e)=>{data.network='solana';setNetwork(Solana)}}
-              value={<><img src={Solana} alt='' height='25px'></img> &nbsp; <span style={{fontSize:'18px'}}>Solana</span></>}/>
-            </li>
-            <li> 
-              <TransparentButton 
-              onClick={(e)=>{data.network='polkadot';setNetwork(Polkadot)}}
-              value={<><img src={Polkadot} alt='' height='25px'></img> &nbsp; <span style={{fontSize:'18px'}}>Polkadot</span></>}/>
-            </li>
-            <li> 
-              <TransparentButton 
-              onClick={(e)=>{data.network='polygon';setNetwork(Polygon)}}
-              value={<><img src={Polygon} alt='' height='25px'></img> &nbsp; <span style={{fontSize:'18px'}}>Polygon</span></>}/>
-            </li>
-          </ul>
-        </AccordionDetails>
-      </Accordion>
-      
-
-    </div>
-  );
-}
- */
-
-import React, { useRef, useState } from 'react';
-// material
-import { alpha } from '@material-ui/core/styles';
-import { Box, MenuItem, ListItemIcon, ListItemText, IconButton } from '@material-ui/core';
-// components
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MenuPopover from '../MenuPopover';
-// import globe from '../../generalAssets/icons/globe.svg'
-// import languageImg from '../../generalAssets/icons/language.png'
-// import { IoIosHelpCircleOutline } from "react-icons/io";
-
+import React, { useState } from 'react';
+import Select, { components } from 'react-select';
+import './style.css';
+import emptyNetworkIcon from '../../assets/icons/emptyNetworkIcon.png';
 import EthereumIcon from '../../assets/icons/ethereum.svg';
 import BinanceIcon from '../../assets/icons/binance.svg';
 import Solana from '../../assets/icons/solana.svg';
 import Polkadot from '../../assets/icons/polkadot.svg';
 import Polygon from '../../assets/icons/polygon.svg';
 
-// import {data} from '../../globalStore'
+import { ReactSelectLayout, ComingSoonLabel } from './style';
 
-// ----------------------------------------------------------------------
-
-const LANGS = [
-  {
-    value: 'eth',
-    label: 'Ethereum',
-    icon: EthereumIcon,
-  },
-  {
-    value: 'bsc',
-    label: 'Binance Smart Chain',
-    icon: BinanceIcon,
-  },
-  {
-    value: 'sol',
-    label: 'Solana',
-    icon: Solana,
-  },
-  {
-    value: 'pol',
-    label: 'Polkadot',
-    icon: Polkadot,
-  },
-  {
-    value: 'matic',
-    label: 'Polygon',
-    icon: Polygon,
-  },
+const networks = [
+  { value: 'eth', label: 'Ethereum', icon: EthereumIcon },
+  { value: 'bnc', label: 'Binance', icon: BinanceIcon, disabled: true },
+  { value: 'solana', label: 'Solana', icon: Solana },
+  { value: 'polkadot', label: 'Polkadot', icon: Polkadot },
+  { value: 'polygon', label: 'Polygon', icon: Polygon, disabled: true },
 ];
 
-// ----------------------------------------------------------------------
+const Option = (props) => (
+  <components.Option {...props} className="country-option">
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <div style={{ display: 'flex', flexDirection: 'row', cursor: 'pointer' }}>
+        {props.data.disabled === true ? (
+          <>
+            <img
+              src={props.data.icon}
+              alt="logo"
+              className="country-logo"
+              style={{ width: 20, height: 20, opacity: 0.5 }}
+            />
+            <span style={{ color: '#b3b3b4' }}>{props.data.label}</span>
+          </>
+        ) : (
+          <>
+            <img
+              src={props.data.icon}
+              alt="logo"
+              className="country-logo"
+              style={{ width: 20, height: 20 }}
+            />
+            <span>{props.data.label}</span>
+          </>
+        )}
+      </div>
+      {props.data.disabled === true && <ComingSoonLabel>Coming soon</ComingSoonLabel>}
+    </div>
+  </components.Option>
+);
 
-export default function NetworkDropDown() {
-  const anchorRef = useRef(null);
-  const [open, setOpen] = useState(false);
+const NetworkSelect = ({ isLightTheme }) => {
+  // console.log('isLightThemeNetworkToggler', isLightTheme);
+  const [selectedCountry, setSelectedCountry] = useState(networks[0]);
 
-  const handleOpen = () => {
-    setOpen(true);
+  const handleChange = (value) => {
+    setSelectedCountry(value);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const SingleValue = ({ children, ...props }) => (
+    <components.SingleValue {...props}>
+      <img src={selectedCountry.icon} alt="s-logo" className="selected-logo" />
+      {children}
+    </components.SingleValue>
+  );
 
   return (
-    <>
-      <IconButton
-        ref={anchorRef}
-        onClick={handleOpen}
-        sx={{
-          padding: 0,
-          width: 44,
-          height: 44,
-          ...(open && {
-            bgcolor: (theme) =>
-              alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
+    <ReactSelectLayout>
+      <Select
+        value={selectedCountry}
+        options={networks}
+        isOptionDisabled={(option) => option.disabled}
+        onChange={handleChange}
+        isSearchable={false}
+        styles={{
+          control: (base) => ({
+            ...base,
+            backgroundColor: isLightTheme ? '#ffffff' : '#10142D',
+            border: 'none',
+            boxShadow: isLightTheme
+              ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+              : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
           }),
-        }}>
-        <img src={EthereumIcon} alt="" />
-        <ExpandMoreIcon style={{ color: '#fff' }} />
-
-        {/* <IoIosHelpCircleOutline style={{color:'#fff'}}/><ExpandMoreIcon style={{color:'#fff'}}/> */}
-      </IconButton>
-
-      <MenuPopover open={open} onClose={handleClose} anchorEl={anchorRef.current}>
-        <Box sx={{ py: 1 }}>
-          {LANGS.map((option) => (
-            <MenuItem
-              key={option.value}
-              selected={option.value === LANGS[0].value}
-              onClick={handleClose}
-              sx={{ py: 1, px: 2.5 }}>
-              <ListItemIcon>
-                <Box component="img" alt={option.label} src={option.icon} />
-              </ListItemIcon>
-              <ListItemText primaryTypographyProps={{ variant: 'body2', color: '#fff' }}>
-                {option.label}
-              </ListItemText>
-            </MenuItem>
-          ))}
-        </Box>
-      </MenuPopover>
-    </>
+          // Menu: () => ({ borderRadius: '10px' }),
+          menuList: () => ({
+            backgroundColor: isLightTheme ? '#E5E5E5' : '#10142D',
+            border: 'none !important',
+            paddingTop: '5px',
+            '&:hover': {
+              cursor: 'pointer',
+            },
+          }),
+          singleValue: (base) => ({
+            ...base,
+            display: 'flex',
+            alignItems: 'center',
+            color: isLightTheme ? 'black' : 'white',
+            // marginLeft: '5px',
+            '&:hover': {
+              cursor: 'pointer',
+            },
+          }),
+          dropdownIndicator: (provided, state) => ({
+            ...provided,
+            color: isLightTheme ? 'black' : 'white',
+            transform: state.selectProps.menuIsOpen && 'rotate(180deg)',
+            '&:hover': {
+              color: isLightTheme ? 'black' : 'white',
+              cursor: 'pointer',
+            },
+          }),
+          option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+            console.log({ data, isDisabled, isFocused, isSelected });
+            return {
+              ...styles,
+              backgroundColor: isLightTheme
+                ? isSelected
+                  ? '#ffffff'
+                  : null
+                : isSelected
+                ? '#1F265C'
+                : null,
+              boxShadow: isSelected ? 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)' : null,
+              fontSize: 14,
+              color: isSelected
+                ? isLightTheme
+                  ? 'black'
+                  : '#8F86FF'
+                : isLightTheme
+                ? 'black'
+                : 'white',
+              // width: isSelected ? '150px' : '160px',
+              borderRadius: isSelected ? '10px' : '0',
+              // color: '#000000',
+            };
+          },
+        }}
+        components={{
+          Option,
+          SingleValue,
+          IndicatorSeparator: () => null,
+        }}
+      />
+    </ReactSelectLayout>
   );
-}
+};
+
+export default NetworkSelect;

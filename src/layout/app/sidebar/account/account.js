@@ -229,6 +229,25 @@ export default function Account({ address, name, global_wallet, setTheme }) {
         ? rename
         : localStorage.getItem('selected-name');
     }
+
+    // if (addy !== '' && name == 'null') {
+    //   const l = addy.length;
+    //   const addynew = `${addy[0] + addy[1] + addy[2] + addy[3] + addy[4] + addy[5]}...${
+    //     addy[l - 4]
+    //   }${addy[l - 3]}${addy[l - 2]}${addy[l - 1]}`;
+
+    //   const shortAddress = `${addy[0] + addy[1] + addy[2] + addy[3] + addy[4] + addy[5]}...`;
+    //   return shortAddress;
+    // } else {
+    //   let rename = '';
+    //   let wallets = localStorage.getItem('wallets');
+    //   wallets = JSON.parse(result);
+    //   wallets.map((option) => {
+    //     if (option.address == address && option.name != 'null') {
+    //       rename = option.name;
+    //     }
+    //   });
+    // }
   }
 
   function shortaddress1(addy) {
@@ -248,6 +267,9 @@ export default function Account({ address, name, global_wallet, setTheme }) {
 
   return (
     <>
+      {/*<Typography className={classes.accountBalance}>*/}
+      {/*  <AccountBalance address={address} />*/}
+      {/*</Typography>*/}
       <AccountStyle ref={anchorRef} onClick={showAccountPopover}>
         <Avatar className={classes.accountlLogo} src={accountLogo} alt="photoURL" />
         <Box sx={{ ml: 2 }}>
