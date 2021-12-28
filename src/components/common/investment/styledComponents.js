@@ -6,6 +6,7 @@ export const Main = styled.div`
   background-color: ${(props) => (props.isOpen ? 'rgba(31, 38, 92, 0.24)' : 'none')};
   box-shadow: ${(props) => (props.isOpen ? 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)' : 'none')};
   border-radius: 10px;
+  margin-bottom: ${(props) => (props.isOpen ? '20px' : 'none')};
 `;
 
 export const TotalValue = styled.div`
@@ -14,7 +15,7 @@ export const TotalValue = styled.div`
   padding: 0 25px;
   justify-content: space-between;
   align-items: center;
-  height: 67px;
+  height: ${(props) => (props.isOpen ? '67px' : '46px')};
 `;
 
 export const ToggleButton = styled.div`
@@ -34,4 +35,31 @@ export const ToggleButton = styled.div`
 
 export const ContentRightWrapper = styled.div`
   display: flex;
+`;
+
+export const TokenImage = styled.img`
+  display: flex;
+  margin-left: ${(props) => (props.firstElement !== 0 ? '-10px' : '0')};
+  max-width: 21px;
+  max-height: 21px;
+  border-radius: 50%;
+  border: 2px solid orange;
+`;
+
+export const TokenName = styled.div`
+  font-size: 16px;
+  font-weight: 600;
+`;
+
+export const ImagesWrapper = styled.div`
+  display: flex;
+  margin-right: 5px;
+`;
+
+export const ContentWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 0 32px 11px 26px;
+  font-weight: 600;
+  font-size: 10px;
 `;
