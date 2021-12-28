@@ -11,12 +11,12 @@ Version           Date                         Description
 import React from 'react';
 import { Box, Collapse, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import './social.css';
-import github from '../../../../assets/icons/github_menu.svg';
-import fb_menu_icon from '../../../../assets/icons/facebook_menu_logo.svg';
-import discord_menu_logo from '../../../../assets/icons/discord_menu_logo.svg';
-import logo_4_menu from '../../../../assets/icons/logo_4_menu.svg';
-import twitter_menu_logo from '../../../../assets/icons/twitter_menu_logo.svg';
-import telegram_menu_logo from '../../../../assets/icons/telegram_menu_logo.svg';
+import github from '../../../assets/icons/github_menu.svg';
+import fb_menu_icon from '../../../assets/icons/facebook_menu_logo.svg';
+import discord_menu_logo from '../../../assets/icons/discord_menu_logo.svg';
+import logo_4_menu from '../../../assets/icons/logo_4_menu.svg';
+import twitter_menu_logo from '../../../assets/icons/twitter_menu_logo.svg';
+import telegram_menu_logo from '../../../assets/icons/telegram_menu_logo.svg';
 import { experimentalStyled as styled } from '@material-ui/core/styles';
 
 const Image_Social = styled('img')(({ theme }) => ({

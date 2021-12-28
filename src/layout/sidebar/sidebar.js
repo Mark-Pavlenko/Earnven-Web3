@@ -1,8 +1,8 @@
 /* eslint-disable */
-import Scrollbar from '../../../components/Scrollbar';
+import Scrollbar from '../../components/Scrollbar';
 import sidebarConfig, { getRecall } from '../SidebarConfig';
 // import upcomingConfig from '../upcomingConfig';
-import NavSection from '../../../components/NavSection';
+import NavSection from '../../components/NavSection';
 
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
@@ -18,16 +18,16 @@ import { experimentalStyled as styled } from '@material-ui/core/styles';
 // import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@material-ui/core';
 import { Box, Drawer, Stack } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
-import { MHidden } from '../../../components/@material-extend';
-import CompanyLogo from '../../../assets/icons/logo_menu.svg';
-import Earnven from '../../../assets/icons/Earnven_menu_text.svg';
-import Dark_Earnven_logo from '../../../assets/icons/Dark_Earnven_logo.svg';
+import { MHidden } from '../../components/@material-extend';
+import CompanyLogo from '../../assets/icons/logo_menu.svg';
+import Earnven from '../../assets/icons/Earnven_menu_text.svg';
+import Dark_Earnven_logo from '../../assets/icons/Dark_Earnven_logo.svg';
 import Account from './account/account';
 import './sidebar.css';
 import Links from './social/Links';
 import Accounts from './account/Accounts';
-import darkTheme from '../../../assets/images/darkTheme.jpg';
-import lightTheme from '../../../assets/images/lightTheme.jpg';
+import darkTheme from '../../assets/images/darkTheme.jpg';
+import lightTheme from '../../assets/images/lightTheme.jpg';
 import { useSelector } from 'react-redux';
 const DRAWER_WIDTH = 315;
 

@@ -1,5 +1,5 @@
 import { Box, Button, Grid, Stack, TextField, Typography } from '@material-ui/core';
-
+import Header from '../layout/';
 import Web3 from 'web3';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowRight } from 'react-icons/fa';
@@ -35,11 +35,6 @@ export default function ConnectWallet() {
     try {
       await activate(injected);
       if (window.ethereum && account !== null) {
-        // window.web3 = new Web3(window.ethereum);
-        // await window.ethereum.enable();
-        // const accounts = await window.web3.eth.getAccounts();
-        // console.log(accounts[0]);
-        // routeToDashboard(accounts[0], 'metamask');
         await routeToDashboard(account, 'metamask');
       } else if (window.web3) {
         window.web3 = new Web3(window.web3.currentProvider);
@@ -99,7 +94,6 @@ export default function ConnectWallet() {
     const existingWallet = localStorage.getItem('wallets');
     const parsedExistingWallet = JSON.parse(existingWallet);
     const existingWallet_mywallet = localStorage.getItem('mywallet');
-    const parsedWallet_mywallet = JSON.parse(existingWallet_mywallet);
 
     const newWallet = {
       address: account,
@@ -125,7 +119,7 @@ export default function ConnectWallet() {
     var jsondata = [];
     const result = localStorage.getItem('mywallet');
     const result_wallets = localStorage.getItem('wallets');
-    if (result != null && result != []) {
+    if (result != null && result !== []) {
       jsondata = JSON.parse(result);
     } else {
       jsondata = JSON.parse(result_wallets);
@@ -134,12 +128,12 @@ export default function ConnectWallet() {
 
     jsondata.map((option) => {
       if (
-        option.provider == 'metamask' ||
-        option.provider == 'walletconnect' ||
-        option.provider == 'portis' ||
-        option.provider == 'coinbase' ||
-        option.provider == 'fortmatic' ||
-        option.provider == 'torus'
+        option.provider === 'metamask' ||
+        option.provider === 'walletconnect' ||
+        option.provider === 'portis' ||
+        option.provider === 'coinbase' ||
+        option.provider === 'fortmatic' ||
+        option.provider === 'torus'
       ) {
         jsonData.push({
           address: option.address,

@@ -4,7 +4,6 @@ import Header from './header';
 import Sidebar from './sidebar/sidebar';
 import { Outlet } from 'react-router-dom';
 import { RootStyle, MainStyle } from './styledComponents';
-import lightDashboard from '../../assets/images/lightDashboard.jpg';
 import { useSelector } from 'react-redux';
 
 export default function AppLayout({ propChangeTheme }) {

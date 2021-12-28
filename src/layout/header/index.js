@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useParams, useNavigate } from 'react-router-dom';
-import sidebarBurgerLightIcon from '../../../assets/icons/sidebarBurgerLightIcon.png';
-import sidebarBurgerDarkIcon from '../../../assets/icons/sidebarBurgerDarkIcon.png';
-import userMockAvatar from '../../../assets/icons/userMockAvatar.png';
+import sidebarBurgerLightIcon from '../../assets/icons/sidebarBurgerLightIcon.png';
+import sidebarBurgerDarkIcon from '../../assets/icons/sidebarBurgerDarkIcon.png';
+import userMockAvatar from '../../assets/icons/userMockAvatar.png';
 // material
 import { alpha, experimentalStyled as styled } from '@material-ui/core/styles';
 import IconButton from '@mui/material/IconButton';
 
-import SearchTokensMobile from '../../../components/searchTokensMobile/index';
-import NetworkSelect from '../../../components/networkDropDown';
+import SearchTokensMobile from '../../components/searchTokensMobile';
+import NetworkSelect from '../../components/networkDropDown';
 
-import GasDropdownMenu from '../../../components/gasDropDownMenu';
-import LanguageDropDown from '../../../components/languageDropDown';
-import HelpDropDown from '../../../components/helpDropDown';
+import GasDropdownMenu from '../../components/gasDropDownMenu';
+import LanguageDropDown from '../../components/languageDropDown';
+import HelpDropDown from '../../components/helpDropDown';
 
-import SearchTokensLight from '../../../components/searchTokens/searchTokensLight';
-import SearchTokensDark from '../../../components/searchTokens/searchTokensDark';
-import SearchTokens from '../../../components/searchTokens/index';
+import SearchTokensLight from '../../components/searchTokens/searchTokensLight';
+import SearchTokensDark from '../../components/searchTokens/searchTokensDark';
+import SearchTokens from '../../components/searchTokens';
 
-import darkIcon from '../../../assets/icons/darkIcon.svg';
-import lightIcon from '../../../assets/icons/lightIcon.svg';
+import darkIcon from '../../assets/icons/darkIcon.svg';
+import lightIcon from '../../assets/icons/lightIcon.svg';
 import { connect, useDispatch, useSelector } from 'react-redux';
 
 import {

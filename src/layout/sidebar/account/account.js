@@ -1,5 +1,5 @@
 import { experimentalStyled as styled } from '@material-ui/core/styles';
-import accountLogo from '../../../../assets/icons/accountlogo.png';
+import accountLogo from '../../../assets/icons/accountlogo.png';
 import { createStyles } from '@material-ui/styles';
 import {
   Box,
@@ -22,14 +22,14 @@ import './account.css';
 import { useNavigate } from 'react-router-dom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { MdContentCopy } from 'react-icons/md';
-import AccountBalance from '../../../../components/accountBalance/index';
-import MenuPopover from '../../../../components/MenuPopover';
+import AccountBalance from '../../../components/accountBalance';
+import MenuPopover from '../../../components/MenuPopover';
 import { makeStyles } from '@material-ui/styles';
 import { createTheme, StyledEngineProvider, ThemeProvider } from '@material-ui/core/styles';
 import { fontSize, fontStyle, fontWeight } from '@material-ui/system';
 import Accounts from './Accounts';
 import Acc from './Acc';
-import theme1 from '../../../../../src/theme/palette';
+import theme1 from '../../../theme/palette';
 import menurender_customhook from './menurender_customhook';
 
 import { useSelector } from 'react-redux';

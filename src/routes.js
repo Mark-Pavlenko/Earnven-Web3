@@ -3,7 +3,7 @@ import { Navigate, useRoutes } from 'react-router-dom';
 // import { BrowserRouter , Routes, Route, Link } from 'react-router-dom'
 import Landing from './screens/landingPage';
 import PageNotFound from './screens/PageNotFound';
-import AppLayout from './layout/app';
+import AppLayout from './layout';
 import Dashboard from './screens/dashboard/dashboard';
 import History from './screens/History';
 import DefiMadeEasy from './screens/DefiMadeEasy';

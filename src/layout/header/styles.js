@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Box, AppBar, Toolbar, IconButton } from '@material-ui/core';
-import lightDashboard from '../../../assets/images/lightDashboard.jpg';
-import lightDashboardBig from '../../../assets/images/lightDashboardBig.jpg';
+import lightDashboard from '../../assets/images/lightDashboard.jpg';
+import lightDashboardBig from '../../assets/images/lightDashboardBig.jpg';
 
 export const HeaderLayoutBig = styled.div`
   height: 102px;

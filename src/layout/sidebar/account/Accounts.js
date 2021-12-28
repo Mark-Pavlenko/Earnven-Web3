@@ -9,7 +9,7 @@ Version           Date                         Description
 ************************************************************************************/
 
 import { experimentalStyled as styled } from '@material-ui/core/styles';
-import accountLogo from '../../../../assets/icons/accountlogo.png';
+import accountLogo from '../../../assets/icons/accountlogo.png';
 import { createStyles } from '@material-ui/styles';
 import { Collapse, List } from '@material-ui/core';
 import {
@@ -32,23 +32,23 @@ import './account.css';
 import { useNavigate } from 'react-router-dom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { MdContentCopy } from 'react-icons/md';
-import AccountBalance from '../../../../components/accountBalance/AccountBalance_Menu';
-import MenuPopover from '../../../../components/MenuPopover';
+import AccountBalance from '../../../components/accountBalance/AccountBalance_Menu';
+import MenuPopover from '../../../components/MenuPopover';
 import { makeStyles } from '@material-ui/styles';
 import { createTheme, StyledEngineProvider, ThemeProvider } from '@material-ui/core/styles';
 import { fontSize, fontStyle, fontWeight } from '@material-ui/system';
-import rename_menu_icon from '../../../../assets/icons/rename_menu_icon.svg';
-import copy_menu_icon from '../../../../assets/icons/copy_menu_icon.svg';
-import copy_link_menu_icon from '../../../../assets/icons/copy_link_menu_icon.svg';
-import disconnect_menu_icon from '../../../../assets/icons/disconnect_menu_icon.svg';
-import dots_menu_icon from '../../../../assets/icons/3dots_menu_icon.svg';
-import ThemeConfig from '../../../../theme';
+import rename_menu_icon from '../../../assets/icons/rename_menu_icon.svg';
+import copy_menu_icon from '../../../assets/icons/copy_menu_icon.svg';
+import copy_link_menu_icon from '../../../assets/icons/copy_link_menu_icon.svg';
+import disconnect_menu_icon from '../../../assets/icons/disconnect_menu_icon.svg';
+import dots_menu_icon from '../../../assets/icons/3dots_menu_icon.svg';
+import ThemeConfig from '../../../theme';
 import { Disconnection } from './Disconnection';
 import Rename from './Rename';
 import Popup from './popup';
-import green_got_menu from '../../../../assets/icons/green_got_menu.svg';
+import green_got_menu from '../../../assets/icons/green_got_menu.svg';
 import menurender_customhook from './menurender_customhook';
-import copy_notification_menu from '../../../../assets/icons/copy_notification_menu.svg';
+import copy_notification_menu from '../../../assets/icons/copy_notification_menu.svg';
 
 const AccountStyle = styled('div')(({ theme }) => ({
   display: 'flex',
