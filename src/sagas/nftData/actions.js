@@ -7,3 +7,4 @@ export const getNftData = (payload) => {
     payload,
   };
 };
+getNftData;

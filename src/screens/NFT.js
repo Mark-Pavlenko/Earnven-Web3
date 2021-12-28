@@ -28,7 +28,6 @@ export default function NFT({ changeTheme, nftDataFlag }) {
     async function getData() {
       const account = address;
       setAccount(account);
-      console.log(Account);
       await axios
         .get(
           `https://api.etherscan.io/api?module=account&action=tokennfttx&address=${account}&startblock=0&endblock=999999999&sort=asc&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W`,

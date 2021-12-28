@@ -10,9 +10,9 @@ const NftNetworth = ({ changeTheme, NFTDATA, Account, address, ethUSDPrice }) =>
     useWeb3React();
 
   const NetWorth = styled('div')(({ theme }) => ({
-    // background: !changeTheme
-    //   ? theme.palette.nft_dark.noNFT_background
-    //   : theme.palette.nft_light.noNFT_background,
+    background: !changeTheme
+      ? theme.palette.nft_dark.noNFT_background
+      : theme.palette.nft_light.noNFT_background,
     mixBlendMode: 'normal',
     boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.16)',
     backdropFilter: 'blur(35px)',
@@ -35,9 +35,9 @@ const NftNetworth = ({ changeTheme, NFTDATA, Account, address, ethUSDPrice }) =>
   }));
 
   const AccountNetWorth = styled(Typography)(({ theme }) => ({
-    // color: changeTheme
-    //   ? theme.palette.nft_light.NFT_popup_name
-    //   : theme.palette.nft_dark.NFT_bodyFont,
+    color: changeTheme
+      ? theme.palette.nft_light.NFT_popup_name
+      : theme.palette.nft_dark.NFT_bodyFont,
     marginLeft: '20px',
     fontSize: '40px',
     fontWeight: 600,
@@ -62,7 +62,7 @@ const NftNetworth = ({ changeTheme, NFTDATA, Account, address, ethUSDPrice }) =>
     marginLeft: '22px',
     lineHeight: '16px',
     opacity: changeTheme ? 0.5 : 0.8,
-    // color: changeTheme ? theme.palette.nft_light.NFT_bodyFont : theme.palette.nft_dark.NFT_bodyFont,
+    color: changeTheme ? theme.palette.nft_light.NFT_bodyFont : theme.palette.nft_dark.NFT_bodyFont,
     marginTop: '-4px',
     ['@media (max-width:600px)']: {
       // eslint-disable-line no-useless-computed-key
@@ -85,6 +85,7 @@ const NftNetworth = ({ changeTheme, NFTDATA, Account, address, ethUSDPrice }) =>
     try {
       // tx = await web3.eth.getTransaction(hash);
       tx = await web3.eth.getTransaction(hash);
+      console.log('tx', tx);
     } catch (err) {
       console.log('eerr', err);
     }
