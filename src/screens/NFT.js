@@ -38,6 +38,7 @@ export default function NFT({ changeTheme, nftDataFlag }) {
         .then(async (response) => {
           const b = {};
           const res = response.data.result;
+          console.log('raw result', res);
           setflag_data(res);
           for (const i in res) {
             if (b[res[i].tokenName] === undefined) {
@@ -106,8 +107,12 @@ export default function NFT({ changeTheme, nftDataFlag }) {
           setdata(finalObject);
         });
     }
+    getData();
+  }, [Account, address]);
 
+  useEffect(() => {
     async function getUSDPrice() {
+      console.log('get usd price in NFT');
       try {
         const response = await axios.get(
           `https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=BTC,USD,EUR`
@@ -117,9 +122,8 @@ export default function NFT({ changeTheme, nftDataFlag }) {
         console.log('error in usd price', err);
       }
     }
-    getData();
     getUSDPrice();
-  }, [Account, address]);
+  }, [ethUSDPrice]);
 
   return (
     <>
