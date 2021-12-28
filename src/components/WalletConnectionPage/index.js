@@ -4,7 +4,7 @@ import Sidebar from '../../layout/sidebar';
 import Web3 from 'web3';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowRight } from 'react-icons/fa';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Portis from '@portis/web3';
 import Fortmatic from 'fortmatic';
 import WalletConnectProvider from '@walletconnect/web3-provider';
@@ -27,6 +27,7 @@ import { useSelector } from 'react-redux';
 export default function Index() {
   const themeType = useSelector((state) => state.themeReducer.isLightTheme);
   const [open, setOpen] = useState(false);
+  console.log('themeType', themeType);
 
   //correct web3 connection
   // const { active, account, library, connector, activate, deactivate } = useWeb3React();
@@ -43,7 +44,6 @@ export default function Index() {
   const [errorMsg, seterrorMsg] = useState(false);
 
   // console.log('is metamask wallet connect', active);
-
   //metamask web3-react connection
   const connectMetamask = async () => {
     if (window.ethereum) {

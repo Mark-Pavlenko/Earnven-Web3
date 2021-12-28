@@ -1,7 +1,11 @@
 import GET_THEME from '../../constants/actionTypes';
 
+let isLightTheme;
+isLightTheme =
+  localStorage.getItem('selectedTheme') === null || localStorage.getItem('selectedTheme') === 'Day';
+
 const initialState = {
-  isLightTheme: localStorage.getItem('selectedTheme') == 'Day',
+  isLightTheme,
 };
 
 export const themeReducer = (state = initialState, action) => {
