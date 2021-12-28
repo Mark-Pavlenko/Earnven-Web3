@@ -38,13 +38,13 @@ const RootStyle = styled('div')(({ theme }) => ({
   },
 }));
 
-Sidebar.propTypes = {
+Index.propTypes = {
   isOpenSidebar: PropTypes.bool,
   onCloseSidebar: PropTypes.func,
   setTheme: PropTypes.bool,
 };
 
-export default function Sidebar({
+export default function Index({
   isOpenSidebar,
   onCloseSidebar,
   address,
@@ -56,17 +56,9 @@ export default function Sidebar({
   // console.log('light theme type in sidebar', isLightTheme);
 
   const { pathname } = useLocation();
-  const navigate = useNavigate();
   let newSideBard = [];
   if (!setTheme || setTheme) {
     newSideBard = getRecall();
-  }
-  function mouseOver(e) {
-    e.target.style.background = '#242321';
-  }
-
-  function mouseOut(e) {
-    e.target.style.background = 'transparent';
   }
 
   useEffect(() => {

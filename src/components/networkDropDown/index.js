@@ -13,8 +13,8 @@ import { ReactSelectLayout, ComingSoonLabel } from './style';
 const networks = [
   { value: 'eth', label: 'Ethereum', icon: EthereumIcon },
   { value: 'bnc', label: 'Binance', icon: BinanceIcon, disabled: true },
-  { value: 'solana', label: 'Solana', icon: Solana },
-  { value: 'polkadot', label: 'Polkadot', icon: Polkadot },
+  { value: 'solana', label: 'Solana', icon: Solana, disabled: true },
+  { value: 'polkadot', label: 'Polkadot', icon: Polkadot, disabled: true },
   { value: 'polygon', label: 'Polygon', icon: Polygon, disabled: true },
 ];
 
@@ -75,8 +75,13 @@ const NetworkSelect = ({ isLightTheme }) => {
         styles={{
           control: (base) => ({
             ...base,
+            minWidth: '153px',
+            minHeight: '40px',
+            fontSize: '15px',
             backgroundColor: isLightTheme ? '#ffffff' : '#10142D',
             border: 'none',
+            borderRadius: '10px',
+
             boxShadow: isLightTheme
               ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
               : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
@@ -95,7 +100,7 @@ const NetworkSelect = ({ isLightTheme }) => {
             display: 'flex',
             alignItems: 'center',
             color: isLightTheme ? 'black' : 'white',
-            // marginLeft: '5px',
+
             '&:hover': {
               cursor: 'pointer',
             },

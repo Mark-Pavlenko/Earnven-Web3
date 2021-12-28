@@ -11,7 +11,7 @@ export const HeaderLayoutBig = styled.div`
   }
   @media screen and (min-width: 711px) and (max-width: 1280px) {
     display: grid;
-    grid-template-columns: 20% 80%;
+    grid-template-columns: 40% 60%;
     margin-left: 0;
   }
   @media (max-width: 710px) {
@@ -20,7 +20,7 @@ export const HeaderLayoutBig = styled.div`
 
   @media (min-width: 1280px) {
     display: grid;
-    grid-template-columns: 40% 60%;
+    grid-template-columns: 30% 70%;
     margin-left: 314px;
   }
 `;
@@ -70,11 +70,11 @@ export const HeaderTitle = styled.div`
     margin-left: 15px;
   }
 
-  @media (min-width: 910px) {
-    //padding-left: 35px;
+  @media screen and (min-width: 800px) and (max-width: 1279px) {
+    margin-left: 20px;
   }
 
-  @media (min-width: 1279px) {
+  @media (min-width: 1280px) {
     margin-top: 30px;
     margin-left: 35px;
   }

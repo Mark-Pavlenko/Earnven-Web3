@@ -92,8 +92,9 @@ function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle }) {
           <SearchTokensMobile isLightTheme={isLightTheme} />
           <NetworkSelect isLightTheme={isLightTheme} />
           <GasDropdownMenu isLightTheme={isLightTheme} />
-          <LanguageDropDown />
+          {/*<LanguageDropDown />*/}
           {/*<HelpDropDown />*/}
+
           <ChangeThemeBtn
             onClick={() => {
               setDynamicTheme();

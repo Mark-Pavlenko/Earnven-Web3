@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-import ConnectWallet from '../components/ConnectWallet';
+import Index from '../components/WalletConnectionPage';
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -15,5 +15,5 @@ export default function LandingPage() {
     }
   }, [navigate]);
 
-  return <div>{shoWalletComponent && <ConnectWallet />}</div>;
+  return <div>{shoWalletComponent && <Index />}</div>;
 }

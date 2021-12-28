@@ -17,7 +17,7 @@ import AllAssetsPage from './screens/AllAssetsPage';
 import TokenDetailsPage from './components/tokenDetails';
 import NFTpage from './screens/NFTpage';
 import NFTTokenPage from './components/NFTTokenPage';
-import ConnectWallet from './components/ConnectWallet';
+import Index from './components/WalletConnectionPage';
 import AllTokensApprovals from './screens/allTokensApprovals';
 import TokenApproval from './screens/tokenApproval';
 import CubicleGraphs from './screens/chartsCubicle';
@@ -74,7 +74,7 @@ export default function Router() {
     { path: 'nft', element: <NFTpage /> },
     // {path:'nft-token',element:<NFTTokenPage/>},
     { path: 'nft-token/:contract/:id', element: <NFTTokenPage /> },
-    { path: 'connect-wallet', element: <ConnectWallet /> },
+    { path: 'connect-wallet', element: <Index /> },
     { path: 'approvals', element: <AllTokensApprovals /> },
     { path: 'approvals/:tokenAddress', element: <TokenApproval /> },
     { path: 'graphtools', element: <CubicleGraphs /> },

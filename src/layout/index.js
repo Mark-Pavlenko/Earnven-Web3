@@ -1,33 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import './app.css';
 import Header from './header';
-import Sidebar from './sidebar/sidebar';
+import Sidebar from './sidebar';
 import { Outlet } from 'react-router-dom';
 import { RootStyle, MainStyle } from './styledComponents';
 import { useSelector } from 'react-redux';
 
-export default function AppLayout({ propChangeTheme }) {
-  // const headerTitles = useSelector((state) => state.headerTitlesReducer.headerTitles);
-  // console.log('headerTitles', headerTitles);
-
+export default function AppLayout() {
   const themeType = useSelector((state) => state.themeReducer.isLightTheme);
-
   const title = useSelector((state) => state.headerTitlesReducer.currentRouteTitle);
-  console.log('middle title', title);
+  // console.log('middle title', title);
 
   function capitalizeFirstLetter(string) {
     return string?.charAt(0).toUpperCase() + string?.slice(1);
   }
-
   const finalTitle = capitalizeFirstLetter(title);
 
   const [open, setOpen] = useState(false);
-  const [setTheme, setSetTheme] = useState(false);
-  const [changeTheme, setChangeTheme] = useState(false);
-
-  useEffect(() => {
-    propChangeTheme(setTheme);
-  }, [setTheme]);
 
   return (
     <RootStyle>

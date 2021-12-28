@@ -184,14 +184,15 @@ export default function Account({ address, name, global_wallet, setTheme }) {
   };
 
   function test1(address, name) {
-    if (name == 'null') {
+    if (name === 'null') {
       return address.substring(0, 5) + '...';
-    } else {
-      return name.substring(0, 6) + '...';
     }
+    // else {
+    //   return name.substring(0, 6) + '...';
+    // }
   }
 
-  function shortaddress(addy, name) {
+  function shortAddress(addy, name) {
     if (addy === '') {
       return addy;
     } else {

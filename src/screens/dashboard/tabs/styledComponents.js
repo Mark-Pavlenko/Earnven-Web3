@@ -47,7 +47,7 @@ export const Tab = styled(TabUnstyled)`
 
 export const TabsList = styled(TabsListUnstyled)`
   min-width: 150px;
-  border-radius: 8px;
+  border-radius: 10px;
   margin-bottom: 16px;
   display: flex;
   align-items: center;
