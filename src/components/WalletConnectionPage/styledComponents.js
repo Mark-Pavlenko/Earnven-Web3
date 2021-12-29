@@ -42,7 +42,7 @@ export const MainStyle = styled.div`
 export const MainSubLayout = styled.div`
   width: 570px;
 
-  @media (max-width: 710px) {
+  @media (max-width: 600px) {
     width: 345px;
   }
 `;
@@ -76,7 +76,7 @@ export const WalletButtonsLayout = styled.div`
   column-gap: 30px;
   margin-top: 30px;
 
-  @media (max-width: 710px) {
+  @media (max-width: 600px) {
     grid-template-columns: repeat(2, 1fr);
     column-gap: 15px;
   }
