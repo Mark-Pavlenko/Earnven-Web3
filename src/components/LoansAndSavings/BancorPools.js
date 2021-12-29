@@ -142,7 +142,7 @@ export default function BancorPools({ setPoolTotal, accountAddress, setDisplay }
               {object.name} <br />
               {/* Token Price : {parseFloat(object.price).toFixed(4)} USD <br/>
               Total Tokens : {object.value} ${object.symbol} <br/>
-              Total Investment : {object.totalInvestment} USD */}
+              Total SushiProtocol : {object.totalInvestment} USD */}
             </>
           }>
           <div style={{ width: '90%', marginTop: '12px', marginLeft: '30px' }}>

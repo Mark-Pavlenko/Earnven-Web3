@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import toggleArrowIcon from '../../../assets/icons/birdArrow-icon.svg';
+import toggleArrowIcon from '../../../../assets/icons/birdArrow-icon.svg';
 
 export const Main = styled.div`
   height: fit-content;
