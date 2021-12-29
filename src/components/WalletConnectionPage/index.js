@@ -12,12 +12,25 @@ import Torus from '@toruslabs/torus-embed';
 import { bool } from 'prop-types';
 import portisWalletLogo from '../../assets/icons/portisLogo.png';
 import torusWalletLogo from '../../assets/icons/torus.png';
-import coinbaseWalletLogo from '../../assets/icons/coinbase-wallet.png';
 import fortmaticLogo from '../../assets/icons/fortmatic.png';
 import walletConnectLogo from '../../assets/icons/walletconnect-logo.svg';
-import metamask from '../../assets/icons/metamask.svg';
+import coinbaseWalletIcon from '../../assets/icons/coinbaseWalletIcon.svg';
+import exodusWalletIcon from '../../assets/icons/exodusWalletIcon.svg';
+import atomicWalletIcon from '../../assets/icons/atomicWalletIcon.svg';
+import ledgerWalletIcon from '../../assets/icons/ledgerWalletIcon.svg';
+import trezorWalletIcon from '../../assets/icons/trezorWalletIcon.svg';
 
-import { RootStyle, MainStyle } from './styledComponents';
+import metamaskWalletLogo from '../../assets/icons/metamask.svg';
+
+import {
+  RootStyle,
+  MainStyle,
+  MainSubLayout,
+  MainSubLayoutTitle,
+  MetaMaskBtn,
+  WalletBtnConnect,
+  WalletBtnConnectImg,
+} from './styledComponents';
 
 //correct web3 connection
 import { useWeb3React } from '@web3-react/core';
@@ -199,12 +212,13 @@ export default function Index() {
     }
     return null;
   };
+
   ErrorComponent.propTypes = {
     isWrongAddress: bool,
   };
 
   return (
-    <RootStyle>
+    <RootStyle isLightTheme={themeType}>
       <Header
         onOpenSidebar={() => setOpen(true)}
         themeType={themeType}
@@ -218,143 +232,103 @@ export default function Index() {
         global_wallet={localStorage.getItem('wallets')}
         themeType={themeType}
       />
-      <MainStyle isLightTheme={themeType} appBarMobile={64} appBarDesktop={92}>
-        <Grid item>
-          <Box sx={{ mt: 2 }}>
-            <div>
-              <Typography variant="h3">Connect To Earnven</Typography>
-              {networkActive ? (
-                <span>
-                  Metamask wallet address{' '}
-                  <b>
-                    (get on main app pages: <br />
-                    first click - connect to MetaMask wallet, s4econd click - go on main pages{' '}
-                    <br />- useState hooks bug, will going to fix later)
-                  </b>{' '}
-                  <br />
-                  <b>{account}</b>
-                  <br />
-                  <br />
-                  <b>Sign in with ethereum address - without changes</b>
-                </span>
-              ) : (
-                <span>Not connected</span>
-              )}
-            </div>
-            <Box sx={{ mt: 2 }}>
-              <Typography variant="caption">Connect Wallet 123</Typography>
-              <Button
-                variant="contained"
-                sx={{ backgroundColor: (theme) => theme.palette.primary.dark, color: 'black' }}
-                onClick={connectMetamask}
-                disableElevation
-                fullWidth
-                startIcon={<img src={metamask} alt="" style={{ height: '14px', width: '14px' }} />}>
-                MetaMask
-              </Button>
+      <MainStyle isLightTheme={themeType}>
+        <MainSubLayout>
+          <MainSubLayoutTitle>Connect a wallet</MainSubLayoutTitle>
+          <MetaMaskBtn
+            onClick={connectMetamask}
+            disableElevation
+            fullWidth
+            startIcon={<img src={metamaskWalletLogo} alt="" />}>
+            MetaMask
+          </MetaMaskBtn>
 
-              <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-                <Button
-                  onClick={async () => {
-                    try {
-                      await loadWalletConnect();
-                    } catch {
-                      // do smth.
-                    }
-                  }}
-                  variant="outlined"
-                  startIcon={
-                    <img
-                      src={walletConnectLogo}
-                      alt=""
-                      style={{
-                        height: '14px',
-                        width: '14px',
-                      }}
-                    />
-                  }>
-                  WalletConnect
-                </Button>
-                <Button
-                  onClick={loadPortis}
-                  variant="outlined"
-                  startIcon={
-                    <img src={portisWalletLogo} alt="" style={{ height: '14px', width: '14px' }} />
-                  }>
-                  Portis
-                </Button>
-                <Button
-                  variant="outlined"
-                  s
-                  tartIcon={
-                    <img
-                      src={coinbaseWalletLogo}
-                      alt=""
-                      style={{ height: '14px', width: '14px' }}
-                    />
-                  }>
-                  Coinbase Wallet
-                </Button>
-              </Stack>
-              <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-                <Button
-                  onClick={loadFormatic}
-                  variant="outlined"
-                  startIcon={
-                    <img src={fortmaticLogo} alt="" style={{ height: '14px', width: '14px' }} />
-                  }>
-                  Fortmatic
-                </Button>
-                <Button
-                  onClick={loadTorus}
-                  variant="outlined"
-                  startIcon={
-                    <img src={torusWalletLogo} alt="" style={{ height: '14px', width: '14px' }} />
-                  }>
-                  Torus Wallet
-                </Button>
-              </Stack>
-              <Box sx={{ mt: 3 }}>
-                <Typography variant="caption">Track any address</Typography>
-                <Stack direction="row" spacing={1}>
-                  <TextField
-                    fullWidth
-                    placeholder="Track any ethereum address"
-                    id="fullWidth"
-                    onChange={addressUpdate}
-                  />
-                  <Button variant="contained" onClick={trackAddress}>
-                    <FaArrowRight />
-                  </Button>
-                </Stack>
-                <ErrorComponent isWrongAddress={errorMsg} />
-                <br />
-                <div>
-                  <p>
-                    The MetaMask Wallet connection was made through global library
-                    <a target="_blank" href="https://github.com/NoahZinsmeister/web3-react">
-                      {' '}
-                      web3-react
-                    </a>
-                  </p>
-                  <p>
-                    It allows to create just one global web3 instance around root component - just
-                    like Context API
-                  </p>
-                  <p>
-                    With the help of it we can get access to all web3 methods just with the help of
-                    useWeb3React hook
-                  </p>
-                  <p>
-                    Web3-react inits just when the app started - it allows us to decrease app
-                    loading and make our code cleaner and faster
-                  </p>
-                </div>
-              </Box>
-            </Box>
-          </Box>
-        </Grid>
+          <div>
+            <WalletBtnConnect
+              onClick={async () => await loadWalletConnect()}
+              variant="outlined"
+              startIcon={<WalletBtnConnectImg src={walletConnectLogo} alt="" />}>
+              WalletConnect
+            </WalletBtnConnect>
+
+            <WalletBtnConnect
+              onClick={loadPortis}
+              variant="outlined"
+              startIcon={<WalletBtnConnectImg src={portisWalletLogo} alt="" />}>
+              Portis
+            </WalletBtnConnect>
+
+            <WalletBtnConnect
+              variant="outlined"
+              startIcon={<WalletBtnConnectImg src={coinbaseWalletIcon} alt="" />}>
+              Coinbase Wallet
+            </WalletBtnConnect>
+
+            <WalletBtnConnect
+              onClick={loadFormatic}
+              variant="outlined"
+              startIcon={<WalletBtnConnectImg src={fortmaticLogo} alt="" />}>
+              Fortmatic
+            </WalletBtnConnect>
+
+            <WalletBtnConnect
+              onClick={loadTorus}
+              variant="outlined"
+              startIcon={<WalletBtnConnectImg src={torusWalletLogo} alt="" />}>
+              Torus Wallet
+            </WalletBtnConnect>
+
+            <WalletBtnConnect
+              variant="outlined"
+              startIcon={<WalletBtnConnectImg src={exodusWalletIcon} alt="" />}>
+              Exodus
+            </WalletBtnConnect>
+
+            <WalletBtnConnect
+              variant="outlined"
+              startIcon={<WalletBtnConnectImg src={atomicWalletIcon} alt="" />}>
+              Atomic
+            </WalletBtnConnect>
+
+            <WalletBtnConnect
+              variant="outlined"
+              startIcon={<WalletBtnConnectImg src={ledgerWalletIcon} alt="" />}>
+              Ledger
+            </WalletBtnConnect>
+
+            <WalletBtnConnect
+              variant="outlined"
+              startIcon={<WalletBtnConnectImg src={trezorWalletIcon} alt="" />}>
+              Trezor
+            </WalletBtnConnect>
+          </div>
+
+          <div>
+            <Typography variant="caption">Track any address</Typography>
+            <Stack direction="row" spacing={1}>
+              <TextField
+                fullWidth
+                placeholder="Track any ethereum address"
+                id="fullWidth"
+                onChange={addressUpdate}
+              />
+              <Button variant="contained" onClick={trackAddress}>
+                <FaArrowRight />
+              </Button>
+            </Stack>
+            <ErrorComponent isWrongAddress={errorMsg} />
+            <br />
+          </div>
+        </MainSubLayout>
       </MainStyle>
+
+      {/*<MainStyle isLightTheme={themeType} appBarMobile={64} appBarDesktop={92}>*/}
+      {/*  <Grid item>*/}
+      {/*    <Box sx={{ mt: 2 }}>*/}
+      {/*   */}
+      {/*    </Box>*/}
+      {/*  </Grid>*/}
+      {/*</MainStyle>*/}
     </RootStyle>
   );
 }

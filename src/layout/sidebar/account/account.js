@@ -1,4 +1,5 @@
-import { experimentalStyled as styled } from '@material-ui/core/styles';
+// import { experimentalStyled as styled } from '@material-ui/core/styles';
+import styled from 'styled-components';
 import accountLogo from '../../../assets/icons/accountlogo.png';
 import { createStyles } from '@material-ui/styles';
 import {
@@ -34,26 +35,35 @@ import menurender_customhook from './menurender_customhook';
 
 import { useSelector } from 'react-redux';
 
-const AccountStyle = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  padding: theme.spacing(3, 2.5),
-  borderRadius: '10px',
-  paddingBottom: 0,
-  cursor: 'pointer',
-  width: '186px',
-  height: '74px',
-  backgroundColor:
-    localStorage.getItem('selectedTheme') == 'Day'
-      ? localStorage.getItem('PopUp_Menu') == true
-        ? 'green'
-        : theme.palette.menu.backgorundColor_wallet_secondary
-      : '#141838',
-  fontWeight: 500,
-  marginLeft: '26px',
-  marginTop: '20px',
-  boxShadow: '4px 6px 20px -5px rgba(51, 78, 131, 0.17)',
-}));
+// box-shadow: ${(props) =>
+//props.isLightTheme ? 'null' : '4px 6px 20px -5px rgba(51, 78, 131, 0.17)'};
+
+const AccountStyle = styled.div`
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  padding-bottom: 0;
+  cursor: pointer;
+  width: 186px;
+  height: 74px;
+  font-weight: 500;
+  margin-left: 26px;
+  margin-top: 20px;
+`;
+
+const EnterAccountBlock = styled.div`
+  margin-top: -20px;
+  margin-left: 10px;
+
+  p {
+    color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
+    font-family: 'Saira', sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 19px;
+  }
+`;
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -101,6 +111,10 @@ const useStyles = makeStyles(() =>
 );
 
 export default function Account({ address, name, global_wallet, setTheme }) {
+  const themeType = useSelector((state) => state.themeReducer.isLightTheme);
+  const selectedAccount = localStorage.getItem('selected-account');
+  console.log('selectedAccount', selectedAccount);
+
   const { flag_menu } = menurender_customhook();
 
   const classes = useStyles();
@@ -112,14 +126,6 @@ export default function Account({ address, name, global_wallet, setTheme }) {
   var mywallet_text = 'My Wallet';
   const [arrowicon, setarrowicon] = useState(false);
   const [reRender, setReRender] = useState(false);
-
-  function setdropDown() {
-    setarrowicon(true);
-  }
-
-  function dropdown() {
-    setarrowicon(false);
-  }
 
   useEffect(() => {
     const result = localStorage.getItem('wallets');
@@ -168,88 +174,17 @@ export default function Account({ address, name, global_wallet, setTheme }) {
     setaccount(false);
   };
 
-  const updateSelectedAccount = (address, name) => {
-    localStorage.setItem('selected-account', address);
-    if (name == null) {
-      localStorage.setItem('selected-account', address);
-    } else {
-      localStorage.setItem('selected-account', address);
-      localStorage.setItem('selected-name', name);
-    }
-  };
-
-  const routeToDashboard = () => {
-    const address = localStorage.getItem('selected-account');
-    navigate(`/${address}/dashboard/`, { replace: true });
-  };
-
-  function test1(address, name) {
-    if (name === 'null') {
+  function walletAddressCutter(address, name) {
+    if (name === 'null' && selectedAccount !== null) {
       return address.substring(0, 5) + '...';
-    }
-    // else {
-    //   return name.substring(0, 6) + '...';
-    // }
-  }
-
-  function shortAddress(addy, name) {
-    if (addy === '') {
-      return addy;
     } else {
-      let rename = '';
-      let wallets = localStorage.getItem('wallets');
-      wallets = JSON.parse(wallets);
-      wallets &&
-        wallets.map((option) => {
-          if (option.address == address && option.name != 'null') {
-            let shortAddress1 =
-              option.name.length >= 4
-                ? `${
-                    option.name[0] +
-                    option.name[1] +
-                    option.name[2] +
-                    option.name[3] +
-                    option.name[4] +
-                    option.name[5]
-                  }...`
-                : option.name;
-            rename = shortAddress1;
-            rename == 'undefiend' ? localStorage.setItem('selected-name', rename) : '';
-            // rename = option.name;
-          } else {
-            // rename = addy;
-            let shortAddress =
-              addy.length >= 4
-                ? `${addy[0] + addy[1] + addy[2] + addy[3] + addy[4] + addy[5]}...`
-                : addy;
-            rename = shortAddress;
-            // rename = shortAddress;
-          }
-        });
-      return localStorage.getItem('selected-name') == 'null'
-        ? rename
-        : localStorage.getItem('selected-name');
+      return name.substring(0, 6) + '...';
     }
-  }
-
-  function shortaddress1(addy) {
-    if (addy === '') {
-      return addy;
-    }
-    let mywallet = localStorage.getItem('mywallet');
-    mywallet = JSON.parse(mywallet);
-    const l = addy.length;
-    const addynew = `${
-      addy[0] + addy[1] + addy[2] + addy[3] + addy[4] + addy[5] + addy[6] + addy[7] + addy[8]
-    }...${addy[l - 8]}${addy[l - 7]}${addy[l - 6]}${addy[l - 5]}${addy[l - 4]}${addy[l - 3]}${
-      addy[l - 2]
-    }${addy[l - 1]}`;
-    return addynew;
   }
 
   return (
     <>
-      <AccountStyle ref={anchorRef} onClick={showAccountPopover}>
+      <AccountStyle ref={anchorRef} onClick={showAccountPopover} isLightTheme={themeType}>
         {address ? (
           <>
             {' '}
@@ -263,7 +198,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
                       setTheme ? theme.palette.menu.myWallet_font_light : '#141838',
                   }}
                   className={classes.accountAddress}>
-                  {test1(address, name)}
+                  {walletAddressCutter(address, name)}
                 </Typography>
                 {arrowicon === true ? (
                   <ExpandLessIcon sx={{ ml: 4, mt: -2.1, color: '#4453AD' }} />
@@ -277,7 +212,9 @@ export default function Account({ address, name, global_wallet, setTheme }) {
             </Box>
           </>
         ) : (
-          <div style={{ color: 'red' }}>Enter the account </div>
+          <EnterAccountBlock isLightTheme={themeType}>
+            <p>Connect an Ethereum wallet to manage your portfolio</p>
+          </EnterAccountBlock>
         )}
       </AccountStyle>
       <MenuPopover
