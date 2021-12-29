@@ -1,15 +1,15 @@
-import { Box, Button, Grid, Stack, TextField, Typography } from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
+import { bool } from 'prop-types';
+import Fortmatic from 'fortmatic';
+import { useNavigate } from 'react-router-dom';
+import Web3 from 'web3';
+import Portis from '@portis/web3';
+import Torus from '@toruslabs/torus-embed';
+import WalletConnectProvider from '@walletconnect/web3-provider';
+import { makeStyles } from '@material-ui/styles';
+import { Stack, Typography } from '@material-ui/core';
 import Header from '../../layout/header';
 import Sidebar from '../../layout/sidebar';
-import Web3 from 'web3';
-import { useNavigate } from 'react-router-dom';
-import { FaArrowRight } from 'react-icons/fa';
-import React, { useState, useEffect } from 'react';
-import Portis from '@portis/web3';
-import Fortmatic from 'fortmatic';
-import WalletConnectProvider from '@walletconnect/web3-provider';
-import Torus from '@toruslabs/torus-embed';
-import { bool } from 'prop-types';
 import portisWalletLogo from '../../assets/icons/portisLogo.png';
 import torusWalletLogo from '../../assets/icons/torus.png';
 import fortmaticLogo from '../../assets/icons/fortmatic.png';
@@ -19,6 +19,7 @@ import exodusWalletIcon from '../../assets/icons/exodusWalletIcon.svg';
 import atomicWalletIcon from '../../assets/icons/atomicWalletIcon.svg';
 import ledgerWalletIcon from '../../assets/icons/ledgerWalletIcon.svg';
 import trezorWalletIcon from '../../assets/icons/trezorWalletIcon.svg';
+import ArrowRight from '../../assets/icons/arrowRight.svg';
 
 import metamaskWalletLogo from '../../assets/icons/metamask.svg';
 
@@ -28,8 +29,14 @@ import {
   MainSubLayout,
   MainSubLayoutTitle,
   MetaMaskBtn,
+  WalletButtonsLayout,
   WalletBtnConnect,
+  ComingSoonItem,
   WalletBtnConnectImg,
+  EthereumAddressBlock,
+  EthereumAddressField,
+  SubmitEthereumAddressBtn,
+  WalletBtnName,
 } from './styledComponents';
 
 //correct web3 connection
@@ -37,7 +44,14 @@ import { useWeb3React } from '@web3-react/core';
 import { injected } from '../../utils/connectors';
 import { useSelector } from 'react-redux';
 
+const useStyles = makeStyles(() => ({
+  noBorder: {
+    border: 'none !important',
+  },
+}));
+
 export default function Index() {
+  const classes = useStyles();
   const themeType = useSelector((state) => state.themeReducer.isLightTheme);
   const [open, setOpen] = useState(false);
   console.log('themeType', themeType);
@@ -243,92 +257,123 @@ export default function Index() {
             MetaMask
           </MetaMaskBtn>
 
-          <div>
+          <WalletButtonsLayout>
             <WalletBtnConnect
               onClick={async () => await loadWalletConnect()}
               variant="outlined"
+              disabled
               startIcon={<WalletBtnConnectImg src={walletConnectLogo} alt="" />}>
-              WalletConnect
+              <div>
+                <WalletBtnName>WalletConnect</WalletBtnName>
+                <ComingSoonItem>Coming soon</ComingSoonItem>
+              </div>
             </WalletBtnConnect>
 
             <WalletBtnConnect
               onClick={loadPortis}
               variant="outlined"
+              disabled
               startIcon={<WalletBtnConnectImg src={portisWalletLogo} alt="" />}>
-              Portis
+              <div>
+                <WalletBtnName>Portis</WalletBtnName>
+                <ComingSoonItem>Coming soon</ComingSoonItem>
+              </div>
             </WalletBtnConnect>
 
             <WalletBtnConnect
               variant="outlined"
+              disabled
               startIcon={<WalletBtnConnectImg src={coinbaseWalletIcon} alt="" />}>
-              Coinbase Wallet
+              <div>
+                <WalletBtnName> Coinbase Wallet</WalletBtnName>
+                <ComingSoonItem>Coming soon</ComingSoonItem>
+              </div>
             </WalletBtnConnect>
 
             <WalletBtnConnect
               onClick={loadFormatic}
               variant="outlined"
+              disabled
               startIcon={<WalletBtnConnectImg src={fortmaticLogo} alt="" />}>
-              Fortmatic
+              <div>
+                <WalletBtnName> Fortmatic</WalletBtnName>
+                <ComingSoonItem>Coming soon</ComingSoonItem>
+              </div>
             </WalletBtnConnect>
 
             <WalletBtnConnect
               onClick={loadTorus}
               variant="outlined"
+              disabled
               startIcon={<WalletBtnConnectImg src={torusWalletLogo} alt="" />}>
-              Torus Wallet
+              <div>
+                <WalletBtnName> Torus Wallet</WalletBtnName>
+                <ComingSoonItem>Coming soon</ComingSoonItem>
+              </div>
             </WalletBtnConnect>
 
             <WalletBtnConnect
               variant="outlined"
+              disabled
               startIcon={<WalletBtnConnectImg src={exodusWalletIcon} alt="" />}>
-              Exodus
+              <div>
+                <WalletBtnName> Exodus</WalletBtnName>
+                <ComingSoonItem>Coming soon</ComingSoonItem>
+              </div>
             </WalletBtnConnect>
 
             <WalletBtnConnect
               variant="outlined"
+              disabled
               startIcon={<WalletBtnConnectImg src={atomicWalletIcon} alt="" />}>
-              Atomic
+              <div>
+                <WalletBtnName> Atomic</WalletBtnName>
+                <ComingSoonItem>Coming soon</ComingSoonItem>
+              </div>
             </WalletBtnConnect>
 
             <WalletBtnConnect
               variant="outlined"
+              disabled
               startIcon={<WalletBtnConnectImg src={ledgerWalletIcon} alt="" />}>
-              Ledger
+              <div>
+                <WalletBtnName> Atomic</WalletBtnName>
+                <ComingSoonItem> Ledger</ComingSoonItem>
+              </div>
             </WalletBtnConnect>
 
             <WalletBtnConnect
               variant="outlined"
+              disabled
               startIcon={<WalletBtnConnectImg src={trezorWalletIcon} alt="" />}>
-              Trezor
+              <div>
+                <WalletBtnName> Trezor</WalletBtnName>
+                <ComingSoonItem> Ledger</ComingSoonItem>
+              </div>
             </WalletBtnConnect>
-          </div>
+          </WalletButtonsLayout>
 
-          <div>
-            <Typography variant="caption">Track any address</Typography>
-            <Stack direction="row" spacing={1}>
-              <TextField
-                fullWidth
+          <EthereumAddressBlock>
+            <MainSubLayoutTitle>Track any address</MainSubLayoutTitle>
+            <Stack direction="row" justifyContent="space-between">
+              <EthereumAddressField
                 placeholder="Track any ethereum address"
-                id="fullWidth"
                 onChange={addressUpdate}
+                inputProps={{
+                  style: {
+                    height: '27px',
+                  },
+                  classes: { notchedOutline: classes.noBorder },
+                }}
               />
-              <Button variant="contained" onClick={trackAddress}>
-                <FaArrowRight />
-              </Button>
+              <SubmitEthereumAddressBtn onClick={trackAddress}>
+                <img src={ArrowRight} alt="arrow" />
+              </SubmitEthereumAddressBtn>
             </Stack>
             <ErrorComponent isWrongAddress={errorMsg} />
-            <br />
-          </div>
+          </EthereumAddressBlock>
         </MainSubLayout>
       </MainStyle>
-
-      {/*<MainStyle isLightTheme={themeType} appBarMobile={64} appBarDesktop={92}>*/}
-      {/*  <Grid item>*/}
-      {/*    <Box sx={{ mt: 2 }}>*/}
-      {/*   */}
-      {/*    </Box>*/}
-      {/*  </Grid>*/}
-      {/*</MainStyle>*/}
     </RootStyle>
   );
 }
