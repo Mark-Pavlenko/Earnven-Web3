@@ -64,6 +64,9 @@ export default function Index({ accountAddress }) {
   const [BancorPoolTotal, setBancorPoolTotal] = useState(0);
   const [DisplayBancor, setDisplayBancor] = useState(false);
 
+  const [YearnData, setYearnData] = useState([]); // Yearn
+  const [YearnContent, setYearnContent] = useState([]); // Yearn
+  const [YearnTotal, setYearnTotal] = useState([]); // Yearn Total
   const [CurveStakeData, setCurveStakeData] = useState([]); // Curve
   const [CurveStakeContent, setCurveStakeContent] = useState([]); // Curve
 
@@ -75,8 +78,6 @@ export default function Index({ accountAddress }) {
   const [SynthetixData, setSynthetixData] = useState([]); // get curve lp token data
   //YearnToken
   const [YearnTokenValue, setYearnTokenValue] = useState([]);
-
-  console.log('BalancerPoolsContent', BalancerPoolsContent);
 
   //get the value from the child component of the curve lp token
   const getCurveLpToken = (data) => {
@@ -114,7 +115,7 @@ export default function Index({ accountAddress }) {
     while (pattern.test(x)) x = x.replace(pattern, '$1,$2');
     return x;
   };
-
+  console.log('YearnTotal', YearnData);
   useEffect(() => {
     const content = SavingsData.map((object) => (
       <Tooltip
@@ -160,7 +161,6 @@ export default function Index({ accountAddress }) {
         </div>
       </Tooltip>
     ));
-
     setSavingsContent(content);
   }, [SavingsData]);
 
@@ -205,7 +205,6 @@ export default function Index({ accountAddress }) {
         </div>
       </Tooltip>
     ));
-
     setLoansContent(content);
   }, [LoansData]);
 
@@ -245,7 +244,6 @@ export default function Index({ accountAddress }) {
         </div>
       </Tooltip>
     ));
-
     setPoolsContent(content);
   }, [PoolsData]);
 
@@ -285,7 +283,6 @@ export default function Index({ accountAddress }) {
         </div>
       </Tooltip>
     ));
-
     setSushiPoolsContent(content);
   }, [SushiPoolsData]);
 
@@ -334,7 +331,6 @@ export default function Index({ accountAddress }) {
         </div>
       </Tooltip>
     ));
-
     setCompoundLoansContent(content);
   }, [CompoundLoansData]);
 
@@ -383,141 +379,272 @@ export default function Index({ accountAddress }) {
         </div>
       </Tooltip>
     ));
-
     setCompoundSavingsContent(content);
   }, [CompoundSavingsData]);
 
   useEffect(() => {
-    console.log('BalancerPoolsData', BalancerPoolsData);
     const content = BalancerPoolsData.map((object) => (
-      <Tooltip
-        title={
-          <>
-            {/*<div*/}
-            {/*  style={{*/}
-            {/*    display: 'inline-block',*/}
-            {/*    textAlign: 'left',*/}
-            {/*    wordBreak: 'break-word',*/}
-            {/*  }}>*/}
-            {/*  Tokens in Pool: <br />*/}
-            {/*</div>*/}
-            {/*<br />*/}
-            {/*<br />*/}
-            {/*Pool Percentage : {parseFloat(object.poolPercentage).toFixed(2)} % <br />*/}
-            {/*Pool Liquidity : {parseFloat(object.liquidity).toFixed(2)} USD <br />*/}
-            {/*Total Investment : {object.totalInvestment} USD*/}
-          </>
-        }>
-        {/*<div style={{ width: '90%', marginTop: '12px', marginLeft: '20px' }}>*/}
-        {/*  <br />*/}
-        {/*  <div*/}
-        {/*    style={{*/}
-        {/*      display: 'inline-block',*/}
-        {/*      width: '100%',*/}
-        {/*      textAlign: 'left',*/}
-        {/*      wordBreak: 'break-word',*/}
-        {/*    }}>*/}
-        {/*<div style={{ display: 'flex' }}>*/}
-        {/*  {object.imageData.map((obj) => (*/}
-        {/*    <div style={{ display: 'flex', marginLeft: '-10px' }}>*/}
-        {/*      <img*/}
-        {/*        src={obj}*/}
-        {/*        alt="noimage"*/}
-        {/*        style={{ maxWidth: '100%', maxHeight: '100%' }}*/}
-        {/*        width="30px"*/}
-        {/*        height="30px"*/}
-        {/*      />*/}
-        {/*    </div>*/}
-        {/*  ))}*/}
-        {/*</div>*/}
-        {/*{object.tokens.map((obj) => (*/}
-        {/*  <>*/}
-        {/*    <>{obj.symbol}-</>*/}
-        {/*  </>*/}
-        {/*))}*/}
-        {/*<div style={{ display: 'flex', width: '300px' }}>*/}
-        {/*  <p>Value</p>*/}
-        {/*  <>&nbsp;-&nbsp;{parseFloat(object.priceSum).toFixed(2)}&nbsp;USD</>*/}
-        {/*</div>*/}
-        {/*<div style={{ display: 'flex', width: '300px' }}>*/}
-        {/*  <p>LP price</p>*/}
-        {/*  <>&nbsp;-&nbsp;{parseFloat(object.price).toFixed(2)}&nbsp;USD</>*/}
-        {/*</div>*/}
-        {/*<div style={{ display: 'flex', width: '300px' }}>*/}
-        {/*  <p>LP balance</p>*/}
-        {/*  <>&nbsp;-&nbsp;{parseFloat(object.balance).toFixed(3)}&nbsp;</>*/}
-        {/*</div>*/}
-        {/*<div style={{ display: 'flex', width: '300px' }}>*/}
-        {/*  <p>Liquidity</p>*/}
-        {/*  <>&nbsp;-&nbsp;{parseFloat(object.liquidity).toFixed(2)}&nbsp;</>*/}
-        {/*</div>*/}
-        {/*<div style={{ display: 'flex', width: '300px' }}>*/}
-        {/*  <p>Chain</p>*/}
-        {/*  <>&nbsp;-&nbsp;Ethereum&nbsp;</>*/}
-        {/*</div>*/}
-        {/*<div style={{ display: 'flex', width: '300px' }}>*/}
-        {/*  <p>Protocol</p>*/}
-        {/*  <>&nbsp;-&nbsp;Balancer-V1&nbsp;</>*/}
-        {/*</div>*/}
-        <Investment protocol={object} protocolName={'Balancer'} />
-        {/*  </div>*/}
-        {/*</div>*/}
-      </Tooltip>
+      <Investment protocol={object} protocolName={'Balancer V1'} />
+      // <Tooltip
+      //   title={
+      //     <>
+      //       {/*<div*/}
+      //       {/*  style={{*/}
+      //       {/*    display: 'inline-block',*/}
+      //       {/*    textAlign: 'left',*/}
+      //       {/*    wordBreak: 'break-word',*/}
+      //       {/*  }}>*/}
+      //       {/*  Tokens in Pool: <br />*/}
+      //       {/*</div>*/}
+      //       {/*<br />*/}
+      //       {/*<br />*/}
+      //       {/*Pool Percentage : {parseFloat(object.poolPercentage).toFixed(2)} % <br />*/}
+      //       {/*Pool Liquidity : {parseFloat(object.liquidity).toFixed(2)} USD <br />*/}
+      //       {/*Total Investment : {object.totalInvestment} USD*/}
+      //     </>
+      //   }>
+      //   {/*<div style={{ width: '90%', marginTop: '12px', marginLeft: '20px' }}>*/}
+      //   {/*  <br />*/}
+      //   {/*  <div*/}
+      //   {/*    style={{*/}
+      //   {/*      display: 'inline-block',*/}
+      //   {/*      width: '100%',*/}
+      //   {/*      textAlign: 'left',*/}
+      //   {/*      wordBreak: 'break-word',*/}
+      //   {/*    }}>*/}
+      //   {/*<div style={{ display: 'flex' }}>*/}
+      //   {/*  {object.imageData.map((obj) => (*/}
+      //   {/*    <div style={{ display: 'flex', marginLeft: '-10px' }}>*/}
+      //   {/*      <img*/}
+      //   {/*        src={obj}*/}
+      //   {/*        alt="noimage"*/}
+      //   {/*        style={{ maxWidth: '100%', maxHeight: '100%' }}*/}
+      //   {/*        width="30px"*/}
+      //   {/*        height="30px"*/}
+      //   {/*      />*/}
+      //   {/*    </div>*/}
+      //   {/*  ))}*/}
+      //   {/*</div>*/}
+      //   {/*{object.tokens.map((obj) => (*/}
+      //   {/*  <>*/}
+      //   {/*    <>{obj.symbol}-</>*/}
+      //   {/*  </>*/}
+      //   {/*))}*/}
+      //   {/*<div style={{ display: 'flex', width: '300px' }}>*/}
+      //   {/*  <p>Value</p>*/}
+      //   {/*  <>&nbsp;-&nbsp;{parseFloat(object.priceSum).toFixed(2)}&nbsp;USD</>*/}
+      //   {/*</div>*/}
+      //   {/*<div style={{ display: 'flex', width: '300px' }}>*/}
+      //   {/*  <p>LP price</p>*/}
+      //   {/*  <>&nbsp;-&nbsp;{parseFloat(object.price).toFixed(2)}&nbsp;USD</>*/}
+      //   {/*</div>*/}
+      //   {/*<div style={{ display: 'flex', width: '300px' }}>*/}
+      //   {/*  <p>LP balance</p>*/}
+      //   {/*  <>&nbsp;-&nbsp;{parseFloat(object.balance).toFixed(3)}&nbsp;</>*/}
+      //   {/*</div>*/}
+      //   {/*<div style={{ display: 'flex', width: '300px' }}>*/}
+      //   {/*  <p>Liquidity</p>*/}
+      //   {/*  <>&nbsp;-&nbsp;{parseFloat(object.liquidity).toFixed(2)}&nbsp;</>*/}
+      //   {/*</div>*/}
+      //   {/*<div style={{ display: 'flex', width: '300px' }}>*/}
+      //   {/*  <p>Chain</p>*/}
+      //   {/*  <>&nbsp;-&nbsp;Ethereum&nbsp;</>*/}
+      //   {/*</div>*/}
+      //   {/*<div style={{ display: 'flex', width: '300px' }}>*/}
+      //   {/*  <p>Protocol</p>*/}
+      //   {/*  <>&nbsp;-&nbsp;Balancer-V1&nbsp;</>*/}
+      //   {/*</div>*/}
+      //
+      //   {/*  </div>*/}
+      //   {/*</div>*/}
+      // </Tooltip>
     ));
-
     setBalancerPoolsContent(content);
-  }, [BalancerPoolsData]);
+  }, [BalancerPoolsData]); //done
 
   useEffect(() => {
-    const content = CurveStakeData.map((object) => (
-      <Tooltip
-        title={
-          <>
-            {object.name} <br />
-            Share Price : {parseFloat(object.price).toFixed(4)} USD <br />
-            Total Shares : {parseFloat(object.balance).toFixed(2)} ${object.symbol} <br />
-            Total Investment : {parseFloat(object.totalInvestment).toFixed(2)} USD <br />
-          </>
-        }>
-        <div style={{ width: '90%', marginTop: '12px', marginLeft: '30px' }}>
-          <div style={{ display: 'inline-block', width: '15%' }}>
-            <div
-              style={{
-                height: '40px',
-                padding: '5px',
-                borderRadius: '10px',
-                backgroundImage:
-                  'linear-gradient(to right,  rgba(20,24,30,.1), rgba(173,204,151,.5), rgba(20,24,30,.1))',
-              }}>
-              <center>
-                <img
-                  src={object.image ? object.image : CurveLogo}
-                  style={{ height: '30px', marginTop: '' }}
-                  alt=""
-                />
-              </center>
+    const content = BalancerPoolsDatav2.map((object) => {
+      console.log('Balancer V2', object);
+      return (
+        <Investment protocol={object} protocolName={'Balancer V2'} />
+        // <Tooltip
+        //   title={
+        //     <>
+        //       <div
+        //         style={{
+        //           display: 'inline-block',
+        //           textAlign: 'left',
+        //           wordBreak: 'break-word',
+        //         }}>
+        //         Tokens in Pool: <br />
+        //         {object.tokens.map((obj) => (
+        //           <>
+        //             ${obj.symbol}
+        //             <br />
+        //           </>
+        //         ))}
+        //       </div>
+        //       <br />
+        //       <br />
+        //       Pool Percentage : {parseFloat(object.poolPercentage).toFixed(2)} % <br />
+        //       Pool Liquidity : {parseFloat(object.liquidity).toFixed(2)} USD <br />
+        //       Total Investment : {object.totalInvestment} USD
+        //     </>
+        //   }>
+        //   <div style={{ width: '90%', marginTop: '12px', marginLeft: '20px' }}>
+        //     <br />
+        //     <div
+        //       style={{
+        //         display: 'inline-block',
+        //         width: '60%',
+        //         textAlign: 'left',
+        //         wordBreak: 'break-word',
+        //       }}>
+        //       {object.tokens.map((obj) => (
+        //         <>
+        //           <>${obj.symbol}-</>
+        //         </>
+        //       ))}
+        //       <>
+        //         <>&nbsp;{parseFloat(object.balance).toFixed(2)}&nbsp;-</>
+        //       </>
+        //       <>
+        //         <>&nbsp;{parseFloat(object.price).toFixed(2)}&nbsp;USD</>
+        //       </>
+        //     </div>
+        //
+        //     {/* <div style={{ display: 'inline-block', width: '10%' }}>
+        //       {object.value} ${object.symbol}
+        //     </div> */}
+        //
+        //     <div
+        //       style={{ display: 'inline-block', width: '30%', fontSize: '15px', marginLeft: '20px' }}>
+        //       {object.totalInvestment} USD
+        //     </div>
+        //     {/* <hr style={{ width: '30%' }} /> */}
+        //   </div>
+        // </Tooltip>
+      );
+    });
+    setBalancerPoolsContentv2(content);
+  }, [BalancerPoolsDatav2]); //done
+
+  useEffect(() => {
+    const content = YearnData.map((object) => {
+      return (
+        <Investment protocol={object} protocolName={'Yearn Finance'} logoImage={YearnLogo} />
+        // <Tooltip
+        //   title={
+        //     <>
+        //       {object.shareTokenName} <br />
+        //       Share Price :{' '}
+        //       {parseFloat(object.sharePrice / 10 ** object.shareTokenDecimals).toFixed(4)} USD <br />
+        //       Total Shares :{' '}
+        //       {parseFloat(object.balanceShares / 10 ** object.shareTokenDecimals).toFixed(2)} $
+        //       {object.symbol} <br />
+        //       Total Investment : {parseFloat(object.totalInvestment).toFixed(2)} USD <br />
+        //       Underlying Token Name : {object.mainTokenName} <br />
+        //     </>
+        //   }>
+        //   <div style={{ width: '90%', marginTop: '12px', marginLeft: '30px' }}>
+        //     <div style={{ display: 'inline-block', width: '15%' }}>
+        //       <div
+        //         style={{
+        //           height: '40px',
+        //           padding: '5px',
+        //           borderRadius: '10px',
+        //           backgroundImage:
+        //             'linear-gradient(to right,  rgba(20,24,30,.1), rgba(173,204,151,.5), rgba(20,24,30,.1))',
+        //         }}>
+        //         <center>
+        //           <img
+        //             src={object.image ? object.image : YearnLogo}
+        //             style={{ height: '30px', marginTop: '' }}
+        //             alt=""
+        //           />
+        //         </center>
+        //       </div>
+        //     </div>
+        //
+        //     <div style={{ display: 'inline-block', width: '10%' }} />
+        //
+        //     <div
+        //       style={{
+        //         display: 'inline-block',
+        //         fontSize: '12px',
+        //         width: '40%',
+        //         textAlign: 'left',
+        //       }}>
+        //       ${object.shareTokenSymbol}
+        //     </div>
+        //
+        //     {/* <div style={{display:'inline-block', width:'30%'}}>
+        //           {object.value} ${object.symbol}
+        //       </div> */}
+        //
+        //     <div style={{ display: 'inline-block', width: '30%', fontSize: '13px' }}>
+        //       {parseFloat(object.totalInvestment).toFixed(2)} USD
+        //     </div>
+        //
+        //     <br />
+        //   </div>
+        // </Tooltip>
+      );
+    });
+    setYearnContent(content);
+  }, [YearnData]);
+
+  useEffect(() => {
+    const content = CurveStakeData.map((object) => {
+      return (
+        <Tooltip
+          title={
+            <>
+              {object.name} <br />
+              Share Price : {parseFloat(object.price).toFixed(4)} USD <br />
+              Total Shares : {parseFloat(object.balance).toFixed(2)} ${object.symbol} <br />
+              Total Investment : {parseFloat(object.totalInvestment).toFixed(2)} USD <br />
+            </>
+          }>
+          <div style={{ width: '90%', marginTop: '12px', marginLeft: '30px' }}>
+            <div style={{ display: 'inline-block', width: '15%' }}>
+              <div
+                style={{
+                  height: '40px',
+                  padding: '5px',
+                  borderRadius: '10px',
+                  backgroundImage:
+                    'linear-gradient(to right,  rgba(20,24,30,.1), rgba(173,204,151,.5), rgba(20,24,30,.1))',
+                }}>
+                <center>
+                  <img
+                    src={object.image ? object.image : CurveLogo}
+                    style={{ height: '30px', marginTop: '' }}
+                    alt=""
+                  />
+                </center>
+              </div>
             </div>
-          </div>
 
-          <div style={{ display: 'inline-block', width: '10%' }} />
+            <div style={{ display: 'inline-block', width: '10%' }} />
 
-          <div style={{ display: 'inline-block', width: '40%', textAlign: 'left' }}>
-            {object.symbol}
-          </div>
+            <div style={{ display: 'inline-block', width: '40%', textAlign: 'left' }}>
+              {object.symbol}
+            </div>
 
-          {/* <div style={{display:'inline-block', width:'30%'}}>
+            {/* <div style={{display:'inline-block', width:'30%'}}>
               {object.value} ${object.symbol}
           </div> */}
 
-          <div style={{ display: 'inline-block', width: '30%', fontSize: '13px' }}>
-            {parseFloat(object.totalInvestment).toFixed(2)} USD
+            <div style={{ display: 'inline-block', width: '30%', fontSize: '13px' }}>
+              {parseFloat(object.totalInvestment).toFixed(2)} USD
+            </div>
+
+            <br />
           </div>
-
-          <br />
-        </div>
-      </Tooltip>
-    ));
-
+        </Tooltip>
+      );
+    });
     setCurveStakeContent(content);
   }, [CurveStakeData]);
 
@@ -900,6 +1027,7 @@ export default function Index({ accountAddress }) {
         )
         .then(async (response) => {
           if (response.data.data) {
+            console.log('response', response.data);
             if (response.data.data.users[0]) {
               let tot = 0;
               const pools = [];
@@ -929,6 +1057,89 @@ export default function Index({ accountAddress }) {
                 console.log(err);
               }
             }
+          }
+        });
+    }
+    async function getYearnData() {
+      await axios
+        .post(
+          `https://gateway.thegraph.com/api/${addresses.graph_API}/subgraphs/id/0xf50b705e4eaba269dfe954f10c65bd34e6351e0c-0`,
+          {
+            query: `{
+                    accountVaultPositions(
+                      first:1000
+                      where:{
+                        account:"0x4beaa82fdda3543523d68bdf525d471ca20cd73c"
+                        balanceShares_gt:0
+                      }
+                    )
+                    {
+                      id
+                      balanceTokens
+                      balancePosition
+                      balanceShares
+                      balanceProfit
+                      vault{
+                        token{
+                          symbol
+                          name
+                          id
+                          decimals
+                        }
+                        shareToken{
+                          id
+                          name
+                          symbol
+                          decimals
+                        }
+                        latestUpdate{
+                          pricePerShare
+                        }
+                      }
+                    }
+                  }`,
+          }
+        )
+        .then(async (response) => {
+          if (response.data.data) {
+            const res = response.data.data.accountVaultPositions;
+            const positions = [];
+            let tot = 0;
+            for (var i = 0; i < res.length; i++) {
+              const object = {};
+
+              await axios
+                .get(
+                  `https://api.coingecko.com/api/v3/coins/ethereum/contract/${res[i].vault.token.id}`,
+                  {},
+                  {}
+                )
+                .then(async (priceData) => {
+                  res[i].image = priceData.data.image.thumb;
+                })
+                .catch((err) => {});
+
+              object.balanceShares = res[i].balanceShares;
+              object.sharePrice = res[i].vault.latestUpdate.pricePerShare;
+              object.shareTokenAddress = res[i].vault.shareToken.id;
+              object.shareTokenSymbol = res[i].vault.shareToken.symbol;
+              object.shareTokenDecimals = res[i].vault.shareToken.decimals;
+              object.shareTokenName = res[i].vault.shareToken.name;
+              object.mainTokenSymbol = res[i].vault.token.symbol;
+              object.mainTokenName = res[i].vault.token.name;
+              object.mainTokenDecimals = res[i].vault.token.decimals;
+              object.mainTokenAddress = res[i].vault.token.id;
+              object.image = res[i].image;
+              object.totalInvestment =
+                ((object.balanceShares / 10 ** object.shareTokenDecimals) * object.sharePrice) /
+                10 ** object.shareTokenDecimals;
+              tot += parseFloat(object.totalInvestment).toFixed(2);
+              positions.push(object);
+            }
+            console.log();
+            positions.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
+            setYearnData(positions);
+            setYearnTotal(tot);
           }
         });
     }
@@ -1006,6 +1217,7 @@ export default function Index({ accountAddress }) {
     getSushiV2Data();
     getCurveData();
   }, [accountAddress]);
+
   return (
     <div>
       <div
@@ -1212,8 +1424,17 @@ export default function Index({ accountAddress }) {
             fontSize: '12px',
             marginLeft: '15px',
           }}></div>
-
         <Synthetix accountAddress={accountAddress} onSynthetixTokenValue={getSynthetixTokenData} />
+        <br />
+        <div
+          style={{
+            fontSize: '12px',
+            marginLeft: '15px',
+            display: YearnData.length > 0 ? '' : 'none',
+          }}>
+          Yearn Finance --- {YearnTotal} USD
+        </div>
+        {YearnContent}
         <br />
         <YearnFinance accountAddress={accountAddress} onYearnTokenValue={getYearnTokenValue} />
       </div>

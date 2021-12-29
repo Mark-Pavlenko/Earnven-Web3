@@ -27,7 +27,7 @@ export default function SushiStaking({ accountAddress }) {
   //then make dispatch/send an action
   const dispatch = useDispatch();
   //below function is used to get sushi staking balance from the subgraph
-
+  console.log('SLPTokenData', SLPTokenData);
   useEffect(() => {
     const getSushiStakeData = async () => {
       const epocDate = await getEpoch();
@@ -127,6 +127,7 @@ export default function SushiStaking({ accountAddress }) {
 
   return (
     <React.Fragment>
+      <h1>Sushi</h1>
       <div
         style={{
           fontSize: '15px',

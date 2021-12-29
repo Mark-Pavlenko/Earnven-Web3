@@ -47,7 +47,7 @@ export const TokenImage = styled.img`
 `;
 
 export const TokenName = styled.div`
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 600;
 `;
 

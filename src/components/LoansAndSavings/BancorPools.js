@@ -225,6 +225,7 @@ export default function BancorPools({ setPoolTotal, accountAddress, setDisplay }
   }, [accountAddress]);
   return (
     <div>
+      <h1>BANCOR</h1>
       <div
         style={{
           fontSize: '12px',

@@ -237,6 +237,7 @@ export default function Cream({ setTotal, setDisplay, accountAddress }) {
   };
   return (
     <div>
+      <h1>CREAM</h1>
       {TotalCream > 0 ? (
         <div>
           Cream Protocol ----------- {numberWithCommas(parseFloat(TotalCream).toFixed(2))} USD

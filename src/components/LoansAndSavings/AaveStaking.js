@@ -31,7 +31,6 @@ export default function AaveStaking({ accountAddress }) {
   const [AaveAmountUSD, setAaveAmountUSD] = useState(0);
   const [AaveV2ClaimableAmt, setAaveV2ClaimableAmt] = useState(0);
   const [AaveV2ClaimableValue, setAaveV2ClaimableValue] = useState(0);
-
   //variable for stkABPT - balancer LP
   const [AaveStkABPTBalanceAmt, setAaveStkABPTBalanceAmt] = useState();
   const [AaveStkABPTPrice, setAaveStkABPTPrice] = useState();
@@ -120,6 +119,7 @@ export default function AaveStaking({ accountAddress }) {
 
       //Call the contract to get the value for staked Aave
       const AaveBalaceAmount = await checkAaveStake(accountAddress, Addresses.aaveStakingV2);
+      console.log('AaveBalaceAmount', AaveBalaceAmount);
       //call the contract to get the value from Staked Balancer LP
       const stkABPTBalance = await checkAaveStake(accountAddress, Addresses.aavestkABPT);
       //call the below function to get the aaveV2 Cliambale amount
@@ -217,6 +217,7 @@ export default function AaveStaking({ accountAddress }) {
 
   return (
     <div>
+      <h1>AAVE</h1>
       {parseInt(AaveAmountUSD) || parseInt(AaveStkABPTAmountUSD) ? (
         <div>
           <Accordion
