@@ -49,7 +49,6 @@ export default function SushiStaking({ accountAddress }) {
     if (SLPTokenData.length > 0) {
       try {
         var content = SLPTokenData.map((object) => {
-          console.log('sushi', object);
           return (
             <SushiProtocol protocol={object} protocolName={'Sushi'} logoImage={SushiSwapLogo} />
             // <Accordion
@@ -130,25 +129,7 @@ export default function SushiStaking({ accountAddress }) {
 
   return (
     <React.Fragment>
-      <div
-        style={{
-          fontSize: '15px',
-          marginRight: '15px',
-          display: SLPTokenData.length > 0 ? '' : 'none',
-        }}>
-        {/*<img*/}
-        {/*  src={SushiSwapLogo}*/}
-        {/*  style={{*/}
-        {/*    height: '30px',*/}
-        {/*    marginTop: '',*/}
-        {/*    marginLeft: '15px',*/}
-        {/*    display: 'inline-block',*/}
-        {/*  }}*/}
-        {/*  alt=""*/}
-        {/*/>*/}
-        {/*Sushi staking -- {SLPTokenTotalValue.toLocaleString()} USD*/}
-        {SLPTokenDataContent}
-      </div>
+      <div>{SLPTokenDataContent}</div>
       <br />
     </React.Fragment>
   );

@@ -10,7 +10,7 @@ import Balance from '../../components/Balance';
 import sendIcon from '../../assets/icons/send-icon.svg';
 import { Box, Container, Grid } from '@material-ui/core';
 import AllAssets from '../../components/allAssets/generalAssets/assets/assets';
-import LoansAndSavings from '../../components/LoansAndSavings';
+import LoansAndSavings from '../../components/LoansAndSavings/index';
 import etherScanIcon from '../../assets/icons/etherScan-icon.svg';
 import etherScanDark from '../../assets/icons/etherScanDark-icon.svg';
 import PortfolioPerf from '../../components/portfolioperf/portfolioperf';
@@ -69,9 +69,7 @@ export default function Dashboard({ test, changeTheme }) {
                   </Grid>
                   {/*ethAssets=========>*/}
                   <Grid item xs={12} md={12}>
-                    <Grid container spacing={1}>
-                      <LoansAndSavings accountAddress={address} />
-                    </Grid>
+                    <LoansAndSavings accountAddress={address} />
                   </Grid>
                 </Grid>
               </Grid>

@@ -1,27 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Tooltip from '@material-ui/core/Tooltip';
-import YearnLogo from '../../assets/icons/yearnLogo.png';
-import CurveLogo from '../../assets/icons/curveLogo.png';
-import ETHLogo from '../../assets/icons/eth.png';
-import addresses from '../../contractAddresses';
-import UniStaking from './UniStaking';
-import AaveStaking from './AaveStaking';
-import SushiStaking from './SushiStaking';
-import LiquityStaking from './LiquityStaking';
-import CreamIronBank from './CreamIronBankSavings';
-import ConvexStaking from './ConvexStaking';
-import { SnowSwapStaking } from './SnowSwapStaking';
-import CurveLpToken from './CurveLpToken';
-import Cream from './Cream';
-import BancorPools from './BancorPools';
-import Synthetix from './Synthetix';
-import Ethereum2Staking from './Ethereum2Staking';
+import YearnLogo from '../../../assets/icons/yearnLogo.png';
+import CurveLogo from '../../../assets/icons/curveLogo.png';
+import ETHLogo from '../../../assets/icons/eth.png';
+import addresses from '../../../contractAddresses';
+import UniStaking from '../UniStaking';
+import AaveStaking from '../AaveStaking';
+import SushiStaking from '../SushiStaking';
+import LiquityStaking from '../LiquityStaking';
+import CreamIronBank from '../CreamIronBankSavings';
+import ConvexStaking from '../ConvexStaking';
+import { SnowSwapStaking } from '../SnowSwapStaking';
+import CurveLpToken from '../CurveLpToken';
+import Cream from '../Cream';
+import BancorPools from '../BancorPools';
+import Synthetix from '../Synthetix';
+import Ethereum2Staking from '../Ethereum2Staking';
+import Investment from '../../common/investment/investment';
+import PoolsProtocols from '../../common/investment/poolsProtocols/poolsProtocols';
+import {
+  PoolsBlock,
+  TotalValueField,
+  TotalTitle,
+  TotalEmptyCell,
+  TotalValue,
+  Header,
+  Title,
+} from './styledComponents';
 import YearnFinance from './YearnFinance';
 import BalancerV2 from './LiqudityPools/BalancerV2';
 import { useSelector } from 'react-redux';
-import Investment from '../common/investment/investment';
-import PoolsProtocols from '../common/investment/poolsProtocols/poolsProtocols';
+import { ToggleButton } from '../../styled/styledComponents';
 
 // Below code is for task https://app.clickup.com/t/1je2y9d
 // import CompoundData from './Compound';
@@ -91,6 +101,10 @@ export default function Index({ accountAddress }) {
   const getSynthetixTokenData = (data) => {
     setSynthetixData(data);
   };
+
+  const [isPoolsOpen, setIsPoolsOpen] = useState(true);
+  const [isOthersOpen, setIsOthersOpen] = useState(true);
+  const [isStakedAssetsOpen, setIsStakedAssetsOpen] = useState(true);
 
   //get the value from the yearnFinance protocol
   const getYearnTokenValue = (data) => {
@@ -1217,121 +1231,27 @@ export default function Index({ accountAddress }) {
     getCurveData();
   }, [accountAddress]);
 
+  const poolsHandler = () => {
+    setIsPoolsOpen(!isPoolsOpen);
+  };
+
+  const othersHandler = () => {
+    setIsOthersOpen(!isOthersOpen);
+  };
+
+  const stakedHandler = () => {
+    setIsStakedAssetsOpen(!isStakedAssetsOpen);
+  };
+
   return (
-    <div>
-      <div
+    <div
+      style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+      }}>
+      <PoolsBlock //first
         style={{
-          width: '100%',
-          minWidth: '300px',
-          border: '1px solid rgb(115, 115, 115)',
-          height: 'auto',
-          minHeight: '200px',
-          borderRadius: '10px',
-          display:
-            SavingsData.length > 0 || CompoundSavingsData > 0 || IronBankSavings > 0 || CreamDisplay
-              ? ''
-              : 'none',
-        }}>
-        <br />
-        <center>
-          <div style={{ fontSize: '25px' }}>
-            Savings
-            <br />
-            Total : {/* Below code is for task https://app.clickup.com/t/1je2y9d */}
-            {/* {parseFloat(AaveSavingsTotal + CompSavingsTotal + TotalCompoundSavings).toFixed(2)} USD */}
-            {numberWithCommas(
-              parseFloat(
-                AaveSavingsTotal + CompSavingsTotal + IronBankSavings + parseFloat(CreamTotal)
-              ).toFixed(2)
-            )}{' '}
-            USD
-            <br />
-            <br />
-          </div>
-        </center>
-        <Cream
-          setTotal={setCreamTotal}
-          setDisplay={setCreamDisplay}
-          accountAddress={accountAddress}
-        />
-        <br />
-        <div
-          style={{
-            fontSize: '12px',
-            marginLeft: '15px',
-            display: SavingsData.length > 0 ? '' : 'none',
-          }}>
-          Aave V2 -- Savings : {parseFloat(AaveSavingsTotal).toFixed(2)} USD
-        </div>
-        {SavingsContent}
-        <br />
-        <CreamIronBank totalSavings={setIronBankSavings} accountAddress={accountAddress} />
-        <div
-          style={{
-            fontSize: '12px',
-            marginLeft: '15px',
-            display: CompoundSavingsData.length > 0 ? '' : 'none',
-          }}>
-          Compound V2 -- Savings : {parseFloat(CompSavingsTotal).toFixed(2)} USD
-        </div>
-        {CompoundSavingsContent}
-        <br />
-      </div>
-
-      <div
-        style={{
-          width: '100%',
-          minWidth: '300px',
-          border: '1px solid rgb(115, 115, 115)',
-          height: 'auto',
-          marginTop: '20px',
-          minHeight: '200px',
-          borderRadius: '10px',
-          display: LoansData.length > 0 || CompoundLoansData.length > 0 ? '' : 'none',
-        }}>
-        <br />
-        <center>
-          <div style={{ fontSize: '25px' }}>
-            Loans
-            <br />
-            Total : {parseFloat(AaveLoansTotal + CompLoansTotal).toFixed(2)} USD
-            <br />
-            <br />
-          </div>
-        </center>
-
-        <div
-          style={{
-            fontSize: '12px',
-            marginLeft: '15px',
-            display: LoansData.length > 0 ? '' : 'none',
-          }}>
-          Aave V2 -- Debt : {parseFloat(AaveLoansTotal).toFixed(2)} USD
-        </div>
-        {LoansContent}
-        <br />
-
-        <div
-          style={{
-            fontSize: '12px',
-            marginLeft: '15px',
-            display: CompoundLoansData.length > 0 ? '' : 'none',
-          }}>
-          Compound V2 -- Debt : {CompLoansTotal} USD
-        </div>
-        {CompoundLoansContent}
-        <br />
-      </div>
-
-      <div
-        style={{
-          width: '100%',
-          minWidth: '300px',
-          marginTop: '20px',
-          border: '1px solid rgb(115, 115, 115)',
-          height: 'auto',
-          minHeight: '200px',
-          borderRadius: '10px',
           display:
             PoolsData.length > 0 ||
             BalancerPoolsData.length > 0 ||
@@ -1340,155 +1260,90 @@ export default function Index({ accountAddress }) {
               ? ''
               : 'none',
         }}>
-        <br />
-        <center>
-          <div style={{ fontSize: '25px' }}>
-            Pools <br />
-            Total :{' '}
-            {parseFloat(
-              UniV2Total + SushiV2Total + BalancerTotal + BalancerTotalv2 + BancorPoolTotal
-            ).toFixed(2)}{' '}
-            USD
-            <br />
-            <br />
-          </div>
-        </center>
-
-        {/*<div*/}
-        {/*  style={{*/}
-        {/*    fontSize: '12px',*/}
-        {/*    marginLeft: '15px',*/}
-        {/*    display: PoolsData.length > 0 ? '' : 'none',*/}
-        {/*  }}>*/}
-        {/*  Uniswap V2 --- {UniV2Total} USD*/}
-        {/*</div>*/}
-        {PoolsData.map((protocol) => (
-          <PoolsProtocols protocol={protocol} />
-        ))}
-
-        {/*<BancorPools*/}
-        {/*  setPoolTotal={setBancorPoolTotal}*/}
-        {/*  setDisplay={setDisplayBancor}*/}
-        {/*  accountAddress={accountAddress}*/}
-        {/*/>*/}
-
-        {/*<div*/}
-        {/*  style={{*/}
-        {/*    fontSize: '12px',*/}
-        {/*    marginLeft: '15px',*/}
-        {/*    display: SushiPoolsData.length > 0 ? '' : 'none',*/}
-        {/*  }}>*/}
-        {/*  SushiSwap V2 --- {parseFloat(SushiV2Total).toFixed(2)} USD*/}
-        {/*</div>*/}
-        {/*{SushiPoolsContent}*/}
-        {/*<div*/}
-        {/*  style={{*/}
-        {/*    fontSize: '12px',*/}
-        {/*    marginLeft: '15px',*/}
-        {/*    display: BalancerPoolsData.length > 0 ? '' : 'none',*/}
-        {/*  }}>*/}
-        {/*  Balancer ---{parseFloat(BalancerTotal).toFixed(2)} USD*/}
-        {/*</div>*/}
-        {BalancerPoolsContent}
-        {/*<div*/}
-        {/*  style={{*/}
-        {/*    fontSize: '12px',*/}
-        {/*    marginLeft: '15px',*/}
-        {/*    display: BalancerPoolsDatav2.length > 0 ? '' : 'none',*/}
-        {/*  }}>*/}
-        {/*  Balancer V2 --- {BalancerTotalv2} USD*/}
-        {/*</div>*/}
-        {BalancerPoolsContentv2}
-        <br />
-
-        <BalancerV2 accountAddress={accountAddress} />
-      </div>
-
-      <div
-        style={{
-          width: '100%',
-          marginTop: '20px',
-          minWidth: '300px',
-          border: '1px solid rgb(115, 115, 115)',
-          height: 'auto',
-          minHeight: '170px',
-          borderRadius: '10px',
-          // display: parseFloat(SynthetixData) > 0 || YearnData.length > 0 ? '' : 'none',
-        }}>
-        <center>
-          <div style={{ fontSize: '25px' }}>
-            Other Assets <br />
-            Total : {parseFloat(parseFloat(SynthetixData) + parseFloat(YearnTokenValue)).toFixed(
-              2
-            )}{' '}
-            USD
-            <br />
-            <br />
-          </div>
-        </center>
-        <div
-          style={{
-            fontSize: '12px',
-            marginLeft: '15px',
-          }}></div>
-        <Synthetix accountAddress={accountAddress} onSynthetixTokenValue={getSynthetixTokenData} />
-        {/*<br />*/}
-        {/*<div*/}
-        {/*  style={{*/}
-        {/*    fontSize: '12px',*/}
-        {/*    marginLeft: '15px',*/}
-        {/*    display: YearnData.length > 0 ? '' : 'none',*/}
-        {/*  }}>*/}
-        {/*  Yearn Finance --- {YearnTotal} USD*/}
-        {/*</div>*/}
-        {YearnContent}
-        <br />
-        <YearnFinance accountAddress={accountAddress} onYearnTokenValue={getYearnTokenValue} />
-      </div>
-
-      <div
-        style={{
-          width: '110%',
-          marginTop: '20px',
-          minWidth: '300px',
-          border: '1px solid rgb(115, 115, 115)',
-          height: 'auto',
-          minHeight: '170px',
-          borderRadius: '10px',
-        }}>
-        <center>
-          <div style={{ fontSize: '25px' }}>
-            Staked Assets <br />
-            Total : {parseFloat(CurveStakeTotal).toFixed(2)} USD
-          </div>
-        </center>
-        <div
-          style={{
-            fontSize: '12px',
-            marginLeft: '15px',
-            display: CurveStakeData.length > 0 ? '' : 'none',
-          }}>
-          Curve Staking --- {CurveStakeTotal} USD
+        <Header>
+          <Title>{'Liquidity pools'}</Title>
+          <ToggleButton onClick={poolsHandler} isOpen={isPoolsOpen} />
+        </Header>
+        <div style={{ padding: '0 29px 0 26px', marginBottom: '20px' }}>
+          <TotalValueField>
+            <TotalTitle>{'Total Value'}</TotalTitle>
+            <TotalEmptyCell></TotalEmptyCell>
+            <TotalValue>{3452432}</TotalValue>
+          </TotalValueField>
         </div>
-        {CurveStakeContent}
-        {/*<br />*/}
-        {/*<Ethereum2Staking accountAddress={accountAddress} />*/}
-        {/*<br />*/}
-        {/*<AaveStaking accountAddress={accountAddress} />*/}
-        {/*<br />*/}
-        <SushiStaking accountAddress={accountAddress} />
-        {/*<br />*/}
-        {/*<UniStaking accountAddress={accountAddress} />*/}
-        {/*<br />*/}
-        {/*<LiquityStaking accountAddress={accountAddress} />*/}
-        {/*<br />*/}
-        {/*<ConvexStaking accountAddress={accountAddress} />*/}
-        {/*<br />*/}
-        {/*<SnowSwapStaking accountAddress={accountAddress} />*/}
-        {/*<br />*/}
-        {/*<CurveLpToken accountAddress={accountAddress} onCurveLptoken={getCurveLpToken} />*/}
-        {/*<br />*/}
-      </div>
+        {/*<center>*/}
+        {/*  <div style={{ fontSize: '25px', color: 'white' }}>*/}
+        {/*    Pools Total :{' '}*/}
+        {/*    {parseFloat(*/}
+        {/*      UniV2Total + SushiV2Total + BalancerTotal + BalancerTotalv2 + BancorPoolTotal*/}
+        {/*    ).toFixed(2)}{' '}*/}
+        {/*    USD*/}
+        {/*  </div>*/}
+        {/*</center>*/}
+        {isPoolsOpen && (
+          <>
+            {PoolsData.map((protocol) => (
+              <PoolsProtocols protocol={protocol} />
+            ))}
+            {BalancerPoolsContent}
+            {BalancerPoolsContentv2}
+          </>
+        )}
+      </PoolsBlock>
+
+      <PoolsBlock //second
+        style={{
+          display: parseFloat(SynthetixData) > 0 || YearnData.length > 0 ? '' : 'none',
+        }}>
+        <Header>
+          <Title>{'Others'}</Title>
+          <ToggleButton onClick={othersHandler} isOpen={isOthersOpen} />
+        </Header>
+        <div style={{ padding: '0 29px 0 26px', marginBottom: '20px' }}>
+          <TotalValueField>
+            <TotalTitle>{'Total Value'}</TotalTitle>
+            <TotalEmptyCell></TotalEmptyCell>
+            <TotalValue>{3452432}</TotalValue>
+          </TotalValueField>
+        </div>
+        {/*<center>*/}
+        {/*  <div style={{ fontSize: '25px', color: 'white' }}>*/}
+        {/*    Other Assets Total :{' '}*/}
+        {/*    {parseFloat(parseFloat(SynthetixData) + parseFloat(YearnTotal)).toFixed(2)} USD*/}
+        {/*  </div>*/}
+        {/*</center>*/}
+        {/*<Synthetix accountAddress={accountAddress} onSynthetixTokenValue={getSynthetixTokenData} />*/}
+        {isOthersOpen && <>{YearnContent}</>}
+      </PoolsBlock>
+
+      <PoolsBlock>
+        {/*<center>*/}
+        {/*  <div style={{ fontSize: '25px' }}>*/}
+        {/*    Staked Assets Total : {parseFloat(CurveStakeTotal).toFixed(2)} USD*/}
+        {/*  </div>*/}
+        {/*</center>*/}
+        {/*<div*/}
+        {/*  style={{*/}
+        {/*    fontSize: '12px',*/}
+        {/*    marginLeft: '15px',*/}
+        {/*    display: CurveStakeData.length > 0 ? '' : 'none',*/}
+        {/*  }}>*/}
+        {/*  Curve Staking --- {CurveStakeTotal} USD*/}
+        {/*</div>*/}
+        <Header>
+          <Title>{'Staked Assets'}</Title>
+          <ToggleButton onClick={stakedHandler} isOpen={isStakedAssetsOpen} />
+        </Header>
+        <div style={{ padding: '0 29px 0 26px', marginBottom: '20px' }}>
+          <TotalValueField>
+            <TotalTitle>{'Total Value'}</TotalTitle>
+            <TotalEmptyCell></TotalEmptyCell>
+            <TotalValue>{3452432}</TotalValue>
+          </TotalValueField>
+        </div>
+        {/*{CurveStakeContent}*/}
+        {isStakedAssetsOpen && <SushiStaking accountAddress={accountAddress} />}
+      </PoolsBlock>
     </div>
   );
 }
