@@ -62,9 +62,11 @@ export const MetaMaskBtn = styled(Button)`
   height: 60px;
   border-radius: 10px;
   background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#10142D')};
-  box-shadow: inset 0 5px 10px -6px rgba(51, 78, 131, 0.12);
-  //color: ${(props) => (props.isLightTheme ? '#4453ad' : '#ffffff')};
-  color: #4453ad;
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+      : '  inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+  color: ${(props) => (props.isLightTheme ? '#4453AD' : '#8F86FF')};
 
   :hover {
     background-color: #e5e5e5;
