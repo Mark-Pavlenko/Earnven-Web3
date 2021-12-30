@@ -20,6 +20,7 @@ import atomicWalletIcon from '../../assets/icons/atomicWalletIcon.svg';
 import ledgerWalletIcon from '../../assets/icons/ledgerWalletIcon.svg';
 import trezorWalletIcon from '../../assets/icons/trezorWalletIcon.svg';
 import ArrowRight from '../../assets/icons/arrowRight.svg';
+import ArrowRightDark from '../../assets/icons/arrowRightDark.svg';
 
 import metamaskWalletLogo from '../../assets/icons/metamask.svg';
 
@@ -43,10 +44,15 @@ import {
 import { useWeb3React } from '@web3-react/core';
 import { injected } from '../../utils/connectors';
 import { useSelector } from 'react-redux';
+import { SearchIcon } from '../searchTokens/stylesDark';
+import searchIcon from '../../assets/icons/searchIcon.png';
 
 const useStyles = makeStyles(() => ({
   noBorder: {
     border: 'none !important',
+  },
+  input: {
+    color: 'white',
   },
 }));
 
@@ -248,8 +254,9 @@ export default function Index() {
       />
       <MainStyle isLightTheme={themeType}>
         <MainSubLayout>
-          <MainSubLayoutTitle>Connect a wallet</MainSubLayoutTitle>
+          <MainSubLayoutTitle isLightTheme={themeType}>Connect a wallet</MainSubLayoutTitle>
           <MetaMaskBtn
+            isLightTheme={themeType}
             onClick={connectMetamask}
             disableElevation
             fullWidth
@@ -354,10 +361,11 @@ export default function Index() {
           </WalletButtonsLayout>
 
           <EthereumAddressBlock>
-            <MainSubLayoutTitle>Track any address</MainSubLayoutTitle>
+            <MainSubLayoutTitle isLightTheme={themeType}>Track any address</MainSubLayoutTitle>
             <Stack direction="row" justifyContent="space-between">
               <EthereumAddressField
-                placeholder="Track any ethereum address"
+                isLightTheme={themeType}
+                label="Track any ethereum address"
                 onChange={addressUpdate}
                 inputProps={{
                   style: {
@@ -365,9 +373,19 @@ export default function Index() {
                   },
                   classes: { notchedOutline: classes.noBorder },
                 }}
+                InputLabelProps={{
+                  style: {
+                    fontSize: 16,
+                    color: themeType ? '#8F8F8F' : '#878995',
+                  },
+                }}
               />
-              <SubmitEthereumAddressBtn onClick={trackAddress}>
-                <img src={ArrowRight} alt="arrow" />
+              <SubmitEthereumAddressBtn onClick={trackAddress} isLightTheme={themeType}>
+                {themeType ? (
+                  <img src={ArrowRight} alt="arrow" />
+                ) : (
+                  <img src={ArrowRightDark} alt="arrow" />
+                )}
               </SubmitEthereumAddressBtn>
             </Stack>
             <ErrorComponent isWrongAddress={errorMsg} />

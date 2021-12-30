@@ -23,7 +23,7 @@ export const GasMenuPopover = styled(Popover)`
 
 export const MenuPopoverBox = styled(Box)`
   width: 320px;
-  height: 255px;
+
   border-radius: 10px;
   background-color: ${(props) => (props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : '#11152D')};
   box-shadow: ${(props) =>

@@ -50,7 +50,7 @@ export const MainSubLayout = styled.div`
 export const MainSubLayoutTitle = styled.p`
   margin-bottom: 7px;
   font-size: 12px;
-
+  color: ${(props) => (props.isLightTheme ? '#000000' : '#ffffff')};
   @media (max-width: 710px) {
     font-size: 16px;
     font-weight: bold;
@@ -61,8 +61,9 @@ export const MetaMaskBtn = styled(Button)`
   font-size: 16px;
   height: 60px;
   border-radius: 10px;
-  background-color: #ffffff;
+  background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#10142D')};
   box-shadow: inset 0 5px 10px -6px rgba(51, 78, 131, 0.12);
+  //color: ${(props) => (props.isLightTheme ? '#4453ad' : '#ffffff')};
   color: #4453ad;
 
   :hover {
@@ -91,14 +92,12 @@ export const WalletBtnConnect = styled(Button)`
   height: 60px;
   width: 171px;
   font-size: 16px;
-  background: #ffffff;
+  color: #4453ad !important;
+  background: #c7c8d4;
   box-shadow: inset 0 5px 10px -6px rgba(51, 78, 131, 0.12);
   border-radius: 10px;
   border: none;
-
-  img {
-    opacity: 0.5;
-  }
+  opacity: 0.5;
 
   :hover {
     border: none;
@@ -135,9 +134,12 @@ export const EthereumAddressBlock = styled.div``;
 export const EthereumAddressField = styled(TextField)`
   height: 60px;
   width: 461px;
-  background: #ffffff;
+  background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#10142D')};
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+      : '  inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
   border: none !important;
-  box-shadow: inset 0 5px 10px -6px rgba(51, 78, 131, 0.12);
   border-radius: 10px;
 
   :hover {
@@ -153,8 +155,11 @@ export const EthereumAddressField = styled(TextField)`
 export const SubmitEthereumAddressBtn = styled(Button)`
   height: 60px;
   width: 79px;
-  background: #ffffff;
-  box-shadow: inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12);
+  background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#10142D')};
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+      : '  inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
   border-radius: 10px;
 
   :hover {
