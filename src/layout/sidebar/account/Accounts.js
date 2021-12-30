@@ -54,7 +54,7 @@ const AccountStyle = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(2, 2.5),
-  borderRadius: theme.shape.borderRadiusSm,
+  // borderRadius: theme.shape.borderRadiusSm,
   paddingBottom: 0,
   cursor: 'pointer',
   // background: 'rgba(255, 255, 255, 0.16)',
@@ -69,7 +69,7 @@ const List_Menu_Pop_UP = styled('div')(({ theme }) => ({
   display: 'flex',
   '&:hover': {
     backgroundColor: theme.palette.action.hover,
-    color: theme.palette.menu.account_balance,
+    color: 'orange',
     fontWeight: 600,
   },
   marginLeft: '12px',
@@ -291,7 +291,7 @@ export default function Accounts({ address, name, setaccount_menuclose, global_w
             <Typography
               variant="WaltchList_font_address"
               sx={{
-                color: (theme) => theme.palette.menu.myWallet_font_light,
+                color: (theme) => 'orange',
               }}
               className={classes.accountAddress}>
               {shortaddress(address, name)}{' '}

@@ -30,7 +30,6 @@ import { createTheme, StyledEngineProvider, ThemeProvider } from '@material-ui/c
 import { fontSize, fontStyle, fontWeight } from '@material-ui/system';
 import Accounts from './Accounts';
 import Acc from './Acc';
-import theme1 from '../../../theme/palette';
 import menurender_customhook from './menurender_customhook';
 
 import { useSelector } from 'react-redux';
@@ -194,8 +193,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
                 <Typography
                   variant="primaryFont"
                   sx={{
-                    color: (theme) =>
-                      setTheme ? theme.palette.menu.myWallet_font_light : '#141838',
+                    color: (theme) => (setTheme ? 'blue' : '#141838'),
                   }}
                   className={classes.accountAddress}>
                   {walletAddressCutter(address, name)}
@@ -280,12 +278,12 @@ export default function Account({ address, name, global_wallet, setTheme }) {
             }}
             className={classes.hoverMenu11}>
             <ListItemIcon sx={{ mr: 1, minWidth: '17px', opacity: 0.5 }}>
-              <VscAdd style={{ color: (theme) => theme.palette.menu.account_font, opacity: 0.5 }} />
+              <VscAdd style={{ color: (theme) => 'blue', opacity: 0.5 }} />
             </ListItemIcon>
             <ListItemText
               primaryTypographyProps={{
                 variant: 'watchlist_font_balance',
-                color: (theme) => theme.palette.menu.account_font,
+                color: (theme) => 'bluw',
               }}
               sx={{ opacity: 0.5 }}>
               New Wallet

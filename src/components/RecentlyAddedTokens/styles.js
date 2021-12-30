@@ -65,10 +65,12 @@ export const TokensTableHeader = styled(TableCell)`
   font-size: 10px;
   line-height: 16px;
   align-items: center;
+  border: none;
 `;
 
 export const TokensTableCell = styled(TableCell)`
   color: ${(props) => (props.isLightTheme ? ' #1E1E20' : '#ffffff')};
+  border-bottom: ${(props) => (props.isLightTheme ? ' none' : '1px solid #f5f5f5')};
   font-weight: ${(props) => (props.isLightTheme ? 'normal' : 'bold')};
 `;
 

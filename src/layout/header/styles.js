@@ -89,6 +89,11 @@ export const HeaderItemsBlock = styled.div`
 `;
 
 export const BurgerIcon = styled(IconButton)`
+  :hover {
+    background-color: transparent !important;
+    //border-radius: 10px;
+  }
+
   img {
     width: 41px;
     height: 41px;

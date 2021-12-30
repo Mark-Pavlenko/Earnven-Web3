@@ -10,9 +10,9 @@ const NoNft = ({ changeTheme }) => {
   );
 
   const NoNFT_div = styled('div')(({ theme }) => ({
-    background: changeTheme
-      ? theme.palette.nft_light.noNFT_background
-      : theme.palette.nft_dark.noNFT_background,
+    // background: changeTheme
+    //   ? theme.palette.nft_light.noNFT_background
+    //   : theme.palette.nft_dark.noNFT_background,
     mixBlendMode: 'normal',
     boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.16)',
     backdropFilter: 'blur(35px)',

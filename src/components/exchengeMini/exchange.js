@@ -484,7 +484,7 @@ export default function ExchangeMini() {
                         color: '#fff',
                         fontWeight: 100,
                         fontSize: '17px',
-                        background: (theme) => theme.palette.gradients.custom,
+                        // background: (theme) => theme.palette.gradients.custom,
                       }}
                       onClick={() => {
                         setcurrencyModal(true);
@@ -529,7 +529,7 @@ export default function ExchangeMini() {
                               p: 1,
                               cursor: 'pointer',
                               '&:hover': {
-                                background: (theme) => theme.palette.gradients.custom,
+                                // background: (theme) => theme.palette.gradients.custom,
                               },
                             }}>
                             <Stack direction="row" spacing={2}>
@@ -596,7 +596,7 @@ export default function ExchangeMini() {
                         color: '#fff',
                         fontWeight: 100,
                         fontSize: '17px',
-                        background: (theme) => theme.palette.gradients.custom,
+                        // background: (theme) => theme.palette.gradients.custom,
                       }}
                       onClick={() => {
                         setcurrencyToModal(true);
@@ -641,7 +641,7 @@ export default function ExchangeMini() {
                               p: 1,
                               cursor: 'pointer',
                               '&:hover': {
-                                background: (theme) => theme.palette.gradients.custom,
+                                // background: (theme) => theme.palette.gradients.custom,
                               },
                             }}>
                             <Stack direction="row" spacing={2}>

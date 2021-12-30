@@ -127,9 +127,9 @@ export default function NftCard({
     width: '309px', //379
     height: '381px', // 451
     '&:hover': {
-      background: changeTheme
-        ? theme.palette.nft_light.hoverNFTdata
-        : theme.palette.nft_dark.hoverNFTdata,
+      // background: changeTheme
+      //   ? theme.palette.nft_light.hoverNFTdata
+      //   : theme.palette.nft_dark.hoverNFTdata,
       color: changeTheme ? '#4453AD' : 'white',
       backdropFilter: 'blur(30px)',
       // border: (theme) => `solid 1px ${theme.palette.grey[500_8]}`,

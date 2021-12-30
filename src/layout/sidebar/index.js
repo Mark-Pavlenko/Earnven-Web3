@@ -31,12 +31,7 @@ import lightTheme from '../../assets/images/lightTheme.jpg';
 import { useSelector } from 'react-redux';
 const DRAWER_WIDTH = 315;
 
-const RootStyle = styled('div')(({ theme }) => ({
-  [theme.breakpoints.up('lg')]: {
-    flexShrink: 0,
-    width: DRAWER_WIDTH,
-  },
-}));
+import { RootStyle } from './styles';
 
 Index.propTypes = {
   isOpenSidebar: PropTypes.bool,

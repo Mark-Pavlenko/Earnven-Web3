@@ -55,7 +55,7 @@ const AccountStyle = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(2, 2.5),
-  borderRadius: theme.shape.borderRadiusSm,
+  // borderRadius: theme.shape.borderRadiusSm,
   paddingBottom: 0,
   cursor: 'pointer',
   // background: 'rgba(255, 255, 255, 0.16)',
@@ -70,7 +70,7 @@ const List_Menu_Pop_UP = styled('div')(({ theme }) => ({
   display: 'flex',
   '&:hover': {
     backgroundColor: theme.palette.action.hover,
-    color: theme.palette.menu.account_balance,
+    color: 'orange',
     fontWeight: 600,
   },
   marginLeft: '15px',
@@ -79,7 +79,7 @@ const List_Menu_Pop_UP = styled('div')(({ theme }) => ({
 }));
 
 const Provider = styled('div')(({ theme }) => ({
-  color: theme.palette.menu.account_balance,
+  color: 'orange',
   fontWeight: 600,
   fontsize: '10px',
 }));
@@ -274,7 +274,7 @@ export default function Acc({ address, provider, name, global_wallet }) {
             <Typography
               variant="myWallet_font_address"
               sx={{
-                color: (theme) => theme.palette.menu.myWallet_font_light,
+                color: (theme) => 'orange',
               }}
               className={classes.accountAddress}>
               {shortaddress(address, name)}

@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux';
 
 const ListItemStyle = styled((props) => <ListItem button disableGutters {...props} />)(
   ({ theme }) => ({
-    ...theme.typography.body2,
+    // ...theme.typography.body2,
     position: 'relative',
     marginLeft: '36px',
     paddingLeft: '10px',
@@ -31,7 +31,7 @@ const ListItemStyle = styled((props) => <ListItem button disableGutters {...prop
 
 const ListItemStyleUpcoming = styled((props) => <ListItem button disableGutters {...props} />)(
   ({ theme }) => ({
-    ...theme.typography.body2,
+    // ...theme.typography.body2,
     position: 'relative',
     marginLeft: '36px',
     paddingLeft: '10px',
@@ -87,8 +87,7 @@ function NavItem({ item, active, address }) {
   }
 
   const activeRootStyle = {
-    color: (theme) =>
-      localStorage.getItem('selectedTheme') == 'Day' ? theme.palette.menu.text_color : 'white',
+    color: (theme) => (localStorage.getItem('selectedTheme') == 'Day' ? 'black' : 'white'),
     fontWeight: 'fontWeightBold',
     // background: (theme) =>
     //   localStorage.getItem('selectedTheme') == 'Day' ? theme.palette.menu.light : '#141838',
@@ -198,10 +197,9 @@ function NavItemUpcomming({ item, active, address }) {
   };
 
   const activeRootStyle = {
-    color: (theme) =>
-      localStorage.getItem('selectedTheme') == 'Day' ? theme.palette.menu.text_color : '#000000',
+    color: (theme) => (localStorage.getItem('selectedTheme') == 'Day' ? 'black' : '#000000'),
     fontWeight: 'fontWeightBold',
-    background: (theme) => theme.palette.menu.light,
+    background: (theme) => 'blue',
     borderRadius: '7px',
     width: '13rem',
   };
