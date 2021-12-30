@@ -9,6 +9,7 @@ import { sushiStaking } from './sushiStaking/reducer';
 import { nftData } from './nftData/reducer';
 import { chosenTokensList, tokensList } from './searchedTokens/reducer';
 import { yearnFinance } from './yearnFinance/reducer';
+import { balancerV2lp } from './BalancerV2/reducer';
 
 export const rootReducer = combineReducers({
   web3Reducer,
@@ -22,4 +23,5 @@ export const rootReducer = combineReducers({
   sushiStaking,
   nftData,
   yearnFinance,
+  balancerV2lp,
 });
