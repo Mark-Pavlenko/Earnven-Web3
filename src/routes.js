@@ -87,7 +87,6 @@ export default function Router() {
   ];
 
   useEffect(() => {
-    console.log('sathya test for the mecgan gein router', changeTheme);
     setChangeTheme(changeTheme);
   }, [changeTheme]);
 

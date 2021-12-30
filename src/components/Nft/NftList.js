@@ -38,37 +38,43 @@ export default function NftList({
     propnetWorth1(netWorth);
   }, [netWorth]);
 
+  // server and application id for implimenting molalis
+
+  // const serverUrl = 'https://qyowfcltd5u6.usemoralis.com:2053/server';
+  // const appId = 'vVASNqBvFXa6NWsiOhB2n1atIOqijECNHxFBZIvF';
+
+  async function getNFTdataMoralis() {
+    const options = { chain: 'eth', address: '0xf56345338cb4cddaf915ebef3bfde63e70fe3053' };
+    const polygonNFTs = await Moralis.Web3API.account.getNFTs(options);
+    console.log('moralis api', polygonNFTs);
+  }
+
   useEffect(() => {
+    // Moralis Implimentation
+    // Moralis.start({ serverUrl, appId });
+    // getNFTdataMoralis();
     let partialdata = NFTDATA.filter(
       (over) => over.count_flag > pivot_front && over.count_flag < pivot_back
     );
-    console.log('pivot back first ', pivot_back);
     sethalfNFTdata(partialdata);
-    console.log('partial  data 1', partialdata);
-    partialdata.map((over) => {
-      console.log('over.token', over.token, over.address);
-      const mockTwitterObject = { tokenId: over.token, contractAddress: over.address };
-      try {
-        console.log('inside try');
-        dispatch({
-          type: actionTypes.SET_NFT_DATA,
-          payload: mockTwitterObject,
-        });
-      } catch (error) {
-        console.log('dispatch error', error);
-      }
-    });
+    // redux implimentation
+    // partialdata.map((over) => {
+    //   const mockTwitterObject = { tokenId: over.token, contractAddress: over.address };
+    //   try {
+    //     dispatch({
+    //       type: actionTypes.SET_NFT_DATA,
+    //       payload: mockTwitterObject,
+    //     });
+    //   } catch (error) {
+    //     console.log('dispatch error', error);
+    //   }
+    // });
   }, [NFTDATA]);
 
   function second() {
-    // sethalfNFTdata(NFTDATA);
-    // setpivot_front(pivot_back + 1);
-    console.log('pivot back ', pivot_back);
     let p = pivot_back;
     p = p + 6;
-    console.log('p value', p);
     setpivot_back(p);
-    console.log('pivot back after add', p);
 
     let partialdata = NFTDATA.filter(
       (over) => over.count_flag > pivot_front && over.count_flag < p
@@ -78,9 +84,9 @@ export default function NftList({
   }
 
   // get nft data from store
-  const nftArray = useSelector((state) => state.nftData.nftData);
-  nftArray.length > 0 && console.log('nftArray', nftArray[0].data.assets[0]);
-  console.log('nftArray full', nftArray);
+  // const nftArray = useSelector((state) => state.nftData.nftData);
+  // nftArray.length > 0 && console.log('nftArray', nftArray[0].data.assets[0]);
+  // console.log('nftArray full', nftArray);
 
   return (
     <InfiniteScroll dataLength={halfNFTdata.length} next={second} hasMore={true}>
