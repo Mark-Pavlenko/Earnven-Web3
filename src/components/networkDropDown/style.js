@@ -2,7 +2,8 @@ import styled from 'styled-components';
 
 export const ReactSelectLayout = styled.div`
   height: 40px;
-  width: 155px;
+  border-radius: 10px;
+  width: 153px;
 
   @media (max-width: 709px) {
     display: none;

@@ -15,8 +15,8 @@ export default function NFT_Popover({ children, sx, ...other }) {
       transformOrigin={{ vertical: 'top', horizontal: 'center' }}
       PaperProps={{
         sx: {
-          backgroundColor: (theme) => theme.palette.nft_light.backgorund,
-          border: (theme) => `solid 1px ${theme.palette.grey[500_8]}`,
+          // backgroundColor: (theme) => theme.palette.nft_light.backgorund,
+          // border: (theme) => `solid 1px ${theme.palette.grey[500_8]}`,
           width: '1110px',
           height: '595px',
           marginTop: '-10%',

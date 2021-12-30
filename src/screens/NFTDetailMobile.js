@@ -71,10 +71,10 @@ const Image_Close_Div = styled('div')(({ theme }) => ({
   right: '13px',
   borderRadius: '10px',
   cursor: 'pointer',
-  background:
-    localStorage.getItem('selectedTheme') == 'Day'
-      ? theme.palette.nft_light.background
-      : theme.palette.nft_dark.background,
+  // background:
+  //   localStorage.getItem('selectedTheme') == 'Day'
+  //     ? theme.palette.nft_light.background
+  //     : theme.palette.nft_dark.background,
   boxShadow: 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
   '&:hover': {
     background: 'rgba(255, 255, 255, 0.16)',
@@ -91,7 +91,7 @@ const Image_Close_Div_dark = styled('div')(({ theme }) => ({
   right: '13px',
   borderRadius: '10px',
   cursor: 'pointer',
-  background: theme.palette.nft_dark.hoverNFTdata,
+  // background: theme.palette.nft_dark.hoverNFTdata,
   boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
   '&:hover': {
     background: 'rgba(255, 255, 255, 0.16)',
@@ -108,7 +108,7 @@ const Arrow_Close_Div = styled('div')(({ theme }) => ({
   position: 'absolute',
   right: '13px',
   marginTop: '14px',
-  background: theme.palette.nft_light.background,
+  // background: theme.palette.nft_light.background,
   boxShadow: 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
   '&:hover': {
     background: 'rgba(255, 255, 255, 0.16)',
@@ -122,7 +122,7 @@ const Right_arrow_div = styled('div')(({ theme }) => ({
   height: '41px',
   borderRadius: '7px',
   cursor: 'pointer',
-  background: theme.palette.nft_light.background,
+  // background: theme.palette.nft_light.background,
   boxShadow: 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
   '&:hover': {
     background: 'rgba(255, 255, 255, 0.16)',
@@ -139,7 +139,7 @@ const Arrow_Close_Div_dark = styled('div')(({ theme }) => ({
   position: 'absolute',
   right: '13px',
   marginTop: '14px',
-  background: theme.palette.nft_dark.hoverNFTdata,
+  // background: theme.palette.nft_dark.hoverNFTdata,
   boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
   mixBlendMode: 'normal',
   '&:hover': {
@@ -180,10 +180,10 @@ const LeftArrow_Div = styled('div')(({ theme }) => ({
   height: '30px',
   borderRadius: '7px',
   cursor: 'pointer',
-  background:
-    localStorage.getItem('selectedTheme') == 'Day'
-      ? theme.palette.nft_light.background
-      : theme.palette.nft_dark.background,
+  // background:
+  //   localStorage.getItem('selectedTheme') == 'Day'
+  //     ? theme.palette.nft_light.background
+  //     : theme.palette.nft_dark.background,
   boxShadow: 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
   '&:hover': {
     background: 'rgba(255, 255, 255, 0.16)',
@@ -200,7 +200,7 @@ const LeftArrow_Div_dark = styled('div')(({ theme }) => ({
   height: '30px',
   borderRadius: '7px',
   cursor: 'pointer',
-  background: theme.palette.nft_dark.hoverNFTdata,
+  // background: theme.palette.nft_dark.hoverNFTdata,
   boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
   mixBlendMode: 'normal',
   '&:hover': {
@@ -219,7 +219,7 @@ const RightArrow_Div_dark = styled('div')(({ theme }) => ({
   height: '30px',
   borderRadius: '7px',
   cursor: 'pointer',
-  background: theme.palette.nft_dark.hoverNFTdata,
+  // background: theme.palette.nft_dark.hoverNFTdata,
   boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
   mixBlendMode: 'normal',
   '&:hover': {
@@ -243,10 +243,10 @@ const RightArrow_Div = styled('div')(({ theme }) => ({
   height: '30px',
   borderRadius: '7px',
   cursor: 'pointer',
-  background:
-    localStorage.getItem('selectedTheme') == 'Day'
-      ? theme.palette.nft_light.background
-      : theme.palette.nft_dark.background,
+  // background:
+  //   localStorage.getItem('selectedTheme') == 'Day'
+  //     ? theme.palette.nft_light.background
+  //     : theme.palette.nft_dark.background,
   boxShadow: 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
   '&:hover': {
     background: 'rgba(255, 255, 255, 0.16)',
@@ -259,10 +259,10 @@ const NFT_Title = styled(Typography)(({ theme }) => ({
   fontSize: '20px',
   fontWeight: 700,
   lineHeight: '31px',
-  color:
-    localStorage.getItem('selectedTheme') == 'Day'
-      ? theme.palette.nft_light.NFT_popup_name
-      : theme.palette.nft_dark.NFT_popup_name,
+  // color:
+  //   localStorage.getItem('selectedTheme') == 'Day'
+  //     ? theme.palette.nft_light.NFT_popup_name
+  //     : theme.palette.nft_dark.NFT_popup_name,
 }));
 
 const NFT_Title_sub = styled(Typography)(({ theme }) => ({
@@ -270,10 +270,10 @@ const NFT_Title_sub = styled(Typography)(({ theme }) => ({
   lineHeight: '16px',
   marginLeft: '2px',
   marginTop: '3px',
-  color:
-    localStorage.getItem('selectedTheme') == 'Day'
-      ? theme.palette.nft_light.NFT_bodyFont
-      : theme.palette.nft_dark.NFT_bodyFont,
+  // color:
+  //   localStorage.getItem('selectedTheme') == 'Day'
+  //     ? theme.palette.nft_light.NFT_bodyFont
+  //     : theme.palette.nft_dark.NFT_bodyFont,
   opacity: localStorage.getItem('selectedTheme') == 'Day' ? 0.5 : 1,
 }));
 
@@ -282,10 +282,10 @@ const Balance = styled(Typography)(({ theme }) => ({
   fontWeight: 600,
   lineHeight: '40px',
   marginTop: '1rem',
-  color:
-    localStorage.getItem('selectedTheme') == 'Day'
-      ? theme.palette.nft_light.NFT_bodyFont
-      : theme.palette.nft_dark.NFT_bodyFont,
+  // color:
+  //   localStorage.getItem('selectedTheme') == 'Day'
+  //     ? theme.palette.nft_light.NFT_bodyFont
+  //     : theme.palette.nft_dark.NFT_bodyFont,
 }));
 
 const About = styled(Typography)(({ theme }) => ({
@@ -294,19 +294,19 @@ const About = styled(Typography)(({ theme }) => ({
   fontWeight: 600,
   lineHeight: '26px',
   marginTop: '18px',
-  color:
-    localStorage.getItem('selectedTheme') == 'Day'
-      ? theme.palette.nft_light.NFT_bodyFont
-      : theme.palette.nft_dark.NFT_bodyFont,
+  // color:
+  //   localStorage.getItem('selectedTheme') == 'Day'
+  //     ? theme.palette.nft_light.NFT_bodyFont
+  //     : theme.palette.nft_dark.NFT_bodyFont,
 }));
 
 const About_Body = styled(Typography)(({ theme }) => ({
   marginLeft: '10px',
   marginTop: '10px',
-  color:
-    localStorage.getItem('selectedTheme') == 'Day'
-      ? theme.palette.nft_light.NFT_bodyFont
-      : theme.palette.nft_dark.NFT_bodyFont,
+  // color:
+  //   localStorage.getItem('selectedTheme') == 'Day'
+  //     ? theme.palette.nft_light.NFT_bodyFont
+  //     : theme.palette.nft_dark.NFT_bodyFont,
   opacity: localStorage.getItem('selectedTheme') == 'Day' ? 0.5 : 1,
 }));
 
@@ -316,10 +316,10 @@ const TransferHistory = styled(Typography)(({ theme }) => ({
   lineHeight: '26px',
   marginLeft: '10px',
   marginTop: '30px',
-  color:
-    localStorage.getItem('selectedTheme') == 'Day'
-      ? theme.palette.nft_light.NFT_bodyFont
-      : theme.palette.nft_dark.NFT_bodyFont,
+  // color:
+  //   localStorage.getItem('selectedTheme') == 'Day'
+  //     ? theme.palette.nft_light.NFT_bodyFont
+  //     : theme.palette.nft_dark.NFT_bodyFont,
 }));
 
 const Tranfer_body = styled(List)(({ theme }) => ({
@@ -330,19 +330,19 @@ const Tranfer_Body = styled(ListItemText)(({ theme }) => ({
   // color: (theme) => theme.palette.menu.backgorundColor_wallet;
   fontSize: '10px',
   marginLeft: '-16px',
-  color:
-    localStorage.getItem('selectedTheme') == 'Day'
-      ? theme.palette.nft_light.NFT_bodyFont
-      : theme.palette.nft_dark.NFT_bodyFont,
+  // color:
+  //   localStorage.getItem('selectedTheme') == 'Day'
+  //     ? theme.palette.nft_light.NFT_bodyFont
+  //     : theme.palette.nft_dark.NFT_bodyFont,
 }));
 
 const Tranfer_Body_Title = styled('p')(({ theme }) => ({
   // color: (theme) => theme.palette.menu.backgorundColor_wallet;
   marginLeft: '-16px',
-  color:
-    localStorage.getItem('selectedTheme') == 'Day'
-      ? theme.palette.nft_light.NFT_bodyFont
-      : theme.palette.nft_dark.NFT_bodyFont,
+  // color:
+  //   localStorage.getItem('selectedTheme') == 'Day'
+  //     ? theme.palette.nft_light.NFT_bodyFont
+  //     : theme.palette.nft_dark.NFT_bodyFont,
   opacity: localStorage.getItem('selectedTheme') == 'Day' ? 0.5 : 1,
 }));
 
@@ -364,10 +364,10 @@ const Social_light = styled(Stack)(({ theme }) => ({
 
 const Container_nft = styled(Container)(({ theme }) => ({
   // color: (theme) => theme.palette.menu.backgorundColor_wallet;
-  color:
-    localStorage.getItem('selectedTheme') == 'Day'
-      ? theme.palette.nft_light.NFT_bodyFont
-      : theme.palette.nft_dark.NFT_bodyFont,
+  // color:
+  //   localStorage.getItem('selectedTheme') == 'Day'
+  //     ? theme.palette.nft_light.NFT_bodyFont
+  //     : theme.palette.nft_dark.NFT_bodyFont,
 }));
 
 // let nftImageUrl = "";
@@ -552,16 +552,16 @@ export default function NftDetailsMobile({
           <Tranfer_body>
             <ListItem
               sx={{
-                color:
-                  localStorage.getItem('selectedTheme') == 'Day'
-                    ? (theme) => theme.palette.nft_light.NFT_bodyFont
-                    : (theme) => theme.palette.nft_dark.NFT_bodyFont,
+                // color:
+                //   localStorage.getItem('selectedTheme') == 'Day'
+                //     ? (theme) => theme.palette.nft_light.NFT_bodyFont
+                //     : (theme) => theme.palette.nft_dark.NFT_bodyFont,
                 '&:hover': {
                   background: 'none',
-                  color:
-                    localStorage.getItem('selectedTheme') == 'Day'
-                      ? (theme) => theme.palette.nft_light.NFT_bodyFont
-                      : (theme) => theme.palette.nft_dark.NFT_bodyFont,
+                  // color:
+                  //   localStorage.getItem('selectedTheme') == 'Day'
+                  //     ? (theme) => theme.palette.nft_light.NFT_bodyFont
+                  //     : (theme) => theme.palette.nft_dark.NFT_bodyFont,
                   cursor: 'pointer',
                 },
               }}>
@@ -585,10 +585,10 @@ export default function NftDetailsMobile({
                   divider
                   sx={{
                     '&:hover': {
-                      background:
-                        localStorage.getItem('selectedTheme') == 'Day'
-                          ? (theme) => theme.palette.nft_light.hoverNFTdata
-                          : (theme) => theme.palette.nft_dark.hoverNFTdata,
+                      // background:
+                      //   localStorage.getItem('selectedTheme') == 'Day'
+                      //     ? (theme) => theme.palette.nft_light.hoverNFTdata
+                      //     : (theme) => theme.palette.nft_dark.hoverNFTdata,
                       cursor: 'pointer',
                     },
                   }}>

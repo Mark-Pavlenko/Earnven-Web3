@@ -245,7 +245,7 @@ export const StyledSelectToken = styled.div`
                         margin: 0px;
                         min-width: 0px;
                         padding: 0 4px;
-                        border-radius: 4px;
+                        border-radius: 10px;
                         background-color: rgba(255, 67, 67, 0.2);
                         width: fit-content;
                         .warning-unknown 
@@ -275,7 +275,7 @@ export const StyledSelectToken = styled.div`
                 display: inline;
                 align-items: center;
                 padding: 0.4rem;
-                border-radius: 8px;
+                border-radius: 10px;
                 cursor: pointer;
                 user-select: none;
                 font-weight: 500;

@@ -16,21 +16,21 @@ export const GasButton = styled(Button)`
 `;
 
 export const GasMenuPopover = styled(Popover)`
-  @media (min-width: 911px) {
+  @media (min-width: 1900px) {
     margin-left: 122px;
   }
 `;
 
 export const MenuPopoverBox = styled(Box)`
   width: 320px;
-  height: 255px;
+
   border-radius: 10px;
   background-color: ${(props) => (props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : '#11152D')};
   box-shadow: ${(props) =>
     props.isLightTheme ? 'none' : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
 
-  @media (max-width: 910px) {
-    width: auto;
+  @media (max-width: 1900px) {
+    width: 250px;
   }
 `;
 

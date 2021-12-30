@@ -20,9 +20,9 @@ export default function MenuPopover({ children, isLightTheme, sx, ...other }) {
           mt: 1.5,
           ml: 0.5,
           overflow: 'inherit',
-          //   boxShadow: (theme) => theme.customShadows.z20,
-          border: (theme) => `solid 1px ${theme.palette.grey[500_8]}`,
-          background: (theme) => theme.palette.menu.backgorundColor_wallet,
+
+          borderRadius: '10px',
+          background: (theme) => '#E5E5E5',
           mixBlendMode: 'normal',
           boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
           backdropFilter: 'blur(35px)',

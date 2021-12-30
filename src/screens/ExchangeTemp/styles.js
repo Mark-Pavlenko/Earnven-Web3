@@ -421,7 +421,7 @@ export const StyledHomePageContainer = styled.div`
     color: rgb(132, 142, 156);
     width: 10px;
     height: 10px;
-    border-radius: 4px;
+    border-radius: 10px;
     border: 4px solid #dedede;
     z-index: 1;
     overflow: visible;

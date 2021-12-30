@@ -13,7 +13,7 @@ const CustomStyle = styled('div')(({ theme }) => ({
   lineHeight: '1',
   marginBottom: '5px',
   '&:hover': {
-    background: theme.palette.gradients.custom,
+    //background: theme.palette.gradients.custom,
   },
 }));
 

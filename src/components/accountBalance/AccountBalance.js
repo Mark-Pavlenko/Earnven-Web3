@@ -36,9 +36,7 @@ function AccountBalance({ address, accountBalance }) {
       {isLoading ? (
         <div style={{ color: 'red' }}>loading</div>
       ) : (
-        <Typography
-          sx={{ color: (theme) => theme.palette.menu.account_balance }}
-          variant="primaryFont1">
+        <Typography sx={{ color: (theme) => 'blue' }} variant="primaryFont1">
           ${accountBalance?.finalTotal}
         </Typography>
       )}

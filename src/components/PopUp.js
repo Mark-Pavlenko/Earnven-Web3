@@ -19,10 +19,10 @@ export default function Popup(props) {
     dialogWrapper:
       localStorage.getItem('selectedTheme') == 'Day'
         ? {
-            background:
-              localStorage.getItem('selectedTheme') == 'Day'
-                ? theme.palette.nft_light.background
-                : theme.palette.nft_dark.NFT_popup_background,
+            // background:
+            //   localStorage.getItem('selectedTheme') == 'Day'
+            //     ? theme.palette.nft_light.background
+            //     : theme.palette.nft_dark.NFT_popup_background,
             // background: 'rgba(255, 255, 255, 0.9)',
             minWidth: '1110px',
             minHeight: '595px',

@@ -54,7 +54,7 @@ export const StyledCurrencyContainer = styled.div`
     padding: 0.2rem 0.7rem;
     margin-top: 7px;
     margin-right: 20px;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
     user-select: none;
     font-weight: 500;

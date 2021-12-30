@@ -9,7 +9,7 @@ const initialState = {
 };
 //takes two arguments: The current state and the action and returns the new state.
 export const eth2Stake = (state = initialState, action) => {
-  console.log('TestABC checking in side the reducer');
+  // console.log('TestABC checking in side the reducer');
   switch (action.type) {
     case actionTypes.GET_ETH2_STAKE_DATA:
       return {

@@ -244,10 +244,12 @@ export default function LiquidityPools() {
                           setSupplyToken(e.target.value);
                         }}
                         inputProps={{ 'aria-label': 'Without label' }}
-                        sx={{ background: (theme) => theme.palette.gradients.custom }}>
+                        // sx={{ background: (theme) => theme.palette.gradients.custom }}
+                      >
                         <MenuItem
                           value=""
-                          sx={{ background: (theme) => theme.palette.gradients.custom }}>
+                          // sx={{ background: (theme) => theme.palette.gradients.custom }}
+                        >
                           <Typography>Select</Typography>
                           {/*  <div className="logo-container">
                         <img src={AllTokens[4].logoURI} className="logo-uri" />
@@ -260,7 +262,7 @@ export default function LiquidityPools() {
                             sx={{
                               backgroundColor: '#141a1e',
                               '&:hover': {
-                                background: (theme) => theme.palette.gradients.custom,
+                                // background: (theme) => theme.palette.gradients.custom,
                               },
                             }}>
                             <div className="logo-container">
@@ -412,10 +414,12 @@ export default function LiquidityPools() {
                           setReceiveToken(e.target.value);
                         }}
                         inputProps={{ 'aria-label': 'Without label' }}
-                        sx={{ background: (theme) => theme.palette.gradients.custom }}>
+                        // sx={{ background: (theme) => theme.palette.gradients.custom }}
+                      >
                         <MenuItem
                           value=""
-                          sx={{ background: (theme) => theme.palette.gradients.custom }}>
+                          // sx={{ background: (theme) => theme.palette.gradients.custom }}
+                        >
                           <Typography>Select</Typography>
                         </MenuItem>
                         {AllTokens.map((object) => (
@@ -424,7 +428,7 @@ export default function LiquidityPools() {
                             sx={{
                               backgroundColor: '#141a1e',
                               '&:hover': {
-                                background: (theme) => theme.palette.gradients.custom,
+                                // background: (theme) => theme.palette.gradients.custom,
                               },
                             }}>
                             <div className="logo-container">
