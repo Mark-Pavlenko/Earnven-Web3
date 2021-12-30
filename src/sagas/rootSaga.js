@@ -8,6 +8,7 @@ import {
   getALlTokensSagaWatcher,
   getSearchedTokensSagaWatcher,
 } from '../store/searchedTokens/sagas';
+import { getYearnFinanceSagaWatcher } from './yearnFinance';
 
 export default function* watchRootSaga() {
   yield all([
@@ -18,5 +19,6 @@ export default function* watchRootSaga() {
     call(getETH2StakeSagaWatcher),
     call(getSushiStakeSagaWatcher),
     call(getNftDataSagaWatcher),
+    call(getYearnFinanceSagaWatcher),
   ]);
 }

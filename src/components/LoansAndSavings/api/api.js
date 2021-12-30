@@ -153,3 +153,54 @@ export const getSushiPoolData = async (poolId) => {
   }
 };
 //SushiStaking LP token SLP Ends
+//YearnFinance Protocol subgraph
+export const getYearnUserData = async (accountAddress) => {
+  try {
+    const response = await axios.post(
+      `https://gateway.thegraph.com/api/${addresses.graph_API}/subgraphs/id/0xf50b705e4eaba269dfe954f10c65bd34e6351e0c-0`,
+      {
+        query: `{
+                accountVaultPositions(
+                  first:1000
+                  where:{
+                    account:"${accountAddress}"
+                    balanceShares_gt:0
+                  }
+                )
+                {
+                  id
+                  balanceTokens
+                  balancePosition
+                  balanceShares
+                  balanceProfit
+                  vault{
+                    token{
+                      symbol
+                      name
+                      id
+                      decimals
+                    }
+                    shareToken{
+                      id
+                      name
+                      symbol
+                      decimals
+                    }
+                    latestUpdate{
+                      pricePerShare
+                    }
+                  }
+                }
+              }`,
+      }
+    );
+    return response;
+  } catch (err) {
+    console.log('Year Finance protocol', err.message);
+  }
+};
+//use Yearn Finance API call
+export const getYearnData = async () => {
+  const response = await axios.get(`https://api.yearn.finance/v1/chains/1/vaults/all`);
+  return response;
+};

@@ -17,6 +17,7 @@ import Cream from './Cream';
 import BancorPools from './BancorPools';
 import Synthetix from './Synthetix';
 import Ethereum2Staking from './Ethereum2Staking';
+import YearnFinance from './YearnFinance';
 
 // Below code is for task https://app.clickup.com/t/1je2y9d
 // import CompoundData from './Compound';
@@ -60,11 +61,6 @@ export default function Index({ accountAddress }) {
   const [BancorPoolTotal, setBancorPoolTotal] = useState(0);
   const [DisplayBancor, setDisplayBancor] = useState(false);
 
-  const [YearnData, setYearnData] = useState([]); // Yearn
-  const [YearnContent, setYearnContent] = useState([]); // Yearn
-
-  const [YearnTotal, setYearnTotal] = useState([]); // Yearn Total
-
   const [CurveStakeData, setCurveStakeData] = useState([]); // Curve
   const [CurveStakeContent, setCurveStakeContent] = useState([]); // Curve
 
@@ -79,6 +75,8 @@ export default function Index({ accountAddress }) {
   const [CurveLpdata, setCurveLpData] = useState([]); // get curve lp token data
   //Synthetix data points
   const [SynthetixData, setSynthetixData] = useState([]); // get curve lp token data
+  //YearnToken
+  const [YearnTokenValue, setYearnTokenValue] = useState([]);
 
   //get the value from the child component of the curve lp token
   const getCurveLpToken = (data) => {
@@ -88,6 +86,11 @@ export default function Index({ accountAddress }) {
   //get the value from the synthetix child component
   const getSynthetixTokenData = (data) => {
     setSynthetixData(data);
+  };
+
+  //get the value from the yearnFinance protocol
+  const getYearnTokenValue = (data) => {
+    setYearnTokenValue(data);
   };
 
   // function to get the number render with comma
@@ -529,69 +532,6 @@ export default function Index({ accountAddress }) {
 
     setBalancerPoolsContentv2(content);
   }, [BalancerPoolsDatav2]);
-
-  useEffect(() => {
-    const content = YearnData.map((object) => (
-      <Tooltip
-        title={
-          <>
-            {object.shareTokenName} <br />
-            Share Price :{' '}
-            {parseFloat(object.sharePrice / 10 ** object.shareTokenDecimals).toFixed(4)} USD <br />
-            Total Shares :{' '}
-            {parseFloat(object.balanceShares / 10 ** object.shareTokenDecimals).toFixed(2)} $
-            {object.symbol} <br />
-            Total Investment : {parseFloat(object.totalInvestment).toFixed(2)} USD <br />
-            Underlying Token Name : {object.mainTokenName} <br />
-          </>
-        }>
-        <div style={{ width: '90%', marginTop: '12px', marginLeft: '30px' }}>
-          <div style={{ display: 'inline-block', width: '15%' }}>
-            <div
-              style={{
-                height: '40px',
-                padding: '5px',
-                borderRadius: '10px',
-                backgroundImage:
-                  'linear-gradient(to right,  rgba(20,24,30,.1), rgba(173,204,151,.5), rgba(20,24,30,.1))',
-              }}>
-              <center>
-                <img
-                  src={object.image ? object.image : YearnLogo}
-                  style={{ height: '30px', marginTop: '' }}
-                  alt=""
-                />
-              </center>
-            </div>
-          </div>
-
-          <div style={{ display: 'inline-block', width: '10%' }} />
-
-          <div
-            style={{
-              display: 'inline-block',
-              fontSize: '12px',
-              width: '40%',
-              textAlign: 'left',
-            }}>
-            ${object.shareTokenSymbol}
-          </div>
-
-          {/* <div style={{display:'inline-block', width:'30%'}}>
-                {object.value} ${object.symbol}
-            </div> */}
-
-          <div style={{ display: 'inline-block', width: '30%', fontSize: '13px' }}>
-            {parseFloat(object.totalInvestment).toFixed(2)} USD
-          </div>
-
-          <br />
-        </div>
-      </Tooltip>
-    ));
-
-    setYearnContent(content);
-  }, [YearnData]);
 
   useEffect(() => {
     const content = CurveStakeData.map((object) => (
@@ -1115,89 +1055,6 @@ export default function Index({ accountAddress }) {
           }
         });
     }
-    async function getYearnData() {
-      await axios
-        .post(
-          `https://gateway.thegraph.com/api/${addresses.graph_API}/subgraphs/id/0xf50b705e4eaba269dfe954f10c65bd34e6351e0c-0`,
-          {
-            query: `{
-                    accountVaultPositions(
-                      first:1000
-                      where:{
-                        account:"0x4beaa82fdda3543523d68bdf525d471ca20cd73c"
-                        balanceShares_gt:0
-                      }
-                    )
-                    {
-                      id
-                      balanceTokens
-                      balancePosition
-                      balanceShares
-                      balanceProfit
-                      vault{
-                        token{
-                          symbol
-                          name
-                          id
-                          decimals
-                        }
-                        shareToken{
-                          id
-                          name
-                          symbol
-                          decimals
-                        }
-                        latestUpdate{
-                          pricePerShare
-                        }
-                      }
-                    }
-                  }`,
-          }
-        )
-        .then(async (response) => {
-          if (response.data.data) {
-            const res = response.data.data.accountVaultPositions;
-            const positions = [];
-            let tot = 0;
-            for (var i = 0; i < res.length; i++) {
-              const object = {};
-
-              await axios
-                .get(
-                  `https://api.coingecko.com/api/v3/coins/ethereum/contract/${res[i].vault.token.id}`,
-                  {},
-                  {}
-                )
-                .then(async (priceData) => {
-                  res[i].image = priceData.data.image.thumb;
-                })
-                .catch((err) => {});
-
-              object.balanceShares = res[i].balanceShares;
-              object.sharePrice = res[i].vault.latestUpdate.pricePerShare;
-              object.shareTokenAddress = res[i].vault.shareToken.id;
-              object.shareTokenSymbol = res[i].vault.shareToken.symbol;
-              object.shareTokenDecimals = res[i].vault.shareToken.decimals;
-              object.shareTokenName = res[i].vault.shareToken.name;
-              object.mainTokenSymbol = res[i].vault.token.symbol;
-              object.mainTokenName = res[i].vault.token.name;
-              object.mainTokenDecimals = res[i].vault.token.decimals;
-              object.mainTokenAddress = res[i].vault.token.id;
-              object.image = res[i].image;
-              object.totalInvestment =
-                ((object.balanceShares / 10 ** object.shareTokenDecimals) * object.sharePrice) /
-                10 ** object.shareTokenDecimals;
-              tot += parseFloat(object.totalInvestment).toFixed(2);
-              positions.push(object);
-            }
-
-            positions.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
-            setYearnData(positions);
-            setYearnTotal(tot);
-          }
-        });
-    }
 
     async function getCurveData() {
       await axios
@@ -1270,7 +1127,6 @@ export default function Index({ accountAddress }) {
     getUniV2Data();
     getBalancerData();
     getSushiV2Data();
-    getYearnData();
     getCurveData();
     getBalancerV2Data();
   }, [accountAddress]);
@@ -1485,13 +1341,16 @@ export default function Index({ accountAddress }) {
           height: 'auto',
           minHeight: '170px',
           borderRadius: '10px',
-          display: parseFloat(SynthetixData) > 0 || YearnData.length > 0 ? '' : 'none',
+          // display: parseFloat(SynthetixData) > 0 || YearnData.length > 0 ? '' : 'none',
         }}>
         <br />
         <center>
           <div style={{ fontSize: '25px' }}>
             Other Assets <br />
-            Total : {parseFloat(parseFloat(SynthetixData) + parseFloat(YearnTotal)).toFixed(2)} USD
+            Total : {parseFloat(parseFloat(SynthetixData) + parseFloat(YearnTokenValue)).toFixed(
+              2
+            )}{' '}
+            USD
             <br />
             <br />
           </div>
@@ -1503,19 +1362,8 @@ export default function Index({ accountAddress }) {
           }}></div>
 
         <Synthetix accountAddress={accountAddress} onSynthetixTokenValue={getSynthetixTokenData} />
-
         <br />
-
-        <div
-          style={{
-            fontSize: '12px',
-            marginLeft: '15px',
-            display: YearnData.length > 0 ? '' : 'none',
-          }}>
-          Yearn Finance --- {YearnTotal} USD
-        </div>
-        {YearnContent}
-        <br />
+        <YearnFinance accountAddress={accountAddress} onYearnTokenValue={getYearnTokenValue} />
       </div>
 
       <div

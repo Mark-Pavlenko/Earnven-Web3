@@ -8,6 +8,7 @@ import { eth2Stake } from './eth2Stake/reducer';
 import { sushiStaking } from './sushiStaking/reducer';
 import { nftData } from './nftData/reducer';
 import { chosenTokensList, tokensList } from './searchedTokens/reducer';
+import { yearnFinance } from './yearnFinance/reducer';
 
 export const rootReducer = combineReducers({
   web3Reducer,
@@ -20,4 +21,5 @@ export const rootReducer = combineReducers({
   eth2Stake,
   sushiStaking,
   nftData,
+  yearnFinance,
 });
