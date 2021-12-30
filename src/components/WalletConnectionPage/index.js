@@ -364,6 +364,7 @@ export default function Index() {
             <MainSubLayoutTitle isLightTheme={themeType}>Track any address</MainSubLayoutTitle>
             <Stack direction="row" justifyContent="space-between">
               <EthereumAddressField
+                variant="outlined"
                 isLightTheme={themeType}
                 label="Track any ethereum address"
                 onChange={addressUpdate}
