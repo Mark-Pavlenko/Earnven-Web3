@@ -63,6 +63,7 @@ export const MetaMaskBtn = styled(Button)`
   border-radius: 10px;
   background-color: #ffffff;
   box-shadow: inset 0 5px 10px -6px rgba(51, 78, 131, 0.12);
+  color: #4453ad;
 
   :hover {
     background-color: #e5e5e5;
