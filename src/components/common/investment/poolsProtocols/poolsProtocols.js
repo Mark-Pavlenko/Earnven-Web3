@@ -14,7 +14,7 @@ const PoolsProtocols = ({ protocol, protocolName, logoImage }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const { token1Symbol, imageData, tokens, price, totalInvestment, token0name } = protocol;
-
+  console.log('imageData', imageData);
   const protocolData = {
     Liquidity: protocol.liquidity ? `$${parseFloat(protocol.liquidity).toFixed(2)}` : `$0`,
     Balance: parseFloat(
@@ -33,13 +33,15 @@ const PoolsProtocols = ({ protocol, protocolName, logoImage }) => {
     <Main isOpen={isOpen}>
       <TotalValue isOpen={isOpen}>
         <div style={{ display: 'flex' }}>
-          <ImagesWrapper>
-            {imageData ? (
-              imageData.map((name, index) => <TokenImage firstElement={index} src={name} />)
-            ) : (
-              <TokenImage src={logoImage} />
-            )}
-          </ImagesWrapper>
+          {imageData && (
+            <ImagesWrapper>
+              {imageData ? (
+                imageData.map((name, index) => <TokenImage firstElement={index} src={name} />)
+              ) : (
+                <TokenImage src={logoImage} />
+              )}
+            </ImagesWrapper>
+          )}
           <div style={{ display: 'flex' }}>
             {tokens ? (
               tokens.map((name, index) => (

@@ -6,6 +6,7 @@ import {
   TotalValue,
   ToggleButton,
   ImagesWrapper,
+  MockTokenImage,
   ContentWrapper,
   ContentRightWrapper,
 } from './styledComponents';
@@ -13,7 +14,7 @@ import {
 const Investment = ({ protocol, protocolName, logoImage }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { imageData, tokens, price, totalInvestment, mainTokenSymbol } = protocol;
+  const { imageData, tokens, totalInvestment, mainTokenSymbol, totalTokensBalance } = protocol;
 
   const protocolData = {
     Liquidity: protocol.liquidity ? `$${parseFloat(protocol.liquidity).toFixed(2)}` : `$0`,
@@ -33,13 +34,15 @@ const Investment = ({ protocol, protocolName, logoImage }) => {
     <Main isOpen={isOpen}>
       <TotalValue isOpen={isOpen}>
         <div style={{ display: 'flex' }}>
-          <ImagesWrapper>
-            {imageData ? (
-              imageData.map((name, index) => <TokenImage firstElement={index} src={name} />)
-            ) : (
-              <TokenImage src={logoImage} />
-            )}
-          </ImagesWrapper>
+          {imageData && (
+            <ImagesWrapper>
+              {imageData ? (
+                imageData.map((name, index) => <TokenImage firstElement={index} src={name} />)
+              ) : (
+                <MockTokenImage src={logoImage} />
+              )}
+            </ImagesWrapper>
+          )}
           <div style={{ display: 'flex' }}>
             {tokens ? (
               tokens.map((name, index) => (
@@ -54,17 +57,36 @@ const Investment = ({ protocol, protocolName, logoImage }) => {
           </div>
         </div>
         <ContentRightWrapper>
-          <div>{parseFloat(price ? price : totalInvestment).toFixed(2)}&nbsp;USD</div>
+          <div>
+            {parseFloat(totalTokensBalance ? totalTokensBalance : totalInvestment).toFixed(2)}
+            &nbsp;USD
+          </div>
           <ToggleButton isOpen={isOpen} onClick={toggleHandler} />
         </ContentRightWrapper>
       </TotalValue>
-      {isOpen &&
-        Object.keys(protocolData).map((el) => (
-          <ContentWrapper>
-            <div>{el}</div>
-            <div>{protocolData[el]}</div>
-          </ContentWrapper>
-        ))}
+      {isOpen && (
+        <>
+          {tokens &&
+            tokens.map((token) => (
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  fontWeight: '600',
+                  padding: '0 32px 11px 26px',
+                }}>
+                <div style={{ fontSize: '10px' }}>{token.symbol}</div>
+                <div style={{ fontSize: '10px' }}>${parseFloat(token.balance).toFixed(2)}</div>
+              </div>
+            ))}
+          {Object.keys(protocolData).map((el) => (
+            <ContentWrapper>
+              <div>{el}</div>
+              <div>{protocolData[el]}</div>
+            </ContentWrapper>
+          ))}
+        </>
+      )}
     </Main>
   );
 };

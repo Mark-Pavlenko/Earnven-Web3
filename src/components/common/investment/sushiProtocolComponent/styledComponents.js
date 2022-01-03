@@ -13,7 +13,7 @@ export const Main = styled.div`
 export const TotalValue = styled.div`
   max-width: 100%;
   display: flex;
-  padding: 0 25px;
+  padding: 0 29px 0 26px;
   justify-content: space-between;
   align-items: center;
   height: ${(props) => (props.isOpen ? '67px' : '46px')};
@@ -41,6 +41,14 @@ export const ContentRightWrapper = styled.div`
 export const TokenImage = styled.img`
   display: flex;
   margin-left: ${(props) => (props.firstElement !== 0 ? '-10px' : '0')};
+  max-width: 21px;
+  max-height: 21px;
+  border-radius: 50%;
+  border: 2px solid orange;
+`;
+
+export const MockTokenImage = styled.img`
+  display: flex;
   max-width: 21px;
   max-height: 21px;
   border-radius: 50%;

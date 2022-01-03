@@ -7,6 +7,7 @@ import {
   ToggleButton,
   ImagesWrapper,
   ContentWrapper,
+  MockTokenImage,
   ContentRightWrapper,
 } from './styledComponents';
 
@@ -43,7 +44,7 @@ const SushiProtocol = ({ protocol, protocolName, logoImage }) => {
             {imageData ? (
               imageData.map((name, index) => <TokenImage firstElement={index} src={name} />)
             ) : (
-              <TokenImage src={logoImage} />
+              <MockTokenImage src={logoImage} />
             )}
           </ImagesWrapper>
           <div style={{ display: 'flex' }}>

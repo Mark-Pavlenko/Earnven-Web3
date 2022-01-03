@@ -126,11 +126,10 @@ export default function SushiStaking({ accountAddress }) {
     }
     setSLPTokenDataContent(content);
   }, [SLPTokenData]);
-
+  console.log('SLPTokenDataContent', SLPTokenDataContent);
   return (
     <React.Fragment>
       <div>{SLPTokenDataContent}</div>
-      <br />
     </React.Fragment>
   );
 }

@@ -1,11 +1,14 @@
 import styled from 'styled-components';
+import { maxWidth } from '@mui/system';
 
 export const PoolsBlock = styled.div`
   background: rgba(31, 38, 92, 0.24);
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
-  width: 48%;
-  margin-top: 20px;
+  //width: 48%;
+  margin-top: 35px;
   border-radius: 10px;
+  padding-top: 1px;
+  padding-bottom: 1px;
 `;
 
 export const TotalValueField = styled.div`
@@ -37,7 +40,9 @@ export const TotalEmptyCell = styled.div`
 `;
 
 export const TotalValue = styled.div`
-  width: 33%;
+  display: flex;
+  justify-content: flex-end;
+  width: 40%;
   font-family: Saira, serif;
   font-style: normal;
   font-weight: 500;
@@ -61,4 +66,31 @@ export const Title = styled.div`
   color: white;
   font-weight: 500;
   font-size: 20px;
+`;
+
+export const LeftColumnWrapper = styled.div`
+  width: 50%;
+  padding-right: 14px;
+  box-sizing: border-box;
+  @media (max-width: 2000px) {
+    width: 100%;
+    padding-right: 0;
+  }
+`;
+
+export const RightColumnWrapper = styled.div`
+  width: 50%;
+  padding-left: 14px;
+  box-sizing: border-box;
+  @media (max-width: 2000px) {
+    width: 100%;
+    padding-left: 0;
+  }
+`;
+
+export const ContentWrapper = styled.div`
+  display: flex;
+  @media (max-width: 2000px) {
+    display: block;
+  }
 `;

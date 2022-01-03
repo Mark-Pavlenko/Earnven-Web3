@@ -27,11 +27,15 @@ import {
   TotalValue,
   Header,
   Title,
+  LeftColumnWrapper,
+  RightColumnWrapper,
+  ContentWrapper,
 } from './styledComponents';
 import YearnFinance from './YearnFinance';
 import BalancerV2 from './LiqudityPools/BalancerV2';
 import { useSelector } from 'react-redux';
 import { ToggleButton } from '../../styled/styledComponents';
+import { Grid } from '@material-ui/core';
 
 // Below code is for task https://app.clickup.com/t/1je2y9d
 // import CompoundData from './Compound';
@@ -65,7 +69,6 @@ export default function Index({ accountAddress }) {
 
   const [CompLoansTotal, setCompLoansTotal] = useState([]); // Comp total debt
   const [CompSavingsTotal, setCompSavingsTotal] = useState([]); // Comp total Savings
-
   const [BalancerPoolsData, setBalancerPoolsData] = useState([]); // Balancer
   const [BalancerPoolsContent, setBalancerPoolsContent] = useState([]); // Balancer
 
@@ -79,9 +82,11 @@ export default function Index({ accountAddress }) {
   const [YearnTotal, setYearnTotal] = useState([]); // Yearn Total
   const [CurveStakeData, setCurveStakeData] = useState([]); // Curve
   const [CurveStakeContent, setCurveStakeContent] = useState([]); // Curve
-
   const [CurveStakeTotal, setCurveStakeTotal] = useState([0]); // Curve Total
-
+  // BalancerV2
+  const [BalancerTotalv2, setBalancerTotalv2] = useState([]);
+  const [BalancerPoolsDatav2, setBalancerPoolsDatav2] = useState([]);
+  const [BalancerPoolsContentv2, setBalancerPoolsContentv2] = useState([]);
   //Curve Lp token
   const [CurveLpdata, setCurveLpData] = useState([]); // get curve lp token data
   //Synthetix data points
@@ -102,9 +107,18 @@ export default function Index({ accountAddress }) {
     setSynthetixData(data);
   };
 
+  //save conditions of open/close investment blocks
   const [isPoolsOpen, setIsPoolsOpen] = useState(true);
   const [isOthersOpen, setIsOthersOpen] = useState(true);
   const [isStakedAssetsOpen, setIsStakedAssetsOpen] = useState(true);
+
+  const sumObjectsByKey = (...objs) => {
+    return objs.reduce((el, acc) => {
+      return el + +acc.totalTokensBalance;
+    }, 0);
+  };
+
+  sumObjectsByKey(...BalancerPoolsDatav2, ...BalancerPoolsData);
 
   //get the value from the yearnFinance protocol
   const getYearnTokenValue = (data) => {
@@ -396,88 +410,91 @@ export default function Index({ accountAddress }) {
   }, [CompoundSavingsData]);
 
   useEffect(() => {
-    const content = BalancerPoolsData.map((object) => (
-      <Investment protocol={object} protocolName={'Balancer V1'} />
-      // <Tooltip
-      //   title={
-      //     <>
-      //       {/*<div*/}
-      //       {/*  style={{*/}
-      //       {/*    display: 'inline-block',*/}
-      //       {/*    textAlign: 'left',*/}
-      //       {/*    wordBreak: 'break-word',*/}
-      //       {/*  }}>*/}
-      //       {/*  Tokens in Pool: <br />*/}
-      //       {/*</div>*/}
-      //       {/*<br />*/}
-      //       {/*<br />*/}
-      //       {/*Pool Percentage : {parseFloat(object.poolPercentage).toFixed(2)} % <br />*/}
-      //       {/*Pool Liquidity : {parseFloat(object.liquidity).toFixed(2)} USD <br />*/}
-      //       {/*Total SushiProtocol : {object.totalInvestment} USD*/}
-      //     </>
-      //   }>
-      //   {/*<div style={{ width: '90%', marginTop: '12px', marginLeft: '20px' }}>*/}
-      //   {/*  <br />*/}
-      //   {/*  <div*/}
-      //   {/*    style={{*/}
-      //   {/*      display: 'inline-block',*/}
-      //   {/*      width: '100%',*/}
-      //   {/*      textAlign: 'left',*/}
-      //   {/*      wordBreak: 'break-word',*/}
-      //   {/*    }}>*/}
-      //   {/*<div style={{ display: 'flex' }}>*/}
-      //   {/*  {object.imageData.map((obj) => (*/}
-      //   {/*    <div style={{ display: 'flex', marginLeft: '-10px' }}>*/}
-      //   {/*      <img*/}
-      //   {/*        src={obj}*/}
-      //   {/*        alt="noimage"*/}
-      //   {/*        style={{ maxWidth: '100%', maxHeight: '100%' }}*/}
-      //   {/*        width="30px"*/}
-      //   {/*        height="30px"*/}
-      //   {/*      />*/}
-      //   {/*    </div>*/}
-      //   {/*  ))}*/}
-      //   {/*</div>*/}
-      //   {/*{object.tokens.map((obj) => (*/}
-      //   {/*  <>*/}
-      //   {/*    <>{obj.symbol}-</>*/}
-      //   {/*  </>*/}
-      //   {/*))}*/}
-      //   {/*<div style={{ display: 'flex', width: '300px' }}>*/}
-      //   {/*  <p>Value</p>*/}
-      //   {/*  <>&nbsp;-&nbsp;{parseFloat(object.priceSum).toFixed(2)}&nbsp;USD</>*/}
-      //   {/*</div>*/}
-      //   {/*<div style={{ display: 'flex', width: '300px' }}>*/}
-      //   {/*  <p>LP price</p>*/}
-      //   {/*  <>&nbsp;-&nbsp;{parseFloat(object.price).toFixed(2)}&nbsp;USD</>*/}
-      //   {/*</div>*/}
-      //   {/*<div style={{ display: 'flex', width: '300px' }}>*/}
-      //   {/*  <p>LP balance</p>*/}
-      //   {/*  <>&nbsp;-&nbsp;{parseFloat(object.balance).toFixed(3)}&nbsp;</>*/}
-      //   {/*</div>*/}
-      //   {/*<div style={{ display: 'flex', width: '300px' }}>*/}
-      //   {/*  <p>Liquidity</p>*/}
-      //   {/*  <>&nbsp;-&nbsp;{parseFloat(object.liquidity).toFixed(2)}&nbsp;</>*/}
-      //   {/*</div>*/}
-      //   {/*<div style={{ display: 'flex', width: '300px' }}>*/}
-      //   {/*  <p>Chain</p>*/}
-      //   {/*  <>&nbsp;-&nbsp;Ethereum&nbsp;</>*/}
-      //   {/*</div>*/}
-      //   {/*<div style={{ display: 'flex', width: '300px' }}>*/}
-      //   {/*  <p>Protocol</p>*/}
-      //   {/*  <>&nbsp;-&nbsp;Balancer-V1&nbsp;</>*/}
-      //   {/*</div>*/}
-      //
-      //   {/*  </div>*/}
-      //   {/*</div>*/}
-      // </Tooltip>
-    ));
+    const content = BalancerPoolsData.map((object) => {
+      console.log('BalancerPoolsData', object);
+      return (
+        <Investment protocol={object} protocolName={'Balancer V1'} />
+        // <Tooltip
+        //   title={
+        //     <>
+        //       {/*<div*/}
+        //       {/*  style={{*/}
+        //       {/*    display: 'inline-block',*/}
+        //       {/*    textAlign: 'left',*/}
+        //       {/*    wordBreak: 'break-word',*/}
+        //       {/*  }}>*/}
+        //       {/*  Tokens in Pool: <br />*/}
+        //       {/*</div>*/}
+        //       {/*<br />*/}
+        //       {/*<br />*/}
+        //       {/*Pool Percentage : {parseFloat(object.poolPercentage).toFixed(2)} % <br />*/}
+        //       {/*Pool Liquidity : {parseFloat(object.liquidity).toFixed(2)} USD <br />*/}
+        //       {/*Total SushiProtocol : {object.totalInvestment} USD*/}
+        //     </>
+        //   }>
+        //   {/*<div style={{ width: '90%', marginTop: '12px', marginLeft: '20px' }}>*/}
+        //   {/*  <br />*/}
+        //   {/*  <div*/}
+        //   {/*    style={{*/}
+        //   {/*      display: 'inline-block',*/}
+        //   {/*      width: '100%',*/}
+        //   {/*      textAlign: 'left',*/}
+        //   {/*      wordBreak: 'break-word',*/}
+        //   {/*    }}>*/}
+        //   {/*<div style={{ display: 'flex' }}>*/}
+        //   {/*  {object.imageData.map((obj) => (*/}
+        //   {/*    <div style={{ display: 'flex', marginLeft: '-10px' }}>*/}
+        //   {/*      <img*/}
+        //   {/*        src={obj}*/}
+        //   {/*        alt="noimage"*/}
+        //   {/*        style={{ maxWidth: '100%', maxHeight: '100%' }}*/}
+        //   {/*        width="30px"*/}
+        //   {/*        height="30px"*/}
+        //   {/*      />*/}
+        //   {/*    </div>*/}
+        //   {/*  ))}*/}
+        //   {/*</div>*/}
+        //   {/*{object.tokens.map((obj) => (*/}
+        //   {/*  <>*/}
+        //   {/*    <>{obj.symbol}-</>*/}
+        //   {/*  </>*/}
+        //   {/*))}*/}
+        //   {/*<div style={{ display: 'flex', width: '300px' }}>*/}
+        //   {/*  <p>Value</p>*/}
+        //   {/*  <>&nbsp;-&nbsp;{parseFloat(object.priceSum).toFixed(2)}&nbsp;USD</>*/}
+        //   {/*</div>*/}
+        //   {/*<div style={{ display: 'flex', width: '300px' }}>*/}
+        //   {/*  <p>LP price</p>*/}
+        //   {/*  <>&nbsp;-&nbsp;{parseFloat(object.price).toFixed(2)}&nbsp;USD</>*/}
+        //   {/*</div>*/}
+        //   {/*<div style={{ display: 'flex', width: '300px' }}>*/}
+        //   {/*  <p>LP balance</p>*/}
+        //   {/*  <>&nbsp;-&nbsp;{parseFloat(object.balance).toFixed(3)}&nbsp;</>*/}
+        //   {/*</div>*/}
+        //   {/*<div style={{ display: 'flex', width: '300px' }}>*/}
+        //   {/*  <p>Liquidity</p>*/}
+        //   {/*  <>&nbsp;-&nbsp;{parseFloat(object.liquidity).toFixed(2)}&nbsp;</>*/}
+        //   {/*</div>*/}
+        //   {/*<div style={{ display: 'flex', width: '300px' }}>*/}
+        //   {/*  <p>Chain</p>*/}
+        //   {/*  <>&nbsp;-&nbsp;Ethereum&nbsp;</>*/}
+        //   {/*</div>*/}
+        //   {/*<div style={{ display: 'flex', width: '300px' }}>*/}
+        //   {/*  <p>Protocol</p>*/}
+        //   {/*  <>&nbsp;-&nbsp;Balancer-V1&nbsp;</>*/}
+        //   {/*</div>*/}
+        //
+        //   {/*  </div>*/}
+        //   {/*</div>*/}
+        // </Tooltip>
+      );
+    });
     setBalancerPoolsContent(content);
   }, [BalancerPoolsData]); //done
 
   useEffect(() => {
     const content = BalancerPoolsDatav2.map((object) => {
-      console.log('Balancer V2', object);
+      console.log('object', object.totalTokensBalance);
       return (
         <Investment protocol={object} protocolName={'Balancer V2'} />
         // <Tooltip
@@ -952,6 +969,10 @@ export default function Index({ accountAddress }) {
               object.balance = res[i].balance;
               object.liquidity = res[i].poolId.liquidity;
               object.tokens = res[i].poolId.tokens;
+              object.totalTokensBalance = object.tokens.reduce(
+                (token, acc) => token + +acc.balance,
+                0
+              );
               object.totalShares = res[i].poolId.totalShares;
               object.poolPercentage = (res[i].balance / res[i].poolId.totalShares) * 100;
               object.totalInvestment = parseFloat(
@@ -997,6 +1018,68 @@ export default function Index({ accountAddress }) {
             pools.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
             setBalancerTotal(tot);
             setBalancerPoolsData(pools);
+          }
+        });
+    }
+    // v2
+    async function getBalancerV2Data() {
+      await axios
+        .post(`https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-v2`, {
+          query: `{
+            users
+            (
+              where:{
+                id:"${accountAddress}"
+              }
+            )
+            {
+              id
+              sharesOwned {
+                id
+                balance
+                poolId{
+                  symbol
+                  tokensList
+                  tokens{
+                    symbol
+                    balance
+                  }
+                  tokensList
+                  totalShares
+                  totalLiquidity
+                }
+              }
+            }
+          }`,
+        })
+        .then(async (response) => {
+          if (response.data.data.users[0]) {
+            const res = response.data.data.users[0].sharesOwned;
+            const pools = [];
+            let tot = parseInt(0);
+            for (let i = 0; i < res.length; i++) {
+              const object = {};
+              object.balance = res[i].balance;
+              object.liquidity = res[i].poolId.totalLiquidity;
+              object.tokens = res[i].poolId.tokens;
+              object.totalTokensBalance = object.tokens.reduce(
+                (token, acc) => token + +acc.balance,
+                0
+              );
+              object.totalShares = res[i].poolId.totalShares;
+              object.poolPercentage = (res[i].balance / res[i].poolId.totalShares) * 100;
+              object.totalInvestment = parseFloat(
+                (res[i].poolId.totalLiquidity / res[i].poolId.totalShares) * res[i].balance
+              ).toFixed(2);
+              object.price = object.totalInvestment / res[i].balance;
+              if (object.totalInvestment > 0) {
+                tot += parseFloat(object.totalInvestment).toFixed(2);
+                pools.push(object);
+              }
+            }
+            pools.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
+            setBalancerTotalv2(parseFloat(tot).toFixed(2));
+            setBalancerPoolsDatav2(pools);
           }
         });
     }
@@ -1243,107 +1326,115 @@ export default function Index({ accountAddress }) {
     setIsStakedAssetsOpen(!isStakedAssetsOpen);
   };
 
+  const balances = PoolsData.reduce((el, acc) => {
+    return el + +acc.totalInvestment;
+  }, 0);
+
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
-      }}>
-      <PoolsBlock //first
-        style={{
-          display:
-            PoolsData.length > 0 ||
-            BalancerPoolsData.length > 0 ||
-            SushiPoolsData.length > 0 ||
-            DisplayBancor
-              ? ''
-              : 'none',
-        }}>
-        <Header>
-          <Title>{'Liquidity pools'}</Title>
-          <ToggleButton onClick={poolsHandler} isOpen={isPoolsOpen} />
-        </Header>
-        <div style={{ padding: '0 29px 0 26px', marginBottom: '20px' }}>
-          <TotalValueField>
-            <TotalTitle>{'Total Value'}</TotalTitle>
-            <TotalEmptyCell></TotalEmptyCell>
-            <TotalValue>{3452432}</TotalValue>
-          </TotalValueField>
-        </div>
-        {/*<center>*/}
-        {/*  <div style={{ fontSize: '25px', color: 'white' }}>*/}
-        {/*    Pools Total :{' '}*/}
-        {/*    {parseFloat(*/}
-        {/*      UniV2Total + SushiV2Total + BalancerTotal + BalancerTotalv2 + BancorPoolTotal*/}
-        {/*    ).toFixed(2)}{' '}*/}
-        {/*    USD*/}
-        {/*  </div>*/}
-        {/*</center>*/}
-        {isPoolsOpen && (
-          <>
-            {PoolsData.map((protocol) => (
-              <PoolsProtocols protocol={protocol} />
-            ))}
-            {BalancerPoolsContent}
-            {BalancerPoolsContentv2}
-          </>
-        )}
-      </PoolsBlock>
+    <ContentWrapper>
+      <LeftColumnWrapper>
+        <PoolsBlock //first
+          style={{
+            display:
+              PoolsData.length > 0 ||
+              BalancerPoolsData.length > 0 ||
+              SushiPoolsData.length > 0 ||
+              DisplayBancor
+                ? ''
+                : 'none',
+          }}>
+          <Header>
+            <Title>{'Liquidity pools'}</Title>
+            <ToggleButton onClick={poolsHandler} isOpen={isPoolsOpen} />
+          </Header>
+          <div style={{ padding: '0 29px 20px 26px', marginBottom: '20px' }}>
+            <TotalValueField>
+              <TotalTitle>{'Total Value'}</TotalTitle>
+              <TotalEmptyCell></TotalEmptyCell>
+              <TotalValue>
+                $
+                {parseFloat(
+                  sumObjectsByKey(...BalancerPoolsDatav2, ...BalancerPoolsData) + balances
+                  // BalancerTotal
+                ).toFixed(2)}
+              </TotalValue>
+            </TotalValueField>
+          </div>
+          {/*<center>*/}
+          {/*  <div style={{ fontSize: '25px', color: 'white' }}>*/}
+          {/*    Pools Total :{' '}*/}
+          {/*    {parseFloat(*/}
+          {/*      UniV2Total + SushiV2Total + BalancerTotal + BalancerTotalv2 + BancorPoolTotal*/}
+          {/*    ).toFixed(2)}{' '}*/}
+          {/*    USD*/}
+          {/*  </div>*/}
+          {/*</center>*/}
+          {isPoolsOpen && (
+            <>
+              {PoolsData.map((protocol) => {
+                return <PoolsProtocols protocol={protocol} />;
+              })}
+              {BalancerPoolsContent}
+              {BalancerPoolsContentv2}
+            </>
+          )}
+        </PoolsBlock>
 
-      <PoolsBlock //second
-        style={{
-          display: parseFloat(SynthetixData) > 0 || YearnData.length > 0 ? '' : 'none',
-        }}>
-        <Header>
-          <Title>{'Others'}</Title>
-          <ToggleButton onClick={othersHandler} isOpen={isOthersOpen} />
-        </Header>
-        <div style={{ padding: '0 29px 0 26px', marginBottom: '20px' }}>
-          <TotalValueField>
-            <TotalTitle>{'Total Value'}</TotalTitle>
-            <TotalEmptyCell></TotalEmptyCell>
-            <TotalValue>{3452432}</TotalValue>
-          </TotalValueField>
-        </div>
-        {/*<center>*/}
-        {/*  <div style={{ fontSize: '25px', color: 'white' }}>*/}
-        {/*    Other Assets Total :{' '}*/}
-        {/*    {parseFloat(parseFloat(SynthetixData) + parseFloat(YearnTotal)).toFixed(2)} USD*/}
-        {/*  </div>*/}
-        {/*</center>*/}
-        {/*<Synthetix accountAddress={accountAddress} onSynthetixTokenValue={getSynthetixTokenData} />*/}
-        {isOthersOpen && <>{YearnContent}</>}
-      </PoolsBlock>
-
-      <PoolsBlock>
-        {/*<center>*/}
-        {/*  <div style={{ fontSize: '25px' }}>*/}
-        {/*    Staked Assets Total : {parseFloat(CurveStakeTotal).toFixed(2)} USD*/}
-        {/*  </div>*/}
-        {/*</center>*/}
-        {/*<div*/}
-        {/*  style={{*/}
-        {/*    fontSize: '12px',*/}
-        {/*    marginLeft: '15px',*/}
-        {/*    display: CurveStakeData.length > 0 ? '' : 'none',*/}
-        {/*  }}>*/}
-        {/*  Curve Staking --- {CurveStakeTotal} USD*/}
-        {/*</div>*/}
-        <Header>
-          <Title>{'Staked Assets'}</Title>
-          <ToggleButton onClick={stakedHandler} isOpen={isStakedAssetsOpen} />
-        </Header>
-        <div style={{ padding: '0 29px 0 26px', marginBottom: '20px' }}>
-          <TotalValueField>
-            <TotalTitle>{'Total Value'}</TotalTitle>
-            <TotalEmptyCell></TotalEmptyCell>
-            <TotalValue>{3452432}</TotalValue>
-          </TotalValueField>
-        </div>
-        {/*{CurveStakeContent}*/}
-        {isStakedAssetsOpen && <SushiStaking accountAddress={accountAddress} />}
-      </PoolsBlock>
-    </div>
+        <PoolsBlock //second
+          style={{
+            display: parseFloat(SynthetixData) > 0 || YearnData.length > 0 ? '' : 'none',
+          }}>
+          <Header>
+            <Title>{'Others'}</Title>
+            <ToggleButton onClick={othersHandler} isOpen={isOthersOpen} />
+          </Header>
+          <div style={{ padding: '0 29px 15px 26px', marginBottom: '20px' }}>
+            <TotalValueField>
+              <TotalTitle>{'Total Value'}</TotalTitle>
+              <TotalEmptyCell></TotalEmptyCell>
+              <TotalValue>${YearnTotal}</TotalValue>
+            </TotalValueField>
+          </div>
+          {/*<center>*/}
+          {/*  <div style={{ fontSize: '25px', color: 'white' }}>*/}
+          {/*    Other Assets Total :{' '}*/}
+          {/*    {parseFloat(parseFloat(SynthetixData) + parseFloat(YearnTotal)).toFixed(2)} USD*/}
+          {/*  </div>*/}
+          {/*</center>*/}
+          {/*<Synthetix accountAddress={accountAddress} onSynthetixTokenValue={getSynthetixTokenData} />*/}
+          {isOthersOpen && <>{YearnContent}</>}
+        </PoolsBlock>
+      </LeftColumnWrapper>
+      <RightColumnWrapper>
+        <PoolsBlock>
+          {/*<center>*/}
+          {/*  <div style={{ fontSize: '25px' }}>*/}
+          {/*    Staked Assets Total : {parseFloat(CurveStakeTotal).toFixed(2)} USD*/}
+          {/*  </div>*/}
+          {/*</center>*/}
+          {/*<div*/}
+          {/*  style={{*/}
+          {/*    fontSize: '12px',*/}
+          {/*    marginLeft: '15px',*/}
+          {/*    display: CurveStakeData.length > 0 ? '' : 'none',*/}
+          {/*  }}>*/}
+          {/*  Curve Staking --- {CurveStakeTotal} USD*/}
+          {/*</div>*/}
+          <Header>
+            <Title>{'Staked Assets'}</Title>
+            <ToggleButton onClick={stakedHandler} isOpen={isStakedAssetsOpen} />
+          </Header>
+          <div style={{ padding: '0 29px 15px 26px', marginBottom: '20px' }}>
+            <TotalValueField>
+              <TotalTitle>{'Total Value'}</TotalTitle>
+              <TotalEmptyCell></TotalEmptyCell>
+              <TotalValue>{'$0'}</TotalValue>
+            </TotalValueField>
+          </div>
+          {/*{CurveStakeContent}*/}
+          {isStakedAssetsOpen && <SushiStaking accountAddress={accountAddress} />}
+        </PoolsBlock>
+      </RightColumnWrapper>
+    </ContentWrapper>
   );
 }

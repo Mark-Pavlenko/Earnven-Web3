@@ -13,7 +13,7 @@ export const Main = styled.div`
 export const TotalValue = styled.div`
   max-width: 100%;
   display: flex;
-  padding: 0 25px;
+  padding: 0 29px 0 26px;
   justify-content: space-between;
   align-items: center;
   height: ${(props) => (props.isOpen ? '67px' : '46px')};
