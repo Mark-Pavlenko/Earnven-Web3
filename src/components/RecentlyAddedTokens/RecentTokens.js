@@ -1,13 +1,3 @@
-/** ****************************************************************************************************
- Purpose : This component is used to display newly added tokens in the home page
- Developed by : Prabhakaran.R
- Version log:
- -------------------------------------------------------------------------------------------------------
- Version           Date                         Description                    Developed by
- --------------------------------------------------------------------------------------------------
- 1.0               8/Nov/2021                   Initial Development            Prabhakaran.R
-
- ******************************************************************************************************/
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { createStyles } from '@material-ui/styles';
@@ -44,22 +34,23 @@ const useStyles = makeStyles(() =>
       marginRight: '40px',
       marginBottom: '20px',
 
-      '& .MuiPaginationItem-outlined': {
-        backgroundColor: 'transparent',
-        color: 'black',
-        border: 'none',
+      '& .MuiPaginationItem': {
+        backgroundColor: '#E0E0E0',
         width: '20px',
         height: '20px',
       },
 
-      '& .MuiPaginationItem-hover': {
-        backgroundColor: '#ff0000 !important',
+      '& .MuiPaginationItem-outlined': {
+        color: 'black',
+        border: 'none',
+        borderRadius: 10,
       },
 
       '& .MuiPaginationItem-icon': {
         color: '#4453AD',
         width: '20px',
-        right: '20px',
+        height: '20px',
+        backgroundColor: 'transparent !important',
       },
 
       '@media(max-width: 1200px)': {
@@ -84,15 +75,16 @@ const useStyles = makeStyles(() =>
 
       '& .Mui-selected': {
         backgroundColor: '#FFFFFF',
-        // color: '#4453AD',
+        width: 20,
+        height: 30,
+        boxShadow: 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
+        borderRadius: 10,
+        color: '#4453AD',
       },
 
       li: {
         width: '20px',
         height: '20px',
-        // '&:hover': {
-        //   backgroundColor: '#ff0000',
-        // },
       },
     },
   })
@@ -251,9 +243,13 @@ export default function RecentTokens({ themeType }) {
               <Pagination
                 className="paginationItemStyle"
                 sx={{
-                  '&. MuiPaginationItem-root': {
+                  '&. MuiPaginationItem': {
                     width: '20px',
                     height: '20px',
+                  },
+                  '&. MuiPaginationItem-root:hover': {
+                    //you want this to be the same as the backgroundColor above
+                    backgroundColor: 'transparent !important',
                   },
                 }}
                 classes={{

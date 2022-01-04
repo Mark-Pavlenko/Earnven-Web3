@@ -130,14 +130,4 @@ export const MockUserMobileAvatar = styled.img`
   }
 `;
 
-export const ChangeThemeBtn = styled(IconButton)`
-  //'&:hover': {
-  //  backgroundColor: 'none !important',
-  //  // borderColor: '#0062cc',
-  //  boxShadow: 'none',
-  //},
-
-  @media (max-width: 711px) {
-    //margin-left: auto;
-  }
-`;
+export const ChangeThemeBtn = styled(IconButton)``;

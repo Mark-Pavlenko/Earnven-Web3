@@ -131,18 +131,18 @@ export default function Account({ address, name, global_wallet, setTheme }) {
     const result = localStorage.getItem('wallets');
     var jsonData = [];
     var jsondata = JSON.parse(result);
-    if (flag_menu == true) {
+    if (flag_menu === true) {
       setaccount(false);
     }
     jsondata &&
       jsondata.map((option) => {
         if (
-          option.provider != 'metamask' &&
-          option.provider != 'walletconnect' &&
-          option.provider != 'portis' &&
-          option.provider != 'coinbase' &&
-          option.provider != 'fortmatic' &&
-          option.provider != 'torus'
+          option.provider !== 'metamask' &&
+          option.provider !== 'walletconnect' &&
+          option.provider !== 'portis' &&
+          option.provider !== 'coinbase' &&
+          option.provider !== 'fortmatic' &&
+          option.provider !== 'torus'
         ) {
           jsonData.push({ address: option.address, provider: option.provider, name: option.name });
         }
@@ -187,7 +187,6 @@ export default function Account({ address, name, global_wallet, setTheme }) {
       <AccountStyle ref={anchorRef} onClick={showAccountPopover} isLightTheme={themeType}>
         {address ? (
           <>
-            {' '}
             <Avatar className={classes.accountlLogo} src={accountLogo} alt="photoURL" />
             <Box sx={{ ml: 2 }}>
               <Stack direction="row">

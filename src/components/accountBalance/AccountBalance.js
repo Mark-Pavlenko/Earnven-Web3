@@ -8,12 +8,12 @@ import { CommaFormatted } from '../../modules/common/commaFormatter';
 import { useDispatch, useSelector } from 'react-redux';
 
 function AccountBalance({ address, accountBalance }) {
-  console.log('accountBalance', accountBalance);
+  // console.log('accountBalance', accountBalance);
   const dispatch = useDispatch();
   const [totalValue, setTotalValue] = useState('00.00');
 
   const isLoading = useSelector((state) => state.accountBalance.isLoading);
-  console.log('isLoading', isLoading);
+  // console.log('isLoading', isLoading);
 
   useEffect(() => {
     const accountAddress = address;
@@ -36,7 +36,7 @@ function AccountBalance({ address, accountBalance }) {
       {isLoading ? (
         <div style={{ color: 'red' }}>loading</div>
       ) : (
-        <Typography sx={{ color: (theme) => 'blue' }} variant="primaryFont1">
+        <Typography sx={{ color: (theme) => 'red' }} variant="primaryFont1">
           ${accountBalance?.finalTotal}
         </Typography>
       )}
