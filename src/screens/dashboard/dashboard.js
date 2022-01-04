@@ -10,11 +10,18 @@ import Balance from '../../components/Balance';
 import sendIcon from '../../assets/icons/send-icon.svg';
 import { Box, Container, Grid } from '@material-ui/core';
 import AllAssets from '../../components/allAssets/generalAssets/assets/assets';
-import LoansAndSavings from '../../components/LoansAndSavings';
+import LoansAndSavings from '../../components/LoansAndSavings/index';
 import etherScanIcon from '../../assets/icons/etherScan-icon.svg';
 import etherScanDark from '../../assets/icons/etherScanDark-icon.svg';
 import PortfolioPerf from '../../components/portfolioperf/portfolioperf';
-import { TokenButtonsBlock, SendButton, EtherScanButton } from './styledComponents';
+import {
+  TokenButtonsBlock,
+  SendButton,
+  EtherScanButton,
+  MainBlocks,
+  LeftSideWrapper,
+  RightSideWrapper,
+} from './styledComponents';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -58,26 +65,17 @@ export default function Dashboard({ test, changeTheme }) {
       </Box>
       <TabPanel value={value} index={0}>
         <Page title="Dashboard">
-          <Container maxWidth="xl">
+          <Container>
             <Balance address={address} />
-            <Grid container spacing={6}>
-              <Grid item xs={12} md={8}>
-                <Grid container spacing={1}>
-                  <Grid item xs={12} md={12}>
-                    <PortfolioPerf address={address} />
-                  </Grid>
-                  <Grid item xs={12} md={12}>
-                    <AllAssets isLightTheme={theme} address={address} />
-                    <br />
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <Grid container spacing={1}>
-                  <LoansAndSavings accountAddress={address} />
-                </Grid>
-              </Grid>
-            </Grid>
+            <MainBlocks>
+              <LeftSideWrapper>
+                <PortfolioPerf address={address} />
+                <LoansAndSavings accountAddress={address} />
+              </LeftSideWrapper>
+              <RightSideWrapper>
+                <AllAssets isLightTheme={theme} address={address} />
+              </RightSideWrapper>
+            </MainBlocks>
           </Container>
         </Page>
       </TabPanel>

@@ -386,6 +386,7 @@ export default function ConvexStaking({ accountAddress }) {
 
   return (
     <React.Fragment>
+      <h1>CONVEX</h1>
       {parseFloat(cvxStakingTotalAmount) > 0 ? (
         <div>
           <img

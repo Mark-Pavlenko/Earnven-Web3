@@ -463,11 +463,10 @@ export default class Assets extends Component {
   }
 
   render() {
-    // this.change(arr2);
     return (
       <Main isLight={this.props.isLightTheme}>
         <Header>
-          <Title>{'Ethereum Assets'}</Title>
+          <Title isLight={this.props.isLightTheme}>{'Ethereum Assets'}</Title>
           <ToggleButton
             onClick={() => {
               this.setState({ isOpen: !this.state.isOpen });

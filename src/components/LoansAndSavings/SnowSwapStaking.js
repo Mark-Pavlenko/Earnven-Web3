@@ -90,6 +90,7 @@ export const SnowSwapStaking = ({ accountAddress }) => {
 
   return (
     <>
+      <h1>SNOW SWAN</h1>
       <div>
         {finalValue && StakeBalance > 0 && flag && (
           <div>

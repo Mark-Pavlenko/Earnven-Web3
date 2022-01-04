@@ -90,6 +90,7 @@ export default function UniStaking({ accountAddress }) {
 
   return (
     <div>
+      <h1>UNI</h1>
       <div
         style={{
           display: USDTAmountUSD + USDCAmountUSD + DAIAmountUSD + WBTCAmountUSD > 0 ? '' : 'none',
