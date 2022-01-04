@@ -53,6 +53,7 @@ export const TotalValue = styled.div`
 `;
 
 export const Title = styled.div`
+  color: ${(props) => (props.isLight ? '#1e1e20' : '#ffffff')};
   margin-top: 15px;
   margin-left: 27px;
 `;

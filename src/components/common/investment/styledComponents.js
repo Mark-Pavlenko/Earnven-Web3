@@ -82,6 +82,7 @@ export const ImagesWrapper = styled.div`
 `;
 
 export const ContentWrapper = styled.div`
+  color: ${(props) => (props.isLightTheme ? '#1E1E20' : 'white')};
   display: flex;
   justify-content: space-between;
   padding: 0 32px 11px 26px;

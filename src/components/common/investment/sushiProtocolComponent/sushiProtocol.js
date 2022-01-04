@@ -10,8 +10,10 @@ import {
   MockTokenImage,
   ContentRightWrapper,
 } from './styledComponents';
+import { useSelector } from 'react-redux';
 
 const SushiProtocol = ({ protocol, protocolName, logoImage }) => {
+  const theme = useSelector((state) => state.themeReducer.isLightTheme);
   const [isOpen, setIsOpen] = useState(false);
 
   const { imageData, tokens, price, sushiLpTokenValue, sushiLpTokenSymbol } = protocol;
@@ -37,7 +39,7 @@ const SushiProtocol = ({ protocol, protocolName, logoImage }) => {
   const gap = '-';
 
   return (
-    <Main isOpen={isOpen}>
+    <Main isOpen={isOpen} isLightTheme={theme}>
       <TotalValue isOpen={isOpen}>
         <div style={{ display: 'flex' }}>
           <ImagesWrapper>
@@ -52,22 +54,22 @@ const SushiProtocol = ({ protocol, protocolName, logoImage }) => {
               tokens.map((name, index) => (
                 <>
                   {index !== 0 && <div>{gap}</div>}
-                  <TokenName>{`${name.symbol}`}</TokenName>
+                  <TokenName isLightTheme={theme}>{`${name.symbol}`}</TokenName>
                 </>
               ))
             ) : (
-              <TokenName>{`${sushiLpTokenSymbol}`}</TokenName>
+              <TokenName isLightTheme={theme}>{`${sushiLpTokenSymbol}`}</TokenName>
             )}
           </div>
         </div>
-        <ContentRightWrapper>
+        <ContentRightWrapper isLightTheme={theme}>
           <div>{parseFloat(price ? price : sushiLpTokenValue).toFixed(2)}&nbsp;USD</div>
-          <ToggleButton isOpen={isOpen} onClick={toggleHandler} />
+          <ToggleButton isLightTheme={theme} isOpen={isOpen} onClick={toggleHandler} />
         </ContentRightWrapper>
       </TotalValue>
       {isOpen &&
         Object.keys(protocolData).map((el) => (
-          <ContentWrapper>
+          <ContentWrapper isLightTheme={theme}>
             <div>{el}</div>
             <div>{protocolData[el]}</div>
           </ContentWrapper>

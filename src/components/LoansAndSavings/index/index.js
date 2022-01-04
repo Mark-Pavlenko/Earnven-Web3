@@ -41,7 +41,8 @@ import { useSelector } from 'react-redux';
 // import CompoundData from './Compound';
 export default function Index({ accountAddress }) {
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
-
+  const SLPTokenTotalValue = useSelector((state) => state.sushiStaking.sushiStakeTotal);
+  console.log('SLPTokenTotalValue', SLPTokenTotalValue);
   // Below code is for task https://app.clickup.com/t/1je2y9d
   // const [DisplaySavings, setDisplaySavings] = useState(null);
   // const [TotalCompoundSavings, setTotalCompoundSavings] = useState(0);
@@ -1432,7 +1433,7 @@ export default function Index({ accountAddress }) {
             <TotalValueField isLightTheme={theme}>
               <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
               <TotalEmptyCell></TotalEmptyCell>
-              <TotalValue isLightTheme={theme}>{'$0'}</TotalValue>
+              <TotalValue isLightTheme={theme}>${SLPTokenTotalValue}</TotalValue>
             </TotalValueField>
           </div>
           {/*{CurveStakeContent}*/}

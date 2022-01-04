@@ -83,7 +83,7 @@ const Investment = ({ protocol, protocolName, logoImage }) => {
               </div>
             ))}
           {Object.keys(protocolData).map((el) => (
-            <ContentWrapper>
+            <ContentWrapper isLightTheme={theme}>
               <div>{el}</div>
               <div>{protocolData[el]}</div>
             </ContentWrapper>
