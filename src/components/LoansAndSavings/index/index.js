@@ -35,11 +35,13 @@ import YearnFinance from './YearnFinance';
 import BalancerV2 from './LiqudityPools/BalancerV2';
 import { useSelector } from 'react-redux';
 import { ToggleButton } from '../../styled/styledComponents';
-import { Grid } from '@material-ui/core';
+import { useSelector } from 'react-redux';
 
 // Below code is for task https://app.clickup.com/t/1je2y9d
 // import CompoundData from './Compound';
 export default function Index({ accountAddress }) {
+  const theme = useSelector((state) => state.themeReducer.isLightTheme);
+
   // Below code is for task https://app.clickup.com/t/1je2y9d
   // const [DisplaySavings, setDisplaySavings] = useState(null);
   // const [TotalCompoundSavings, setTotalCompoundSavings] = useState(0);
@@ -1334,6 +1336,7 @@ export default function Index({ accountAddress }) {
     <ContentWrapper>
       <LeftColumnWrapper>
         <PoolsBlock //first
+          isLightTheme={theme}
           style={{
             display:
               PoolsData.length > 0 ||
@@ -1344,14 +1347,14 @@ export default function Index({ accountAddress }) {
                 : 'none',
           }}>
           <Header>
-            <Title>{'Liquidity pools'}</Title>
+            <Title isLightTheme={theme}>{'Liquidity pools'}</Title>
             <ToggleButton onClick={poolsHandler} isOpen={isPoolsOpen} />
           </Header>
           <div style={{ padding: '0 29px 20px 26px', marginBottom: '20px' }}>
-            <TotalValueField>
-              <TotalTitle>{'Total Value'}</TotalTitle>
+            <TotalValueField isLightTheme={theme}>
+              <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
               <TotalEmptyCell></TotalEmptyCell>
-              <TotalValue>
+              <TotalValue isLightTheme={theme}>
                 $
                 {parseFloat(
                   sumObjectsByKey(...BalancerPoolsDatav2, ...BalancerPoolsData) + balances
@@ -1381,18 +1384,19 @@ export default function Index({ accountAddress }) {
         </PoolsBlock>
 
         <PoolsBlock //second
+          isLightTheme={theme}
           style={{
             display: parseFloat(SynthetixData) > 0 || YearnData.length > 0 ? '' : 'none',
           }}>
           <Header>
-            <Title>{'Others'}</Title>
+            <Title isLightTheme={theme}>{'Others'}</Title>
             <ToggleButton onClick={othersHandler} isOpen={isOthersOpen} />
           </Header>
           <div style={{ padding: '0 29px 15px 26px', marginBottom: '20px' }}>
-            <TotalValueField>
-              <TotalTitle>{'Total Value'}</TotalTitle>
+            <TotalValueField isLightTheme={theme}>
+              <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
               <TotalEmptyCell></TotalEmptyCell>
-              <TotalValue>${YearnTotal}</TotalValue>
+              <TotalValue isLightTheme={theme}>${YearnTotal}</TotalValue>
             </TotalValueField>
           </div>
           {/*<center>*/}
@@ -1406,7 +1410,7 @@ export default function Index({ accountAddress }) {
         </PoolsBlock>
       </LeftColumnWrapper>
       <RightColumnWrapper>
-        <PoolsBlock>
+        <PoolsBlock isLightTheme={theme}>
           {/*<center>*/}
           {/*  <div style={{ fontSize: '25px' }}>*/}
           {/*    Staked Assets Total : {parseFloat(CurveStakeTotal).toFixed(2)} USD*/}
@@ -1421,14 +1425,14 @@ export default function Index({ accountAddress }) {
           {/*  Curve Staking --- {CurveStakeTotal} USD*/}
           {/*</div>*/}
           <Header>
-            <Title>{'Staked Assets'}</Title>
+            <Title isLightTheme={theme}>{'Staked Assets'}</Title>
             <ToggleButton onClick={stakedHandler} isOpen={isStakedAssetsOpen} />
           </Header>
           <div style={{ padding: '0 29px 15px 26px', marginBottom: '20px' }}>
-            <TotalValueField>
-              <TotalTitle>{'Total Value'}</TotalTitle>
+            <TotalValueField isLightTheme={theme}>
+              <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
               <TotalEmptyCell></TotalEmptyCell>
-              <TotalValue>{'$0'}</TotalValue>
+              <TotalValue isLightTheme={theme}>{'$0'}</TotalValue>
             </TotalValueField>
           </div>
           {/*{CurveStakeContent}*/}

@@ -9,8 +9,11 @@ import {
   ContentWrapper,
   ContentRightWrapper,
 } from './styledComponents';
+import { useSelector } from 'react-redux';
+import { TotalValueField } from '../../../LoansAndSavings/index/styledComponents';
 
 const PoolsProtocols = ({ protocol, protocolName, logoImage }) => {
+  const theme = useSelector((state) => state.themeReducer.isLightTheme);
   const [isOpen, setIsOpen] = useState(false);
 
   const { token1Symbol, imageData, tokens, price, totalInvestment, token0name } = protocol;
@@ -30,7 +33,7 @@ const PoolsProtocols = ({ protocol, protocolName, logoImage }) => {
   const gap = '-';
 
   return (
-    <Main isOpen={isOpen}>
+    <Main isOpen={isOpen} isLightTheme={theme}>
       <TotalValue isOpen={isOpen}>
         <div style={{ display: 'flex' }}>
           {imageData && (
@@ -47,17 +50,17 @@ const PoolsProtocols = ({ protocol, protocolName, logoImage }) => {
               tokens.map((name, index) => (
                 <>
                   {index !== 0 && <div>{gap}</div>}
-                  <TokenName>{`${name.symbol}`}</TokenName>
+                  <TokenName isLightTheme={theme}>{`${name.symbol}`}</TokenName>
                 </>
               ))
             ) : (
-              <TokenName>{`${token1Symbol}`}</TokenName>
+              <TokenName isLightTheme={theme}>{`${token1Symbol}`}</TokenName>
             )}
           </div>
         </div>
-        <ContentRightWrapper>
+        <ContentRightWrapper isLightTheme={theme}>
           <div>{parseFloat(price ? price : totalInvestment).toFixed(2)}&nbsp;USD</div>
-          <ToggleButton isOpen={isOpen} onClick={toggleHandler} />
+          <ToggleButton isLightTheme={theme} isOpen={isOpen} onClick={toggleHandler} />
         </ContentRightWrapper>
       </TotalValue>
       {isOpen &&
