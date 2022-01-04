@@ -74,7 +74,7 @@ export const TweetBlock = styled.div`
   padding-bottom: 5px;
   width: 458px;
   height: auto;
-  background-color: ${(props) => (props.isLightTheme ? '#e5efff' : '#10142D')};
+  background-color: ${(props) => (props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : '#10142D')};
   mix-blend-mode: normal;
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(35px);
@@ -197,8 +197,7 @@ export const LoadMoreTweetsBtn = styled.button`
 `;
 
 export const TwitterWidget = styled.div`
-  background-color: ${(props) => (props.isLightTheme ? '#e3efff' : '#10142D')};
-  //background-color: orange;
+  background: ${(props) => (props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : '#10142D')};
   border-radius: 10px;
   mix-blend-mode: normal;
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
