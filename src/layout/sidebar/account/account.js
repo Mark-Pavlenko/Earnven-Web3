@@ -32,7 +32,7 @@ import Accounts from './Accounts';
 import Acc from './Acc';
 import menurender_customhook from './menurender_customhook';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 // box-shadow: ${(props) =>
 //props.isLightTheme ? 'null' : '4px 6px 20px -5px rgba(51, 78, 131, 0.17)'};
@@ -110,6 +110,7 @@ const useStyles = makeStyles(() =>
 );
 
 export default function Account({ address, name, global_wallet, setTheme }) {
+  const dispatch = useDispatch();
   const themeType = useSelector((state) => state.themeReducer.isLightTheme);
   const selectedAccount = localStorage.getItem('selected-account');
   console.log('selectedAccount', selectedAccount);

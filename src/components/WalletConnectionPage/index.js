@@ -42,9 +42,7 @@ import {
 
 //correct web3 connection
 import { useWeb3React } from '@web3-react/core';
-import { injected } from '../../utils/connectors';
 import { useSelector } from 'react-redux';
-import { SearchIcon } from '../searchTokens/stylesDark';
 import searchIcon from '../../assets/icons/searchIcon.png';
 
 const useStyles = makeStyles(() => ({
@@ -59,6 +57,7 @@ const useStyles = makeStyles(() => ({
 export default function Index() {
   const classes = useStyles();
   const themeType = useSelector((state) => state.themeReducer.isLightTheme);
+
   const [open, setOpen] = useState(false);
   console.log('themeType', themeType);
 
@@ -239,11 +238,13 @@ export default function Index() {
 
   return (
     <RootStyle isLightTheme={themeType}>
-      <Header
-        onOpenSidebar={() => setOpen(true)}
-        themeType={themeType}
-        finalTitle={'Connect to Earnven'}
-      />
+      {localStorage.getItem('wallets') === null && (
+        <Header
+          onOpenSidebar={() => setOpen(true)}
+          themeType={themeType}
+          finalTitle={'Connect to Earnven'}
+        />
+      )}
       <Sidebar
         isOpenSidebar={open}
         onCloseSidebar={() => setOpen(false)}
@@ -252,11 +253,15 @@ export default function Index() {
         global_wallet={localStorage.getItem('wallets')}
         themeType={themeType}
       />
+      {/*{localStorage.getItem('wallets') */}
+      {/*  ? (*/}
+      {/*  <p>Content if connect to exist</p>*/}
+      {/*) : (*/}
       <MainStyle isLightTheme={themeType}>
         <MainSubLayout>
           <MainSubLayoutTitle isLightTheme={themeType}>Connect a wallet</MainSubLayoutTitle>
           <MetaMaskBtn
-            isLightTheme={themeType}
+            isLightTheme={true}
             onClick={connectMetamask}
             disableElevation
             fullWidth
@@ -364,6 +369,7 @@ export default function Index() {
             <MainSubLayoutTitle isLightTheme={themeType}>Track any address</MainSubLayoutTitle>
             <Stack direction="row" justifyContent="space-between">
               <EthereumAddressField
+                variant="outlined"
                 isLightTheme={themeType}
                 label="Track any ethereum address"
                 onChange={addressUpdate}
@@ -392,6 +398,7 @@ export default function Index() {
           </EthereumAddressBlock>
         </MainSubLayout>
       </MainStyle>
+      {/*) }*/}
     </RootStyle>
   );
 }

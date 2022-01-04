@@ -3,7 +3,7 @@ import { web3Reducer } from './web3Connect/reducer';
 import { combineReducers } from 'redux';
 import { accountBalance } from './accountBalance/reducer';
 import { twitterPosts } from './twitterPosts/reducer';
-import { headerTitlesReducer } from './headerTitlesReducer/reducer';
+import { headerTitlesReducer } from './headerTitles/reducer';
 import { eth2Stake } from './eth2Stake/reducer';
 import { sushiStaking } from './sushiStaking/reducer';
 import { nftData } from './nftData/reducer';

@@ -7,7 +7,7 @@ export const RootStyle = styled.div`
     props.isLightTheme
       ? `url(${require(`../../assets/images/lightDashboard.jpg`).default})`
       : `#0B0E1D`};
-  @media (min-width: 1880px) {
+  @media (min-width: 1930px) {
     background: ${(props) =>
       props.isLightTheme
         ? `url(${require(`../../assets/images/lightDashboardBig.jpg`).default})`
@@ -34,14 +34,14 @@ export const MainStyle = styled.div`
   }
 
   @media (min-width: 1280px) {
-    margin-top: 72px;
-    margin-left: 314px;
+    //margin-top: 72px;
+    //margin-left: 314px;
   }
 `;
 
 export const MainSubLayout = styled.div`
   width: 570px;
-
+  margin-top: 72px;
   @media (max-width: 600px) {
     width: 345px;
   }
@@ -62,9 +62,11 @@ export const MetaMaskBtn = styled(Button)`
   height: 60px;
   border-radius: 10px;
   background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#10142D')};
-  box-shadow: inset 0 5px 10px -6px rgba(51, 78, 131, 0.12);
-  //color: ${(props) => (props.isLightTheme ? '#4453ad' : '#ffffff')};
-  color: #4453ad;
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+      : '  inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+  color: ${(props) => (props.isLightTheme ? '#8F86FF' : '#8F86FF')};
 
   :hover {
     background-color: #e5e5e5;
@@ -92,12 +94,15 @@ export const WalletBtnConnect = styled(Button)`
   height: 60px;
   width: 171px;
   font-size: 16px;
-  color: #4453ad !important;
-  background: #c7c8d4;
+  background: #85868e;
   box-shadow: inset 0 5px 10px -6px rgba(51, 78, 131, 0.12);
   border-radius: 10px;
   border: none;
-  opacity: 0.5;
+  //opacity: 0.5;
+
+  div {
+    color: #4e4a8e !important;
+  }
 
   :hover {
     border: none;
@@ -147,7 +152,7 @@ export const EthereumAddressField = styled(TextField)`
     background-color: #e5e5e5;
   }
 
-  @media (max-width: 710px) {
+  @media (max-width: 600px) {
     width: 250px;
   }
 `;

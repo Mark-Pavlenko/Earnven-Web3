@@ -185,11 +185,6 @@ export default function Acc({ address, provider, name, global_wallet }) {
     setaccount(false);
   };
 
-  const routeToConnectWallet = () => {
-    navigate('/app/connect-wallet');
-    setaccount(false);
-  };
-
   function copy_notification() {
     setflag(true);
   }

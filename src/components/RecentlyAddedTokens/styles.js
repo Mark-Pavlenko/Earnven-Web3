@@ -33,11 +33,10 @@ export const MainBlock = styled(Box)`
 `;
 
 export const TokenTableLightContainer = styled(TableContainer)`
-  background: ${(props) => (props.isLightTheme ? '#F2F8FF' : '#10142D')};
-  //background-color: red;
+  background: ${(props) => (props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : '#10142D')};
+  backdrop-filter: blur(35px);
   mix-blend-mode: normal;
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
-  //backdrop-filter: blur(35px);
   border-radius: 10px;
 `;
 
