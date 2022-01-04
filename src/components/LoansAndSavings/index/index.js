@@ -31,18 +31,16 @@ import {
   RightColumnWrapper,
   ContentWrapper,
 } from './styledComponents';
-import YearnFinance from './YearnFinance';
-import BalancerV2 from './LiqudityPools/BalancerV2';
+import YearnFinance from '../YearnFinance';
+import BalancerV2 from '../LiqudityPools/BalancerV2';
 import { useSelector } from 'react-redux';
 import { ToggleButton } from '../../styled/styledComponents';
-import { useSelector } from 'react-redux';
 
 // Below code is for task https://app.clickup.com/t/1je2y9d
 // import CompoundData from './Compound';
 export default function Index({ accountAddress }) {
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
   const SLPTokenTotalValue = useSelector((state) => state.sushiStaking.sushiStakeTotal);
-  console.log('SLPTokenTotalValue', SLPTokenTotalValue);
   // Below code is for task https://app.clickup.com/t/1je2y9d
   // const [DisplaySavings, setDisplaySavings] = useState(null);
   // const [TotalCompoundSavings, setTotalCompoundSavings] = useState(0);
@@ -103,7 +101,7 @@ export default function Index({ accountAddress }) {
   };
 
   // balancerv2 total
-  const [BalancerTotalv2, setBalancerTotalv2] = useState(0);
+  //const [BalancerTotalv2, setBalancerTotalv2] = useState(0);
 
   //get the value from the synthetix child component
   const getSynthetixTokenData = (data) => {

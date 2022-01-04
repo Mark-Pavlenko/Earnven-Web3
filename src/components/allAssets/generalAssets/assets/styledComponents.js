@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 export const Main = styled.div`
+  width: 100%;
   background: ${(props) =>
     props.isLight ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)'};
   padding: 20px;
@@ -43,6 +44,8 @@ export const TotalTitle = styled.span`
 `;
 
 export const TotalValue = styled.div`
+  display: flex;
+  justify-content: flex-end;
   width: 33%;
   font-family: Saira, serif;
   font-style: normal;

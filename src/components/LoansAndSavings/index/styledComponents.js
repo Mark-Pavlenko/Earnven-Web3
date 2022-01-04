@@ -74,7 +74,7 @@ export const LeftColumnWrapper = styled.div`
   width: 50%;
   padding-right: 14px;
   box-sizing: border-box;
-  @media (max-width: 2000px) {
+  @media (max-width: 768px) {
     width: 100%;
     padding-right: 0;
   }
@@ -84,15 +84,14 @@ export const RightColumnWrapper = styled.div`
   width: 50%;
   padding-left: 14px;
   box-sizing: border-box;
-  @media (max-width: 2000px) {
+  @media (max-width: 768px) {
     width: 100%;
-    padding-left: 0;
   }
 `;
 
 export const ContentWrapper = styled.div`
   display: flex;
-  @media (max-width: 2000px) {
+  @media (max-width: 768px) {
     display: block;
   }
 `;

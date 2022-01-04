@@ -14,7 +14,14 @@ import LoansAndSavings from '../../components/LoansAndSavings/index';
 import etherScanIcon from '../../assets/icons/etherScan-icon.svg';
 import etherScanDark from '../../assets/icons/etherScanDark-icon.svg';
 import PortfolioPerf from '../../components/portfolioperf/portfolioperf';
-import { TokenButtonsBlock, SendButton, EtherScanButton } from './styledComponents';
+import {
+  TokenButtonsBlock,
+  SendButton,
+  EtherScanButton,
+  MainBlocks,
+  LeftSideWrapper,
+  RightSideWrapper,
+} from './styledComponents';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -58,27 +65,17 @@ export default function Dashboard({ test, changeTheme }) {
       </Box>
       <TabPanel value={value} index={0}>
         <Page title="Dashboard">
-          <Container maxWidth="xl">
+          <Container>
             <Balance address={address} />
-            <Grid container spacing={6}>
-              <Grid item xs={12} md={6}>
-                <Grid container spacing={1}>
-                  {/*chart=========>*/}
-                  <Grid item xs={12} md={12}>
-                    <PortfolioPerf address={address} />
-                  </Grid>
-                  {/*ethAssets=========>*/}
-                  <Grid item xs={12} md={12}>
-                    <LoansAndSavings accountAddress={address} />
-                  </Grid>
-                </Grid>
-              </Grid>
-              {/*investment=============>*/}
-              <Grid item xs={12} md={6}>
+            <MainBlocks>
+              <LeftSideWrapper>
+                <PortfolioPerf address={address} />
+                <LoansAndSavings accountAddress={address} />
+              </LeftSideWrapper>
+              <RightSideWrapper>
                 <AllAssets isLightTheme={theme} address={address} />
-                <br />
-              </Grid>
-            </Grid>
+              </RightSideWrapper>
+            </MainBlocks>
           </Container>
         </Page>
       </TabPanel>
