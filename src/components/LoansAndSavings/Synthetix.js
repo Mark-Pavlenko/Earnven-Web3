@@ -23,7 +23,7 @@ import SnxTokenContractABI from '../../abi/SynthetixTokenContract.json';
 import SnxTokenAddressList from '../../contractAddress/SnxTokenAddress';
 import Addresses from '../../contractAddresses';
 import { useWeb3React } from '@web3-react/core';
-
+import { ethers } from 'ethers';
 export default function Synthetix({ accountAddress, onSynthetixTokenValue }) {
   const [SnxCollateralData, setSnxCollateralData] = useState([]);
   const [SnxTokenData, setSnxTokenData] = useState([]);
@@ -38,7 +38,7 @@ export default function Synthetix({ accountAddress, onSynthetixTokenValue }) {
 
   //logic implementing for web3 provider connection using web3 React hook
   async function getWeb3() {
-    const provider = await connector.getProvider();
+    const provider = active ? await connector.getProvider() : ethers.getDefaultProvider();
     const web3 = await new Web3(provider);
     return web3;
   }
@@ -190,7 +190,7 @@ export default function Synthetix({ accountAddress, onSynthetixTokenValue }) {
                 <br />
                 Chain &nbsp;&nbsp;&nbsp;&nbsp; Ethereum
                 <br />
-                Protocol &nbsp;&nbsp; Sythentix
+                Protocol &nbsp;&nbsp; Synthetix
               </div>
             </AccordionDetails>
           </Accordion>
