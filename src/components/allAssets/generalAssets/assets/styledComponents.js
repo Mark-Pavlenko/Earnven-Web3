@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 export const Main = styled.div`
+  width: 100%;
   background: ${(props) =>
     props.isLight ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)'};
   padding: 20px;
@@ -43,6 +44,8 @@ export const TotalTitle = styled.span`
 `;
 
 export const TotalValue = styled.div`
+  display: flex;
+  justify-content: flex-end;
   width: 33%;
   font-family: Saira, serif;
   font-style: normal;
@@ -53,6 +56,7 @@ export const TotalValue = styled.div`
 `;
 
 export const Title = styled.div`
+  color: ${(props) => (props.isLight ? '#1e1e20' : '#ffffff')};
   margin-top: 15px;
   margin-left: 27px;
 `;
@@ -224,7 +228,7 @@ export const TotalEmptyCell = styled.div`
 export const Part = styled.div`
   width: 30px;
   height: 21px;
-  background: #ffffff;
+  background: #4453ad;
   box-shadow: inset 0 5px 10px -6px rgba(51, 78, 131, 0.12);
   border-radius: 7px;
   font-family: Saira, serif;
@@ -235,6 +239,6 @@ export const Part = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #1e1e20;
+  color: #ffffff;
   margin-left: 5px;
 `;

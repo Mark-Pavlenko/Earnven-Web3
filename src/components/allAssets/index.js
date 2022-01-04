@@ -333,7 +333,6 @@ export default class index extends Component {
         </MobileView>
       </div>
     ));
-    // console.log(contents)
   };
 
   constructor() {
@@ -366,8 +365,6 @@ export default class index extends Component {
       <div>
         <div
           style={{
-            // width:'800px',
-            // height:'720px',
             background: 'transparent',
             border: '1px solid #737373',
             borderRadius: '10px',

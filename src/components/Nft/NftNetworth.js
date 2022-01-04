@@ -52,11 +52,6 @@ const NftNetworth = ({ changeTheme, NFTDATA, Account, address, ethUSDPrice }) =>
     },
   }));
   let sum = 0;
-  useEffect(() => {
-    NFTDATA.map((over) => {
-      getTransactionValue(over.txHash[0]);
-    });
-  }, [NFTDATA]);
 
   const NetWorthText = styled(Typography)(({ theme }) => ({
     marginLeft: '22px',
@@ -80,6 +75,7 @@ const NftNetworth = ({ changeTheme, NFTDATA, Account, address, ethUSDPrice }) =>
   }
 
   const getTransactionValue = async (hash) => {
+    console.log('hash', hash);
     const web3 = await getWeb3();
     var tx = '';
     try {
@@ -101,6 +97,14 @@ const NftNetworth = ({ changeTheme, NFTDATA, Account, address, ethUSDPrice }) =>
       }
     }
   };
+
+  useEffect(() => {
+    console.log('NFTDATA', NFTDATA);
+    NFTDATA.map((over) => {
+      getTransactionValue(over.txHash[0]);
+    });
+  }, [NFTDATA]);
+
   return (
     <div style={{ display: 'flex' }}>
       <NetWorth>

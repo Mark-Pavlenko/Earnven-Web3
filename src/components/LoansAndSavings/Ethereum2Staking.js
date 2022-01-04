@@ -108,6 +108,7 @@ export default function Ethereum2Staking({ accountAddress }) {
 
   return (
     <React.Fragment>
+      <h1>ETHEREUM</h1>
       <div
         style={{
           fontSize: '15px',

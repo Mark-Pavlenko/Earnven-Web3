@@ -360,6 +360,7 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
   const IronBankLayout = (item) => {
     return (
       <div>
+        <h1>CREAM IRON BANK</h1>
         {parseFloat(item.price) > 0 ? (
           <div>
             <div>

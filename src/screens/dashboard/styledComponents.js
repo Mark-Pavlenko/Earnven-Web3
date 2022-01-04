@@ -36,3 +36,31 @@ export const EtherScanButton = styled.div`
   border: none;
   cursor: pointer;
 `;
+
+export const MainBlocks = styled.div`
+  display: flex;
+  @media (max-width: 375px) {
+    display: block;
+  }
+`;
+
+export const LeftSideWrapper = styled.div`
+  width: 55%;
+  margin-right: 35px;
+  @media (max-width: 768px) {
+    width: 45%;
+  }
+  @media (max-width: 375px) {
+    width: 100%;
+  }
+`;
+
+export const RightSideWrapper = styled.div`
+  width: 45%;
+  @media (max-width: 768px) {
+    width: 55%;
+  }
+  @media (max-width: 375px) {
+    width: 100%;
+  }
+`;
