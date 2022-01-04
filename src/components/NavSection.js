@@ -315,13 +315,6 @@ NavSection.propTypes = {
 export default function NavSection({ navConfig, address, ...other }) {
   const dispatch = useDispatch();
 
-  // console.log('navConfig', navConfig);
-
-  function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
-  // console.log(capitalizeFirstLetter('foo')); // Foo
-
   useEffect(() => {
     dispatch({ type: 'GET_HEADER_TITLES', payload: navConfig });
   }, []);

@@ -5,7 +5,7 @@ export const RootStyle = styled('div')`
     props.isLightTheme
       ? `url(${require(`./../assets/images/lightDashboard.jpg`).default})`
       : `#0B0E1D`};
-  @media (min-width: 1880px) {
+  @media (min-width: 1930px) {
     background: ${(props) =>
       props.isLightTheme
         ? `url(${require(`./../assets/images/lightDashboardBig.jpg`).default})`
@@ -20,7 +20,7 @@ export const MainStyle = styled('div')`
     props.isLightTheme
       ? `url(${require(`./../assets/images/lightDashboard.jpg`).default})`
       : `#0B0E1D`};
-  @media (min-width: 1880px) {
+  @media (min-width: 1930px) {
     background: ${(props) =>
       props.isLightTheme
         ? `url(${require(`./../assets/images/lightDashboardBig.jpg`).default})`
@@ -35,5 +35,6 @@ export const MainStyle = styled('div')`
 
   @media (min-width: 1280px) {
     margin-left: 314px;
+    margin-top: -24px;
   }
 `;
