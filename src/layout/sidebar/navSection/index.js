@@ -51,7 +51,7 @@ function NavItemDisabled({ item, active, address }) {
   const isActiveRoot = active(`/${address}${path}`);
 
   return (
-    <>
+    <div style={{ marginBottom: '0px' }}>
       <ListItemElementDisabled
         isLightTheme={themeType}
         button
@@ -63,7 +63,7 @@ function NavItemDisabled({ item, active, address }) {
         <ListItemText style={{ marginTop: '-10px' }} disableTypography primary={title} />
       </ListItemElementDisabled>
       <ItemSubTextDisabled isLightTheme={themeType} disableTypography primary="Coming soon" />
-    </>
+    </div>
   );
 }
 

@@ -43,7 +43,7 @@ export const ListItemElement = MUIStyles(ListItem)(({ isLightTheme }) => ({
 export const ListItemElementDisabled = MUIStyles(ListItem)(({ isLightTheme }) => ({
   ListItemGeneralStyles,
   color: isLightTheme ? 'black' : 'white',
-
+  // marginBottom: '30px',
   opacity: '0.5',
   textTransform: 'capitalize',
 
