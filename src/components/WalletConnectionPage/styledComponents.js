@@ -28,9 +28,9 @@ export const MainStyle = styled.div`
   }
 
   @media (min-width: 711px) {
-    padding-right: 35px;
-    padding-bottom: 20px;
-    padding-left: 35px;
+    //padding-right: 35px;
+    //padding-bottom: 20px;
+    //padding-left: 35px;
   }
 
   @media (min-width: 1280px) {

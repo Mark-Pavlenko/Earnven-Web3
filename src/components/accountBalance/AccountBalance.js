@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import Web3 from 'web3';
-import { Typography } from '@material-ui/core';
 import { string } from 'prop-types';
 import actionTypes from '../../constants/actionTypes';
-import { CommaFormatted } from '../../modules/common/commaFormatter';
 import { useDispatch, useSelector } from 'react-redux';
+import { AccountBalanceValue } from './styles';
 
 function AccountBalance({ address, accountBalance }) {
-  // console.log('accountBalance', accountBalance);
+  const themeType = useSelector((state) => state.themeReducer.isLightTheme);
   const dispatch = useDispatch();
   const [totalValue, setTotalValue] = useState('00.00');
 
@@ -36,9 +33,9 @@ function AccountBalance({ address, accountBalance }) {
       {isLoading ? (
         <div style={{ color: 'red' }}>loading</div>
       ) : (
-        <Typography sx={{ color: (theme) => 'red' }} variant="primaryFont1">
+        <AccountBalanceValue isLightTheme={themeType}>
           ${accountBalance?.finalTotal}
-        </Typography>
+        </AccountBalanceValue>
       )}
     </>
   );

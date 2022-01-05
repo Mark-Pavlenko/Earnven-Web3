@@ -17,9 +17,8 @@ import Links from './social/Links';
 import darkTheme from '../../assets/images/darkTheme.jpg';
 import lightTheme from '../../assets/images/lightTheme.jpg';
 import { useSelector } from 'react-redux';
-const DRAWER_WIDTH = 315;
 
-import { RootStyle } from './styles';
+import { RootStyle, LogoBlock, LogoImg } from './styles';
 
 Sidebar.propTypes = {
   isOpenSidebar: PropTypes.bool,
@@ -58,26 +57,16 @@ export default function Sidebar({
         boxShadow: '0 2px 3px 30px #d2dcf6',
         '& .simplebar-content': { display: 'flex', flexDirection: 'column' },
       }}>
-      <Box sx={{ px: '38.91%', pb: 1, mt: '8%', ml: '-20px' }}>
-        <Stack
-          direction="row"
-          spacing={2}
-          sx={{
-            position: 'relative',
-            bgcolor: 'transparent',
-          }}>
-          <img src={CompanyLogo} alt="" />
-          <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
-        </Stack>
-      </Box>
-      <Box sx={{ px: 8 }}>
-        <Account
-          address={address}
-          name={name}
-          setTheme={isLightTheme}
-          global_wallet={global_wallet}
-        />
-      </Box>
+      <LogoBlock>
+        <LogoImg src={CompanyLogo} alt="" />
+        <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
+      </LogoBlock>
+      <Account
+        address={address}
+        name={name}
+        setTheme={isLightTheme}
+        global_wallet={global_wallet}
+      />
       <NavSection
         sx={{ px: 8, color: 'black' }}
         navConfig={newSideBard}
@@ -95,7 +84,11 @@ export default function Sidebar({
           open={isOpenSidebar}
           onClose={onCloseSidebar}
           PaperProps={{
-            sx: { width: DRAWER_WIDTH, overflow: 'auto', height: 'auto' },
+            sx: {
+              width: '315px',
+              overflow: 'auto',
+              height: 'auto',
+            },
           }}>
           {renderContent}
         </Drawer>
@@ -107,7 +100,7 @@ export default function Sidebar({
           variant="persistent"
           PaperProps={{
             sx: {
-              width: DRAWER_WIDTH,
+              width: '315px',
               height: 'auto',
               overflow: 'auto',
             },

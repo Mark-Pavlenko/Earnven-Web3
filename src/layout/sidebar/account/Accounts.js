@@ -28,7 +28,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { RiSettings5Line } from 'react-icons/ri';
 import { VscAdd } from 'react-icons/vsc';
-import './account.css';
+import './styles';
 import { useNavigate } from 'react-router-dom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { MdContentCopy } from 'react-icons/md';
