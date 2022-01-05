@@ -16,7 +16,7 @@
     }
 }
 .maindiv {
-    position: fixed;
+    /*position: fixed;*/
     bottom: 5%;
     margin-left: 35px;
 }

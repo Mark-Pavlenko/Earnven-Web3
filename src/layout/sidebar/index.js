@@ -18,7 +18,7 @@ import darkTheme from '../../assets/images/darkTheme.jpg';
 import lightTheme from '../../assets/images/lightTheme.jpg';
 import { useSelector } from 'react-redux';
 
-import { RootStyle, LogoBlock, LogoImg } from './styles';
+import { RootStyle, LogoBlock, LogoImg, SidebarMainLayout } from './styles';
 
 Sidebar.propTypes = {
   isOpenSidebar: PropTypes.bool,
@@ -52,28 +52,32 @@ export default function Sidebar({
   const renderContent = (
     <Scrollbar
       sx={{
-        height: '100vh',
+        // height: '100vh',
+        // url(${darkTheme})
+        'background-image': () => (isLightTheme ? `url(${lightTheme})` : `#1f265c`),
+        // backgroundColor: 'red',
 
-        boxShadow: '0 2px 3px 30px #d2dcf6',
         '& .simplebar-content': { display: 'flex', flexDirection: 'column' },
       }}>
-      <LogoBlock>
-        <LogoImg src={CompanyLogo} alt="" />
-        <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
-      </LogoBlock>
-      <Account
-        address={address}
-        name={name}
-        setTheme={isLightTheme}
-        global_wallet={global_wallet}
-      />
-      <NavSection
-        sx={{ px: 8, color: 'black' }}
-        navConfig={newSideBard}
-        address={address}
-        setTheme={setTheme}
-      />
-      <Links setTheme={setTheme} />
+      <SidebarMainLayout isLightTheme={isLightTheme}>
+        <LogoBlock>
+          <LogoImg src={CompanyLogo} alt="" />
+          <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
+        </LogoBlock>
+        <Account
+          address={address}
+          name={name}
+          setTheme={isLightTheme}
+          global_wallet={global_wallet}
+        />
+        <NavSection
+          sx={{ px: 8, color: 'black' }}
+          navConfig={newSideBard}
+          address={address}
+          setTheme={setTheme}
+        />
+        <Links setTheme={setTheme} />
+      </SidebarMainLayout>
     </Scrollbar>
   );
 
@@ -106,6 +110,8 @@ export default function Sidebar({
               overflow: 'auto',
               // backgroundColor: 'red',
               backgroundColor: 'transparent !important',
+              // boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+              // backdropFilter: 'blur(35px)',
               border: 'none',
             },
           }}>
