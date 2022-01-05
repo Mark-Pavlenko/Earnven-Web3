@@ -2,17 +2,22 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { matchPath, NavLink as RouterLink, useLocation } from 'react-router-dom';
 import { Box, Collapse, List, ListItemText } from '@material-ui/core';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
   ListItemElement,
   ListItemElementDisabled,
   ListItemElementIcon,
   ListItemElementDisabledIcon,
+  ItemSubText,
+  ItemSubTextDisabled,
+  MainNavLayout,
+  NavList,
 } from './styles';
 
 // active navigation element
 function NavItem({ item, active, address }) {
+  const themeType = useSelector((state) => state.themeReducer.isLightTheme);
   const { title, path, icon, info, children } = item;
   const isActiveRoot = active(`/${address}${path}`);
 
@@ -22,6 +27,7 @@ function NavItem({ item, active, address }) {
 
   return (
     <ListItemElement
+      isLightTheme={themeType}
       onClick={() => {
         setNavigation();
       }}
@@ -40,47 +46,23 @@ function NavItem({ item, active, address }) {
 
 // disabled navigation element
 function NavItemDisabled({ item, active, address }) {
+  const themeType = useSelector((state) => state.themeReducer.isLightTheme);
   const { title, path, icon, info, children } = item;
   const isActiveRoot = active(`/${address}${path}`);
-  const [open, setOpen] = useState(isActiveRoot);
-
-  const handleOpen = () => {
-    setOpen((prev) => !prev);
-    console.log('setOpen');
-  };
 
   return (
     <>
       <ListItemElementDisabled
+        isLightTheme={themeType}
         button
         disableGutters
         sx={{
-          mt: 0.2,
           ...isActiveRoot,
         }}>
         <ListItemElementDisabledIcon>{icon && icon}</ListItemElementDisabledIcon>
-        <ListItemText
-          sx={{
-            color: localStorage.getItem('selectedTheme') == 'Day' ? '#000000' : '#CCCFCF',
-            opacity: '0.5',
-          }}
-          disableTypography
-          primary={title}
-        />
-        {info && info}
+        <ListItemText style={{ marginTop: '-10px' }} disableTypography primary={title} />
       </ListItemElementDisabled>
-      <ListItemText
-        sx={{
-          color: localStorage.getItem('selectedTheme') == 'Day' ? '#000000' : '#CCCFCF',
-          opacity: '0.5',
-          display: 'flex',
-          marginLeft: '5.6rem',
-          fontSize: '10px',
-          marginTop: '-17px',
-        }}
-        disableTypography
-        primary="Coming soon"
-      />
+      <ItemSubTextDisabled isLightTheme={themeType} disableTypography primary="Coming soon" />
     </>
   );
 }
@@ -102,8 +84,8 @@ export default function NavSection({ navConfig, address, ...other }) {
   };
 
   return (
-    <Box {...other} sx={{ pl: 7, overflow: 'hidden', mt: 2 }}>
-      <List disablePadding>
+    <MainNavLayout>
+      <NavList disablePadding>
         {navConfig.map((item) => {
           // disabled last two elements in navBar
           return item.title === 'yield farms' || item.title === 'savings' ? (
@@ -118,8 +100,8 @@ export default function NavSection({ navConfig, address, ...other }) {
             />
           );
         })}
-      </List>
-    </Box>
+      </NavList>
+    </MainNavLayout>
   );
 }
 
