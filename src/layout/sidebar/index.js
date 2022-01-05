@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Scrollbar from '../../components/Scrollbar';
 import { getRecall } from '../SidebarConfig';
-import NavSection from '../../components/NavSection';
+import NavSection from './navSection';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import React from 'react';
