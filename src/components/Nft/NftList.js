@@ -80,13 +80,12 @@ export default function NftList({
       (over) => over.count_flag > pivot_front && over.count_flag < p
     );
     sethalfNFTdata(partialdata);
-    console.log('sathua in second', halfNFTdata);
   }
 
   // get nft data from store
-  // const nftArray = useSelector((state) => state.nftData.nftData);
-  // nftArray.length > 0 && console.log('nftArray', nftArray[0].data.assets[0]);
-  // console.log('nftArray full', nftArray);
+  const nftArray = useSelector((state) => state.nftData.nftData);
+  nftArray.length > 0 && console.log('nftArray', nftArray[0].data.assets[0]);
+  console.log('nftArray full', nftArray);
 
   return (
     <InfiniteScroll dataLength={halfNFTdata.length} next={second} hasMore={true}>

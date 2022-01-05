@@ -10,5 +10,5 @@ export function* getNftDataSagaWatcher() {
 function* NFTworker(data) {
   const attributes = data.payload;
   const nft = yield call(API.getNFTdata, attributes);
-  yield put(actions.getNftData(nft));
+  yield put(actions(nft));
 }

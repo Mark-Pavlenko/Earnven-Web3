@@ -228,7 +228,7 @@ export const TotalEmptyCell = styled.div`
 export const Part = styled.div`
   width: 30px;
   height: 21px;
-  background: #4453ad;
+  background: ${(props) => (props.isLight ? '#ffffff' : '#4453ad')};
   box-shadow: inset 0 5px 10px -6px rgba(51, 78, 131, 0.12);
   border-radius: 7px;
   font-family: Saira, serif;
@@ -239,6 +239,6 @@ export const Part = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
+  color: ${(props) => (props.isLight ? '#1E1E20' : '#ffffff')};
   margin-left: 5px;
 `;

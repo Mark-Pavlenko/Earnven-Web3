@@ -43,11 +43,14 @@ export default function Dashboard({ test, changeTheme }) {
   const { address } = useParams();
   const [value, setValue] = useState(0);
 
-  const ownWallet = '0x49a2dcc237a65cc1f412ed47e0594602f6141936';
   const currentWallet = localStorage.getItem('selected-account');
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+
+  const connectEtherScan = () => {
+    window.open(`https://etherscan.io/address/${currentWallet}`, '_blank');
   };
 
   return (
@@ -55,8 +58,9 @@ export default function Dashboard({ test, changeTheme }) {
       <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <DashboardTabs isLightTheme={theme} toggleTabsHandler={handleChange} />
         <TokenButtonsBlock>
-          {currentWallet === ownWallet && <SendButton isLightTheme={theme} icon={sendIcon} />}
+          <SendButton isLightTheme={theme} icon={sendIcon} />
           <EtherScanButton
+            onClick={connectEtherScan}
             isLightTheme={theme}
             icon={etherScanIcon}
             etherScanDark={etherScanDark}
