@@ -6,6 +6,8 @@ import actionTypes from '../../constants/actionTypes';
 const initialState = {
   yearnFinanceData: [],
   yearnFinanceTotal: 0,
+  yearnYTokenData: [],
+  yearnYTokenTotal: 0,
 };
 //takes two arguments: The current state and the action and returns the new state.
 export const yearnFinance = (state = initialState, action) => {
@@ -19,6 +21,16 @@ export const yearnFinance = (state = initialState, action) => {
       return {
         ...state,
         yearnFinanceTotal: action?.payload,
+      };
+    case actionTypes.GET_YTOKEN_DATA:
+      return {
+        ...state,
+        yearnYTokenData: action?.payload,
+      };
+    case actionTypes.GET_YTOKEN_TOTAL:
+      return {
+        ...state,
+        yearnYTokenTotal: action?.payload,
       };
     default:
       return state;
