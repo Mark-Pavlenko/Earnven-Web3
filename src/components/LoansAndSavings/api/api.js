@@ -1,4 +1,5 @@
 import axios from 'axios';
+import YearnTokenContract from '../../../abi/YearnTokenContract.json';
 import addresses from '../../../contractAddresses';
 
 //for eth2.0 protocol section
@@ -203,4 +204,41 @@ export const getYearnUserData = async (accountAddress) => {
 export const getYearnData = async () => {
   const response = await axios.get(`https://api.yearn.finance/v1/chains/1/vaults/all`);
   return response;
+};
+
+//use below API call to get the given user level information for yearn Finance
+export const getUserAccountInfo = async (accountAddress) => {
+  const response = await axios.get(
+    `https://api.ethplorer.io/getAddressInfo/${accountAddress}?apiKey=EK-qSPda-W9rX7yJ-UY93y`,
+    {}
+  );
+  return response;
+};
+//get yearn finance token price
+export const getYearnTokenPrice = async (contractAddress) => {
+  let result = await axios.get(
+    `https://api.coingecko.com/api/v3/coins/ethereum/contract/${contractAddress}`
+  );
+  return result;
+};
+
+//get yearn.Finanace contract data
+
+export const getYearnTokenData = async (accountAddress, tokenAddress, web3) => {
+  const yTokenContract = new web3.eth.Contract(YearnTokenContract, tokenAddress);
+  let yTokenBalance = await yTokenContract.methods.balanceOf(accountAddress).call();
+  let yTokenName = await yTokenContract.methods.name().call();
+  let yTokenSymbol = await yTokenContract.methods.symbol().call();
+  let yTokenDecimals = await yTokenContract.methods.decimals().call();
+  let yTokenUnderlyingToken = await yTokenContract.methods.token().call();
+  let yTokenTotalSupply = await yTokenContract.methods.totalSupply().call();
+
+  return {
+    yTokenBalance: yTokenBalance, // yToken Balance
+    yTokenName: yTokenName, //yTokenName
+    yTokenSymbol: yTokenSymbol, // yTokenSymbol
+    yTokenDecimals: yTokenDecimals, //yTokenDecimals
+    yTokenUnderlyingToken: yTokenUnderlyingToken, //yToken underlying Token to get token info
+    yTokenTotalSupply: yTokenTotalSupply, //yToken Total supply
+  };
 };
