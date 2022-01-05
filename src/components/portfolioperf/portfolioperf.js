@@ -60,7 +60,7 @@ export default class PortfolioPerf extends Component {
           type: 'area',
           height: 'auto',
           zoom: {
-            autoScaleYaxis: true,
+            autoScaleYAxis: true,
           },
           sparkline: {
             enabled: true,
@@ -100,7 +100,7 @@ export default class PortfolioPerf extends Component {
         dataLabels: {
           enabled: false,
           style: {
-            colors: ['#BB86FC'],
+            colors: ['#000000'],
           },
         },
         legend: {},
@@ -204,38 +204,43 @@ export default class PortfolioPerf extends Component {
         stroke: {
           show: true,
           curve: 'smooth',
-          width: 1,
-          colors: ['#BB86FC'],
+          lineCap: 'butt',
+          colors: ['blue'],
+          width: 2,
+          dashArray: 0,
         },
         fill: {
-          colors: ['#493864', '#291d41', '#1c515b'],
-          opacity: 0.4,
           type: 'gradient',
           gradient: {
-            shadeIntensity: 0,
+            shade: 'dark',
             type: 'horizontal',
-            stops: [0, 100],
+            shadeIntensity: 0.5,
+            gradientToColors: ['gray', 'red'],
             colorStops: [
               {
                 offset: 0,
-                color: '#493864',
-                opacity: 0.4,
+                color: 'transparent',
+                opacity: 1,
               },
               {
-                offset: 35,
-                color: '#291d41',
-                opacity: 0.4,
+                offset: 50,
+                color: 'transparent',
+                opacity: 1,
               },
               {
-                offset: 70,
-                color: '#1c515b',
-                opacity: 0.4,
+                offset: 100,
+                color: 'transparent',
+                opacity: 1,
               },
-            ],
+            ], // optional, if not defined - uses the shades of same color in series
+            inverseColors: true,
+            opacityFrom: 1,
+            opacityTo: 1,
+            stops: [0, 50, 100],
           },
         },
         title: {
-          text: 'Portfolio Performance',
+          text: this.props.totalValue,
           align: 'left',
           margin: 20,
           offsetX: 15,
@@ -326,7 +331,13 @@ export default class PortfolioPerf extends Component {
 
   render() {
     return (
-      <div style={{ border: '1px solid #737373', borderRadius: '10px' }}>
+      <div
+        style={{
+          // border: '1px solid #737373',
+          borderRadius: '10px',
+          backgroundColor: 'rgba(255, 255, 255, 0.16',
+          boxShadow: 'box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+        }}>
         <div>
           <div style={{ textAlign: 'end' }}>
             {/* <button id="one_month"

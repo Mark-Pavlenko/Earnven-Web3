@@ -528,7 +528,7 @@ export default class Assets extends Component {
                           )}
                           <NameWrapper>
                             <TokenName isLight={this.props.isLightTheme}>{object.name}</TokenName>
-                            <Part>{'17%'}</Part>
+                            <Part isLight={this.props.isLightTheme}>{'17%'}</Part>
                           </NameWrapper>
                         </AssetsColumn>
 
