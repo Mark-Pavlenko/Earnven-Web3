@@ -19,7 +19,7 @@ export default function AppLayout() {
   const [open, setOpen] = useState(false);
 
   return (
-    <RootStyle>
+    <RootStyle isLightTheme={themeType}>
       <Header onOpenSidebar={() => setOpen(true)} themeType={themeType} finalTitle={finalTitle} />
       <Sidebar
         isOpenSidebar={open}

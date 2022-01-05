@@ -19,6 +19,7 @@ import exchangeDark from '../assets/icons/exchangeDark.svg';
 import iconoir_flashDark from '../assets/icons/iconoir_flashDark.svg';
 import sketchDark from '../assets/icons/sketchDark.svg';
 import cubeDark from '../assets/icons/cubeDark.svg';
+import { useSelector } from 'react-redux';
 
 const getIcon = (name) => (
   <div

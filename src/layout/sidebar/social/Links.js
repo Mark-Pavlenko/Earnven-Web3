@@ -38,9 +38,7 @@ const CustomStyle = styled('a')(({ theme }) => ({
   },
 }));
 
-const theme = createTheme();
 const Links = () => {
-  const preventDefault = (event) => event.preventDefault();
   const classes = useStyles();
 
   return (

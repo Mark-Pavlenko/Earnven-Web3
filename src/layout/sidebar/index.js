@@ -53,7 +53,7 @@ export default function Sidebar({
     <Scrollbar
       sx={{
         height: '100vh',
-        'background-image': () => (!isLightTheme ? `url(${darkTheme})` : `url(${lightTheme})`),
+
         boxShadow: '0 2px 3px 30px #d2dcf6',
         '& .simplebar-content': { display: 'flex', flexDirection: 'column' },
       }}>
@@ -88,6 +88,7 @@ export default function Sidebar({
               width: '315px',
               overflow: 'auto',
               height: 'auto',
+              backgroundColor: 'transparent',
             },
           }}>
           {renderContent}
@@ -103,6 +104,8 @@ export default function Sidebar({
               width: '315px',
               height: 'auto',
               overflow: 'auto',
+              // backgroundColor: 'red',
+              backgroundColor: 'transparent !important',
             },
           }}>
           {renderContent}

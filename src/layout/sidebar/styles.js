@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 export const RootStyle = styled.div`
+  background-color: red;
   @media (max-width: 1280px) {
     display: none;
   }
