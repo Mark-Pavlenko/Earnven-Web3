@@ -106,6 +106,7 @@ export default function Sidebar({
               overflow: 'auto',
               // backgroundColor: 'red',
               backgroundColor: 'transparent !important',
+              border: 'none',
             },
           }}>
           {renderContent}

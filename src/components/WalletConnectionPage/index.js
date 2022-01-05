@@ -43,7 +43,7 @@ import {
 //correct web3 connection
 import { useWeb3React } from '@web3-react/core';
 import { useSelector } from 'react-redux';
-import searchIcon from '../../assets/icons/searchIcon.png';
+import searchIcon from '../../assets/icons/searchIconLight.png';
 
 const useStyles = makeStyles(() => ({
   noBorder: {
@@ -59,7 +59,7 @@ export default function Index() {
   const themeType = useSelector((state) => state.themeReducer.isLightTheme);
 
   const [open, setOpen] = useState(false);
-  console.log('themeType', themeType);
+  console.log('isLightTheme on wallet page connection', themeType);
 
   //correct web3 connection
   // const { active, account, library, connector, activate, deactivate } = useWeb3React();
@@ -261,12 +261,12 @@ export default function Index() {
         <MainSubLayout>
           <MainSubLayoutTitle isLightTheme={themeType}>Connect a wallet</MainSubLayoutTitle>
           <MetaMaskBtn
-            isLightTheme={true}
+            isLightTheme={themeType}
             onClick={connectMetamask}
             disableElevation
             fullWidth
             startIcon={<img src={metamaskWalletLogo} alt="" />}>
-            MetaMask
+            Metamask
           </MetaMaskBtn>
 
           <WalletButtonsLayout>
@@ -349,8 +349,8 @@ export default function Index() {
               disabled
               startIcon={<WalletBtnConnectImg src={ledgerWalletIcon} alt="" />}>
               <div>
-                <WalletBtnName> Atomic</WalletBtnName>
-                <ComingSoonItem> Ledger</ComingSoonItem>
+                <WalletBtnName>Ledger</WalletBtnName>
+                <ComingSoonItem>Coming soon</ComingSoonItem>
               </div>
             </WalletBtnConnect>
 
@@ -360,7 +360,7 @@ export default function Index() {
               startIcon={<WalletBtnConnectImg src={trezorWalletIcon} alt="" />}>
               <div>
                 <WalletBtnName> Trezor</WalletBtnName>
-                <ComingSoonItem> Ledger</ComingSoonItem>
+                <ComingSoonItem>Coming soon</ComingSoonItem>
               </div>
             </WalletBtnConnect>
           </WalletButtonsLayout>

@@ -3,15 +3,9 @@ import styled from 'styled-components';
 import { Button, TextField } from '@material-ui/core';
 
 export const RootStyle = styled.div`
-  background: ${(props) =>
-    props.isLightTheme
-      ? `url(${require(`../../assets/images/lightDashboard.jpg`).default})`
-      : `#0B0E1D`};
-  @media (min-width: 1930px) {
-    background: ${(props) =>
-      props.isLightTheme
-        ? `url(${require(`../../assets/images/lightDashboardBig.jpg`).default})`
-        : `#0B0E1D`};
+  background: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};
+  @media (min-width: 1281px) {
+    background: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};
   }
 `;
 
@@ -22,7 +16,7 @@ export const MainStyle = styled.div`
   height: 100vh;
 
   @media (max-width: 710px) {
-    padding-top: 27px;
+    //padding-top: 27px;
     padding-left: 15px;
     padding-right: 15px;
   }
@@ -45,6 +39,10 @@ export const MainSubLayout = styled.div`
   @media (max-width: 600px) {
     width: 345px;
   }
+
+  @media (max-width: 710px) {
+    margin-top: 23px;
+  }
 `;
 
 export const MainSubLayoutTitle = styled.p`
@@ -53,7 +51,9 @@ export const MainSubLayoutTitle = styled.p`
   color: ${(props) => (props.isLightTheme ? '#000000' : '#ffffff')};
   @media (max-width: 710px) {
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 500;
+    font-style: normal;
+    //font-weight: bold;
   }
 `;
 
@@ -61,12 +61,12 @@ export const MetaMaskBtn = styled(Button)`
   font-size: 16px;
   height: 60px;
   border-radius: 10px;
-  background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#10142D')};
+  background-color: #ffffff;
   box-shadow: ${(props) =>
     props.isLightTheme
       ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
       : '  inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
-  color: ${(props) => (props.isLightTheme ? '#8F86FF' : '#8F86FF')};
+  color: ${(props) => (props.isLightTheme ? '#4453AD' : '#8F86FF')};
 
   :hover {
     background-color: #e5e5e5;
@@ -94,14 +94,14 @@ export const WalletBtnConnect = styled(Button)`
   height: 60px;
   width: 171px;
   font-size: 16px;
-  background: #85868e;
+  background: #ffffff;
   box-shadow: inset 0 5px 10px -6px rgba(51, 78, 131, 0.12);
   border-radius: 10px;
-  border: none;
-  //opacity: 0.5;
+  border: none !important;
+  opacity: 0.5;
 
   div {
-    color: #4e4a8e !important;
+    color: #8f86ff !important;
   }
 
   :hover {

@@ -67,7 +67,7 @@ export const HeaderTitle = styled.div`
   }
 
   @media (max-width: 711px) {
-    margin-top: 30px;
+    margin-top: 23px;
     margin-left: 15px;
   }
 
