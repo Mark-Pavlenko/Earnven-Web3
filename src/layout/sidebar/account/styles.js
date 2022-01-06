@@ -11,15 +11,25 @@ export const AccountStyle = styled.div`
   margin-right: 20px;
 `;
 
+const handleBackgroundColorBtn = (isLightTheme, isBlockActivated) => {
+  switch (true) {
+    case isBlockActivated && isLightTheme:
+      return 'color: orange; background: #E5E5E5; backdrop-filter: blur(35px); box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);';
+    case !isBlockActivated && isLightTheme:
+      return 'color: orange; background: white; box-shadow: 4px 6px 20px -5px rgba(51, 78, 131, 0.17);';
+    case isBlockActivated && !isLightTheme:
+      return 'color: orange; background: #1F265C; backdrop-filter: blur(35px); box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);';
+    default:
+      return 'color: orange; background: #1F265C; backdrop-filter: blur(35px); box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);';
+  }
+};
+
 export const WalletsListBlock = styled.div`
   display: flex;
   flex-direction: column;
-  background: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C')};
-  box-shadow: ${(props) =>
-    props.isLightTheme
-      ? 'inset 0 0 4px rgba(68, 83, 173, 0.1)'
-      : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
-  backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
+
+  ${(props) => handleBackgroundColorBtn(props.isLightTheme, props.isBlockActivated)};
+
   border-radius: 10px;
   width: 186px;
   height: 74px;

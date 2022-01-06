@@ -152,12 +152,13 @@ export default function Account({ address, name, global_wallet, setTheme }) {
     }
   }
 
+  // console.log('if wallet block is clicked', arrowicon);
   return (
     <>
       {address ? (
         <>
           <AccountStyle ref={anchorRef} onClick={showAccountPopover} isLightTheme={themeType}>
-            <WalletsListBlock isLightTheme={themeType}>
+            <WalletsListBlock isLightTheme={themeType} isBlockActivated={arrowicon}>
               <FirstWalletsListBlock>
                 <UserAvatar src={accountLogo} alt="photoURL" />
                 <WalletAddress isLightTheme={themeType}>
