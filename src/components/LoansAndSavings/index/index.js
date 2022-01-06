@@ -84,17 +84,18 @@ export default function Index({ accountAddress }) {
   const [CurveStakeData, setCurveStakeData] = useState([]); // Curve
   const [CurveStakeContent, setCurveStakeContent] = useState([]); // Curve
   const [CurveStakeTotal, setCurveStakeTotal] = useState([0]); // Curve Total
+
   // BalancerV2
   const [BalancerTotalv2, setBalancerTotalv2] = useState([]);
   const [BalancerPoolsDatav2, setBalancerPoolsDatav2] = useState([]);
   const [BalancerPoolsContentv2, setBalancerPoolsContentv2] = useState([]);
+
   //Curve Lp token
   const [CurveLpdata, setCurveLpData] = useState([]); // get curve lp token data
   //Synthetix data points
   const [SynthetixData, setSynthetixData] = useState([]); // get curve lp token data
   //YearnToken
   const [YearnTokenValue, setYearnTokenValue] = useState([]);
-
   //get the value from the child component of the curve lp token
   const getCurveLpToken = (data) => {
     setCurveLpData(data);
@@ -412,7 +413,6 @@ export default function Index({ accountAddress }) {
 
   useEffect(() => {
     const content = BalancerPoolsData.map((object) => {
-      console.log('BalancerPoolsData', object);
       return (
         <Investment protocol={object} protocolName={'Balancer V1'} />
         // <Tooltip
@@ -1206,7 +1206,6 @@ export default function Index({ accountAddress }) {
     //         let tot = 0;
     //         for (var i = 0; i < res.length; i++) {
     //           const object = {};
-
     //           await axios
     //             .get(
     //               `https://api.coingecko.com/api/v3/coins/ethereum/contract/${res[i].vault.token.id}`,
@@ -1217,7 +1216,6 @@ export default function Index({ accountAddress }) {
     //               res[i].image = priceData.data.image.thumb;
     //             })
     //             .catch((err) => {});
-
     //           object.balanceShares = res[i].balanceShares;
     //           object.sharePrice = res[i].vault.latestUpdate.pricePerShare;
     //           object.shareTokenAddress = res[i].vault.shareToken.id;
@@ -1315,6 +1313,7 @@ export default function Index({ accountAddress }) {
     getBalancerData();
     getSushiV2Data();
     getCurveData();
+    getBalancerV2Data();
   }, [accountAddress]);
 
   const poolsHandler = () => {
@@ -1336,6 +1335,9 @@ export default function Index({ accountAddress }) {
   return (
     <ContentWrapper>
       <LeftColumnWrapper>
+        <AaveStaking accountAddress={accountAddress} />
+        <UniStaking accountAddress={accountAddress} />
+        <LiquityStaking accountAddress={accountAddress} />
         <PoolsBlock //first
           isLightTheme={theme}
           style={{
@@ -1364,15 +1366,15 @@ export default function Index({ accountAddress }) {
               </TotalValue>
             </TotalValueField>
           </div>
-          {/*<center>*/}
-          {/*  <div style={{ fontSize: '25px', color: 'white' }}>*/}
-          {/*    Pools Total :{' '}*/}
-          {/*    {parseFloat(*/}
-          {/*      UniV2Total + SushiV2Total + BalancerTotal + BalancerTotalv2 + BancorPoolTotal*/}
-          {/*    ).toFixed(2)}{' '}*/}
-          {/*    USD*/}
-          {/*  </div>*/}
-          {/*</center>*/}
+          <center>
+            <div style={{ fontSize: '25px', color: 'white' }}>
+              Pools Total :{' '}
+              {parseFloat(
+                UniV2Total + SushiV2Total + BalancerTotal + BalancerTotalv2 + BancorPoolTotal
+              ).toFixed(2)}{' '}
+              USD
+            </div>
+          </center>
           {isPoolsOpen && (
             <>
               {PoolsData.map((protocol) => {
@@ -1380,6 +1382,7 @@ export default function Index({ accountAddress }) {
               })}
               {BalancerPoolsContent}
               {BalancerPoolsContentv2}
+              <AaveStaking accountAddress={accountAddress} />
             </>
           )}
         </PoolsBlock>
