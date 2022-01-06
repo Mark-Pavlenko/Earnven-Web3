@@ -7,7 +7,9 @@ export const RootStyle = styled.div`
 `;
 
 export const SidebarMainLayout = styled.div`
-  //height: 100vh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const LogoBlock = styled.div`

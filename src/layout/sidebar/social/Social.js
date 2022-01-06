@@ -1,6 +1,4 @@
 import React from 'react';
-import './test.css';
-import { Box, Collapse, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { NetworksSubColumn, NetworksGridList } from './styles';
 import github from '../../../assets/icons/github_menu.svg';
 import fb_menu_icon from '../../../assets/icons/facebook_menu_logo.svg';

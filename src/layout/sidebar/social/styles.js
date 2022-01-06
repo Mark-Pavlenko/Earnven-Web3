@@ -1,11 +1,40 @@
 import styled from 'styled-components';
+import { List } from '@material-ui/core';
+
+export const MainLinksLayout = styled.div`
+  margin-top: auto;
+  margin-bottom: 55px;
+`;
+
+export const InfoLinksList = styled.div`
+  margin-left: 125px;
+`;
+
+export const InfoListItem = styled(List)`
+  margin-bottom: 20px;
+  text-decoration: none;
+  color: black;
+  font-size: 14px;
+  font-weight: 400;
+`;
+
+export const InfoListItemLink = styled('a')(({ isLightTheme }) => ({
+  color: isLightTheme ? 'black !important' : 'white !important',
+  fontWeight: 400,
+  fontSize: '14px',
+  textDecoration: 'none',
+  '&:hover': {
+    color: '#4453AD !important',
+    fontWeight: 500,
+  },
+}));
 
 export const NetworksGridList = styled.ul`
   display: inline-flex;
   flex-wrap: wrap;
   gap: 20px;
-  margin-top: 30px;
-  margin-left: 125px;
+  margin-top: 20px;
+  margin-left: 120px;
 
   li {
     padding: 4px;
