@@ -33,6 +33,7 @@ export default function YearnFinance({ accountAddress }) {
   //------Yearn.Finanace yVault data process-----------------//
   const YearnData = useSelector((state) => state.yearnFinance.yearnFinanceData);
   const YearnTotalValue = useSelector((state) => state.yearnFinance.yearnFinanceTotal);
+
   const yearnAccountAddress = { accountAddress: accountAddress };
   useEffect(() => {
     const getYearnUserData = async () => {
@@ -125,7 +126,8 @@ export default function YearnFinance({ accountAddress }) {
   //below function to get yToken data of yearn finanace
   const YearnTokenData = useSelector((state) => state.yearnFinance.yearnYTokenData);
   const YearnTokenTotalValue = useSelector((state) => state.yearnFinance.yearnYTokenTotal);
-
+  console.log('YearnTokenData', YearnTokenData);
+  console.log('YearnTokenTotalValue', YearnTokenTotalValue);
   useEffect(() => {
     const getYTokenData = async () => {
       const web3 = await getWeb3();

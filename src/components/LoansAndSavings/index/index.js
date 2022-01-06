@@ -41,6 +41,8 @@ import { ToggleButton } from '../../styled/styledComponents';
 export default function Index({ accountAddress }) {
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
   const SLPTokenTotalValue = useSelector((state) => state.sushiStaking.sushiStakeTotal);
+  const Yearn = useSelector((state) => state.yearnFinance.yearnFinanceData);
+  console.log('Yearn', Yearn);
   // Below code is for task https://app.clickup.com/t/1je2y9d
   // const [DisplaySavings, setDisplaySavings] = useState(null);
   // const [TotalCompoundSavings, setTotalCompoundSavings] = useState(0);
@@ -1335,9 +1337,15 @@ export default function Index({ accountAddress }) {
   return (
     <ContentWrapper>
       <LeftColumnWrapper>
-        <AaveStaking accountAddress={accountAddress} />
-        <UniStaking accountAddress={accountAddress} />
-        <LiquityStaking accountAddress={accountAddress} />
+        {/*<AaveStaking accountAddress={accountAddress} />*/}
+        {/*<UniStaking accountAddress={accountAddress} />*/}
+        {/*<LiquityStaking accountAddress={accountAddress} />*/}
+        {/*<AaveStaking accountAddress={accountAddress} />*/}
+        <BancorPools
+          setPoolTotal={() => {}}
+          setDisplay={() => {}}
+          accountAddress={accountAddress}
+        />
         <PoolsBlock //first
           isLightTheme={theme}
           style={{
@@ -1383,6 +1391,13 @@ export default function Index({ accountAddress }) {
               {BalancerPoolsContent}
               {BalancerPoolsContentv2}
               <AaveStaking accountAddress={accountAddress} />
+              <UniStaking accountAddress={accountAddress} />
+              <LiquityStaking accountAddress={accountAddress} />
+              <BancorPools
+                setPoolTotal={() => {}}
+                setDisplay={() => {}}
+                accountAddress={accountAddress}
+              />
             </>
           )}
         </PoolsBlock>
