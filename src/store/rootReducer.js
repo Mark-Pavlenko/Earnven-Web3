@@ -10,7 +10,8 @@ import { nftData } from './nftData/reducer';
 import { chosenTokensList, tokensList } from './searchedTokens/reducer';
 import { yearnFinance } from './yearnFinance/reducer';
 import { balancerV2lp } from './BalancerV2/reducer';
-
+import { uniswapV2lp } from './UniswapV2/reducer';
+import { uniswapV2stake } from './UniswapV2/reducerStake';
 export const rootReducer = combineReducers({
   web3Reducer,
   themeReducer,
@@ -24,4 +25,6 @@ export const rootReducer = combineReducers({
   nftData,
   yearnFinance,
   balancerV2lp,
+  uniswapV2lp,
+  uniswapV2stake,
 });

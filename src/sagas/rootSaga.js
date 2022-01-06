@@ -5,6 +5,9 @@ import { getETH2StakeSagaWatcher } from './eth2Stake';
 import { getSushiStakeSagaWatcher } from './sushiStaking';
 import { getNftDataSagaWatcher } from './nftData';
 import { getbalancerV2SagaWatcher } from './balancerV2';
+import { getuniswapV2StakeSagaWatcher } from './uniswapV2';
+import { getuniswapV2SagaWatcher } from './uniswapV2';
+
 import {
   getALlTokensSagaWatcher,
   getSearchedTokensSagaWatcher,
@@ -22,5 +25,7 @@ export default function* watchRootSaga() {
     call(getNftDataSagaWatcher),
     call(getYearnFinanceSagaWatcher),
     call(getbalancerV2SagaWatcher),
+    call(getuniswapV2SagaWatcher),
+    call(getuniswapV2StakeSagaWatcher),
   ]);
 }
