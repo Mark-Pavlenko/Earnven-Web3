@@ -19,6 +19,7 @@ import Synthetix from '../Synthetix';
 import Ethereum2Staking from '../Ethereum2Staking';
 import Investment from '../../common/investment/investment';
 import PoolsProtocols from '../../common/investment/poolsProtocols/poolsProtocols';
+// import UniswapV2 from './LiqudityPools/UniswapV2';
 import {
   PoolsBlock,
   TotalValueField,
@@ -35,6 +36,8 @@ import YearnFinance from '../YearnFinance';
 import BalancerV2 from '../LiqudityPools/BalancerV2';
 import { useSelector } from 'react-redux';
 import { ToggleButton } from '../../styled/styledComponents';
+import UniswapV2 from '../LiqudityPools/UniswapV2';
+// import { uniswapV2stake } from '../../../store/UniswapV2/reducerStake';
 
 // Below code is for task https://app.clickup.com/t/1je2y9d
 // import CompoundData from './Compound';
@@ -80,8 +83,8 @@ export default function Index({ accountAddress }) {
 
   const [YearnData, setYearnData] = useState([]); // Yearn
   const [YearnContent, setYearnContent] = useState([]); // Yearn
-  const [YearnTotal, setYearnTotal] = useState([]); // Yearn Total
   const [CurveStakeData, setCurveStakeData] = useState([]); // Curve
+  const [YearnTotal, setYearnTotal] = useState([]); // Yearn Total
   const [CurveStakeContent, setCurveStakeContent] = useState([]); // Curve
   const [CurveStakeTotal, setCurveStakeTotal] = useState([0]); // Curve Total
   // BalancerV2
@@ -779,67 +782,6 @@ export default function Index({ accountAddress }) {
           }
         });
     }
-    async function getUniV2Data() {
-      await axios
-        .post(`https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2`, {
-          query: `{
-                    liquidityPositions(
-                      first:1000
-                      where:{
-                        user:"${accountAddress}"
-                        liquidityTokenBalance_gt:0
-                      }
-                      orderDirection:desc
-                    )
-                  
-                    {
-                      pair{
-                        totalSupply
-                        id
-                        reserveUSD
-                        token0{
-                          name
-                          symbol
-                        }
-                        token1{
-                          name
-                          symbol
-                        }
-                      }
-                      liquidityTokenBalance
-                    }
-                    }`,
-        })
-        .then(async (response) => {
-          if (response.data.data) {
-            let tot = 0;
-            const pools = [];
-            const res = response.data.data.liquidityPositions;
-            for (let i = 0; i < res.length; i++) {
-              const object = {};
-              object.id = res[i].pair.id;
-              object.tokenBalance = res[i].liquidityTokenBalance;
-              object.tokenSupply = res[i].pair.totalSupply;
-              object.token0name = res[i].pair.token0.name;
-              object.token1name = res[i].pair.token1.name;
-              object.token0Symbol = res[i].pair.token0.symbol;
-              object.token1Symbol = res[i].pair.token1.symbol;
-              object.liquidity = res[i].pair.reserveUSD;
-              object.totalInvestment = (
-                (res[i].liquidityTokenBalance / res[i].pair.totalSupply) *
-                res[i].pair.reserveUSD
-              ).toFixed(2);
-              if (object.totalInvestment > 0) {
-                tot += parseFloat(object.totalInvestment);
-                pools.push(object);
-              }
-            }
-            pools.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
-            setUniV2Total(tot);
-            setPoolsData(pools);
-          }
-        });
-    }
     async function getCompoundV2Data() {
       await axios
         .post(`https://api.thegraph.com/subgraphs/name/graphprotocol/compound-v2`, {
@@ -1311,7 +1253,7 @@ export default function Index({ accountAddress }) {
 
     getCompoundV2Data();
     getAaveV2Data();
-    getUniV2Data();
+    // getUniV2Data();
     getBalancerData();
     getSushiV2Data();
     getCurveData();
@@ -1380,6 +1322,7 @@ export default function Index({ accountAddress }) {
               })}
               {BalancerPoolsContent}
               {BalancerPoolsContentv2}
+              <UniswapV2 accountAddress={accountAddress} />
             </>
           )}
         </PoolsBlock>
@@ -1441,6 +1384,7 @@ export default function Index({ accountAddress }) {
           </div>
           {/*{CurveStakeContent}*/}
           {isStakedAssetsOpen && <SushiStaking accountAddress={accountAddress} />}
+          <UniStaking accountAddress={accountAddress} />
         </PoolsBlock>
       </RightColumnWrapper>
     </ContentWrapper>

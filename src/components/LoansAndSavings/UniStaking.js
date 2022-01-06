@@ -3,133 +3,329 @@ import Web3 from 'web3';
 import axios from 'axios';
 import UniStakingABI from '../../abi/uniStakingContract.json';
 import Addresses from '../../contractAddresses';
+import { useDispatch, useSelector } from 'react-redux';
+import actionTypes from '../../constants/actionTypes';
+import usdcicon from '../../assets/icons/usdtlogo.png';
+import ethicon from '../../assets/icons/ethlogo.png';
+import usdticon from '../../assets/icons/usdtlogo.png';
+import daiicon from '../../assets/icons/dailogo.png';
+import wbtcicon from '../../assets/icons/wbtclogo.png';
 
 export default function UniStaking({ accountAddress }) {
-  const [USDTAmountUSD, setUSDTAmountUSD] = useState(0);
-  const [USDCAmountUSD, setUSDCAmountUSD] = useState(0);
-  const [DAIAmountUSD, setDAIAmountUSD] = useState(0);
-  const [WBTCAmountUSD, setWBTCAmuntUSD] = useState(0);
+  const [UniStateData, setUniStateData] = useState([]);
+  const dispatch = useDispatch();
+  const [stakeContent, setstakeContent] = useState([]);
+  const [stakeTotal, setstakeTotal] = useState(0);
+  useEffect(() => {
+    try {
+      dispatch({
+        type: actionTypes.SET_UNISWAPV2_STAKE,
+        payload: accountAddress,
+      });
+    } catch (error) {
+      console.log('dispatch error in uniswap stake v2', error);
+    }
+  }, [accountAddress]);
+
+  const uniswapV2array = useSelector((state) => state.uniswapV2stake.uniswapV2stake);
+  useEffect(() => {
+    let tot = 0;
+    setUniStateData(uniswapV2array);
+    if (uniswapV2array.USDT && uniswapV2array.USDT !== 'null') {
+      tot = tot + uniswapV2array.USDT[3];
+    }
+    if (uniswapV2array.USDC && uniswapV2array.USDC !== 'null') {
+      tot = tot + uniswapV2array.USDC[3];
+    }
+    if (uniswapV2array.DAI && uniswapV2array.DAI !== 'null') {
+      tot = tot + uniswapV2array.DAI[3];
+    }
+    if (uniswapV2array.WBTC && uniswapV2array.WBTC !== 'null') {
+      tot = tot + uniswapV2array.WBTC[3];
+    }
+    setstakeTotal(tot);
+  }, [uniswapV2array]);
 
   useEffect(() => {
-    async function getBlockchainData() {
-      const web3 = new Web3(Web3.givenProvider || Addresses.alchemyAPI);
-      const UniStakeUSDT = new web3.eth.Contract(UniStakingABI, Addresses.uniStakingUSDT);
-      const UniStakeDAI = new web3.eth.Contract(UniStakingABI, Addresses.uniStakingDAI);
-      const UniStakeUSDC = new web3.eth.Contract(UniStakingABI, Addresses.uniStakingUSDC);
-      const UniStakeWBTC = new web3.eth.Contract(UniStakingABI, Addresses.uniStakingWBTC);
-      const USDTAmount = (await UniStakeUSDT.methods.balanceOf(accountAddress).call()) / 10 ** 18;
-      const DAIAmount = (await UniStakeDAI.methods.balanceOf(accountAddress).call()) / 10 ** 18;
-      const USDCAmount = (await UniStakeUSDC.methods.balanceOf(accountAddress).call()) / 10 ** 18;
-      const WBTCAmount = (await UniStakeWBTC.methods.balanceOf(accountAddress).call()) / 10 ** 18;
-
-      // var graphData;
-
-      await axios
-        .post(`https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2`, {
-          query: `
-          {
-            USDT: pairs(
-              where:{
-                id:"0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852"
-              }  
-            ){
-              reserveUSD
-              totalSupply
-            }
-            
-            USDC : pairs(
-              where:{
-                id:"0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc"
-              }  
-            ){
-              reserveUSD
-              totalSupply
-            }
-            
-            DAI : pairs(
-              where:{
-                id:"0xa478c2975ab1ea89e8196811f51a7b7ade33eb11"
-              }  
-            ){
-              reserveUSD
-              totalSupply
-            }
-            
-            WBTC: pairs(
-              where:{
-                id:"0xbb2b8038a1640196fbe3e38816f3e67cba72d940"
-              }  
-            ){
-              reserveUSD
-              totalSupply
-            }
-            
-          }`,
-        })
-        .then(async (response) => {
-          console.log(response.data.data);
-
-          const USDTPrice =
-            response.data.data.USDT[0].reserveUSD / response.data.data.USDT[0].totalSupply;
-          const USDCPrice =
-            response.data.data.USDC[0].reserveUSD / response.data.data.USDC[0].totalSupply;
-          const DAIPrice =
-            response.data.data.DAI[0].reserveUSD / response.data.data.DAI[0].totalSupply;
-          const WBTCPrice =
-            response.data.data.WBTC[0].reserveUSD / response.data.data.WBTC[0].totalSupply;
-
-          setUSDTAmountUSD(USDTPrice * USDTAmount);
-          setUSDCAmountUSD(USDCPrice * USDCAmount);
-          setDAIAmountUSD(DAIPrice * DAIAmount);
-          setWBTCAmuntUSD(WBTCPrice * WBTCAmount);
-        });
-    }
-
-    getBlockchainData();
-  }, []);
-
-  return (
-    <div>
-      <h1>UNI</h1>
-      <div
-        style={{
-          display: USDTAmountUSD + USDCAmountUSD + DAIAmountUSD + WBTCAmountUSD > 0 ? '' : 'none',
-        }}>
-        <div
-          style={{
-            fontSize: '12px',
-            marginLeft: '15px',
-          }}>
-          Uniswap LP Staking ---{' '}
-          {parseFloat(USDTAmountUSD + USDCAmountUSD + DAIAmountUSD + WBTCAmountUSD).toFixed(2)} USD
-          <br />
-          <br />
-        </div>
-        <div style={{ marginLeft: '10%' }}>
-          <div style={{ display: USDTAmountUSD > 0 ? '' : 'none' }}>
-            USDT/ETH : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {parseFloat(USDTAmountUSD).toFixed(2)}{' '}
-            USD
-            <br />
-          </div>
-          <div style={{ display: USDCAmountUSD > 0 ? '' : 'none' }}>
-            USDC/ETH : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {parseFloat(USDCAmountUSD).toFixed(2)} USD
-            <br />
-          </div>
-
-          <div style={{ display: DAIAmountUSD > 0 ? '' : 'none' }}>
-            DAI/ETH : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{' '}
-            {parseFloat(DAIAmountUSD).toFixed(2)} USD
-            <br />
-          </div>
-
-          <div style={{ display: WBTCAmountUSD > 0 ? '' : 'none' }}>
-            WBTC/ETH : &nbsp;&nbsp;&nbsp;&nbsp; {parseFloat(WBTCAmountUSD).toFixed(2)} USD
-            <br />
-          </div>
-        </div>
-        <br />
-        <br />
+    console.log('check content', UniStateData.USDT);
+    const content = (
+      <div>
+        {UniStateData.USDT && UniStateData.USDT !== 'null' && (
+          <>
+            <div style={{ display: 'flex', marginLeft: '10%' }}>
+              <div style={{ display: 'flex' }}>
+                <img
+                  src={usdcicon}
+                  alt="noimage"
+                  style={{ maxWidth: '100%', maxHeight: '100%' }}
+                  width="30px"
+                  height="30px"></img>
+                <img
+                  src={ethicon}
+                  alt="noimage"
+                  style={{ maxWidth: '100%', maxHeight: '100%', marginLeft: '-10px' }}
+                  width="30px"
+                  height="30px"></img>
+                {/* <>${obj.symbol}-</> */}
+              </div>
+            </div>
+            <div style={{ marginLeft: '10%' }}>
+              USDT/ETH: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{' '}
+              {parseFloat(UniStateData.USDT[3]).toFixed(2)}
+              USD
+              <br />
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Value</p>
+              <>&nbsp;-&nbsp;{parseFloat(UniStateData.USDT[3]).toFixed(2)}&nbsp;USD</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Price</p>
+              <>&nbsp;-&nbsp;{parseFloat(UniStateData.USDT[2]).toFixed(2)}&nbsp;USD</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Balance</p>
+              <>
+                {' '}
+                &nbsp;-&nbsp;&nbsp;
+                {UniStateData.USDT[4] < 0.001
+                  ? parseFloat(UniStateData.USDT[4]).toFixed(5)
+                  : parseFloat(UniStateData.USDT[4]).toFixed(2)}
+                &nbsp;
+              </>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Claimable</p>
+              <>&nbsp;-&nbsp;{parseFloat(UniStateData.USDT[5]).toFixed(2)}&nbsp;USD</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Liquidity</p>
+              <>&nbsp;-&nbsp;{parseFloat(UniStateData.USDT[0]).toFixed(2)}&nbsp;</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Volume</p>
+              <>&nbsp;-&nbsp;{parseFloat(UniStateData.USDT[1]).toFixed(2)}&nbsp;</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Chain</p>
+              <>&nbsp;-&nbsp;Ethereum&nbsp;</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Protocol</p>
+              <>&nbsp;-&nbsp;Uniswap-V2&nbsp;</>
+            </div>
+          </>
+        )}
+        {UniStateData.WBTC && UniStateData.WBTC !== 'null' && (
+          <>
+            <div style={{ display: 'flex', marginLeft: '10%' }}>
+              <div style={{ display: 'flex' }}>
+                <img
+                  src={wbtcicon}
+                  alt="noimage"
+                  style={{ maxWidth: '100%', maxHeight: '100%' }}
+                  width="30px"
+                  height="30px"></img>
+                <img
+                  src={ethicon}
+                  alt="noimage"
+                  style={{ maxWidth: '100%', maxHeight: '100%', marginLeft: '-10px' }}
+                  width="30px"
+                  height="30px"></img>
+                {/* <>${obj.symbol}-</> */}
+              </div>
+            </div>
+            <div style={{ marginLeft: '10%' }}>
+              WBTC/ETH: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{' '}
+              {parseFloat(UniStateData.WBTC[3]).toFixed(2)}
+              USD
+              <br />
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Value</p>
+              <>&nbsp;-&nbsp;{parseFloat(UniStateData.WBTC[3]).toFixed(2)}&nbsp;USD</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Price</p>
+              <>&nbsp;-&nbsp;{parseFloat(UniStateData.WBTC[2]).toFixed(2)}&nbsp;USD</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Balance</p>
+              <>
+                {' '}
+                &nbsp;-&nbsp;&nbsp;
+                {UniStateData.WBTC[4] < 0.001
+                  ? parseFloat(UniStateData.WBTC[4]).toFixed(5)
+                  : parseFloat(UniStateData.WBTC[4]).toFixed(2)}
+                &nbsp;
+              </>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Claimable</p>
+              <>&nbsp;-&nbsp;{parseFloat(UniStateData.WBTC[5]).toFixed(2)}&nbsp;USD</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Liquidity</p>
+              <>&nbsp;-&nbsp;{parseFloat(UniStateData.WBTC[0]).toFixed(2)}&nbsp;</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Volume</p>
+              <>&nbsp;-&nbsp;{parseFloat(UniStateData.WBTC[1]).toFixed(2)}&nbsp;</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Chain</p>
+              <>&nbsp;-&nbsp;Ethereum&nbsp;</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Protocol</p>
+              <>&nbsp;-&nbsp;Uniswap-V2&nbsp;</>
+            </div>
+          </>
+        )}
+        {UniStateData.DAI && UniStateData.DAI !== 'null' && (
+          <>
+            <div style={{ display: 'flex', marginLeft: '10%' }}>
+              <div style={{ display: 'flex' }}>
+                <img
+                  src={daiicon}
+                  alt="noimage"
+                  style={{ maxWidth: '100%', maxHeight: '100%' }}
+                  width="30px"
+                  height="30px"></img>
+                <img
+                  src={ethicon}
+                  alt="noimage"
+                  style={{ maxWidth: '100%', maxHeight: '100%', marginLeft: '-10px' }}
+                  width="30px"
+                  height="30px"></img>
+                {/* <>${obj.symbol}-</> */}
+              </div>
+            </div>
+            <div style={{ marginLeft: '10%' }}>
+              DAI/ETH: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{' '}
+              {parseFloat(UniStateData.DAI[3]).toFixed(2)}
+              USD
+              <br />
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Value</p>
+              <>&nbsp;-&nbsp;{parseFloat(UniStateData.DAI[3]).toFixed(2)}&nbsp;USD</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Price</p>
+              <>&nbsp;-&nbsp;{parseFloat(UniStateData.DAI[2]).toFixed(2)}&nbsp;USD</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Balance</p>
+              <>
+                &nbsp;-&nbsp;&nbsp;
+                {UniStateData.DAI[4] < 0.001
+                  ? parseFloat(UniStateData.DAI[4]).toFixed(5)
+                  : parseFloat(UniStateData.DAI[4]).toFixed(2)}
+                &nbsp;
+              </>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Claimable</p>
+              <>&nbsp;-&nbsp;{parseFloat(UniStateData.DAI[5]).toFixed(2)}&nbsp;USD</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Liquidity</p>
+              <>&nbsp;-&nbsp;{parseFloat(UniStateData.DAI[0]).toFixed(2)}&nbsp;</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Volume</p>
+              <>&nbsp;-&nbsp;{parseFloat(UniStateData.DAI[1]).toFixed(2)}&nbsp;</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Chain</p>
+              <>&nbsp;-&nbsp;Ethereum&nbsp;</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Protocol</p>
+              <>&nbsp;-&nbsp;Uniswap-V2&nbsp;</>
+            </div>
+          </>
+        )}
+        {UniStateData.USDC && UniStateData.USDC !== 'null' && (
+          <>
+            <div style={{ display: 'flex', marginLeft: '10%' }}>
+              <div style={{ display: 'flex' }}>
+                <img
+                  src={usdcicon}
+                  alt="noimage"
+                  style={{ maxWidth: '100%', maxHeight: '100%' }}
+                  width="30px"
+                  height="30px"></img>
+                <img
+                  src={ethicon}
+                  alt="noimage"
+                  style={{ maxWidth: '100%', maxHeight: '100%', marginLeft: '-10px' }}
+                  width="30px"
+                  height="30px"></img>
+                {/* <>${obj.symbol}-</> */}
+              </div>
+            </div>
+            <div style={{ marginLeft: '10%' }}>
+              USDC/ETH: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{' '}
+              {parseFloat(UniStateData.USDC[3]).toFixed(2)}
+              USD
+              <br />
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Value</p>
+              <>&nbsp;-&nbsp;{parseFloat(UniStateData.USDC[3]).toFixed(2)}&nbsp;USD</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Price</p>
+              <>&nbsp;-&nbsp;{parseFloat(UniStateData.USDC[2]).toFixed(2)}&nbsp;USD</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Balance</p>
+              <>&nbsp;-&nbsp;{UniStateData.USDC[4]}&nbsp;</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Claimable</p>
+              <>&nbsp;-&nbsp;{parseFloat(UniStateData.USDC[5]).toFixed(2)}&nbsp;USD</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Liquidity</p>
+              <>&nbsp;-&nbsp;{parseFloat(UniStateData.USDC[0]).toFixed(2)}&nbsp;</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Volume</p>
+              <>&nbsp;-&nbsp;{parseFloat(UniStateData.USDC[1]).toFixed(2)}&nbsp;</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Chain</p>
+              <>&nbsp;-&nbsp;Ethereum&nbsp;</>
+            </div>
+            <div style={{ display: 'flex', width: '300px', marginLeft: '10%' }}>
+              <p>Protocol</p>
+              <>&nbsp;-&nbsp;Uniswap-V2&nbsp;</>
+            </div>
+          </>
+        )}
       </div>
-    </div>
+    );
+    setstakeContent(content);
+  }, [UniStateData]);
+  return (
+    <>
+      <div>
+        <div>
+          {stakeTotal > 0 && (
+            <div
+              style={{
+                fontSize: '12px',
+                marginLeft: '15px',
+              }}>
+              Uniswap V2 total --- {stakeTotal > 0 && parseFloat(stakeTotal).toFixed(2)} USD
+            </div>
+          )}
+          {stakeContent && stakeContent}
+        </div>
+      </div>
+    </>
   );
 }
