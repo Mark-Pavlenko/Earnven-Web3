@@ -16,6 +16,7 @@ import Account from './account/account';
 import Links from './social/Links';
 import darkTheme from '../../assets/images/darkTheme.jpg';
 import lightTheme from '../../assets/images/lightTheme.jpg';
+import lightThemeBig from '../../assets/images/lightDashboardBig.jpg';
 import { useSelector } from 'react-redux';
 
 import { RootStyle, LogoBlock, LogoImg, SidebarMainLayout } from './styles';
@@ -52,11 +53,12 @@ export default function Sidebar({
   const renderContent = (
     <Scrollbar
       sx={{
-        // height: '100vh',
-        // url(${darkTheme})
-        'background-image': () => (isLightTheme ? `url(${lightTheme})` : `#1f265c`),
-        // backgroundColor: 'red',
-
+        height: '100vh',
+        // in order to get correct background for QHD & 4K Screens
+        background: () => (isLightTheme ? `url(${lightThemeBig})` : `#0F152C`),
+        borderRadius: '10px',
+        backdropFilter: 'blur(35px)',
+        boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
         '& .simplebar-content': { display: 'flex', flexDirection: 'column' },
       }}>
       <SidebarMainLayout isLightTheme={isLightTheme}>
@@ -70,13 +72,8 @@ export default function Sidebar({
           setTheme={isLightTheme}
           global_wallet={global_wallet}
         />
-        <NavSection
-          sx={{ px: 8, color: 'black' }}
-          navConfig={newSideBard}
-          address={address}
-          setTheme={setTheme}
-        />
-        <Links setTheme={setTheme} />
+        <NavSection sx={{ px: 8, color: 'black' }} navConfig={newSideBard} address={address} />
+        <Links setTheme={isLightTheme} />
       </SidebarMainLayout>
     </Scrollbar>
   );

@@ -1,13 +1,3 @@
-/***********************************************************************************
-Purpose : Re-designed UI
-Developed by : Sathyakrishna T
-Version log:
-----------------------------------------------------------------------------------
-Version           Date                         Description
----------------------------------------------------------------------------------
-1.0               4/nov/2021                   Initial Development
-************************************************************************************/
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Links.css';
@@ -15,8 +5,8 @@ import { Box, Collapse, List, ListItem, ListItemIcon, ListItemText } from '@mate
 import Social from './Social';
 import { createStyles } from '@material-ui/styles';
 import { makeStyles } from '@material-ui/styles';
-import { createTheme, StyledEngineProvider, ThemeProvider } from '@material-ui/core/styles';
 import { experimentalStyled as styled } from '@material-ui/core/styles';
+import { useSelector } from 'react-redux';
 const useStyles = makeStyles(() =>
   createStyles({
     root: {
@@ -28,45 +18,45 @@ const useStyles = makeStyles(() =>
   })
 );
 
-const CustomStyle = styled('a')(({ theme }) => ({
-  color: 'green',
+const CustomStyle = styled('a')(({ isLightTheme }) => ({
+  color: isLightTheme ? 'black !important' : 'white !important',
   fontWeight: 400,
   fontSize: '14px',
   textDecoration: 'none',
   '&:hover': {
-    color: '#4453AD',
+    color: '#4453AD !important',
+    fontWeight: 500,
   },
 }));
 
 const Links = () => {
   const classes = useStyles();
-
+  const themeType = useSelector((state) => state.themeReducer.isLightTheme);
   return (
     <>
       <div className="links">
-        <Box sx={{ ml: '4em', pt: '4em' }}>
-          <List disablePadding>
-            <CustomStyle className={classes.root} href="url">
-              Suggest protocol
-            </CustomStyle>
-          </List>
-          <List className="List" disablePadding>
-            <CustomStyle className={classes.root} href="url">
-              FAQ
-            </CustomStyle>
-          </List>
-          <List className="List" disablePadding>
-            <CustomStyle className={classes.root} href="url">
-              About Earven
-            </CustomStyle>
-          </List>
-          <List className="List" disablePadding>
-            <CustomStyle className={classes.root} href="url">
-              Supported platforms
-            </CustomStyle>
-          </List>
-        </Box>
+        <List disablePadding style={{ marginBottom: '20px' }}>
+          <CustomStyle isLightTheme={themeType} className={classes.root} href="url">
+            Suggest protocol
+          </CustomStyle>
+        </List>
+        <List className="List" disablePadding style={{ marginBottom: '20px' }}>
+          <CustomStyle isLightTheme={themeType} className={classes.root} href="url">
+            FAQ
+          </CustomStyle>
+        </List>
+        <List className="List" disablePadding style={{ marginBottom: '20px' }}>
+          <CustomStyle isLightTheme={themeType} className={classes.root} href="url">
+            About Earven
+          </CustomStyle>
+        </List>
+        <List className="List" disablePadding style={{ marginBottom: '20px' }}>
+          <CustomStyle isLightTheme={themeType} className={classes.root} href="url">
+            Supported platforms
+          </CustomStyle>
+        </List>
       </div>
+
       <Social />
     </>
   );

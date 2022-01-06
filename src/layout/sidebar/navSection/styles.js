@@ -87,7 +87,7 @@ export const MainNavLayout = styled.div`
 `;
 
 export const NavList = styled(List)({
-  marginTop: 63,
+  marginTop: 43,
   marginLeft: 61,
   marginBottom: 21,
   // backgroundColor: 'lightBlue',
