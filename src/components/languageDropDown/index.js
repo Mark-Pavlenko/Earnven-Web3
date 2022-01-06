@@ -4,7 +4,7 @@ import { alpha } from '@material-ui/core/styles';
 import { Box, IconButton, ListItemIcon, ListItemText, MenuItem } from '@material-ui/core';
 // components
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MenuPopover from '../MenuPopover';
+import MenuPopover from '../../layout/sidebar/account/walletsListPopover';
 import globe from '../../assets/icons/globe.svg';
 import languageImg from '../../assets/icons/language.png';
 

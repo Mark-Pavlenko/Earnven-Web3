@@ -7,7 +7,7 @@ import Portis from '@portis/web3';
 import Torus from '@toruslabs/torus-embed';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { makeStyles } from '@material-ui/styles';
-import { Stack, Typography } from '@material-ui/core';
+import { Stack, Typography, TextField } from '@material-ui/core';
 import Header from '../../layout/header';
 import Sidebar from '../../layout/sidebar';
 import portisWalletLogo from '../../assets/icons/portisLogo.png';
@@ -43,23 +43,23 @@ import {
 //correct web3 connection
 import { useWeb3React } from '@web3-react/core';
 import { useSelector } from 'react-redux';
-import searchIcon from '../../assets/icons/searchIcon.png';
+import searchIcon from '../../assets/icons/searchIconLight.png';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   noBorder: {
     border: 'none !important',
   },
   input: {
-    color: 'white',
+    color: 'red',
   },
 }));
 
-export default function Index() {
-  const classes = useStyles();
+export default function WalletPageConnection() {
   const themeType = useSelector((state) => state.themeReducer.isLightTheme);
+  const classes = useStyles(themeType);
 
   const [open, setOpen] = useState(false);
-  console.log('themeType', themeType);
+  console.log('isLightTheme on wallet page connection', themeType);
 
   //correct web3 connection
   // const { active, account, library, connector, activate, deactivate } = useWeb3React();
@@ -261,12 +261,12 @@ export default function Index() {
         <MainSubLayout>
           <MainSubLayoutTitle isLightTheme={themeType}>Connect a wallet</MainSubLayoutTitle>
           <MetaMaskBtn
-            isLightTheme={true}
+            isLightTheme={themeType}
             onClick={connectMetamask}
             disableElevation
             fullWidth
             startIcon={<img src={metamaskWalletLogo} alt="" />}>
-            MetaMask
+            Metamask
           </MetaMaskBtn>
 
           <WalletButtonsLayout>
@@ -349,8 +349,8 @@ export default function Index() {
               disabled
               startIcon={<WalletBtnConnectImg src={ledgerWalletIcon} alt="" />}>
               <div>
-                <WalletBtnName> Atomic</WalletBtnName>
-                <ComingSoonItem> Ledger</ComingSoonItem>
+                <WalletBtnName>Ledger</WalletBtnName>
+                <ComingSoonItem>Coming soon</ComingSoonItem>
               </div>
             </WalletBtnConnect>
 
@@ -360,7 +360,7 @@ export default function Index() {
               startIcon={<WalletBtnConnectImg src={trezorWalletIcon} alt="" />}>
               <div>
                 <WalletBtnName> Trezor</WalletBtnName>
-                <ComingSoonItem> Ledger</ComingSoonItem>
+                <ComingSoonItem>Coming soon</ComingSoonItem>
               </div>
             </WalletBtnConnect>
           </WalletButtonsLayout>
@@ -369,7 +369,6 @@ export default function Index() {
             <MainSubLayoutTitle isLightTheme={themeType}>Track any address</MainSubLayoutTitle>
             <Stack direction="row" justifyContent="space-between">
               <EthereumAddressField
-                variant="outlined"
                 isLightTheme={themeType}
                 label="Track any ethereum address"
                 onChange={addressUpdate}

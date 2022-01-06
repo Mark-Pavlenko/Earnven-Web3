@@ -7,10 +7,10 @@ import { data } from '../../globalStore';
 import SlowGweiGasIcon from '../../assets/icons/slowGweiGasIcon.png';
 import MiddleGweiGasIcon from '../../assets/icons/middleGweiGasIcon.png';
 import FastGweiGasIcon from '../../assets/icons/fastGweiGasIcon.png';
-import SearchIcon from '../../assets/icons/searchIcon.png';
-
+// import SearchIcon from '../../assets/icons/searchIconLight.png';
+import SearchIcon from '../../assets/icons/searchIconDark.svg';
 import {
-  GasButton,
+  SearchTokensMobileBtn,
   GasMenuItem,
   MenuPopoverBox,
   MenuPopoverBoxTitle,
@@ -37,7 +37,7 @@ const gasType = [
 
 const MINUTE_MS = 10000;
 
-export default function GasDropDownMenu({ isLightTheme }) {
+export default function SearchTokensMobile({ isLightTheme }) {
   const anchorRef = useRef(null);
   const [open, setopen] = useState(false);
   const [selected, setselected] = useState('Average');
@@ -118,7 +118,7 @@ export default function GasDropDownMenu({ isLightTheme }) {
 
   return (
     <>
-      <GasButton
+      <SearchTokensMobileBtn
         isLightTheme={isLightTheme}
         startIcon={<img src={SearchIcon} alt="" />}
         ref={anchorRef}
@@ -146,17 +146,17 @@ export default function GasDropDownMenu({ isLightTheme }) {
         onClose={handleClose}
         anchorEl={anchorRef.current}>
         <div>Here will be search tokens widget for mobile devices</div>
-        {/*<MenuPopoverBox isLightTheme={isLightTheme} sx={{ py: 1 }}>*/}
-        {/*  <MenuPopoverBoxTitle isLightTheme={isLightTheme}>Realtime Gas Prices</MenuPopoverBoxTitle>*/}
-        {/*  {GasPricesContent}*/}
-        {/*  <MenuPopoverBoxNote>*/}
-        {/*    Provided by*/}
-        {/*    <a href={'https://etherscan.io/'} target="_blank">*/}
-        {/*      {' '}*/}
-        {/*      etherscan.io*/}
-        {/*    </a>*/}
-        {/*  </MenuPopoverBoxNote>*/}
-        {/*</MenuPopoverBox>*/}
+        <MenuPopoverBox isLightTheme={isLightTheme} sx={{ py: 1 }}>
+          <MenuPopoverBoxTitle isLightTheme={isLightTheme}>Realtime Gas Prices</MenuPopoverBoxTitle>
+          {GasPricesContent}
+          <MenuPopoverBoxNote>
+            Provided by
+            <a href={'https://etherscan.io/'} target="_blank">
+              {' '}
+              etherscan.io
+            </a>
+          </MenuPopoverBoxNote>
+        </MenuPopoverBox>
       </MenuPopover>
     </>
   );

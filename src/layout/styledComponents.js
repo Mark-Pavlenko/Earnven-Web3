@@ -5,7 +5,7 @@ export const RootStyle = styled('div')`
     props.isLightTheme
       ? `url(${require(`./../assets/images/lightDashboard.jpg`).default})`
       : `#0B0E1D`};
-  @media (min-width: 1930px) {
+  @media (min-width: 1281px) {
     background: ${(props) =>
       props.isLightTheme
         ? `url(${require(`./../assets/images/lightDashboardBig.jpg`).default})`
@@ -16,15 +16,10 @@ export const RootStyle = styled('div')`
 export const MainStyle = styled('div')`
   flex-grow: 1;
 
-  background: ${(props) =>
-    props.isLightTheme
-      ? `url(${require(`./../assets/images/lightDashboard.jpg`).default})`
-      : `#0B0E1D`};
+  background-color: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};
+
   @media (min-width: 1930px) {
-    background: ${(props) =>
-      props.isLightTheme
-        ? `url(${require(`./../assets/images/lightDashboardBig.jpg`).default})`
-        : `#0B0E1D`};
+    background-color: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};
   }
 
   @media (min-width: 1024px) {
