@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
 import axios from 'axios';
 import spinner from '../../assets/icons/spinner.svg';
-import MenuPopover from '../MenuPopover';
+import MenuPopover from '../../layout/sidebar/account/walletsListPopover';
 import NftDetails from '../../screens/NftDetail';
 import NFT_Popover from '../NFT_Popover';
 import Popup from '../PopUp';

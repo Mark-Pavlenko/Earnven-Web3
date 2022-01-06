@@ -33,7 +33,7 @@ import { useNavigate } from 'react-router-dom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { MdContentCopy } from 'react-icons/md';
 import AccountBalance from '../../../components/accountBalance/AccountBalance_Menu';
-import MenuPopover from '../../../components/MenuPopover';
+import MenuPopover from './walletsListPopover';
 import { makeStyles } from '@material-ui/styles';
 import { createTheme, StyledEngineProvider, ThemeProvider } from '@material-ui/core/styles';
 import { fontSize, fontStyle, fontWeight } from '@material-ui/system';

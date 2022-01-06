@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Avatar } from '@material-ui/core';
+import { Avatar, Box, List } from '@material-ui/core';
 
 export const AccountLayout = styled.div``;
 
@@ -14,13 +14,13 @@ export const AccountStyle = styled.div`
 const handleBackgroundColorBtn = (isLightTheme, isBlockActivated) => {
   switch (true) {
     case isBlockActivated && isLightTheme:
-      return 'background: #E5E5E5; backdrop-filter: blur(35px); box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);';
+      return 'background: #FFFFFF29; backdrop-filter: blur(35px); box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);';
     case !isBlockActivated && isLightTheme:
       return 'background: white; box-shadow: 4px 6px 20px -5px rgba(51, 78, 131, 0.17);';
     case isBlockActivated && !isLightTheme:
-      return 'background: #1F265C; backdrop-filter: blur(35px); box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);';
+      return 'background: #1F265C3D; backdrop-filter: blur(35px); box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);';
     default:
-      return 'background: #1F265C; backdrop-filter: blur(35px); box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);';
+      return 'background: #1F265C3D; backdrop-filter: blur(35px); box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);';
   }
 };
 
@@ -61,9 +61,6 @@ export const WalletArrow = styled.span`
 `;
 
 export const EnterAccountBlock = styled.div`
-  //margin-top: -20px;
-  //margin-left: 10px;
-
   display: flex;
   margin-top: 30px;
   margin-left: auto;
@@ -78,5 +75,25 @@ export const EnterAccountBlock = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 19px;
+  }
+`;
+
+export const MyWalletsLabel = styled(Box)`
+  margin-left: 25px;
+  margin-top: 25px;
+
+  p {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 10px;
+    color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#ffffff')};
+  }
+`;
+
+export const WalletsList = styled(List)`
+  :hover {
+    background: white;
+    color: black;
+    height: 56px;
   }
 `;

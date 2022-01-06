@@ -14,6 +14,7 @@ import {
   Divider,
   ListItem,
   IconButton,
+  List,
 } from '@material-ui/core';
 import React, { useState, useRef, useEffect } from 'react';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -25,37 +26,22 @@ import { useNavigate } from 'react-router-dom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { MdContentCopy } from 'react-icons/md';
 import AccountBalance from '../../../components/accountBalance';
-import MenuPopover from '../../../components/MenuPopover';
+import WalletListPopover from './walletsListPopover';
 import { makeStyles } from '@material-ui/styles';
 import { createTheme, StyledEngineProvider, ThemeProvider } from '@material-ui/core/styles';
 import { fontSize, fontStyle, fontWeight } from '@material-ui/system';
 import Accounts from './Accounts';
-import Acc from './Acc';
+
 import menurender_customhook from './menurender_customhook';
-
 import { useSelector, useDispatch } from 'react-redux';
-
-// box-shadow: ${(props) =>
-//props.isLightTheme ? 'null' : '4px 6px 20px -5px rgba(51, 78, 131, 0.17)'};
 
 const useStyles = makeStyles(() =>
   createStyles({
-    myWallet: {
-      marginLeft: '1.5625rem',
-      marginTop: '0.3rem',
-    },
-    watchlist: {
-      marginLeft: '1.5625rem',
-      marginTop: '0.3rem',
-      color: '#1E1E20',
-      opacity: 0.5,
-    },
+    myWallet: { marginLeft: '1.5625rem', marginTop: '0.3rem' },
+    watchlist: {},
     hoverMenu: {
-      '&:hover': {
-        background: 'white',
-        color: 'black',
-        height: '56px',
-      },
+      // '&:hover': {
+      // },
     },
     hoverMenu11: {
       '&:hover': {
@@ -77,6 +63,8 @@ import {
   UserAvatar,
   WalletAddress,
   WalletArrow,
+  MyWalletsLabel,
+  WalletsList,
 } from './styles';
 
 export default function Account({ address, name, global_wallet, setTheme }) {
@@ -88,12 +76,12 @@ export default function Account({ address, name, global_wallet, setTheme }) {
   const { flag_menu } = menurender_customhook();
 
   const classes = useStyles();
+
   const navigate = useNavigate();
   const anchorRef = useRef(null);
   const [account, setaccount] = useState(false);
   const [accountList, setaccountList] = useState([]);
-  const [mywallet, setmywallet] = useState([]);
-  var mywallet_text = 'My Wallet';
+  const [myWallet, setMyWallet] = useState([]);
   const [arrowicon, setarrowicon] = useState(false);
   const [reRender, setReRender] = useState(false);
 
@@ -119,7 +107,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
       });
     setaccountList(jsonData);
     const myWallet = localStorage.getItem('mywallet');
-    setmywallet(JSON.parse(myWallet));
+    setMyWallet(JSON.parse(myWallet));
     // setmywallet(myWallet);
   }, [account, flag_menu, name, global_wallet]);
 
@@ -175,41 +163,27 @@ export default function Account({ address, name, global_wallet, setTheme }) {
               <AccountBalance address={address} />
             </WalletsListBlock>
           </AccountStyle>
-          <MenuPopover
-            sx={{ ml: 9, mt: '0.2rem', width: '336px' }}
+          <WalletListPopover
+            sx={{ ml: -2.2, mt: '3px' }}
+            isLightTheme={themeType}
             open={account}
             onClose={hideAccountPopover}
             anchorEl={anchorRef.current}>
-            <Box className={classes.myWallet}>
-              <Typography variant="myWallet_font_watchlist">
-                <p>{mywallet && mywallet.length > 0 && mywallet_text}</p>
-              </Typography>
-            </Box>
-            <Box sx={{ py: 1 }}>
-              {mywallet &&
-                mywallet.map((option) => (
-                  <ListItem className={classes.hoverMenu}>
-                    <Box>
-                      <Acc
-                        address={option.address}
-                        provider={option.provider}
-                        global_wallet={global_wallet}
-                        name={option.name}
-                      />
-                    </Box>
-                  </ListItem>
-                ))}
-            </Box>
-            <Box className={classes.watchlist}>
-              <Typography variant="myWallet_font_watchlist">
-                <p>{accountList.length > 0 && 'Watchlist'}</p>
-              </Typography>
-            </Box>
-            <Box sx={{ py: 1, mt: 1 }}>
+            {/* my wallet*/}
+            <MyWalletsLabel isLightTheme={themeType}>
+              <p isLightTheme={themeType}>{accountList.length > 0 && 'My wallet'}</p>
+            </MyWalletsLabel>
+            <p style={{ color: 'red' }}>{selectedAccount}</p>
+
+            {/* all wallets */}
+            <MyWalletsLabel isLightTheme={themeType}>
+              <p isLightTheme={themeType}>{accountList.length > 0 && 'Watchlist'}</p>
+            </MyWalletsLabel>
+            <div>
               {accountList &&
                 accountList.map((option) => (
-                  <ListItem className={classes.hoverMenu}>
-                    <Box>
+                  <ListItem>
+                    <WalletsList>
                       <Accounts
                         setaccount_menuclose={(w) => setaccount(w)}
                         onClick={() => {
@@ -220,11 +194,11 @@ export default function Account({ address, name, global_wallet, setTheme }) {
                         name={option.name}
                         global_wallet={global_wallet}
                       />
-                    </Box>
+                    </WalletsList>
                   </ListItem>
                 ))}
 
-              <Divider variant="middle" />
+              {/* add new item element */}
               <MenuItem
                 onClick={routeToConnectWallet}
                 sx={{
@@ -249,8 +223,8 @@ export default function Account({ address, name, global_wallet, setTheme }) {
                   New Wallet
                 </ListItemText>
               </MenuItem>
-            </Box>
-          </MenuPopover>
+            </div>
+          </WalletListPopover>
         </>
       ) : (
         <EnterAccountBlock isLightTheme={themeType}>

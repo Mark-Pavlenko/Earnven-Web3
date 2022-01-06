@@ -12,7 +12,7 @@ import { MHidden } from '../../components/@material-extend';
 import CompanyLogo from '../../assets/icons/logo_menu.svg';
 import Earnven from '../../assets/icons/Earnven_menu_text.svg';
 import Dark_Earnven_logo from '../../assets/icons/Dark_Earnven_logo.svg';
-import Account from './account/account';
+import Account from './account';
 import Links from './social/Links';
 import darkTheme from '../../assets/images/darkTheme.jpg';
 import lightTheme from '../../assets/images/lightTheme.jpg';

@@ -7,7 +7,7 @@ import Portis from '@portis/web3';
 import Torus from '@toruslabs/torus-embed';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { makeStyles } from '@material-ui/styles';
-import { Stack, Typography } from '@material-ui/core';
+import { Stack, Typography, TextField } from '@material-ui/core';
 import Header from '../../layout/header';
 import Sidebar from '../../layout/sidebar';
 import portisWalletLogo from '../../assets/icons/portisLogo.png';
@@ -45,18 +45,18 @@ import { useWeb3React } from '@web3-react/core';
 import { useSelector } from 'react-redux';
 import searchIcon from '../../assets/icons/searchIconLight.png';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   noBorder: {
     border: 'none !important',
   },
   input: {
-    color: 'white',
+    color: 'red',
   },
 }));
 
-export default function Index() {
-  const classes = useStyles();
+export default function WalletPageConnection() {
   const themeType = useSelector((state) => state.themeReducer.isLightTheme);
+  const classes = useStyles(themeType);
 
   const [open, setOpen] = useState(false);
   console.log('isLightTheme on wallet page connection', themeType);
@@ -369,7 +369,6 @@ export default function Index() {
             <MainSubLayoutTitle isLightTheme={themeType}>Track any address</MainSubLayoutTitle>
             <Stack direction="row" justifyContent="space-between">
               <EthereumAddressField
-                variant="outlined"
                 isLightTheme={themeType}
                 label="Track any ethereum address"
                 onChange={addressUpdate}
