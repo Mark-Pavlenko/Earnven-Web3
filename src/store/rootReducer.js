@@ -12,6 +12,7 @@ import { yearnFinance } from './yearnFinance/reducer';
 import { balancerV2lp } from './BalancerV2/reducer';
 import { uniswapV2lp } from './UniswapV2/reducer';
 import { uniswapV2stake } from './UniswapV2/reducerStake';
+import { curveToken } from './curveToken/reducer';
 export const rootReducer = combineReducers({
   web3Reducer,
   themeReducer,
@@ -27,4 +28,5 @@ export const rootReducer = combineReducers({
   balancerV2lp,
   uniswapV2lp,
   uniswapV2stake,
+  curveToken,
 });

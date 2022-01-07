@@ -37,6 +37,7 @@ import BalancerV2 from '../LiqudityPools/BalancerV2';
 import { useSelector } from 'react-redux';
 import { ToggleButton } from '../../styled/styledComponents';
 import UniswapV2 from '../LiqudityPools/UniswapV2';
+import CurveToken from '../CurveToken';
 // import { uniswapV2stake } from '../../../store/UniswapV2/reducerStake';
 
 // Below code is for task https://app.clickup.com/t/1je2y9d
@@ -629,59 +630,61 @@ export default function Index({ accountAddress }) {
   //   setYearnContent(content);
   // }, [YearnData]);
 
-  useEffect(() => {
-    const content = CurveStakeData.map((object) => {
-      return (
-        <Tooltip
-          title={
-            <>
-              {object.name} <br />
-              Share Price : {parseFloat(object.price).toFixed(4)} USD <br />
-              Total Shares : {parseFloat(object.balance).toFixed(2)} ${object.symbol} <br />
-              Total Investment : {parseFloat(object.totalInvestment).toFixed(2)} USD <br />
-            </>
-          }>
-          <div style={{ width: '90%', marginTop: '12px', marginLeft: '30px' }}>
-            <div style={{ display: 'inline-block', width: '15%' }}>
-              <div
-                style={{
-                  height: '40px',
-                  padding: '5px',
-                  borderRadius: '10px',
-                  backgroundImage:
-                    'linear-gradient(to right,  rgba(20,24,30,.1), rgba(173,204,151,.5), rgba(20,24,30,.1))',
-                }}>
-                <center>
-                  <img
-                    src={object.image ? object.image : CurveLogo}
-                    style={{ height: '30px', marginTop: '' }}
-                    alt=""
-                  />
-                </center>
-              </div>
-            </div>
+  //this curve protocol is moved in seperate component CurveToken.js
+  //so commented for now and later point we can remove this section
+  // useEffect(() => {
+  //   const content = CurveStakeData.map((object) => {
+  //     return (
+  //       <Tooltip
+  //         title={
+  //           <>
+  //             {object.name} <br />
+  //             Share Price : {parseFloat(object.price).toFixed(4)} USD <br />
+  //             Total Shares : {parseFloat(object.balance).toFixed(2)} ${object.symbol} <br />
+  //             Total Investment : {parseFloat(object.totalInvestment).toFixed(2)} USD <br />
+  //           </>
+  //         }>
+  //         <div style={{ width: '90%', marginTop: '12px', marginLeft: '30px' }}>
+  //           <div style={{ display: 'inline-block', width: '15%' }}>
+  //             <div
+  //               style={{
+  //                 height: '40px',
+  //                 padding: '5px',
+  //                 borderRadius: '10px',
+  //                 backgroundImage:
+  //                   'linear-gradient(to right,  rgba(20,24,30,.1), rgba(173,204,151,.5), rgba(20,24,30,.1))',
+  //               }}>
+  //               <center>
+  //                 <img
+  //                   src={object.image ? object.image : CurveLogo}
+  //                   style={{ height: '30px', marginTop: '' }}
+  //                   alt=""
+  //                 />
+  //               </center>
+  //             </div>
+  //           </div>
 
-            <div style={{ display: 'inline-block', width: '10%' }} />
+  //           <div style={{ display: 'inline-block', width: '10%' }} />
 
-            <div style={{ display: 'inline-block', width: '40%', textAlign: 'left' }}>
-              {object.symbol}
-            </div>
+  //           <div style={{ display: 'inline-block', width: '40%', textAlign: 'left' }}>
+  //             {object.symbol}
+  //           </div>
 
-            {/* <div style={{display:'inline-block', width:'30%'}}>
-              {object.value} ${object.symbol}
-          </div> */}
+  //           {/* <div style={{display:'inline-block', width:'30%'}}>
+  //             {object.value} ${object.symbol}
+  //         </div> */}
 
-            <div style={{ display: 'inline-block', width: '30%', fontSize: '13px' }}>
-              {parseFloat(object.totalInvestment).toFixed(2)} USD
-            </div>
+  //           <div style={{ display: 'inline-block', width: '30%', fontSize: '13px' }}>
+  //             {parseFloat(object.totalInvestment).toFixed(2)} USD
+  //           </div>
 
-            <br />
-          </div>
-        </Tooltip>
-      );
-    });
-    setCurveStakeContent(content);
-  }, [CurveStakeData]);
+  //           <br />
+  //         </div>
+  //       </Tooltip>
+  //     );
+  //   });
+  //   setCurveStakeContent(content);
+  // }, [CurveStakeData]);
 
   useEffect(() => {
     async function getAaveV2Data() {
@@ -1185,78 +1188,80 @@ export default function Index({ accountAddress }) {
     //     });
     // }
 
-    async function getCurveData() {
-      await axios
-        .post(
-          `https://gateway.thegraph.com/api/${addresses.graph_API}/subgraphs/id/0x2382ab6c2099474cf424560a370ed1b1fdb65253-0`,
-          {
-            query: `{
-                accounts
-                (
-                  where:
-                  {
-                    id:"${accountAddress}"
-                  }
-                )
-                {
-                  id
-                  gauges{
-                    originalBalance
-                    gauge{
-                      pool{
-                        lpToken{
-                          name
-                          symbol
-                          decimals
-                        }
-                        virtualPrice
-                      }
-                    }
-                  }
-                }
-              }`,
-          }
-        )
-        .then(async (response) => {
-          if (response.data.data) {
-            if (response.data.data.accounts[0]) {
-              const res = response.data.data.accounts[0].gauges;
-              const stakings = [];
-              let tot = 0;
-              try {
-                for (let i = 0; i < res.length; i++) {
-                  const object = {};
-                  object.decimals = res[0].gauge.pool.lpToken.decimals;
-                  object.symbol = res[0].gauge.pool.lpToken.symbol;
-                  object.name = res[0].gauge.pool.lpToken.name;
-                  object.balance = res[0].originalBalance / 10 ** object.decimals;
-                  object.price = res[0].gauge.pool.virtualPrice;
-                  object.totalInvestment = parseFloat(object.price * object.balance).toFixed(2);
-                  tot += parseFloat(object.totalInvestment);
-                  if (object.totalInvestment > 0) {
-                    stakings.push(object);
-                  }
-                }
+    //this curve protocol is moved in seperate component CurveToken.js
+    //so commented for now and later remove this section
+    // async function getCurveData() {
+    //   await axios
+    //     .post(
+    //       `https://gateway.thegraph.com/api/${addresses.graph_API}/subgraphs/id/0x2382ab6c2099474cf424560a370ed1b1fdb65253-0`,
+    //       {
+    //         query: `{
+    //             accounts
+    //             (
+    //               where:
+    //               {
+    //                 id:"${accountAddress}"
+    //               }
+    //             )
+    //             {
+    //               id
+    //               gauges{
+    //                 originalBalance
+    //                 gauge{
+    //                   pool{
+    //                     lpToken{
+    //                       name
+    //                       symbol
+    //                       decimals
+    //                     }
+    //                     virtualPrice
+    //                   }
+    //                 }
+    //               }
+    //             }
+    //           }`,
+    //       }
+    //     )
+    //     .then(async (response) => {
+    //       if (response.data.data) {
+    //         if (response.data.data.accounts[0]) {
+    //           const res = response.data.data.accounts[0].gauges;
+    //           const stakings = [];
+    //           let tot = 0;
+    //           try {
+    //             for (let i = 0; i < res.length; i++) {
+    //               const object = {};
+    //               object.decimals = res[0].gauge.pool.lpToken.decimals;
+    //               object.symbol = res[0].gauge.pool.lpToken.symbol;
+    //               object.name = res[0].gauge.pool.lpToken.name;
+    //               object.balance = res[0].originalBalance / 10 ** object.decimals;
+    //               object.price = res[0].gauge.pool.virtualPrice;
+    //               object.totalInvestment = parseFloat(object.price * object.balance).toFixed(2);
+    //               tot += parseFloat(object.totalInvestment);
+    //               if (object.totalInvestment > 0) {
+    //                 stakings.push(object);
+    //               }
+    //             }
 
-                stakings.sort(
-                  (a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment)
-                );
-              } catch (err) {
-                console.log('Err from Curve staking process', err);
-              }
-              setCurveStakeData(stakings);
-              setCurveStakeTotal(tot);
-            }
-          }
-        });
-    }
+    //             stakings.sort(
+    //               (a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment)
+    //             );
+    //           } catch (err) {
+    //             console.log('Err from Curve staking process', err);
+    //           }
+    //           setCurveStakeData(stakings);
+    //           setCurveStakeTotal(tot);
+    //         }
+    //       }
+    //     });
+    // }
 
     getCompoundV2Data();
     getAaveV2Data();
     // getUniV2Data();
     getBalancerData();
     getSushiV2Data();
-    getCurveData();
+    //getCurveData(); //moved to seperate component CurveToken.js
   }, [accountAddress]);
 
   const poolsHandler = () => {
@@ -1346,6 +1351,11 @@ export default function Index({ accountAddress }) {
           </div>
           {/* added Yearn Finance component here to check yearnFinance data attributes */}
           <YearnFinance accountAddress={accountAddress} />
+          <br />
+          <CurveToken accountAddress={accountAddress} />
+          <br />
+          <CurveLpToken accountAddress={accountAddress} onCurveLptoken={getCurveLpToken} />
+          <br />
           {/*<center>*/}
           {/*  <div style={{ fontSize: '25px', color: 'white' }}>*/}
           {/*    Other Assets Total :{' '}*/}
