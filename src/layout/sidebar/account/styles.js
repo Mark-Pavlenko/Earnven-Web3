@@ -121,12 +121,12 @@ export const WalletListItemAccountLogo = MUIStyled(Avatar)(({ theme }) => ({
   marginRight: '-0.063rem',
 }));
 
-export const WalletListItemAccountBalance = MUIStyled(Typography)`
-  margin-left: -26.4px;
+export const WalletListItemAccountBalance = MUIStyled(Typography)(({ isLightTheme }) => ({
+  color: isLightTheme ? 'black' : 'white',
+  marginLeft: '-26.4px',
   textAlign: 'left',
   marginTop: '-3px',
- 
-`;
+}));
 
 export const List_Menu_Pop_UP = styled('div')(({ theme }) => ({
   width: '276px',

@@ -217,12 +217,23 @@ export default function Accounts(
             direction="row">
             <WalletListItemAccountBalance
               variant="WaltchList_font_address"
-              sx={{
-                color: isLightTheme ? 'black' : 'white',
-              }}
+              isLightTheme={isLightTheme}
               className={classes.accountAddress}>
               {walletAddressCutter(address, name)}
-              {selectedAccountAddress === address ? <img src={green_got_menu} alt="no pic" /> : ''}
+              {selectedAccountAddress === address ? (
+                <img
+                  src={green_got_menu}
+                  style={{
+                    display: 'flex',
+                    float: 'right',
+                    marginTop: '2.09px',
+                    marginLeft: '10px',
+                  }}
+                  alt="no pic"
+                />
+              ) : (
+                ''
+              )}
             </WalletListItemAccountBalance>
           </Stack>
           <div className={classes.icon1} onClick={showAccountPopover}>
