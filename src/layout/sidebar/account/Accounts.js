@@ -45,7 +45,7 @@ import {
 
 const useStyles = makeStyles(() =>
   createStyles({
-    menupopover: { marginLeft: '15rem', marginTop: '-2.2rem' },
+    menupopover: { marginLeft: '150px', marginTop: '-25px' },
     menu: {
       width: '306px',
       height: '197px',
