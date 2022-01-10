@@ -12,7 +12,7 @@ import {
 } from './styledComponents';
 import { useSelector } from 'react-redux';
 
-const Investment = ({ protocol, protocolName, logoImage, chain }) => {
+const FullDataProtocol = ({ protocol, protocolName, logoImage }) => {
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -20,14 +20,12 @@ const Investment = ({ protocol, protocolName, logoImage, chain }) => {
   const { imageData, tokens, totalInvestment, mainTokenSymbol, totalTokensBalance } = protocol;
 
   const protocolData = {
-    Value: `$${parseFloat(protocol.priceSum).toFixed(2)}`,
-    LPprice: protocol.price ? `$${parseFloat(protocol.price).toFixed(2)}` : '$0',
     Liquidity: protocol.liquidity ? `$${parseFloat(protocol.liquidity).toFixed(2)}` : `$0`,
     Balance: parseFloat(
       protocol.balance ? protocol.balance : protocol.balanceShares / 10 ** 18
     ).toFixed(3),
-    Chain: chain,
-    Protocol: protocolName,
+    Chain: 'Ethereum',
+    Protocol: protocolName ? protocolName : protocol.protocol,
   };
 
   const toggleHandler = () => {
@@ -96,4 +94,4 @@ const Investment = ({ protocol, protocolName, logoImage, chain }) => {
   );
 };
 
-export default Investment;
+export default FullDataProtocol;

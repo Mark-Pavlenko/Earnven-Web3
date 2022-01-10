@@ -18,6 +18,9 @@ import BancorPools from '../BancorPools';
 import Synthetix from '../Synthetix';
 import Ethereum2Staking from '../Ethereum2Staking';
 import YearnFinance from '../YearnFinance';
+import ValueProtocol from '../../common/protocols/valueProtocol/valueProtocol';
+import Investment from '../../common/investment/investment';
+import StakedProtocols from '../../common/stakedProtocols/stakedProtocols';
 //import CurveToken from './CurveToken';
 
 // Below code is for task https://app.clickup.com/t/1je2y9d
@@ -35,6 +38,7 @@ export default function Index({ accountAddress }) {
   const [AaveLoansTotal, setAaveLoansTotal] = useState([]); // Aave total debt
   const [AaveSavingsTotal, setAaveSavingsTotal] = useState([]); // Aave total Savings
 
+  //UNI v2
   const [PoolsContent, setPoolsContent] = useState([]); // UNI v2
   const [PoolsData, setPoolsData] = useState([]); // UNI v2
   const [UniV2Total, setUniV2Total] = useState([]); // UNI v2 total
@@ -42,10 +46,12 @@ export default function Index({ accountAddress }) {
   const [CreamDisplay, setCreamDisplay] = useState(false);
   const [CreamTotal, setCreamTotal] = useState(false);
 
+  //Sushi v2
   const [SushiPoolsContent, setSushiPoolsContent] = useState([]); // Sushi v2
   const [SushiPoolsData, setSushiPoolsData] = useState([]); // Sushi v2
   const [SushiV2Total, setSushiV2Total] = useState([]); // Sushi v2 total
 
+  //Compound
   const [CompoundSavingsContent, setCompoundSavingsContent] = useState([]); // compound v2
   const [CompoundLoansContent, setCompoundLoansContent] = useState([]); // compound v2
   const [CompoundSavingsData, setCompoundSavingsData] = useState([]); // compound v2
@@ -67,7 +73,7 @@ export default function Index({ accountAddress }) {
   const [CurveStakeData, setCurveStakeData] = useState([]); // Curve
   const [CurveStakeContent, setCurveStakeContent] = useState([]); // Curve
   const [CurveStakeTotal, setCurveStakeTotal] = useState([0]); // Curve Total
-
+  console.log('CurveStakeData', CurveStakeData);
   // BalancerV2
   const [BalancerTotalv2, setBalancerTotalv2] = useState([]);
   const [BalancerPoolsDatav2, setBalancerPoolsDatav2] = useState([]);
@@ -202,41 +208,45 @@ export default function Index({ accountAddress }) {
   }, [LoansData]);
 
   useEffect(() => {
-    const content = PoolsData.map((object) => (
-      <Tooltip
-        title={
-          <>
-            Token 0 : {object.token0name} <br />
-            Token 1 : {object.token1name} <br />
-            Pool Share : {parseFloat((object.tokenBalance / object.tokenSupply) * 100).toFixed(
-              2
-            )} % <br />
-            Pool Liquidity : {parseFloat(object.liquidity).toFixed(2)} <br />
-            Total Investment : {object.totalInvestment} USD <br />
-            LP Token Balance : {parseFloat(object.tokenBalance).toFixed(2)}
-          </>
-        }>
-        <div style={{ width: '90%', marginTop: '12px', marginLeft: '30px' }}>
-          <div
-            style={{
-              display: 'inline-block',
-              width: '45%',
-              textAlign: 'left',
-              wordBreak: 'break-all',
-            }}>
-            ${object.token0Symbol}-${object.token1Symbol}
+    const content = PoolsData.map((object) => {
+      console.log('object', object);
+      return (
+        <Tooltip
+          title={
+            <>
+              Token 0 : {object.token0name} <br />
+              Token 1 : {object.token1name} <br />
+              Pool Share : {parseFloat((object.tokenBalance / object.tokenSupply) * 100).toFixed(
+                2
+              )}{' '}
+              % <br />
+              Pool Liquidity : {parseFloat(object.liquidity).toFixed(2)} <br />
+              Total Investment : {object.totalInvestment} USD <br />
+              LP Token Balance : {parseFloat(object.tokenBalance).toFixed(2)}
+            </>
+          }>
+          <div style={{ width: '90%', marginTop: '12px', marginLeft: '30px' }}>
+            <div
+              style={{
+                display: 'inline-block',
+                width: '45%',
+                textAlign: 'left',
+                wordBreak: 'break-all',
+              }}>
+              ${object.token0Symbol}-${object.token1Symbol}
+            </div>
+
+            <div style={{ display: 'inline-block', width: '15%' }} />
+
+            <div style={{ display: 'inline-block', width: '40%', fontSize: '13px' }}>
+              {object.totalInvestment} USD
+            </div>
+
+            <br />
           </div>
-
-          <div style={{ display: 'inline-block', width: '15%' }} />
-
-          <div style={{ display: 'inline-block', width: '40%', fontSize: '13px' }}>
-            {object.totalInvestment} USD
-          </div>
-
-          <br />
-        </div>
-      </Tooltip>
-    ));
+        </Tooltip>
+      );
+    });
 
     setPoolsContent(content);
   }, [PoolsData]);
@@ -473,63 +483,71 @@ export default function Index({ accountAddress }) {
 
   useEffect(() => {
     const content = BalancerPoolsDatav2.map((object) => (
-      <Tooltip
-        title={
-          <>
+      <>
+        {/*<Investment protocol={object} />*/}
+        <Tooltip
+          title={
+            <>
+              <div
+                style={{
+                  display: 'inline-block',
+                  textAlign: 'left',
+                  wordBreak: 'break-word',
+                }}>
+                Tokens in Pool: <br />
+                {object.tokens.map((obj) => (
+                  <>
+                    ${obj.symbol}
+                    <br />
+                  </>
+                ))}
+              </div>
+              <br />
+              <br />
+              Pool Percentage : {parseFloat(object.poolPercentage).toFixed(2)} % <br />
+              Pool Liquidity : {parseFloat(object.liquidity).toFixed(2)} USD <br />
+              Total Investment : {object.totalInvestment} USD
+            </>
+          }>
+          <div style={{ width: '90%', marginTop: '12px', marginLeft: '20px' }}>
+            <br />
             <div
               style={{
                 display: 'inline-block',
+                width: '60%',
                 textAlign: 'left',
                 wordBreak: 'break-word',
               }}>
-              Tokens in Pool: <br />
               {object.tokens.map((obj) => (
                 <>
-                  ${obj.symbol}
-                  <br />
+                  <>${obj.symbol}-</>
                 </>
               ))}
-            </div>
-            <br />
-            <br />
-            Pool Percentage : {parseFloat(object.poolPercentage).toFixed(2)} % <br />
-            Pool Liquidity : {parseFloat(object.liquidity).toFixed(2)} USD <br />
-            Total Investment : {object.totalInvestment} USD
-          </>
-        }>
-        <div style={{ width: '90%', marginTop: '12px', marginLeft: '20px' }}>
-          <br />
-          <div
-            style={{
-              display: 'inline-block',
-              width: '60%',
-              textAlign: 'left',
-              wordBreak: 'break-word',
-            }}>
-            {object.tokens.map((obj) => (
               <>
-                <>${obj.symbol}-</>
+                <>&nbsp;{parseFloat(object.balance).toFixed(2)}&nbsp;-</>
               </>
-            ))}
-            <>
-              <>&nbsp;{parseFloat(object.balance).toFixed(2)}&nbsp;-</>
-            </>
-            <>
-              <>&nbsp;{parseFloat(object.price).toFixed(2)}&nbsp;USD</>
-            </>
-          </div>
+              <>
+                <>&nbsp;{parseFloat(object.price).toFixed(2)}&nbsp;USD</>
+              </>
+            </div>
 
-          {/* <div style={{ display: 'inline-block', width: '10%' }}>
+            {/* <div style={{ display: 'inline-block', width: '10%' }}>
             {object.value} ${object.symbol}
           </div> */}
 
-          <div
-            style={{ display: 'inline-block', width: '30%', fontSize: '15px', marginLeft: '20px' }}>
-            {object.totalInvestment} USD
+            <div
+              style={{
+                display: 'inline-block',
+                width: '30%',
+                fontSize: '15px',
+                marginLeft: '20px',
+              }}>
+              {object.totalInvestment} USD
+            </div>
+            {/* <hr style={{ width: '30%' }} /> */}
           </div>
-          {/* <hr style={{ width: '30%' }} /> */}
-        </div>
-      </Tooltip>
+        </Tooltip>
+      </>
     ));
 
     setBalancerPoolsContentv2(content);
@@ -1134,6 +1152,26 @@ export default function Index({ accountAddress }) {
   }, [accountAddress]);
   return (
     <div>
+      {PoolsData.map((object) => (
+        <ValueProtocol
+          token0Symbol={object.token0Symbol}
+          token1Symbol={object.token1Symbol}
+          liquidity={object.liquidity}
+          protocol={'Uniswap V2'}
+        />
+      ))}
+      {/*<div>2{SushiPoolsContent}</div> //TODO:check how SushiPools works with data*/}
+      {/*<BancorPools //TODO:check how BancorPools works with data*/}
+      {/*  setPoolTotal={setBancorPoolTotal}*/}
+      {/*  setDisplay={setDisplayBancor}*/}
+      {/*  accountAddress={accountAddress}*/}
+      {/*/>*/}
+      {BalancerPoolsData.map((object) => {
+        return <Investment protocol={object} chain={'Ethereum'} protocolName={'Balancer V1'} />;
+      })}
+      {BalancerPoolsDatav2.map((object) => {
+        return <Investment protocol={object} chain={'Ethereum'} protocolName={'Balancer V2'} />;
+      })}
       <div
         style={{
           width: '100%',
@@ -1205,7 +1243,6 @@ export default function Index({ accountAddress }) {
         {CompoundSavingsContent}
         <br />
       </div>
-
       <div
         style={{
           width: '100%',
@@ -1250,7 +1287,6 @@ export default function Index({ accountAddress }) {
         {CompoundLoansContent}
         <br />
       </div>
-
       <div
         style={{
           width: '100%',
@@ -1332,7 +1368,6 @@ export default function Index({ accountAddress }) {
         {BalancerPoolsContentv2}
         <br />
       </div>
-
       <div
         style={{
           // marginLeft:'25px',
@@ -1367,7 +1402,6 @@ export default function Index({ accountAddress }) {
         <br />
         <YearnFinance accountAddress={accountAddress} onYearnTokenValue={getYearnTokenValue} />
       </div>
-
       <div
         style={{
           width: '110%',
@@ -1396,6 +1430,9 @@ export default function Index({ accountAddress }) {
           }}>
           Curve Staking --- {CurveStakeTotal} USD
         </div>
+        {CurveStakeData.map((object) => (
+          <StakedProtocols protocol={object} protocolName={'Curve Staking'} logoImage={CurveLogo} />
+        ))}
         {CurveStakeContent}
         <br />
         <Ethereum2Staking accountAddress={accountAddress} />
