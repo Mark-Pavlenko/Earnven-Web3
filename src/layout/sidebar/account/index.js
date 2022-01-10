@@ -100,16 +100,16 @@ export default function Account({ address, name, global_wallet, setTheme }) {
     }
     jsondata &&
       jsondata.map((option) => {
-        // if (
-        //   option.provider !== 'metamask' &&
-        //   option.provider !== 'walletconnect' &&
-        //   option.provider !== 'portis' &&
-        //   option.provider !== 'coinbase' &&
-        //   option.provider !== 'fortmatic' &&
-        //   option.provider !== 'torus'
-        // ) {
-        jsonData.push({ address: option.address, provider: option.provider, name: option.name });
-        // }
+        if (
+          option.provider !== 'metamask' &&
+          option.provider !== 'walletconnect' &&
+          option.provider !== 'portis' &&
+          option.provider !== 'coinbase' &&
+          option.provider !== 'fortmatic' &&
+          option.provider !== 'torus'
+        ) {
+          jsonData.push({ address: option.address, provider: option.provider, name: option.name });
+        }
       });
     setaccountList(jsonData);
     const myWallet = localStorage.getItem('mywallet');
