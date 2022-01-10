@@ -92,20 +92,19 @@ export const MyWalletsLabel = styled(Box)`
 `;
 
 export const WalletsList = styled(List)`
-  margin: 0 auto;
   //:hover {
-
   color: black;
-  height: 60px;
-  width: 291px;
+
   //}
 `;
 
 export const WalletsListItem = styled(ListItem)`
-  padding-left: 0px;
-
+  height: 60px;
+  width: 291px;
+  margin-left: 27px;
+  padding-left: 7px;
+  background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
   :hover {
-    background: red;
   }
 `;
 
@@ -115,6 +114,7 @@ export const WalletsListLayout = MUIStyled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   marginTop: '20px',
+
   // padding: theme.spacing(2, 2.5),
   // borderRadius: theme.shape.borderRadiusSm,
   paddingBottom: 0,

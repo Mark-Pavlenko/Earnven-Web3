@@ -146,6 +146,8 @@ export default function Account({ address, name, global_wallet, setTheme }) {
     }
   }
 
+  // const currentWalletObject = JSON.parse(global_wallet)[0].address;
+  // console.log('currentWallet', currentWalletObject);
   // console.log('if wallet block is clicked', arrowicon);
   return (
     <>
@@ -179,18 +181,16 @@ export default function Account({ address, name, global_wallet, setTheme }) {
             <MyWalletsLabel isLightTheme={themeType}>
               <p isLightTheme={themeType}>{accountList.length > 0 && 'My wallet'}</p>
             </MyWalletsLabel>
-            {/*{currentWallet && <p style={{ color: 'red' }}>{currentWallet[0].address}</p>}*/}
-
             <WalletsList>
               {accountList && (
-                <WalletsListItem>
+                <WalletsListItem isLightTheme={themeType}>
                   <Accounts
                     setaccount_menuclose={(w) => setaccount(w)}
                     onClick={() => {
                       hideAccountPopover();
                     }}
                     onReRender={handleReRender}
-                    address={JSON.stringify(JSON.parse(global_wallet)[0].address)}
+                    address={JSON.parse(global_wallet)[0].address}
                     name={JSON.parse(global_wallet)[0].name}
                     globalWalletsList={JSON.stringify(JSON.parse(global_wallet)[0])}
                     currentWalletAddress={currentWallet[0].address}
@@ -207,7 +207,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
               <WalletsList>
                 {accountList &&
                   accountList.map((option) => (
-                    <WalletsListItem>
+                    <WalletsListItem isLightTheme={themeType}>
                       <Accounts
                         setaccount_menuclose={(w) => setaccount(w)}
                         onClick={() => {
