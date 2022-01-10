@@ -64,6 +64,7 @@ import {
   WalletArrow,
   MyWalletsLabel,
   WalletsList,
+  WalletsListItem,
 } from './styles';
 
 export default function Account({ address, name, global_wallet, setTheme }) {
@@ -149,7 +150,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
   return (
     <>
       {address ? (
-        <>
+        <div>
           <AccountStyle ref={anchorRef} onClick={showAccountPopover} isLightTheme={themeType}>
             <WalletsListBlock isLightTheme={themeType} isBlockActivated={arrowicon}>
               <FirstWalletsListBlock>
@@ -175,20 +176,38 @@ export default function Account({ address, name, global_wallet, setTheme }) {
             onClose={hideAccountPopover}
             anchorEl={anchorRef.current}>
             {/* my wallet*/}
-            {/*<MyWalletsLabel isLightTheme={themeType}>*/}
-            {/*  <p isLightTheme={themeType}>{accountList.length > 0 && 'My wallet'}</p>*/}
-            {/*</MyWalletsLabel>*/}
+            <MyWalletsLabel isLightTheme={themeType}>
+              <p isLightTheme={themeType}>{accountList.length > 0 && 'My wallet'}</p>
+            </MyWalletsLabel>
             {/*{currentWallet && <p style={{ color: 'red' }}>{currentWallet[0].address}</p>}*/}
+
+            <WalletsList>
+              {accountList && (
+                <WalletsListItem>
+                  <Accounts
+                    setaccount_menuclose={(w) => setaccount(w)}
+                    onClick={() => {
+                      hideAccountPopover();
+                    }}
+                    onReRender={handleReRender}
+                    address={JSON.stringify(JSON.parse(global_wallet)[0].address)}
+                    name={JSON.parse(global_wallet)[0].name}
+                    globalWalletsList={JSON.stringify(JSON.parse(global_wallet)[0])}
+                    currentWalletAddress={currentWallet[0].address}
+                  />
+                </WalletsListItem>
+              )}
+            </WalletsList>
 
             {/* all wallets */}
             <MyWalletsLabel isLightTheme={themeType}>
               <p isLightTheme={themeType}>{accountList.length > 0 && 'Watchlist'}</p>
             </MyWalletsLabel>
             <div>
-              {accountList &&
-                accountList.map((option) => (
-                  <ListItem>
-                    <WalletsList>
+              <WalletsList>
+                {accountList &&
+                  accountList.map((option) => (
+                    <WalletsListItem>
                       <Accounts
                         setaccount_menuclose={(w) => setaccount(w)}
                         onClick={() => {
@@ -200,38 +219,37 @@ export default function Account({ address, name, global_wallet, setTheme }) {
                         globalWalletsList={global_wallet}
                         currentWalletAddress={currentWallet[0].address}
                       />
-                    </WalletsList>
-                  </ListItem>
-                ))}
-
-              {/* add new item element */}
-              <MenuItem
-                onClick={routeToConnectWallet}
-                sx={{
-                  py: 1,
-                  px: 1,
-                  mx: 1,
-                  my: 1,
-                  ml: 2,
-                  height: '50px',
-                  borderRadius: '8px',
-                }}
-                className={classes.hoverMenu11}>
-                <ListItemIcon sx={{ mr: 1, minWidth: '17px', opacity: 0.5 }}>
-                  <VscAdd style={{ color: (theme) => 'blue', opacity: 0.5 }} />
-                </ListItemIcon>
-                <ListItemText
-                  primaryTypographyProps={{
-                    variant: 'watchlist_font_balance',
-                    color: (theme) => 'bluw',
+                    </WalletsListItem>
+                  ))}
+                <div
+                  onClick={routeToConnectWallet}
+                  sx={{
+                    py: 1,
+                    px: 1,
+                    mx: 1,
+                    my: 1,
+                    ml: 2,
+                    height: '50px',
+                    borderRadius: '8px',
                   }}
-                  sx={{ opacity: 0.5 }}>
-                  New Wallet
-                </ListItemText>
-              </MenuItem>
+                  className={classes.hoverMenu11}>
+                  <ListItemIcon sx={{ mr: 1, minWidth: '17px', opacity: 0.5 }}>
+                    <VscAdd style={{ color: (theme) => 'blue', opacity: 0.5 }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primaryTypographyProps={{
+                      variant: 'watchlist_font_balance',
+                      color: (theme) => 'bluw',
+                    }}
+                    sx={{ opacity: 0.5 }}>
+                    New Wallet
+                  </ListItemText>
+                </div>
+              </WalletsList>
+              {/* add new item element */}
             </div>
           </WalletListPopover>
-        </>
+        </div>
       ) : (
         <EnterAccountBlock isLightTheme={themeType}>
           <p>Connect an Ethereum wallet to manage your portfolio</p>

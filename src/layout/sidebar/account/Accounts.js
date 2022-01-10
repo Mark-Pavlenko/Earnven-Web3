@@ -36,6 +36,7 @@ import {
   WalletListItemAccountLogo,
   WalletListItemAccountBalance,
   List_Menu_Pop_UP,
+  MyWalletsLabel,
 } from './styles';
 
 const useStyles = makeStyles(() =>
@@ -200,7 +201,7 @@ export default function Accounts(
             <WalletListItemAccountBalance
               variant="WaltchList_font_address"
               isLightTheme={isLightTheme}
-              sx={{ marginLeft: '0.02rem', marginTop: '-1.21rem' }}>
+              sx={{ marginLeft: '-2px', marginTop: '-1.21rem' }}>
               {walletAddressCutter(address, name)}
               {selectedAccountAddress === address ? (
                 <img

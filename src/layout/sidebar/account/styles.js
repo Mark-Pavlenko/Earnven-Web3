@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { experimentalStyled as MUIStyled } from '@material-ui/core/styles';
-import { Avatar, Box, List, Typography } from '@material-ui/core';
+import { Avatar, Box, List, ListItem, Typography } from '@material-ui/core';
 
 export const AccountLayout = styled.div``;
 
@@ -92,10 +92,20 @@ export const MyWalletsLabel = styled(Box)`
 `;
 
 export const WalletsList = styled(List)`
+  margin: 0 auto;
+  //:hover {
+
+  color: black;
+  height: 60px;
+  width: 291px;
+  //}
+`;
+
+export const WalletsListItem = styled(ListItem)`
+  padding-left: 0px;
+
   :hover {
-    background: white;
-    color: black;
-    height: 56px;
+    background: red;
   }
 `;
 
@@ -104,7 +114,8 @@ export const WalletsList = styled(List)`
 export const WalletsListLayout = MUIStyled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  padding: theme.spacing(2, 2.5),
+  marginTop: '20px',
+  // padding: theme.spacing(2, 2.5),
   // borderRadius: theme.shape.borderRadiusSm,
   paddingBottom: 0,
   cursor: 'pointer',
@@ -121,7 +132,8 @@ export const WalletListItemAccountLogo = MUIStyled(Avatar)(({ theme }) => ({
   marginRight: '-0.063rem',
 }));
 
-export const WalletListItemAccountBalance = MUIStyled(Typography)(({ isLightTheme }) => ({
+export const WalletListItemAccountBalance = MUIStyled('div')(({ isLightTheme }) => ({
+  fontSize: '10px',
   color: isLightTheme ? 'black' : 'white',
   marginLeft: '-26.4px',
   textAlign: 'left',
