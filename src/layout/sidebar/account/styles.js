@@ -93,7 +93,6 @@ export const MyWalletsLabel = styled(Box)`
 
 export const WalletsList = styled(List)`
   //:hover {
-  color: black;
 
   //}
 `;
@@ -103,8 +102,15 @@ export const WalletsListItem = styled(ListItem)`
   width: 291px;
   margin-left: 27px;
   padding-left: 7px;
-  background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
+
   :hover {
+    background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
+    box-shadow: ${(props) =>
+      props.isLightTheme
+        ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+        : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+    backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
+    border-radius: 10px;
   }
 `;
 
