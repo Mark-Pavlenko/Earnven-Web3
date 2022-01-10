@@ -29,6 +29,7 @@ export default function AaveStaking({ accountAddress }) {
   const [AaveV2BalanceAmt, setAaveV2BalanceAmt] = useState();
   const [AaveV2UsdPrice, setAaveV2UsdPrice] = useState();
   const [AaveAmountUSD, setAaveAmountUSD] = useState(0);
+  console.log('AaveAmountUSD', AaveAmountUSD);
   const [AaveV2ClaimableAmt, setAaveV2ClaimableAmt] = useState(0);
   const [AaveV2ClaimableValue, setAaveV2ClaimableValue] = useState(0);
   //variable for stkABPT - balancer LP

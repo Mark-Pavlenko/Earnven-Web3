@@ -31,7 +31,7 @@ export default function CurveLpToken({ accountAddress, onCurveLptoken }) {
   const [CurveLpTokenData, setCurveLpTokenData] = useState([]);
   const [CurveLpTokenTotal, setCurveLpTokenTotal] = useState([]);
   const [CurveLpTokenContent, setCurveLpTokenContent] = useState([]);
-
+  console.log('CurveLpTokenData', CurveLpTokenContent);
   //get useWeb3React hook
   const { account, activate, active, chainId, connector, deactivate, error, provider, setError } =
     useWeb3React();

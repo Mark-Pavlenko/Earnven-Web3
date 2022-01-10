@@ -13,6 +13,8 @@ import {
 import { useSelector } from 'react-redux';
 
 const Investment = ({ protocol, protocolName, logoImage }) => {
+  console.log('protocol', protocol);
+  console.log('logoImage', logoImage);
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -25,7 +27,7 @@ const Investment = ({ protocol, protocolName, logoImage }) => {
       protocol.balance ? protocol.balance : protocol.balanceShares / 10 ** 18
     ).toFixed(3),
     Chain: 'Ethereum',
-    Protocol: protocolName,
+    Protocol: protocolName ? protocolName : protocol.protocol,
   };
 
   const toggleHandler = () => {

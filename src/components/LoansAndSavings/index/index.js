@@ -19,7 +19,7 @@ import Synthetix from '../Synthetix';
 import Ethereum2Staking from '../Ethereum2Staking';
 import Investment from '../../common/investment/investment';
 import PoolsProtocols from '../../common/investment/poolsProtocols/poolsProtocols';
-// import UniswapV2 from './LiqudityPools/UniswapV2';
+import UniswapV2 from '../LiqudityPools/UniswapV2';
 import {
   PoolsBlock,
   TotalValueField,
@@ -36,8 +36,7 @@ import YearnFinance from '../YearnFinance';
 import BalancerV2 from '../LiqudityPools/BalancerV2';
 import { useSelector } from 'react-redux';
 import { ToggleButton } from '../../styled/styledComponents';
-import UniswapV2 from '../LiqudityPools/UniswapV2';
-// import { uniswapV2stake } from '../../../store/UniswapV2/reducerStake';
+import { uniswapV2stake } from '../../../store/UniswapV2/reducerStake';
 
 // Below code is for task https://app.clickup.com/t/1je2y9d
 // import CompoundData from './Compound';
@@ -45,7 +44,7 @@ export default function Index({ accountAddress }) {
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
   const SLPTokenTotalValue = useSelector((state) => state.sushiStaking.sushiStakeTotal);
   const Yearn = useSelector((state) => state.yearnFinance.yearnFinanceData);
-  console.log('Yearn', Yearn);
+
   // Below code is for task https://app.clickup.com/t/1je2y9d
   // const [DisplaySavings, setDisplaySavings] = useState(null);
   // const [TotalCompoundSavings, setTotalCompoundSavings] = useState(0);
@@ -565,72 +564,6 @@ export default function Index({ accountAddress }) {
     setBalancerPoolsContentv2(content);
   }, [BalancerPoolsDatav2]); //done
 
-  //Yearn data is commented since it moved to seperate component as YearFinanace.js
-  // useEffect(() => {
-  //   const content = YearnData.map((object) => {
-  //     return (
-  //       <Investment protocol={object} protocolName={'Yearn Finance'} logoImage={YearnLogo} />
-  //       // <Tooltip
-  //       //   title={
-  //       //     <>
-  //       //       {object.shareTokenName} <br />
-  //       //       Share Price :{' '}
-  //       //       {parseFloat(object.sharePrice / 10 ** object.shareTokenDecimals).toFixed(4)} USD <br />
-  //       //       Total Shares :{' '}
-  //       //       {parseFloat(object.balanceShares / 10 ** object.shareTokenDecimals).toFixed(2)} $
-  //       //       {object.symbol} <br />
-  //       //       Total SushiProtocol : {parseFloat(object.totalInvestment).toFixed(2)} USD <br />
-  //       //       Underlying Token Name : {object.mainTokenName} <br />
-  //       //     </>
-  //       //   }>
-  //       //   <div style={{ width: '90%', marginTop: '12px', marginLeft: '30px' }}>
-  //       //     <div style={{ display: 'inline-block', width: '15%' }}>
-  //       //       <div
-  //       //         style={{
-  //       //           height: '40px',
-  //       //           padding: '5px',
-  //       //           borderRadius: '10px',
-  //       //           backgroundImage:
-  //       //             'linear-gradient(to right,  rgba(20,24,30,.1), rgba(173,204,151,.5), rgba(20,24,30,.1))',
-  //       //         }}>
-  //       //         <center>
-  //       //           <img
-  //       //             src={object.image ? object.image : YearnLogo}
-  //       //             style={{ height: '30px', marginTop: '' }}
-  //       //             alt=""
-  //       //           />
-  //       //         </center>
-  //       //       </div>
-  //       //     </div>
-  //       //
-  //       //     <div style={{ display: 'inline-block', width: '10%' }} />
-  //       //
-  //       //     <div
-  //       //       style={{
-  //       //         display: 'inline-block',
-  //       //         fontSize: '12px',
-  //       //         width: '40%',
-  //       //         textAlign: 'left',
-  //       //       }}>
-  //       //       ${object.shareTokenSymbol}
-  //       //     </div>
-  //       //
-  //       //     {/* <div style={{display:'inline-block', width:'30%'}}>
-  //       //           {object.value} ${object.symbol}
-  //       //       </div> */}
-  //       //
-  //       //     <div style={{ display: 'inline-block', width: '30%', fontSize: '13px' }}>
-  //       //       {parseFloat(object.totalInvestment).toFixed(2)} USD
-  //       //     </div>
-  //       //
-  //       //     <br />
-  //       //   </div>
-  //       // </Tooltip>
-  //     );
-  //   });
-  //   setYearnContent(content);
-  // }, [YearnData]);
-
   useEffect(() => {
     const content = CurveStakeData.map((object) => {
       return (
@@ -1102,88 +1035,6 @@ export default function Index({ accountAddress }) {
           }
         });
     }
-    //Yearn Data is moved to seperate component as YearnFinance.js
-    // async function getYearnData() {
-    //   await axios
-    //     .post(
-    //       `https://gateway.thegraph.com/api/${addresses.graph_API}/subgraphs/id/0xf50b705e4eaba269dfe954f10c65bd34e6351e0c-0`,
-    //       {
-    //         query: `{
-    //                 accountVaultPositions(
-    //                   first:1000
-    //                   where:{
-    //                     account:"0x4beaa82fdda3543523d68bdf525d471ca20cd73c"
-    //                     balanceShares_gt:0
-    //                   }
-    //                 )
-    //                 {
-    //                   id
-    //                   balanceTokens
-    //                   balancePosition
-    //                   balanceShares
-    //                   balanceProfit
-    //                   vault{
-    //                     token{
-    //                       symbol
-    //                       name
-    //                       id
-    //                       decimals
-    //                     }
-    //                     shareToken{
-    //                       id
-    //                       name
-    //                       symbol
-    //                       decimals
-    //                     }
-    //                     latestUpdate{
-    //                       pricePerShare
-    //                     }
-    //                   }
-    //                 }
-    //               }`,
-    //       }
-    //     )
-    //     .then(async (response) => {
-    //       if (response.data.data) {
-    //         const res = response.data.data.accountVaultPositions;
-    //         const positions = [];
-    //         let tot = 0;
-    //         for (var i = 0; i < res.length; i++) {
-    //           const object = {};
-    //           await axios
-    //             .get(
-    //               `https://api.coingecko.com/api/v3/coins/ethereum/contract/${res[i].vault.token.id}`,
-    //               {},
-    //               {}
-    //             )
-    //             .then(async (priceData) => {
-    //               res[i].image = priceData.data.image.thumb;
-    //             })
-    //             .catch((err) => {});
-    //           object.balanceShares = res[i].balanceShares;
-    //           object.sharePrice = res[i].vault.latestUpdate.pricePerShare;
-    //           object.shareTokenAddress = res[i].vault.shareToken.id;
-    //           object.shareTokenSymbol = res[i].vault.shareToken.symbol;
-    //           object.shareTokenDecimals = res[i].vault.shareToken.decimals;
-    //           object.shareTokenName = res[i].vault.shareToken.name;
-    //           object.mainTokenSymbol = res[i].vault.token.symbol;
-    //           object.mainTokenName = res[i].vault.token.name;
-    //           object.mainTokenDecimals = res[i].vault.token.decimals;
-    //           object.mainTokenAddress = res[i].vault.token.id;
-    //           object.image = res[i].image;
-    //           object.totalInvestment =
-    //             ((object.balanceShares / 10 ** object.shareTokenDecimals) * object.sharePrice) /
-    //             10 ** object.shareTokenDecimals;
-    //           tot += parseFloat(object.totalInvestment).toFixed(2);
-    //           positions.push(object);
-    //         }
-    //         console.log();
-    //         positions.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
-    //         setYearnData(positions);
-    //         setYearnTotal(tot);
-    //       }
-    //     });
-    // }
 
     async function getCurveData() {
       await axios
@@ -1279,15 +1130,6 @@ export default function Index({ accountAddress }) {
   return (
     <ContentWrapper>
       <LeftColumnWrapper>
-        {/*<AaveStaking accountAddress={accountAddress} />*/}
-        {/*<UniStaking accountAddress={accountAddress} />*/}
-        {/*<LiquityStaking accountAddress={accountAddress} />*/}
-        {/*<AaveStaking accountAddress={accountAddress} />*/}
-        <BancorPools
-          setPoolTotal={() => {}}
-          setDisplay={() => {}}
-          accountAddress={accountAddress}
-        />
         <PoolsBlock //first
           isLightTheme={theme}
           style={{
@@ -1316,15 +1158,15 @@ export default function Index({ accountAddress }) {
               </TotalValue>
             </TotalValueField>
           </div>
-          <center>
-            <div style={{ fontSize: '25px', color: 'white' }}>
-              Pools Total :{' '}
-              {parseFloat(
-                UniV2Total + SushiV2Total + BalancerTotal + BalancerTotalv2 + BancorPoolTotal
-              ).toFixed(2)}{' '}
-              USD
-            </div>
-          </center>
+          {/*<center>*/}
+          {/*  <div style={{ fontSize: '25px', color: 'white' }}>*/}
+          {/*    Pools Total :{' '}*/}
+          {/*    {parseFloat(*/}
+          {/*      UniV2Total + SushiV2Total + BalancerTotal + BalancerTotalv2 + BancorPoolTotal*/}
+          {/*    ).toFixed(2)}{' '}*/}
+          {/*    USD*/}
+          {/*  </div>*/}
+          {/*</center>*/}
           {isPoolsOpen && (
             <>
               {PoolsData.map((protocol) => {
@@ -1332,7 +1174,7 @@ export default function Index({ accountAddress }) {
               })}
               {BalancerPoolsContent}
               {BalancerPoolsContentv2}
-
+              <YearnFinance accountAddress={accountAddress} />
               <AaveStaking accountAddress={accountAddress} />
               <UniStaking accountAddress={accountAddress} />
               <LiquityStaking accountAddress={accountAddress} />
@@ -1342,6 +1184,10 @@ export default function Index({ accountAddress }) {
                 accountAddress={accountAddress}
               />
               <UniswapV2 accountAddress={accountAddress} />
+              <Synthetix onSynthetixTokenValue={() => {}} accountAddress={accountAddress} />
+              <CurveLpToken accountAddress={accountAddress} onCurveLptoken={() => {}} />
+              {/*<SnowSwapStaking accountAddress={accountAddress} />*/}
+              {/*<CreamIronBank accountAddress={accountAddress} />*/}
             </>
           )}
         </PoolsBlock>
@@ -1364,7 +1210,7 @@ export default function Index({ accountAddress }) {
             </TotalValueField>
           </div>
           {/* added Yearn Finance component here to check yearnFinance data attributes */}
-          <YearnFinance accountAddress={accountAddress} />
+          {/*<YearnFinance accountAddress={accountAddress} />*/}
           {/*<center>*/}
           {/*  <div style={{ fontSize: '25px', color: 'white' }}>*/}
           {/*    Other Assets Total :{' '}*/}

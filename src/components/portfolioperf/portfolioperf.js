@@ -14,6 +14,20 @@ export default class PortfolioPerf extends Component {
     if (this.state.account !== this.props.address) {
       this.getAddressChartHistory();
     }
+    if (this.state.options.title.text !== this.props.totalValue) {
+      this.setState(() => {
+        return {
+          ...this.state,
+          options: {
+            ...this.state.options,
+            title: {
+              ...this.state.options.title,
+              text: this.props.totalValue,
+            },
+          },
+        };
+      });
+    }
   }
 
   // Will return history of ethereum account address
@@ -29,7 +43,6 @@ export default class PortfolioPerf extends Component {
       accountAddress +
       '?apiKey=ethplorer.widget';
     await axios.get(path, {}, {}).then(async (response) => {
-      console.log(`response:::${response.data.history.timestamp}`);
       result = response.data.history.data;
 
       if (result && result.length > 0) {
@@ -43,7 +56,6 @@ export default class PortfolioPerf extends Component {
       c = { data };
       // points
       points.push(c);
-      console.log(c);
       this.setState({ series: points });
     });
   };
@@ -247,10 +259,10 @@ export default class PortfolioPerf extends Component {
           offsetY: -15,
           floating: false,
           style: {
-            fontSize: '16px',
-            fontWeight: 'bold',
-            fontFamily: undefined,
-            color: '#fff',
+            fontSize: '40px',
+            fontWeight: 600,
+            fontFamily: 'saira',
+            color: '#4453AD',
           },
         },
         noData: {
@@ -333,7 +345,6 @@ export default class PortfolioPerf extends Component {
     return (
       <div
         style={{
-          // border: '1px solid #737373',
           borderRadius: '10px',
           backgroundColor: 'rgba(255, 255, 255, 0.16',
           boxShadow: 'box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
@@ -341,7 +352,6 @@ export default class PortfolioPerf extends Component {
         <div>
           <div style={{ textAlign: 'end' }}>
             {/* <button id="one_month"
-
                             onClick={() => this.updateData('one_month')} className={(this.state.selection === 'one_month' ? 'active' : '')}>
                             1M
                         </button> */}
@@ -352,9 +362,13 @@ export default class PortfolioPerf extends Component {
               color="inherit"
               sx={{
                 borderRadius: '10000px',
+                border: 'none',
                 minWidth: '34px',
                 height: '20px',
                 padding: '0px 8px',
+                fontSize: '14px',
+                color: '#1E1E20',
+                fontWeight: 'normal',
               }}
               onClick={() => this.updateData('one_month')}
               className={this.state.selection === 'one_month' ? 'active' : ''}>
@@ -368,8 +382,9 @@ export default class PortfolioPerf extends Component {
               color="inherit"
               sx={{
                 borderRadius: '10000px',
+                border: 'none',
                 minWidth: '34px',
-                height: '20px',
+                height: '26px',
                 padding: '0px 8px',
               }}
               onClick={() => this.updateData('one_year')}
@@ -384,8 +399,9 @@ export default class PortfolioPerf extends Component {
               color="inherit"
               sx={{
                 borderRadius: '10000px',
+                border: 'none',
                 minWidth: '34px',
-                height: '20px',
+                height: '26px',
                 padding: '0px 8px',
               }}
               onClick={() => this.updateData('ytd')}
@@ -400,8 +416,9 @@ export default class PortfolioPerf extends Component {
               color="inherit"
               sx={{
                 borderRadius: '10000px',
+                border: 'none',
                 minWidth: '34px',
-                height: '20px',
+                height: '26px',
                 padding: '0px 8px',
               }}
               onClick={() => this.updateData('all')}

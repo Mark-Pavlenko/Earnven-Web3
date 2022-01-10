@@ -36,10 +36,15 @@ function* yearnFinanceSagaWorker(yearnAccountAddress) {
 
         if (result.data[j].address.toLowerCase() === res[i].vault.shareToken.id.toLowerCase()) {
           if (result.data[j].token.address.toLowerCase() === res[i].vault.token.id.toLowerCase()) {
-            object.tokenName = result.data[j].token.display_name;
-            object.tokenImageUrl = result.data[j].token.icon;
             object.tokenDecimal = res[i].vault.shareToken.decimals;
-            object.tokenBalance =
+            object.tokens = [
+              {
+                symbol: result.data[j].token.display_name,
+                balance: parseFloat(res[i].balanceShares).toFixed(2) / 10 ** object.tokenDecimal,
+              },
+            ];
+            object.imageData = [result.data[j].token.icon];
+            object.totalTokensBalance =
               parseFloat(res[i].balanceShares).toFixed(2) / 10 ** object.tokenDecimal;
             object.tokenPrice = parseFloat(result.data[j].tvl.price).toFixed(2);
             object.tokenValue = parseFloat(object.tokenBalance * object.tokenPrice).toFixed(2);
