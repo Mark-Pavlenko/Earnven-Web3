@@ -2,43 +2,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { withStyles } from '@material-ui/styles';
-// import { makeStyles } from '@mui/styles';
+import { withStyles, makeStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
-import searchIcon from '../../assets/icons/searchIcon.png';
-import { Box, Typography } from '@material-ui/core';
+import searchIcon from '../../assets/icons/searchIconLight.png';
+import { Box } from '@material-ui/core';
 import { getAllTokens, getSearchedTokens } from '../../store/searchedTokens/actions';
 
 import { MainLayout, SearchIcon, CoinItem } from './styles';
 
 const styles = () => ({
-  root: (props) => ({
-    '& .MuiInputLabel-outlined:not(.MuiInputLabel-shrink)': {
-      // Default transform is "translate(14px, 20px) scale(1)""
-      // This lines up the label with the initial cursor position in the input
-      // after changing its padding-left.
-      transform: 'translate(34px, 20px) scale(1);',
-    },
-  }),
-  inputRoot: (props) => ({
-    color: 'white',
-    // borderRadius: 10,
-    // padding: 10,
-    // This matches the specificity of the default styles at https://github.com/mui-org/material-ui/blob/v4.11.3/packages/material-ui-lab/src/Autocomplete/Autocomplete.js#L90
-    '&[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child': {
-      // Default left padding is 6px
-      // paddingLeft: 26,
-    },
-    '& .MuiOutlinedInput-notchedOutline': {
-      borderColor: '#737373',
-    },
-    '&:hover .MuiOutlinedInput-notchedOutline': {
-      borderColor: '#737373',
-    },
-    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-      borderColor: '#737373',
-    },
-  }),
+  noBorder: {
+    border: 'none',
+  },
   labelRoot: {
     fontSize: 14,
     fontWeight: 400,
@@ -89,6 +64,8 @@ export class SearchTokensLight extends Component {
 
     const { classes } = this.props;
 
+    // const borderClasses = useStyles();
+
     return (
       <MainLayout isLightTheme={isLightTheme}>
         <div>
@@ -107,7 +84,7 @@ export class SearchTokensLight extends Component {
             getOptionLabel={(option) => option.name}
             renderOption={(props, option) => (
               <Box
-                component="div"
+                component="li"
                 sx={{
                   fontFamily: 'Saira, sans-serif',
                   fontSize: '10px',
@@ -137,6 +114,7 @@ export class SearchTokensLight extends Component {
                       <SearchIcon src={searchIcon} alt="" />
                     </>
                   ),
+                  classes: { notchedOutline: classes.noBorder },
                 }}
                 id="filled-search"
                 onChange={this.searchTokens}
@@ -152,6 +130,7 @@ export class SearchTokensLight extends Component {
                   width: 242,
                   height: 40,
                   borderRadius: '10px',
+
                   // boxShadow:
                   //   this.props.isLightTheme === false &&
                   //   'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',

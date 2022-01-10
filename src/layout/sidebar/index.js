@@ -1,45 +1,33 @@
 /* eslint-disable */
 import Scrollbar from '../../components/Scrollbar';
-import sidebarConfig, { getRecall } from '../SidebarConfig';
-// import upcomingConfig from '../upcomingConfig';
-import NavSection from '../../components/NavSection';
-
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
+import { getRecall } from '../SidebarConfig';
+import NavSection from './navSection';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 // material
-import { experimentalStyled as styled } from '@material-ui/core/styles';
-// import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@material-ui/core';
 import { Box, Drawer, Stack } from '@material-ui/core';
-import { useNavigate } from 'react-router-dom';
 import { MHidden } from '../../components/@material-extend';
 import CompanyLogo from '../../assets/icons/logo_menu.svg';
 import Earnven from '../../assets/icons/Earnven_menu_text.svg';
 import Dark_Earnven_logo from '../../assets/icons/Dark_Earnven_logo.svg';
-import Account from './account/account';
-import './sidebar.css';
+import Account from './account';
 import Links from './social/Links';
-import Accounts from './account/Accounts';
 import darkTheme from '../../assets/images/darkTheme.jpg';
 import lightTheme from '../../assets/images/lightTheme.jpg';
+import lightThemeBig from '../../assets/images/lightDashboardBig.jpg';
 import { useSelector } from 'react-redux';
-const DRAWER_WIDTH = 315;
 
-import { RootStyle } from './styles';
+import { RootStyle, LogoBlock, LogoImg, SidebarMainLayout } from './styles';
 
-Index.propTypes = {
+Sidebar.propTypes = {
   isOpenSidebar: PropTypes.bool,
   onCloseSidebar: PropTypes.func,
   setTheme: PropTypes.bool,
 };
 
-export default function Index({
+export default function Sidebar({
   isOpenSidebar,
   onCloseSidebar,
   address,
@@ -66,37 +54,27 @@ export default function Index({
     <Scrollbar
       sx={{
         height: '100vh',
-        'background-image': () => (!isLightTheme ? `url(${darkTheme})` : `url(${lightTheme})`),
-        boxShadow: '0 2px 3px 30px #d2dcf6',
+        // in order to get correct background for QHD & 4K Screens
+        background: () => (isLightTheme ? `url(${lightThemeBig})` : `#0F152C`),
+        borderRadius: '10px',
+        backdropFilter: 'blur(35px)',
+        boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
         '& .simplebar-content': { display: 'flex', flexDirection: 'column' },
       }}>
-      <Box sx={{ px: '38.91%', pb: 1, mt: '8%', ml: '-20px' }}>
-        <Stack
-          direction="row"
-          spacing={2}
-          sx={{
-            position: 'relative',
-            bgcolor: 'transparent',
-          }}>
-          <img src={CompanyLogo} alt="" />
+      <SidebarMainLayout isLightTheme={isLightTheme}>
+        <LogoBlock>
+          <LogoImg src={CompanyLogo} alt="" />
           <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
-        </Stack>
-      </Box>
-      <Box sx={{ px: 8 }}>
+        </LogoBlock>
         <Account
           address={address}
           name={name}
           setTheme={isLightTheme}
           global_wallet={global_wallet}
         />
-      </Box>
-      <NavSection
-        sx={{ px: 8, color: 'black' }}
-        navConfig={newSideBard}
-        address={address}
-        setTheme={setTheme}
-      />
-      <Links setTheme={setTheme} />
+        <NavSection sx={{ px: 8, color: 'black' }} navConfig={newSideBard} address={address} />
+        <Links setTheme={isLightTheme} />
+      </SidebarMainLayout>
     </Scrollbar>
   );
 
@@ -107,7 +85,12 @@ export default function Index({
           open={isOpenSidebar}
           onClose={onCloseSidebar}
           PaperProps={{
-            sx: { width: DRAWER_WIDTH, overflow: 'auto', height: 'auto' },
+            sx: {
+              width: '315px',
+              overflow: 'auto',
+              height: 'auto',
+              backgroundColor: 'transparent',
+            },
           }}>
           {renderContent}
         </Drawer>
@@ -119,9 +102,14 @@ export default function Index({
           variant="persistent"
           PaperProps={{
             sx: {
-              width: DRAWER_WIDTH,
+              width: '315px',
               height: 'auto',
               overflow: 'auto',
+              // backgroundColor: 'red',
+              backgroundColor: 'transparent !important',
+              // boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+              // backdropFilter: 'blur(35px)',
+              border: 'none',
             },
           }}>
           {renderContent}

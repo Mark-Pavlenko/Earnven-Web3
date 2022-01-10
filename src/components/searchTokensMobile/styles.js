@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Button, Box, Popover, ListItemText } from '@material-ui/core';
 
-export const GasButton = styled(Button)`
+export const SearchTokensMobileBtn = styled(Button)`
   @media (min-width: 1000px) {
     display: none;
   }

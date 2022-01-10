@@ -7,7 +7,7 @@ import { Box, MenuItem, ListItemText, IconButton } from '@material-ui/core';
 // import languageImg from '../../generalAssets/icons/language.png'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { IoIosHelpCircleOutline } from 'react-icons/io';
-import MenuPopover from '../MenuPopover';
+import MenuPopover from '../../layout/sidebar/account/walletsListPopover';
 
 // ----------------------------------------------------------------------
 

@@ -5,7 +5,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { withStyles } from '@material-ui/styles';
 // import { makeStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
-import searchIcon from '../../assets/icons/searchIcon.png';
+import searchIcon from '../../assets/icons/searchIconLight.png';
 import { Box, Typography } from '@material-ui/core';
 import { getAllTokens, getSearchedTokens } from '../../store/searchedTokens/actions';
 
@@ -48,7 +48,7 @@ const styles = () => ({
   },
 });
 
-export class SearchTokensLight extends Component {
+export class SearchTokensDark extends Component {
   sendData = () => {
     this.props.parentCallback(this.state.token);
   };
@@ -173,7 +173,7 @@ export class SearchTokensLight extends Component {
   }
 }
 
-SearchTokensLight.propTypes = {
+SearchTokensDark.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
@@ -186,4 +186,4 @@ const mapDispatchToProps = {
   getAllTokens,
 };
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(SearchTokensLight));
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(SearchTokensDark));

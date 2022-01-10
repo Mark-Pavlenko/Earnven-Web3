@@ -42,6 +42,7 @@ const addresses = {
   CreamCMIM: `0x9e8E207083ffd5BDc3D99A1F32D1e6250869C1A9`,
   CreamCZAR: `0x672473908587b10e65DAB177Dbaeadcbb30BF40B`,
   snxTokenAddress: '0xDC01020857afbaE65224CfCeDb265d1216064c59',
+  cvxTokenAddress: '0x5f3b5dfeb7b28cdbd7faba78963ee202a494e2a2',
 };
 
 export default addresses;
