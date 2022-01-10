@@ -47,7 +47,7 @@ export default class index extends Component {
     await this.loadBlockchainData();
   }
 
-  shortaddress(addy) {
+  walletAddressCutter(addy) {
     if (addy === '') {
       return addy;
     }
@@ -313,8 +313,8 @@ export default class index extends Component {
                   />
                   <Typography variant="body2">
                     {data.status === 'Receive'
-                      ? this.shortaddress(data.from)
-                      : this.shortaddress(data.to)}
+                      ? this.walletAddressCutter(data.from)
+                      : this.walletAddressCutter(data.to)}
                   </Typography>
                 </Stack>
               </div>
@@ -345,7 +345,7 @@ export default class index extends Component {
               <Typography variant="body2">Hash</Typography>
               <Stack direction="row">
                 <Typography href={this.etherscanTxLink(data.hash)} variant="caption">
-                  {this.shortaddress(data.hash)}
+                  {this.walletAddressCutter(data.hash)}
                 </Typography>
                 <IconButton edge="end" aria-label="copy" style={{ padding: '0px' }}>
                   <CopyToClipboard text={data.hash}>
@@ -594,8 +594,8 @@ export default class index extends Component {
                   />
                   <Typography variant="caption">
                     {data.status === 'Receive'
-                      ? this.shortaddress(data.from)
-                      : this.shortaddress(data.to)}
+                      ? this.walletAddressCutter(data.from)
+                      : this.walletAddressCutter(data.to)}
                   </Typography>
                 </Stack>
               </div>
@@ -631,7 +631,7 @@ export default class index extends Component {
                   href={this.etherscanTxLink(data.hash)}
                   variant="caption"
                   sx={{ fontSize: '8px' }}>
-                  {this.shortaddress(data.hash)}
+                  {this.walletAddressCutter(data.hash)}
                 </Typography>
                 <IconButton edge="end" aria-label="copy" style={{ padding: '0px' }}>
                   <CopyToClipboard text={data.hash}>

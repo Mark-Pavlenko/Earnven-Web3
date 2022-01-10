@@ -1,7 +1,6 @@
 // import { experimentalStyled as styled } from '@material-ui/core/styles';
 import styled from 'styled-components';
 import accountLogo from '../../../assets/icons/accountlogo.png';
-import arrowIcon from './ArrowRotate.svg';
 import { createStyles } from '@material-ui/styles';
 import {
   Box,
@@ -75,7 +74,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
   {
     currentWallet && console.log('currentWallet', currentWallet[0].address);
   }
-  console.log('selectedAccount', selectedAccount);
+  // console.log('selectedAccount', selectedAccount);
 
   const { flag_menu } = menurender_customhook();
 
@@ -93,21 +92,23 @@ export default function Account({ address, name, global_wallet, setTheme }) {
     const result = localStorage.getItem('wallets');
     var jsonData = [];
     var jsondata = JSON.parse(result);
+    console.log('jsondata', jsondata);
+
     if (flag_menu === true) {
       setaccount(false);
     }
     jsondata &&
       jsondata.map((option) => {
-        if (
-          option.provider !== 'metamask' &&
-          option.provider !== 'walletconnect' &&
-          option.provider !== 'portis' &&
-          option.provider !== 'coinbase' &&
-          option.provider !== 'fortmatic' &&
-          option.provider !== 'torus'
-        ) {
-          jsonData.push({ address: option.address, provider: option.provider, name: option.name });
-        }
+        // if (
+        //   option.provider !== 'metamask' &&
+        //   option.provider !== 'walletconnect' &&
+        //   option.provider !== 'portis' &&
+        //   option.provider !== 'coinbase' &&
+        //   option.provider !== 'fortmatic' &&
+        //   option.provider !== 'torus'
+        // ) {
+        jsonData.push({ address: option.address, provider: option.provider, name: option.name });
+        // }
       });
     setaccountList(jsonData);
     const myWallet = localStorage.getItem('mywallet');
@@ -174,10 +175,10 @@ export default function Account({ address, name, global_wallet, setTheme }) {
             onClose={hideAccountPopover}
             anchorEl={anchorRef.current}>
             {/* my wallet*/}
-            <MyWalletsLabel isLightTheme={themeType}>
-              <p isLightTheme={themeType}>{accountList.length > 0 && 'My wallet'}</p>
-            </MyWalletsLabel>
-            {currentWallet && <p style={{ color: 'red' }}>{currentWallet[0].address}</p>}
+            {/*<MyWalletsLabel isLightTheme={themeType}>*/}
+            {/*  <p isLightTheme={themeType}>{accountList.length > 0 && 'My wallet'}</p>*/}
+            {/*</MyWalletsLabel>*/}
+            {/*{currentWallet && <p style={{ color: 'red' }}>{currentWallet[0].address}</p>}*/}
 
             {/* all wallets */}
             <MyWalletsLabel isLightTheme={themeType}>
@@ -196,7 +197,8 @@ export default function Account({ address, name, global_wallet, setTheme }) {
                         onReRender={handleReRender}
                         address={option.address}
                         name={option.name}
-                        global_wallet={global_wallet}
+                        globalWalletsList={global_wallet}
+                        currentWalletAddress={currentWallet[0].address}
                       />
                     </WalletsList>
                   </ListItem>

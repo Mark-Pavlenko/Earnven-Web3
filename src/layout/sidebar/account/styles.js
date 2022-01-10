@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { Avatar, Box, List } from '@material-ui/core';
+import { experimentalStyled as MUIStyled } from '@material-ui/core/styles';
+import { Avatar, Box, List, Typography } from '@material-ui/core';
 
 export const AccountLayout = styled.div``;
 
@@ -97,3 +98,46 @@ export const WalletsList = styled(List)`
     height: 56px;
   }
 `;
+
+//dropdown wallets list styles
+
+export const WalletsListLayout = MUIStyled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  padding: theme.spacing(2, 2.5),
+  // borderRadius: theme.shape.borderRadiusSm,
+  paddingBottom: 0,
+  cursor: 'pointer',
+  // background: 'rgba(255, 255, 255, 0.16)',
+  // mixBlendMode: 'normal',
+  // boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+  // backdropFilter: 'blur(35px)',
+}));
+
+export const WalletListItemAccountLogo = MUIStyled(Avatar)(({ theme }) => ({
+  width: '1.3125rem',
+  height: '1.3125rem',
+  marginTop: '-3rem',
+  marginRight: '-0.063rem',
+}));
+
+export const WalletListItemAccountBalance = MUIStyled(Typography)`
+  margin-left: -26.4px;
+  textAlign: 'left',
+  marginTop: '-3px',
+ 
+`;
+
+export const List_Menu_Pop_UP = styled('div')(({ theme }) => ({
+  width: '276px',
+  height: '40px',
+  display: 'flex',
+  '&:hover': {
+    backgroundColor: 'red',
+    color: 'orange',
+    fontWeight: 600,
+  },
+  marginLeft: '12px',
+  borderRadius: '10px',
+  cursor: 'pointer',
+}));

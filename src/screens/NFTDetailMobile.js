@@ -409,7 +409,7 @@ export default function NftDetailsMobile({
     sessionStorage.setItem('nftCount_left', 0);
   };
 
-  const shortaddress = (addy) => {
+  const walletAddressCutter = (addy) => {
     if (addy === '') {
       return addy;
     }
@@ -596,10 +596,10 @@ export default function NftDetailsMobile({
                     <p style={{ fontSize: '10px' }}>{convertTimestampToDate(object.timestamp)}</p>
                   </Tranfer_Body>
                   <Tranfer_Body variant="transferbody_mobile" align="left">
-                    <p style={{ fontSize: '10px' }}>{shortaddress(object.from)}</p>
+                    <p style={{ fontSize: '10px' }}>{walletAddressCutter(object.from)}</p>
                   </Tranfer_Body>
                   <Tranfer_Body variant="transferbody_mobile" align="left">
-                    <p style={{ fontSize: '10px' }}>{shortaddress(object.to)}</p>
+                    <p style={{ fontSize: '10px' }}>{walletAddressCutter(object.to)}</p>
                   </Tranfer_Body>
                 </ListItem>
               </Link>
