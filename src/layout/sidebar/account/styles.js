@@ -92,6 +92,7 @@ export const MyWalletsLabel = styled(Box)`
 `;
 
 export const WalletsList = styled(List)`
+  padding-top: 8px;
   //:hover {
 
   //}
@@ -101,6 +102,7 @@ export const WalletsListItem = styled(ListItem)`
   height: 60px;
   width: 291px;
   margin-left: 27px;
+  padding-top: 12px;
   padding-left: 7px;
 
   :hover {
