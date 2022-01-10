@@ -215,9 +215,10 @@ export default function Accounts(
             updateSelectedAccount(address, name);
             routeToDashboard();
           }}>
-          <AccountBalance address={address} />
+          <AccountBalance address={address} isLightTheme={isLightTheme} />
         </WalletListItemAccountBalance>
       </WalletsListLayout>
+      {/* popover menu with options for wallet*/}
       <MenuPopover
         className={classes.menupopover}
         open={account}

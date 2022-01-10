@@ -168,6 +168,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
                   )}
                 </WalletArrow>
               </FirstWalletsListBlock>
+              {/* account balance*/}
               <AccountBalance address={address} />
             </WalletsListBlock>
           </AccountStyle>
