@@ -99,13 +99,16 @@ export const WalletsList = styled(List)`
 `;
 
 export const WalletsListItem = styled(ListItem)`
+  display: flex;
+  align-items: center;
   height: 60px;
   width: 291px;
   margin-left: 27px;
   padding-top: 12px;
   padding-left: 7px;
-
+  background-color: red;
   :hover {
+    cursor: pointer;
     background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
     box-shadow: ${(props) =>
       props.isLightTheme
@@ -119,14 +122,8 @@ export const WalletsListItem = styled(ListItem)`
 //dropdown wallets list styles
 
 export const WalletsListLayout = MUIStyled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  marginTop: '20px',
-
-  // padding: theme.spacing(2, 2.5),
-  // borderRadius: theme.shape.borderRadiusSm,
-  paddingBottom: 0,
-  cursor: 'pointer',
+  // marginTop: '20px',
+  // paddingBottom: 0,
   // background: 'rgba(255, 255, 255, 0.16)',
   // mixBlendMode: 'normal',
   // boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
@@ -136,16 +133,23 @@ export const WalletsListLayout = MUIStyled('div')(({ theme }) => ({
 export const WalletListItemAccountLogo = MUIStyled(Avatar)(({ theme }) => ({
   width: '1.3125rem',
   height: '1.3125rem',
-  marginTop: '-3rem',
-  marginRight: '-0.063rem',
+  marginRight: '27px',
+  // marginTop: '-3rem',
+  // marginRight: '-0.063rem',
 }));
+
+export const WalletListItemContent = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: 27px;
+`;
 
 export const WalletListItemAccountBalance = MUIStyled('div')(({ isLightTheme }) => ({
   fontSize: '10px',
   color: isLightTheme ? 'black' : 'white',
-  marginLeft: '-26.4px',
   textAlign: 'left',
-  marginTop: '-3px',
+  // marginTop: '-3px',
+  // marginLeft: '-26.4px',
 }));
 
 export const List_Menu_Pop_UP = styled('div')(({ theme }) => ({

@@ -37,6 +37,7 @@ import {
   WalletListItemAccountBalance,
   List_Menu_Pop_UP,
   MyWalletsLabel,
+  WalletListItemContent,
 } from './styles';
 
 const useStyles = makeStyles(() =>
@@ -190,48 +191,46 @@ export default function Accounts(
     <>
       <WalletsListLayout ref={anchorRef}>
         <WalletListItemAccountLogo src={accountLogo} alt="photoURL" />
-        <Box sx={{ ml: 1 }}>
-          <Stack
-            onClick={() => {
-              hideAccountPopover();
-              updateSelectedAccount(address);
-              routeToDashboard();
-            }}
-            direction="row">
-            <WalletListItemAccountBalance
-              variant="WaltchList_font_address"
-              isLightTheme={isLightTheme}
-              sx={{ marginLeft: '-2px', marginTop: '-1.21rem' }}>
-              {walletAddressCutter(address, name)}
-              {selectedAccountAddress === address ? (
-                <img
-                  src={green_got_menu}
-                  style={{
-                    display: 'flex',
-                    float: 'right',
-                    marginTop: '2.09px',
-                    marginLeft: '10px',
-                  }}
-                  alt="no pic"
-                />
-              ) : (
-                ''
-              )}
-            </WalletListItemAccountBalance>
-          </Stack>
-          <div className={classes.icon1} onClick={showAccountPopover}>
-            <img src={dots_menu_icon} alt="no pic" />
-          </div>
-          {/* Current Account balance value*/}
+        <WalletListItemContent
+          onClick={() => {
+            hideAccountPopover();
+            updateSelectedAccount(address);
+            routeToDashboard();
+          }}
+          direction="row">
           <WalletListItemAccountBalance
-            onClick={() => {
-              hideAccountPopover();
-              updateSelectedAccount(address, name);
-              routeToDashboard();
-            }}>
-            <AccountBalance address={address} />
+            variant="WaltchList_font_address"
+            isLightTheme={isLightTheme}
+            sx={{ marginLeft: '-2px', marginTop: '-1.21rem' }}>
+            {walletAddressCutter(address, name)}
+            {selectedAccountAddress === address ? (
+              <img
+                src={green_got_menu}
+                style={{
+                  display: 'flex',
+                  float: 'right',
+                  marginTop: '2.09px',
+                  marginLeft: '10px',
+                }}
+                alt="no pic"
+              />
+            ) : (
+              ''
+            )}
           </WalletListItemAccountBalance>
-        </Box>
+        </WalletListItemContent>
+        <div className={classes.icon1} onClick={showAccountPopover}>
+          <img src={dots_menu_icon} alt="no pic" />
+        </div>
+        {/* Current Account balance value*/}
+        <WalletListItemAccountBalance
+          onClick={() => {
+            hideAccountPopover();
+            updateSelectedAccount(address, name);
+            routeToDashboard();
+          }}>
+          <AccountBalance address={address} />
+        </WalletListItemAccountBalance>
       </WalletsListLayout>
       <MenuPopover
         className={classes.menupopover}
