@@ -71,6 +71,10 @@ export default function Account({ address, name, global_wallet, setTheme }) {
   const dispatch = useDispatch();
   const themeType = useSelector((state) => state.themeReducer.isLightTheme);
   const selectedAccount = localStorage.getItem('selected-account');
+  const currentWallet = JSON.parse(localStorage.getItem('mywallet'));
+  {
+    currentWallet && console.log('currentWallet', currentWallet[0].address);
+  }
   console.log('selectedAccount', selectedAccount);
 
   const { flag_menu } = menurender_customhook();
@@ -173,7 +177,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
             <MyWalletsLabel isLightTheme={themeType}>
               <p isLightTheme={themeType}>{accountList.length > 0 && 'My wallet'}</p>
             </MyWalletsLabel>
-            <p style={{ color: 'red' }}>{selectedAccount}</p>
+            {currentWallet && <p style={{ color: 'red' }}>{currentWallet[0].address}</p>}
 
             {/* all wallets */}
             <MyWalletsLabel isLightTheme={themeType}>
