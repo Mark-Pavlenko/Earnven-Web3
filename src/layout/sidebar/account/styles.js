@@ -104,6 +104,7 @@ export const WalletsListItem = styled(ListItem)`
   align-items: center;
   height: 60px;
   width: 291px;
+
   margin-left: 27px;
   padding-top: 12px;
   padding-left: 7px;
@@ -173,6 +174,18 @@ export const WalletListItemAccountBalance = MUIStyled('div')(({ isLightTheme }) 
   // marginTop: '-3px',
   // marginLeft: '-26.4px',
 }));
+
+export const MetamaskLabel = styled.span`
+  margin-left: 25px;
+  color: #4453ad;
+  font-family: 'Saira', sans-serif;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0;
+  text-align: center;
+`;
 
 export const WalletListItemGreenDot = styled.img`
   display: flex;

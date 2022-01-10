@@ -186,6 +186,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
                     name={JSON.parse(global_wallet)[0].name}
                     globalWalletsList={JSON.stringify(JSON.parse(global_wallet)[0])}
                     currentWalletAddress={currentWallet[0].address}
+                    isMetamaskWallet={true}
                   />
                 </WalletsListItem>
               )}
@@ -210,6 +211,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
                         name={option.name}
                         globalWalletsList={global_wallet}
                         currentWalletAddress={currentWallet[0].address}
+                        isMetamaskWallet={false}
                       />
                     </WalletsListItem>
                   ))}

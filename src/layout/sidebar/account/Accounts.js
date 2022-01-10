@@ -40,6 +40,7 @@ import {
   WalletListItemContent,
   WalletListItemGreenDot,
   DotIconBlock,
+  MetamaskLabel,
 } from './styles';
 
 const useStyles = makeStyles(() =>
@@ -89,7 +90,14 @@ const useStyles = makeStyles(() =>
 // }));
 
 export default function Accounts(
-  { address, name, setaccount_menuclose, globalWalletsList, currentWalletAddress },
+  {
+    address,
+    name,
+    setaccount_menuclose,
+    globalWalletsList,
+    currentWalletAddress,
+    isMetamaskWallet,
+  },
   props
 ) {
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
@@ -215,7 +223,11 @@ export default function Accounts(
             updateSelectedAccount(address, name);
             routeToDashboard();
           }}>
-          <AccountBalance address={address} isLightTheme={isLightTheme} />
+          {!isMetamaskWallet ? (
+            <AccountBalance address={address} isLightTheme={isLightTheme} />
+          ) : (
+            <MetamaskLabel>Metamask</MetamaskLabel>
+          )}
         </WalletListItemAccountBalance>
       </WalletsListLayout>
       {/* popover menu with options for wallet*/}
