@@ -40,25 +40,7 @@ import {
 
 const useStyles = makeStyles(() =>
   createStyles({
-    accountBalance: {},
-    accountAddress: {
-      marginLeft: '0.02rem',
-      marginTop: '-1.21rem',
-    },
-    myWallet: {
-      marginLeft: '25px',
-      marginTop: '25px',
-    },
-    list: {
-      color: 'black',
-      fontWeight: 400,
-      fontSize: '14px',
-      textDecoration: 'none',
-    },
-    menupopover: {
-      marginLeft: '15rem',
-      marginTop: '-2.2rem',
-    },
+    menupopover: { marginLeft: '15rem', marginTop: '-2.2rem' },
     menu: {
       width: '306px',
       height: '197px',
@@ -218,7 +200,7 @@ export default function Accounts(
             <WalletListItemAccountBalance
               variant="WaltchList_font_address"
               isLightTheme={isLightTheme}
-              className={classes.accountAddress}>
+              sx={{ marginLeft: '0.02rem', marginTop: '-1.21rem' }}>
               {walletAddressCutter(address, name)}
               {selectedAccountAddress === address ? (
                 <img

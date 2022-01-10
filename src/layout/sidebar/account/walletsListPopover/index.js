@@ -14,6 +14,7 @@ export default function WalletsListPopover({ isLightTheme, children, sx, ...othe
           width: '336px',
           height: '401px',
           overflow: 'inherit',
+
           boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
           borderRadius: '10px',
           background: isLightTheme ? '#FFFFFF29' : '#1F265C3D',
