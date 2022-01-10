@@ -106,7 +106,7 @@ export const WalletsListItem = styled(ListItem)`
   margin-left: 27px;
   padding-top: 12px;
   padding-left: 7px;
-  background-color: red;
+  //background-color: red;
   :hover {
     cursor: pointer;
     background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
@@ -122,6 +122,8 @@ export const WalletsListItem = styled(ListItem)`
 //dropdown wallets list styles
 
 export const WalletsListLayout = MUIStyled('div')(({ theme }) => ({
+  width: '291px',
+  // backgroundColor: 'orange',
   // marginTop: '20px',
   // paddingBottom: 0,
   // background: 'rgba(255, 255, 255, 0.16)',
@@ -152,6 +154,13 @@ export const WalletListItemAccountBalance = MUIStyled('div')(({ isLightTheme }) 
   // marginLeft: '-26.4px',
 }));
 
+export const WalletListItemGreenDot = styled.img`
+  display: flex;
+  float: right;
+  margin-top: 2.09px;
+  margin-left: 10px;
+`;
+
 export const List_Menu_Pop_UP = styled('div')(({ theme }) => ({
   width: '276px',
   height: '40px',
@@ -165,3 +174,11 @@ export const List_Menu_Pop_UP = styled('div')(({ theme }) => ({
   borderRadius: '10px',
   cursor: 'pointer',
 }));
+
+export const DotIconBlock = styled.div`
+  margin-left: auto;
+  margin-top: -12px;
+  margin-right: -7px;
+  width: 16px;
+  height: 16px;
+`;

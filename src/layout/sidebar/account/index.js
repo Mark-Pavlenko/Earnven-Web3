@@ -179,7 +179,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
             anchorEl={anchorRef.current}>
             {/* my wallet*/}
             <MyWalletsLabel isLightTheme={themeType}>
-              <p isLightTheme={themeType}>{accountList.length > 0 && 'My wallet'}</p>
+              <p isLightTheme={themeType}>{accountList.length > 0 && 'My Wallet'}</p>
             </MyWalletsLabel>
             <WalletsList>
               {accountList && (

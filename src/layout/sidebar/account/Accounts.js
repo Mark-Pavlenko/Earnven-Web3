@@ -38,6 +38,8 @@ import {
   List_Menu_Pop_UP,
   MyWalletsLabel,
   WalletListItemContent,
+  WalletListItemGreenDot,
+  DotIconBlock,
 } from './styles';
 
 const useStyles = makeStyles(() =>
@@ -54,12 +56,7 @@ const useStyles = makeStyles(() =>
       width: '16px',
       height: '16px',
     },
-    icon1: {
-      marginLeft: '200px',
-      marginTop: '-12px',
-      width: '16px',
-      height: '16px',
-    },
+
     text: {
       marginLeft: '25px',
       marginTop: '14px',
@@ -203,25 +200,14 @@ export default function Accounts(
             isLightTheme={isLightTheme}
             sx={{ marginLeft: '-2px', marginTop: '-1.21rem' }}>
             {walletAddressCutter(address, name)}
-            {selectedAccountAddress === address ? (
-              <img
-                src={green_got_menu}
-                style={{
-                  display: 'flex',
-                  float: 'right',
-                  marginTop: '2.09px',
-                  marginLeft: '10px',
-                }}
-                alt="no pic"
-              />
-            ) : (
-              ''
+            {selectedAccountAddress === address && (
+              <WalletListItemGreenDot src={green_got_menu} style={{}} alt="no pic" />
             )}
           </WalletListItemAccountBalance>
         </WalletListItemContent>
-        <div className={classes.icon1} onClick={showAccountPopover}>
+        <DotIconBlock onClick={showAccountPopover}>
           <img src={dots_menu_icon} alt="no pic" />
-        </div>
+        </DotIconBlock>
         {/* Current Account balance value*/}
         <WalletListItemAccountBalance
           onClick={() => {
