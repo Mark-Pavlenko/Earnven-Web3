@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { experimentalStyled as MUIStyled } from '@material-ui/core/styles';
 import { Avatar, Box, List, ListItem, Typography } from '@material-ui/core';
+import { VscAdd } from 'react-icons/vsc';
 
 export const AccountLayout = styled.div``;
 
@@ -119,25 +120,44 @@ export const WalletsListItem = styled(ListItem)`
   }
 `;
 
+export const AddNewWalletListItem = styled(ListItem)`
+  display: flex;
+  align-items: center;
+  height: 60px;
+  width: 291px;
+  margin-left: 24px;
+  padding-top: 12px;
+  padding-left: 7px;
+  color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#ffffff')};
+  :hover {
+    cursor: pointer;
+    background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
+    box-shadow: ${(props) =>
+      props.isLightTheme
+        ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+        : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+    backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
+    border-radius: 10px;
+  }
+`;
 //dropdown wallets list styles
+
+export const AddWalletIcon = styled(VscAdd)`
+  margin-right: 15px;
+  font-size: 10px;
+  width: 14px;
+  height: 14px;
+  color: ${(props) => (props.isLightTheme ? '#828283' : '#ffffff')};
+`;
 
 export const WalletsListLayout = MUIStyled('div')(({ theme }) => ({
   width: '291px',
-  // backgroundColor: 'orange',
-  // marginTop: '20px',
-  // paddingBottom: 0,
-  // background: 'rgba(255, 255, 255, 0.16)',
-  // mixBlendMode: 'normal',
-  // boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-  // backdropFilter: 'blur(35px)',
 }));
 
 export const WalletListItemAccountLogo = MUIStyled(Avatar)(({ theme }) => ({
   width: '1.3125rem',
   height: '1.3125rem',
   marginRight: '27px',
-  // marginTop: '-3rem',
-  // marginRight: '-0.063rem',
 }));
 
 export const WalletListItemContent = styled.div`

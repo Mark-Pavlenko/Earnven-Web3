@@ -42,14 +42,6 @@ const useStyles = makeStyles(() =>
       // '&:hover': {
       // },
     },
-    hoverMenu11: {
-      '&:hover': {
-        background: 'white',
-        color: 'blue',
-        height: '46px',
-        fontWeight: '900',
-      },
-    },
   })
 );
 
@@ -65,6 +57,8 @@ import {
   MyWalletsLabel,
   WalletsList,
   WalletsListItem,
+  AddNewWalletListItem,
+  AddWalletIcon,
 } from './styles';
 
 export default function Account({ address, name, global_wallet, setTheme }) {
@@ -146,9 +140,6 @@ export default function Account({ address, name, global_wallet, setTheme }) {
     }
   }
 
-  // const currentWalletObject = JSON.parse(global_wallet)[0].address;
-  // console.log('currentWallet', currentWalletObject);
-  // console.log('if wallet block is clicked', arrowicon);
   return (
     <>
       {address ? (
@@ -222,30 +213,18 @@ export default function Account({ address, name, global_wallet, setTheme }) {
                       />
                     </WalletsListItem>
                   ))}
-                <div
-                  onClick={routeToConnectWallet}
-                  sx={{
-                    py: 1,
-                    px: 1,
-                    mx: 1,
-                    my: 1,
-                    ml: 2,
-                    height: '50px',
-                    borderRadius: '8px',
-                  }}
-                  className={classes.hoverMenu11}>
-                  <ListItemIcon sx={{ mr: 1, minWidth: '17px', opacity: 0.5 }}>
-                    <VscAdd style={{ color: (theme) => 'blue', opacity: 0.5 }} />
+                <AddNewWalletListItem isLightTheme={themeType} onClick={routeToConnectWallet}>
+                  <ListItemIcon sx={{ mr: 1, minWidth: '17px' }}>
+                    <AddWalletIcon isLightTheme={themeType} />
                   </ListItemIcon>
                   <ListItemText
                     primaryTypographyProps={{
                       variant: 'watchlist_font_balance',
-                      color: (theme) => 'bluw',
                     }}
-                    sx={{ opacity: 0.5 }}>
+                    sx={{ opacity: 0.5, marginTop: '2px' }}>
                     New Wallet
                   </ListItemText>
-                </div>
+                </AddNewWalletListItem>
               </WalletsList>
               {/* add new item element */}
             </div>
