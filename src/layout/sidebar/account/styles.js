@@ -199,7 +199,9 @@ export const WalletActionsLayout = styled.div`
   height: 197px;
 `;
 
-export const WalletActionsList = styled.ul``;
+export const WalletActionsList = styled.ul`
+  margin-top: 2px;
+`;
 
 export const WalletActionsListItem = styled.li`
   display: flex;
@@ -238,19 +240,33 @@ export const WalletActionsListItemLabel = styled.p`
 
   :hover {
     color: #4453ad;
+    font-weight: 600;
   }
 `;
-// export const WalletActionsListItem = MUIStyled('li')(({ theme }) => ({
 
-// '&:hover': {
-//   backgroundColor: 'red',
-//   color: 'orange',
-//   fontWeight: 600,
-// },
-// marginLeft: '15px',
-// borderRadius: '10px',
-// cursor: 'pointer',
-// }));
+export const DisconnectWalletActionsListItem = styled.li`
+  display: flex;
+  width: 305px;
+  height: 60px;
+  padding: 0;
+  margin-top: 17px;
+
+  background-color: ${(props) => (props.isLightTheme ? '#E5E5E5' : '#1F265C3D')};
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+      : 'box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+  backdrop-filter:  ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')});
+  border-radius: 10px;
+  cursor: pointer;
+
+  :hover {
+    p{
+      color: #4453ad;
+      font-weight: 600;
+    }
+  }
+`;
 
 export const DotIconBlock = styled.div`
   margin-left: auto;

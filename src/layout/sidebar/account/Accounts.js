@@ -44,6 +44,7 @@ import {
   WalletActionsList,
   WalletActionsLayout,
   WalletActionsListItemLabel,
+  DisconnectWalletActionsListItem,
 } from './styles';
 
 const useStyles = makeStyles(() =>
@@ -247,7 +248,7 @@ export default function Accounts(
             />
           </Box>
         ) : (
-          <WalletActionsLayout sx={{ width: '306px' }}>
+          <WalletActionsLayout sx={{ width: '306px' }} isLightTheme={isLightTheme}>
             <WalletActionsList isLightTheme={isLightTheme} disablePadding>
               <WalletActionsListItem
                 isLightTheme={isLightTheme}
@@ -294,7 +295,7 @@ export default function Accounts(
                   Copy Link
                 </WalletActionsListItemLabel>
               </WalletActionsListItem>
-              <WalletActionsListItem
+              <DisconnectWalletActionsListItem
                 isLightTheme={isLightTheme}
                 onClick={() => {
                   change_flag();
@@ -303,13 +304,16 @@ export default function Accounts(
                   setaccount_menuclose(true);
                   hideAccountPopover();
                 }}>
-                <div className={classes.icon}>
+                <div className={classes.icon} style={{ marginLeft: '34px', marginTop: '20px' }}>
                   <img src={disconnect_menu_icon} alt="no pic" />
                 </div>
-                <WalletActionsListItemLabel isLightTheme={isLightTheme} onClick={onReRender}>
+                <WalletActionsListItemLabel
+                  isLightTheme={isLightTheme}
+                  onClick={onReRender}
+                  style={{ marginTop: '20px' }}>
                   Disconnect
                 </WalletActionsListItemLabel>
-              </WalletActionsListItem>
+              </DisconnectWalletActionsListItem>
             </WalletActionsList>
           </WalletActionsLayout>
         )}
