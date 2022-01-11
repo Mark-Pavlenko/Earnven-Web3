@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 // material
-import { Box, Drawer, Stack } from '@material-ui/core';
+import { Drawer } from '@material-ui/core';
 import { MHidden } from '../../components/@material-extend';
 import CompanyLogo from '../../assets/icons/logo_menu.svg';
 import Earnven from '../../assets/icons/Earnven_menu_text.svg';
@@ -56,7 +56,8 @@ export default function Sidebar({
         height: '100vh',
         // in order to get correct background for QHD & 4K Screens
         background: () => (isLightTheme ? `url(${lightThemeBig})` : `#0F152C`),
-        borderRadius: '10px',
+        // backgroundColor: 'red',
+        // borderRadius: '10px',
         backdropFilter: 'blur(35px)',
         boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
         '& .simplebar-content': { display: 'flex', flexDirection: 'column' },
@@ -90,10 +91,7 @@ export default function Sidebar({
               width: '315px',
               height: 'auto',
               overflow: 'auto',
-              // backgroundColor: 'red',
               backgroundColor: 'transparent !important',
-              // boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-              // backdropFilter: 'blur(35px)',
               border: 'none',
             },
           }}>
@@ -107,6 +105,7 @@ export default function Sidebar({
           open={isOpenSidebar}
           anchor={'right'}
           onClose={onCloseSidebar}
+          BackdropProps={{ invisible: true }}
           PaperProps={{
             sx: {
               width: '360px',

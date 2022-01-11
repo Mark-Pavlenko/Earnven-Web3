@@ -1,4 +1,7 @@
 import styled from 'styled-components';
+import { Drawer } from '@material-ui/core';
+
+export const DrawerLayoutMobile = styled(Drawer)``;
 
 export const RootStyle = styled.div`
   @media (max-width: 1280px) {
