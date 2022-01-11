@@ -40,7 +40,7 @@ Header.propTypes = {
   themeChanger: PropTypes.func,
 };
 
-function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle }) {
+function Header({ onOpenSidebar, finalTitle }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

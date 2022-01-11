@@ -80,22 +80,7 @@ export default function Sidebar({
 
   return (
     <RootStyle>
-      <MHidden width="lgUp">
-        <Drawer
-          open={isOpenSidebar}
-          onClose={onCloseSidebar}
-          PaperProps={{
-            sx: {
-              width: '315px',
-              overflow: 'auto',
-              height: 'auto',
-              backgroundColor: 'transparent',
-            },
-          }}>
-          {renderContent}
-        </Drawer>
-      </MHidden>
-
+      {/* sidebar for desktop versions */}
       <MHidden width="lgDown">
         <Drawer
           open
@@ -110,6 +95,24 @@ export default function Sidebar({
               // boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
               // backdropFilter: 'blur(35px)',
               border: 'none',
+            },
+          }}>
+          {renderContent}
+        </Drawer>
+      </MHidden>
+
+      {/* sidebar for mobiles versions */}
+      <MHidden width="lgUp">
+        <Drawer
+          open={isOpenSidebar}
+          anchor={'right'}
+          onClose={onCloseSidebar}
+          PaperProps={{
+            sx: {
+              width: '360px',
+              overflow: 'auto',
+              height: 'auto',
+              backgroundColor: 'transparent',
             },
           }}>
           {renderContent}
