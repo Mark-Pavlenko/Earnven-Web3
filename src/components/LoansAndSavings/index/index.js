@@ -21,17 +21,19 @@ import YearnFinance from '../YearnFinance';
 import ValueProtocol from '../../common/protocols/valueProtocol/valueProtocol';
 import Investment from '../../common/investment/investment';
 import StakedProtocols from '../../common/stakedProtocols/stakedProtocols';
+import { useSelector } from 'react-redux';
 //import CurveToken from './CurveToken';
 
 // Below code is for task https://app.clickup.com/t/1je2y9d
 // import CompoundData from './Compound';
 export default function Index({ accountAddress }) {
+  const YearnData = useSelector((state) => state.yearnFinance.yearnFinanceData);
   // Below code is for task https://app.clickup.com/t/1je2y9d
   // const [DisplaySavings, setDisplaySavings] = useState(null);
   // const [TotalCompoundSavings, setTotalCompoundSavings] = useState(0);
   const [IronBankSavings, setIronBankSavings] = useState(0);
   const [SavingsContent, setSavingsContent] = useState([]); // aave v2
-  const [LoansContent, setLoansContent] = useState([]); // aave v2
+  const [LoansContent, setLoansContent] = useState([]); // aave v2 empty
   const [SavingsData, setSavingsData] = useState([]); // aave v2
   const [LoansData, SetLoansData] = useState([]); // aave v2
 
@@ -53,7 +55,7 @@ export default function Index({ accountAddress }) {
 
   //Compound
   const [CompoundSavingsContent, setCompoundSavingsContent] = useState([]); // compound v2
-  const [CompoundLoansContent, setCompoundLoansContent] = useState([]); // compound v2
+  const [CompoundLoansContent, setCompoundLoansContent] = useState([]); // compound v2 empty
   const [CompoundSavingsData, setCompoundSavingsData] = useState([]); // compound v2
   const [CompoundLoansData, SetCompoundLoansData] = useState([]); // compound v2
 
@@ -73,7 +75,7 @@ export default function Index({ accountAddress }) {
   const [CurveStakeData, setCurveStakeData] = useState([]); // Curve
   const [CurveStakeContent, setCurveStakeContent] = useState([]); // Curve
   const [CurveStakeTotal, setCurveStakeTotal] = useState([0]); // Curve Total
-  console.log('CurveStakeData', CurveStakeData);
+
   // BalancerV2
   const [BalancerTotalv2, setBalancerTotalv2] = useState([]);
   const [BalancerPoolsDatav2, setBalancerPoolsDatav2] = useState([]);
@@ -83,6 +85,7 @@ export default function Index({ accountAddress }) {
   const [CurveLpdata, setCurveLpData] = useState([]); // get curve lp token data
   //Synthetix data points
   const [SynthetixData, setSynthetixData] = useState([]); // get curve lp token data
+  console.log('SynthetixData', SynthetixData);
   //YearnToken
   const [YearnTokenValue, setYearnTokenValue] = useState([]);
 
@@ -1172,6 +1175,10 @@ export default function Index({ accountAddress }) {
       {BalancerPoolsDatav2.map((object) => {
         return <Investment protocol={object} chain={'Ethereum'} protocolName={'Balancer V2'} />;
       })}
+      Staked
+      {CurveStakeData.map((object) => (
+        <StakedProtocols protocol={object} protocolName={'Curve Staking'} logoImage={CurveLogo} />
+      ))}
       <div
         style={{
           width: '100%',
@@ -1430,9 +1437,6 @@ export default function Index({ accountAddress }) {
           }}>
           Curve Staking --- {CurveStakeTotal} USD
         </div>
-        {CurveStakeData.map((object) => (
-          <StakedProtocols protocol={object} protocolName={'Curve Staking'} logoImage={CurveLogo} />
-        ))}
         {CurveStakeContent}
         <br />
         <Ethereum2Staking accountAddress={accountAddress} />

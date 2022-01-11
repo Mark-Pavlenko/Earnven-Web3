@@ -140,61 +140,65 @@ export default function Synthetix({ accountAddress, onSynthetixTokenValue }) {
   useEffect(() => {
     if (SnxCollateralData.length > 0) {
       try {
-        var content = SnxCollateralData.map((object) => (
-          <Accordion
-            style={{
-              background: 'transparent',
-              marginRight: '1px',
-              color: 'black',
-              width: '100%',
-              border: '1px',
-              borderColor: 'black',
-              borderStyle: 'hidden',
-            }}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header">
-              <React.Fragment
-                style={{
-                  display: 'inline-block',
-                  width: '100%',
+        var content = SnxCollateralData.map((object) => {
+          console.log('SnxCollateralData', object);
+          return (
+            <Accordion
+              style={{
+                background: 'transparent',
+                marginRight: '1px',
+                color: 'black',
+                width: '100%',
+                border: '1px',
+                borderColor: 'black',
+                borderStyle: 'hidden',
+              }}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header">
+                <React.Fragment
+                  style={{
+                    display: 'inline-block',
+                    width: '100%',
 
-                  wordBreak: 'break-all',
-                }}>
-                <React.Fragment>
-                  <img
-                    style={{
-                      height: '20px',
-                      width: '20px',
-                      display: 'inline-block',
-                    }}
-                    src={object.snxImageUrl}
-                    alt=""
-                  />
+                    wordBreak: 'break-all',
+                  }}>
+                  <React.Fragment>
+                    <img
+                      style={{
+                        height: '20px',
+                        width: '20px',
+                        display: 'inline-block',
+                      }}
+                      src={object.snxImageUrl}
+                      alt=""
+                    />
+                  </React.Fragment>
+                  {object.snxCollateralSymbol}&nbsp;
+                  {parseFloat(object.snxCollateralValue.toFixed(2)).toLocaleString()} USD
                 </React.Fragment>
-                {object.snxCollateralSymbol}&nbsp;
-                {parseFloat(object.snxCollateralValue.toFixed(2)).toLocaleString()} USD
-              </React.Fragment>
-            </AccordionSummary>
-            <AccordionDetails>
-              <div style={{ display: 'inline-block', width: '70%', fontSize: '15px' }}>
-                SNX token &nbsp;&nbsp;&nbsp;&nbsp; {object.snxCollateralSymbol}
-                <br />
-                Balance &nbsp; {parseFloat(object.snxCollateralBalance.toFixed(2)).toLocaleString()}
-                <br />
-                Price &nbsp;&nbsp;&nbsp;&nbsp;${parseFloat(object.snxCollateralPrice.toFixed(4))}
-                <br />
-                Value &nbsp;&nbsp;&nbsp;&nbsp;$
-                {parseFloat(object.snxCollateralValue.toFixed(2)).toLocaleString()}
-                <br />
-                Chain &nbsp;&nbsp;&nbsp;&nbsp; Ethereum
-                <br />
-                Protocol &nbsp;&nbsp; Synthetix
-              </div>
-            </AccordionDetails>
-          </Accordion>
-        ));
+              </AccordionSummary>
+              <AccordionDetails>
+                <div style={{ display: 'inline-block', width: '70%', fontSize: '15px' }}>
+                  SNX token &nbsp;&nbsp;&nbsp;&nbsp; {object.snxCollateralSymbol}
+                  <br />
+                  Balance &nbsp;{' '}
+                  {parseFloat(object.snxCollateralBalance.toFixed(2)).toLocaleString()}
+                  <br />
+                  Price &nbsp;&nbsp;&nbsp;&nbsp;${parseFloat(object.snxCollateralPrice.toFixed(4))}
+                  <br />
+                  Value &nbsp;&nbsp;&nbsp;&nbsp;$
+                  {parseFloat(object.snxCollateralValue.toFixed(2)).toLocaleString()}
+                  <br />
+                  Chain &nbsp;&nbsp;&nbsp;&nbsp; Ethereum
+                  <br />
+                  Protocol &nbsp;&nbsp; Synthetix
+                </div>
+              </AccordionDetails>
+            </Accordion>
+          );
+        });
       } catch (err) {
         console.log('No Curve LP token data found');
       }

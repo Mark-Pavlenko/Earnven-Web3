@@ -10,10 +10,12 @@ import actionTypes from '../../constants/actionTypes';
 
 export default function Ethereum2Staking({ accountAddress }) {
   const [BeaconContent, setBeaconContent] = useState([]);
+  console.log('BeaconContent', BeaconContent);
   //useSelector is a function that takes currentState as an argument
   //and returns data from it and store the return values inside a variable within the scope
   //of the functional component
   const BeaconData = useSelector((state) => state.eth2Stake.eth2StakeData);
+  console.log('BeaconData', BeaconData);
   const BeaconTotal = useSelector((state) => state.eth2Stake.eth2StakeTotal);
   console.log('TestABC ETH receveid data', BeaconData);
   console.log('TestABC ETH Total Value data', BeaconTotal);

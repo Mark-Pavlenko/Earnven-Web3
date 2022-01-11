@@ -72,18 +72,21 @@ const Investment = ({ protocol, protocolName, logoImage, chain }) => {
       {isOpen && (
         <>
           {tokens &&
-            tokens.map((token) => (
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  fontWeight: '600',
-                  padding: '0 32px 11px 26px',
-                }}>
-                <div style={{ fontSize: '10px' }}>{token.symbol}</div>
-                <div style={{ fontSize: '10px' }}>${parseFloat(token.balance).toFixed(2)}</div>
-              </div>
-            ))}
+            tokens.map((token) => {
+              console.log('token', token);
+              return (
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    fontWeight: '600',
+                    padding: '0 32px 11px 26px',
+                  }}>
+                  <div style={{ fontSize: '10px' }}>{token.symbol}</div>
+                  <div style={{ fontSize: '10px' }}>${parseFloat(token.balance).toFixed(2)}</div>
+                </div>
+              );
+            })}
           {Object.keys(protocolData).map((el) => (
             <ContentWrapper isLightTheme={theme}>
               <div>{el}</div>

@@ -27,7 +27,7 @@ const StakedProtocols = ({ protocol, protocolName, logoImage }) => {
     <Main isOpen={isOpen} isLightTheme={theme}>
       <TotalValue isOpen={isOpen}>
         <div style={{ display: 'flex' }}>
-          <img src={CurveLogo} style={{ height: '30px', marginTop: '' }} alt="" />
+          <MockTokenImage src={CurveLogo} />
           <div style={{ display: 'flex' }}>
             <TokenName isLightTheme={theme}>{`${protocol.symbol}`}</TokenName>
           </div>

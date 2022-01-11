@@ -3,6 +3,7 @@ import * as API from '../../components/LoansAndSavings/api/api';
 import * as actions from './actions';
 import actionTypes from '../../constants/actionTypes';
 import yearnTokensAddress from '../../contractAddress/yearnTokensAddressList';
+import BigNumber from 'bignumber.js';
 
 export function* getYearnFinanceSagaWatcher() {
   yield takeEvery(actionTypes.SET_YFI_TOKEN_DATA, yearnFinanceSagaWorker);
@@ -37,6 +38,19 @@ function* yearnFinanceSagaWorker(yearnAccountAddress) {
         if (result.data[j].address.toLowerCase() === res[i].vault.shareToken.id.toLowerCase()) {
           if (result.data[j].token.address.toLowerCase() === res[i].vault.token.id.toLowerCase()) {
             object.tokenDecimal = res[i].vault.shareToken.decimals;
+            // console.log('balanceShares', res[i].balanceShares);
+            //
+            // const getExponentValue = (decimals) => {
+            //   return new BigNumber(10).pow(decimals);
+            // };
+            // const getHumanValue = (value, decimals) => {
+            //   return new BigNumber(value).div(getExponentValue(decimals));
+            // };
+            // console.log(
+            //   'getHumanValue',
+            //   getHumanValue(res[i].balanceShares, object.tokenDecimal).toString()
+            // );
+
             object.tokens = [
               {
                 symbol: result.data[j].token.display_name,
