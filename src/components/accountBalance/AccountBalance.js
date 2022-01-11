@@ -6,10 +6,10 @@ import { AccountBalanceValue } from './styles';
 
 function AccountBalance({ address, accountBalance }) {
   const themeType = useSelector((state) => state.themeReducer.isLightTheme);
+  const isLoading = useSelector((state) => state.accountBalance.isLoading);
   const dispatch = useDispatch();
   const [totalValue, setTotalValue] = useState('00.00');
 
-  const isLoading = useSelector((state) => state.accountBalance.isLoading);
   // console.log('isLoading', isLoading);
 
   useEffect(() => {
@@ -24,9 +24,6 @@ function AccountBalance({ address, accountBalance }) {
     };
     totalAccountValue();
   }, [totalValue, address]);
-
-  // const tokens = useSelector((state) => state);
-  // console.log('account balance token data', tokens);
 
   return (
     <>

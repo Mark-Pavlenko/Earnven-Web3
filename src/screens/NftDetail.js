@@ -384,7 +384,7 @@ export default function NftDetails({ contract, id, changeNFT, setOpenPopup, flag
     sessionStorage.setItem('nftCount_left', 0);
   };
 
-  const shortaddress = (addy) => {
+  const walletAddressCutter = (addy) => {
     if (addy === '') {
       return addy;
     }
@@ -589,10 +589,10 @@ export default function NftDetails({ contract, id, changeNFT, setOpenPopup, flag
                         {convertTimestampToDate(object.timestamp)}
                       </Tranfer_Body>
                       <Tranfer_Body variant="transferbody" align="left">
-                        {shortaddress(object.from)}
+                        {walletAddressCutter(object.from)}
                       </Tranfer_Body>
                       <Tranfer_Body variant="transferbody" align="left">
-                        {shortaddress(object.to)}
+                        {walletAddressCutter(object.to)}
                       </Tranfer_Body>
                     </ListItem>
                   </Link>
