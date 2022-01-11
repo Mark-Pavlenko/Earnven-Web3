@@ -3,7 +3,7 @@ import Scrollbar from '../../components/Scrollbar';
 import { getRecall } from '../SidebarConfig';
 import NavSection from './navSection';
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 // material
@@ -17,9 +17,18 @@ import Links from './social/Links';
 import darkTheme from '../../assets/images/darkTheme.jpg';
 import lightTheme from '../../assets/images/lightTheme.jpg';
 import lightThemeBig from '../../assets/images/lightDashboardBig.jpg';
+import CloseMobileSidebarLight from '../../assets/images/closeMobileSidebarLight.svg';
+import CloseMobileSidebarDark from '../../assets/images/closeMobileSidebarDark.svg';
 import { useSelector } from 'react-redux';
 
-import { RootStyle, LogoBlock, LogoImg, SidebarMainLayout } from './styles';
+import {
+  RootStyle,
+  LogoBlock,
+  LogoImg,
+  SidebarMainLayout,
+  CloseMobileSidebarIcon,
+  DrawerLayoutMobile,
+} from './styles';
 
 Sidebar.propTypes = {
   isOpenSidebar: PropTypes.bool,
@@ -35,6 +44,7 @@ export default function Sidebar({
   setTheme,
   global_wallet,
 }) {
+  const [open, setOpen] = useState(false);
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
   // console.log('light theme type in sidebar', isLightTheme);
 
@@ -66,6 +76,19 @@ export default function Sidebar({
         <LogoBlock>
           <LogoImg src={CompanyLogo} alt="" />
           <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
+          {isLightTheme ? (
+            <CloseMobileSidebarIcon
+              src={CloseMobileSidebarLight}
+              alt=""
+              onClick={() => onCloseSidebar()}
+            />
+          ) : (
+            <CloseMobileSidebarIcon
+              src={CloseMobileSidebarDark}
+              alt=""
+              onClick={() => onCloseSidebar()}
+            />
+          )}
         </LogoBlock>
         <Account
           address={address}
@@ -101,11 +124,11 @@ export default function Sidebar({
 
       {/* sidebar for mobiles versions */}
       <MHidden width="lgUp">
-        <Drawer
+        <DrawerLayoutMobile
           open={isOpenSidebar}
           anchor={'right'}
           onClose={onCloseSidebar}
-          BackdropProps={{ invisible: true }}
+          // BackdropProps={{ invisible: true }}
           PaperProps={{
             sx: {
               width: '360px',
@@ -115,7 +138,7 @@ export default function Sidebar({
             },
           }}>
           {renderContent}
-        </Drawer>
+        </DrawerLayoutMobile>
       </MHidden>
     </RootStyle>
   );

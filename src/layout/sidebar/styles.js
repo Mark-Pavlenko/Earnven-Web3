@@ -1,7 +1,11 @@
 import styled from 'styled-components';
 import { Drawer } from '@material-ui/core';
 
-export const DrawerLayoutMobile = styled(Drawer)``;
+export const DrawerLayoutMobile = styled(Drawer)`
+  @media (min-width: 1281px) {
+    display: none;
+  } ;
+`;
 
 export const RootStyle = styled.div`
   @media (max-width: 1280px) {
@@ -24,7 +28,20 @@ export const LogoBlock = styled.div`
   margin-left: 124px;
   width: 150px;
   height: 42px;
-  //background-color: red;
+
+  @media (max-width: 1280px) {
+    margin-top: 20px;
+    margin-left: 15px;
+    justify-content: start;
+  }
+`;
+
+export const CloseMobileSidebarIcon = styled.img`
+  margin-left: 140px;
+  cursor: pointer;
+  @media (min-width: 1281px) {
+    display: none;
+  } ;
 `;
 
 export const LogoImg = styled.img`
