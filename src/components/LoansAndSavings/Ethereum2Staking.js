@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useDispatch, useSelector } from 'react-redux';
 import actionTypes from '../../constants/actionTypes';
+import Investment from '../common/investment/investment';
 
 export default function Ethereum2Staking({ accountAddress }) {
   const [BeaconContent, setBeaconContent] = useState([]);
@@ -47,59 +48,72 @@ export default function Ethereum2Staking({ accountAddress }) {
     if (BeaconData) {
       console.log('TestABC inside eth 2 implmentation', BeaconData);
       try {
-        var content = BeaconData.map((object) => (
-          <Accordion
-            style={{
-              background: 'transparent',
-              marginRight: '1px',
-              color: 'black',
-              width: '100%',
-              border: '1px',
-              borderColor: 'black',
-              borderStyle: 'hidden', //solid
-            }}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header">
-              <React.Fragment
-                style={{
-                  display: 'inline-block',
-                  width: '100%',
-                  //textAlign: 'left',
-                  wordBreak: 'break-all',
-                }}>
-                <React.Fragment>
-                  <img
-                    style={{
-                      height: '20px',
-                      width: '20px',
-                      display: 'inline-block',
-                    }}
-                    src={ETHLogo}
-                    alt=""
-                  />
-                </React.Fragment>
-                ETH 2.0 &nbsp; ${parseFloat(object.totalInvestment).toLocaleString()}
-              </React.Fragment>
-            </AccordionSummary>
-            <AccordionDetails>
-              <div style={{ display: 'inline-block', width: '70%', fontSize: '15px' }}>
-                Staked Token &nbsp;&nbsp;&nbsp;&nbsp; ETH
-                <br />
-                Balance &nbsp; {parseFloat(object.totalDeposit).toLocaleString()}
-                <br />
-                Price &nbsp;&nbsp;&nbsp;&nbsp;${parseFloat(object.ethPrice).toFixed(2)}
-                <br />
-                Value &nbsp;&nbsp;${parseFloat(object.totalInvestment).toFixed(2).toLocaleString()}
-                <br />
-                Chain &nbsp;&nbsp;&nbsp;&nbsp; Ethereum
-                <br />
-                Protocol &nbsp;&nbsp; Ethereum
-              </div>
-            </AccordionDetails>
-          </Accordion>
-        ));
+        var content = BeaconData.map((object) => {
+          return (
+            <>
+              <Investment
+                protocol={object}
+                logoImage={ETHLogo}
+                stakedToken={'ETH'}
+                protocolName={'Ethereum'}
+                chain={'Ethereum'}
+                isStaked={true}
+              />
+              {/*<Accordion*/}
+              {/*  style={{*/}
+              {/*    background: 'transparent',*/}
+              {/*    marginRight: '1px',*/}
+              {/*    color: 'black',*/}
+              {/*    width: '100%',*/}
+              {/*    border: '1px',*/}
+              {/*    borderColor: 'black',*/}
+              {/*    borderStyle: 'hidden', //solid*/}
+              {/*  }}>*/}
+              {/*  <AccordionSummary*/}
+              {/*    expandIcon={<ExpandMoreIcon />}*/}
+              {/*    aria-controls="panel1a-content"*/}
+              {/*    id="panel1a-header">*/}
+              {/*    <React.Fragment*/}
+              {/*      style={{*/}
+              {/*        display: 'inline-block',*/}
+              {/*        width: '100%',*/}
+              {/*        //textAlign: 'left',*/}
+              {/*        wordBreak: 'break-all',*/}
+              {/*      }}>*/}
+              {/*      <React.Fragment>*/}
+              {/*        <img*/}
+              {/*          style={{*/}
+              {/*            height: '20px',*/}
+              {/*            width: '20px',*/}
+              {/*            display: 'inline-block',*/}
+              {/*          }}*/}
+              {/*          src={ETHLogo}*/}
+              {/*          alt=""*/}
+              {/*        />*/}
+              {/*      </React.Fragment>*/}
+              {/*      ETH 2.0 &nbsp; ${parseFloat(object.totalInvestment).toLocaleString()}*/}
+              {/*    </React.Fragment>*/}
+              {/*  </AccordionSummary>*/}
+              {/*  <AccordionDetails>*/}
+              {/*    <div style={{ display: 'inline-block', width: '70%', fontSize: '15px' }}>*/}
+              {/*      Staked Token &nbsp;&nbsp;&nbsp;&nbsp; ETH*/}
+              {/*      <br />*/}
+              {/*      Balance &nbsp; {parseFloat(object.totalDeposit).toLocaleString()}*/}
+              {/*      <br />*/}
+              {/*      Price &nbsp;&nbsp;&nbsp;&nbsp;${parseFloat(object.ethPrice).toFixed(2)}*/}
+              {/*      <br />*/}
+              {/*      Value &nbsp;&nbsp;$*/}
+              {/*      {parseFloat(object.totalInvestment).toFixed(2).toLocaleString()}*/}
+              {/*      <br />*/}
+              {/*      Chain &nbsp;&nbsp;&nbsp;&nbsp; Ethereum*/}
+              {/*      <br />*/}
+              {/*      Protocol &nbsp;&nbsp; Ethereum*/}
+              {/*    </div>*/}
+              {/*  </AccordionDetails>*/}
+              {/*</Accordion>*/}
+            </>
+          );
+        });
       } catch (err) {
         console.log('No Curve LP token data found');
       }
@@ -110,27 +124,27 @@ export default function Ethereum2Staking({ accountAddress }) {
 
   return (
     <React.Fragment>
-      <h1>ETHEREUM</h1>
-      <div
-        style={{
-          fontSize: '15px',
-          marginRight: '15px',
-          display: BeaconData.length > 0 ? '' : 'none',
-        }}>
-        <img
-          src={ETHLogo}
-          style={{
-            height: '30px',
-            marginTop: '',
-            marginLeft: '15px',
-            display: 'inline-block',
-          }}
-          alt=""
-        />
-        Ethereum 2.0 staking -- ${BeaconTotal.toLocaleString()}
-        {BeaconContent}
-      </div>
-      <br />
+      {/*<h1>ETHEREUM</h1>*/}
+      {/*<div*/}
+      {/*  style={{*/}
+      {/*    fontSize: '15px',*/}
+      {/*    marginRight: '15px',*/}
+      {/*    display: BeaconData.length > 0 ? '' : 'none',*/}
+      {/*  }}>*/}
+      {/*  <img*/}
+      {/*    src={ETHLogo}*/}
+      {/*    style={{*/}
+      {/*      height: '30px',*/}
+      {/*      marginTop: '',*/}
+      {/*      marginLeft: '15px',*/}
+      {/*      display: 'inline-block',*/}
+      {/*    }}*/}
+      {/*    alt=""*/}
+      {/*  />*/}
+      {/*  Ethereum 2.0 staking -- ${BeaconTotal.toLocaleString()}*/}
+      {BeaconContent}
+      {/*</div>*/}
+      {/*<br />*/}
     </React.Fragment>
   );
 }

@@ -23,15 +23,30 @@ import Investment from '../../common/investment/investment';
 import StakedProtocols from '../../common/stakedProtocols/stakedProtocols';
 import { useSelector } from 'react-redux';
 //import CurveToken from './CurveToken';
+import {
+  PoolsBlock,
+  Header,
+  Title,
+  TotalValueField,
+  TotalTitle,
+  TotalEmptyCell,
+  TotalValue,
+  ToggleButton,
+} from './styledComponents';
 
 // Below code is for task https://app.clickup.com/t/1je2y9d
 // import CompoundData from './Compound';
 export default function Index({ accountAddress }) {
   const YearnData = useSelector((state) => state.yearnFinance.yearnFinanceData);
+  const theme = useSelector((state) => state.themeReducer.isLightTheme);
+  const BeaconData = useSelector((state) => state.eth2Stake.eth2StakeData);
+  const SLPTokenData = useSelector((state) => state.sushiStaking.sushiStakeData);
+
+  const [isPoolsOpen, setIsPoolsOpen] = useState(true);
   // Below code is for task https://app.clickup.com/t/1je2y9d
   // const [DisplaySavings, setDisplaySavings] = useState(null);
   // const [TotalCompoundSavings, setTotalCompoundSavings] = useState(0);
-  const [IronBankSavings, setIronBankSavings] = useState(0);
+  const [IronBankSavings, setIronBankSavings] = useState(0); //(get NaN)
   const [SavingsContent, setSavingsContent] = useState([]); // aave v2
   const [LoansContent, setLoansContent] = useState([]); // aave v2 empty
   const [SavingsData, setSavingsData] = useState([]); // aave v2
@@ -85,7 +100,7 @@ export default function Index({ accountAddress }) {
   const [CurveLpdata, setCurveLpData] = useState([]); // get curve lp token data
   //Synthetix data points
   const [SynthetixData, setSynthetixData] = useState([]); // get curve lp token data
-  console.log('SynthetixData', SynthetixData);
+
   //YearnToken
   const [YearnTokenValue, setYearnTokenValue] = useState([]);
 
@@ -1153,156 +1168,28 @@ export default function Index({ accountAddress }) {
     getCurveData();
     getBalancerV2Data();
   }, [accountAddress]);
+
+  const poolsHandler = () => {
+    setIsPoolsOpen(!isPoolsOpen);
+  };
+
+  const sumObjectsByKey = (...objs) => {
+    return objs.reduce((el, acc) => {
+      return el + +acc.totalTokensBalance;
+    }, 0);
+  };
+
+  const balances = PoolsData.reduce((el, acc) => {
+    return el + +acc.totalInvestment;
+  }, 0);
+
   return (
     <div>
-      {PoolsData.map((object) => (
-        <ValueProtocol
-          token0Symbol={object.token0Symbol}
-          token1Symbol={object.token1Symbol}
-          liquidity={object.liquidity}
-          protocol={'Uniswap V2'}
-        />
-      ))}
-      {/*<div>2{SushiPoolsContent}</div> //TODO:check how SushiPools works with data*/}
-      {/*<BancorPools //TODO:check how BancorPools works with data*/}
-      {/*  setPoolTotal={setBancorPoolTotal}*/}
-      {/*  setDisplay={setDisplayBancor}*/}
-      {/*  accountAddress={accountAddress}*/}
-      {/*/>*/}
-      {BalancerPoolsData.map((object) => {
-        return <Investment protocol={object} chain={'Ethereum'} protocolName={'Balancer V1'} />;
-      })}
-      {BalancerPoolsDatav2.map((object) => {
-        return <Investment protocol={object} chain={'Ethereum'} protocolName={'Balancer V2'} />;
-      })}
-      Staked
-      {CurveStakeData.map((object) => (
-        <StakedProtocols protocol={object} protocolName={'Curve Staking'} logoImage={CurveLogo} />
-      ))}
-      <div
+      {/*=========================================>*/}
+      <PoolsBlock //first
+        isLightTheme={theme}
+        // SavingsData.length > 0 || CompoundSavingsData > 0 || IronBankSavings > 0 || CreamDisplay
         style={{
-          width: '100%',
-          minWidth: '300px',
-          border: '1px solid rgb(115, 115, 115)',
-          height: 'auto',
-          minHeight: '200px',
-          borderRadius: '10px',
-          // Below code is for task https://app.clickup.com/t/1je2y9d
-          // display:
-          //   SavingsData.length > 0 || CompoundSavingsData > 0 || DisplaySavings ? '' : 'none',
-          display:
-            SavingsData.length > 0 || CompoundSavingsData > 0 || IronBankSavings > 0 || CreamDisplay
-              ? ''
-              : 'none',
-        }}>
-        <br />
-        <center>
-          <div style={{ fontSize: '25px' }}>
-            Savings
-            <br />
-            Total : {/* Below code is for task https://app.clickup.com/t/1je2y9d */}
-            {/* {parseFloat(AaveSavingsTotal + CompSavingsTotal + TotalCompoundSavings).toFixed(2)} USD */}
-            {numberWithCommas(
-              parseFloat(
-                AaveSavingsTotal + CompSavingsTotal + IronBankSavings + parseFloat(CreamTotal)
-              ).toFixed(2)
-            )}{' '}
-            USD
-            <br />
-            <br />
-          </div>
-        </center>
-
-        <Cream
-          setTotal={setCreamTotal}
-          setDisplay={setCreamDisplay}
-          accountAddress={accountAddress}
-        />
-        <br />
-
-        <div
-          style={{
-            fontSize: '12px',
-            marginLeft: '15px',
-            display: SavingsData.length > 0 ? '' : 'none',
-          }}>
-          Aave V2 -- Savings : {parseFloat(AaveSavingsTotal).toFixed(2)} USD
-        </div>
-        {SavingsContent}
-        <br />
-        {/* Below code is for task https://app.clickup.com/t/1je2y9d */}
-        {/* <CompoundData
-          accountAddress={accountAddress}
-          displayProp={setDisplaySavings}
-          totalSavings={setTotalCompoundSavings}
-        /> */}
-
-        <CreamIronBank totalSavings={setIronBankSavings} accountAddress={accountAddress} />
-
-        <div
-          style={{
-            fontSize: '12px',
-            marginLeft: '15px',
-            display: CompoundSavingsData.length > 0 ? '' : 'none',
-          }}>
-          Compound V2 -- Savings : {parseFloat(CompSavingsTotal).toFixed(2)} USD
-        </div>
-        {CompoundSavingsContent}
-        <br />
-      </div>
-      <div
-        style={{
-          width: '100%',
-          minWidth: '300px',
-          border: '1px solid rgb(115, 115, 115)',
-          height: 'auto',
-          marginTop: '20px',
-          minHeight: '200px',
-          borderRadius: '10px',
-          display: LoansData.length > 0 || CompoundLoansData.length > 0 ? '' : 'none',
-        }}>
-        <br />
-        <center>
-          <div style={{ fontSize: '25px' }}>
-            Loans
-            <br />
-            Total : {parseFloat(AaveLoansTotal + CompLoansTotal).toFixed(2)} USD
-            <br />
-            <br />
-          </div>
-        </center>
-
-        <div
-          style={{
-            fontSize: '12px',
-            marginLeft: '15px',
-            display: LoansData.length > 0 ? '' : 'none',
-          }}>
-          Aave V2 -- Debt : {parseFloat(AaveLoansTotal).toFixed(2)} USD
-        </div>
-        {LoansContent}
-        <br />
-
-        <div
-          style={{
-            fontSize: '12px',
-            marginLeft: '15px',
-            display: CompoundLoansData.length > 0 ? '' : 'none',
-          }}>
-          Compound V2 -- Debt : {CompLoansTotal} USD
-        </div>
-        {CompoundLoansContent}
-        <br />
-      </div>
-      <div
-        style={{
-          width: '100%',
-          minWidth: '300px',
-          marginTop: '20px',
-          border: '1px solid rgb(115, 115, 115)',
-          height: 'auto',
-          minHeight: '200px',
-          borderRadius: '10px',
           display:
             PoolsData.length > 0 ||
             BalancerPoolsData.length > 0 ||
@@ -1311,70 +1198,309 @@ export default function Index({ accountAddress }) {
               ? ''
               : 'none',
         }}>
-        <br />
-        <center>
-          <div style={{ fontSize: '25px' }}>
-            Pools <br />
-            Total :{' '}
-            {parseFloat(
-              UniV2Total + SushiV2Total + BalancerTotal + BalancerTotalv2 + BancorPoolTotal
-            ).toFixed(2)}{' '}
-            USD
-            <br />
-            <br />
-          </div>
-        </center>
-
-        <div
-          style={{
-            fontSize: '12px',
-            marginLeft: '15px',
-            display: PoolsData.length > 0 ? '' : 'none',
-          }}>
-          Uniswap V2 --- {UniV2Total} USD
+        <Header>
+          <Title isLightTheme={theme}>{'Liquidity pools'}</Title>
+          <ToggleButton onClick={poolsHandler} isOpen={isPoolsOpen} />
+        </Header>
+        <div style={{ padding: '0 29px 20px 26px', marginBottom: '20px' }}>
+          <TotalValueField isLightTheme={theme}>
+            <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
+            <TotalEmptyCell></TotalEmptyCell>
+            <TotalValue isLightTheme={theme}>
+              $
+              {parseFloat(
+                sumObjectsByKey(...BalancerPoolsDatav2, ...BalancerPoolsData) + balances
+                // BalancerTotal
+              ).toFixed(2)}
+            </TotalValue>
+          </TotalValueField>
         </div>
-        {PoolsContent}
-        <br />
-        <BancorPools
-          setPoolTotal={setBancorPoolTotal}
-          setDisplay={setDisplayBancor}
-          accountAddress={accountAddress}
-        />
-        <br />
-
-        <div
-          style={{
-            fontSize: '12px',
-            marginLeft: '15px',
-            display: SushiPoolsData.length > 0 ? '' : 'none',
-          }}>
-          SushiSwap V2 --- {parseFloat(SushiV2Total).toFixed(2)} USD
+        {/*<center>*/}
+        {/*  <div style={{ fontSize: '25px', color: 'white' }}>*/}
+        {/*    Pools Total :{' '}*/}
+        {/*    {parseFloat(*/}
+        {/*      UniV2Total + SushiV2Total + BalancerTotal + BalancerTotalv2 + BancorPoolTotal*/}
+        {/*    ).toFixed(2)}{' '}*/}
+        {/*    USD*/}
+        {/*  </div>*/}
+        {/*</center>*/}
+        {isPoolsOpen && (
+          <>
+            {PoolsData.map((object) => (
+              <ValueProtocol
+                token0Symbol={object.token0Symbol}
+                token1Symbol={object.token1Symbol}
+                liquidity={object.liquidity}
+                protocol={'Uniswap V2'}
+              />
+            ))}
+            {/*<div>2{SushiPoolsContent}</div> //TODO:check how SushiPools works with data*/}
+            {/*<BancorPools //TODO:check how BancorPools works with data*/}
+            {/*  setPoolTotal={setBancorPoolTotal}*/}
+            {/*  setDisplay={setDisplayBancor}*/}
+            {/*  accountAddress={accountAddress}*/}
+            {/*/>*/}
+            {BalancerPoolsData.map((object) => {
+              return (
+                <Investment protocol={object} chain={'Ethereum'} protocolName={'Balancer V1'} />
+              );
+            })}
+            {BalancerPoolsDatav2.map((object) => {
+              return (
+                <Investment protocol={object} chain={'Ethereum'} protocolName={'Balancer V2'} />
+              );
+            })}
+            {/*<Cream*/}
+            {/*  setTotal={setCreamTotal}*/}
+            {/*  setDisplay={setCreamDisplay}*/}
+            {/*  accountAddress={accountAddress}*/}
+            {/*/>*/}
+            {/*{SavingsContent}*/}
+            {/*<CreamIronBank totalSavings={setIronBankSavings} accountAddress={accountAddress} />*/}
+            {/*{CompoundSavingsContent}*/}
+          </>
+        )}
+      </PoolsBlock>
+      {/*=========================================>*/}
+      {/*OLD POOLS*/}
+      {/*<div*/}
+      {/*  style={{*/}
+      {/*    width: '100%',*/}
+      {/*    minWidth: '300px',*/}
+      {/*    border: '1px solid rgb(115, 115, 115)',*/}
+      {/*    height: 'auto',*/}
+      {/*    minHeight: '200px',*/}
+      {/*    borderRadius: '10px',*/}
+      {/*    // Below code is for task https://app.clickup.com/t/1je2y9d*/}
+      {/*    // display:*/}
+      {/*    //   SavingsData.length > 0 || CompoundSavingsData > 0 || DisplaySavings ? '' : 'none',*/}
+      {/*    display:*/}
+      {/*      SavingsData.length > 0 || CompoundSavingsData > 0 || IronBankSavings > 0 || CreamDisplay*/}
+      {/*        ? ''*/}
+      {/*        : 'none',*/}
+      {/*  }}>*/}
+      {/*  <br />*/}
+      {/*  <center>*/}
+      {/*    <div style={{ fontSize: '25px' }}>*/}
+      {/*      Savings*/}
+      {/*      <br />*/}
+      {/*      Total : /!* Below code is for task https://app.clickup.com/t/1je2y9d *!/*/}
+      {/*      /!* {parseFloat(AaveSavingsTotal + CompSavingsTotal + TotalCompoundSavings).toFixed(2)} USD *!/*/}
+      {/*      {numberWithCommas(*/}
+      {/*        parseFloat(*/}
+      {/*          AaveSavingsTotal + CompSavingsTotal + IronBankSavings + parseFloat(CreamTotal)*/}
+      {/*        ).toFixed(2)*/}
+      {/*      )}{' '}*/}
+      {/*      USD*/}
+      {/*      <br />*/}
+      {/*      <br />*/}
+      {/*    </div>*/}
+      {/*  </center>*/}
+      {/*  <Cream*/}
+      {/*    setTotal={setCreamTotal}*/}
+      {/*    setDisplay={setCreamDisplay}*/}
+      {/*    accountAddress={accountAddress}*/}
+      {/*  />*/}
+      {/*  <br />*/}
+      {/*  <div*/}
+      {/*    style={{*/}
+      {/*      fontSize: '12px',*/}
+      {/*      marginLeft: '15px',*/}
+      {/*      display: SavingsData.length > 0 ? '' : 'none',*/}
+      {/*    }}>*/}
+      {/*    Aave V2 -- Savings : {parseFloat(AaveSavingsTotal).toFixed(2)} USD*/}
+      {/*  </div>*/}
+      {/*  {SavingsContent}*/}
+      {/*  <br />*/}
+      {/*  /!* Below code is for task https://app.clickup.com/t/1je2y9d *!/*/}
+      {/*  /!* <CompoundData*/}
+      {/*    accountAddress={accountAddress}*/}
+      {/*    displayProp={setDisplaySavings}*/}
+      {/*    totalSavings={setTotalCompoundSavings}*/}
+      {/*  /> *!/*/}
+      {/*  <CreamIronBank totalSavings={setIronBankSavings} accountAddress={accountAddress} />*/}
+      {/*  <div*/}
+      {/*    style={{*/}
+      {/*      fontSize: '12px',*/}
+      {/*      marginLeft: '15px',*/}
+      {/*      display: CompoundSavingsData.length > 0 ? '' : 'none',*/}
+      {/*    }}>*/}
+      {/*    Compound V2 -- Savings : {parseFloat(CompSavingsTotal).toFixed(2)} USD*/}
+      {/*  </div>*/}
+      {/*  {CompoundSavingsContent}*/}
+      {/*  <br />*/}
+      {/*</div>*/}
+      {/*/!*=========================================>*!/*/}
+      {/*<div*/}
+      {/*  style={{*/}
+      {/*    width: '100%',*/}
+      {/*    minWidth: '300px',*/}
+      {/*    border: '1px solid rgb(115, 115, 115)',*/}
+      {/*    height: 'auto',*/}
+      {/*    marginTop: '20px',*/}
+      {/*    minHeight: '200px',*/}
+      {/*    borderRadius: '10px',*/}
+      {/*    display: LoansData.length > 0 || CompoundLoansData.length > 0 ? '' : 'none',*/}
+      {/*  }}>*/}
+      {/*  <br />*/}
+      {/*  <center>*/}
+      {/*    <div style={{ fontSize: '25px' }}>*/}
+      {/*      Loans*/}
+      {/*      <br />*/}
+      {/*      Total : {parseFloat(AaveLoansTotal + CompLoansTotal).toFixed(2)} USD*/}
+      {/*      <br />*/}
+      {/*      <br />*/}
+      {/*    </div>*/}
+      {/*  </center>*/}
+      {/*  <div*/}
+      {/*    style={{*/}
+      {/*      fontSize: '12px',*/}
+      {/*      marginLeft: '15px',*/}
+      {/*      display: LoansData.length > 0 ? '' : 'none',*/}
+      {/*    }}>*/}
+      {/*    Aave V2 -- Debt : {parseFloat(AaveLoansTotal).toFixed(2)} USD*/}
+      {/*  </div>*/}
+      {/*  {LoansContent}*/}
+      {/*  <br />*/}
+      {/*  <div*/}
+      {/*    style={{*/}
+      {/*      fontSize: '12px',*/}
+      {/*      marginLeft: '15px',*/}
+      {/*      display: CompoundLoansData.length > 0 ? '' : 'none',*/}
+      {/*    }}>*/}
+      {/*    Compound V2 -- Debt : {CompLoansTotal} USD*/}
+      {/*  </div>*/}
+      {/*  {CompoundLoansContent}*/}
+      {/*  <br />*/}
+      {/*</div>*/}
+      {/*<div*/}
+      {/*  style={{*/}
+      {/*    width: '100%',*/}
+      {/*    minWidth: '300px',*/}
+      {/*    marginTop: '20px',*/}
+      {/*    border: '1px solid rgb(115, 115, 115)',*/}
+      {/*    height: 'auto',*/}
+      {/*    minHeight: '200px',*/}
+      {/*    borderRadius: '10px',*/}
+      {/*    display:*/}
+      {/*      PoolsData.length > 0 ||*/}
+      {/*      BalancerPoolsData.length > 0 ||*/}
+      {/*      SushiPoolsData.length > 0 ||*/}
+      {/*      DisplayBancor*/}
+      {/*        ? ''*/}
+      {/*        : 'none',*/}
+      {/*  }}>*/}
+      {/*  <br />*/}
+      {/*  <center>*/}
+      {/*    <div style={{ fontSize: '25px' }}>*/}
+      {/*      Pools <br />*/}
+      {/*      Total :{' '}*/}
+      {/*      {parseFloat(*/}
+      {/*        UniV2Total + SushiV2Total + BalancerTotal + BalancerTotalv2 + BancorPoolTotal*/}
+      {/*      ).toFixed(2)}{' '}*/}
+      {/*      USD*/}
+      {/*      <br />*/}
+      {/*      <br />*/}
+      {/*    </div>*/}
+      {/*  </center>*/}
+      {/*  <div*/}
+      {/*    style={{*/}
+      {/*      fontSize: '12px',*/}
+      {/*      marginLeft: '15px',*/}
+      {/*      display: PoolsData.length > 0 ? '' : 'none',*/}
+      {/*    }}>*/}
+      {/*    Uniswap V2 --- {UniV2Total} USD*/}
+      {/*  </div>*/}
+      {/*  {PoolsContent}*/}
+      {/*  <br />*/}
+      {/*  <BancorPools*/}
+      {/*    setPoolTotal={setBancorPoolTotal}*/}
+      {/*    setDisplay={setDisplayBancor}*/}
+      {/*    accountAddress={accountAddress}*/}
+      {/*  />*/}
+      {/*  <br />*/}
+      {/*  <div*/}
+      {/*    style={{*/}
+      {/*      fontSize: '12px',*/}
+      {/*      marginLeft: '15px',*/}
+      {/*      display: SushiPoolsData.length > 0 ? '' : 'none',*/}
+      {/*    }}>*/}
+      {/*    SushiSwap V2 --- {parseFloat(SushiV2Total).toFixed(2)} USD*/}
+      {/*  </div>*/}
+      {/*  {SushiPoolsContent}*/}
+      {/*  <br />*/}
+      {/*  <div*/}
+      {/*    style={{*/}
+      {/*      fontSize: '12px',*/}
+      {/*      marginLeft: '15px',*/}
+      {/*      display: BalancerPoolsData.length > 0 ? '' : 'none',*/}
+      {/*    }}>*/}
+      {/*    Balancer ---{parseFloat(BalancerTotal).toFixed(2)} USD*/}
+      {/*  </div>*/}
+      {/*  {BalancerPoolsContent}*/}
+      {/*  <br />*/}
+      {/*  <div*/}
+      {/*    style={{*/}
+      {/*      fontSize: '12px',*/}
+      {/*      marginLeft: '15px',*/}
+      {/*      display: BalancerPoolsDatav2.length > 0 ? '' : 'none',*/}
+      {/*    }}>*/}
+      {/*    Balancer V2 --- {BalancerTotalv2} USD*/}
+      {/*  </div>*/}
+      {/*  {BalancerPoolsContentv2}*/}
+      {/*  <br />*/}
+      {/*</div>*/}
+      {/*=======================================>*/}
+      <PoolsBlock //second
+        isLightTheme={theme}
+        // SavingsData.length > 0 || CompoundSavingsData > 0 || IronBankSavings > 0 || CreamDisplay
+        style={{
+          display:
+            CurveStakeData.length > 0 || BeaconData.length > 0 || SLPTokenData.length > 0
+              ? ''
+              : 'none',
+        }}>
+        <Header>
+          <Title isLightTheme={theme}>{'Staked Assets'}</Title>
+          <ToggleButton onClick={poolsHandler} isOpen={isPoolsOpen} />
+        </Header>
+        <div style={{ padding: '0 29px 20px 26px', marginBottom: '20px' }}>
+          <TotalValueField isLightTheme={theme}>
+            <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
+            <TotalEmptyCell></TotalEmptyCell>
+            <TotalValue isLightTheme={theme}>
+              $
+              {parseFloat(
+                sumObjectsByKey(...BalancerPoolsDatav2, ...BalancerPoolsData) + balances
+                // BalancerTotal
+              ).toFixed(2)}
+            </TotalValue>
+          </TotalValueField>
         </div>
-        {SushiPoolsContent}
-        <br />
-
-        <div
-          style={{
-            fontSize: '12px',
-            marginLeft: '15px',
-            display: BalancerPoolsData.length > 0 ? '' : 'none',
-          }}>
-          Balancer ---{parseFloat(BalancerTotal).toFixed(2)} USD
-        </div>
-        {BalancerPoolsContent}
-        <br />
-
-        <div
-          style={{
-            fontSize: '12px',
-            marginLeft: '15px',
-            display: BalancerPoolsDatav2.length > 0 ? '' : 'none',
-          }}>
-          Balancer V2 --- {BalancerTotalv2} USD
-        </div>
-        {BalancerPoolsContentv2}
-        <br />
-      </div>
+        {/*<center>*/}
+        {/*  <div style={{ fontSize: '25px', color: 'white' }}>*/}
+        {/*    Pools Total :{' '}*/}
+        {/*    {parseFloat(*/}
+        {/*      UniV2Total + SushiV2Total + BalancerTotal + BalancerTotalv2 + BancorPoolTotal*/}
+        {/*    ).toFixed(2)}{' '}*/}
+        {/*    USD*/}
+        {/*  </div>*/}
+        {/*</center>*/}
+        {isPoolsOpen && (
+          <>
+            {CurveStakeData.map((object) => (
+              <StakedProtocols
+                protocol={object}
+                protocolName={'Curve Staking'}
+                logoImage={CurveLogo}
+              />
+            ))}
+            <Ethereum2Staking accountAddress={accountAddress} />
+            <SushiStaking accountAddress={accountAddress} />
+          </>
+        )}
+      </PoolsBlock>
+      {/*=======================================>*/}
       <div
         style={{
           // marginLeft:'25px',
@@ -1438,13 +1564,13 @@ export default function Index({ accountAddress }) {
           Curve Staking --- {CurveStakeTotal} USD
         </div>
         {CurveStakeContent}
-        <br />
-        <Ethereum2Staking accountAddress={accountAddress} />
-        <br />
-        <AaveStaking accountAddress={accountAddress} />
-        <br />
-        <SushiStaking accountAddress={accountAddress} />
-        <br />
+        {/*<br />*/}
+        {/*<Ethereum2Staking accountAddress={accountAddress} />*/}
+        {/*<br />*/}
+        {/*<AaveStaking accountAddress={accountAddress} />*/}
+        {/*<br />*/}
+        {/*<SushiStaking accountAddress={accountAddress} />*/}
+        {/*<br />*/}
         <UniStaking accountAddress={accountAddress} />
         <br />
         <LiquityStaking accountAddress={accountAddress} />

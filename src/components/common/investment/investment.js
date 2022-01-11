@@ -12,20 +12,28 @@ import {
 } from './styledComponents';
 import { useSelector } from 'react-redux';
 
-const Investment = ({ protocol, protocolName, logoImage, chain }) => {
+const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isStaked }) => {
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
-
+  console.log('logoImage', logoImage);
   const [isOpen, setIsOpen] = useState(false);
 
-  const { imageData, tokens, totalInvestment, mainTokenSymbol, totalTokensBalance } = protocol;
+  const {
+    imageData,
+    tokens,
+    totalInvestment,
+    mainTokenSymbol,
+    totalTokensBalance,
+    ethPrice,
+    totalDeposit,
+  } = protocol;
 
   const protocolData = {
-    Value: `$${parseFloat(protocol.priceSum).toFixed(2)}`,
-    LPprice: protocol.price ? `$${parseFloat(protocol.price).toFixed(2)}` : '$0',
-    Liquidity: protocol.liquidity ? `$${parseFloat(protocol.liquidity).toFixed(2)}` : `$0`,
-    Balance: parseFloat(
-      protocol.balance ? protocol.balance : protocol.balanceShares / 10 ** 18
-    ).toFixed(3),
+    Value: isStaked ? totalInvestment : `$${parseFloat(protocol.priceSum).toFixed(2)}`,
+    Balance: isStaked
+      ? totalDeposit
+      : parseFloat(protocol.balance ? protocol.balance : protocol.balanceShares / 10 ** 18).toFixed(
+          3
+        ),
     Chain: chain,
     Protocol: protocolName,
   };
@@ -39,15 +47,14 @@ const Investment = ({ protocol, protocolName, logoImage, chain }) => {
     <Main isOpen={isOpen} isLightTheme={theme}>
       <TotalValue isOpen={isOpen}>
         <div style={{ display: 'flex' }}>
-          {imageData && (
-            <ImagesWrapper>
-              {imageData ? (
-                imageData.map((name, index) => <TokenImage firstElement={index} src={name} />)
-              ) : (
-                <MockTokenImage src={logoImage} />
-              )}
-            </ImagesWrapper>
-          )}
+          <ImagesWrapper>
+            {imageData ? (
+              imageData.map((name, index) => <TokenImage firstElement={index} src={name} />)
+            ) : (
+              <MockTokenImage src={logoImage} />
+            )}
+          </ImagesWrapper>
+
           <div style={{ display: 'flex' }}>
             {tokens ? (
               tokens.map((name, index) => (
@@ -87,6 +94,32 @@ const Investment = ({ protocol, protocolName, logoImage, chain }) => {
                 </div>
               );
             })}
+          {stakedToken && (
+            <ContentWrapper isLightTheme={theme}>
+              <div>Staked Token</div>
+              <div>{stakedToken}</div>
+            </ContentWrapper>
+          )}
+          {ethPrice && (
+            <ContentWrapper isLightTheme={theme}>
+              <div>Price</div>
+              <div>{ethPrice}</div>
+            </ContentWrapper>
+          )}
+          {!stakedToken && (
+            <ContentWrapper isLightTheme={theme}>
+              <div>LPprice</div>
+              <div>{`$${parseFloat(protocol.price).toFixed(2)} : '$0'`}</div>
+            </ContentWrapper>
+          )}
+          {!stakedToken && (
+            <ContentWrapper isLightTheme={theme}>
+              <div>Liquidity</div>
+              <div>
+                {protocol.liquidity ? `$${parseFloat(protocol.liquidity).toFixed(2)}` : `$0`}
+              </div>
+            </ContentWrapper>
+          )}
           {Object.keys(protocolData).map((el) => (
             <ContentWrapper isLightTheme={theme}>
               <div>{el}</div>
