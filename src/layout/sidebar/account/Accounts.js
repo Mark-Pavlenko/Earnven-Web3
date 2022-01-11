@@ -35,23 +35,22 @@ import {
   WalletsListLayout,
   WalletListItemAccountLogo,
   WalletListItemAccountBalance,
-  List_Menu_Pop_UP,
+  WalletActionsListItem,
   MyWalletsLabel,
   WalletListItemContent,
   WalletListItemGreenDot,
   DotIconBlock,
   MetamaskLabel,
+  WalletActionsList,
+  WalletActionsLayout,
+  WalletActionsListItemLabel,
 } from './styles';
 
 const useStyles = makeStyles(() =>
   createStyles({
-    menupopover: { marginLeft: '150px', marginTop: '-25px' },
-    menu: {
-      width: '306px',
-      height: '197px',
-    },
+    menupopover: { marginLeft: '132px', marginTop: '-25px', width: '338px' },
     icon: {
-      marginLeft: '19px',
+      marginLeft: '21px',
       marginTop: '12px',
       display: 'flex',
       width: '16px',
@@ -72,9 +71,6 @@ const useStyles = makeStyles(() =>
       position: 'fixed',
       left: '42%',
       top: '39.6%',
-    },
-    menupopUp_list: {
-      padding: '5px',
     },
   })
 );
@@ -233,6 +229,9 @@ export default function Accounts(
       {/* popover menu with options for wallet*/}
       <MenuPopover
         className={classes.menupopover}
+        sx={{
+          backgroundColor: isLightTheme ? '#FFFFFF29' : '#1F265C3D',
+        }}
         open={account}
         onClose={hideAccountPopover}
         anchorEl={anchorRef.current}>
@@ -248,77 +247,71 @@ export default function Accounts(
             />
           </Box>
         ) : (
-          <Box className={classes.menu}>
-            <List
-              onClick={() => {
-                setOpenPopup_rename(true);
-                hideAccountPopover();
-              }}
-              className={classes.menupopUp_list}
-              disablePadding>
-              <List_Menu_Pop_UP>
+          <WalletActionsLayout sx={{ width: '306px' }}>
+            <WalletActionsList isLightTheme={isLightTheme} disablePadding>
+              <WalletActionsListItem
+                isLightTheme={isLightTheme}
+                onClick={() => {
+                  setOpenPopup_rename(true);
+                  hideAccountPopover();
+                }}>
                 <div className={classes.icon}>
                   <img src={rename_menu_icon} alt="no pic" />
                 </div>
-                <div
+                <WalletActionsListItemLabel
+                  isLightTheme={isLightTheme}
                   onClick={() => {
                     Rename1(address);
-                  }}
-                  className={classes.text}>
+                  }}>
                   Rename Wallet
-                </div>
-              </List_Menu_Pop_UP>
-            </List>
-            <List
-              onClick={() => {
-                navigator.clipboard.writeText(address);
-                copy_notification();
-                close_copy_notification();
-              }}
-              className={classes.menupopUp_list}
-              disablePadding>
-              <List_Menu_Pop_UP>
+                </WalletActionsListItemLabel>
+              </WalletActionsListItem>
+              <WalletActionsListItem
+                isLightTheme={isLightTheme}
+                onClick={() => {
+                  navigator.clipboard.writeText(address);
+                  copy_notification();
+                  close_copy_notification();
+                }}>
                 <div className={classes.icon}>
                   <img src={copy_menu_icon} alt="no pic" />
                 </div>
-                <div className={classes.text}>Copy Address</div>
-              </List_Menu_Pop_UP>
-            </List>
-            <List
-              onClick={() => {
-                navigator.clipboard.writeText(window.location.href);
-                copy_notification();
-                close_copy_notification();
-              }}
-              className={classes.menupopUp_list}
-              disablePadding>
-              <List_Menu_Pop_UP>
+                <WalletActionsListItemLabel isLightTheme={isLightTheme}>
+                  Copy Address
+                </WalletActionsListItemLabel>
+              </WalletActionsListItem>
+              <WalletActionsListItem
+                isLightTheme={isLightTheme}
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  copy_notification();
+                  close_copy_notification();
+                }}>
                 <div className={classes.icon}>
                   <img src={copy_link_menu_icon} alt="no pic" />
                 </div>
-                <div className={classes.text}>Copy Link</div>
-              </List_Menu_Pop_UP>
-            </List>
-            <List
-              onClick={() => {
-                change_flag();
-                setOpenPopup(true);
-                setaccount(true);
-                setaccount_menuclose(true);
-                hideAccountPopover();
-              }}
-              className={classes.menupopUp_list}
-              disablePadding>
-              <List_Menu_Pop_UP>
+                <WalletActionsListItemLabel isLightTheme={isLightTheme}>
+                  Copy Link
+                </WalletActionsListItemLabel>
+              </WalletActionsListItem>
+              <WalletActionsListItem
+                isLightTheme={isLightTheme}
+                onClick={() => {
+                  change_flag();
+                  setOpenPopup(true);
+                  setaccount(true);
+                  setaccount_menuclose(true);
+                  hideAccountPopover();
+                }}>
                 <div className={classes.icon}>
                   <img src={disconnect_menu_icon} alt="no pic" />
                 </div>
-                <div onClick={onReRender} className={classes.text}>
+                <WalletActionsListItemLabel isLightTheme={isLightTheme} onClick={onReRender}>
                   Disconnect
-                </div>
-              </List_Menu_Pop_UP>
-            </List>
-          </Box>
+                </WalletActionsListItemLabel>
+              </WalletActionsListItem>
+            </WalletActionsList>
+          </WalletActionsLayout>
         )}
       </MenuPopover>
       <ThemeConfig>

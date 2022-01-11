@@ -194,19 +194,63 @@ export const WalletListItemGreenDot = styled.img`
   margin-left: 10px;
 `;
 
-export const List_Menu_Pop_UP = styled('div')(({ theme }) => ({
-  width: '276px',
-  height: '40px',
-  display: 'flex',
-  '&:hover': {
-    backgroundColor: 'red',
-    color: 'orange',
-    fontWeight: 600,
-  },
-  marginLeft: '12px',
-  borderRadius: '10px',
-  cursor: 'pointer',
-}));
+export const WalletActionsLayout = styled.div`
+  width: 306px;
+  height: 197px;
+`;
+
+export const WalletActionsList = styled.ul``;
+
+export const WalletActionsListItem = styled.li`
+  display: flex;
+  width: 276px;
+  height: 40px;
+  margin-left: 15px;
+  padding: 0;
+
+  :hover {
+    p{
+      color: #4453ad;
+      font-weight: 600;
+    }
+    background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#1F265C3D')};
+    box-shadow: ${(props) =>
+      props.isLightTheme
+        ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+        : 'box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+    backdrop-filter:  ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')});
+    border-radius: 10px;
+    cursor: pointer;
+  }
+`;
+
+export const WalletActionsListItemLabel = styled.p`
+  display: flex;
+  width: 276px;
+  margin-left: 25px;
+  margin-top: 14px;
+  color: ${(props) => (props.isLightTheme ? '#000000' : '#FFFFFF')};
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0;
+
+  :hover {
+    color: #4453ad;
+  }
+`;
+// export const WalletActionsListItem = MUIStyled('li')(({ theme }) => ({
+
+// '&:hover': {
+//   backgroundColor: 'red',
+//   color: 'orange',
+//   fontWeight: 600,
+// },
+// marginLeft: '15px',
+// borderRadius: '10px',
+// cursor: 'pointer',
+// }));
 
 export const DotIconBlock = styled.div`
   margin-left: auto;
