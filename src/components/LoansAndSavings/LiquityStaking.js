@@ -11,13 +11,15 @@ Version           Date                         Description
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import addresses from '../../contractAddresses';
+import { useDispatch } from 'react-redux';
+import { liquityStakeAmountUSD } from '../../store/LiquityStakeReducer/actions';
 
 export default function LiquityStaking({ accountAddress }) {
   const [LiquityStakeAmountUSD, setLiquityStakeAmountUSD] = useState(0);
   const [LiquityLogo, setLiquityLogo] = useState('');
   const [LiquityStake, setLiquityStake] = useState(0);
   const [LiquitySymbol, setLiquitySymbol] = useState(null);
-
+  const dispatch = useDispatch();
   async function getLiquityData(accountAddress) {
     await axios
       .post(
@@ -86,6 +88,7 @@ export default function LiquityStaking({ accountAddress }) {
                 const stakeUSDValue = LiquityUsdPrice * response.data.data.lqtyStakes[0].amount;
                 console.log('Liquity Staking Value in USD', stakeUSDValue);
                 setLiquityStakeAmountUSD(stakeUSDValue.toLocaleString());
+                dispatch(liquityStakeAmountUSD(stakeUSDValue.toLocaleString()));
                 setLiquityLogo(data.image.thumb);
               })
               .catch((err) => {

@@ -13,6 +13,8 @@ import { balancerV2lp } from './BalancerV2/reducer';
 import { uniswapV2lp } from './UniswapV2/reducer';
 import { uniswapV2stake } from './UniswapV2/reducerStake';
 import { curveToken } from './curveToken/reducer';
+import { LiquityStakeReducer } from './LiquityStakeReducer/LiquityStakeReducer';
+import { SynthetixProtocol } from './synthetixProtocol/synthetixProtocol';
 export const rootReducer = combineReducers({
   web3Reducer,
   themeReducer,
@@ -29,4 +31,6 @@ export const rootReducer = combineReducers({
   uniswapV2lp,
   uniswapV2stake,
   curveToken,
+  LiquityStakeReducer,
+  SynthetixProtocol,
 });

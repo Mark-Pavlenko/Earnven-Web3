@@ -16,6 +16,7 @@ export default function UniStaking({ accountAddress }) {
   const dispatch = useDispatch();
   const [stakeContent, setstakeContent] = useState([]);
   const [stakeTotal, setstakeTotal] = useState(0);
+
   useEffect(() => {
     try {
       dispatch({

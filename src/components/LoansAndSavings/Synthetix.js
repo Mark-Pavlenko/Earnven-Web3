@@ -24,6 +24,9 @@ import SnxTokenAddressList from '../../contractAddress/SnxTokenAddress';
 import Addresses from '../../contractAddresses';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
+import { useDispatch } from 'react-redux';
+import { snxData } from '../../store/synthetixProtocol/actions';
+
 export default function Synthetix({ accountAddress, onSynthetixTokenValue }) {
   const [SnxCollateralData, setSnxCollateralData] = useState([]);
   const [SnxTokenData, setSnxTokenData] = useState([]);
@@ -31,6 +34,8 @@ export default function Synthetix({ accountAddress, onSynthetixTokenValue }) {
   const [SnxTokenContent, setSnxTokenContent] = useState([]);
   const [SnxCollateralContent, setSnxCollateralContent] = useState([]);
   const [SnxCollateralTotal, setSnxCollateralTotal] = useState(0);
+
+  const dispatch = useDispatch();
 
   //get useWeb3React hook
   const { account, activate, active, chainId, connector, deactivate, error, provider, setError } =
@@ -127,6 +132,7 @@ export default function Synthetix({ accountAddress, onSynthetixTokenValue }) {
       collateralData.push(object);
 
       setSnxCollateralData(collateralData);
+      dispatch(snxData(collateralData));
       setSnxCollateralTotal(parseFloat(snxCollateralTotal.toFixed(2)).toLocaleString());
       //need this log to varify the data ouput for now
       console.log('snx Collateral data', collateralData);
