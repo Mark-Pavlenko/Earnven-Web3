@@ -1,5 +1,21 @@
 import styled from 'styled-components';
-import { Button, Box, Popover, ListItemText } from '@material-ui/core';
+import { Button, Box, Popover, ListItemText, IconButton } from '@material-ui/core';
+
+export const SearchTokensMobileButton = styled(IconButton)`
+  :hover {
+    background-color: transparent;
+  }
+
+  span {
+    :hover {
+      border-radius: 10px;
+    }
+  }
+
+  @media (min-width: 1000px) {
+    display: none;
+  }
+`;
 
 export const SearchTokensMobileBtn = styled(Button)`
   @media (min-width: 1000px) {
