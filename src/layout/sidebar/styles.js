@@ -19,7 +19,7 @@ export const SidebarMainLayout = styled.div`
   flex-direction: column;
 
   @media (max-width: 1280px) {
-    height: auto;
+    //height: auto;
   }
 `;
 
@@ -70,7 +70,15 @@ export const SidebarMobileIconSubBlock = styled.div`
 
 export const ChangeThemeBtnMobile = styled(IconButton)`
   display: flex;
+  margin: 16px 30px 5px;
   margin-right: auto;
-  margin-top: 16px;
-  margin-left: 30px;
+`;
+
+export const SidebarMobileDelimiter = styled.div`
+  margin-left: 38px;
+  width: 264px;
+  height: 1px;
+  //opacity: 0.05;
+  background-color: #dae5f4;
+  margin-bottom: 20px;
 `;

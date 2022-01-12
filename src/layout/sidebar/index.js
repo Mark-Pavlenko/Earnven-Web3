@@ -31,6 +31,7 @@ import {
   SidebarMobileIconsBlock,
   ChangeThemeBtnMobile,
   SidebarMobileIconSubBlock,
+  SidebarMobileDelimiter,
 } from './styles';
 import lightIcon from '../../assets/icons/lightIcon.svg';
 import darkIcon from '../../assets/icons/darkIcon.svg';
@@ -124,6 +125,7 @@ export default function Sidebar({
             }}>
             {isLightTheme ? <img src={lightIcon} alt="" /> : <img src={darkIcon} alt="" />}
           </ChangeThemeBtnMobile>
+          <SidebarMobileDelimiter isLightTheme={isLightTheme} />
         </SidebarMobileIconsBlock>
         <Links setTheme={isLightTheme} />
       </SidebarMainLayout>

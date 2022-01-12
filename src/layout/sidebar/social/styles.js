@@ -57,6 +57,11 @@ export const NetworksGridList = styled.ul`
         : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
     backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
   }
+
+  @media (max-width: 1280px) {
+    margin-left: 36px;
+    margin-bottom: 47px;
+  }
 `;
 
 export const NetworksSubColumn = styled.div``;

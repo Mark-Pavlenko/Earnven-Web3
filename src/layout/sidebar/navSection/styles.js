@@ -20,12 +20,6 @@ const ListItemGeneralStyles = css`
     width: 330px;
     height: 47px;
   }
-
-  //:hover {
-  //  border-radius: 10px;
-  //  width: 180px;
-  //  box-shadow: 4px 6px 20px -5px rgba(51, 78, 131, 0.17);
-  //}
 `;
 
 export const ListItemElement = styled(ListItem)`
@@ -52,6 +46,13 @@ export const ListItemElement = styled(ListItem)`
   }
 `;
 
+export const ListItemElementDisabledLayout = styled.div`
+  margin-bottom: 0;
+
+  @media (max-width: 1280px) {
+  }
+`;
+
 export const ListItemElementDisabled = styled(ListItem)`
   ${ListItemGeneralStyles};
   color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
@@ -64,6 +65,7 @@ export const ListItemElementDisabled = styled(ListItem)`
 
   @media (max-width: 1280px) {
     font-size: 16px;
+    height: 52px;
   }
 `;
 
@@ -100,7 +102,10 @@ export const ListItemElementDisabledIcon = MUIStyles(ListItemIcon)({
 });
 
 export const MainNavLayout = styled.div`
-  overflow: hidden;
+  //overflow: hidden;
+  @media (max-width: 1280px) {
+    //overflow: auto;
+  }
   //height: 400px;
   // background-color: red;
 `;
@@ -111,7 +116,7 @@ export const NavList = styled(List)`
   margin-bottom: 21px;
 
   @media (max-width: 1280px) {
-    margin-top: 48px;
+    //margin-top: 20px;
     margin-left: 0;
     //margin-left: -22px;
   } ;
