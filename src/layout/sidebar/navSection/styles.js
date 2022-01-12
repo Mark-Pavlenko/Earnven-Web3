@@ -48,9 +48,6 @@ export const ListItemElement = styled(ListItem)`
 
 export const ListItemElementDisabledLayout = styled.div`
   margin-bottom: 0;
-
-  @media (max-width: 1280px) {
-  }
 `;
 
 export const ListItemElementDisabled = styled(ListItem)`
