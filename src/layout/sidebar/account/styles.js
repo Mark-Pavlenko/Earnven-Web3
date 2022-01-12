@@ -11,6 +11,9 @@ export const AccountStyle = styled.div`
   justify-content: end;
   margin-top: 28px;
   margin-right: 20px;
+  @media (max-width: 1280px) {
+    display: none;
+  } ;
 `;
 
 const handleBackgroundColorBtn = (isLightTheme, isBlockActivated) => {
@@ -94,9 +97,6 @@ export const MyWalletsLabel = styled(Box)`
 
 export const WalletsList = styled(List)`
   padding-top: 8px;
-  //:hover {
-
-  //}
 `;
 
 export const WalletsListItem = styled(ListItem)`
