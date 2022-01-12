@@ -151,15 +151,23 @@ export const AddWalletIcon = styled(VscAdd)`
   color: ${(props) => (props.isLightTheme ? '#828283' : '#ffffff')};
 `;
 
-export const WalletsListLayout = MUIStyled('div')(({ theme }) => ({
-  width: '291px',
-}));
+export const WalletsListLayout = styled.div`
+  width: 291px;
+  @media (max-width: 1280px) {
+    width: ${(props) => (props.isMetamaskWallet ? '294px' : '291px')};
+  }
+`;
 
-export const WalletListItemAccountLogo = MUIStyled(Avatar)(({ theme }) => ({
-  width: '1.3125rem',
-  height: '1.3125rem',
-  marginRight: '27px',
-}));
+export const WalletListItemAccountLogo = styled(Avatar)`
+  width: 21px;
+  height: 21px;
+  margin-right: 27px;
+
+  @media (max-width: 1280px) {
+    width: ${(props) => (props.isMetamaskWallet ? '46px' : '21px')};
+    height: ${(props) => (props.isMetamaskWallet ? '46px' : '21px')};
+  }
+`;
 
 export const WalletListItemContent = styled.div`
   display: flex;

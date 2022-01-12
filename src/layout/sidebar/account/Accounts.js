@@ -29,6 +29,7 @@ import Popup from './popup';
 import green_got_menu from '../../../assets/icons/green_got_menu.svg';
 import menurender_customhook from './menurender_customhook';
 import copy_notification_menu from '../../../assets/icons/copy_notification_menu.svg';
+import userMockAvatar from '../../../assets/icons/userMockAvatar.png';
 import { useSelector } from 'react-redux';
 
 import {
@@ -75,16 +76,6 @@ const useStyles = makeStyles(() =>
     },
   })
 );
-
-// const CustomStyle = styled('a')(({ theme }) => ({
-//   color: 'black',
-//   fontWeight: 400,
-//   fontSize: '14px',
-//   textDecoration: 'none',
-//   '&:hover': {
-//     color: '#4453AD',
-//   },
-// }));
 
 export default function Accounts(
   {
@@ -191,8 +182,16 @@ export default function Accounts(
 
   return (
     <>
-      <WalletsListLayout ref={anchorRef}>
-        <WalletListItemAccountLogo src={accountLogo} alt="photoURL" />
+      <WalletsListLayout ref={anchorRef} isMetamaskWallet={isMetamaskWallet}>
+        {isMetamaskWallet ? (
+          <WalletListItemAccountLogo
+            src={userMockAvatar}
+            alt="photoURL"
+            isMetamaskWallet={isMetamaskWallet}
+          />
+        ) : (
+          <WalletListItemAccountLogo src={accountLogo} alt="photoURL" />
+        )}
         <WalletListItemContent
           onClick={() => {
             hideAccountPopover();
