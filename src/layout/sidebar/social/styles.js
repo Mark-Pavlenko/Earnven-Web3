@@ -8,6 +8,10 @@ export const MainLinksLayout = styled.div`
 
 export const InfoLinksList = styled.div`
   margin-left: 125px;
+
+  @media (max-width: 1280px) {
+    margin-left: 38px;
+  }
 `;
 
 export const InfoListItem = styled(List)`
@@ -52,6 +56,11 @@ export const NetworksGridList = styled.ul`
         ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
         : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
     backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
+  }
+
+  @media (max-width: 1280px) {
+    margin-left: 36px;
+    margin-bottom: 47px;
   }
 `;
 

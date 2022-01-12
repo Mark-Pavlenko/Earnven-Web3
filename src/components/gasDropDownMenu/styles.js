@@ -10,9 +10,9 @@ export const GasButton = styled(Button)`
   box-shadow: ${(props) =>
     props.isLightTheme ? 'none' : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
 
-  @media (max-width: 709px) {
-    display: none;
-  }
+  //@media (max-width: 709px) {
+  //  display: none;
+  //}
 `;
 
 export const GasMenuPopover = styled(Popover)`

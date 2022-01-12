@@ -9,9 +9,9 @@ import { alpha, experimentalStyled as styled } from '@material-ui/core/styles';
 import IconButton from '@mui/material/IconButton';
 
 import SearchTokensMobile from '../../components/searchTokensMobile';
-import NetworkSelect from '../../components/networkDropDown';
+import NetworkSelectHeader from '../../components/networkDropDown';
+import GasDropdownMenu from '../../components/gasDropDownMenu/index';
 
-import GasDropdownMenu from '../../components/gasDropDownMenu';
 import LanguageDropDown from '../../components/languageDropDown';
 import HelpDropDown from '../../components/helpDropDown';
 
@@ -32,7 +32,7 @@ import {
   HeaderItemsBlock,
   HeaderFirstLayout,
   MockUserMobileAvatar,
-  ChangeThemeBtn,
+  ChangeThemeBtnHeader,
 } from './styles';
 
 Header.propTypes = {
@@ -40,7 +40,7 @@ Header.propTypes = {
   themeChanger: PropTypes.func,
 };
 
-function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle }) {
+function Header({ onOpenSidebar, finalTitle }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -90,29 +90,29 @@ function Header({ onOpenSidebar, themeChanger, ChangeTheme, finalTitle }) {
             <SearchTokensDark />
           )}
           <SearchTokensMobile isLightTheme={isLightTheme} />
-          <NetworkSelect isLightTheme={isLightTheme} />
+          <NetworkSelectHeader isLightTheme={isLightTheme} />
           <GasDropdownMenu isLightTheme={isLightTheme} />
           {/*<LanguageDropDown />*/}
           {/*<HelpDropDown />*/}
 
-          <ChangeThemeBtn
+          <ChangeThemeBtnHeader
             onClick={() => {
               setDynamicTheme();
             }}>
             {isLightTheme ? <img src={lightIcon} alt="" /> : <img src={darkIcon} alt="" />}
-          </ChangeThemeBtn>
+          </ChangeThemeBtnHeader>
         </HeaderItemsBlock>
       </HeaderLayoutBig>
       <HeaderLayoutMobile isLightTheme={isLightTheme}>
         <MobileSubLayout>
           <MockUserMobileAvatar src={userMockAvatar} alt="mockAvatar" />
           <SearchTokensMobile isLightTheme={isLightTheme} />
-          <ChangeThemeBtn
+          <ChangeThemeBtnHeader
             onClick={() => {
               setDynamicTheme();
             }}>
             {isLightTheme ? <img src={lightIcon} alt="" /> : <img src={darkIcon} alt="" />}
-          </ChangeThemeBtn>
+          </ChangeThemeBtnHeader>
           <BurgerIcon onClick={onOpenSidebar} sx={{ mr: 1, color: 'text.primary' }}>
             {isLightTheme ? (
               <img src={sidebarBurgerLightIcon} alt="burger_img" />
