@@ -8,6 +8,10 @@ export const MainLinksLayout = styled.div`
 
 export const InfoLinksList = styled.div`
   margin-left: 125px;
+
+  @media (max-width: 1280px) {
+    margin-left: 38px;
+  }
 `;
 
 export const InfoListItem = styled(List)`

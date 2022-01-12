@@ -131,4 +131,8 @@ export const MockUserMobileAvatar = styled.img`
   }
 `;
 
-export const ChangeThemeBtn = styled(IconButton)``;
+export const ChangeThemeBtnHeader = styled(IconButton)`
+  @media (max-width: 1280px) {
+    display: none;
+  }
+`;

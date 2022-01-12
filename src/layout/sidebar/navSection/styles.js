@@ -45,23 +45,27 @@ export const ListItemElement = styled(ListItem)`
   }
 
   @media (max-width: 1280px) {
+    font-size: 16px;
     :hover {
       width: 330px;
     }
   }
 `;
 
-export const ListItemElementDisabled = MUIStyles(ListItem)(({ isLightTheme }) => ({
-  ListItemGeneralStyles,
-  color: isLightTheme ? 'black' : 'white',
-  // marginBottom: '30px',
-  opacity: '0.5',
-  textTransform: 'capitalize',
+export const ListItemElementDisabled = styled(ListItem)`
+  ${ListItemGeneralStyles};
+  color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
+  opacity: 0.5;
+  text-transform: capitalize;
 
-  '&:hover': {
-    backgroundColor: 'transparent !important',
-  },
-}));
+  :hover {
+    background-color: transparent !important;
+  }
+
+  @media (max-width: 1280px) {
+    font-size: 16px;
+  }
+`;
 
 export const ItemSubText = MUIStyles(ListItemText)(({ isLightTheme }) => ({}));
 

@@ -19,7 +19,7 @@ import lightTheme from '../../assets/images/lightTheme.jpg';
 import lightThemeBig from '../../assets/images/lightDashboardBig.jpg';
 import CloseMobileSidebarLight from '../../assets/images/closeMobileSidebarLight.svg';
 import CloseMobileSidebarDark from '../../assets/images/closeMobileSidebarDark.svg';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
   RootStyle,
@@ -28,7 +28,14 @@ import {
   SidebarMainLayout,
   CloseMobileSidebarIcon,
   DrawerLayoutMobile,
+  SidebarMobileIconsBlock,
+  ChangeThemeBtnMobile,
+  SidebarMobileIconSubBlock,
 } from './styles';
+import lightIcon from '../../assets/icons/lightIcon.svg';
+import darkIcon from '../../assets/icons/darkIcon.svg';
+import GasDropdownMenu from '../../components/gasDropDownMenu';
+import NetworkSelectHeader from '../../components/networkDropDown';
 
 Sidebar.propTypes = {
   isOpenSidebar: PropTypes.bool,
@@ -46,12 +53,23 @@ export default function Sidebar({
 }) {
   const [open, setOpen] = useState(false);
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
+  const dispatch = useDispatch();
   // console.log('light theme type in sidebar', isLightTheme);
 
   const { pathname } = useLocation();
   let newSideBard = [];
   if (!setTheme || setTheme) {
     newSideBard = getRecall();
+  }
+
+  function setDynamicTheme() {
+    if (!isLightTheme) {
+      localStorage.setItem('selectedTheme', 'Day');
+      dispatch({ type: 'GET_THEME', isLightTheme: true });
+    } else {
+      localStorage.setItem('selectedTheme', 'Night');
+      dispatch({ type: 'GET_THEME', isLightTheme: false });
+    }
   }
 
   useEffect(() => {
@@ -66,8 +84,6 @@ export default function Sidebar({
         height: '100vh',
         // in order to get correct background for QHD & 4K Screens
         background: () => (isLightTheme ? `url(${lightThemeBig})` : `#0F152C`),
-        // backgroundColor: 'red',
-        // borderRadius: '10px',
         backdropFilter: 'blur(35px)',
         boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
         '& .simplebar-content': { display: 'flex', flexDirection: 'column' },
@@ -97,6 +113,18 @@ export default function Sidebar({
           global_wallet={global_wallet}
         />
         <NavSection sx={{ px: 8, color: 'black' }} navConfig={newSideBard} address={address} />
+        <SidebarMobileIconsBlock>
+          <SidebarMobileIconSubBlock>
+            <NetworkSelectHeader isLightTheme={isLightTheme} />
+            <GasDropdownMenu isLightTheme={isLightTheme} />
+          </SidebarMobileIconSubBlock>
+          <ChangeThemeBtnMobile
+            onClick={() => {
+              setDynamicTheme();
+            }}>
+            {isLightTheme ? <img src={lightIcon} alt="" /> : <img src={darkIcon} alt="" />}
+          </ChangeThemeBtnMobile>
+        </SidebarMobileIconsBlock>
         <Links setTheme={isLightTheme} />
       </SidebarMainLayout>
     </Scrollbar>

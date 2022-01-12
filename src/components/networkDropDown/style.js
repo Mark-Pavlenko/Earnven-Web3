@@ -5,9 +5,9 @@ export const ReactSelectLayout = styled.div`
   border-radius: 10px;
   width: 153px;
 
-  @media (max-width: 709px) {
-    display: none;
-  }
+  //@media (max-width: 709px) {
+  //  display: none;
+  //}
 `;
 
 export const ComingSoonLabel = styled.span`
