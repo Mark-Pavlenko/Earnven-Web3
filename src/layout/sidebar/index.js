@@ -98,14 +98,6 @@ export default function Sidebar({
     setaccount(false);
   };
 
-  function walletAddressCutter(address, name) {
-    if (name === 'null' && selectedAccount !== null) {
-      return address.substring(0, 7) + '..';
-    } else {
-      return name.substring(0, 8) + '..';
-    }
-  }
-
   //------
 
   useEffect(() => {
@@ -233,6 +225,23 @@ export default function Sidebar({
       }}>
       <SidebarMainLayout isLightTheme={isLightTheme}>
         {/*content for wallets list*/}
+        <LogoBlock>
+          <LogoImg src={CompanyLogo} alt="" />
+          <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
+          {isLightTheme ? (
+            <CloseMobileSidebarIcon
+              src={CloseMobileSidebarLight}
+              alt=""
+              onClick={() => onCloseWalletsListMobile()}
+            />
+          ) : (
+            <CloseMobileSidebarIcon
+              src={CloseMobileSidebarDark}
+              alt=""
+              onClick={() => onCloseWalletsListMobile()}
+            />
+          )}
+        </LogoBlock>
         <MyWalletsLabel isLightTheme={isLightTheme}>
           <p isLightTheme={isLightTheme}>{accountList.length > 0 && 'My Wallet'}</p>
         </MyWalletsLabel>
