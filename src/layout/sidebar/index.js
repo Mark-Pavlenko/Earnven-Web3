@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 // material
-import { Drawer } from '@material-ui/core';
+import { Drawer, ListItemIcon, ListItemText } from '@material-ui/core';
 import { MHidden } from '../../components/@material-extend';
 import CompanyLogo from '../../assets/icons/logo_menu.svg';
 import Earnven from '../../assets/icons/Earnven_menu_text.svg';
@@ -37,6 +37,14 @@ import lightIcon from '../../assets/icons/lightIcon.svg';
 import darkIcon from '../../assets/icons/darkIcon.svg';
 import GasDropdownMenu from '../../components/gasDropDownMenu';
 import NetworkSelectHeader from '../../components/networkDropDown';
+import {
+  AddNewWalletListItem,
+  AddWalletIcon,
+  MyWalletsLabel,
+  WalletsList,
+  WalletsListItem,
+} from './account/styles';
+import Accounts from './account/Accounts';
 
 Sidebar.propTypes = {
   isOpenSidebar: PropTypes.bool,
@@ -56,10 +64,82 @@ export default function Sidebar({
   setTheme,
   global_wallet,
 }) {
-  const [open, setOpen] = useState(false);
+  const [accountList, setaccountList] = useState([]);
+  const [account, setaccount] = useState(false);
+  const [myWallet, setMyWallet] = useState([]);
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
   const dispatch = useDispatch();
-  // console.log('light theme type in sidebar', isLightTheme);
+
+  const currentWallet = JSON.parse(localStorage.getItem('mywallet'));
+  {
+    currentWallet && console.log('currentWallet', currentWallet[0].address);
+  }
+
+  //------
+
+  const showAccountPopover = () => {
+    setaccount(true);
+    setarrowicon(true);
+    localStorage.setItem('PopUp_Menu', false);
+  };
+
+  const handleReRender = () => {
+    setReRender(!reRender); // state change will re-render parent
+  };
+
+  const hideAccountPopover = () => {
+    setaccount(false);
+    setarrowicon(false);
+    localStorage.setItem('PopUp_Menu', true);
+  };
+
+  const routeToConnectWallet = () => {
+    navigate('/app/connect-wallet');
+    setaccount(false);
+  };
+
+  function walletAddressCutter(address, name) {
+    if (name === 'null' && selectedAccount !== null) {
+      return address.substring(0, 7) + '..';
+    } else {
+      return name.substring(0, 8) + '..';
+    }
+  }
+
+  //------
+
+  useEffect(() => {
+    const result = localStorage.getItem('wallets');
+    var jsonData = [];
+    var jsondata = JSON.parse(result);
+    console.log('jsondata', jsondata);
+
+    // if (flag_menu === true) {
+    //   setaccount(false);
+    // }
+    jsondata &&
+      jsondata.map((option) => {
+        if (
+          option.provider !== 'metamask' &&
+          option.provider !== 'walletconnect' &&
+          option.provider !== 'portis' &&
+          option.provider !== 'coinbase' &&
+          option.provider !== 'fortmatic' &&
+          option.provider !== 'torus'
+        ) {
+          jsonData.push({ address: option.address, provider: option.provider, name: option.name });
+        }
+      });
+    setaccountList(jsonData);
+    const myWallet = localStorage.getItem('mywallet');
+    setMyWallet(JSON.parse(myWallet));
+    // setmywallet(myWallet);
+  }, [
+    account,
+    // flag_menu,
+    name,
+    global_wallet,
+  ]);
 
   const { pathname } = useLocation();
   let newSideBard = [];
@@ -86,6 +166,7 @@ export default function Sidebar({
     }
   }, [pathname, address, name, global_wallet]);
 
+  // main sidebar content
   const mainSidebarLayoutContent = (
     <Scrollbar
       sx={{
@@ -139,6 +220,7 @@ export default function Sidebar({
     </Scrollbar>
   );
 
+  // main sidebar wallet content
   const mainSidebarWalletsListContent = (
     <Scrollbar
       sx={{
@@ -150,45 +232,67 @@ export default function Sidebar({
         '& .simplebar-content': { display: 'flex', flexDirection: 'column' },
       }}>
       <SidebarMainLayout isLightTheme={isLightTheme}>
-        {/*content*/}
-        <LogoBlock>
-          <LogoImg src={CompanyLogo} alt="" />
-          <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
-          {isLightTheme ? (
-            <CloseMobileSidebarIcon
-              src={CloseMobileSidebarLight}
-              alt=""
-              onClick={() => onCloseSidebar()}
-            />
-          ) : (
-            <CloseMobileSidebarIcon
-              src={CloseMobileSidebarDark}
-              alt=""
-              onClick={() => onCloseSidebar()}
-            />
+        {/*content for wallets list*/}
+        <MyWalletsLabel isLightTheme={isLightTheme}>
+          <p isLightTheme={isLightTheme}>{accountList.length > 0 && 'My Wallet'}</p>
+        </MyWalletsLabel>
+        <WalletsList>
+          {accountList && (
+            <WalletsListItem isLightTheme={isLightTheme}>
+              <Accounts
+                setaccount_menuclose={(w) => setaccount(w)}
+                onClick={() => {
+                  hideAccountPopover();
+                }}
+                // onReRender={handleReRender}
+                address={JSON.parse(global_wallet)[0].address}
+                name={JSON.parse(global_wallet)[0].name}
+                globalWalletsList={JSON.stringify(JSON.parse(global_wallet)[0])}
+                currentWalletAddress={currentWallet[0].address}
+                isMetamaskWallet={true}
+              />
+            </WalletsListItem>
           )}
-        </LogoBlock>
-        <Account
-          address={address}
-          name={name}
-          setTheme={isLightTheme}
-          global_wallet={global_wallet}
-        />
-        <NavSection sx={{ px: 8, color: 'black' }} navConfig={newSideBard} address={address} />
-        <SidebarMobileIconsBlock>
-          <SidebarMobileIconSubBlock>
-            <NetworkSelectHeader isLightTheme={isLightTheme} />
-            <GasDropdownMenu isLightTheme={isLightTheme} />
-          </SidebarMobileIconSubBlock>
-          <ChangeThemeBtnMobile
-            onClick={() => {
-              setDynamicTheme();
-            }}>
-            {isLightTheme ? <img src={lightIcon} alt="" /> : <img src={darkIcon} alt="" />}
-          </ChangeThemeBtnMobile>
-          <SidebarMobileDelimiter isLightTheme={isLightTheme} />
-        </SidebarMobileIconsBlock>
-        <Links setTheme={isLightTheme} />
+        </WalletsList>
+
+        {/* all wallets */}
+        <MyWalletsLabel isLightTheme={isLightTheme}>
+          <p isLightTheme={isLightTheme}>{accountList.length > 0 && 'Watchlist'}</p>
+        </MyWalletsLabel>
+        <div>
+          <WalletsList>
+            {accountList &&
+              accountList.map((option) => (
+                <WalletsListItem isLightTheme={isLightTheme}>
+                  <Accounts
+                    setaccount_menuclose={(w) => setaccount(w)}
+                    onClick={() => {
+                      hideAccountPopover();
+                    }}
+                    onReRender={handleReRender}
+                    address={option.address}
+                    name={option.name}
+                    globalWalletsList={global_wallet}
+                    currentWalletAddress={currentWallet[0].address}
+                    isMetamaskWallet={false}
+                  />
+                </WalletsListItem>
+              ))}
+            <AddNewWalletListItem isLightTheme={isLightTheme} onClick={routeToConnectWallet}>
+              <ListItemIcon sx={{ mr: 1, minWidth: '17px' }}>
+                <AddWalletIcon isLightTheme={isLightTheme} />
+              </ListItemIcon>
+              <ListItemText
+                primaryTypographyProps={{
+                  variant: 'watchlist_font_balance',
+                }}
+                sx={{ opacity: 0.5, marginTop: '2px' }}>
+                New Wallet
+              </ListItemText>
+            </AddNewWalletListItem>
+          </WalletsList>
+          {/* add new item element */}
+        </div>
       </SidebarMainLayout>
     </Scrollbar>
   );
