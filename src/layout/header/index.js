@@ -37,10 +37,11 @@ import {
 
 Header.propTypes = {
   onOpenSidebar: PropTypes.func,
+  onOpenMobileWalletsList: PropTypes.func,
   themeChanger: PropTypes.func,
 };
 
-function Header({ onOpenSidebar, finalTitle }) {
+function Header({ onOpenSidebar, onOpenMobileWalletsList, finalTitle }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -104,7 +105,7 @@ function Header({ onOpenSidebar, finalTitle }) {
       </HeaderLayoutBig>
       <HeaderLayoutMobile isLightTheme={isLightTheme}>
         <MobileSubLayout>
-          <UserAvatarIconButton onClick={onOpenSidebar}>
+          <UserAvatarIconButton onClick={onOpenMobileWalletsList}>
             <img src={userMockAvatar} alt="mockAvatar" />
           </UserAvatarIconButton>
           <SearchTokensMobile isLightTheme={isLightTheme} />
@@ -130,4 +131,4 @@ function Header({ onOpenSidebar, finalTitle }) {
   );
 }
 
-export default connect()(Header);
+export default Header;

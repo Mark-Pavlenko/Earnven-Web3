@@ -127,7 +127,8 @@ export const UserAvatarIconButton = styled(IconButton)`
   }
 
   @media (max-width: 711px) {
-    margin-right: 20px;
+    //margin-right: 20px;
+    margin-right: 4px;
     //margin-top: 20px;
     //margin-left: 15px;
   }

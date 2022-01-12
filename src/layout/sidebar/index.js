@@ -41,12 +41,16 @@ import NetworkSelectHeader from '../../components/networkDropDown';
 Sidebar.propTypes = {
   isOpenSidebar: PropTypes.bool,
   onCloseSidebar: PropTypes.func,
+  isOpenWalletsListMobile: PropTypes.bool,
+  onCloseWalletsListMobile: PropTypes.func,
   setTheme: PropTypes.bool,
 };
 
 export default function Sidebar({
   isOpenSidebar,
   onCloseSidebar,
+  isOpenWalletsListMobile,
+  onCloseWalletsListMobile,
   address,
   name,
   setTheme,
@@ -77,9 +81,12 @@ export default function Sidebar({
     if (isOpenSidebar) {
       onCloseSidebar();
     }
+    if (isOpenWalletsListMobile) {
+      onCloseWalletsListMobile();
+    }
   }, [pathname, address, name, global_wallet]);
 
-  const renderContent = (
+  const mainSidebarLayoutContent = (
     <Scrollbar
       sx={{
         height: '100vh',
@@ -90,6 +97,60 @@ export default function Sidebar({
         '& .simplebar-content': { display: 'flex', flexDirection: 'column' },
       }}>
       <SidebarMainLayout isLightTheme={isLightTheme}>
+        <LogoBlock>
+          <LogoImg src={CompanyLogo} alt="" />
+          <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
+          {isLightTheme ? (
+            <CloseMobileSidebarIcon
+              src={CloseMobileSidebarLight}
+              alt=""
+              onClick={() => onCloseSidebar()}
+            />
+          ) : (
+            <CloseMobileSidebarIcon
+              src={CloseMobileSidebarDark}
+              alt=""
+              onClick={() => onCloseSidebar()}
+            />
+          )}
+        </LogoBlock>
+        <Account
+          address={address}
+          name={name}
+          setTheme={isLightTheme}
+          global_wallet={global_wallet}
+        />
+        <NavSection sx={{ px: 8, color: 'black' }} navConfig={newSideBard} address={address} />
+        <SidebarMobileIconsBlock>
+          <SidebarMobileIconSubBlock>
+            <NetworkSelectHeader isLightTheme={isLightTheme} />
+            <GasDropdownMenu isLightTheme={isLightTheme} />
+          </SidebarMobileIconSubBlock>
+          <ChangeThemeBtnMobile
+            onClick={() => {
+              setDynamicTheme();
+            }}>
+            {isLightTheme ? <img src={lightIcon} alt="" /> : <img src={darkIcon} alt="" />}
+          </ChangeThemeBtnMobile>
+          <SidebarMobileDelimiter isLightTheme={isLightTheme} />
+        </SidebarMobileIconsBlock>
+        <Links setTheme={isLightTheme} />
+      </SidebarMainLayout>
+    </Scrollbar>
+  );
+
+  const mainSidebarWalletsListContent = (
+    <Scrollbar
+      sx={{
+        height: '100vh',
+        // in order to get correct background for QHD & 4K Screens
+        background: () => (isLightTheme ? `url(${lightThemeBig})` : `#0F152C`),
+        backdropFilter: 'blur(35px)',
+        boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+        '& .simplebar-content': { display: 'flex', flexDirection: 'column' },
+      }}>
+      <SidebarMainLayout isLightTheme={isLightTheme}>
+        {/*content*/}
         <LogoBlock>
           <LogoImg src={CompanyLogo} alt="" />
           <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
@@ -148,12 +209,13 @@ export default function Sidebar({
               border: 'none',
             },
           }}>
-          {renderContent}
+          {mainSidebarLayoutContent}
         </Drawer>
       </MHidden>
 
       {/* sidebar for mobiles versions */}
       <MHidden width="lgUp">
+        {/*Default sidebar with main content*/}
         <DrawerLayoutMobile
           open={isOpenSidebar}
           anchor={'right'}
@@ -167,7 +229,24 @@ export default function Sidebar({
               backgroundColor: 'transparent',
             },
           }}>
-          {renderContent}
+          {mainSidebarLayoutContent}
+        </DrawerLayoutMobile>
+
+        {/* Sidebar with wallets list */}
+        <DrawerLayoutMobile
+          open={isOpenWalletsListMobile}
+          anchor={'left'}
+          onClose={onCloseWalletsListMobile}
+          // BackdropProps={{ invisible: true }}
+          PaperProps={{
+            sx: {
+              width: '360px',
+              overflow: 'auto',
+              height: 'auto',
+              backgroundColor: 'transparent',
+            },
+          }}>
+          {mainSidebarWalletsListContent}
         </DrawerLayoutMobile>
       </MHidden>
     </RootStyle>

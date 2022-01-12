@@ -172,9 +172,13 @@ export default function SearchTokensMobile({ isLightTheme }) {
         className={classes.myClassName}>
         {isLightTheme ? (
           // <ActionHome hoverColor={'red'} alt="light_search_icon" />
-          <img src={SearchTokensButtonMobileLight} alt="dark_search_icon" />
+          <span>
+            <img src={SearchTokensButtonMobileLight} alt="dark_search_icon" />
+          </span>
         ) : (
-          <img src={SearchTokensButtonMobileDark} alt="dark_search_icon" />
+          <span>
+            <img src={SearchTokensButtonMobileDark} alt="dark_search_icon" />
+          </span>
         )}
       </SearchTokensMobileButton>
       <MenuPopover
