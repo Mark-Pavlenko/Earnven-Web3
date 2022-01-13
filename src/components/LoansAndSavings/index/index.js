@@ -21,6 +21,7 @@ import Investment from '../../common/investment/investment';
 import PoolsProtocols from '../../common/investment/poolsProtocols/poolsProtocols';
 import PickleStake from '../Farming/Pickle';
 import PickleDill from '../Vaults/PickleDill';
+import CurveFarming from '../CurveFarming';
 // import UniswapV2 from './LiqudityPools/UniswapV2';
 import {
   PoolsBlock,
@@ -1357,6 +1358,8 @@ export default function Index({ accountAddress }) {
           <CurveToken accountAddress={accountAddress} />
           <br />
           <CurveLpToken accountAddress={accountAddress} onCurveLptoken={getCurveLpToken} />
+          <br />
+          <CurveFarming accountAddress={accountAddress} />
           <br />
           {/*<center>*/}
           {/*  <div style={{ fontSize: '25px', color: 'white' }}>*/}

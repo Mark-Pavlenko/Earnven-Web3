@@ -15,6 +15,8 @@ import { uniswapV2stake } from './UniswapV2/reducerStake';
 import { curveToken } from './curveToken/reducer';
 import { pickeStake } from './pickle/reducer';
 import { pickeDill } from './pickle/reducer';
+import { curveStaking } from './curveStaking/reducer';
+
 export const rootReducer = combineReducers({
   web3Reducer,
   themeReducer,
@@ -33,4 +35,5 @@ export const rootReducer = combineReducers({
   curveToken,
   pickeStake,
   pickeDill,
+  curveStaking,
 });
