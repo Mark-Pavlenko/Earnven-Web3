@@ -29,11 +29,11 @@ const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isS
   } = protocol;
   const protocolData = {
     Value: isStaked ? totalInvestment : `$${parseFloat(totalValue).toFixed(2)}`,
-    Balance: isStaked
-      ? totalDeposit
-      : parseFloat(protocol.balance ? protocol.balance : protocol.balanceShares / 10 ** 18).toFixed(
-          3
-        ),
+    // Balance: isStaked
+    //   ? totalDeposit
+    //   : parseFloat(protocol.balance ? protocol.balance : protocol.balanceShares / 10 ** 18).toFixed(
+    //       3
+    //     ),
     Chain: chain ? chain : protocol.chain,
     Protocol: protocolName ? protocolName : protocol.protocol,
   };
@@ -109,13 +109,25 @@ const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isS
               <div>{numberWithCommas(ethPrice)}</div>
             </ContentWrapper>
           )}
+          {protocol.balance && (
+            <ContentWrapper isLightTheme={theme}>
+              <div>Price</div>
+              <div>{numberWithCommas(protocol.balance)}</div>
+            </ContentWrapper>
+          )}
           {!stakedToken && protocol.price && (
             <ContentWrapper isLightTheme={theme}>
               <div>LPprice</div>
               <div>{`$${numberWithCommas(parseFloat(protocol.price).toFixed(2))}`}</div>
             </ContentWrapper>
           )}
-          {!stakedToken && (
+          {protocol.stakingClaimable && (
+            <ContentWrapper isLightTheme={theme}>
+              <div>Claimable</div>
+              <div>{`$${numberWithCommas(parseFloat(protocol.stakingClaimable).toFixed(2))}`}</div>
+            </ContentWrapper>
+          )}
+          {protocol.liquidity && (
             <ContentWrapper isLightTheme={theme}>
               <div>Liquidity</div>
               <div>

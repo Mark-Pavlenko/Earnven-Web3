@@ -120,7 +120,6 @@ export default function AaveStaking({ accountAddress }) {
 
       //Call the contract to get the value for staked Aave
       const AaveBalaceAmount = await checkAaveStake(accountAddress, Addresses.aaveStakingV2);
-      console.log('AaveBalaceAmount', AaveBalaceAmount);
       //call the contract to get the value from Staked Balancer LP
       const stkABPTBalance = await checkAaveStake(accountAddress, Addresses.aavestkABPT);
       //call the below function to get the aaveV2 Cliambale amount

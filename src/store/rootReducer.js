@@ -18,6 +18,7 @@ import { SynthetixProtocol } from './synthetixProtocol/synthetixProtocol';
 import { pickeStake } from './pickle/reducer';
 import { pickeDill } from './pickle/reducer';
 import { curveStaking } from './curveStaking/reducer';
+import { convexStake } from './convexStake/reducer';
 
 export const rootReducer = combineReducers({
   web3Reducer,
@@ -40,4 +41,5 @@ export const rootReducer = combineReducers({
   pickeStake,
   pickeDill,
   curveStaking,
+  convexStake,
 });

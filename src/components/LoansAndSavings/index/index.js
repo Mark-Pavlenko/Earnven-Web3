@@ -44,6 +44,7 @@ import { SynthetixProtocol } from '../../../store/synthetixProtocol/synthetixPro
 import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
 import UniswapV2 from '../LiqudityPools/UniswapV2';
 import CurveToken from '../CurveToken';
+import { convexStake } from '../../../store/convexStake/reducer';
 
 // Below code is for task https://app.clickup.com/t/1je2y9d
 // import CompoundData from './Compound';
@@ -58,6 +59,9 @@ export default function Index({ accountAddress }) {
   );
   const snxCollateralData = useSelector((state) => state.SynthetixProtocol.snxData);
   const SLPTokenTotalValue = useSelector((state) => state.sushiStaking.sushiStakeTotal);
+  const pickeStake = useSelector((state) => state.pickeStake.pickeStake);
+  const convexStakeData = useSelector((state) => state.convexStake.convexStakeData);
+  console.log('convexStakeData', convexStakeData);
 
   // Below code is for task https://app.clickup.com/t/1je2y9d
   // const [DisplaySavings, setDisplaySavings] = useState(null);
@@ -1217,15 +1221,16 @@ export default function Index({ accountAddress }) {
       {/*=========================================>*/}
       <PoolsBlock //first
         isLightTheme={theme}
-        style={{
-          display:
-            PoolsData.length > 0 ||
-            BalancerPoolsData.length > 0 ||
-            SushiPoolsData.length > 0 ||
-            DisplayBancor
-              ? ''
-              : 'none',
-        }}>
+        // style={{
+        //   display:
+        //     PoolsData.length > 0 ||
+        //     BalancerPoolsData.length > 0 ||
+        //     SushiPoolsData.length > 0 ||
+        //     DisplayBancor
+        //       ? ''
+        //       : 'none',
+        // }}
+      >
         <Header>
           <Title isLightTheme={theme}>{'Liquidity pools'}</Title>
           <ToggleButton onClick={poolsHandler} isOpen={isPoolsOpen} />
@@ -1274,7 +1279,6 @@ export default function Index({ accountAddress }) {
             {/*  accountAddress={accountAddress}*/}
             {/*/>*/}
             {BalancerPoolsData.map((object, index) => {
-              console.log('balancerV1', object);
               return (
                 <Investment
                   key={index}
@@ -1296,14 +1300,15 @@ export default function Index({ accountAddress }) {
               );
             })}
             <UniswapV2 accountAddress={accountAddress} />
-            {/*<Cream*/}
-            {/*  setTotal={setCreamTotal}*/}
-            {/*  setDisplay={setCreamDisplay}*/}
-            {/*  accountAddress={accountAddress}*/}
-            {/*/>*/}
-            {/*{SavingsContent}*/}
-            {/*<CreamIronBank totalSavings={setIronBankSavings} accountAddress={accountAddress} />*/}
-            {/*{CompoundSavingsContent}*/}
+            <AaveStaking accountAddress={accountAddress} />
+            <Cream
+              setTotal={setCreamTotal}
+              setDisplay={setCreamDisplay}
+              accountAddress={accountAddress}
+            />
+            {SavingsContent}
+            <CreamIronBank totalSavings={setIronBankSavings} accountAddress={accountAddress} />
+            {CompoundSavingsContent}
           </>
         )}
       </PoolsBlock>
@@ -1311,16 +1316,17 @@ export default function Index({ accountAddress }) {
       <PoolsBlock //second
         isLightTheme={theme}
         // SavingsData.length > 0 || CompoundSavingsData > 0 || IronBankSavings > 0 || CreamDisplay
-        style={{
-          display:
-            CurveStakeData.length > 0 ||
-            BeaconData.length > 0 ||
-            SLPTokenData.length > 0 ||
-            uniswapV2array.length > 0 ||
-            liquityStakeAmountUSD > 0
-              ? ''
-              : 'none',
-        }}>
+        // style={{
+        //   display:
+        //     CurveStakeData.length > 0 ||
+        //     BeaconData.length > 0 ||
+        //     SLPTokenData.length > 0 ||
+        //     uniswapV2array.length > 0 ||
+        //     liquityStakeAmountUSD > 0
+        //       ? ''
+        //       : 'none',
+        // }}
+      >
         <Header>
           <Title isLightTheme={theme}>{'Staked Assets'}</Title>
           <ToggleButton onClick={stakedHandler} isOpen={isStakedAssetsOpen} />
@@ -1354,6 +1360,9 @@ export default function Index({ accountAddress }) {
                 />
               );
             })}
+            {convexStakeData.map((object) => {
+              return <Investment protocol={object} />;
+            })}
             <Ethereum2Staking accountAddress={accountAddress} />
             <SushiStaking accountAddress={accountAddress} />
             <UniStaking accountAddress={accountAddress} />
@@ -1367,18 +1376,19 @@ export default function Index({ accountAddress }) {
             <UniStaking accountAddress={accountAddress} />
             <PickleStake accountAddress={accountAddress} />
             <PickleDill accountAddress={accountAddress} />
-            {/*<LiquityStaking accountAddress={accountAddress} />*/}
-            {/*<ConvexStaking accountAddress={accountAddress} /> doesn't have dependency hide/display if array is empty*/}
-            {/*<SnowSwapStaking accountAddress={accountAddress} doesn't have dependency hide/display if array is empty/>*/}
+            <LiquityStaking accountAddress={accountAddress} />
+            <ConvexStaking accountAddress={accountAddress} />
+            <SnowSwapStaking accountAddress={accountAddress} />
           </>
         )}
       </PoolsBlock>
       {/*=======================================>*/}
       <PoolsBlock //third
         isLightTheme={theme}
-        style={{
-          display: YearnData.length > 0 || snxCollateralData > 0 ? '' : 'none',
-        }}>
+        // style={{
+        //   display: YearnData.length > 0 || snxCollateralData > 0 ? '' : 'none',
+        // }}
+      >
         <Header>
           <Title isLightTheme={theme}>{'Other Assets'}</Title>
           <ToggleButton onClick={othersHandler} isOpen={isOthersOpen} />

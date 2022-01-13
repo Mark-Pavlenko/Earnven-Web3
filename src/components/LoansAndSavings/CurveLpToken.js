@@ -26,12 +26,12 @@ import CurvePoolRegistryABI from '../../abi/CurveLpContracts/CurveRegistry.json'
 import CurvePoolRegAddress from '../../contractAddresses';
 import getCoingeckoData from '../../utils/getCoingeckoAPIData.js';
 import { useWeb3React } from '@web3-react/core';
+import Investment from '../common/investment/investment';
 
 export default function CurveLpToken({ accountAddress, onCurveLptoken }) {
   const [CurveLpTokenData, setCurveLpTokenData] = useState([]);
   const [CurveLpTokenTotal, setCurveLpTokenTotal] = useState([]);
   const [CurveLpTokenContent, setCurveLpTokenContent] = useState([]);
-  console.log('CurveLpTokenData', CurveLpTokenContent);
   //get useWeb3React hook
   const { account, activate, active, chainId, connector, deactivate, error, provider, setError } =
     useWeb3React();
@@ -141,51 +141,61 @@ export default function CurveLpToken({ accountAddress, onCurveLptoken }) {
   useEffect(() => {
     if (CurveLpTokenData.length > 0) {
       try {
-        var content = CurveLpTokenData.map((object) => (
-          <Accordion
-            style={{
-              background: 'transparent',
-              marginRight: '1px',
-              color: 'black',
-              width: '100%',
-              border: '1px',
-              borderColor: 'black',
-              borderStyle: 'hidden',
-            }}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header">
-              <React.Fragment
+        var content = CurveLpTokenData.map((object) => {
+          console.log('CurveLpTokenData', object);
+          return (
+            <>
+              <Investment protocol={object} />
+              <Accordion
                 style={{
-                  display: 'inline-block',
+                  background: 'transparent',
+                  marginRight: '1px',
+                  color: 'black',
                   width: '100%',
-                  wordBreak: 'break-all',
+                  border: '1px',
+                  borderColor: 'black',
+                  borderStyle: 'hidden',
                 }}>
-                {/*Get the Curve lp token Name */}
-                <CurveLpImage lpToken={object.curveLpTokenName} /> {object.curveLpTokenName}
-                &nbsp; &nbsp;{parseFloat(object.curveLpTokenValue.toFixed(2)).toLocaleString()} USD
-              </React.Fragment>
-            </AccordionSummary>
-            <AccordionDetails>
-              <div style={{ display: 'inline-block', width: '70%', fontSize: '13px' }}>
-                Value &nbsp;&nbsp;&nbsp;&nbsp;$
-                {parseFloat(object.curveLpTokenValue.toFixed(2)).toLocaleString()}
-                <br />
-                Price &nbsp;&nbsp;&nbsp;&nbsp;${parseFloat(object.curveLpTokenPrice.toFixed(4))}
-                <br />
-                Balance &nbsp; {parseFloat(object.cuveLpTokenBalance.toFixed(2)).toLocaleString()}
-                <br />
-                Liquidity &nbsp; $
-                {parseFloat(object.curveLpTokenLiquidity.toFixed(2)).toLocaleString()}
-                <br />
-                Chain &nbsp;&nbsp;Ethereum
-                <br />
-                Protocol &nbsp; {object.curveLpTokenSymbol}
-              </div>
-            </AccordionDetails>
-          </Accordion>
-        ));
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header">
+                  <React.Fragment
+                    style={{
+                      display: 'inline-block',
+                      width: '100%',
+                      wordBreak: 'break-all',
+                    }}>
+                    {/*Get the Curve lp token Name */}
+                    <CurveLpImage lpToken={object.curveLpTokenName} /> {object.curveLpTokenName}
+                    &nbsp; &nbsp;{parseFloat(
+                      object.curveLpTokenValue.toFixed(2)
+                    ).toLocaleString()}{' '}
+                    USD
+                  </React.Fragment>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <div style={{ display: 'inline-block', width: '70%', fontSize: '13px' }}>
+                    Value &nbsp;&nbsp;&nbsp;&nbsp;$
+                    {parseFloat(object.curveLpTokenValue.toFixed(2)).toLocaleString()}
+                    <br />
+                    Price &nbsp;&nbsp;&nbsp;&nbsp;${parseFloat(object.curveLpTokenPrice.toFixed(4))}
+                    <br />
+                    Balance &nbsp;{' '}
+                    {parseFloat(object.cuveLpTokenBalance.toFixed(2)).toLocaleString()}
+                    <br />
+                    Liquidity &nbsp; $
+                    {parseFloat(object.curveLpTokenLiquidity.toFixed(2)).toLocaleString()}
+                    <br />
+                    Chain &nbsp;&nbsp;Ethereum
+                    <br />
+                    Protocol &nbsp; {object.curveLpTokenSymbol}
+                  </div>
+                </AccordionDetails>
+              </Accordion>
+            </>
+          );
+        });
       } catch (err) {
         console.log('No Curve LP token data found');
       }
