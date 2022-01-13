@@ -24,7 +24,7 @@ export default function SushiStaking({ accountAddress }) {
   };
   //use useSelector hook to get the current state from store
   const SLPTokenData = useSelector((state) => state.sushiStaking.sushiStakeData);
-  const SLPTokenTotalValue = useSelector((state) => state.sushiStaking.sushiStakeTotal);
+  console.log('SLPTokenData', SLPTokenData);
   //then make dispatch/send an action
   const dispatch = useDispatch();
   //below function is used to get sushi staking balance from the subgraph

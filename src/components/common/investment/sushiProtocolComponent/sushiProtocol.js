@@ -11,6 +11,7 @@ import {
   ContentRightWrapper,
 } from './styledComponents';
 import { useSelector } from 'react-redux';
+import { numberWithCommas } from '../../../../commonFunctions/commonFunctions';
 
 const SushiProtocol = ({ protocol, protocolName, logoImage }) => {
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
@@ -19,6 +20,7 @@ const SushiProtocol = ({ protocol, protocolName, logoImage }) => {
   const { imageData, tokens, price, sushiLpTokenValue, sushiLpTokenSymbol } = protocol;
 
   const protocolData = {
+    Value: `$${protocol.sushiLpTokenValue}`,
     Liquidity: protocol.sushiLpTokenLiquidity
       ? `$${parseFloat(protocol.sushiLpTokenLiquidity).toFixed(2)}`
       : `$0`,
@@ -27,8 +29,8 @@ const SushiProtocol = ({ protocol, protocolName, logoImage }) => {
         ? protocol.sushiLpTokenBalance
         : protocol.balanceShares / 10 ** 18
     ).toFixed(3),
-    Chain: protocol.sushiLpChain,
-    Protocol: protocol.sushiLpProtocol,
+    Chain: protocol.sushiLpProtocol,
+    Protocol: protocol.sushiLpChain,
     Volume: protocol.sushiLpTokenVolume,
     Price: `$${protocol.sushiLpTokenPrice}`,
   };
@@ -63,7 +65,7 @@ const SushiProtocol = ({ protocol, protocolName, logoImage }) => {
           </div>
         </div>
         <ContentRightWrapper isLightTheme={theme}>
-          <div>{parseFloat(price ? price : sushiLpTokenValue).toFixed(2)}&nbsp;USD</div>
+          <div>${numberWithCommas(parseFloat(price ? price : sushiLpTokenValue).toFixed(2))}</div>
           <ToggleButton isLightTheme={theme} isOpen={isOpen} onClick={toggleHandler} />
         </ContentRightWrapper>
       </TotalValue>
@@ -71,7 +73,7 @@ const SushiProtocol = ({ protocol, protocolName, logoImage }) => {
         Object.keys(protocolData).map((el) => (
           <ContentWrapper isLightTheme={theme}>
             <div>{el}</div>
-            <div>{protocolData[el]}</div>
+            <div>{numberWithCommas(protocolData[el])}</div>
           </ContentWrapper>
         ))}
     </Main>

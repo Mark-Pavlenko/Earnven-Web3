@@ -11,6 +11,7 @@ import {
   ContentRightWrapper,
 } from './styledComponents';
 import { useSelector } from 'react-redux';
+import { numberWithCommas } from '../../../../commonFunctions/commonFunctions';
 
 const ValueProtocol = ({ token0Symbol, token1Symbol, liquidity, protocol, totalInvestment }) => {
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
@@ -39,10 +40,7 @@ const ValueProtocol = ({ token0Symbol, token1Symbol, liquidity, protocol, totalI
           </div>
         </div>
         <ContentRightWrapper isLightTheme={theme}>
-          <div>
-            {parseFloat(liquidity && +liquidity).toFixed(2)}
-            &nbsp;USD
-          </div>
+          <div>${numberWithCommas(parseFloat(totalInvestment).toFixed(2))}</div>
           <ToggleButton isLightTheme={theme} isOpen={isOpen} onClick={toggleHandler} />
         </ContentRightWrapper>
       </TotalValue>
@@ -56,7 +54,9 @@ const ValueProtocol = ({ token0Symbol, token1Symbol, liquidity, protocol, totalI
               padding: '0 32px 11px 26px',
             }}>
             <div style={{ fontSize: '10px' }}>Liquidity</div>
-            <div style={{ fontSize: '10px' }}>${parseFloat(liquidity).toFixed(2)}</div>
+            <div style={{ fontSize: '10px' }}>
+              ${numberWithCommas(parseFloat(liquidity).toFixed(2))}
+            </div>
           </div>
           <div
             style={{
@@ -76,7 +76,7 @@ const ValueProtocol = ({ token0Symbol, token1Symbol, liquidity, protocol, totalI
               padding: '0 32px 11px 26px',
             }}>
             <div style={{ fontSize: '10px' }}>Value</div>
-            <div style={{ fontSize: '10px' }}>${totalInvestment}</div>
+            <div style={{ fontSize: '10px' }}>${numberWithCommas(totalInvestment)}</div>
           </div>
         </>
       )}

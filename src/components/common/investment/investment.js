@@ -11,10 +11,10 @@ import {
   ContentRightWrapper,
 } from './styledComponents';
 import { useSelector } from 'react-redux';
+import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
 
 const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isStaked }) => {
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
-  console.log('logoImage', logoImage);
   const [isOpen, setIsOpen] = useState(false);
 
   const {
@@ -25,17 +25,17 @@ const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isS
     totalTokensBalance,
     ethPrice,
     totalDeposit,
+    totalValue,
   } = protocol;
-
   const protocolData = {
-    Value: isStaked ? totalInvestment : `$${parseFloat(protocol.priceSum).toFixed(2)}`,
+    Value: isStaked ? totalInvestment : `$${parseFloat(totalValue).toFixed(2)}`,
     Balance: isStaked
       ? totalDeposit
       : parseFloat(protocol.balance ? protocol.balance : protocol.balanceShares / 10 ** 18).toFixed(
           3
         ),
-    Chain: chain,
-    Protocol: protocolName,
+    Chain: chain ? chain : protocol.chain,
+    Protocol: protocolName ? protocolName : protocol.protocol,
   };
 
   const toggleHandler = () => {
@@ -70,8 +70,10 @@ const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isS
         </div>
         <ContentRightWrapper isLightTheme={theme}>
           <div>
-            {parseFloat(totalTokensBalance ? totalTokensBalance : totalInvestment).toFixed(2)}
-            &nbsp;USD
+            $
+            {numberWithCommas(
+              parseFloat(totalTokensBalance ? totalTokensBalance : totalValue).toFixed(2)
+            )}
           </div>
           <ToggleButton isLightTheme={theme} isOpen={isOpen} onClick={toggleHandler} />
         </ContentRightWrapper>
@@ -80,7 +82,6 @@ const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isS
         <>
           {tokens &&
             tokens.map((token) => {
-              console.log('token', token);
               return (
                 <div
                   style={{
@@ -89,8 +90,10 @@ const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isS
                     fontWeight: '600',
                     padding: '0 32px 11px 26px',
                   }}>
-                  <div style={{ fontSize: '10px' }}>{token.symbol}</div>
-                  <div style={{ fontSize: '10px' }}>${parseFloat(token.balance).toFixed(2)}</div>
+                  <div style={{ fontSize: '10px' }}>balance {token.symbol}</div>
+                  <div style={{ fontSize: '10px' }}>
+                    {numberWithCommas(parseFloat(token.balance).toFixed(2))}
+                  </div>
                 </div>
               );
             })}
@@ -103,29 +106,33 @@ const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isS
           {ethPrice && (
             <ContentWrapper isLightTheme={theme}>
               <div>Price</div>
-              <div>{ethPrice}</div>
+              <div>{numberWithCommas(ethPrice)}</div>
             </ContentWrapper>
           )}
-          {!stakedToken && (
+          {!stakedToken && protocol.price && (
             <ContentWrapper isLightTheme={theme}>
               <div>LPprice</div>
-              <div>{`$${parseFloat(protocol.price).toFixed(2)} : '$0'`}</div>
+              <div>{`$${numberWithCommas(parseFloat(protocol.price).toFixed(2))}`}</div>
             </ContentWrapper>
           )}
           {!stakedToken && (
             <ContentWrapper isLightTheme={theme}>
               <div>Liquidity</div>
               <div>
-                {protocol.liquidity ? `$${parseFloat(protocol.liquidity).toFixed(2)}` : `$0`}
+                {protocol.liquidity
+                  ? `$${numberWithCommas(parseFloat(protocol.liquidity).toFixed(2))}`
+                  : `$0`}
               </div>
             </ContentWrapper>
           )}
-          {Object.keys(protocolData).map((el) => (
-            <ContentWrapper isLightTheme={theme}>
-              <div>{el}</div>
-              <div>{protocolData[el]}</div>
-            </ContentWrapper>
-          ))}
+          {Object.keys(protocolData).map((el) => {
+            return (
+              <ContentWrapper isLightTheme={theme}>
+                <div>{el}</div>
+                <div>{numberWithCommas(protocolData[el])}</div>
+              </ContentWrapper>
+            );
+          })}
         </>
       )}
     </Main>

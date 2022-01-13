@@ -35,7 +35,7 @@ export default function YearnFinance({ accountAddress }) {
   //------Yearn.Finanace yVault data process-----------------//
   const YearnData = useSelector((state) => state.yearnFinance.yearnFinanceData);
   const YearnTotalValue = useSelector((state) => state.yearnFinance.yearnFinanceTotal);
-
+  console.log('YearnTotalValue', YearnTotalValue);
   const yearnAccountAddress = { accountAddress: accountAddress };
   useEffect(() => {
     const getYearnUserData = async () => {
