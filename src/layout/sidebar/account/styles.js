@@ -1,7 +1,8 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { experimentalStyled as MUIStyled } from '@material-ui/core/styles';
-import { Avatar, Box, List, ListItem, Typography } from '@material-ui/core';
+import { Avatar, Box, List, ListItem, Typography, ListItemText } from '@material-ui/core';
 import { VscAdd } from 'react-icons/vsc';
+import { AccountBalanceWallet } from '@material-ui/icons';
 
 export const AccountLayout = styled.div``;
 
@@ -133,13 +134,13 @@ export const WalletsListItem = styled(ListItem)`
   }
 `;
 
-export const AddNewWalletListItem = styled(ListItem)`
+const manageItemsButtons = css`
   display: flex;
   align-items: center;
   height: 60px;
   width: 291px;
   margin-left: 27px;
-  padding-top: 12px;
+
   padding-left: 7px;
 
   color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#ffffff')};
@@ -153,6 +154,19 @@ export const AddNewWalletListItem = styled(ListItem)`
     backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
     border-radius: 10px;
   }
+
+  @media (max-width: 1280px) {
+    height: 40px;
+  }
+`;
+
+export const AddNewWalletListItem = styled(ListItem)`
+  ${manageItemsButtons};
+  margin-top: 20px;
+`;
+
+export const ManageWalletsListItem = styled(ListItem)`
+  ${manageItemsButtons}
 `;
 //dropdown wallets list styles
 
@@ -162,6 +176,21 @@ export const AddWalletIcon = styled(VscAdd)`
   width: 14px;
   height: 14px;
   color: ${(props) => (props.isLightTheme ? '#828283' : '#ffffff')};
+  opacity: 0.5;
+`;
+
+export const AccountWalletBalance = styled(AccountBalanceWallet)`
+  margin-right: 15px;
+  font-size: 10px;
+  width: 14px;
+  height: 14px;
+  color: ${(props) => (props.isLightTheme ? '#828283' : '#ffffff')};
+  opacity: 0.5;
+`;
+
+export const NewWalletLabel = styled(ListItemText)`
+  margin-top: 2px;
+  opacity: 0.5;
 `;
 
 export const WalletsListLayout = styled.div`

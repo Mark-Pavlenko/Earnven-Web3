@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 // material
-import { Drawer, ListItemIcon, ListItemText } from '@material-ui/core';
+import { Drawer, ListItemIcon } from '@material-ui/core';
 import { MHidden } from '../../components/@material-extend';
 import CompanyLogo from '../../assets/icons/logo_menu.svg';
 import Earnven from '../../assets/icons/Earnven_menu_text.svg';
@@ -19,6 +19,7 @@ import lightTheme from '../../assets/images/lightTheme.jpg';
 import lightThemeBig from '../../assets/images/lightDashboardBig.jpg';
 import CloseMobileSidebarLight from '../../assets/images/closeMobileSidebarLight.svg';
 import CloseMobileSidebarDark from '../../assets/images/closeMobileSidebarDark.svg';
+import walletIcon from '../../assets/icons/walletIcon.svg';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -38,9 +39,12 @@ import darkIcon from '../../assets/icons/darkIcon.svg';
 import GasDropdownMenu from '../../components/gasDropDownMenu';
 import NetworkSelectHeader from '../../components/networkDropDown';
 import {
+  AccountWalletBalance,
   AddNewWalletListItem,
   AddWalletIcon,
+  ManageWalletsListItem,
   MyWalletsLabel,
+  NewWalletLabel,
   WalletsList,
   WalletsListItem,
 } from './account/styles';
@@ -288,14 +292,27 @@ export default function Sidebar({
               <ListItemIcon sx={{ mr: 1, minWidth: '17px' }}>
                 <AddWalletIcon isLightTheme={isLightTheme} />
               </ListItemIcon>
-              <ListItemText
+              <NewWalletLabel
+                isMobileWalletsList={true}
                 primaryTypographyProps={{
                   variant: 'watchlist_font_balance',
-                }}
-                sx={{ opacity: 0.5, marginTop: '2px' }}>
+                }}>
                 New Wallet
-              </ListItemText>
+              </NewWalletLabel>
             </AddNewWalletListItem>
+
+            <ManageWalletsListItem isLightTheme={isLightTheme} onClick={routeToConnectWallet}>
+              <ListItemIcon sx={{ mr: 1, minWidth: '17px' }}>
+                <AccountWalletBalance isLightTheme={isLightTheme} />
+              </ListItemIcon>
+              <NewWalletLabel
+                isMobileWalletsList={true}
+                primaryTypographyProps={{
+                  variant: 'watchlist_font_balance',
+                }}>
+                Manage Wallets
+              </NewWalletLabel>
+            </ManageWalletsListItem>
           </WalletsList>
           {/* add new item element */}
         </div>
