@@ -59,7 +59,6 @@ export default function WalletPageConnection() {
   const classes = useStyles(themeType);
 
   const [open, setOpen] = useState(false);
-  console.log('isLightTheme on wallet page connection', themeType);
 
   //correct web3 connection
   // const { active, account, library, connector, activate, deactivate } = useWeb3React();
@@ -253,10 +252,6 @@ export default function WalletPageConnection() {
         global_wallet={localStorage.getItem('wallets')}
         themeType={themeType}
       />
-      {/*{localStorage.getItem('wallets') */}
-      {/*  ? (*/}
-      {/*  <p>Content if connect to exist</p>*/}
-      {/*) : (*/}
       <MainStyle isLightTheme={themeType}>
         <MainSubLayout>
           <MainSubLayoutTitle isLightTheme={themeType}>Connect a wallet</MainSubLayoutTitle>

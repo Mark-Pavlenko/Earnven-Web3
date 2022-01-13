@@ -20,9 +20,15 @@ import Ethereum2Staking from '../Ethereum2Staking';
 import YearnFinance from '../YearnFinance';
 import ValueProtocol from '../../common/protocols/valueProtocol/valueProtocol';
 import Investment from '../../common/investment/investment';
+
 import StakedProtocols from '../../common/stakedProtocols/stakedProtocols';
 import { useSelector } from 'react-redux';
 //import CurveToken from './CurveToken';
+
+import PoolsProtocols from '../../common/investment/poolsProtocols/poolsProtocols';
+import PickleStake from '../Farming/Pickle';
+import PickleDill from '../Vaults/PickleDill';
+// import UniswapV2 from './LiqudityPools/UniswapV2';
 import {
   PoolsBlock,
   Header,
@@ -35,6 +41,8 @@ import {
 } from './styledComponents';
 import { SynthetixProtocol } from '../../../store/synthetixProtocol/synthetixProtocol';
 import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
+import UniswapV2 from '../LiqudityPools/UniswapV2';
+import CurveToken from '../CurveToken';
 
 // Below code is for task https://app.clickup.com/t/1je2y9d
 // import CompoundData from './Compound';
@@ -1208,7 +1216,6 @@ export default function Index({ accountAddress }) {
       {/*=========================================>*/}
       <PoolsBlock //first
         isLightTheme={theme}
-        // SavingsData.length > 0 || CompoundSavingsData > 0 || IronBankSavings > 0 || CreamDisplay
         style={{
           display:
             PoolsData.length > 0 ||
@@ -1287,6 +1294,7 @@ export default function Index({ accountAddress }) {
                 />
               );
             })}
+            <UniswapV2 accountAddress={accountAddress} />
             {/*<Cream*/}
             {/*  setTotal={setCreamTotal}*/}
             {/*  setDisplay={setCreamDisplay}*/}
@@ -1538,6 +1546,15 @@ export default function Index({ accountAddress }) {
             <SushiStaking accountAddress={accountAddress} />
             <UniStaking accountAddress={accountAddress} />
             <YearnFinance accountAddress={accountAddress} onYearnTokenValue={getYearnTokenValue} />
+            <CurveToken accountAddress={accountAddress} />
+            <CurveLpToken accountAddress={accountAddress} onCurveLptoken={getCurveLpToken} />
+            <Synthetix
+              accountAddress={accountAddress}
+              onSynthetixTokenValue={getSynthetixTokenData}
+            />
+            <UniStaking accountAddress={accountAddress} />
+            <PickleStake accountAddress={accountAddress} />
+            <PickleDill accountAddress={accountAddress} />
             {/*<LiquityStaking accountAddress={accountAddress} />*/}
             {/*<ConvexStaking accountAddress={accountAddress} /> doesn't have dependency hide/display if array is empty*/}
             {/*<SnowSwapStaking accountAddress={accountAddress} doesn't have dependency hide/display if array is empty/>*/}

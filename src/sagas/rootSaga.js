@@ -13,7 +13,8 @@ import {
 } from '../store/searchedTokens/sagas';
 import { getYearnFinanceSagaWatcher } from './yearnFinance';
 import { getCurveTokenSagaWatcher } from './curveToken';
-
+import { getpickleStakeSagaWatcher } from './pickle';
+import { getpickleDillSagaWatcher } from './pickle';
 export default function* watchRootSaga() {
   yield all([
     call(getAccountBalanceSagaWatcher),
@@ -28,5 +29,7 @@ export default function* watchRootSaga() {
     call(getuniswapV2SagaWatcher),
     call(getuniswapV2StakeSagaWatcher),
     call(getCurveTokenSagaWatcher),
+    call(getpickleStakeSagaWatcher),
+    call(getpickleDillSagaWatcher),
   ]);
 }

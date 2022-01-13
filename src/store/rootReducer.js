@@ -15,6 +15,7 @@ import { uniswapV2stake } from './UniswapV2/reducerStake';
 import { curveToken } from './curveToken/reducer';
 import { LiquityStakeReducer } from './LiquityStakeReducer/LiquityStakeReducer';
 import { SynthetixProtocol } from './synthetixProtocol/synthetixProtocol';
+
 export const rootReducer = combineReducers({
   web3Reducer,
   themeReducer,

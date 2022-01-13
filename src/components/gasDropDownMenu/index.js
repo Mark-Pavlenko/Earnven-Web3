@@ -36,7 +36,7 @@ const gasType = [
 
 const MINUTE_MS = 10000;
 
-export default function GasDropDownMenu({ isLightTheme }) {
+export default function GasDropdownMenuHeader({ isLightTheme }) {
   const anchorRef = useRef(null);
   const [open, setopen] = useState(false);
   const [selected, setselected] = useState('Average');
@@ -89,9 +89,6 @@ export default function GasDropDownMenu({ isLightTheme }) {
           updateGasValue(option.value, option.label);
         }}
         sx={{ py: 1, px: 2.5 }}>
-        {/*<ListItemIcon>*/}
-        {/*  <Box component="img" alt={option.label} src={languageImg} />*/}
-        {/*</ListItemIcon>*/}
         <GasMenuItem isLightTheme={isLightTheme}>
           <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
             <img src={option.icon} alt="" />

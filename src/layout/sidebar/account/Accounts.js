@@ -10,33 +10,13 @@ Version           Date                         Description
 
 import { experimentalStyled as styled } from '@material-ui/core/styles';
 import accountLogo from '../../../assets/icons/accountlogo.png';
-import { createStyles } from '@material-ui/styles';
-import { Collapse, List } from '@material-ui/core';
-import {
-  Box,
-  Typography,
-  Avatar,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
-  Stack,
-  Divider,
-  ListItem,
-  IconButton,
-} from '@material-ui/core';
-import React, { useState, useRef, useEffect } from 'react';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { RiSettings5Line } from 'react-icons/ri';
-import { VscAdd } from 'react-icons/vsc';
+import { createStyles, makeStyles } from '@material-ui/styles';
+import { Avatar, Box, List, Stack, Typography } from '@material-ui/core';
+import React, { useRef, useState } from 'react';
 import './styles';
 import { useNavigate } from 'react-router-dom';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { MdContentCopy } from 'react-icons/md';
 import AccountBalance from '../../../components/accountBalance/AccountBalance_Menu';
 import MenuPopover from './walletsListPopover';
-import { makeStyles } from '@material-ui/styles';
-import { createTheme, StyledEngineProvider, ThemeProvider } from '@material-ui/core/styles';
-import { fontSize, fontStyle, fontWeight } from '@material-ui/system';
 import rename_menu_icon from '../../../assets/icons/rename_menu_icon.svg';
 import copy_menu_icon from '../../../assets/icons/copy_menu_icon.svg';
 import copy_link_menu_icon from '../../../assets/icons/copy_link_menu_icon.svg';
@@ -49,82 +29,35 @@ import Popup from './popup';
 import green_got_menu from '../../../assets/icons/green_got_menu.svg';
 import menurender_customhook from './menurender_customhook';
 import copy_notification_menu from '../../../assets/icons/copy_notification_menu.svg';
+import { useSelector } from 'react-redux';
 
-const AccountStyle = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  padding: theme.spacing(2, 2.5),
-  // borderRadius: theme.shape.borderRadiusSm,
-  paddingBottom: 0,
-  cursor: 'pointer',
-  // background: 'rgba(255, 255, 255, 0.16)',
-  // mixBlendMode: 'normal',
-  // boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-  // backdropFilter: 'blur(35px)',
-}));
-
-const List_Menu_Pop_UP = styled('div')(({ theme }) => ({
-  width: '276px',
-  height: '40px',
-  display: 'flex',
-  '&:hover': {
-    backgroundColor: theme.palette.action.hover,
-    color: 'orange',
-    fontWeight: 600,
-  },
-  marginLeft: '12px',
-  borderRadius: '10px',
-  cursor: 'pointer',
-}));
+import {
+  WalletsListLayout,
+  WalletListItemAccountLogo,
+  WalletListItemAccountBalance,
+  WalletActionsListItem,
+  MyWalletsLabel,
+  WalletListItemContent,
+  WalletListItemGreenDot,
+  DotIconBlock,
+  MetamaskLabel,
+  WalletActionsList,
+  WalletActionsLayout,
+  WalletActionsListItemLabel,
+  DisconnectWalletActionsListItem,
+} from './styles';
 
 const useStyles = makeStyles(() =>
   createStyles({
-    accountlLogo: {
-      width: '1.3125rem',
-      height: '1.3125rem',
-      marginTop: '-3rem',
-      marginRight: '-0.063rem',
-    },
-    accountBalance: {
-      marginLeft: '-26.4px',
-      textAlign: 'left',
-      marginTop: '-3px',
-    },
-    accountAddress: {
-      marginLeft: '0.02rem',
-      marginTop: '-1.21rem',
-    },
-    myWallet: {
-      marginLeft: '25px',
-      marginTop: '25px',
-    },
-    list: {
-      color: 'black',
-      fontWeight: 400,
-      fontSize: '14px',
-      textDecoration: 'none',
-    },
-    menupopover: {
-      marginLeft: '15rem',
-      marginTop: '-2.2rem',
-    },
-    menu: {
-      width: '306px',
-      height: '197px',
-    },
+    menupopover: { marginLeft: '132px', marginTop: '-25px', width: '338px' },
     icon: {
-      marginLeft: '19px',
+      marginLeft: '21px',
       marginTop: '12px',
       display: 'flex',
       width: '16px',
       height: '16px',
     },
-    icon1: {
-      marginLeft: '200px',
-      marginTop: '-12px',
-      width: '16px',
-      height: '16px',
-    },
+
     text: {
       marginLeft: '25px',
       marginTop: '14px',
@@ -140,48 +73,50 @@ const useStyles = makeStyles(() =>
       left: '42%',
       top: '39.6%',
     },
-    menupopUp_list: {
-      padding: '5px',
-    },
   })
 );
 
-const CustomStyle = styled('a')(({ theme }) => ({
-  color: 'black',
-  fontWeight: 400,
-  fontSize: '14px',
-  textDecoration: 'none',
-  '&:hover': {
-    color: '#4453AD',
-  },
-}));
+// const CustomStyle = styled('a')(({ theme }) => ({
+//   color: 'black',
+//   fontWeight: 400,
+//   fontSize: '14px',
+//   textDecoration: 'none',
+//   '&:hover': {
+//     color: '#4453AD',
+//   },
+// }));
 
-export default function Accounts({ address, name, setaccount_menuclose, global_wallet }, props) {
+export default function Accounts(
+  {
+    address,
+    name,
+    setaccount_menuclose,
+    globalWalletsList,
+    currentWalletAddress,
+    isMetamaskWallet,
+  },
+  props
+) {
+  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
   const { onReRender } = props;
   const { flag_menu, change_flag } = menurender_customhook();
   const classes = useStyles();
   const navigate = useNavigate();
   const anchorRef = useRef(null);
   const [account, setaccount] = useState(false);
-  const [accountList, setaccountList] = useState([]);
   const [flag, setflag] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
   const [openPopup_rename, setOpenPopup_rename] = useState(false);
 
-  useEffect(() => {
-    const result = localStorage.getItem('wallets');
-    setaccountList(JSON.parse(result));
-  }, [account, name, address, global_wallet]);
+  const selectedAccountAddress = localStorage.getItem('selected-account');
+  console.log('selectedAccountAddress', selectedAccountAddress);
+  console.log('current Metamask wallet address', currentWalletAddress);
+  console.log('globalWalletsList', JSON.parse(globalWalletsList));
 
   const showAccountPopover = () => {
     setaccount(true);
   };
   const hideAccountPopover = () => {
-    setaccount(false);
-  };
-
-  const routeToConnectWallet = () => {
-    navigate('/app/connect-wallet');
     setaccount(false);
   };
 
@@ -225,7 +160,7 @@ export default function Accounts({ address, name, setaccount_menuclose, global_w
       localStorage.setItem('selected-account', address);
     } else {
       localStorage.setItem('selected-account', address);
-      let shortAddress =
+      let walletAddressCutter =
         name.length >= 4 ? `${name[0] + name[1] + name[2] + name[3] + name[4] + name[5]}...` : name;
       localStorage.setItem('selected-name', name);
     }
@@ -233,104 +168,75 @@ export default function Accounts({ address, name, setaccount_menuclose, global_w
 
   const routeToDashboard = () => {
     const address = localStorage.getItem('selected-account');
-    navigate(`/${address}/dashboard/`, { replace: true });
+    navigate(`/${address}/dashboard`, { replace: true });
   };
 
-  function shortaddress(addy, name) {
+  function walletAddressCutter(addy, name) {
     if (addy === '') {
       return addy;
     }
     if (addy) {
-      if (name == 'null') {
+      if (name === 'null') {
         const l = addy.length;
-        const addynew = `${
+        return `${
           addy[0] + addy[1] + addy[2] + addy[3] + addy[4] + addy[5] + addy[6] + addy[7] + addy[8]
         }...${addy[l - 7]}${addy[l - 6]}${addy[l - 5]}${addy[l - 4]}${addy[l - 3]}${addy[l - 2]}${
           addy[l - 1]
         }`;
-
-        const shortAddress = `${
-          addy[0] + addy[1] + addy[2] + addy[3] + addy[4] + addy[5] + addy[6] + addy[7] + addy[8]
-        }...`;
-        return addynew;
       } else {
         return name;
       }
     }
   }
 
-  function MenuClose() {
-    change_flag();
-  }
-
-  function shortaddress1(addy) {
-    if (addy === '') {
-      return addy;
-    }
-    const l = addy.length;
-    const addynew = `${
-      addy[0] + addy[1] + addy[2] + addy[3] + addy[4] + addy[5] + addy[6] + addy[7] + addy[8]
-    }...${addy[l - 8]}${addy[l - 7]}${addy[l - 6]}${addy[l - 5]}${addy[l - 4]}${addy[l - 3]}${
-      addy[l - 2]
-    }${addy[l - 1]}`;
-    return addynew;
-  }
-
   return (
     <>
-      <AccountStyle ref={anchorRef}>
-        <Avatar className={classes.accountlLogo} src={accountLogo} alt="photoURL" />
-        <Box sx={{ ml: 1 }}>
-          <Stack
-            onClick={() => {
-              hideAccountPopover();
-              updateSelectedAccount(address);
-              routeToDashboard();
-            }}
-            direction="row">
-            <Typography
-              variant="WaltchList_font_address"
-              sx={{
-                color: (theme) => 'orange',
-              }}
-              className={classes.accountAddress}>
-              {shortaddress(address, name)}{' '}
-              {localStorage.getItem('selected-account') == address ? (
-                <img
-                  style={{
-                    display: 'flex',
-                    float: 'right',
-                    marginTop: '2.09px',
-                    marginLeft: '10px',
-                  }}
-                  src={green_got_menu}
-                  alt="no pic"
-                />
-              ) : (
-                ''
-              )}
-            </Typography>
-          </Stack>
-          <div className={classes.icon1} onClick={showAccountPopover}>
-            <img src={dots_menu_icon} alt="no pic" />
-          </div>
-          <Typography
-            onClick={() => {
-              hideAccountPopover();
-              updateSelectedAccount(address, name);
-              routeToDashboard();
-            }}
-            className={classes.accountBalance}>
-            <AccountBalance address={address} />
-          </Typography>
-        </Box>
-      </AccountStyle>
+      <WalletsListLayout ref={anchorRef}>
+        <WalletListItemAccountLogo src={accountLogo} alt="photoURL" />
+        <WalletListItemContent
+          onClick={() => {
+            hideAccountPopover();
+            updateSelectedAccount(address);
+            routeToDashboard();
+          }}
+          direction="row">
+          <WalletListItemAccountBalance
+            variant="WaltchList_font_address"
+            isLightTheme={isLightTheme}
+            sx={{ marginLeft: '-2px', marginTop: '-1.21rem' }}>
+            {walletAddressCutter(address, name)}
+            {selectedAccountAddress === address && (
+              <WalletListItemGreenDot src={green_got_menu} style={{}} alt="no pic" />
+            )}
+          </WalletListItemAccountBalance>
+        </WalletListItemContent>
+        <DotIconBlock onClick={showAccountPopover}>
+          <img src={dots_menu_icon} alt="no pic" />
+        </DotIconBlock>
+        {/* Current Account balance value*/}
+        <WalletListItemAccountBalance
+          onClick={() => {
+            hideAccountPopover();
+            updateSelectedAccount(address, name);
+            routeToDashboard();
+          }}>
+          {!isMetamaskWallet ? (
+            <AccountBalance address={address} isLightTheme={isLightTheme} />
+          ) : (
+            <MetamaskLabel>Metamask</MetamaskLabel>
+          )}
+        </WalletListItemAccountBalance>
+      </WalletsListLayout>
+      {/* popover menu with options for wallet*/}
       <MenuPopover
         className={classes.menupopover}
+        sx={{
+          backgroundColor: isLightTheme ? '#FFFFFF29' : '#1F265C3D',
+        }}
         open={account}
         onClose={hideAccountPopover}
         anchorEl={anchorRef.current}>
-        {flag == true ? (
+        {flag === true ? (
           <Box className={classes.copy_notification}>
             <img
               className={classes.copy_notification_menu}
@@ -342,77 +248,74 @@ export default function Accounts({ address, name, setaccount_menuclose, global_w
             />
           </Box>
         ) : (
-          <Box className={classes.menu}>
-            <List
-              onClick={() => {
-                setOpenPopup_rename(true);
-                hideAccountPopover();
-              }}
-              className={classes.menupopUp_list}
-              disablePadding>
-              <List_Menu_Pop_UP>
+          <WalletActionsLayout sx={{ width: '306px' }} isLightTheme={isLightTheme}>
+            <WalletActionsList isLightTheme={isLightTheme} disablePadding>
+              <WalletActionsListItem
+                isLightTheme={isLightTheme}
+                onClick={() => {
+                  setOpenPopup_rename(true);
+                  hideAccountPopover();
+                }}>
                 <div className={classes.icon}>
                   <img src={rename_menu_icon} alt="no pic" />
                 </div>
-                <div
+                <WalletActionsListItemLabel
+                  isLightTheme={isLightTheme}
                   onClick={() => {
                     Rename1(address);
-                  }}
-                  className={classes.text}>
+                  }}>
                   Rename Wallet
-                </div>
-              </List_Menu_Pop_UP>
-            </List>
-            <List
-              onClick={() => {
-                navigator.clipboard.writeText(address);
-                copy_notification();
-                close_copy_notification();
-              }}
-              className={classes.menupopUp_list}
-              disablePadding>
-              <List_Menu_Pop_UP>
+                </WalletActionsListItemLabel>
+              </WalletActionsListItem>
+              <WalletActionsListItem
+                isLightTheme={isLightTheme}
+                onClick={() => {
+                  navigator.clipboard.writeText(address);
+                  copy_notification();
+                  close_copy_notification();
+                }}>
                 <div className={classes.icon}>
                   <img src={copy_menu_icon} alt="no pic" />
                 </div>
-                <div className={classes.text}>Copy Address</div>
-              </List_Menu_Pop_UP>
-            </List>
-            <List
-              onClick={() => {
-                navigator.clipboard.writeText(window.location.href);
-                copy_notification();
-                close_copy_notification();
-              }}
-              className={classes.menupopUp_list}
-              disablePadding>
-              <List_Menu_Pop_UP>
+                <WalletActionsListItemLabel isLightTheme={isLightTheme}>
+                  Copy Address
+                </WalletActionsListItemLabel>
+              </WalletActionsListItem>
+              <WalletActionsListItem
+                isLightTheme={isLightTheme}
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  copy_notification();
+                  close_copy_notification();
+                }}>
                 <div className={classes.icon}>
                   <img src={copy_link_menu_icon} alt="no pic" />
                 </div>
-                <div className={classes.text}>Copy Link</div>
-              </List_Menu_Pop_UP>
-            </List>
-            <List
-              onClick={() => {
-                MenuClose();
-                setOpenPopup(true);
-                setaccount(true);
-                setaccount_menuclose(true);
-                hideAccountPopover();
-              }}
-              className={classes.menupopUp_list}
-              disablePadding>
-              <List_Menu_Pop_UP>
-                <div className={classes.icon}>
+                <WalletActionsListItemLabel isLightTheme={isLightTheme}>
+                  Copy Link
+                </WalletActionsListItemLabel>
+              </WalletActionsListItem>
+              <DisconnectWalletActionsListItem
+                isLightTheme={isLightTheme}
+                onClick={() => {
+                  change_flag();
+                  setOpenPopup(true);
+                  setaccount(true);
+                  setaccount_menuclose(true);
+                  hideAccountPopover();
+                }}>
+                <div className={classes.icon} style={{ marginLeft: '34px', marginTop: '20px' }}>
                   <img src={disconnect_menu_icon} alt="no pic" />
                 </div>
-                <div onClick={onReRender} className={classes.text}>
+                <WalletActionsListItemLabel
+                  isLightTheme={isLightTheme}
+                  onClick={onReRender}
+                  style={{ marginTop: '20px' }}>
                   Disconnect
-                </div>
-              </List_Menu_Pop_UP>
-            </List>
-          </Box>
+                </WalletActionsListItemLabel>
+              </DisconnectWalletActionsListItem>
+            </WalletActionsList>
+          </WalletActionsLayout>
         )}
       </MenuPopover>
       <ThemeConfig>
@@ -429,11 +332,3 @@ export default function Accounts({ address, name, setaccount_menuclose, global_w
     </>
   );
 }
-
-// secondaryAction={
-//   <IconButton edge="end" aria-label="copy">
-//     <CopyToClipboard text={option.address}>
-//       <MdContentCopy style={{ color: 'green', px: '1px' }} />
-//     </CopyToClipboard>
-//   </IconButton>
-// }

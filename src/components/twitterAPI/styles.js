@@ -88,7 +88,7 @@ export const TweetBlock = styled.div`
     // background-color: red;
   }
 
-  @media (max-width: 1023px) {
+  @media screen and(min-width: 600px) and (max-width: 1023px) {
     width: auto;
     margin-left: 20px;
     margin-right: 20px;
@@ -224,7 +224,7 @@ export const TwitterWidget = styled.div`
   }
 
   @media (max-width: 1600px) {
-    width: auto;
+    //width: auto;
     margin-bottom: 40px;
 
     iframe {

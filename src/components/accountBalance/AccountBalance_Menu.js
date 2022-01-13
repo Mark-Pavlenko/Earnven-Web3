@@ -4,7 +4,7 @@ import Web3 from 'web3';
 import { Typography } from '@material-ui/core';
 import { string } from 'prop-types';
 
-function AccountBalance({ address }) {
+function AccountBalance({ address, isLightTheme }) {
   const [totalValue, settotalValue] = useState('00.00');
 
   function CommaFormatted(amount) {
@@ -70,7 +70,7 @@ function AccountBalance({ address }) {
   }, [totalValue, address]);
   return (
     <>
-      <Typography sx={{ color: (theme) => 'blue' }} variant="watchlist_font_balance">
+      <Typography sx={{ color: isLightTheme ? 'black' : 'white' }} variant="watchlist_font_balance">
         ${totalValue}
       </Typography>
     </>
