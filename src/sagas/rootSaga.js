@@ -15,6 +15,7 @@ import { getYearnFinanceSagaWatcher } from './yearnFinance';
 import { getCurveTokenSagaWatcher } from './curveToken';
 import { getpickleStakeSagaWatcher } from './pickle';
 import { getpickleDillSagaWatcher } from './pickle';
+import { getCurveStakingSagaWatcher } from './curveStaking';
 export default function* watchRootSaga() {
   yield all([
     call(getAccountBalanceSagaWatcher),
@@ -31,5 +32,6 @@ export default function* watchRootSaga() {
     call(getCurveTokenSagaWatcher),
     call(getpickleStakeSagaWatcher),
     call(getpickleDillSagaWatcher),
+    call(getCurveStakingSagaWatcher),
   ]);
 }
