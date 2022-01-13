@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 // material
+
 import { Drawer, ListItemIcon } from '@material-ui/core';
 import { MHidden } from '../../components/@material-extend';
 import CompanyLogo from '../../assets/icons/logo_menu.svg';
@@ -19,7 +20,7 @@ import lightTheme from '../../assets/images/lightTheme.jpg';
 import lightThemeBig from '../../assets/images/lightDashboardBig.jpg';
 import CloseMobileSidebarLight from '../../assets/images/closeMobileSidebarLight.svg';
 import CloseMobileSidebarDark from '../../assets/images/closeMobileSidebarDark.svg';
-import walletIcon from '../../assets/icons/walletIcon.svg';
+import testMobileNetworkButton from '../../assets/icons/testMobileNetworkButton.svg';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -49,6 +50,22 @@ import {
   WalletsListItem,
 } from './account/styles';
 import Accounts from './account/walletsList/Accounts';
+import IconButton from '@mui/material/IconButton';
+import Modal from '@mui/material/Modal';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
 Sidebar.propTypes = {
   isOpenSidebar: PropTypes.bool,
@@ -73,6 +90,10 @@ export default function Sidebar({
   const [myWallet, setMyWallet] = useState([]);
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
   const dispatch = useDispatch();
+
+  const [networkListPopup, setNetworkListPopup] = useState(false);
+  const handleOpen = () => setNetworkListPopup(true);
+  const handleClose = () => setNetworkListPopup(false);
 
   const currentWallet = JSON.parse(localStorage.getItem('mywallet'));
   {
@@ -103,9 +124,6 @@ export default function Sidebar({
     var jsondata = JSON.parse(result);
     console.log('jsondata', jsondata);
 
-    // if (flag_menu === true) {
-    //   setaccount(false);
-    // }
     jsondata &&
       jsondata.map((option) => {
         if (
@@ -123,12 +141,7 @@ export default function Sidebar({
     const myWallet = localStorage.getItem('mywallet');
     setMyWallet(JSON.parse(myWallet));
     // setmywallet(myWallet);
-  }, [
-    account,
-    // flag_menu,
-    name,
-    global_wallet,
-  ]);
+  }, [account, name, global_wallet]);
 
   const { pathname } = useLocation();
   let newSideBard = [];
@@ -154,6 +167,11 @@ export default function Sidebar({
       onCloseWalletsListMobile();
     }
   }, [pathname, address, name, global_wallet]);
+
+  const openNetworkListPopup = () => {
+    console.log('clicked');
+    setNetworkListPopup(true);
+  };
 
   // main sidebar content
   const mainSidebarLayoutContent = (
@@ -193,8 +211,28 @@ export default function Sidebar({
         <NavSection sx={{ px: 8, color: 'black' }} navConfig={newSideBard} address={address} />
         <SidebarMobileIconsBlock>
           <SidebarMobileIconSubBlock>
-            <NetworkSelectHeader isLightTheme={isLightTheme} />
-            <GasDropdownMenu isLightTheme={isLightTheme} />
+            {/*<NetworkSelectHeader isLightTheme={isLightTheme} />*/}
+            {/*<GasDropdownMenu isLightTheme={isLightTheme} />*/}
+            <IconButton>
+              <img src={testMobileNetworkButton} alt="test" onClick={handleOpen} />
+            </IconButton>
+            {/*<Modal*/}
+            {/*  open={open}*/}
+            {/*  onClose={handleClose}*/}
+            {/*  aria-labelledby="modal-modal-title"*/}
+            {/*  aria-describedby="modal-modal-description">*/}
+            {/*  <Box sx={style}>*/}
+            {/*    <Typography id="modal-modal-title" variant="h6" component="h2">*/}
+            {/*      Text in a modal*/}
+            {/*    </Typography>*/}
+            {/*    <Typography id="modal-modal-description" sx={{ mt: 2 }}>*/}
+            {/*      Duis mollis, est non commodo luctus, nisi erat porttitor ligula.*/}
+            {/*    </Typography>*/}
+            {/*  </Box>*/}
+            {/*</Modal>*/}
+            {networkListPopup && (
+              <div style={{ backgroundColor: 'red' }}>The future network list block</div>
+            )}
           </SidebarMobileIconSubBlock>
           <ChangeThemeBtnMobile
             onClick={() => {
