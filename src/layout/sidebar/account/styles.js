@@ -119,6 +119,11 @@ export const WalletsListItem = styled(ListItem)`
     backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
     border-radius: 10px;
   }
+
+  @media (max-width: 1280px) {
+    margin-left: ${(props) => (props.isMobileWalletsList ? '18px' : '27px')};
+    width: ${(props) => (props.isMobileWalletsList ? '300px' : '291px')};
+  }
 `;
 
 export const AddNewWalletListItem = styled(ListItem)`
@@ -126,9 +131,10 @@ export const AddNewWalletListItem = styled(ListItem)`
   align-items: center;
   height: 60px;
   width: 291px;
-  margin-left: 24px;
+  margin-left: 27px;
   padding-top: 12px;
   padding-left: 7px;
+
   color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#ffffff')};
   :hover {
     cursor: pointer;
@@ -161,11 +167,11 @@ export const WalletsListLayout = styled.div`
 export const WalletListItemAccountLogo = styled(Avatar)`
   width: 21px;
   height: 21px;
-  margin-right: 27px;
 
   @media (max-width: 1280px) {
     width: ${(props) => (props.isMetamaskWallet ? '46px' : '21px')};
     height: ${(props) => (props.isMetamaskWallet ? '46px' : '21px')};
+    margin-top: ${(props) => (props.isMobileWalletsList ? '17px' : '0px')};
   }
 `;
 
@@ -173,18 +179,25 @@ export const WalletListItemContent = styled.div`
   display: flex;
   align-items: center;
   margin-left: 27px;
+  margin-top: -15px;
+  @media (max-width: 1280px) {
+    margin-top: ${(props) =>
+      props.isMetamaskWallet && props.isMobileWalletsList ? '-30px' : '-19px'};
+  }
 `;
 
-export const WalletListItemAccountBalance = MUIStyled('div')(({ isLightTheme }) => ({
-  fontSize: '10px',
-  color: isLightTheme ? 'black' : 'white',
-  textAlign: 'left',
-  // marginTop: '-3px',
-  // marginLeft: '-26.4px',
-}));
+export const WalletListItemAccountBalance = styled.div`
+  //({ isLightTheme, isMetamaskWallet, isMobileWalletsList }) => ({
+  font-size: 10px;
+  color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
+  @media (max-width: 1280px) {
+    margin-left: ${(props) =>
+      props.isMetamaskWallet && props.isMobileWalletsList ? '30px' : '-2px'};
+  }
+`;
 
 export const MetamaskLabel = styled.span`
-  margin-left: 25px;
+  margin-left: 27px;
   color: #4453ad;
   font-family: 'Saira', sans-serif;
   font-size: 10px;
@@ -193,6 +206,11 @@ export const MetamaskLabel = styled.span`
   line-height: 16px;
   letter-spacing: 0;
   text-align: center;
+
+  @media (max-width: 1280px) {
+    margin-top: ${(props) => props.isMobileWalletsList && props.isMetamaskWallet && '-50px'};
+    margin-left: ${(props) => props.isMobileWalletsList && props.isMetamaskWallet && '50px'};
+  }
 `;
 
 export const WalletListItemGreenDot = styled.img`

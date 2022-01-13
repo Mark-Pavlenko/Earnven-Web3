@@ -25,11 +25,11 @@ import { useNavigate } from 'react-router-dom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { MdContentCopy } from 'react-icons/md';
 import AccountBalance from '../../../components/accountBalance';
-import WalletListPopover from './walletsListPopover';
+import WalletListPopover from './walletsListOptionsPopover';
 import { makeStyles } from '@material-ui/styles';
 import { createTheme, StyledEngineProvider, ThemeProvider } from '@material-ui/core/styles';
 import { fontSize, fontStyle, fontWeight } from '@material-ui/system';
-import Accounts from './Accounts';
+import Accounts from './walletsList/Accounts';
 
 import menurender_customhook from './menurender_customhook';
 import { useSelector, useDispatch } from 'react-redux';

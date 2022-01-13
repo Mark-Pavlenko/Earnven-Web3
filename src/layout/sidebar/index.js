@@ -44,7 +44,7 @@ import {
   WalletsList,
   WalletsListItem,
 } from './account/styles';
-import Accounts from './account/Accounts';
+import Accounts from './account/walletsList/Accounts';
 
 Sidebar.propTypes = {
   isOpenSidebar: PropTypes.bool,
@@ -76,13 +76,6 @@ export default function Sidebar({
   }
 
   //------
-
-  const showAccountPopover = () => {
-    setaccount(true);
-    setarrowicon(true);
-    localStorage.setItem('PopUp_Menu', false);
-  };
-
   const handleReRender = () => {
     setReRender(!reRender); // state change will re-render parent
   };
@@ -212,7 +205,7 @@ export default function Sidebar({
     </Scrollbar>
   );
 
-  // main sidebar wallet content
+  // main sidebar wallet content (mobiles only)
   const mainSidebarWalletsListContent = (
     <Scrollbar
       sx={{
@@ -247,18 +240,19 @@ export default function Sidebar({
         </MyWalletsLabel>
         <WalletsList>
           {accountList && (
-            <WalletsListItem isLightTheme={isLightTheme}>
+            <WalletsListItem isLightTheme={isLightTheme} isMobileWalletsList={true}>
               <Accounts
                 setaccount_menuclose={(w) => setaccount(w)}
                 onClick={() => {
                   hideAccountPopover();
                 }}
-                // onReRender={handleReRender}
+                onReRender={handleReRender}
                 address={JSON.parse(global_wallet)[0].address}
                 name={JSON.parse(global_wallet)[0].name}
                 globalWalletsList={JSON.stringify(JSON.parse(global_wallet)[0])}
                 currentWalletAddress={currentWallet[0].address}
                 isMetamaskWallet={true}
+                isMobileWalletsList={true}
               />
             </WalletsListItem>
           )}
