@@ -19,6 +19,8 @@ import Synthetix from '../Synthetix';
 import Ethereum2Staking from '../Ethereum2Staking';
 import Investment from '../../common/investment/investment';
 import PoolsProtocols from '../../common/investment/poolsProtocols/poolsProtocols';
+import PickleStake from '../Farming/Pickle';
+import PickleDill from '../Vaults/PickleDill';
 // import UniswapV2 from './LiqudityPools/UniswapV2';
 import {
   PoolsBlock,
@@ -1395,6 +1397,8 @@ export default function Index({ accountAddress }) {
           {/*{CurveStakeContent}*/}
           {isStakedAssetsOpen && <SushiStaking accountAddress={accountAddress} />}
           <UniStaking accountAddress={accountAddress} />
+          <PickleStake accountAddress={accountAddress} />
+          <PickleDill accountAddress={accountAddress} />
         </PoolsBlock>
       </RightColumnWrapper>
     </ContentWrapper>

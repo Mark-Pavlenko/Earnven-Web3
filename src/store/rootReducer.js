@@ -13,6 +13,8 @@ import { balancerV2lp } from './BalancerV2/reducer';
 import { uniswapV2lp } from './UniswapV2/reducer';
 import { uniswapV2stake } from './UniswapV2/reducerStake';
 import { curveToken } from './curveToken/reducer';
+import { pickeStake } from './pickle/reducer';
+import { pickeDill } from './pickle/reducer';
 export const rootReducer = combineReducers({
   web3Reducer,
   themeReducer,
@@ -29,4 +31,6 @@ export const rootReducer = combineReducers({
   uniswapV2lp,
   uniswapV2stake,
   curveToken,
+  pickeStake,
+  pickeDill,
 });
