@@ -240,7 +240,10 @@ export default function Sidebar({
         </MyWalletsLabel>
         <WalletsList>
           {accountList && (
-            <WalletsListItem isLightTheme={isLightTheme} isMobileWalletsList={true}>
+            <WalletsListItem
+              isLightTheme={isLightTheme}
+              isMetamaskWallet={true}
+              isMobileWalletsList={true}>
               <Accounts
                 setaccount_menuclose={(w) => setaccount(w)}
                 onClick={() => {
@@ -259,7 +262,7 @@ export default function Sidebar({
         </WalletsList>
 
         {/* all wallets */}
-        <MyWalletsLabel isLightTheme={isLightTheme}>
+        <MyWalletsLabel isLightTheme={isLightTheme} allWalletsListMobile={true}>
           <p isLightTheme={isLightTheme}>{accountList.length > 0 && 'Watchlist'}</p>
         </MyWalletsLabel>
         <div>

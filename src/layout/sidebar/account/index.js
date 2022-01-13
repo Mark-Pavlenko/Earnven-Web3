@@ -173,7 +173,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
             <MyWalletsLabel isLightTheme={themeType}>
               <p isLightTheme={themeType}>{accountList.length > 0 && 'My Wallet'}</p>
             </MyWalletsLabel>
-            <WalletsList>
+            <WalletsList isMetamaskWallet={true}>
               {accountList && (
                 <WalletsListItem isLightTheme={themeType}>
                   <Accounts
@@ -193,7 +193,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
             </WalletsList>
 
             {/* all wallets */}
-            <MyWalletsLabel isLightTheme={themeType}>
+            <MyWalletsLabel isLightTheme={themeType} allWalletsListMobile={true}>
               <p isLightTheme={themeType}>{accountList.length > 0 && 'Watchlist'}</p>
             </MyWalletsLabel>
             <div>

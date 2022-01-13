@@ -198,27 +198,6 @@ export default function Accounts(
           </WalletListItemAccountBalance>
         </WalletListItemContent>
 
-        {/* other items/*/}
-        {/*<WalletListItemContent*/}
-        {/*  onClick={() => {*/}
-        {/*    hideAccountPopover();*/}
-        {/*    updateSelectedAccount(address);*/}
-        {/*    routeToDashboard();*/}
-        {/*  }}*/}
-        {/*  direction="row">*/}
-        {/*  <WalletListItemAccountBalance*/}
-        {/*    variant="WaltchList_font_address"*/}
-        {/*    isLightTheme={isLightTheme}*/}
-        {/*    isMetamaskWallet={isMetamaskWallet}*/}
-        {/*    isMobileWalletsList={isMobileWalletsList}*/}
-        {/*    sx={{ marginTop: '-19.36px' }}>*/}
-        {/*    <span>{walletAddressCutter(address, name)}</span>*/}
-        {/*    {selectedAccountAddress === address && (*/}
-        {/*      <WalletListItemGreenDot src={green_got_menu} alt="no pic" />*/}
-        {/*    )}*/}
-        {/*  </WalletListItemAccountBalance>*/}
-        {/*</WalletListItemContent>*/}
-
         <DotIconBlock onClick={showAccountPopover}>
           <img src={dots_menu_icon} alt="no pic" />
         </DotIconBlock>
@@ -234,7 +213,11 @@ export default function Accounts(
           {!isMetamaskWallet ? (
             <AccountBalance address={address} isLightTheme={isLightTheme} />
           ) : (
-            <MetamaskLabel isMobileWalletsList={isMobileWalletsList}>Metamask</MetamaskLabel>
+            <MetamaskLabel
+              isMobileWalletsList={isMobileWalletsList}
+              isMetamaskWallet={isMetamaskWallet}>
+              Metamask
+            </MetamaskLabel>
           )}
         </WalletListItemAccountBalance>
       </WalletsListLayout>

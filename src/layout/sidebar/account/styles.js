@@ -85,13 +85,19 @@ export const EnterAccountBlock = styled.div`
 
 export const MyWalletsLabel = styled(Box)`
   margin-left: 25px;
-  margin-top: 25px;
+
+  margin-top: ${(props) => (props.allWalletsListMobile ? '17px' : '25px')};
 
   p {
+    margin-bottom: -8px;
     font-style: normal;
     font-weight: 600;
     font-size: 10px;
     color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#ffffff')};
+
+    @media (max-width: 1280px) {
+      margin-bottom: ${(props) => (props.allWalletsListMobile ? '-3px' : '-6px')};
+    }
   }
 `;
 
@@ -104,11 +110,10 @@ export const WalletsListItem = styled(ListItem)`
   align-items: center;
   height: 60px;
   width: 291px;
-
   margin-left: 27px;
   padding-top: 12px;
   padding-left: 7px;
-  //background-color: red;
+
   :hover {
     cursor: pointer;
     background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
@@ -123,6 +128,8 @@ export const WalletsListItem = styled(ListItem)`
   @media (max-width: 1280px) {
     margin-left: ${(props) => (props.isMobileWalletsList ? '18px' : '27px')};
     width: ${(props) => (props.isMobileWalletsList ? '300px' : '291px')};
+    height: ${(props) => (props.isMetamaskWallet ? '65px' : '60px')};
+    padding-top: ${(props) => (props.isMobileWalletsList ? '0px' : '12px')};
   }
 `;
 
@@ -171,7 +178,7 @@ export const WalletListItemAccountLogo = styled(Avatar)`
   @media (max-width: 1280px) {
     width: ${(props) => (props.isMetamaskWallet ? '46px' : '21px')};
     height: ${(props) => (props.isMetamaskWallet ? '46px' : '21px')};
-    margin-top: ${(props) => (props.isMobileWalletsList ? '17px' : '0px')};
+    margin-top: ${(props) => (props.isMobileWalletsList ? '8px' : '0px')};
   }
 `;
 
@@ -179,20 +186,26 @@ export const WalletListItemContent = styled.div`
   display: flex;
   align-items: center;
   margin-left: 27px;
-  margin-top: -15px;
+  margin-top: -17px;
+
   @media (max-width: 1280px) {
     margin-top: ${(props) =>
-      props.isMetamaskWallet && props.isMobileWalletsList ? '-30px' : '-19px'};
+      props.isMetamaskWallet && props.isMobileWalletsList ? '-30px' : '-15px'};
+  }
+  @media (min-width: 1280px) {
+    margin-top: ${(props) => props.isMetamaskWallet && '-21px'};
   }
 `;
 
 export const WalletListItemAccountBalance = styled.div`
   //({ isLightTheme, isMetamaskWallet, isMobileWalletsList }) => ({
-  font-size: 10px;
+  font-size: ${(props) => (props.isMetamaskWallet ? '14px' : '10px')};
   color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
   @media (max-width: 1280px) {
+    margin-top: ${(props) =>
+      props.isMetamaskWallet && props.isMobileWalletsList ? '-15px' : '0px'};
     margin-left: ${(props) =>
-      props.isMetamaskWallet && props.isMobileWalletsList ? '30px' : '-2px'};
+      props.isMetamaskWallet && props.isMobileWalletsList ? '24px' : '-2px'};
   }
 `;
 
@@ -209,14 +222,14 @@ export const MetamaskLabel = styled.span`
 
   @media (max-width: 1280px) {
     margin-top: ${(props) => props.isMobileWalletsList && props.isMetamaskWallet && '-50px'};
-    margin-left: ${(props) => props.isMobileWalletsList && props.isMetamaskWallet && '50px'};
+    margin-left: ${(props) => props.isMobileWalletsList && props.isMetamaskWallet && '53px'};
   }
 `;
 
 export const WalletListItemGreenDot = styled.img`
   display: flex;
   float: right;
-  margin-top: 2.09px;
+  margin-top: 5px;
   margin-left: 10px;
 `;
 
@@ -297,6 +310,7 @@ export const DisconnectWalletActionsListItem = styled.li`
 export const DotIconBlock = styled.div`
   margin-left: auto;
   margin-top: -12px;
+  margin-bottom: 3px;
   margin-right: -7px;
   width: 16px;
   height: 16px;
