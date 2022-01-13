@@ -89,7 +89,7 @@ export const HeaderItemsBlock = styled.div`
   }
 `;
 
-export const BurgerIcon = styled(IconButton)`
+export const BurgerSidebarIconButton = styled(IconButton)`
   :hover {
     background-color: transparent !important;
     //border-radius: 10px;
@@ -116,18 +116,25 @@ export const BurgerIcon = styled(IconButton)`
   }
 `;
 
-export const MockUserMobileAvatar = styled.img`
-  width: 40px;
-  height: 40px;
+export const UserAvatarIconButton = styled(IconButton)`
+  :hover {
+    background-color: transparent;
+  }
+
+  img {
+    width: 40px;
+    height: 40px;
+  }
 
   @media (max-width: 711px) {
-    margin-right: 20px;
+    //margin-right: 20px;
+    margin-right: 4px;
     //margin-top: 20px;
     //margin-left: 15px;
   }
 
   @media (min-width: 711px) {
-    display: none;
+    //display: none;
   }
 `;
 

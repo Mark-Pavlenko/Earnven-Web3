@@ -9,27 +9,29 @@ Version           Date                         Description
 ************************************************************************************/
 
 import { experimentalStyled as styled } from '@material-ui/core/styles';
-import accountLogo from '../../../assets/icons/accountlogo.png';
+import accountLogo from '../../../../assets/icons/accountlogo.png';
 import { createStyles, makeStyles } from '@material-ui/styles';
 import { Avatar, Box, List, Stack, Typography } from '@material-ui/core';
 import React, { useRef, useState } from 'react';
-import './styles';
+import '../styles';
 import { useNavigate } from 'react-router-dom';
-import AccountBalance from '../../../components/accountBalance/AccountBalance_Menu';
-import MenuPopover from './walletsListPopover';
-import rename_menu_icon from '../../../assets/icons/rename_menu_icon.svg';
-import copy_menu_icon from '../../../assets/icons/copy_menu_icon.svg';
-import copy_link_menu_icon from '../../../assets/icons/copy_link_menu_icon.svg';
-import disconnect_menu_icon from '../../../assets/icons/disconnect_menu_icon.svg';
-import dots_menu_icon from '../../../assets/icons/3dots_menu_icon.svg';
-import ThemeConfig from '../../../theme';
-import { Disconnection } from './Disconnection';
-import Rename from './Rename';
-import Popup from './popup';
-import green_got_menu from '../../../assets/icons/green_got_menu.svg';
-import menurender_customhook from './menurender_customhook';
-import copy_notification_menu from '../../../assets/icons/copy_notification_menu.svg';
+import AccountBalance from '../../../../components/accountBalance/AccountBalance_Menu';
+import MenuPopover from '../walletsListOptionsPopover';
+import rename_menu_icon from '../../../../assets/icons/rename_menu_icon.svg';
+import copy_menu_icon from '../../../../assets/icons/copy_menu_icon.svg';
+import copy_link_menu_icon from '../../../../assets/icons/copy_link_menu_icon.svg';
+import disconnect_menu_icon from '../../../../assets/icons/disconnect_menu_icon.svg';
+import dots_menu_icon from '../../../../assets/icons/3dots_menu_icon.svg';
+import ThemeConfig from '../../../../theme';
+import { Disconnection } from '../Disconnection';
+import Rename from '../Rename';
+import Popup from '../popup';
+import green_got_menu from '../../../../assets/icons/green_got_menu.svg';
+import menurender_customhook from '../menurender_customhook';
+import copy_notification_menu from '../../../../assets/icons/copy_notification_menu.svg';
+import userMockAvatar from '../../../../assets/icons/userMockAvatar.png';
 import { useSelector } from 'react-redux';
+import walletAddressCutter from '../../../../utils/helpers';
 
 import {
   WalletsListLayout,
@@ -45,17 +47,26 @@ import {
   WalletActionsLayout,
   WalletActionsListItemLabel,
   DisconnectWalletActionsListItem,
-} from './styles';
+} from '../styles';
 
 const useStyles = makeStyles(() =>
   createStyles({
-    menupopover: { marginLeft: '132px', marginTop: '-25px', width: '338px' },
+    menupopover: {
+      marginLeft: '132px',
+      marginTop: '-25px',
+      width: '338px',
+      ['@media (max-width:1280px)']: {
+        marginLeft: '-3px',
+      },
+    },
     icon: {
       marginLeft: '21px',
       marginTop: '12px',
       display: 'flex',
       width: '16px',
       height: '16px',
+
+      ['@media (max-width:1280px)']: { width: '29.2px', height: '22px' },
     },
 
     text: {
@@ -76,16 +87,6 @@ const useStyles = makeStyles(() =>
   })
 );
 
-// const CustomStyle = styled('a')(({ theme }) => ({
-//   color: 'black',
-//   fontWeight: 400,
-//   fontSize: '14px',
-//   textDecoration: 'none',
-//   '&:hover': {
-//     color: '#4453AD',
-//   },
-// }));
-
 export default function Accounts(
   {
     address,
@@ -94,6 +95,7 @@ export default function Accounts(
     globalWalletsList,
     currentWalletAddress,
     isMetamaskWallet,
+    isMobileWalletsList,
   },
   props
 ) {
@@ -109,9 +111,9 @@ export default function Accounts(
   const [openPopup_rename, setOpenPopup_rename] = useState(false);
 
   const selectedAccountAddress = localStorage.getItem('selected-account');
-  console.log('selectedAccountAddress', selectedAccountAddress);
-  console.log('current Metamask wallet address', currentWalletAddress);
-  console.log('globalWalletsList', JSON.parse(globalWalletsList));
+  // console.log('selectedAccountAddress', selectedAccountAddress);
+  // console.log('current Metamask wallet address', currentWalletAddress);
+  // console.log('globalWalletsList', JSON.parse(globalWalletsList));
 
   const showAccountPopover = () => {
     setaccount(true);
@@ -160,8 +162,6 @@ export default function Accounts(
       localStorage.setItem('selected-account', address);
     } else {
       localStorage.setItem('selected-account', address);
-      let walletAddressCutter =
-        name.length >= 4 ? `${name[0] + name[1] + name[2] + name[3] + name[4] + name[5]}...` : name;
       localStorage.setItem('selected-name', name);
     }
   };
@@ -171,29 +171,24 @@ export default function Accounts(
     navigate(`/${address}/dashboard`, { replace: true });
   };
 
-  function walletAddressCutter(addy, name) {
-    if (addy === '') {
-      return addy;
-    }
-    if (addy) {
-      if (name === 'null') {
-        const l = addy.length;
-        return `${
-          addy[0] + addy[1] + addy[2] + addy[3] + addy[4] + addy[5] + addy[6] + addy[7] + addy[8]
-        }...${addy[l - 7]}${addy[l - 6]}${addy[l - 5]}${addy[l - 4]}${addy[l - 3]}${addy[l - 2]}${
-          addy[l - 1]
-        }`;
-      } else {
-        return name;
-      }
-    }
-  }
-
   return (
     <>
-      <WalletsListLayout ref={anchorRef}>
-        <WalletListItemAccountLogo src={accountLogo} alt="photoURL" />
+      <WalletsListLayout ref={anchorRef} isMetamaskWallet={isMetamaskWallet}>
+        {isMetamaskWallet ? (
+          <WalletListItemAccountLogo
+            src={userMockAvatar}
+            alt="photoURL"
+            isMetamaskWallet={isMetamaskWallet}
+            isMobileWalletsList={isMobileWalletsList}
+          />
+        ) : (
+          <WalletListItemAccountLogo src={accountLogo} alt="photoURL" />
+        )}
+
+        {/* mobile metamask wallet list content*/}
         <WalletListItemContent
+          isMetamaskWallet={isMetamaskWallet}
+          isMobileWalletsList={isMobileWalletsList}
           onClick={() => {
             hideAccountPopover();
             updateSelectedAccount(address);
@@ -203,18 +198,22 @@ export default function Accounts(
           <WalletListItemAccountBalance
             variant="WaltchList_font_address"
             isLightTheme={isLightTheme}
-            sx={{ marginLeft: '-2px', marginTop: '-1.21rem' }}>
-            {walletAddressCutter(address, name)}
+            isMetamaskWallet={isMetamaskWallet}
+            isMobileWalletsList={isMobileWalletsList}>
+            <span>{walletAddressCutter(address, name)}</span>
             {selectedAccountAddress === address && (
-              <WalletListItemGreenDot src={green_got_menu} style={{}} alt="no pic" />
+              <WalletListItemGreenDot src={green_got_menu} alt="no pic" />
             )}
           </WalletListItemAccountBalance>
         </WalletListItemContent>
+
         <DotIconBlock onClick={showAccountPopover}>
           <img src={dots_menu_icon} alt="no pic" />
         </DotIconBlock>
         {/* Current Account balance value*/}
         <WalletListItemAccountBalance
+          isMetamaskWallet={false}
+          isMobileWalletsList={false}
           onClick={() => {
             hideAccountPopover();
             updateSelectedAccount(address, name);
@@ -223,7 +222,11 @@ export default function Accounts(
           {!isMetamaskWallet ? (
             <AccountBalance address={address} isLightTheme={isLightTheme} />
           ) : (
-            <MetamaskLabel>Metamask</MetamaskLabel>
+            <MetamaskLabel
+              isMobileWalletsList={isMobileWalletsList}
+              isMetamaskWallet={isMetamaskWallet}>
+              Metamask
+            </MetamaskLabel>
           )}
         </WalletListItemAccountBalance>
       </WalletsListLayout>
@@ -310,7 +313,8 @@ export default function Accounts(
                 <WalletActionsListItemLabel
                   isLightTheme={isLightTheme}
                   onClick={onReRender}
-                  style={{ marginTop: '20px' }}>
+                  style={{}}
+                  isDisconnectLabel={true}>
                   Disconnect
                 </WalletActionsListItemLabel>
               </DisconnectWalletActionsListItem>

@@ -17,13 +17,21 @@ export default function AppLayout() {
   const finalTitle = capitalizeFirstLetter(title);
 
   const [open, setOpen] = useState(false);
+  const [openWalletsListMobile, setOpenWalletsListMobile] = useState(false);
 
   return (
     <RootStyle isLightTheme={themeType}>
-      <Header onOpenSidebar={() => setOpen(true)} themeType={themeType} finalTitle={finalTitle} />
+      <Header
+        onOpenSidebar={() => setOpen(true)}
+        onOpenMobileWalletsList={() => setOpenWalletsListMobile(true)}
+        themeType={themeType}
+        finalTitle={finalTitle}
+      />
       <Sidebar
         isOpenSidebar={open}
         onCloseSidebar={() => setOpen(false)}
+        isOpenWalletsListMobile={openWalletsListMobile}
+        onCloseWalletsListMobile={() => setOpenWalletsListMobile(false)}
         address={localStorage.getItem('selected-account')}
         name={localStorage.getItem('selected-name')}
         global_wallet={localStorage.getItem('wallets')}
