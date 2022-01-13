@@ -51,13 +51,22 @@ import {
 
 const useStyles = makeStyles(() =>
   createStyles({
-    menupopover: { marginLeft: '132px', marginTop: '-25px', width: '338px' },
+    menupopover: {
+      marginLeft: '132px',
+      marginTop: '-25px',
+      width: '338px',
+      ['@media (max-width:1280px)']: {
+        marginLeft: '-3px',
+      },
+    },
     icon: {
       marginLeft: '21px',
       marginTop: '12px',
       display: 'flex',
       width: '16px',
       height: '16px',
+
+      ['@media (max-width:1280px)']: { width: '29.2px', height: '22px' },
     },
 
     text: {
@@ -304,7 +313,8 @@ export default function Accounts(
                 <WalletActionsListItemLabel
                   isLightTheme={isLightTheme}
                   onClick={onReRender}
-                  style={{ marginTop: '20px' }}>
+                  style={{}}
+                  isDisconnectLabel={true}>
                   Disconnect
                 </WalletActionsListItemLabel>
               </DisconnectWalletActionsListItem>

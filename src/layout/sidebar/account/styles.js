@@ -265,10 +265,18 @@ export const WalletListItemGreenDot = styled.img`
 export const WalletActionsLayout = styled.div`
   width: 306px;
   height: 197px;
+
+  @media (max-width: 1280px) {
+    height: 222px;
+  }
 `;
 
 export const WalletActionsList = styled.ul`
   margin-top: 2px;
+
+  @media (max-width: 1280px) {
+    margin-top: 6px;
+  }
 `;
 
 export const WalletActionsListItem = styled.li`
@@ -277,6 +285,13 @@ export const WalletActionsListItem = styled.li`
   height: 40px;
   margin-left: 15px;
   padding: 0;
+
+  @media (max-width: 1280px) {
+     margin-bottom: 5px;
+    height: 50px;
+
+  }
+
 
   :hover {
     p{
@@ -295,10 +310,19 @@ export const WalletActionsListItem = styled.li`
 `;
 
 export const WalletActionsListItemLabel = styled.p`
+  margin-top: ${(props) => (props.isDisconnectLabel ? '21px' : '14px')};
+  @media (max-width: 1280px) {
+    margin-top: ${(props) => props.isDisconnectLabel && '22px'};
+    font-family: 'Saira', sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    text-align: left;
+  }
+
   display: flex;
   width: 276px;
   margin-left: 25px;
-  margin-top: 14px;
   color: ${(props) => (props.isLightTheme ? '#000000' : '#FFFFFF')};
   font-size: 10px;
   font-style: normal;
@@ -319,6 +343,10 @@ export const DisconnectWalletActionsListItem = styled.li`
   padding: 0;
   margin-top: 17px;
 
+  @media (max-width:1280px){
+    margin-top: 0;
+  }
+  
   background-color: ${(props) => (props.isLightTheme ? '#E5E5E5' : '#1F265C3D')};
   box-shadow: ${(props) =>
     props.isLightTheme
