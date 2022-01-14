@@ -119,6 +119,7 @@ export default function Sidebar({
   const [account, setaccount] = useState(false);
   const [myWallet, setMyWallet] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [mobileNetworksListEl, setMobileNetworksListEl] = useState(null);
 
   const [selected, setselected] = useState('Average');
   const [GasPrices, setGasPrices] = useState([]);
@@ -127,20 +128,27 @@ export default function Sidebar({
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
   const dispatch = useDispatch();
 
-  const handleClick = (event) => {
+  const handleMobileGasItemClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleMobileNetworksListClick = (event) => {
+    setMobileNetworksListEl(event.currentTarget);
+  };
+
+  const handleGasItemListClose = () => {
     setAnchorEl(null);
   };
 
-  const openSidebarMobilePopover = Boolean(anchorEl);
-  const id = openSidebarMobilePopover ? 'simple-popover' : undefined;
+  const handleNetworksListClose = () => {
+    setMobileNetworksListEl(null);
+  };
 
-  // const [networkListPopup, setNetworkListPopup] = useState(false);
-  // const handleOpen = () => setNetworkListPopup(true);
-  // const handleClose = () => setNetworkListPopup(false);
+  const openGasPricesMobilePopover = Boolean(anchorEl);
+  const openNetworksListMobilePopover = Boolean(mobileNetworksListEl);
+
+  const id = openGasPricesMobilePopover ? 'simple-popover' : undefined;
+  const networksListId = openNetworksListMobilePopover ? 'simple-popover' : undefined;
 
   const currentWallet = JSON.parse(localStorage.getItem('mywallet'));
   {
@@ -258,7 +266,7 @@ export default function Sidebar({
         // key={option.value}
         selected={option.label === selected}
         onClick={() => {
-          handleClose();
+          handleGasItemListClose();
           updateGasValue(option.value, option.label);
         }}
         sx={{ py: 1, px: 2.5 }}>
@@ -319,14 +327,16 @@ export default function Sidebar({
               <SidebarMobileNetworkButton
                 isLightTheme={isLightTheme}
                 startIcon={<img src={pyramidIcon} alt="pyramide_icon" />}
-                endIcon={<img src={chevronDown} alt="chevron_icon" />}>
+                endIcon={<img src={chevronDown} alt="chevron_icon" />}
+                onClick={handleMobileNetworksListClick}>
                 Network
               </SidebarMobileNetworkButton>
             ) : (
               <SidebarMobileNetworkButton
                 isLightTheme={isLightTheme}
                 startIcon={<img src={pyramidIcon} alt="pyramide_icon" />}
-                endIcon={<img src={chevronDownDark} alt="chevron_icon" />}>
+                endIcon={<img src={chevronDownDark} alt="chevron_icon" />}
+                onClick={handleMobileNetworksListClick}>
                 Network
               </SidebarMobileNetworkButton>
             )}
@@ -334,7 +344,7 @@ export default function Sidebar({
             <GasButton
               isLightTheme={isLightTheme}
               startIcon={<img src={gasIcon} alt="" />}
-              onClick={handleClick}
+              onClick={handleMobileGasItemClick}
               sx={{
                 ...(open && {
                   bgcolor: (theme) =>
@@ -343,14 +353,13 @@ export default function Sidebar({
               }}>
               39
             </GasButton>
-            {/*<SidebarMobileNetworkButton>*/}
-            {/*  <img src={} alt="test" onClick={handleClick} />*/}
-            {/*</SidebarMobileNetworkButton>*/}
+
+            {/*Gas Items Price*/}
             <Popover
               id={id}
-              open={openSidebarMobilePopover}
+              open={openGasPricesMobilePopover}
               anchorEl={anchorEl}
-              onClose={handleClose}
+              onClose={handleGasItemListClose}
               anchorReference="anchorPosition"
               anchorPosition={{ top: 100, left: 10 }}
               anchorOrigin={{
@@ -392,6 +401,56 @@ export default function Sidebar({
                     etherscan.io
                   </a>
                 </SidebarMobilePopoverLink>
+              </MainSidebarMobilePopoverContent>
+            </Popover>
+
+            <Popover
+              id={networksListId}
+              open={openNetworksListMobilePopover}
+              anchorEl={anchorEl}
+              onClose={handleNetworksListClose}
+              anchorReference="anchorPosition"
+              anchorPosition={{ top: 100, left: 10 }}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              transformOrigin={{
+                vertical: 'center',
+                horizontal: 'left',
+              }}
+              PaperProps={{
+                sx: {
+                  mt: 7,
+                  ml: 2.2,
+
+                  width: '345px',
+                  height: '540px',
+                  overflow: 'inherit',
+                  borderRadius: '10px',
+                  // background: (theme) => '#E5E5E5',
+                  mixBlendMode: 'normal',
+                  boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+                  backdropFilter: 'blur(15px)',
+                  ...sx,
+                },
+                style: {
+                  backgroundColor: 'transparent',
+                  boxShadow: 'none',
+                },
+              }}>
+              <MainSidebarMobilePopoverContent>
+                <p>Content for networksList</p>
+                {/*<SidebarMobilePopoverGasPriceTitle isLightTheme={isLightTheme}>*/}
+                {/*  Realtime Gas Prices*/}
+                {/*</SidebarMobilePopoverGasPriceTitle>*/}
+                {/*<SidebarMobileGasItemsBlock>{GasPricesContent}</SidebarMobileGasItemsBlock>*/}
+                {/*<SidebarMobilePopoverLink>*/}
+                {/*  Provided by{' '}*/}
+                {/*  <a href={'https://etherscan.io/'} target="_blank">*/}
+                {/*    etherscan.io*/}
+                {/*  </a>*/}
+                {/*</SidebarMobilePopoverLink>*/}
               </MainSidebarMobilePopoverContent>
             </Popover>
           </SidebarMobileIconSubBlock>
