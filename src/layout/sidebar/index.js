@@ -6,8 +6,9 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-// material
 
+// material
+import Popover from '@mui/material/Popover';
 import { Drawer, ListItemIcon } from '@material-ui/core';
 import { MHidden } from '../../components/@material-extend';
 import CompanyLogo from '../../assets/icons/logo_menu.svg';
@@ -34,6 +35,8 @@ import {
   ChangeThemeBtnMobile,
   SidebarMobileIconSubBlock,
   SidebarMobileDelimiter,
+  MainSidebarMobilePopoverContent,
+  SidebarMobileNetworkButton,
 } from './styles';
 import lightIcon from '../../assets/icons/lightIcon.svg';
 import darkIcon from '../../assets/icons/darkIcon.svg';
@@ -54,6 +57,7 @@ import IconButton from '@mui/material/IconButton';
 import Modal from '@mui/material/Modal';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
+import sx from '@mui/system/sx';
 
 const style = {
   position: 'absolute',
@@ -88,12 +92,24 @@ export default function Sidebar({
   const [accountList, setaccountList] = useState([]);
   const [account, setaccount] = useState(false);
   const [myWallet, setMyWallet] = useState([]);
+  const [anchorEl, setAnchorEl] = useState(null);
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
   const dispatch = useDispatch();
 
-  const [networkListPopup, setNetworkListPopup] = useState(false);
-  const handleOpen = () => setNetworkListPopup(true);
-  const handleClose = () => setNetworkListPopup(false);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+
+  // const [networkListPopup, setNetworkListPopup] = useState(false);
+  // const handleOpen = () => setNetworkListPopup(true);
+  // const handleClose = () => setNetworkListPopup(false);
 
   const currentWallet = JSON.parse(localStorage.getItem('mywallet'));
   {
@@ -213,26 +229,47 @@ export default function Sidebar({
           <SidebarMobileIconSubBlock>
             {/*<NetworkSelectHeader isLightTheme={isLightTheme} />*/}
             {/*<GasDropdownMenu isLightTheme={isLightTheme} />*/}
-            <IconButton>
-              <img src={testMobileNetworkButton} alt="test" onClick={handleOpen} />
-            </IconButton>
-            {/*<Modal*/}
-            {/*  open={open}*/}
-            {/*  onClose={handleClose}*/}
-            {/*  aria-labelledby="modal-modal-title"*/}
-            {/*  aria-describedby="modal-modal-description">*/}
-            {/*  <Box sx={style}>*/}
-            {/*    <Typography id="modal-modal-title" variant="h6" component="h2">*/}
-            {/*      Text in a modal*/}
-            {/*    </Typography>*/}
-            {/*    <Typography id="modal-modal-description" sx={{ mt: 2 }}>*/}
-            {/*      Duis mollis, est non commodo luctus, nisi erat porttitor ligula.*/}
-            {/*    </Typography>*/}
-            {/*  </Box>*/}
-            {/*</Modal>*/}
-            {networkListPopup && (
-              <div style={{ backgroundColor: 'red' }}>The future network list block</div>
-            )}
+            <SidebarMobileNetworkButton>
+              <img src={testMobileNetworkButton} alt="test" onClick={handleClick} />
+            </SidebarMobileNetworkButton>
+            <Popover
+              id={id}
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorReference="anchorPosition"
+              anchorPosition={{ top: 100, left: 10 }}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              transformOrigin={{
+                vertical: 'center',
+                horizontal: 'left',
+              }}
+              PaperProps={{
+                sx: {
+                  mt: 7,
+                  // ml: 0.5,
+                  width: '360px',
+                  height: '540px',
+                  overflow: 'inherit',
+                  borderRadius: '10px',
+                  background: (theme) => '#E5E5E5',
+                  mixBlendMode: 'normal',
+                  boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+                  backdropFilter: 'blur(35px)',
+                  ...sx,
+                },
+                style: {
+                  backgroundColor: 'transparent',
+                  boxShadow: 'none',
+                },
+              }}>
+              <MainSidebarMobilePopoverContent>
+                <p>Some content</p>
+              </MainSidebarMobilePopoverContent>
+            </Popover>
           </SidebarMobileIconSubBlock>
           <ChangeThemeBtnMobile
             onClick={() => {

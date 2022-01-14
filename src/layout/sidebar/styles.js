@@ -68,6 +68,17 @@ export const SidebarMobileIconSubBlock = styled.div`
   align-items: center;
 `;
 
+export const SidebarMobileNetworkButton = styled(IconButton)`
+  :hover {
+    background-color: transparent !important;
+`;
+
+export const MainSidebarMobilePopoverContent = styled.div`
+  background-color: transparent !important;
+  height: 540px;
+  width: 345px;
+`;
+
 export const ChangeThemeBtnMobile = styled(IconButton)`
   display: flex;
   margin: 16px 30px 5px;
