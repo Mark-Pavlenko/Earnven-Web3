@@ -102,7 +102,6 @@ export default function LiquityStaking({ accountAddress }) {
 
   return (
     <div>
-      <h1>LIQUITY</h1>
       {parseInt(LiquityStakeAmountUSD) ? (
         <div>
           <div

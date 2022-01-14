@@ -26,6 +26,7 @@ const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isS
     ethPrice,
     totalDeposit,
     totalValue,
+    tokenName,
   } = protocol;
   const protocolData = {
     Value: isStaked ? totalInvestment : `$${parseFloat(totalValue).toFixed(2)}`,
@@ -64,7 +65,7 @@ const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isS
                 </>
               ))
             ) : (
-              <TokenName isLightTheme={theme}>{`${mainTokenSymbol}`}</TokenName>
+              <TokenName isLightTheme={theme}>{`${tokenName}`}</TokenName>
             )}
           </div>
         </div>
@@ -109,12 +110,14 @@ const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isS
               <div>{numberWithCommas(ethPrice)}</div>
             </ContentWrapper>
           )}
+
           {protocol.balance && (
             <ContentWrapper isLightTheme={theme}>
-              <div>Price</div>
-              <div>{numberWithCommas(protocol.balance)}</div>
+              <div>Balance</div>
+              <div>{numberWithCommas(parseFloat(protocol.balance).toFixed(2))}</div>
             </ContentWrapper>
           )}
+
           {!stakedToken && protocol.price && (
             <ContentWrapper isLightTheme={theme}>
               <div>LPprice</div>

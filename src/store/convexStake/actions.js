@@ -13,3 +13,10 @@ export const setConvexStakingTotal = (payload) => {
     payload,
   };
 };
+
+export const setConvexStakingTokenImage = (payload) => {
+  return {
+    type: actionTypes.SET_CONVEX_STAKE_TOKEN_IMAGE,
+    payload,
+  };
+};

@@ -14,6 +14,7 @@ import axios from 'axios';
 import CreamIronBankContract from '../../abi/CreamIronBank.json';
 import Addresses from '../../contractAddresses';
 import ApiUrl from '../../apiUrls';
+import Investment from '../common/investment/investment';
 
 export default function CreamIronBank({ accountAddress, totalSavings }) {
   const [TotalSavings, setTotalSavings] = useState(0);
@@ -37,7 +38,29 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
   const [CreamAAVE, setCreamAAVE] = useState({});
   const [CreamMIM, setCreamMIM] = useState({});
   const [CreamZAR, setCreamZAR] = useState({});
-
+  const tokensArray = [
+    CreamUSDT,
+    CreamDAI,
+    CreamUSDC,
+    CreamWETH,
+    CreamLINK,
+    CreamUNI,
+    CreamSUSHI,
+    CreamCRV,
+    Creamv2,
+    CreamYFI,
+    CreamSNX,
+    CreamWBTC,
+    CreamSUSD,
+    CreamMUSD,
+    CreamEURS,
+    CreamSEUR,
+    CreamDPI,
+    CreamAAVE,
+    CreamMIM,
+  ];
+  const filteredTokensArray = tokensArray.filter((el) => el.totalValue > 0);
+  console.log('filteredTokensArray', TotalSavings);
   const numberWithCommas = (x) => {
     x = x.toString();
     var pattern = /(-?\d+)(\d{3})/;
@@ -98,19 +121,20 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
             setToken({
               tokenName: CreamTokenName,
               symbol: CreamSymbol,
-              price: parseFloat(IronBankUSDPrice),
+              totalValue: parseFloat(IronBankUSDPrice),
               image: data.image.thumb,
-              pricePerToken: tokenPrice,
+              price: tokenPrice,
               balance: tokenAmount,
               protocol: 'Cream Iron Bank',
+              chain: 'Ethereum',
             });
           } else {
             setToken({
               tokenName: '',
               symbol: '',
-              price: 0,
+              totalValue: 0,
               image: '',
-              pricePerToken: 0,
+              price: 0,
               balance: 0,
               protocol: '',
             });
@@ -123,7 +147,7 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
       setToken({
         tokenName: '',
         symbol: '',
-        price: 0,
+        totalValue: 0,
         image: '',
       });
     }
@@ -314,54 +338,53 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
   useEffect(() => {
     setTotalSavings(
       parseFloat(
-        CreamUSDT.price +
-          CreamDAI.price +
-          CreamUSDC.price +
-          CreamWETH.price +
-          CreamLINK.price +
-          CreamCRV.price +
-          Creamv2.price +
-          CreamUNI.price +
-          CreamSUSHI.price +
-          CreamYFI.price +
-          CreamSNX.price +
-          CreamWBTC.price +
-          CreamSUSD.price +
-          CreamMUSD.price +
-          CreamEURS.price +
-          CreamSEUR.price +
-          CreamDPI.price +
-          CreamAAVE.price +
-          CreamMIM.price
+        CreamUSDT.totalValue +
+          CreamDAI.totalValue +
+          CreamUSDC.totalValue +
+          CreamWETH.totalValue +
+          CreamLINK.totalValue +
+          CreamCRV.totalValue +
+          Creamv2.totalValue +
+          CreamUNI.totalValue +
+          CreamSUSHI.totalValue +
+          CreamYFI.totalValue +
+          CreamSNX.totalValue +
+          CreamWBTC.totalValue +
+          CreamSUSD.totalValue +
+          CreamMUSD.totalValue +
+          CreamEURS.totalValue +
+          CreamSEUR.totalValue +
+          CreamDPI.totalValue +
+          CreamAAVE.totalValue +
+          CreamMIM.totalValue
       )
     );
   }, [
-    CreamUSDT.price,
-    CreamDAI.price,
-    CreamUSDC.price,
-    CreamWETH.price,
-    CreamLINK.price,
-    CreamCRV.price,
-    Creamv2.price,
-    CreamUNI.price,
-    CreamSUSHI.price,
-    CreamYFI.price,
-    CreamSNX.price,
-    CreamWBTC.price,
-    CreamSUSD.price,
-    CreamMUSD.price,
-    CreamEURS.price,
-    CreamSEUR.price,
-    CreamDPI.price,
-    CreamAAVE.price,
-    CreamMIM.price,
+    CreamUSDT.totalValue,
+    CreamDAI.totalValue,
+    CreamUSDC.totalValue,
+    CreamWETH.totalValue,
+    CreamLINK.totalValue,
+    CreamCRV.totalValue,
+    Creamv2.totalValue,
+    CreamUNI.totalValue,
+    CreamSUSHI.totalValue,
+    CreamYFI.totalValue,
+    CreamSNX.totalValue,
+    CreamWBTC.totalValue,
+    CreamSUSD.totalValue,
+    CreamMUSD.totalValue,
+    CreamEURS.totalValue,
+    CreamSEUR.totalValue,
+    CreamDPI.totalValue,
+    CreamAAVE.totalValue,
+    CreamMIM.totalValue,
   ]);
 
   const IronBankLayout = (item) => {
     return (
       <div>
-        <h1>CREAM IRON BANK</h1>
-        {parseFloat(item.price) > 0 ? (
+        {parseFloat(item.totalValue) > 0 ? (
           <div>
             <div>
               <img
@@ -380,8 +403,8 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
                   display: 'inline-block',
                   marginLeft: '10px',
                 }}>
-                {item.symbol} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {numberWithCommas(item.price)}{' '}
-                USD
+                {item.symbol} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{' '}
+                {numberWithCommas(item.totalValue)} USD
               </div>
             </div>
             <div>
@@ -392,7 +415,7 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
                   marginLeft: '30px',
                 }}>
                 Tokens: {numberWithCommas(item.balance.toFixed(2))} &nbsp; Price:{' '}
-                {numberWithCommas(item.pricePerToken.toFixed(2))} USD
+                {numberWithCommas(item.price.toFixed(2))} USD
               </div>
             </div>
             <br />
@@ -404,43 +427,47 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
     );
   };
 
+  IronBankLayout(CreamUSDT);
+  IronBankLayout(CreamDAI);
+  IronBankLayout(CreamUSDC);
+  IronBankLayout(CreamWETH);
+  IronBankLayout(CreamLINK);
+  IronBankLayout(CreamUNI);
+  IronBankLayout(CreamSUSHI);
+  IronBankLayout(Creamv2);
+  IronBankLayout(CreamCRV);
+  IronBankLayout(CreamYFI);
+  IronBankLayout(CreamSNX);
+  IronBankLayout(CreamWBTC);
+  IronBankLayout(CreamSUSD);
+  IronBankLayout(CreamMUSD);
+  IronBankLayout(CreamEURS);
+  IronBankLayout(CreamSEUR);
+  IronBankLayout(CreamDPI);
+  IronBankLayout(CreamAAVE);
+  IronBankLayout(CreamMIM);
+
   return (
     <div>
-      <div
-        style={{
-          fontSize: '12px',
-          marginLeft: '15px',
-          display: TotalSavings ? '' : 'none',
-        }}>
-        Cream Iron Bank --- {numberWithCommas(TotalSavings.toFixed(2))} USD
-      </div>
-      <div
-        style={{
-          fontSize: '12px',
-          marginLeft: '15px',
-          display: TotalSavings ? '' : 'none',
-        }}>
-        <span> Network </span> : <span> Ethereum </span>
-      </div>
-      {IronBankLayout(CreamUSDT)}
-      {IronBankLayout(CreamDAI)}
-      {IronBankLayout(CreamUSDC)}
-      {IronBankLayout(CreamWETH)}
-      {IronBankLayout(CreamLINK)}
-      {IronBankLayout(CreamUNI)}
-      {IronBankLayout(CreamSUSHI)}
-      {IronBankLayout(Creamv2)}
-      {IronBankLayout(CreamCRV)}
-      {IronBankLayout(CreamYFI)}
-      {IronBankLayout(CreamSNX)}
-      {IronBankLayout(CreamWBTC)}
-      {IronBankLayout(CreamSUSD)}
-      {IronBankLayout(CreamMUSD)}
-      {IronBankLayout(CreamEURS)}
-      {IronBankLayout(CreamSEUR)}
-      {IronBankLayout(CreamDPI)}
-      {IronBankLayout(CreamAAVE)}
-      {IronBankLayout(CreamMIM)}
+      {filteredTokensArray.map((object, index) => {
+        return <Investment key={index} protocol={object} logoImage={object.image} />;
+      })}
+      {/*<div*/}
+      {/*  style={{*/}
+      {/*    fontSize: '12px',*/}
+      {/*    marginLeft: '15px',*/}
+      {/*    display: TotalSavings ? '' : 'none',*/}
+      {/*  }}>*/}
+      {/*  Cream Iron Bank --- {numberWithCommas(TotalSavings.toFixed(2))} USD*/}
+      {/*</div>*/}
+      {/*<div*/}
+      {/*  style={{*/}
+      {/*    fontSize: '12px',*/}
+      {/*    marginLeft: '15px',*/}
+      {/*    display: TotalSavings ? '' : 'none',*/}
+      {/*  }}>*/}
+      {/*  <span> Network </span> : <span> Ethereum </span>*/}
+      {/*</div>*/}
     </div>
   );
 }

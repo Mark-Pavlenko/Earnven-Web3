@@ -217,7 +217,6 @@ export default function AaveStaking({ accountAddress }) {
 
   return (
     <div>
-      <h1>AAVE</h1>
       {parseInt(AaveAmountUSD) || parseInt(AaveStkABPTAmountUSD) ? (
         <div>
           <Accordion
@@ -226,9 +225,7 @@ export default function AaveStaking({ accountAddress }) {
               marginRight: '1px',
               color: 'black',
               width: '100%',
-              border: '1px',
-              borderColor: 'black',
-              borderStyle: 'hidden',
+              border: 'none',
             }}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}

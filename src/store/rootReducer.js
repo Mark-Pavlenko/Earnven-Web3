@@ -19,6 +19,7 @@ import { pickeStake } from './pickle/reducer';
 import { pickeDill } from './pickle/reducer';
 import { curveStaking } from './curveStaking/reducer';
 import { convexStake } from './convexStake/reducer';
+import { curveLpToken } from './curveLpToken/reducer';
 
 export const rootReducer = combineReducers({
   web3Reducer,
@@ -42,4 +43,5 @@ export const rootReducer = combineReducers({
   pickeDill,
   curveStaking,
   convexStake,
+  curveLpToken,
 });

@@ -28,7 +28,11 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useWeb3React } from '@web3-react/core';
 import { useDispatch } from 'react-redux';
-import { setConvexStakingData } from '../../store/convexStake/actions';
+import {
+  setConvexStakingData,
+  setConvexStakingTokenImage,
+  setConvexStakingTotal,
+} from '../../store/convexStake/actions';
 
 export default function ConvexStaking({ accountAddress }) {
   const [ConvexCVXAmount, setConvexCVXAmount] = useState(0);
@@ -297,7 +301,9 @@ export default function ConvexStaking({ accountAddress }) {
         dispatch(setConvexStakingData(staking));
         setcvxStakingDataAttributes(staking);
         setcvxStakingTotalAmount(parseFloat(totalStaking).toFixed(2));
+        dispatch(setConvexStakingTotal(totalStaking));
         setCVXTokenImage(CvxTokenImageUrl);
+        //dispatch(setConvexStakingTokenImage(CvxTokenImageUrl));
         staking = [];
       } catch (err) {
         console.log('testcc No curve lp token holding for this user', accountAddress);
@@ -384,23 +390,23 @@ export default function ConvexStaking({ accountAddress }) {
 
   return (
     <React.Fragment>
-      <h1>CONVEX</h1>
-      {parseFloat(cvxStakingTotalAmount) > 0 ? (
-        <div>
-          <img
-            src={ConvexCVXImage}
-            style={{
-              height: '20px',
-              display: 'inline-block',
-            }}
-            alt=""
-          />
-          Convex Total -- {parseFloat(cvxStakingTotalAmount).toLocaleString()}
-        </div>
-      ) : (
-        ''
-      )}
-      {stakingContent}
+      {/*<h1>CONVEX</h1>*/}
+      {/*{parseFloat(cvxStakingTotalAmount) > 0 ? (*/}
+      {/*  <div>*/}
+      {/*    <img*/}
+      {/*      src={ConvexCVXImage}*/}
+      {/*      style={{*/}
+      {/*        height: '20px',*/}
+      {/*        display: 'inline-block',*/}
+      {/*      }}*/}
+      {/*      alt=""*/}
+      {/*    />*/}
+      {/*    Convex Total -- {parseFloat(cvxStakingTotalAmount).toLocaleString()}*/}
+      {/*  </div>*/}
+      {/*) : (*/}
+      {/*  ''*/}
+      {/*)}*/}
+      {/*{stakingContent}*/}
     </React.Fragment>
   );
 }

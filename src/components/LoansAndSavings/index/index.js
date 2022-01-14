@@ -54,14 +54,37 @@ export default function Index({ accountAddress }) {
   const BeaconData = useSelector((state) => state.eth2Stake.eth2StakeData);
   const SLPTokenData = useSelector((state) => state.sushiStaking.sushiStakeData);
   const uniswapV2array = useSelector((state) => state.uniswapV2stake.uniswapV2stake);
+  const curveStakingData = useSelector((state) => state.curveStaking.curveStakingData);
   const liquityStakeAmountUSD = useSelector(
     (state) => state.LiquityStakeReducer.liquityStakeAmountUSD
   );
   const snxCollateralData = useSelector((state) => state.SynthetixProtocol.snxData);
+  const snxCollateralTotal = useSelector((state) => state.SynthetixProtocol.snxTotal);
   const SLPTokenTotalValue = useSelector((state) => state.sushiStaking.sushiStakeTotal);
+  const curveToken = useSelector((state) => state.curveToken.curveTokenData);
   const pickeStake = useSelector((state) => state.pickeStake.pickeStake);
+  const uniswapV2lp = useSelector((state) => state.uniswapV2lp.uniswapV2lp);
+  console.log('CHECKYearnData', YearnData);
+  console.log('CHECKBeaconData', BeaconData);
+  console.log('CHECKSLPTokenData', SLPTokenData);
+  console.log('CHECKuniswapV2array', uniswapV2array);
+  console.log('CHECKliquityStakeAmountUSD', liquityStakeAmountUSD);
+  console.log('CHECKsnxCollateralData', snxCollateralData);
+  console.log('CHECKSLPTokenTotalValue', SLPTokenTotalValue);
+  console.log('CHECKpickeStake', pickeStake);
+  console.log('CHECKcurveStakingData', curveStakingData);
+  console.log('CHECKcurveToken', curveToken);
+  console.log('CHECKuniswapV2lp', uniswapV2lp);
+  //convexStake
   const convexStakeData = useSelector((state) => state.convexStake.convexStakeData);
-  console.log('convexStakeData', convexStakeData);
+  console.log('CHECKconvexStakeData', convexStakeData);
+  const convexStakeTotal = useSelector((state) => state.convexStake.convexStakeTotal);
+  const convexStakeTotalString = parseFloat(convexStakeTotal).toFixed(2);
+
+  //curveLpToken
+  const curveLpToken = useSelector((state) => state.curveLpToken.curveLpTokenData);
+  const curveLpTokenTotal = useSelector((state) => state.curveLpToken.curveLpTokenTotal);
+  const curveLpTokenTotalString = parseFloat(curveLpTokenTotal).toFixed(2);
 
   // Below code is for task https://app.clickup.com/t/1je2y9d
   // const [DisplaySavings, setDisplaySavings] = useState(null);
@@ -87,7 +110,6 @@ export default function Index({ accountAddress }) {
   const [SushiPoolsContent, setSushiPoolsContent] = useState([]); // Sushi v2
   const [SushiPoolsData, setSushiPoolsData] = useState([]); // Sushi v2
   const [SushiV2Total, setSushiV2Total] = useState([]); // Sushi v2 total
-
   //Compound
   const [CompoundSavingsContent, setCompoundSavingsContent] = useState([]); // compound v2
   const [CompoundLoansContent, setCompoundLoansContent] = useState([]); // compound v2 empty
@@ -118,12 +140,13 @@ export default function Index({ accountAddress }) {
 
   //Curve Lp token
   const [CurveLpdata, setCurveLpData] = useState([]); // get curve lp token data
+  console.log('CHECKCurveLpdata', CurveLpdata);
   //Synthetix data points
   const [SynthetixData, setSynthetixData] = useState([]); // get curve lp token data
-
+  console.log('CHECKSynthetixData', SynthetixData);
   //YearnToken
   const [YearnTokenValue, setYearnTokenValue] = useState([]);
-
+  console.log('CHECKYearnTokenValue', YearnTokenValue);
   //save conditions of open/close investment blocks
   const [isPoolsOpen, setIsPoolsOpen] = useState(true);
   const [isOthersOpen, setIsOthersOpen] = useState(true);
@@ -1336,19 +1359,13 @@ export default function Index({ accountAddress }) {
             <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
             <TotalEmptyCell></TotalEmptyCell>
             <TotalValue isLightTheme={theme}>
-              ${numberWithCommas(parseFloat(SLPTokenTotalValue).toFixed(2))}
+              $
+              {parseFloat(
+                numberWithCommas(+convexStakeTotalString + +curveLpTokenTotalString)
+              ).toFixed(2)}
             </TotalValue>
           </TotalValueField>
         </div>
-        {/*<center>*/}
-        {/*  <div style={{ fontSize: '25px', color: 'white' }}>*/}
-        {/*    Pools Total :{' '}*/}
-        {/*    {parseFloat(*/}
-        {/*      UniV2Total + SushiV2Total + BalancerTotal + BalancerTotalv2 + BancorPoolTotal*/}
-        {/*    ).toFixed(2)}{' '}*/}
-        {/*    USD*/}
-        {/*  </div>*/}
-        {/*</center>*/}
         {isStakedAssetsOpen && (
           <>
             {CurveStakeData.map((object) => {
@@ -1368,6 +1385,9 @@ export default function Index({ accountAddress }) {
             <UniStaking accountAddress={accountAddress} />
             <YearnFinance accountAddress={accountAddress} onYearnTokenValue={getYearnTokenValue} />
             <CurveToken accountAddress={accountAddress} />
+            {curveLpToken.map((object) => {
+              return <Investment protocol={object} />;
+            })}
             <CurveLpToken accountAddress={accountAddress} onCurveLptoken={getCurveLpToken} />
             <Synthetix
               accountAddress={accountAddress}
@@ -1421,6 +1441,34 @@ export default function Index({ accountAddress }) {
               accountAddress={accountAddress}
               onSynthetixTokenValue={getSynthetixTokenData}
             />
+          </>
+        )}
+      </PoolsBlock>
+      {/*=======================================>*/}
+      <PoolsBlock //four
+        isLightTheme={theme}
+        // style={{
+        //   display: YearnData.length > 0 || snxCollateralData > 0 ? '' : 'none',
+        // }}
+      >
+        <Header>
+          <Title isLightTheme={theme}>{'Derivatives'}</Title>
+          <ToggleButton onClick={othersHandler} isOpen={isOthersOpen} />
+        </Header>
+        <div style={{ padding: '0 29px 20px 26px', marginBottom: '20px' }}>
+          <TotalValueField isLightTheme={theme}>
+            <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
+            <TotalEmptyCell></TotalEmptyCell>
+            <TotalValue isLightTheme={theme}>
+              ${parseFloat(snxCollateralTotal).toFixed(2)}
+            </TotalValue>
+          </TotalValueField>
+        </div>
+        {isOthersOpen && (
+          <>
+            {snxCollateralData.map((object) => {
+              return <Investment protocol={object} />;
+            })}
           </>
         )}
       </PoolsBlock>

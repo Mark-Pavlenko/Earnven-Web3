@@ -25,7 +25,7 @@ import Addresses from '../../contractAddresses';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import { useDispatch } from 'react-redux';
-import { snxData } from '../../store/synthetixProtocol/actions';
+import { snxData, snxTotal } from '../../store/synthetixProtocol/actions';
 
 export default function Synthetix({ accountAddress, onSynthetixTokenValue }) {
   const [SnxCollateralData, setSnxCollateralData] = useState([]);
@@ -121,18 +121,19 @@ export default function Synthetix({ accountAddress, onSynthetixTokenValue }) {
 
       //get the token market usd price from coingecko API
       if (snxCollateralData.snxCollateralBalanceAmt) {
-        object.snxCollateralBalance = snxCollateralData.snxCollateralBalanceAmt / 10 ** 18;
-        object.snxCollateralPrice = snxCollateralPriceData.snxPrice;
-        object.snxCollateralValue = object.snxCollateralBalance * object.snxCollateralPrice;
-        object.snxCollateralSymbol = snxCollateralData.snxCollateralSymbolName;
-        object.snxImageUrl = snxCollateralPriceData.snxImageUrl;
-        snxCollateralTotal += object.snxCollateralValue;
+        object.balance = snxCollateralData.snxCollateralBalanceAmt / 10 ** 18;
+        object.price = snxCollateralPriceData.snxPrice;
+        object.totalValue = object.balance * object.price;
+        object.tokenName = snxCollateralData.snxCollateralSymbolName;
+        object.imageData = [snxCollateralPriceData.snxImageUrl];
+        snxCollateralTotal += object.value;
       }
 
       collateralData.push(object);
 
       setSnxCollateralData(collateralData);
       dispatch(snxData(collateralData));
+      dispatch(snxTotal(collateralData[0].totalValue));
       setSnxCollateralTotal(parseFloat(snxCollateralTotal.toFixed(2)).toLocaleString());
       //need this log to varify the data ouput for now
       console.log('snx Collateral data', collateralData);
@@ -177,25 +178,24 @@ export default function Synthetix({ accountAddress, onSynthetixTokenValue }) {
                         width: '20px',
                         display: 'inline-block',
                       }}
-                      src={object.snxImageUrl}
+                      src={object.imageData}
                       alt=""
                     />
                   </React.Fragment>
-                  {object.snxCollateralSymbol}&nbsp;
-                  {parseFloat(object.snxCollateralValue.toFixed(2)).toLocaleString()} USD
+                  {object.protocol}&nbsp;
+                  {parseFloat(object.value.toFixed(2)).toLocaleString()} USD
                 </React.Fragment>
               </AccordionSummary>
               <AccordionDetails>
                 <div style={{ display: 'inline-block', width: '70%', fontSize: '15px' }}>
-                  SNX token &nbsp;&nbsp;&nbsp;&nbsp; {object.snxCollateralSymbol}
+                  SNX token &nbsp;&nbsp;&nbsp;&nbsp; {object.protocol}
                   <br />
-                  Balance &nbsp;{' '}
-                  {parseFloat(object.snxCollateralBalance.toFixed(2)).toLocaleString()}
+                  Balance &nbsp; {parseFloat(object.balance.toFixed(2)).toLocaleString()}
                   <br />
-                  Price &nbsp;&nbsp;&nbsp;&nbsp;${parseFloat(object.snxCollateralPrice.toFixed(4))}
+                  Price &nbsp;&nbsp;&nbsp;&nbsp;${parseFloat(object.price.toFixed(4))}
                   <br />
                   Value &nbsp;&nbsp;&nbsp;&nbsp;$
-                  {parseFloat(object.snxCollateralValue.toFixed(2)).toLocaleString()}
+                  {parseFloat(object.value.toFixed(2)).toLocaleString()}
                   <br />
                   Chain &nbsp;&nbsp;&nbsp;&nbsp; Ethereum
                   <br />
