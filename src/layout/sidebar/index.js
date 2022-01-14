@@ -451,7 +451,9 @@ export default function Sidebar({
               }}>
               <MainSidebarMobilePopoverContent>
                 <MobileSidebarNetworksList isLightTheme={isLightTheme}>
-                  <EthereumActiveNetwork style={{ marginBottom: '10px' }}>
+                  <EthereumActiveNetwork
+                    isLightTheme={isLightTheme}
+                    style={{ marginBottom: '10px' }}>
                     <img src={ethIcon} alt={'network_icon'} />
                     <span>Ethereum</span>
                   </EthereumActiveNetwork>
