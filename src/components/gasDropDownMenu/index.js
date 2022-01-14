@@ -119,7 +119,6 @@ export default function GasDropdownMenuHeader({ isLightTheme }) {
         startIcon={<img src={gasIcon} alt="" />}
         ref={anchorRef}
         onClick={() => {
-          console.log('gas click');
           handleOpen();
         }}
         sx={{

@@ -68,6 +68,7 @@ import {
 import axios from 'axios';
 import { data } from '../../globalStore';
 import {
+  GasButton,
   GasMenuItem,
   MobileSidebarGasGweiLabel,
   MobileSidebarSpeedValueParameter,
@@ -76,6 +77,8 @@ import {
 import FastGweiGasIcon from '../../assets/icons/fastGweiGasIcon.png';
 import MiddleGweiGasIcon from '../../assets/icons/middleGweiGasIcon.png';
 import SlowGweiGasIcon from '../../assets/icons/slowGweiGasIcon.png';
+import gasIcon from '../../assets/icons/gasIcon.svg';
+import { alpha } from '@material-ui/core/styles';
 
 const style = {
   position: 'absolute',
@@ -327,11 +330,24 @@ export default function Sidebar({
         <NavSection sx={{ px: 8, color: 'black' }} navConfig={newSideBard} address={address} />
         <SidebarMobileIconsBlock>
           <SidebarMobileIconSubBlock>
-            {/*<NetworkSelectHeader isLightTheme={isLightTheme} />*/}
-            {/*<GasDropdownMenu isLightTheme={isLightTheme} />*/}
             <SidebarMobileNetworkButton>
               <img src={testMobileNetworkButton} alt="test" onClick={handleClick} />
             </SidebarMobileNetworkButton>
+            <GasButton
+              isLightTheme={isLightTheme}
+              startIcon={<img src={gasIcon} alt="" />}
+              onClick={handleClick}
+              sx={{
+                ...(open && {
+                  bgcolor: (theme) =>
+                    alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
+                }),
+              }}>
+              39
+            </GasButton>
+            {/*<SidebarMobileNetworkButton>*/}
+            {/*  <img src={} alt="test" onClick={handleClick} />*/}
+            {/*</SidebarMobileNetworkButton>*/}
             <Popover
               id={id}
               open={openSidebarMobilePopover}
