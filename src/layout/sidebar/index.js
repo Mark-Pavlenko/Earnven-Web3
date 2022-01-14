@@ -55,16 +55,8 @@ import {
   WalletsListItem,
 } from './account/styles';
 import Accounts from './account/walletsList/Accounts';
-import IconButton from '@mui/material/IconButton';
-import Modal from '@mui/material/Modal';
 import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
 import sx from '@mui/system/sx';
-import {
-  MenuPopoverBox,
-  MenuPopoverBoxNote,
-  MenuPopoverBoxTitle,
-} from '../../components/searchTokensMobile/styles';
 import axios from 'axios';
 import { data } from '../../globalStore';
 import {
@@ -79,18 +71,9 @@ import MiddleGweiGasIcon from '../../assets/icons/middleGweiGasIcon.png';
 import SlowGweiGasIcon from '../../assets/icons/slowGweiGasIcon.png';
 import gasIcon from '../../assets/icons/gasIcon.svg';
 import { alpha } from '@material-ui/core/styles';
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
+import pyramidIcon from '../../assets/icons/pyramidIcon.svg';
+import chevronDown from '../../assets/icons/chevronDownLightTheme.svg';
+import chevronDownDark from '../../assets/icons/chevronDownDarkTheme.svg';
 
 Sidebar.propTypes = {
   isOpenSidebar: PropTypes.bool,
@@ -119,6 +102,8 @@ const gasType = [
 ];
 
 const MINUTE_MS = 10000;
+
+import PersonAdd from '@material-ui/icons/PersonAdd';
 
 export default function Sidebar({
   isOpenSidebar,
@@ -330,9 +315,22 @@ export default function Sidebar({
         <NavSection sx={{ px: 8, color: 'black' }} navConfig={newSideBard} address={address} />
         <SidebarMobileIconsBlock>
           <SidebarMobileIconSubBlock>
-            <SidebarMobileNetworkButton>
-              <img src={testMobileNetworkButton} alt="test" onClick={handleClick} />
-            </SidebarMobileNetworkButton>
+            {isLightTheme ? (
+              <SidebarMobileNetworkButton
+                isLightTheme={isLightTheme}
+                startIcon={<img src={pyramidIcon} alt="pyramide_icon" />}
+                endIcon={<img src={chevronDown} alt="chevron_icon" />}>
+                Network
+              </SidebarMobileNetworkButton>
+            ) : (
+              <SidebarMobileNetworkButton
+                isLightTheme={isLightTheme}
+                startIcon={<img src={pyramidIcon} alt="pyramide_icon" />}
+                endIcon={<img src={chevronDownDark} alt="chevron_icon" />}>
+                Network
+              </SidebarMobileNetworkButton>
+            )}
+
             <GasButton
               isLightTheme={isLightTheme}
               startIcon={<img src={gasIcon} alt="" />}

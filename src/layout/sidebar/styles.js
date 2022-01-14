@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Drawer, IconButton } from '@material-ui/core';
+import { Drawer, Button, IconButton } from '@material-ui/core';
 
 export const DrawerLayoutMobile = styled(Drawer)`
   @media (min-width: 1281px) {
@@ -68,7 +68,21 @@ export const SidebarMobileIconSubBlock = styled.div`
   align-items: center;
 `;
 
-export const SidebarMobileNetworkButton = styled(IconButton)`
+export const SidebarMobileNetworkButton = styled(Button)`
+  width:161px;
+  height: 40px;
+  font-size: 16px;
+  font-weight: 500;
+  font-style: normal;
+  border: none;
+  border-radius: 10px;
+  color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
+  background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#10142D')};
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+      : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+}
   :hover {
     background-color: transparent !important;
 `;
