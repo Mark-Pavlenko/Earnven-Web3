@@ -66,6 +66,11 @@ export const MenuPopoverBoxNote = styled.div`
   }
 `;
 
+export const SidebarMobileGasItemsBlock = styled.div`
+  margin-top: 33px;
+  //background-color: blue;
+`;
+
 export const GasMenuItem = styled.div`
   display: flex;
   flex-direction: row;
@@ -93,6 +98,10 @@ export const GasMenuItem = styled.div`
     background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C')};
     color: ${(props) => (props.isLightTheme ? '#4453AD' : '#8F86FF')};
     font-weight: 600;
+
+    @media (max-width: 1280px) {
+      border-radius: 10px;
+    }
   }
 
   @media (max-width: 910px) {
@@ -101,4 +110,15 @@ export const GasMenuItem = styled.div`
     margin-left: 3px;
     margin-right: 3px;
   }
+`;
+
+export const MobileSidebarSpeedValueParameter = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 22px;
+`;
+
+export const MobileSidebarGasGweiLabel = styled.div`
+  margin-right: 32px;
 `;

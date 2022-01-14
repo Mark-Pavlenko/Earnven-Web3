@@ -74,8 +74,8 @@ export const SidebarMobileNetworkButton = styled(IconButton)`
 `;
 
 export const MainSidebarMobilePopoverContent = styled.div`
-  //background-color: transparent !important;
-  background-color: red;
+  background-color: transparent !important;
+  //background-color: red;
   height: 540px;
 `;
 
@@ -87,9 +87,12 @@ export const SidebarMobilePopoverGasPriceTitle = styled.p`
   font-style: normal;
   font-weight: 600;
   line-height: 41px;
+
+  color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
 `;
 
 export const SidebarMobilePopoverLink = styled.div`
+  margin-top: 34px;
   margin-left: 30px;
   font-size: 14px;
   color: #7b7c87;

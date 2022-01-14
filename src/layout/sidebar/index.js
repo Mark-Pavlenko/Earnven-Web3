@@ -67,7 +67,12 @@ import {
 } from '../../components/searchTokensMobile/styles';
 import axios from 'axios';
 import { data } from '../../globalStore';
-import { GasMenuItem } from '../../components/gasDropDownMenu/styles';
+import {
+  GasMenuItem,
+  MobileSidebarGasGweiLabel,
+  MobileSidebarSpeedValueParameter,
+  SidebarMobileGasItemsBlock,
+} from '../../components/gasDropDownMenu/styles';
 import FastGweiGasIcon from '../../assets/icons/fastGweiGasIcon.png';
 import MiddleGweiGasIcon from '../../assets/icons/middleGweiGasIcon.png';
 import SlowGweiGasIcon from '../../assets/icons/slowGweiGasIcon.png';
@@ -261,7 +266,7 @@ export default function Sidebar({
 
     // console.log('Updating Layout....')
     const content = GasPrices.map((option) => (
-      <div
+      <Box
         // key={option.value}
         selected={option.label === selected}
         onClick={() => {
@@ -270,15 +275,15 @@ export default function Sidebar({
         }}
         sx={{ py: 1, px: 2.5 }}>
         <GasMenuItem isLightTheme={isLightTheme}>
-          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          <MobileSidebarSpeedValueParameter>
             <img src={option.icon} alt="" />
             <span>{`${option.label} `}</span>
-          </div>
-          <div>
+          </MobileSidebarSpeedValueParameter>
+          <MobileSidebarGasGweiLabel>
             <span>{`${option.value} Gwei`}</span>
-          </div>
+          </MobileSidebarGasGweiLabel>
         </GasMenuItem>
-      </div>
+      </Box>
     ));
 
     setGasPricesContent(content);
@@ -363,12 +368,12 @@ export default function Sidebar({
                 },
               }}>
               <MainSidebarMobilePopoverContent>
-                <SidebarMobilePopoverGasPriceTitle>
+                <SidebarMobilePopoverGasPriceTitle isLightTheme={isLightTheme}>
                   Realtime Gas Prices
                 </SidebarMobilePopoverGasPriceTitle>
-                {GasPricesContent}
+                <SidebarMobileGasItemsBlock>{GasPricesContent}</SidebarMobileGasItemsBlock>
                 <SidebarMobilePopoverLink>
-                  Provided by
+                  Provided by{' '}
                   <a href={'https://etherscan.io/'} target="_blank">
                     etherscan.io
                   </a>
