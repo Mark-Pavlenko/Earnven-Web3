@@ -37,6 +37,8 @@ import {
   SidebarMobileDelimiter,
   MainSidebarMobilePopoverContent,
   SidebarMobileNetworkButton,
+  SidebarMobilePopoverGasPriceTitle,
+  SidebarMobilePopoverLink,
 } from './styles';
 import lightIcon from '../../assets/icons/lightIcon.svg';
 import darkIcon from '../../assets/icons/darkIcon.svg';
@@ -58,6 +60,17 @@ import Modal from '@mui/material/Modal';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import sx from '@mui/system/sx';
+import {
+  MenuPopoverBox,
+  MenuPopoverBoxNote,
+  MenuPopoverBoxTitle,
+} from '../../components/searchTokensMobile/styles';
+import axios from 'axios';
+import { data } from '../../globalStore';
+import { GasMenuItem } from '../../components/gasDropDownMenu/styles';
+import FastGweiGasIcon from '../../assets/icons/fastGweiGasIcon.png';
+import MiddleGweiGasIcon from '../../assets/icons/middleGweiGasIcon.png';
+import SlowGweiGasIcon from '../../assets/icons/slowGweiGasIcon.png';
 
 const style = {
   position: 'absolute',
@@ -79,6 +92,26 @@ Sidebar.propTypes = {
   setTheme: PropTypes.bool,
 };
 
+const gasType = [
+  {
+    value: '',
+    label: 'Fast',
+    icon: FastGweiGasIcon,
+  },
+  {
+    value: '',
+    label: 'Average',
+    icon: MiddleGweiGasIcon,
+  },
+  {
+    value: '',
+    label: 'Slow',
+    icon: SlowGweiGasIcon,
+  },
+];
+
+const MINUTE_MS = 10000;
+
 export default function Sidebar({
   isOpenSidebar,
   onCloseSidebar,
@@ -93,6 +126,11 @@ export default function Sidebar({
   const [account, setaccount] = useState(false);
   const [myWallet, setMyWallet] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
+
+  const [selected, setselected] = useState('Average');
+  const [GasPrices, setGasPrices] = useState([]);
+  const [GasPricesContent, setGasPricesContent] = useState([]);
+
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
   const dispatch = useDispatch();
 
@@ -104,8 +142,8 @@ export default function Sidebar({
     setAnchorEl(null);
   };
 
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const openSidebarMobilePopover = Boolean(anchorEl);
+  const id = openSidebarMobilePopover ? 'simple-popover' : undefined;
 
   // const [networkListPopup, setNetworkListPopup] = useState(false);
   // const handleOpen = () => setNetworkListPopup(true);
@@ -184,10 +222,67 @@ export default function Sidebar({
     }
   }, [pathname, address, name, global_wallet]);
 
-  const openNetworkListPopup = () => {
-    console.log('clicked');
-    setNetworkListPopup(true);
-  };
+  //gas items content
+  useEffect(() => {
+    async function getData() {
+      try {
+        const response = await axios.get(
+          'https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W'
+        );
+        // console.log('gas item response', response);
+        const { result } = response.data;
+        gasType[0].value = result.FastGasPrice;
+        gasType[1].value = result.ProposeGasPrice;
+        gasType[2].value = result.SafeGasPrice;
+        data.gasSelected = result.ProposeGasPrice;
+        // setGasPrices([])
+        setGasPrices([...gasType]);
+        // console.log('gasType', gasType);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    getData();
+
+    const interval = setInterval(() => {
+      // console.log('Logs every 10 secs');
+      getData();
+    }, MINUTE_MS);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const updateGasValue = (val, label) => {
+      data.gasSelected = val;
+      setselected(label);
+    };
+
+    // console.log('Updating Layout....')
+    const content = GasPrices.map((option) => (
+      <div
+        // key={option.value}
+        selected={option.label === selected}
+        onClick={() => {
+          handleClose();
+          updateGasValue(option.value, option.label);
+        }}
+        sx={{ py: 1, px: 2.5 }}>
+        <GasMenuItem isLightTheme={isLightTheme}>
+          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            <img src={option.icon} alt="" />
+            <span>{`${option.label} `}</span>
+          </div>
+          <div>
+            <span>{`${option.value} Gwei`}</span>
+          </div>
+        </GasMenuItem>
+      </div>
+    ));
+
+    setGasPricesContent(content);
+  }, [GasPrices]);
 
   // main sidebar content
   const mainSidebarLayoutContent = (
@@ -234,7 +329,7 @@ export default function Sidebar({
             </SidebarMobileNetworkButton>
             <Popover
               id={id}
-              open={open}
+              open={openSidebarMobilePopover}
               anchorEl={anchorEl}
               onClose={handleClose}
               anchorReference="anchorPosition"
@@ -250,15 +345,16 @@ export default function Sidebar({
               PaperProps={{
                 sx: {
                   mt: 7,
-                  // ml: 0.5,
-                  width: '360px',
+                  ml: 2.2,
+
+                  width: '345px',
                   height: '540px',
                   overflow: 'inherit',
                   borderRadius: '10px',
-                  background: (theme) => '#E5E5E5',
+                  // background: (theme) => '#E5E5E5',
                   mixBlendMode: 'normal',
                   boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-                  backdropFilter: 'blur(35px)',
+                  backdropFilter: 'blur(15px)',
                   ...sx,
                 },
                 style: {
@@ -267,7 +363,16 @@ export default function Sidebar({
                 },
               }}>
               <MainSidebarMobilePopoverContent>
-                <p>Some content</p>
+                <SidebarMobilePopoverGasPriceTitle>
+                  Realtime Gas Prices
+                </SidebarMobilePopoverGasPriceTitle>
+                {GasPricesContent}
+                <SidebarMobilePopoverLink>
+                  Provided by
+                  <a href={'https://etherscan.io/'} target="_blank">
+                    etherscan.io
+                  </a>
+                </SidebarMobilePopoverLink>
               </MainSidebarMobilePopoverContent>
             </Popover>
           </SidebarMobileIconSubBlock>

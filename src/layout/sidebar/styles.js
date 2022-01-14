@@ -74,9 +74,29 @@ export const SidebarMobileNetworkButton = styled(IconButton)`
 `;
 
 export const MainSidebarMobilePopoverContent = styled.div`
-  background-color: transparent !important;
+  //background-color: transparent !important;
+  background-color: red;
   height: 540px;
-  width: 345px;
+`;
+
+export const SidebarMobilePopoverGasPriceTitle = styled.p`
+  margin-top: 20px;
+  margin-left: 30px;
+  font-family: 'Saira', sans-serif;
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 41px;
+`;
+
+export const SidebarMobilePopoverLink = styled.div`
+  margin-left: 30px;
+  font-size: 14px;
+  color: #7b7c87;
+  a {
+    color: #7b7c87;
+    text-decoration: none;
+  }
 `;
 
 export const ChangeThemeBtnMobile = styled(IconButton)`
