@@ -9,7 +9,7 @@ import { useLocation } from 'react-router-dom';
 
 // material
 import Popover from '@mui/material/Popover';
-import { Drawer, ListItemIcon } from '@material-ui/core';
+import { Drawer, ListItemIcon, List, ListItem, Button } from '@material-ui/core';
 import { MHidden } from '../../components/@material-extend';
 import CompanyLogo from '../../assets/icons/logo_menu.svg';
 import Earnven from '../../assets/icons/Earnven_menu_text.svg';
@@ -39,6 +39,10 @@ import {
   SidebarMobileNetworkButton,
   SidebarMobilePopoverGasPriceTitle,
   SidebarMobilePopoverLink,
+  MobileSidebarNetworksList,
+  MobileSidebarComingSoonLabel,
+  MobileSidebarNetworksListSubBlock,
+  EthereumActiveNetwork,
 } from './styles';
 import lightIcon from '../../assets/icons/lightIcon.svg';
 import darkIcon from '../../assets/icons/darkIcon.svg';
@@ -74,6 +78,12 @@ import { alpha } from '@material-ui/core/styles';
 import pyramidIcon from '../../assets/icons/pyramidIcon.svg';
 import chevronDown from '../../assets/icons/chevronDownLightTheme.svg';
 import chevronDownDark from '../../assets/icons/chevronDownDarkTheme.svg';
+import ethIcon from '../../assets/icons/ethereum.svg';
+import AvalancheIcon from '../../assets/icons/avalancheIcon.svg';
+import bscIcon from '../../assets/icons/bscIcon.svg';
+import arbitrumIcon from '../../assets/icons/arbitrumIcon.svg';
+import fantomIcon from '../../assets/icons/fantomIcon.svg';
+import Polygon from '../../assets/icons/polygon.svg';
 
 Sidebar.propTypes = {
   isOpenSidebar: PropTypes.bool,
@@ -440,17 +450,58 @@ export default function Sidebar({
                 },
               }}>
               <MainSidebarMobilePopoverContent>
-                <p>Content for networksList</p>
-                {/*<SidebarMobilePopoverGasPriceTitle isLightTheme={isLightTheme}>*/}
-                {/*  Realtime Gas Prices*/}
-                {/*</SidebarMobilePopoverGasPriceTitle>*/}
-                {/*<SidebarMobileGasItemsBlock>{GasPricesContent}</SidebarMobileGasItemsBlock>*/}
-                {/*<SidebarMobilePopoverLink>*/}
-                {/*  Provided by{' '}*/}
-                {/*  <a href={'https://etherscan.io/'} target="_blank">*/}
-                {/*    etherscan.io*/}
-                {/*  </a>*/}
-                {/*</SidebarMobilePopoverLink>*/}
+                <MobileSidebarNetworksList isLightTheme={isLightTheme}>
+                  <EthereumActiveNetwork style={{ marginBottom: '10px' }}>
+                    <img src={ethIcon} alt={'network_icon'} />
+                    <span>Ethereum</span>
+                  </EthereumActiveNetwork>
+                  <div>
+                    <img src={AvalancheIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                    {/*<MobileSidebarNetworksListSubBlock>*/}
+                    <span style={{ color: '#b3b3b4' }}> Avalanche</span>
+                    <MobileSidebarComingSoonLabel style={{ marginLeft: '-76px' }}>
+                      Coming soon
+                    </MobileSidebarComingSoonLabel>
+                    {/*</MobileSidebarNetworksListSubBlock>*/}
+                  </div>
+                  <div>
+                    <img src={bscIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                    {/*<MobileSidebarNetworksListSubBlock>*/}
+                    <span style={{ color: '#b3b3b4' }}>BSC</span>
+                    <MobileSidebarComingSoonLabel style={{ marginLeft: '-30px' }}>
+                      Coming soon
+                    </MobileSidebarComingSoonLabel>
+                    {/*</MobileSidebarNetworksListSubBlock>*/}
+                  </div>
+                  <div>
+                    <img src={arbitrumIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                    {/*<MobileSidebarNetworksListSubBlock>*/}
+                    <span style={{ color: '#b3b3b4' }}> Arbitrum</span>
+                    <MobileSidebarComingSoonLabel style={{ marginLeft: '-65px' }}>
+                      Coming soon
+                    </MobileSidebarComingSoonLabel>
+                    {/*</MobileSidebarNetworksListSubBlock>*/}
+                  </div>
+                  {/*<Button startIcon={<img src={bscIcon} alt={'network_icon'} />}>BSC</Button>*/}
+                  <div>
+                    <img src={fantomIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                    {/*<MobileSidebarNetworksListSubBlock>*/}
+                    <span style={{ color: '#b3b3b4' }}> Fantom</span>
+                    <MobileSidebarComingSoonLabel style={{ marginLeft: '-55px' }}>
+                      Coming soon
+                    </MobileSidebarComingSoonLabel>
+                    {/*</MobileSidebarNetworksListSubBlock>*/}
+                  </div>
+                  <div>
+                    <img src={Polygon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                    {/*<MobileSidebarNetworksListSubBlock>*/}
+                    <span style={{ color: '#b3b3b4' }}>Polygon</span>
+                    <MobileSidebarComingSoonLabel style={{ marginLeft: '-60px' }}>
+                      Coming soon
+                    </MobileSidebarComingSoonLabel>
+                    {/*</MobileSidebarNetworksListSubBlock>*/}
+                  </div>
+                </MobileSidebarNetworksList>
               </MainSidebarMobilePopoverContent>
             </Popover>
           </SidebarMobileIconSubBlock>

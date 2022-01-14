@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Drawer, Button, IconButton } from '@material-ui/core';
+import { Drawer, List, Button, IconButton } from '@material-ui/core';
 
 export const DrawerLayoutMobile = styled(Drawer)`
   @media (min-width: 1281px) {
@@ -91,6 +91,81 @@ export const MainSidebarMobilePopoverContent = styled.div`
   background-color: transparent !important;
   //background-color: red;
   height: 540px;
+`;
+
+export const MobileSidebarNetworksList = styled(List)`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  margin-top: 30px;
+  margin-left: 53px;
+
+  div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 132px;
+    height: 40px;
+    margin-bottom: 25px;
+    color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
+    font-family: 'Saira', sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 41px;
+    cursor: pointer;
+
+    img {
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+  }
+
+  Button {
+    width: 132px;
+    height: 40px;
+    margin-bottom: 18px;
+    color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
+    font-family: 'Saira', sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 41px;
+  }
+`;
+
+export const EthereumActiveNetwork = styled.div`
+  :hover {
+    font-weight: 600;
+    color: #4453ad;
+    background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#10142D')};
+    box-shadow: ${(props) =>
+      props.isLightTheme
+        ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+        : '  inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+    border-radius: 10px;
+  }
+`;
+
+export const MobileSidebarComingSoonLabel = styled.span`
+  //margin-left: 28px;
+  color: #b3b3b4;
+  font-family: Saira, sans-serif;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px;
+  margin-top: 50px;
+  margin-left: -60px;
+
+  :hover {
+    cursor: pointer;
+  }
+`;
+
+export const MobileSidebarNetworksListSubBlock = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 export const SidebarMobilePopoverGasPriceTitle = styled.p`
