@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Web3 from 'web3';
 import axios from 'axios';
 import Accordion from '@material-ui/core/Accordion';
@@ -25,26 +25,23 @@ let allHash = [];
 let distinctHash = [];
 let lightThemeFinal;
 
-export default class index extends Component {
-  async componentDidUpdate() {
-    lightThemeFinal = this.props.isLightTheme;
-    console.log('isLightThemeValue456', lightThemeFinal);
-  }
+export default function TransactionHistory({ accounts, isLightTheme }) {
+  console.log('history lightTheme', isLightTheme);
+  console.log('accounts', accounts);
+  const [account, setAccount] = useState('');
+  const [content, setContent] = useState('');
+  const [page, setPage] = useState(1);
 
-  async componentWillMount() {
-    // await this.loadWeb3();
-    lightThemeFinal = this.props.isLightTheme;
-    this.setState({ contents: '' });
-    await this.loadBlockchainData(lightThemeFinal);
-  }
+  useEffect(async () => {
+    setContent('');
+    await loadBlockchainData();
+  }, []);
 
-  async loadBlockchainData(lightThemeFinal) {
-    // const web3 = window.
-
-    const accounts = this.props.address;
+  const loadBlockchainData = async (url, config) => {
+    // const accounts =  props.address;
 
     console.log('account address inside transaction component::', accounts);
-    this.setState({ account: accounts });
+    setAccount(accounts);
     allHash = [];
     distinctHash = [];
     await axios
@@ -80,13 +77,14 @@ export default class index extends Component {
         }
         distinctHash = [...new Set(allHash)];
         console.log('final object response:::', distinctHash);
-        console.log('lightThemeFinal', lightThemeFinal);
-        this.update(lightThemeFinal);
+        console.log('lightThemeFinal', isLightTheme);
+        await update(accounts);
       });
-  }
+  };
 
-  getTransactionfromHash = async (hash) => {
+  const getTransactionFromHash = async (hash) => {
     let result;
+
     try {
       result = await axios.get(
         `https://api.ethplorer.io/getTxInfo/${hash}?apiKey=EK-qSPda-W9rX7yJ-UY93y&limit=1000`
@@ -97,7 +95,7 @@ export default class index extends Component {
     return result;
   };
 
-  getTransactionGas = async (hash) => {
+  const getTransactionGas = async (hash) => {
     const web3 = new Web3(
       new Web3.providers.HttpProvider(
         'https://mainnet.infura.io/v3/8b2159b7b0944586b64f0280c927d0a8'
@@ -108,7 +106,7 @@ export default class index extends Component {
     return web3.utils.fromWei(gasValueInWei.toString(), 'ether');
   };
 
-  getEtherHistoricalPrice = async (date) => {
+  const getEtherHistoricalPrice = async (date) => {
     let result;
     try {
       const temp = await axios.get(
@@ -121,7 +119,7 @@ export default class index extends Component {
     return result;
   };
 
-  walletAddressCutter(addy) {
+  function walletAddressCutter(addy) {
     if (addy === '') {
       return addy;
     }
@@ -132,22 +130,22 @@ export default class index extends Component {
     return addynew;
   }
 
-  etherscanTxLink(link) {
+  function etherscanTxLink(link) {
     link = `https://etherscan.io/tx/${link}`;
     return link;
   }
 
-  convertTimestampToDate(epoch) {
+  function convertTimestampToDate(epoch) {
     const myDate = new Date(epoch * 1000);
     return myDate.toLocaleDateString();
   }
 
-  convertTimestampToTime(epoch) {
+  function convertTimestampToTime(epoch) {
     const myDate = new Date(epoch * 1000);
     return myDate.toLocaleTimeString();
   }
 
-  GetFormattedDate(epoch) {
+  function GetFormattedDate(epoch) {
     const todayTime = new Date(epoch * 1000);
     const month = (todayTime.getMonth() + 1).toString();
     const day = todayTime.getDate().toString();
@@ -155,9 +153,9 @@ export default class index extends Component {
     return `${day}-${month}-${year}`;
   }
 
-  browserComponent = (data) => {
+  const browserComponent = (data) => {
     const generator = new AvatarGenerator();
-    const { isLightTheme } = this.props;
+    // const { isLightTheme } = props;
     return (
       <>
         <Accordion
@@ -196,7 +194,7 @@ export default class index extends Component {
                   <font color="white">Trade</font>
                   <br />
                   <font style={{ fontSize: '10px', color: 'white' }}>
-                    {this.convertTimestampToTime(data.timestamp)}
+                    {convertTimestampToTime(data.timestamp)}
                   </font>
                 </div>
                 <div style={{ width: '18%', float: 'left', textAlign: 'left' }}>
@@ -304,7 +302,7 @@ export default class index extends Component {
                   </font>
                   <br />
                   <font style={{ fontSize: '10px', color: 'white' }}>
-                    {this.convertTimestampToTime(data.timestamp)}
+                    {convertTimestampToTime(data.timestamp)}
                   </font>
                 </div>
                 <div style={{ width: '41%', float: 'left', textAlign: 'left' }}>
@@ -385,8 +383,8 @@ export default class index extends Component {
                     />
                     <Typography variant="body2" color="red">
                       {data.status === 'Receive'
-                        ? this.walletAddressCutter(data.from)
-                        : this.walletAddressCutter(data.to)}
+                        ? walletAddressCutter(data.from)
+                        : walletAddressCutter(data.to)}
                     </Typography>
                   </Stack>
                 </div>
@@ -416,8 +414,8 @@ export default class index extends Component {
               <Stack direction="column">
                 <Typography variant="body2">Hash</Typography>
                 <Stack direction="row">
-                  <Typography href={this.etherscanTxLink(data.hash)} variant="caption">
-                    {this.walletAddressCutter(data.hash)}
+                  <Typography href={etherscanTxLink(data.hash)} variant="caption">
+                    {walletAddressCutter(data.hash)}
                   </Typography>
                   <IconButton edge="end" aria-label="copy" style={{ padding: '0px' }}>
                     <CopyToClipboard text={data.hash}>
@@ -433,7 +431,7 @@ export default class index extends Component {
     );
   };
 
-  mobileComponent = (data) => {
+  const mobileComponent = (data) => {
     const generator = new AvatarGenerator();
     return (
       <Accordion
@@ -474,7 +472,7 @@ export default class index extends Component {
                 </font>
                 <br />
                 <font style={{ fontSize: '7px', color: 'white' }}>
-                  {this.convertTimestampToTime(data.timestamp)}
+                  {convertTimestampToTime(data.timestamp)}
                 </font>
               </div>
               <div style={{ width: '27%', float: 'left', textAlign: 'left' }}>
@@ -584,7 +582,7 @@ export default class index extends Component {
                 </font>
                 <br />
                 <font style={{ fontSize: '7px', color: 'white' }}>
-                  {this.convertTimestampToTime(data.timestamp)}
+                  {convertTimestampToTime(data.timestamp)}
                 </font>
               </div>
               <div style={{ width: '40%', float: 'left', textAlign: 'left' }}>
@@ -667,8 +665,8 @@ export default class index extends Component {
                   />
                   <Typography variant="caption">
                     {data.status === 'Receive'
-                      ? this.walletAddressCutter(data.from)
-                      : this.walletAddressCutter(data.to)}
+                      ? walletAddressCutter(data.from)
+                      : walletAddressCutter(data.to)}
                   </Typography>
                 </Stack>
               </div>
@@ -701,10 +699,10 @@ export default class index extends Component {
               <Typography variant="caption">Hash</Typography>
               <Stack direction="row">
                 <Typography
-                  href={this.etherscanTxLink(data.hash)}
+                  href={etherscanTxLink(data.hash)}
                   variant="caption"
                   sx={{ fontSize: '8px' }}>
-                  {this.walletAddressCutter(data.hash)}
+                  {walletAddressCutter(data.hash)}
                 </Typography>
                 <IconButton edge="end" aria-label="copy" style={{ padding: '0px' }}>
                   <CopyToClipboard text={data.hash}>
@@ -719,18 +717,18 @@ export default class index extends Component {
     );
   };
 
-  change = (arr, isLightTheme) => {
+  const change = (arr, isLightTheme) => {
     const generator = new AvatarGenerator();
-    // const { isLightTheme } = this.props;
+    // const { isLightTheme } =  props;
     console.log('lightTheme', isLightTheme);
     contents = arr.map((object, i, arr) => (
       <>
         <BrowserView>
           {i !== 0 &&
-          this.convertTimestampToDate(object.timestamp) ===
-            this.convertTimestampToDate(arr[i - 1].timestamp) ? null : (
+          convertTimestampToDate(object.timestamp) ===
+            convertTimestampToDate(arr[i - 1].timestamp) ? null : (
             <>
-              <Typography color="blue">{this.convertTimestampToDate(object.timestamp)}</Typography>
+              <Typography color="blue">{convertTimestampToDate(object.timestamp)}</Typography>
               <MainBlock className="boxSize">
                 <TokenTableLightContainer isLightTheme={isLightTheme}>
                   <MainTable>
@@ -759,50 +757,51 @@ export default class index extends Component {
             </>
           )}
 
-          {this.browserComponent(object)}
+          {browserComponent(object)}
         </BrowserView>
-        <MobileView>{this.mobileComponent(object)}</MobileView>
+        <MobileView>{mobileComponent(object)}</MobileView>
       </>
     ));
 
     // console.log('contents', contents);
   };
 
-  update = async (isLightTheme) => {
+  const update = async (accounts) => {
     // try{
 
     const web3 = new Web3();
     arr1 = [];
-    const start = (this.state.page - 1) * 10;
-    let end = this.state.page * 10;
+    const start = (page - 1) * 10;
+    let end = page * 10;
     let data;
     // var end2;
     if (end > distinctHash.length) {
       end = distinctHash.length;
     }
+    console.log('distinctHash', distinctHash);
     for (let i = start; i < end; i++) {
       const object = {};
       // if(ops[i].transactionHash !== undefined){
 
-      data = await this.getTransactionfromHash(distinctHash[i]);
+      data = await getTransactionFromHash(distinctHash[i]);
       if (data !== null) {
-        object.txGas = await this.getTransactionGas(distinctHash[i]);
+        object.txGas = await getTransactionGas(distinctHash[i]);
         const dataObject = data.data;
         // console.log("data object value::", dataObject.from)
         object.from = web3.utils.toChecksumAddress(dataObject.from);
         object.to = web3.utils.toChecksumAddress(dataObject.to);
         object.timestamp = dataObject.timestamp;
         object.hash = dataObject.hash;
-        const formattedDate = this.GetFormattedDate(object.timestamp);
+        const formattedDate = GetFormattedDate(object.timestamp);
         let hisotricalEtherPrice;
         if (dataObject.value !== 0) {
-          hisotricalEtherPrice = await this.getEtherHistoricalPrice(formattedDate);
+          hisotricalEtherPrice = await getEtherHistoricalPrice(formattedDate);
         }
         if (dataObject.operations === undefined) {
           // console.log("eth transfer")
           // object.to = web3.utils.toChecksumAddress(dataObject.to);
           object.txType = 'Eth';
-          object.from === web3.utils.toChecksumAddress(this.state.account)
+          object.from === web3.utils.toChecksumAddress(accounts)
             ? (object.status = 'Send')
             : (object.status = 'Receive');
           object.name = 'Ethereum';
@@ -821,7 +820,9 @@ export default class index extends Component {
               object.txType = 'Token';
             }
 
-            object.from === web3.utils.toChecksumAddress(this.state.account)
+            console.log('account valid', accounts);
+
+            object.from === web3.utils.toChecksumAddress(accounts)
               ? (object.status = 'Send')
               : (object.status = 'Receive');
             const { tokenInfo } = dataObject.operations[0];
@@ -902,77 +903,39 @@ export default class index extends Component {
       arr1.push(object);
     }
     console.log(' transaction history data object::', arr1);
-    this.change(arr1, isLightTheme);
-    this.setState({ contents, isLightTheme });
+    change(arr1, isLightTheme);
+    setContent(true);
+    // setState({ contents, isLightTheme });
   };
+  console.log('accounts', accounts);
+  return (
+    <div>
+      {!contents ? (
+        <Typography variant="h3" sx={{ marginTop: '130px' }} align="center">
+          Loading...
+        </Typography>
+      ) : (
+        contents
+      )}
 
-  constructor() {
-    super();
-
-    this.state = {
-      account: '',
-      contents: '',
-      page: 1,
-      isLightTheme: '',
-    };
-  }
-
-  render() {
-    const { isLightTheme } = this.props;
-    console.log('finalLightTheme', isLightTheme);
-    return (
-      <div>
-        {!this.state.contents ? (
-          <Typography variant="h3" sx={{ marginTop: '130px' }} align="center">
-            Loading...
-          </Typography>
-        ) : (
-          this.state.contents
-        )}
-
-        <br />
-        {this.state.contents && (
-          <center>
-            <font color="white">
-              {this.state.page > 1 && (
-                <button
-                  style={{
-                    background: 'transparent',
-                    border: 'none',
-                    outline: 'none',
-                    transform: 'rotate(180deg)',
-                    cursor: 'pointer',
-                  }}
-                  onClick={async (e) => {
-                    if (this.state.page !== 1) {
-                      await this.setState({ page: this.state.page - 1 });
-                      this.update();
-                    }
-                  }}>
-                  <svg
-                    width="22"
-                    height="8"
-                    viewBox="0 0 22 8"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      d="M21.3536 4.35355C21.5488 4.15829 21.5488 3.84171 21.3536 3.64645L18.1716 0.464466C17.9763 0.269204 17.6597 0.269204 17.4645 0.464466C17.2692 0.659728 17.2692 0.976311 17.4645 1.17157L20.2929 4L17.4645 6.82843C17.2692 7.02369 17.2692 7.34027 17.4645 7.53553C17.6597 7.7308 17.9763 7.7308 18.1716 7.53553L21.3536 4.35355ZM0 4.5H21V3.5H0V4.5Z"
-                      fill="white"
-                    />
-                  </svg>
-                </button>
-              )}{' '}
-              {this.state.page}
+      <br />
+      {contents && (
+        <center>
+          <font color="white">
+            {page > 1 && (
               <button
                 style={{
                   background: 'transparent',
                   border: 'none',
                   outline: 'none',
+                  transform: 'rotate(180deg)',
                   cursor: 'pointer',
                 }}
                 onClick={async (e) => {
-                  await this.setState({ page: this.state.page + 1 });
-                  this.update();
+                  if (page !== 1) {
+                    setPage(page - 1);
+                    await update(accounts);
+                  }
                 }}>
                 <svg
                   width="22"
@@ -986,10 +949,34 @@ export default class index extends Component {
                   />
                 </svg>
               </button>
-            </font>
-          </center>
-        )}
-      </div>
-    );
-  }
+            )}{' '}
+            {page}
+            <button
+              style={{
+                background: 'transparent',
+                border: 'none',
+                outline: 'none',
+                cursor: 'pointer',
+              }}
+              onClick={async (e) => {
+                setPage(page + 1);
+                await update(accounts);
+              }}>
+              <svg
+                width="22"
+                height="8"
+                viewBox="0 0 22 8"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M21.3536 4.35355C21.5488 4.15829 21.5488 3.84171 21.3536 3.64645L18.1716 0.464466C17.9763 0.269204 17.6597 0.269204 17.4645 0.464466C17.2692 0.659728 17.2692 0.976311 17.4645 1.17157L20.2929 4L17.4645 6.82843C17.2692 7.02369 17.2692 7.34027 17.4645 7.53553C17.6597 7.7308 17.9763 7.7308 18.1716 7.53553L21.3536 4.35355ZM0 4.5H21V3.5H0V4.5Z"
+                  fill="white"
+                />
+              </svg>
+            </button>
+          </font>
+        </center>
+      )}
+    </div>
+  );
 }

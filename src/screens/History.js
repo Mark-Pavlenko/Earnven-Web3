@@ -9,7 +9,7 @@ export default function History() {
   return (
     <>
       {/*{console.log('address inside history component::', address)}*/}
-      <TransactionHistory address={address} isLightTheme={isLightTheme} />
+      <TransactionHistory accounts={address} isLightTheme={isLightTheme} />
     </>
   );
 }
