@@ -21,6 +21,7 @@ import {
   MainBlocks,
   LeftSideWrapper,
   RightSideWrapper,
+  DashboardTabsLayout,
 } from './styledComponents';
 
 function TabPanel(props) {
@@ -54,8 +55,8 @@ export default function Dashboard({ test, changeTheme }) {
   };
 
   return (
-    <Box sx={{ width: '100%', mt: 3 }}>
-      <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <Box>
+      <DashboardTabsLayout>
         <DashboardTabs isLightTheme={theme} toggleTabsHandler={handleChange} />
         <TokenButtonsBlock>
           <SendButton isLightTheme={theme} icon={sendIcon} />
@@ -66,7 +67,7 @@ export default function Dashboard({ test, changeTheme }) {
             etherScanDark={etherScanDark}
           />
         </TokenButtonsBlock>
-      </Box>
+      </DashboardTabsLayout>
       <TabPanel value={value} index={0}>
         <Page title="Dashboard">
           <Container>
