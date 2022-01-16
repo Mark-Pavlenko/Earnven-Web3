@@ -33,6 +33,7 @@ export default class index extends Component {
 
   async componentWillMount() {
     // await this.loadWeb3();
+    lightThemeFinal = this.props.isLightTheme;
     this.setState({ contents: '' });
     await this.loadBlockchainData(lightThemeFinal);
   }
