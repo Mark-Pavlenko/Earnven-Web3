@@ -5,28 +5,17 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { MobileView, BrowserView } from 'react-device-detect';
-import { Typography, Stack, IconButton, TableHead, TableRow } from '@material-ui/core';
+import { BrowserView, MobileView } from 'react-device-detect';
+import { IconButton, Stack, TableHead, TableRow, Typography } from '@material-ui/core';
 import { AvatarGenerator } from 'random-avatar-generator';
-import { FaAngleRight, FaExclamationCircle } from 'react-icons/fa';
+import { FaAngleRight } from 'react-icons/fa';
 import Avatar from 'react-avatar';
-import { styled } from '@material-ui/core/styles';
-import Tooltip, { tooltipClasses } from '@material-ui/core/Tooltip';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { MdContentCopy } from 'react-icons/md';
-import ustIcon from '../../assets/icons/ust.png';
-import UserIcon from '../../assets/icons/userIcon.png';
 import TradeIcon from '../../assets/icons/trade.svg';
 import SendIcon from '../../assets/icons/send.png';
 import ReceiveIcon from '../../assets/icons/receive.png';
-import DashboardHistoryArrowLeft from '../../assets/icons/DashboardHistoryArrowLeft.svg';
-import {
-  MainBlock,
-  TokenTableLightContainer,
-  MainTable,
-  TableTokenTitle,
-  TokensTableHeader,
-} from './styles';
+import { MainBlock, MainTable, TokensTableHeader, TokenTableLightContainer } from './styles';
 
 let contents = '';
 let ops = [];
@@ -34,18 +23,25 @@ let ops2 = [];
 let arr1 = [];
 let allHash = [];
 let distinctHash = [];
+let lightThemeFinal;
 
 export default class index extends Component {
+  async componentDidUpdate() {
+    lightThemeFinal = this.props.isLightTheme;
+    console.log('isLightThemeValue456', lightThemeFinal);
+  }
+
   async componentWillMount() {
     // await this.loadWeb3();
     this.setState({ contents: '' });
-    await this.loadBlockchainData();
+    await this.loadBlockchainData(lightThemeFinal);
   }
 
-  async loadBlockchainData() {
+  async loadBlockchainData(lightThemeFinal) {
     // const web3 = window.
 
     const accounts = this.props.address;
+
     console.log('account address inside transaction component::', accounts);
     this.setState({ account: accounts });
     allHash = [];
@@ -83,7 +79,8 @@ export default class index extends Component {
         }
         distinctHash = [...new Set(allHash)];
         console.log('final object response:::', distinctHash);
-        this.update();
+        console.log('lightThemeFinal', lightThemeFinal);
+        this.update(lightThemeFinal);
       });
   }
 
@@ -721,11 +718,12 @@ export default class index extends Component {
     );
   };
 
-  change = (arr) => {
+  change = (arr, isLightTheme) => {
     const generator = new AvatarGenerator();
-    const { isLightTheme } = this.props;
+    // const { isLightTheme } = this.props;
+    console.log('lightTheme', isLightTheme);
     contents = arr.map((object, i, arr) => (
-      <div>
+      <>
         <BrowserView>
           {i !== 0 &&
           this.convertTimestampToDate(object.timestamp) ===
@@ -734,9 +732,6 @@ export default class index extends Component {
               <Typography color="blue">{this.convertTimestampToDate(object.timestamp)}</Typography>
               <MainBlock className="boxSize">
                 <TokenTableLightContainer isLightTheme={isLightTheme}>
-                  <TableTokenTitle isLightTheme={isLightTheme}>
-                    Recently added tokens
-                  </TableTokenTitle>
                   <MainTable>
                     <TableHead>
                       <TableRow>
@@ -766,13 +761,13 @@ export default class index extends Component {
           {this.browserComponent(object)}
         </BrowserView>
         <MobileView>{this.mobileComponent(object)}</MobileView>
-      </div>
+      </>
     ));
 
     // console.log('contents', contents);
   };
 
-  update = async () => {
+  update = async (isLightTheme) => {
     // try{
 
     const web3 = new Web3();
@@ -906,8 +901,8 @@ export default class index extends Component {
       arr1.push(object);
     }
     console.log(' transaction history data object::', arr1);
-    this.change(arr1);
-    this.setState({ contents });
+    this.change(arr1, isLightTheme);
+    this.setState({ contents, isLightTheme });
   };
 
   constructor() {
@@ -917,12 +912,13 @@ export default class index extends Component {
       account: '',
       contents: '',
       page: 1,
+      isLightTheme: '',
     };
   }
 
   render() {
     const { isLightTheme } = this.props;
-
+    console.log('finalLightTheme', isLightTheme);
     return (
       <div>
         {!this.state.contents ? (
