@@ -61,6 +61,12 @@ export const RightSideWrapper = styled.div`
     width: 55%;
   }
   @media (max-width: 375px) {
-    width: 100%;
+    display: none;
+  }
+`;
+export const Mobile = styled.div`
+  display: none;
+  @media (max-width: 375px) {
+    display: block;
   }
 `;

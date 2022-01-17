@@ -21,6 +21,7 @@ import {
   MainBlocks,
   LeftSideWrapper,
   RightSideWrapper,
+  Mobile,
 } from './styledComponents';
 import axios from 'axios';
 
@@ -134,6 +135,9 @@ export default function Dashboard({ test, changeTheme }) {
             <MainBlocks>
               <LeftSideWrapper>
                 <PortfolioPerf address={address} totalValue={`$${totalValue}`} />
+                <Mobile>
+                  <AllAssets isLightTheme={theme} address={address} />
+                </Mobile>
                 <LoansAndSavings accountAddress={address} />
               </LeftSideWrapper>
               <RightSideWrapper>
