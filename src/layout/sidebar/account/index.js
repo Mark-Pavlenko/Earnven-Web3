@@ -25,11 +25,11 @@ import { useNavigate } from 'react-router-dom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { MdContentCopy } from 'react-icons/md';
 import AccountBalance from '../../../components/accountBalance';
-import WalletListPopover from './walletsListPopover';
+import WalletListPopover from './walletsListOptionsPopover';
 import { makeStyles } from '@material-ui/styles';
 import { createTheme, StyledEngineProvider, ThemeProvider } from '@material-ui/core/styles';
 import { fontSize, fontStyle, fontWeight } from '@material-ui/system';
-import Accounts from './Accounts';
+import Accounts from './walletsList/Accounts';
 
 import menurender_customhook from './menurender_customhook';
 import { useSelector, useDispatch } from 'react-redux';
@@ -171,7 +171,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
             <MyWalletsLabel isLightTheme={themeType}>
               <p isLightTheme={themeType}>{accountList.length > 0 && 'My Wallet'}</p>
             </MyWalletsLabel>
-            <WalletsList>
+            <WalletsList isMetamaskWallet={true}>
               {accountList && (
                 <WalletsListItem isLightTheme={themeType}>
                   <Accounts
@@ -191,7 +191,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
             </WalletsList>
 
             {/* all wallets */}
-            <MyWalletsLabel isLightTheme={themeType}>
+            <MyWalletsLabel isLightTheme={themeType} allWalletsListMobile={true}>
               <p isLightTheme={themeType}>{accountList.length > 0 && 'Watchlist'}</p>
             </MyWalletsLabel>
             <div>

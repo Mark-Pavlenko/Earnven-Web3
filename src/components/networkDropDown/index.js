@@ -77,11 +77,10 @@ const NetworkSelectHeader = ({ isLightTheme }) => {
             ...base,
             minWidth: '153px',
             minHeight: '40px',
-            fontSize: '15px',
             backgroundColor: isLightTheme ? '#ffffff' : '#10142D',
+            fontSize: '15px',
             border: 'none',
             borderRadius: '10px',
-
             boxShadow: isLightTheme
               ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
               : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',

@@ -28,19 +28,20 @@ import {
   HeaderLayoutMobile,
   MobileSubLayout,
   HeaderTitle,
-  BurgerIcon,
+  BurgerSidebarIconButton,
   HeaderItemsBlock,
   HeaderFirstLayout,
-  MockUserMobileAvatar,
+  UserAvatarIconButton,
   ChangeThemeBtnHeader,
 } from './styles';
 
 Header.propTypes = {
   onOpenSidebar: PropTypes.func,
+  onOpenMobileWalletsList: PropTypes.func,
   themeChanger: PropTypes.func,
 };
 
-function Header({ onOpenSidebar, finalTitle }) {
+function Header({ onOpenSidebar, onOpenMobileWalletsList, finalTitle }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -70,14 +71,13 @@ function Header({ onOpenSidebar, finalTitle }) {
     <>
       <HeaderLayoutBig isLightTheme={isLightTheme}>
         <HeaderFirstLayout>
-          <BurgerIcon onClick={onOpenSidebar} sx={{ mr: 1, color: 'text.primary' }}>
+          <BurgerSidebarIconButton onClick={onOpenSidebar} sx={{ mr: 1, color: 'text.primary' }}>
             {isLightTheme ? (
               <img src={sidebarBurgerLightIcon} alt="burger_img" />
             ) : (
               <img src={sidebarBurgerDarkIcon} alt="burger_img" />
             )}
-          </BurgerIcon>
-          <MockUserMobileAvatar src={userMockAvatar} alt="mockAvatar" />
+          </BurgerSidebarIconButton>
           <HeaderTitle isLightTheme={isLightTheme}>
             <p>{finalTitle}</p>
           </HeaderTitle>
@@ -105,7 +105,9 @@ function Header({ onOpenSidebar, finalTitle }) {
       </HeaderLayoutBig>
       <HeaderLayoutMobile isLightTheme={isLightTheme}>
         <MobileSubLayout>
-          <MockUserMobileAvatar src={userMockAvatar} alt="mockAvatar" />
+          <UserAvatarIconButton onClick={onOpenMobileWalletsList}>
+            <img src={userMockAvatar} alt="mockAvatar" />
+          </UserAvatarIconButton>
           <SearchTokensMobile isLightTheme={isLightTheme} />
           <ChangeThemeBtnHeader
             onClick={() => {
@@ -113,13 +115,13 @@ function Header({ onOpenSidebar, finalTitle }) {
             }}>
             {isLightTheme ? <img src={lightIcon} alt="" /> : <img src={darkIcon} alt="" />}
           </ChangeThemeBtnHeader>
-          <BurgerIcon onClick={onOpenSidebar} sx={{ mr: 1, color: 'text.primary' }}>
+          <BurgerSidebarIconButton onClick={onOpenSidebar} sx={{ mr: 1, color: 'text.primary' }}>
             {isLightTheme ? (
               <img src={sidebarBurgerLightIcon} alt="burger_img" />
             ) : (
               <img src={sidebarBurgerDarkIcon} alt="burger_img" />
             )}
-          </BurgerIcon>
+          </BurgerSidebarIconButton>
         </MobileSubLayout>
         <HeaderTitle isLightTheme={isLightTheme}>
           <p>{finalTitle}</p>
@@ -129,4 +131,4 @@ function Header({ onOpenSidebar, finalTitle }) {
   );
 }
 
-export default connect()(Header);
+export default Header;

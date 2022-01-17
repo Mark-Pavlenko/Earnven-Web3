@@ -1,21 +1,26 @@
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
-import { alpha } from '@material-ui/core/styles';
+import { IconButton } from '@material-ui/core';
+import { Waves as ActionHome } from '@material-ui/icons';
+import { makeStyles } from '@material-ui/styles';
 import MenuPopover from './MenuPopover';
 import gasIcon from '../../assets/icons/gasIcon.svg';
 import { data } from '../../globalStore';
 import SlowGweiGasIcon from '../../assets/icons/slowGweiGasIcon.png';
 import MiddleGweiGasIcon from '../../assets/icons/middleGweiGasIcon.png';
 import FastGweiGasIcon from '../../assets/icons/fastGweiGasIcon.png';
-// import SearchIcon from '../../assets/icons/searchIconLight.png';
-import SearchIcon from '../../assets/icons/searchIconDark.svg';
+import SearchIcon from '../../assets/icons/oldSearchIconDark.svg';
+import SearchTokensButtonMobileLight from '../../assets/icons/searchTokensButtonMobileLight.svg';
+import SearchTokensButtonMobileDark from '../../assets/icons/searchTokensButtonMobileDark.svg';
 import {
   SearchTokensMobileBtn,
   GasMenuItem,
   MenuPopoverBox,
   MenuPopoverBoxTitle,
   MenuPopoverBoxNote,
+  SearchTokensMobileButton,
 } from './styles';
+import { Waves } from '@material-ui/icons';
 
 const gasType = [
   {
@@ -37,7 +42,18 @@ const gasType = [
 
 const MINUTE_MS = 10000;
 
+const useStyles = makeStyles((theme) => ({
+  myClassName: {
+    // position: 'relative',
+    // '&:hover': {
+    //   backgroundColor: 'green !important',
+    //   borderRadius: '10px',
+    // },
+  },
+}));
+
 export default function SearchTokensMobile({ isLightTheme }) {
+  const classes = useStyles();
   const anchorRef = useRef(null);
   const [open, setopen] = useState(false);
   const [selected, setselected] = useState('Average');
@@ -116,30 +132,55 @@ export default function SearchTokensMobile({ isLightTheme }) {
     setopen(false);
   };
 
+  function addColor() {
+    this.style.backgroundColor = 'magenta';
+  }
+
+  function removeColor() {
+    this.style.backgroundColor = 'white';
+  }
+
   return (
     <>
-      <SearchTokensMobileBtn
+      {/*/!* first solution*!/*/}
+      {/*<SearchTokensMobileBtn*/}
+      {/*  isLightTheme={isLightTheme}*/}
+      {/*  startIcon={<img src={SearchIcon} alt="" />}*/}
+      {/*  ref={anchorRef}*/}
+      {/*  onClick={() => {*/}
+      {/*    console.log('gas click');*/}
+      {/*    handleOpen();*/}
+      {/*  }}*/}
+      {/*  // sx={{*/}
+      {/*  //   ...(open && {*/}
+      {/*  //     backgroundColor: (theme) => 'red',*/}
+      {/*  //   }),*/}
+      {/*  // }}*/}
+      {/*  style={{*/}
+      {/*    maxWidth: '40px',*/}
+      {/*    maxHeight: '40px',*/}
+      {/*    minWidth: '40px',*/}
+      {/*    minHeight: '40px',*/}
+      {/*    // backgroundColor: 'red',*/}
+      {/*  }}*/}
+      {/*/>*/}
+
+      {/*Actual solution*/}
+      <SearchTokensMobileButton
         isLightTheme={isLightTheme}
-        startIcon={<img src={SearchIcon} alt="" />}
-        ref={anchorRef}
-        onClick={() => {
-          console.log('gas click');
-          handleOpen();
-        }}
-        sx={{
-          ...(open && {
-            bgcolor: (theme) =>
-              alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
-          }),
-        }}
-        style={{
-          maxWidth: '40px',
-          maxHeight: '40px',
-          minWidth: '40px',
-          minHeight: '40px',
-          // backgroundColor: 'red',
-        }}
-      />
+        onClick={handleOpen}
+        className={classes.myClassName}>
+        {isLightTheme ? (
+          // <ActionHome hoverColor={'red'} alt="light_search_icon" />
+          <span>
+            <img src={SearchTokensButtonMobileLight} alt="dark_search_icon" />
+          </span>
+        ) : (
+          <span>
+            <img src={SearchTokensButtonMobileDark} alt="dark_search_icon" />
+          </span>
+        )}
+      </SearchTokensMobileButton>
       <MenuPopover
         isLightTheme={isLightTheme}
         open={open}
