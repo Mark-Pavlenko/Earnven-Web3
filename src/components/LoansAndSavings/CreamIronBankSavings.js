@@ -16,8 +16,9 @@ import Addresses from '../../contractAddresses';
 import ApiUrl from '../../apiUrls';
 import Investment from '../common/investment/investment';
 
-export default function CreamIronBank({ accountAddress, totalSavings }) {
+export default function CreamIronBank({ accountAddress, setIronBankSavings }) {
   const [TotalSavings, setTotalSavings] = useState(0);
+  console.log('TotalSavings', TotalSavings);
   const [CreamUSDT, setCreamUSDT] = useState({});
   const [CreamDAI, setCreamDAI] = useState({});
   const [CreamUSDC, setCreamUSDC] = useState({});
@@ -60,14 +61,12 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
     CreamMIM,
   ];
   const filteredTokensArray = tokensArray.filter((el) => el.totalValue > 0);
-  console.log('filteredTokensArray', TotalSavings);
   const numberWithCommas = (x) => {
     x = x.toString();
     var pattern = /(-?\d+)(\d{3})/;
     while (pattern.test(x)) x = x.replace(pattern, '$1,$2');
     return x;
   };
-
   async function loadWeb3() {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
@@ -332,7 +331,7 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
   }, [accountAddress]);
 
   useEffect(() => {
-    totalSavings(TotalSavings);
+    setIronBankSavings(TotalSavings);
   }, [TotalSavings]);
 
   useEffect(() => {
@@ -452,22 +451,6 @@ export default function CreamIronBank({ accountAddress, totalSavings }) {
       {filteredTokensArray.map((object, index) => {
         return <Investment key={index} protocol={object} logoImage={object.image} />;
       })}
-      {/*<div*/}
-      {/*  style={{*/}
-      {/*    fontSize: '12px',*/}
-      {/*    marginLeft: '15px',*/}
-      {/*    display: TotalSavings ? '' : 'none',*/}
-      {/*  }}>*/}
-      {/*  Cream Iron Bank --- {numberWithCommas(TotalSavings.toFixed(2))} USD*/}
-      {/*</div>*/}
-      {/*<div*/}
-      {/*  style={{*/}
-      {/*    fontSize: '12px',*/}
-      {/*    marginLeft: '15px',*/}
-      {/*    display: TotalSavings ? '' : 'none',*/}
-      {/*  }}>*/}
-      {/*  <span> Network </span> : <span> Ethereum </span>*/}
-      {/*</div>*/}
     </div>
   );
 }

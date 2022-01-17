@@ -226,7 +226,6 @@ export default function BancorPools({ setPoolTotal, accountAddress, setDisplay }
   }, [accountAddress]);
   return (
     <div>
-      <h1>BANCOR</h1>
       <div
         style={{
           fontSize: '12px',
@@ -238,7 +237,6 @@ export default function BancorPools({ setPoolTotal, accountAddress, setDisplay }
         {BancorTotal ? <span>Bancor --- {numberWithCommas(BancorTotal)} USD</span> : ''}
       </div>
       {BancorPoolsContent}
-      <br />
     </div>
   );
 }

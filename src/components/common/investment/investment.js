@@ -50,7 +50,7 @@ const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isS
         <div style={{ display: 'flex' }}>
           <ImagesWrapper>
             {imageData ? (
-              imageData.map((name, index) => <TokenImage firstElement={index} src={name} />)
+              imageData?.map((name, index) => <TokenImage firstElement={index} src={name} />)
             ) : (
               <MockTokenImage src={logoImage} />
             )}
@@ -111,7 +111,7 @@ const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isS
             </ContentWrapper>
           )}
 
-          {protocol.balance && (
+          {protocol.balance > 0 && (
             <ContentWrapper isLightTheme={theme}>
               <div>Balance</div>
               <div>{numberWithCommas(parseFloat(protocol.balance).toFixed(2))}</div>
@@ -120,7 +120,7 @@ const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isS
 
           {!stakedToken && protocol.price && (
             <ContentWrapper isLightTheme={theme}>
-              <div>LPprice</div>
+              <div>Price</div>
               <div>{`$${numberWithCommas(parseFloat(protocol.price).toFixed(2))}`}</div>
             </ContentWrapper>
           )}

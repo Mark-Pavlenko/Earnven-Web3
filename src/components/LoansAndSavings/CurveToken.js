@@ -138,7 +138,6 @@ export default function CurveToken({ accountAddress }) {
         Curve -- ${CurveTokenTotal} USD
         {CurveTokenContent}
       </div>
-      <br />
     </React.Fragment>
   );
 }

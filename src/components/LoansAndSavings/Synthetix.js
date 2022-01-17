@@ -25,16 +25,22 @@ import Addresses from '../../contractAddresses';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import { useDispatch } from 'react-redux';
-import { snxData, snxTotal } from '../../store/synthetixProtocol/actions';
+import {
+  snxData,
+  snxTokenData,
+  snxTokenTotal,
+  snxTotal,
+} from '../../store/synthetixProtocol/actions';
 
 export default function Synthetix({ accountAddress, onSynthetixTokenValue }) {
   const [SnxCollateralData, setSnxCollateralData] = useState([]);
   const [SnxTokenData, setSnxTokenData] = useState([]);
+
   const [SnxTokenTotalValue, setSnxTokenTotalValue] = useState(0);
   const [SnxTokenContent, setSnxTokenContent] = useState([]);
   const [SnxCollateralContent, setSnxCollateralContent] = useState([]);
   const [SnxCollateralTotal, setSnxCollateralTotal] = useState(0);
-
+  console.log('SnxTokenTotalValue', SnxTokenTotalValue);
   const dispatch = useDispatch();
 
   //get useWeb3React hook
@@ -126,6 +132,8 @@ export default function Synthetix({ accountAddress, onSynthetixTokenValue }) {
         object.totalValue = object.balance * object.price;
         object.tokenName = snxCollateralData.snxCollateralSymbolName;
         object.imageData = [snxCollateralPriceData.snxImageUrl];
+        object.protocol = 'Sythentix';
+        object.chain = 'Ethereum';
         snxCollateralTotal += object.value;
       }
 
@@ -258,11 +266,13 @@ export default function Synthetix({ accountAddress, onSynthetixTokenValue }) {
                 object.snxTokenBalance =
                   parseFloat(snxTokenDataPoint.snxTokenBalanceAmt) / 10 ** 18;
 
-                object.snxTokenPrice = snxTokenPriceData.snxPrice;
-                object.snxTokenValue = object.snxTokenBalance * object.snxTokenPrice;
-                object.snxTokenSymbol = snxTokenDataPoint.snxTokenSymbol;
-                object.snxTokenImageUrl = snxTokenPriceData.snxImageUrl;
-                svxTokenTotalValue += object.snxTokenValue;
+                object.price = snxTokenPriceData.snxPrice;
+                object.totalValue = object.snxTokenBalance * object.price;
+                object.tokenName = snxTokenDataPoint.snxTokenSymbol;
+                object.image = snxTokenPriceData.snxImageUrl;
+                object.protocol = 'Synthetix';
+                object.chain = 'Ethereum';
+                svxTokenTotalValue += object.totalValue;
                 snxDataSet.push(object);
               } catch (err) {
                 console.log('SNX Token', err.message);
@@ -272,6 +282,8 @@ export default function Synthetix({ accountAddress, onSynthetixTokenValue }) {
         } //end of for loop
 
         setSnxTokenData(snxDataSet);
+        dispatch(snxTokenData(snxDataSet));
+        dispatch(snxTokenTotal(svxTokenTotalValue));
         setSnxTokenTotalValue(svxTokenTotalValue);
         //need this log to varify the data output for now
 
@@ -355,45 +367,43 @@ export default function Synthetix({ accountAddress, onSynthetixTokenValue }) {
 
   return (
     <React.Fragment>
-      <div
-        style={{
-          fontSize: '15px',
-          marginRight: '15px',
-
-          display: (SnxTokenData.length || SnxCollateralData.length) > 0 ? '' : 'none',
-        }}>
-        <img
-          src={
-            parseFloat(SnxTokenTotalValue) > 0 || parseFloat(SnxCollateralTotal) > 0
-              ? 'https://assets.coingecko.com/coins/images/3406/thumb/SNX.png?1598631139'
-              : 'none'
-          }
-          style={{
-            height: '30px',
-            marginTop: '',
-            marginLeft: '15px',
-            display: 'inline-block',
-          }}
-          alt=""
-        />
-        {parseFloat(SnxTokenTotalValue) > 0 ? (
-          <React.Fragment>
-            Synthetix &nbsp;&nbsp; --- {SnxTokenTotalValue.toLocaleString()} USD
-            {SnxTokenContent}
-          </React.Fragment>
-        ) : (
-          ''
-        )}
-        {parseFloat(SnxCollateralTotal) > 0 ? (
-          <React.Fragment>
-            SNX Collateral &nbsp;--{SnxCollateralTotal} USD
-            {SnxCollateralContent}
-          </React.Fragment>
-        ) : (
-          ''
-        )}
-      </div>
-      <br />
+      {/*<div*/}
+      {/*  style={{*/}
+      {/*    fontSize: '15px',*/}
+      {/*    display: (SnxTokenData.length || SnxCollateralData.length) > 0 ? '' : 'none',*/}
+      {/*  }}>*/}
+      {/*<img*/}
+      {/*  src={*/}
+      {/*    parseFloat(SnxTokenTotalValue) > 0 || parseFloat(SnxCollateralTotal) > 0*/}
+      {/*      ? 'https://assets.coingecko.com/coins/images/3406/thumb/SNX.png?1598631139'*/}
+      {/*      : 'none'*/}
+      {/*  }*/}
+      {/*  style={{*/}
+      {/*    height: '30px',*/}
+      {/*    marginTop: '',*/}
+      {/*    marginLeft: '15px',*/}
+      {/*    display: 'inline-block',*/}
+      {/*  }}*/}
+      {/*  alt=""*/}
+      {/*/>*/}
+      {/*{parseFloat(SnxTokenTotalValue) > 0 ? (*/}
+      {/*  <React.Fragment>*/}
+      {/*    Synthetix &nbsp;&nbsp; ----- {SnxTokenTotalValue.toLocaleString()} USD*/}
+      {/*    {SnxTokenContent}*/}
+      {/*  </React.Fragment>*/}
+      {/*) : (*/}
+      {/*  ''*/}
+      {/*)}*/}
+      {/*  {parseFloat(SnxCollateralTotal) > 0 ? (*/}
+      {/*    <React.Fragment>*/}
+      {/*      SNX Collateral &nbsp;--{SnxCollateralTotal} USD*/}
+      {/*      {SnxCollateralContent}*/}
+      {/*    </React.Fragment>*/}
+      {/*  ) : (*/}
+      {/*    ''*/}
+      {/*  )}*/}
+      {/*</div>*/}
+      {/*<br />*/}
     </React.Fragment>
   );
 }

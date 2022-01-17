@@ -59,6 +59,9 @@ export default function Index({ accountAddress }) {
     (state) => state.LiquityStakeReducer.liquityStakeAmountUSD
   );
   const snxCollateralData = useSelector((state) => state.SynthetixProtocol.snxData);
+  const snxTokenData = useSelector((state) => state.SynthetixProtocol.snxTokenData);
+  const snxTokenTotal = useSelector((state) => state.SynthetixProtocol.snxTokenTotal);
+
   const snxCollateralTotal = useSelector((state) => state.SynthetixProtocol.snxTotal);
   const SLPTokenTotalValue = useSelector((state) => state.sushiStaking.sushiStakeTotal);
   const curveToken = useSelector((state) => state.curveToken.curveTokenData);
@@ -86,15 +89,19 @@ export default function Index({ accountAddress }) {
   const curveLpTokenTotal = useSelector((state) => state.curveLpToken.curveLpTokenTotal);
   const curveLpTokenTotalString = parseFloat(curveLpTokenTotal).toFixed(2);
 
+  //AAVE
+  const AaveStakingData = useSelector((state) => state.AaveStaking.AaveStakingData);
+  console.log('AaveStakingData', AaveStakingData);
+
   // Below code is for task https://app.clickup.com/t/1je2y9d
   // const [DisplaySavings, setDisplaySavings] = useState(null);
   // const [TotalCompoundSavings, setTotalCompoundSavings] = useState(0);
-  const [IronBankSavings, setIronBankSavings] = useState(0); //(get NaN)
+  const [IronBankSavings, setIronBankSavings] = useState(''); //(get NaN)
   const [SavingsContent, setSavingsContent] = useState([]); // aave v2
   const [LoansContent, setLoansContent] = useState([]); // aave v2 empty
   const [SavingsData, setSavingsData] = useState([]); // aave v2
   const [LoansData, SetLoansData] = useState([]); // aave v2
-
+  console.log('IronBankSavings', IronBankSavings);
   const [AaveLoansTotal, setAaveLoansTotal] = useState([]); // Aave total debt
   const [AaveSavingsTotal, setAaveSavingsTotal] = useState([]); // Aave total Savings
 
@@ -132,7 +139,7 @@ export default function Index({ accountAddress }) {
   const [CurveStakeData, setCurveStakeData] = useState([]); // Curve
   const [CurveStakeContent, setCurveStakeContent] = useState([]); // Curve
   const [CurveStakeTotal, setCurveStakeTotal] = useState([0]); // Curve Total
-
+  console.log('CurveStakeTotal', CurveStakeData);
   // BalancerV2
   const [BalancerTotalv2, setBalancerTotalv2] = useState(0);
   const [BalancerPoolsDatav2, setBalancerPoolsDatav2] = useState([]);
@@ -152,6 +159,22 @@ export default function Index({ accountAddress }) {
   const [isOthersOpen, setIsOthersOpen] = useState(true);
   const [isStakedAssetsOpen, setIsStakedAssetsOpen] = useState(true);
 
+  const combinedSnxTokenData = snxTokenData.reduce(
+    (acc, el) => ({
+      ...acc,
+      imageData: [...acc.imageData, el.image],
+      tokens: [
+        ...acc.tokens,
+        { symbol: el.tokenName, balance: el.snxTokenBalance, price: el.price },
+      ],
+      totalValue: parseFloat(+acc.totalValue + +el.totalValue).toFixed(3),
+      totalPrice: acc.totalPrice + el.price,
+      protocol: el.protocol,
+      chain: el.chain,
+    }),
+    { imageData: [], tokens: [], totalValue: 0, totalPrice: 0, protocol: '', chain: '' }
+  );
+  console.log('combinedSnxTokenData', combinedSnxTokenData);
   //get the value from the child component of the curve lp token
   const getCurveLpToken = (data) => {
     setCurveLpData(data);
@@ -1190,26 +1213,33 @@ export default function Index({ accountAddress }) {
           if (response.data.data) {
             if (response.data.data.accounts[0]) {
               const res = response.data.data.accounts[0].gauges;
+
               const stakings = [];
               let tot = 0;
               try {
                 for (let i = 0; i < res.length; i++) {
                   const object = {};
-                  object.decimals = res[0].gauge.pool.lpToken.decimals;
-                  object.symbol = res[0].gauge.pool.lpToken.symbol;
-                  object.name = res[0].gauge.pool.lpToken.name;
-                  object.balance = res[0].originalBalance / 10 ** object.decimals;
-                  object.price = res[0].gauge.pool.virtualPrice;
-                  object.totalInvestment = parseFloat(object.price * object.balance).toFixed(2);
-                  tot += parseFloat(object.totalInvestment);
-                  if (object.totalInvestment > 0) {
+                  object.decimals = res[i].gauge.pool.lpToken.decimals;
+                  object.symbol = res[i].gauge.pool.lpToken.symbol;
+                  object.name = res[i].gauge.pool.lpToken.name;
+                  object.balance = res[i].originalBalance / 10 ** object.decimals;
+                  object.tokens = [
+                    {
+                      balance: res[i].originalBalance / 10 ** object.decimals,
+                      symbol: res[i].gauge.pool.lpToken.symbol,
+                    },
+                  ];
+                  object.protocol = 'Curve Staking';
+                  object.chain = 'Ethereum';
+                  object.price = res[i].gauge.pool.virtualPrice;
+                  object.totalValue = parseFloat(object.price * object.balance).toFixed(2);
+                  tot += parseFloat(object.totalValue);
+                  if (object.totalValue > 0) {
                     stakings.push(object);
                   }
                 }
 
-                stakings.sort(
-                  (a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment)
-                );
+                stakings.sort((a, b) => parseFloat(b.totalValue) - parseFloat(a.totalValue));
               } catch (err) {
                 console.log('Err from Curve staking process', err);
               }
@@ -1266,22 +1296,19 @@ export default function Index({ accountAddress }) {
               $
               {numberWithCommas(
                 parseFloat(
-                  balances + BalancerTotal + BalancerTotalv2
+                  balances +
+                    BalancerTotal +
+                    BalancerTotalv2 +
+                    BancorPoolTotal +
+                    UniV2Total +
+                    SushiV2Total +
+                    (!isNaN(IronBankSavings) && IronBankSavings)
                   // BalancerTotal
                 ).toFixed(2)
               )}
             </TotalValue>
           </TotalValueField>
         </div>
-        {/*<center>*/}
-        {/*  <div style={{ fontSize: '25px', color: 'white' }}>*/}
-        {/*    Pools Total :{' '}*/}
-        {/*    {parseFloat(*/}
-        {/*      UniV2Total + SushiV2Total + BalancerTotal + BalancerTotalv2 + BancorPoolTotal*/}
-        {/*    ).toFixed(2)}{' '}*/}
-        {/*    USD*/}
-        {/*  </div>*/}
-        {/*</center>*/}
         {isPoolsOpen && (
           <>
             {PoolsData.map((object) => {
@@ -1295,12 +1322,12 @@ export default function Index({ accountAddress }) {
                 />
               );
             })}
-            {/*<div>2{SushiPoolsContent}</div> //TODO:check how SushiPools works with data*/}
-            {/*<BancorPools //TODO:check how BancorPools works with data*/}
-            {/*  setPoolTotal={setBancorPoolTotal}*/}
-            {/*  setDisplay={setDisplayBancor}*/}
-            {/*  accountAddress={accountAddress}*/}
-            {/*/>*/}
+            <div>{SushiPoolsContent}</div>
+            <BancorPools
+              setPoolTotal={setBancorPoolTotal}
+              setDisplay={setDisplayBancor}
+              accountAddress={accountAddress}
+            />
             {BalancerPoolsData.map((object, index) => {
               return (
                 <Investment
@@ -1312,7 +1339,6 @@ export default function Index({ accountAddress }) {
               );
             })}
             {BalancerPoolsDatav2.map((object, index) => {
-              console.log('balancerV2', object);
               return (
                 <Investment
                   key={index}
@@ -1330,7 +1356,10 @@ export default function Index({ accountAddress }) {
               accountAddress={accountAddress}
             />
             {SavingsContent}
-            <CreamIronBank totalSavings={setIronBankSavings} accountAddress={accountAddress} />
+            <CreamIronBank
+              setIronBankSavings={setIronBankSavings}
+              accountAddress={accountAddress}
+            />
             {CompoundSavingsContent}
           </>
         )}
@@ -1360,24 +1389,26 @@ export default function Index({ accountAddress }) {
             <TotalEmptyCell></TotalEmptyCell>
             <TotalValue isLightTheme={theme}>
               $
-              {parseFloat(
-                numberWithCommas(+convexStakeTotalString + +curveLpTokenTotalString)
-              ).toFixed(2)}
+              {numberWithCommas(
+                parseFloat(
+                  +convexStakeTotalString +
+                    +curveLpTokenTotalString +
+                    snxTokenTotal +
+                    CurveStakeTotal
+                ).toFixed(2)
+              )}
             </TotalValue>
           </TotalValueField>
         </div>
         {isStakedAssetsOpen && (
           <>
             {CurveStakeData.map((object) => {
-              return (
-                <StakedProtocols
-                  protocol={object}
-                  protocolName={'Curve Staking'}
-                  logoImage={CurveLogo}
-                />
-              );
+              return <Investment protocol={object} logoImage={CurveLogo} />;
             })}
             {convexStakeData.map((object) => {
+              return <Investment protocol={object} />;
+            })}
+            {snxCollateralData.map((object) => {
               return <Investment protocol={object} />;
             })}
             <Ethereum2Staking accountAddress={accountAddress} />
@@ -1385,14 +1416,21 @@ export default function Index({ accountAddress }) {
             <UniStaking accountAddress={accountAddress} />
             <YearnFinance accountAddress={accountAddress} onYearnTokenValue={getYearnTokenValue} />
             <CurveToken accountAddress={accountAddress} />
-            {curveLpToken.map((object) => {
-              return <Investment protocol={object} />;
-            })}
+            {curveLpToken &&
+              curveLpToken.map((object) => {
+                return <Investment protocol={object} />;
+              })}
             <CurveLpToken accountAddress={accountAddress} onCurveLptoken={getCurveLpToken} />
             <Synthetix
               accountAddress={accountAddress}
               onSynthetixTokenValue={getSynthetixTokenData}
             />
+            {snxTokenTotal > 0 &&
+              [combinedSnxTokenData].map((object) => {
+                return (
+                  <Investment tokenName={object.symbol} object={object.image} protocol={object} />
+                );
+              })}
             <UniStaking accountAddress={accountAddress} />
             <PickleStake accountAddress={accountAddress} />
             <PickleDill accountAddress={accountAddress} />
@@ -1410,48 +1448,6 @@ export default function Index({ accountAddress }) {
         // }}
       >
         <Header>
-          <Title isLightTheme={theme}>{'Other Assets'}</Title>
-          <ToggleButton onClick={othersHandler} isOpen={isOthersOpen} />
-        </Header>
-        <div style={{ padding: '0 29px 20px 26px', marginBottom: '20px' }}>
-          <TotalValueField isLightTheme={theme}>
-            <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
-            <TotalEmptyCell></TotalEmptyCell>
-            <TotalValue isLightTheme={theme}>
-              $
-              {parseFloat(
-                sumObjectsByKey(...BalancerPoolsDatav2, ...BalancerPoolsData) + balances
-                // BalancerTotal
-              ).toFixed(2)}
-            </TotalValue>
-          </TotalValueField>
-        </div>
-        {/*<center>*/}
-        {/*  <div style={{ fontSize: '25px', color: 'white' }}>*/}
-        {/*    Pools Total :{' '}*/}
-        {/*    {parseFloat(*/}
-        {/*      UniV2Total + SushiV2Total + BalancerTotal + BalancerTotalv2 + BancorPoolTotal*/}
-        {/*    ).toFixed(2)}{' '}*/}
-        {/*    USD*/}
-        {/*  </div>*/}
-        {/*</center>*/}
-        {isOthersOpen && (
-          <>
-            <Synthetix
-              accountAddress={accountAddress}
-              onSynthetixTokenValue={getSynthetixTokenData}
-            />
-          </>
-        )}
-      </PoolsBlock>
-      {/*=======================================>*/}
-      <PoolsBlock //four
-        isLightTheme={theme}
-        // style={{
-        //   display: YearnData.length > 0 || snxCollateralData > 0 ? '' : 'none',
-        // }}
-      >
-        <Header>
           <Title isLightTheme={theme}>{'Derivatives'}</Title>
           <ToggleButton onClick={othersHandler} isOpen={isOthersOpen} />
         </Header>
@@ -1460,7 +1456,7 @@ export default function Index({ accountAddress }) {
             <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
             <TotalEmptyCell></TotalEmptyCell>
             <TotalValue isLightTheme={theme}>
-              ${parseFloat(snxCollateralTotal).toFixed(2)}
+              ${numberWithCommas(parseFloat(snxCollateralTotal).toFixed(2))}
             </TotalValue>
           </TotalValueField>
         </div>

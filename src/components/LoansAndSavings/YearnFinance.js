@@ -241,7 +241,6 @@ export default function YearnFinance({ accountAddress }) {
         {YearnContent}
         {YearnTokenContent}
       </div>
-      <br />
     </React.Fragment>
   );
 }

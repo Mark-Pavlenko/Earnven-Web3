@@ -23,6 +23,8 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useWeb3React } from '@web3-react/core';
+import { useDispatch } from 'react-redux';
+import { setAaveTokenData } from '../../store/Aave/actions';
 
 export default function AaveStaking({ accountAddress }) {
   //varaible for AaveV2
@@ -38,12 +40,38 @@ export default function AaveStaking({ accountAddress }) {
   const [AaveStkABPTAmountUSD, setAaveStkABPTAmountUSD] = useState(0);
   const [AaveStkABPTClaimableAmt, setAaveStkABPTClaimableAmt] = useState(0);
   const [AaveStkABPTClaimableValue, setAaveStkABPTClaimableValue] = useState(0);
-  console.log('AaveStkABPTClaimableValue', AaveStkABPTClaimableValue);
   //to get the total staking value Aave v2 + stkABPT + claimable
   const [AaveStakingTotal, setAaveStakingTotal] = useState();
   const [AaveLiquidityEth, setAaveLiquidityEth] = useState();
   const [AaveStkABPTImage, setAaveStkABPTImage] = useState();
+  const dispatch = useDispatch();
 
+  const AaveTokenData = [
+    {
+      totalValue: AaveStakingTotal,
+      Liquidity: AaveLiquidityEth,
+      Protocol: 'Aave',
+      Chain: 'Ethereum',
+      tokens: [
+        {
+          symbol: 'AAVE',
+          balance: AaveV2BalanceAmt,
+          value: AaveAmountUSD,
+          Claimable: AaveV2ClaimableValue,
+          Price: AaveV2UsdPrice,
+        },
+        {
+          symbol: 'stkABPT',
+          balance: AaveStkABPTBalanceAmt,
+          value: AaveStkABPTAmountUSD,
+          Claimable: AaveStkABPTClaimableValue,
+          price: AaveStkABPTPrice,
+        },
+      ],
+      tokenImage: [aaveLogo, AaveStkABPTImage],
+    },
+  ];
+  // dispatch(setAaveTokenData(AaveTokenData));
   //get useWeb3React hook
   const { account, activate, active, chainId, connector, deactivate, error, provider, setError } =
     useWeb3React();
