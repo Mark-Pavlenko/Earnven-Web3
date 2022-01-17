@@ -24,7 +24,6 @@ export default function SushiStaking({ accountAddress }) {
   };
   //use useSelector hook to get the current state from store
   const SLPTokenData = useSelector((state) => state.sushiStaking.sushiStakeData);
-  console.log('SLPTokenData', SLPTokenData);
   //then make dispatch/send an action
   const dispatch = useDispatch();
   //below function is used to get sushi staking balance from the subgraph
@@ -126,9 +125,5 @@ export default function SushiStaking({ accountAddress }) {
     }
     setSLPTokenDataContent(content);
   }, [SLPTokenData]);
-  return (
-    <React.Fragment>
-      <div>{SLPTokenDataContent}</div>
-    </React.Fragment>
-  );
+  return <React.Fragment>{SLPTokenData && <div>{SLPTokenDataContent}</div>}</React.Fragment>;
 }

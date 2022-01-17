@@ -118,26 +118,27 @@ export default function CurveToken({ accountAddress }) {
 
   return (
     <React.Fragment>
-      <div
-        style={{
-          fontSize: '15px',
-          marginRight: '15px',
-          display: CurveTokenDataPoint.length > 0 ? '' : 'none',
-        }}>
-        <img
-          src={CurveLogo}
-          s
-          style={{
-            height: '30px',
-            marginTop: '',
-            marginLeft: '15px',
-            display: 'inline-block',
-          }}
-          alt=""
-        />
-        Curve -- ${CurveTokenTotal} USD
-        {CurveTokenContent}
-      </div>
+      {/*<div*/}
+      {/*  style={{*/}
+      {/*    fontSize: '15px',*/}
+      {/*    marginRight: '15px',*/}
+      {/*    display: CurveTokenDataPoint.length > 0 ? '' : 'none',*/}
+      {/*  }}>*/}
+      {/*  <img*/}
+      {/*    src={CurveLogo}*/}
+      {/*    s*/}
+      {/*    style={{*/}
+      {/*      height: '30px',*/}
+      {/*      marginTop: '',*/}
+      {/*      marginLeft: '15px',*/}
+      {/*      marginLeft: '15px',*/}
+      {/*      display: 'inline-block',*/}
+      {/*    }}*/}
+      {/*    alt=""*/}
+      {/*  />*/}
+      {/*  Curve -- ${CurveTokenTotal} USD*/}
+      {/*  {CurveTokenContent}*/}
+      {/*</div>*/}
     </React.Fragment>
   );
 }

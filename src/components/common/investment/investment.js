@@ -52,7 +52,7 @@ const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isS
             {imageData ? (
               imageData?.map((name, index) => <TokenImage firstElement={index} src={name} />)
             ) : (
-              <MockTokenImage src={logoImage} />
+              <MockTokenImage src={logoImage} isBorder={!logoImage} />
             )}
           </ImagesWrapper>
 

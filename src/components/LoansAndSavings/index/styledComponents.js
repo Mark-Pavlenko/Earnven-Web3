@@ -12,6 +12,11 @@ export const PoolsBlock = styled.div`
   border-radius: 10px;
   padding-top: 1px;
   padding-bottom: 1px;
+  width: 48%;
+  @media (max-width: 768px) {
+    display: block;
+    width: 100%;
+  }
 `;
 
 export const ToggleButton = styled.div`
@@ -82,6 +87,15 @@ export const Header = styled.div`
   justify-content: space-between;
   padding: 0 29px 0 26px;
   margin: 20px 0 0 0;
+`;
+
+export const InvestmentWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  @media (max-width: 768px) {
+    display: block;
+  }
 `;
 
 export const Title = styled.div`

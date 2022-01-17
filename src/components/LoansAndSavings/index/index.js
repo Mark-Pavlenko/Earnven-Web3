@@ -39,6 +39,7 @@ import {
   TotalEmptyCell,
   TotalValue,
   ToggleButton,
+  InvestmentWrapper,
 } from './styledComponents';
 import { SynthetixProtocol } from '../../../store/synthetixProtocol/synthetixProtocol';
 import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
@@ -50,6 +51,7 @@ import { convexStake } from '../../../store/convexStake/reducer';
 // import CompoundData from './Compound';
 export default function Index({ accountAddress }) {
   const YearnData = useSelector((state) => state.yearnFinance.yearnFinanceData);
+  const yearnYTokenData = useSelector((state) => state.yearnFinance.yearnYTokenData);
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
   const BeaconData = useSelector((state) => state.eth2Stake.eth2StakeData);
   const SLPTokenData = useSelector((state) => state.sushiStaking.sushiStakeData);
@@ -66,21 +68,11 @@ export default function Index({ accountAddress }) {
   const SLPTokenTotalValue = useSelector((state) => state.sushiStaking.sushiStakeTotal);
   const curveToken = useSelector((state) => state.curveToken.curveTokenData);
   const pickeStake = useSelector((state) => state.pickeStake.pickeStake);
+  const pickeDill = useSelector((state) => state.pickeDill.pickeDill);
   const uniswapV2lp = useSelector((state) => state.uniswapV2lp.uniswapV2lp);
-  console.log('CHECKYearnData', YearnData);
-  console.log('CHECKBeaconData', BeaconData);
-  console.log('CHECKSLPTokenData', SLPTokenData);
-  console.log('CHECKuniswapV2array', uniswapV2array);
-  console.log('CHECKliquityStakeAmountUSD', liquityStakeAmountUSD);
-  console.log('CHECKsnxCollateralData', snxCollateralData);
-  console.log('CHECKSLPTokenTotalValue', SLPTokenTotalValue);
-  console.log('CHECKpickeStake', pickeStake);
-  console.log('CHECKcurveStakingData', curveStakingData);
-  console.log('CHECKcurveToken', curveToken);
-  console.log('CHECKuniswapV2lp', uniswapV2lp);
+  const balancerV2lp = useSelector((state) => state.balancerV2lp.balancerV2lp);
   //convexStake
   const convexStakeData = useSelector((state) => state.convexStake.convexStakeData);
-  console.log('CHECKconvexStakeData', convexStakeData);
   const convexStakeTotal = useSelector((state) => state.convexStake.convexStakeTotal);
   const convexStakeTotalString = parseFloat(convexStakeTotal).toFixed(2);
 
@@ -91,17 +83,15 @@ export default function Index({ accountAddress }) {
 
   //AAVE
   const AaveStakingData = useSelector((state) => state.AaveStaking.AaveStakingData);
-  console.log('AaveStakingData', AaveStakingData);
 
   // Below code is for task https://app.clickup.com/t/1je2y9d
   // const [DisplaySavings, setDisplaySavings] = useState(null);
-  // const [TotalCompoundSavings, setTotalCompoundSavings] = useState(0);
+  //const [TotalCompoundSavings, setTotalCompoundSavings] = useState(0);
   const [IronBankSavings, setIronBankSavings] = useState(''); //(get NaN)
   const [SavingsContent, setSavingsContent] = useState([]); // aave v2
   const [LoansContent, setLoansContent] = useState([]); // aave v2 empty
   const [SavingsData, setSavingsData] = useState([]); // aave v2
   const [LoansData, SetLoansData] = useState([]); // aave v2
-  console.log('IronBankSavings', IronBankSavings);
   const [AaveLoansTotal, setAaveLoansTotal] = useState([]); // Aave total debt
   const [AaveSavingsTotal, setAaveSavingsTotal] = useState([]); // Aave total Savings
 
@@ -139,21 +129,17 @@ export default function Index({ accountAddress }) {
   const [CurveStakeData, setCurveStakeData] = useState([]); // Curve
   const [CurveStakeContent, setCurveStakeContent] = useState([]); // Curve
   const [CurveStakeTotal, setCurveStakeTotal] = useState([0]); // Curve Total
-  console.log('CurveStakeTotal', CurveStakeData);
+
   // BalancerV2
   const [BalancerTotalv2, setBalancerTotalv2] = useState(0);
   const [BalancerPoolsDatav2, setBalancerPoolsDatav2] = useState([]);
   const [BalancerPoolsContentv2, setBalancerPoolsContentv2] = useState([]);
-
   //Curve Lp token
   const [CurveLpdata, setCurveLpData] = useState([]); // get curve lp token data
-  console.log('CHECKCurveLpdata', CurveLpdata);
   //Synthetix data points
   const [SynthetixData, setSynthetixData] = useState([]); // get curve lp token data
-  console.log('CHECKSynthetixData', SynthetixData);
   //YearnToken
   const [YearnTokenValue, setYearnTokenValue] = useState([]);
-  console.log('CHECKYearnTokenValue', YearnTokenValue);
   //save conditions of open/close investment blocks
   const [isPoolsOpen, setIsPoolsOpen] = useState(true);
   const [isOthersOpen, setIsOthersOpen] = useState(true);
@@ -174,7 +160,7 @@ export default function Index({ accountAddress }) {
     }),
     { imageData: [], tokens: [], totalValue: 0, totalPrice: 0, protocol: '', chain: '' }
   );
-  console.log('combinedSnxTokenData', combinedSnxTokenData);
+
   //get the value from the child component of the curve lp token
   const getCurveLpToken = (data) => {
     setCurveLpData(data);
@@ -310,7 +296,6 @@ export default function Index({ accountAddress }) {
 
   useEffect(() => {
     const content = PoolsData.map((object) => {
-      console.log('object', object);
       return (
         <Tooltip
           title={
@@ -1092,7 +1077,6 @@ export default function Index({ accountAddress }) {
               object.totalValue =
                 (res[i].poolId.totalLiquidity / res[i].poolId.totalShares) * res[i].balance;
               object.price = object.totalValue / res[i].balance;
-              console.log('object.totalValue', object.totalValue);
               if (object.totalValue > 0) {
                 tot += parseFloat(object.totalValue).toFixed(2);
                 pools.push(object);
@@ -1270,20 +1254,22 @@ export default function Index({ accountAddress }) {
   }, 0);
 
   return (
-    <div>
+    <InvestmentWrapper>
       {/*=========================================>*/}
       <PoolsBlock //first
         isLightTheme={theme}
-        // style={{
-        //   display:
-        //     PoolsData.length > 0 ||
-        //     BalancerPoolsData.length > 0 ||
-        //     SushiPoolsData.length > 0 ||
-        //     DisplayBancor
-        //       ? ''
-        //       : 'none',
-        // }}
-      >
+        style={{
+          display:
+            PoolsData.length > 0 ||
+            BalancerPoolsData.length > 0 ||
+            BalancerPoolsDatav2.length > 0 ||
+            CompoundSavingsData.length > 0 ||
+            yearnYTokenData.length > 0 ||
+            SushiPoolsData.length > 0 ||
+            DisplayBancor
+              ? ''
+              : 'none',
+        }}>
         <Header>
           <Title isLightTheme={theme}>{'Liquidity pools'}</Title>
           <ToggleButton onClick={poolsHandler} isOpen={isPoolsOpen} />
@@ -1322,7 +1308,17 @@ export default function Index({ accountAddress }) {
                 />
               );
             })}
-            <div>{SushiPoolsContent}</div>
+            {SushiPoolsData.map((object) => {
+              return (
+                <ValueProtocol
+                  totalInvestment={object.totalInvestment}
+                  token0Symbol={object.token0Symbol}
+                  token1Symbol={object.token1Symbol}
+                  liquidity={object.liquidity}
+                  protocol={'Uniswap V2'}
+                />
+              );
+            })}
             <BancorPools
               setPoolTotal={setBancorPoolTotal}
               setDisplay={setDisplayBancor}
@@ -1348,6 +1344,9 @@ export default function Index({ accountAddress }) {
                 />
               );
             })}
+            {yearnYTokenData.map((object, index) => {
+              return <Investment key={index} protocol={object} />;
+            })}
             <UniswapV2 accountAddress={accountAddress} />
             <AaveStaking accountAddress={accountAddress} />
             <Cream
@@ -1367,18 +1366,21 @@ export default function Index({ accountAddress }) {
       {/*=========================================>*/}
       <PoolsBlock //second
         isLightTheme={theme}
-        // SavingsData.length > 0 || CompoundSavingsData > 0 || IronBankSavings > 0 || CreamDisplay
-        // style={{
-        //   display:
-        //     CurveStakeData.length > 0 ||
-        //     BeaconData.length > 0 ||
-        //     SLPTokenData.length > 0 ||
-        //     uniswapV2array.length > 0 ||
-        //     liquityStakeAmountUSD > 0
-        //       ? ''
-        //       : 'none',
-        // }}
-      >
+        style={{
+          display:
+            CurveStakeData.length > 0 ||
+            convexStakeData.length > 0 ||
+            snxCollateralData.length > 0 ||
+            BeaconData.length > 0 ||
+            uniswapV2lp.length > 0 ||
+            curveStakingData.length > 0 ||
+            SLPTokenData.length > 0 ||
+            curveLpToken.length > 0 ||
+            uniswapV2array.length > 0 ||
+            liquityStakeAmountUSD > 0
+              ? ''
+              : 'none',
+        }}>
         <Header>
           <Title isLightTheme={theme}>{'Staked Assets'}</Title>
           <ToggleButton onClick={stakedHandler} isOpen={isStakedAssetsOpen} />
@@ -1411,13 +1413,41 @@ export default function Index({ accountAddress }) {
             {snxCollateralData.map((object) => {
               return <Investment protocol={object} />;
             })}
+            {Array.isArray(SLPTokenData) &&
+              SLPTokenData.map((object) => {
+                return <Investment protocol={object} />;
+              })}
+            {Array.isArray(uniswapV2lp) &&
+              uniswapV2lp.map((object) => {
+                return (
+                  <ValueProtocol
+                    protocol={object}
+                    totalInvestment={object.totalInvestment}
+                    token0Symbol={object.token0Symbol}
+                    token1Symbol={object.token1Symbol}
+                    liquidity={object.liquidity}
+                    chain={'Ethereum'}
+                    protocolName={'Uniswap-V2'}
+                  />
+                );
+              })}
+            {curveStakingData.map((object) => {
+              return <Investment protocol={object} />;
+            })}
             <Ethereum2Staking accountAddress={accountAddress} />
             <SushiStaking accountAddress={accountAddress} />
             <UniStaking accountAddress={accountAddress} />
             <YearnFinance accountAddress={accountAddress} onYearnTokenValue={getYearnTokenValue} />
+            {curveToken.map((object) => {
+              return <Investment protocol={object} />;
+            })}
             <CurveToken accountAddress={accountAddress} />
             {curveLpToken &&
               curveLpToken.map((object) => {
+                return <Investment protocol={object} />;
+              })}
+            {Array.isArray(BeaconData) &&
+              BeaconData.map((object) => {
                 return <Investment protocol={object} />;
               })}
             <CurveLpToken accountAddress={accountAddress} onCurveLptoken={getCurveLpToken} />
@@ -1433,7 +1463,6 @@ export default function Index({ accountAddress }) {
               })}
             <UniStaking accountAddress={accountAddress} />
             <PickleStake accountAddress={accountAddress} />
-            <PickleDill accountAddress={accountAddress} />
             <LiquityStaking accountAddress={accountAddress} />
             <ConvexStaking accountAddress={accountAddress} />
             <SnowSwapStaking accountAddress={accountAddress} />
@@ -1443,10 +1472,9 @@ export default function Index({ accountAddress }) {
       {/*=======================================>*/}
       <PoolsBlock //third
         isLightTheme={theme}
-        // style={{
-        //   display: YearnData.length > 0 || snxCollateralData > 0 ? '' : 'none',
-        // }}
-      >
+        style={{
+          display: YearnData.length > 0 || snxCollateralData > 0 ? '' : 'none',
+        }}>
         <Header>
           <Title isLightTheme={theme}>{'Derivatives'}</Title>
           <ToggleButton onClick={othersHandler} isOpen={isOthersOpen} />
@@ -1465,9 +1493,40 @@ export default function Index({ accountAddress }) {
             {snxCollateralData.map((object) => {
               return <Investment protocol={object} />;
             })}
+            {YearnData.map((object) => {
+              return <Investment protocol={object} />;
+            })}
           </>
         )}
       </PoolsBlock>
-    </div>
+      {/*=======================================>*/}
+      <PoolsBlock //four
+        isLightTheme={theme}
+        style={{
+          display: pickeDill.length > 0 ? '' : 'none',
+        }}>
+        <Header>
+          <Title isLightTheme={theme}>{'Vaults'}</Title>
+          <ToggleButton onClick={othersHandler} isOpen={isOthersOpen} />
+        </Header>
+        <div style={{ padding: '0 29px 20px 26px', marginBottom: '20px' }}>
+          <TotalValueField isLightTheme={theme}>
+            <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
+            <TotalEmptyCell></TotalEmptyCell>
+            <TotalValue isLightTheme={theme}>
+              ${numberWithCommas(parseFloat(snxCollateralTotal).toFixed(2))}
+            </TotalValue>
+          </TotalValueField>
+        </div>
+        {isOthersOpen && (
+          <>
+            <PickleDill accountAddress={accountAddress} />
+            {pickeDill.map((object, index) => {
+              return <Investment key={index} protocol={object} logoImage={object.icon} />;
+            })}
+          </>
+        )}
+      </PoolsBlock>
+    </InvestmentWrapper>
   );
 }

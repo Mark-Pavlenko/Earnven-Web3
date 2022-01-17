@@ -54,7 +54,7 @@ export default {
   SET_SNX_TOKEN_DATA: 'SET_SNX_TOKEN_DATA',
   SET_SNX_TOKEN_TOTAL: 'SET_SNX_TOKEN_TOTAL',
   //PickleDill
-  SET_PICKLE_DILL: 'SET_PICKLE_DILL',
+  SET_PICKLE_STAKE: 'SET_PICKLE_STAKE',
   GET_PICKLE_DILL: 'GET_PICKLE_DILL',
 
   //Curve(crv) staking and claimable

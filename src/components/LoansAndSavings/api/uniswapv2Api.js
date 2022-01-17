@@ -48,7 +48,7 @@ export const getuniswapV2data = async (attributes) => {
         for (let i = 0; i < res.length; i++) {
           const object = {};
           object.id = res[i].pair.id;
-          object.tokenBalance = res[i].liquidityTokenBalance;
+          object.balance = res[i].liquidityTokenBalance;
           object.tokenSupply = res[i].pair.totalSupply;
           object.token0name = res[i].pair.token0.name;
           object.token1name = res[i].pair.token1.name;

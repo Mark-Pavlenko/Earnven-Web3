@@ -448,9 +448,10 @@ export default function CreamIronBank({ accountAddress, setIronBankSavings }) {
 
   return (
     <div>
-      {filteredTokensArray.map((object, index) => {
-        return <Investment key={index} protocol={object} logoImage={object.image} />;
-      })}
+      {filteredTokensArray &&
+        filteredTokensArray.map((object, index) => {
+          return <Investment key={index} protocol={object} logoImage={object.image} />;
+        })}
     </div>
   );
 }
