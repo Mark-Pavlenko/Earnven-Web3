@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Box from '@material-ui/core/Box';
-import { Table, TableContainer, TableCell } from '@material-ui/core';
+import { Table, TableContainer, TableCell, TableRow } from '@material-ui/core';
 
 export const TestBlock = styled.div`
   color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
@@ -57,7 +57,7 @@ export const MainTable = styled(Table)`
   opacity: 0.8;
 `;
 
-export const TokensTableHeader = styled(TableCell)`
+export const TransactionHistoryTableHeader = styled(TableCell)`
   color: #7e848f;
   font-family: 'Saira', sans-serif;
   font-style: normal;
@@ -68,98 +68,56 @@ export const TokensTableHeader = styled(TableCell)`
   border: none;
 `;
 
-export const TokensTableCell = styled(TableCell)`
-  color: ${(props) => (props.isLightTheme ? ' #1E1E20' : '#ffffff')};
-  border-bottom: ${(props) => (props.isLightTheme ? ' none' : '1px solid #f5f5f5')};
-  font-weight: ${(props) => (props.isLightTheme ? 'normal' : 'bold')};
-`;
-
-export const TokenImg = styled.img`
-   {
-    width: 20px;
-    height: 20px;
-    display: inline;
-    vertical-align: top;
-    left: 200px;
-    margin-top: -20px;
-    margin-right: 10px;
-  }
-`;
-
-export const TokenInfoNameBlock = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-export const TokenNameSymbol = styled.div`
-  p:first-child {
-    color: ${(props) => (props.isLightTheme ? ' #1E1E20' : '#ffffff')};
-  }
-
-  p:last-child {
-    font-size: 10px;
-    color: ${(props) => (props.isLightTheme ? ' #a9a9a9' : '#ffffff')};
-  }
-`;
-
-export const TokenTableCellValue = styled(TableCell)`
-  color: ${(props) => (props.isLightTheme ? ' #1e1e20' : '#ffffff')};
-  font-weight: ${(props) => (props.isLightTheme ? 'normal' : 'bold')};
-  font-family: 'Saira', sans-serif;
-  font-size: 14px;
-  line-height: 22px;
-  align-items: center;
-  border-bottom: 1px solid #f5f5f5;
-
-  //:first-child {
-  //  border: none !important;
-  //}
-  //
-  //:last-child {
-  //  margin-right: 20px;
-  //}
-`;
-
-export const TokenTableCellBlockChain = styled.div`
-  width: 140px;
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  height: 50px;
-  background: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
-  //box-shadow: 7px 21px 22px 15px rgba(51, 78, 131, 0.17);
-  border-radius: 10px;
-  box-sizing: border-box;
-  font-family: 'Saira', sans-serif;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 50px;
-`;
-
-export const BlockChainImg = styled.img`
-  width: 20px;
-  height: 20px;
-  display: inline;
-  vertical-align: middle;
-  line-height: 50px;
-  margin-right: 10px;
-`;
-
-export const BlockChainName = styled.p`
-  font-weight: ${(props) => (props.isLightTheme ? 'normal' : 'bold')};
-`;
-
-export const TestListItem = styled.li`
-  color: ${(props) => (props.isLightTheme ? 'green' : 'blue')};
-`;
-
 export const TransactionDateTimestamp = styled.p`
-  margin-left: 26px;
+  margin-left: 25px;
+  margin-bottom: 15px;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: 22px;
   letter-spacing: 0;
   color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
+
+  :not(:first-child) {
+    margin-top: 50px;
+  }
+`;
+
+export const TransactionsHistoryTable = styled(MainTable)`
+  > tbody > tr:last-child {
+    background: #ff0000;
+  }
+`;
+
+export const TransactionTableRow = styled(TableRow)`
+  border-top: 1px solid rgba(224, 224, 224, 1);
+
+  border-bottom: 1px solid rgba(224, 224, 224, 1);
+`;
+
+export const HistoryTableCell = styled(TableCell)`
+  display: flex;
+  height: 71px;
+  //width: 200px;
+  margin-left: 29px;
+  border-bottom: none;
+  //background-color: red;
+`;
+
+export const TransactionIcon = styled.img`
+  width: 28px;
+  height: 28px;
+  margin-top: 5px;
+`;
+
+export const DateLabelsSubBlock = styled.div`
+  margin-left: 10px;
+`;
+
+export const TransactionName = styled.p`
+  color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
+`;
+
+export const TransactionTimestamp = styled.p`
+  color: #80868f;
 `;

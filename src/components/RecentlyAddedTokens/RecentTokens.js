@@ -18,7 +18,6 @@ import {
   TokenNameSymbol,
   TokenTableCellValue,
 } from './styles';
-import './recentlyAddedToken.css';
 
 // import { ThemeContext } from '../../../src/layout/app/index';
 

@@ -28,11 +28,17 @@ import gasPumpIconLight from '../../assets/icons/gasPumpHistoryLight.svg';
 import gasPumpIconDark from '../../assets/icons/gasPumpHistoryDark.svg';
 import {
   MainBlock,
-  MainTable,
-  TestListItem,
-  TokensTableHeader,
+  TransactionHistoryTableHeader,
   DashboardHistoryContainer,
   TransactionDateTimestamp,
+  TransactionsHistoryTable,
+  LoadingBlock,
+  HistoryTableCell,
+  DateLabelsSubBlock,
+  TransactionName,
+  TransactionTimestamp,
+  TransactionIcon,
+  TransactionTableRow,
 } from './styles';
 
 let contents = '';
@@ -172,13 +178,6 @@ export default class index extends Component {
     const year = todayTime.getFullYear().toString();
     return `${day}-${month}-${year}`;
   }
-
-  // browserComponent = (data) => {
-  //   const generator = new AvatarGenerator();
-  //   return (
-  //
-  //   );
-  // };
 
   update = async (isLightTheme) => {
     // try{
@@ -615,26 +614,30 @@ export default class index extends Component {
     return (
       <>
         {this.state.testArr.length === 0 ? (
-          <Typography variant="h3" align="center" style={{ color: 'red' }}>
-            Loading...
-          </Typography>
+          <LoadingBlock>
+            <p>Loading...</p>
+          </LoadingBlock>
         ) : (
           <>
             <MainBlock className="boxSize">
               <DashboardHistoryContainer isLightTheme={isLightTheme}>
-                <MainTable>
+                <TransactionsHistoryTable>
                   <TableHead>
                     <TableRow>
-                      <TokensTableHeader
+                      <TransactionHistoryTableHeader
                         isLightTheme={isLightTheme}
                         style={{ paddingLeft: '25px' }}>
                         Date
-                      </TokensTableHeader>
-                      <TokensTableHeader isLightTheme={isLightTheme}>From/To</TokensTableHeader>
-                      <TokensTableHeader isLightTheme={isLightTheme} className="price-title">
+                      </TransactionHistoryTableHeader>
+                      <TransactionHistoryTableHeader isLightTheme={isLightTheme}>
+                        From/To
+                      </TransactionHistoryTableHeader>
+                      <TransactionHistoryTableHeader
+                        isLightTheme={isLightTheme}
+                        className="price-title">
                         Quantity
-                      </TokensTableHeader>
-                      <TokensTableHeader
+                      </TransactionHistoryTableHeader>
+                      <TransactionHistoryTableHeader
                         isLightTheme={isLightTheme}
                         style={{ display: 'flex', flexDirection: 'row' }}>
                         {isLightTheme ? (
@@ -643,11 +646,10 @@ export default class index extends Component {
                           <img src={gasPumpIconDark} alt="gas_icon" />
                         )}
                         <span style={{ marginLeft: '5px' }}> Gas fee</span>
-                      </TokensTableHeader>
-                      <TokensTableHeader isLightTheme={isLightTheme} />
+                      </TransactionHistoryTableHeader>
+                      <TransactionHistoryTableHeader isLightTheme={isLightTheme} />
                     </TableRow>
                   </TableHead>
-
                   <TableBody>
                     {this.state.testArr.map((object, i, arr) => (
                       <>
@@ -658,11 +660,10 @@ export default class index extends Component {
                             {this.convertTimestampToDate(object.timestamp)}
                           </TransactionDateTimestamp>
                         )}
-
-                        <TableRow>
-                          <TableCell>
-                            <img
-                              style={{ paddingTop: '10px' }}
+                        {/*<div style={{ marginLeft: '100px', marginRight: '100px' }}>*/}
+                        <TransactionTableRow>
+                          <HistoryTableCell>
+                            <TransactionIcon
                               src={
                                 object.txType === 'TRADING'
                                   ? TradeIcon
@@ -670,14 +671,27 @@ export default class index extends Component {
                                   ? ReceiveIcon
                                   : SendIcon
                               }
-                              alt=""
+                              alt="transaction_img"
                             />
-                          </TableCell>
-                        </TableRow>
+                            <DateLabelsSubBlock>
+                              {object.txType === 'TRADING' ? (
+                                <TransactionName isLightTheme={isLightTheme}>Trade</TransactionName>
+                              ) : (
+                                <TransactionName isLightTheme={isLightTheme}>
+                                  {object.txType === 'Approval' ? object.txType : object.status}
+                                </TransactionName>
+                              )}
+                              <TransactionTimestamp>
+                                {this.convertTimestampToTime(object.timestamp)}
+                              </TransactionTimestamp>
+                            </DateLabelsSubBlock>
+                          </HistoryTableCell>
+                        </TransactionTableRow>
+                        {/*</div>*/}
                       </>
                     ))}
                   </TableBody>
-                </MainTable>
+                </TransactionsHistoryTable>
                 <div>
                   <font color="green">
                     {this.state.page > 1 && (
@@ -688,6 +702,7 @@ export default class index extends Component {
                           outline: 'none',
                           transform: 'rotate(180deg)',
                           cursor: 'pointer',
+                          color: 'green',
                         }}
                         onClick={async (e) => {
                           if (this.state.page !== 1) {
