@@ -46,6 +46,7 @@ import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
 import UniswapV2 from '../LiqudityPools/UniswapV2';
 import CurveToken from '../CurveToken';
 import { convexStake } from '../../../store/convexStake/reducer';
+import SushiProtocol from '../../common/investment/sushiProtocolComponent/sushiProtocol';
 
 // Below code is for task https://app.clickup.com/t/1je2y9d
 // import CompoundData from './Compound';
@@ -55,11 +56,13 @@ export default function Index({ accountAddress }) {
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
   const BeaconData = useSelector((state) => state.eth2Stake.eth2StakeData);
   const SLPTokenData = useSelector((state) => state.sushiStaking.sushiStakeData);
+  console.log('SLPTokenData', SLPTokenData);
   const uniswapV2array = useSelector((state) => state.uniswapV2stake.uniswapV2stake);
   const curveStakingData = useSelector((state) => state.curveStaking.curveStakingData);
   const liquityStakeAmountUSD = useSelector(
     (state) => state.LiquityStakeReducer.liquityStakeAmountUSD
   );
+
   const snxCollateralData = useSelector((state) => state.SynthetixProtocol.snxData);
   const snxTokenData = useSelector((state) => state.SynthetixProtocol.snxTokenData);
   const snxTokenTotal = useSelector((state) => state.SynthetixProtocol.snxTokenTotal);
@@ -1415,7 +1418,7 @@ export default function Index({ accountAddress }) {
             })}
             {Array.isArray(SLPTokenData) &&
               SLPTokenData.map((object) => {
-                return <Investment protocol={object} />;
+                return <SushiProtocol protocol={object} protocolName={'Sushi'} />;
               })}
             {Array.isArray(uniswapV2lp) &&
               uniswapV2lp.map((object) => {
