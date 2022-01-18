@@ -53,10 +53,6 @@ export const TableTokenTitle = styled.p`
   color: ${(props) => (props.isLightTheme ? ' #1e1e20' : '#ffffff')};
 `;
 
-export const MainTable = styled(Table)`
-  opacity: 0.8;
-`;
-
 export const TransactionHistoryTableHeader = styled(TableCell)`
   color: #7e848f;
   font-family: 'Saira', sans-serif;
@@ -83,7 +79,7 @@ export const TransactionDateTimestamp = styled.p`
   }
 `;
 
-export const TransactionsHistoryTable = styled(MainTable)`
+export const TransactionsHistoryTable = styled(Table)`
   > tbody > tr:last-child {
     background: #ff0000;
   }

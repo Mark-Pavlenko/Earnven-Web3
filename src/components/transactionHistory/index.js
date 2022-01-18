@@ -21,11 +21,14 @@ import { FaAngleRight } from 'react-icons/fa';
 import Avatar from 'react-avatar';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { MdContentCopy } from 'react-icons/md';
-import TradeIcon from '../../assets/icons/trade.svg';
+import TradeIconLight from '../../assets/icons/tradeIconLight.svg';
+import TradeIconDark from '../../assets/icons/tradeIconDark.svg';
 import SendIcon from '../../assets/icons/send.png';
 import ReceiveIcon from '../../assets/icons/receive.png';
 import gasPumpIconLight from '../../assets/icons/gasPumpHistoryLight.svg';
 import gasPumpIconDark from '../../assets/icons/gasPumpHistoryDark.svg';
+import receiveIconLight from '../../assets/icons/receiveIconLight.svg';
+import receiveIconDark from '../../assets/icons/receiveIconDark.svg';
 import {
   MainBlock,
   TransactionHistoryTableHeader,
@@ -355,7 +358,7 @@ export default class index extends Component {
                 style={{ paddingTop: '10px' }}
                 src={
                   data.txType === 'TRADING'
-                    ? TradeIcon
+                    ? TradeIconDark
                     : data.status === 'Receive'
                     ? ReceiveIcon
                     : SendIcon
@@ -666,9 +669,13 @@ export default class index extends Component {
                             <TransactionIcon
                               src={
                                 object.txType === 'TRADING'
-                                  ? TradeIcon
+                                  ? isLightTheme
+                                    ? TradeIconLight
+                                    : TradeIconDark
                                   : object.status === 'Receive'
-                                  ? ReceiveIcon
+                                  ? isLightTheme
+                                    ? receiveIconLight
+                                    : receiveIconDark
                                   : SendIcon
                               }
                               alt="transaction_img"
