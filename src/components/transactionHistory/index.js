@@ -6,7 +6,16 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { BrowserView, MobileView } from 'react-device-detect';
-import { IconButton, Stack, TableBody, TableHead, TableRow, Typography } from '@material-ui/core';
+import walletAddressCutter from '../../utils/helpers';
+import {
+  IconButton,
+  Stack,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@material-ui/core';
 import { AvatarGenerator } from 'random-avatar-generator';
 import { FaAngleRight } from 'react-icons/fa';
 import Avatar from 'react-avatar';
@@ -604,6 +613,8 @@ export default class index extends Component {
           <>
             <MainBlock className="boxSize">
               <DashboardHistoryContainer isLightTheme={isLightTheme}>
+                {/*{this.state.testArr.map((object, i, arr) => this.browserComponent(object))}*/}
+
                 <MainTable>
                   <TableHead>
                     <TableRow>
@@ -627,19 +638,31 @@ export default class index extends Component {
                   </TableHead>
                   <TableBody>
                     {this.state.testArr.map((object, i, arr) => (
-                      <div>
+                      <TableRow>
                         {i !== 0 &&
                         this.convertTimestampToDate(object.timestamp) ===
                           this.convertTimestampToDate(arr[i - 1].timestamp) ? null : (
-                          <>
-                            <Typography color="red">
-                              {this.convertTimestampToDate(object.timestamp)}
-                            </Typography>
-                          </>
+                          <span>{this.convertTimestampToDate(object.timestamp)}</span>
                         )}
-
-                        {this.browserComponent(object)}
-                      </div>
+                        <TableCell>
+                          <img
+                            style={{ paddingTop: '10px' }}
+                            src={
+                              object.txType === 'TRADING'
+                                ? TradeIcon
+                                : object.status === 'Receive'
+                                ? ReceiveIcon
+                                : SendIcon
+                            }
+                            alt=""
+                          />
+                        </TableCell>
+                        <TableCell> {object.txGas}</TableCell>
+                        <TableCell> {object.from}</TableCell>
+                        <TableCell> {object.to}</TableCell>
+                        <TableCell> {object.value}</TableCell>
+                        <TableCell> {object.txType}</TableCell>
+                      </TableRow>
                     ))}
                   </TableBody>
                 </MainTable>
