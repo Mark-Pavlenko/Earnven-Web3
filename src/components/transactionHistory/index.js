@@ -6,7 +6,7 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { BrowserView, MobileView } from 'react-device-detect';
-import { IconButton, Stack, TableHead, TableRow, Typography } from '@material-ui/core';
+import { IconButton, Stack, TableBody, TableHead, TableRow, Typography } from '@material-ui/core';
 import { AvatarGenerator } from 'random-avatar-generator';
 import { FaAngleRight } from 'react-icons/fa';
 import Avatar from 'react-avatar';
@@ -15,12 +15,14 @@ import { MdContentCopy } from 'react-icons/md';
 import TradeIcon from '../../assets/icons/trade.svg';
 import SendIcon from '../../assets/icons/send.png';
 import ReceiveIcon from '../../assets/icons/receive.png';
+import gasPumpIconLight from '../../assets/icons/gasPumpHistoryLight.svg';
+import gasPumpIconDark from '../../assets/icons/gasPumpHistoryDark.svg';
 import {
   MainBlock,
   MainTable,
   TestListItem,
   TokensTableHeader,
-  TokenTableLightContainer,
+  DashboardHistoryContainer,
 } from './styles';
 
 let contents = '';
@@ -592,113 +594,116 @@ export default class index extends Component {
   render() {
     const { isLightTheme } = this.props;
     console.log('testArr object', this.state.testArr);
-    console.log('finalLightTheme', isLightTheme);
     return (
-      // <div style={{ backgroundColor: 'green' }}>
-      <div>
+      <>
         {this.state.testArr.length === 0 ? (
-          <Typography variant="h3" sx={{ marginTop: '130px' }} align="center">
+          <Typography variant="h3" align="center" style={{ color: 'red' }}>
             Loading...
           </Typography>
         ) : (
           <>
             <MainBlock className="boxSize">
-              <TokenTableLightContainer isLightTheme={isLightTheme}>
+              <DashboardHistoryContainer isLightTheme={isLightTheme}>
                 <MainTable>
                   <TableHead>
                     <TableRow>
-                      <TokensTableHeader isLightTheme={isLightTheme}>№</TokensTableHeader>
-                      <TokensTableHeader isLightTheme={isLightTheme}>Name</TokensTableHeader>
+                      <TokensTableHeader isLightTheme={isLightTheme}>Date</TokensTableHeader>
+                      <TokensTableHeader isLightTheme={isLightTheme}>From/To</TokensTableHeader>
                       <TokensTableHeader isLightTheme={isLightTheme} className="price-title">
-                        Price
+                        Quantity
                       </TokensTableHeader>
-                      <TokensTableHeader isLightTheme={isLightTheme}>1H</TokensTableHeader>
-                      <TokensTableHeader isLightTheme={isLightTheme}>24H</TokensTableHeader>
-                      <TokensTableHeader isLightTheme={isLightTheme}>
-                        Fully Diluted Market Cap
+                      <TokensTableHeader
+                        isLightTheme={isLightTheme}
+                        style={{ display: 'flex', flexDirection: 'row' }}>
+                        {isLightTheme ? (
+                          <img src={gasPumpIconLight} alt="gas_icon" />
+                        ) : (
+                          <img src={gasPumpIconDark} alt="gas_icon" />
+                        )}
+                        <span style={{ marginLeft: '5px' }}> Gas fee</span>
                       </TokensTableHeader>
-                      <TokensTableHeader isLightTheme={isLightTheme}>Volume</TokensTableHeader>
-                      <TokensTableHeader isLightTheme={isLightTheme}>Blockchain</TokensTableHeader>
-                      <TokensTableHeader isLightTheme={isLightTheme}>Added</TokensTableHeader>
+                      <TokensTableHeader isLightTheme={isLightTheme} />
                     </TableRow>
                   </TableHead>
-                </MainTable>
-              </TokenTableLightContainer>
-            </MainBlock>
-            {this.state.testArr.map((object, i, arr) => (
-              <div>
-                {i !== 0 &&
-                this.convertTimestampToDate(object.timestamp) ===
-                  this.convertTimestampToDate(arr[i - 1].timestamp) ? null : (
-                  <>
-                    <Typography color="red">
-                      {this.convertTimestampToDate(object.timestamp)}
-                    </Typography>
-                  </>
-                )}
+                  <TableBody>
+                    {this.state.testArr.map((object, i, arr) => (
+                      <div>
+                        {i !== 0 &&
+                        this.convertTimestampToDate(object.timestamp) ===
+                          this.convertTimestampToDate(arr[i - 1].timestamp) ? null : (
+                          <>
+                            <Typography color="red">
+                              {this.convertTimestampToDate(object.timestamp)}
+                            </Typography>
+                          </>
+                        )}
 
-                {this.browserComponent(object)}
-              </div>
-            ))}
-            <center>
-              <font color="green">
-                {this.state.page > 1 && (
-                  <button
-                    style={{
-                      background: 'transparent',
-                      border: 'none',
-                      outline: 'none',
-                      transform: 'rotate(180deg)',
-                      cursor: 'pointer',
-                    }}
-                    onClick={async (e) => {
-                      if (this.state.page !== 1) {
-                        await this.setState({ page: this.state.page - 1 });
+                        {this.browserComponent(object)}
+                      </div>
+                    ))}
+                  </TableBody>
+                </MainTable>
+                <center>
+                  <font color="green">
+                    {this.state.page > 1 && (
+                      <button
+                        style={{
+                          background: 'transparent',
+                          border: 'none',
+                          outline: 'none',
+                          transform: 'rotate(180deg)',
+                          cursor: 'pointer',
+                        }}
+                        onClick={async (e) => {
+                          if (this.state.page !== 1) {
+                            await this.setState({ page: this.state.page - 1 });
+                            await this.update();
+                          }
+                        }}>
+                        <svg
+                          width="22"
+                          height="8"
+                          viewBox="0 0 22 8"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M21.3536 4.35355C21.5488 4.15829 21.5488 3.84171 21.3536 3.64645L18.1716 0.464466C17.9763 0.269204 17.6597 0.269204 17.4645 0.464466C17.2692 0.659728 17.2692 0.976311 17.4645 1.17157L20.2929 4L17.4645 6.82843C17.2692 7.02369 17.2692 7.34027 17.4645 7.53553C17.6597 7.7308 17.9763 7.7308 18.1716 7.53553L21.3536 4.35355ZM0 4.5H21V3.5H0V4.5Z"
+                            fill="white"
+                          />
+                        </svg>
+                      </button>
+                    )}{' '}
+                    {this.state.page}
+                    <button
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        outline: 'none',
+                        cursor: 'pointer',
+                      }}
+                      onClick={async (e) => {
+                        await this.setState({ page: this.state.page + 1 });
                         await this.update();
-                      }
-                    }}>
-                    <svg
-                      width="22"
-                      height="8"
-                      viewBox="0 0 22 8"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        d="M21.3536 4.35355C21.5488 4.15829 21.5488 3.84171 21.3536 3.64645L18.1716 0.464466C17.9763 0.269204 17.6597 0.269204 17.4645 0.464466C17.2692 0.659728 17.2692 0.976311 17.4645 1.17157L20.2929 4L17.4645 6.82843C17.2692 7.02369 17.2692 7.34027 17.4645 7.53553C17.6597 7.7308 17.9763 7.7308 18.1716 7.53553L21.3536 4.35355ZM0 4.5H21V3.5H0V4.5Z"
-                        fill="white"
-                      />
-                    </svg>
-                  </button>
-                )}{' '}
-                {this.state.page}
-                <button
-                  style={{
-                    background: 'transparent',
-                    border: 'none',
-                    outline: 'none',
-                    cursor: 'pointer',
-                  }}
-                  onClick={async (e) => {
-                    await this.setState({ page: this.state.page + 1 });
-                    await this.update();
-                  }}>
-                  <svg
-                    width="22"
-                    height="8"
-                    viewBox="0 0 22 8"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      d="M21.3536 4.35355C21.5488 4.15829 21.5488 3.84171 21.3536 3.64645L18.1716 0.464466C17.9763 0.269204 17.6597 0.269204 17.4645 0.464466C17.2692 0.659728 17.2692 0.976311 17.4645 1.17157L20.2929 4L17.4645 6.82843C17.2692 7.02369 17.2692 7.34027 17.4645 7.53553C17.6597 7.7308 17.9763 7.7308 18.1716 7.53553L21.3536 4.35355ZM0 4.5H21V3.5H0V4.5Z"
-                      fill="white"
-                    />
-                  </svg>
-                </button>
-              </font>
-            </center>
+                      }}>
+                      <svg
+                        width="22"
+                        height="8"
+                        viewBox="0 0 22 8"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M21.3536 4.35355C21.5488 4.15829 21.5488 3.84171 21.3536 3.64645L18.1716 0.464466C17.9763 0.269204 17.6597 0.269204 17.4645 0.464466C17.2692 0.659728 17.2692 0.976311 17.4645 1.17157L20.2929 4L17.4645 6.82843C17.2692 7.02369 17.2692 7.34027 17.4645 7.53553C17.6597 7.7308 17.9763 7.7308 18.1716 7.53553L21.3536 4.35355ZM0 4.5H21V3.5H0V4.5Z"
+                          fill="white"
+                        />
+                      </svg>
+                    </button>
+                  </font>
+                </center>
+              </DashboardHistoryContainer>
+            </MainBlock>
           </>
         )}
-      </div>
+      </>
     );
   }
 }

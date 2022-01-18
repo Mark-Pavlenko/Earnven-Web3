@@ -32,8 +32,9 @@ export const MainBlock = styled(Box)`
   }
 `;
 
-export const TokenTableLightContainer = styled(TableContainer)`
-  background: ${(props) => (props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : '#10142D')};
+export const DashboardHistoryContainer = styled(TableContainer)`
+  background: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#1F265C3D')};
+
   backdrop-filter: blur(35px);
   mix-blend-mode: normal;
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
@@ -57,7 +58,7 @@ export const MainTable = styled(Table)`
 `;
 
 export const TokensTableHeader = styled(TableCell)`
-  color: ${(props) => (props.isLightTheme ? '#6E6E6E' : '#ffffff')};
+  color: #7e848f;
   font-family: 'Saira', sans-serif;
   font-style: normal;
   font-weight: ${(props) => (props.isLightTheme ? 'normal' : 'bold')};
