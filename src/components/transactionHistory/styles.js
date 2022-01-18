@@ -41,23 +41,11 @@ export const DashboardHistoryContainer = styled(TableContainer)`
   border-radius: 10px;
 `;
 
-export const TableTokenTitle = styled.p`
-  margin-top: 30px;
-  margin-left: 25px;
-  margin-bottom: 25px;
-  font-family: 'Saira', sans-serif;
-  font-weight: bold;
-  font-style: normal;
-  font-size: 20px;
-  line-height: 30px;
-  color: ${(props) => (props.isLightTheme ? ' #1e1e20' : '#ffffff')};
-`;
-
 export const TransactionHistoryTableHeader = styled(TableCell)`
   color: #7e848f;
   font-family: 'Saira', sans-serif;
-  font-style: normal;
-  font-weight: ${(props) => (props.isLightTheme ? 'normal' : 'bold')};
+  font-weight: 600;
+  // font-weight: ${(props) => (props.isLightTheme ? 'normal' : 'bold')};
   font-size: 10px;
   line-height: 16px;
   align-items: center;
@@ -80,15 +68,17 @@ export const TransactionDateTimestamp = styled.p`
 `;
 
 export const TransactionsHistoryTable = styled(Table)`
+  //margin-left: 45px;
+  //margin-right: 45px;
   > tbody > tr:last-child {
     background: #ff0000;
   }
 `;
 
 export const TransactionTableRow = styled(TableRow)`
-  border-top: 1px solid rgba(224, 224, 224, 1);
+  border-top: 0.1px solid rgba(224, 224, 224, 1);
 
-  border-bottom: 1px solid rgba(224, 224, 224, 1);
+  border-bottom: 0.1px solid rgba(224, 224, 224, 1);
 `;
 
 export const HistoryTableCell = styled(TableCell)`

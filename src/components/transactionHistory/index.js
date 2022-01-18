@@ -653,7 +653,7 @@ export default class index extends Component {
                       <TransactionHistoryTableHeader isLightTheme={isLightTheme} />
                     </TableRow>
                   </TableHead>
-                  <TableBody>
+                  <TableBody style={{}}>
                     {this.state.testArr.map((object, i, arr) => (
                       <>
                         {i !== 0 &&
