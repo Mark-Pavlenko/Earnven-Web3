@@ -594,6 +594,7 @@ export default class index extends Component {
     console.log('testArr object', this.state.testArr);
     console.log('finalLightTheme', isLightTheme);
     return (
+      // <div style={{ backgroundColor: 'green' }}>
       <div>
         {this.state.testArr.length === 0 ? (
           <Typography variant="h3" sx={{ marginTop: '130px' }} align="center">
@@ -640,7 +641,7 @@ export default class index extends Component {
               </div>
             ))}
             <center>
-              <font color="white">
+              <font color="green">
                 {this.state.page > 1 && (
                   <button
                     style={{
@@ -697,11 +698,6 @@ export default class index extends Component {
             </center>
           </>
         )}
-
-        {/*<br />*/}
-        {/*{this.state.testArr && (*/}
-
-        {/*)}*/}
       </div>
     );
   }
