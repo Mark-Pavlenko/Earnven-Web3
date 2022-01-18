@@ -39,7 +39,7 @@ export const EtherScanButton = styled.div`
 
 export const MainBlocks = styled.div`
   display: flex;
-  @media (max-width: 375px) {
+  @media (max-width: 768px) {
     display: block;
   }
 `;
@@ -48,7 +48,7 @@ export const LeftSideWrapper = styled.div`
   width: 55%;
   margin-right: 35px;
   @media (max-width: 768px) {
-    width: 45%;
+    width: 100%;
   }
   @media (max-width: 375px) {
     width: 100%;
@@ -58,7 +58,7 @@ export const LeftSideWrapper = styled.div`
 export const RightSideWrapper = styled.div`
   width: 45%;
   @media (max-width: 768px) {
-    width: 55%;
+    width: 100%;
   }
   @media (max-width: 375px) {
     display: none;

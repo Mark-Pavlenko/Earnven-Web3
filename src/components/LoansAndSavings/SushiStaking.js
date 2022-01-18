@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Addresses from '../../contractAddresses';
-import SushiSwapLogo from '../../assets/icons/Sushiswap.webp';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import SushiSwapLogo from '../../assets/icons/Sushiswap.webp';
 import { useDispatch, useSelector } from 'react-redux';
 import actionTypes from '../../constants/actionTypes';
 import SushiProtocol from '../common/investment/sushiProtocolComponent/sushiProtocol';
