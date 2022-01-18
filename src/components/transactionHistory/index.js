@@ -32,6 +32,7 @@ import {
   TestListItem,
   TokensTableHeader,
   DashboardHistoryContainer,
+  TransactionDateTimestamp,
 } from './styles';
 
 let contents = '';
@@ -170,6 +171,164 @@ export default class index extends Component {
     const day = todayTime.getDate().toString();
     const year = todayTime.getFullYear().toString();
     return `${day}-${month}-${year}`;
+  }
+
+  // browserComponent = (data) => {
+  //   const generator = new AvatarGenerator();
+  //   return (
+  //
+  //   );
+  // };
+
+  update = async (isLightTheme) => {
+    // try{
+
+    const web3 = new Web3();
+    arr1 = [];
+    const start = (this.state.page - 1) * 10;
+    let end = this.state.page * 10;
+    let data;
+    // var end2;
+    if (end > distinctHash.length) {
+      end = distinctHash.length;
+    }
+    for (let i = start; i < end; i++) {
+      const object = {};
+      // if(ops[i].transactionHash !== undefined){
+
+      data = await this.getTransactionFromHash(distinctHash[i]);
+      if (data !== null) {
+        object.txGas = await this.getTransactionGas(distinctHash[i]);
+        const dataObject = data.data;
+        // console.log("data object value::", dataObject.from)
+        object.from = web3.utils.toChecksumAddress(dataObject.from);
+        object.to = web3.utils.toChecksumAddress(dataObject.to);
+        object.timestamp = dataObject.timestamp;
+        object.hash = dataObject.hash;
+        const formattedDate = this.GetFormattedDate(object.timestamp);
+        let hisotricalEtherPrice;
+        if (dataObject.value !== 0) {
+          hisotricalEtherPrice = await this.getEtherHistoricalPrice(formattedDate);
+        }
+        if (dataObject.operations === undefined) {
+          // console.log("eth transfer")
+          // object.to = web3.utils.toChecksumAddress(dataObject.to);
+          object.txType = 'Eth';
+          object.from === web3.utils.toChecksumAddress(this.state.account)
+            ? (object.status = 'Send')
+            : (object.status = 'Receive');
+          object.name = 'Ethereum';
+          object.symbol = 'ETH';
+          object.image = '/images/eth.png';
+          object.value = dataObject.value.toFixed(3);
+          object.dollarValue = (object.value * hisotricalEtherPrice).toFixed(3);
+        } else {
+          const operationsLength = dataObject.operations.length;
+          if (operationsLength === 1) {
+            // console.log("token transfer")
+            // object.to = web3.utils.toChecksumAddress(dataObject.to);
+            if (dataObject.operations[0].type === 'approve') {
+              object.txType = 'Approval';
+            } else {
+              object.txType = 'Token';
+            }
+
+            object.from === web3.utils.toChecksumAddress(this.state.account)
+              ? (object.status = 'Send')
+              : (object.status = 'Receive');
+            const { tokenInfo } = dataObject.operations[0];
+            object.name = tokenInfo.name;
+            object.symbol = tokenInfo.symbol;
+            tokenInfo.image !== undefined
+              ? (object.image = tokenInfo.image)
+              : (object.image = null);
+            tokenInfo.decimals === '18'
+              ? (object.value = parseFloat(
+                  web3.utils.fromWei(dataObject.operations[0].value, 'ether')
+                ).toFixed(3))
+              : (object.value = (
+                  dataObject.operations[0].intValue / Math.pow(10, parseInt(tokenInfo.decimals))
+                ).toFixed(3));
+            // object.value = parseFloat(web3.utils.fromWei(dataObject.operations[0].value, 'ether')).toFixed(3);
+            tokenInfo.price !== false
+              ? (object.dollarValue = (object.value * tokenInfo.price.rate).toFixed(3))
+              : (object.dollarValue = null);
+          }
+          if (operationsLength >= 2) {
+            // console.log("trading transaction object:::", dataObject)
+            object.txType = 'TRADING';
+            // object.name="trading"
+            // object.symbol="decide"
+            const firstToken = {};
+            const secondToken = {};
+            if (dataObject.value !== 0) {
+              firstToken.name = 'Ethereum';
+              firstToken.symbol = 'ETH';
+              firstToken.image = '/images/eth.png';
+              firstToken.value = dataObject.value;
+              // const tempArr = dataObject.operations.filter((tempObject) => {
+              //   return (tempObject.from === dataObject.to);
+              // })
+              firstToken.dollarValue = (hisotricalEtherPrice * dataObject.value).toFixed(3);
+              // firstToken.dollarValue = ((dataObject.operations[0].usdPrice) * (dataObject.value)).toFixed(3);
+            } else {
+              const firstTokenTemp = dataObject.operations[0];
+
+              firstToken.name = firstTokenTemp.tokenInfo.name;
+              firstToken.symbol = firstTokenTemp.tokenInfo.symbol;
+              firstTokenTemp.tokenInfo.image !== undefined
+                ? (firstToken.image = firstTokenTemp.tokenInfo.image)
+                : (firstToken.image = null);
+              firstToken.value = parseFloat(
+                web3.utils.fromWei(firstTokenTemp.value, 'ether')
+              ).toFixed(3);
+              firstToken.dollarValue = (firstToken.value / firstTokenTemp.usdPrice).toFixed(3);
+            }
+            const tempArr1 = dataObject.operations.filter((tempObject) => {
+              return tempObject.to === dataObject.from;
+            });
+            if (tempArr1[0]) {
+              const secondTokenTemp = tempArr1[0].tokenInfo;
+              secondToken.name = secondTokenTemp.name;
+              secondToken.symbol = secondTokenTemp.symbol;
+              secondTokenTemp.image !== undefined
+                ? (secondToken.image = secondTokenTemp.image)
+                : (secondToken.image = null);
+              secondToken.value = parseFloat(
+                web3.utils.fromWei(tempArr1[0].value, 'ether')
+              ).toFixed(3);
+              secondToken.dollarValue = null;
+              if (secondTokenTemp.price !== false) {
+                secondToken.dollarValue = (secondTokenTemp.price.rate * secondToken.value).toFixed(
+                  3
+                );
+              }
+            }
+
+            object.firstToken = firstToken;
+            object.secondToken = secondToken;
+          }
+        }
+      }
+      console.log('object', object);
+      arr1.push(object);
+    }
+    console.log(' transaction history data object::', arr1);
+    this.setState({ testArr: arr1 });
+
+    this.setState({ contents, isLightTheme });
+  };
+
+  constructor() {
+    super();
+
+    this.state = {
+      account: '',
+      contents: '',
+      page: 1,
+      isLightTheme: '',
+      testArr: [],
+    };
   }
 
   browserComponent = (data) => {
@@ -449,158 +608,8 @@ export default class index extends Component {
     );
   };
 
-  update = async (isLightTheme) => {
-    // try{
-
-    const web3 = new Web3();
-    arr1 = [];
-    const start = (this.state.page - 1) * 10;
-    let end = this.state.page * 10;
-    let data;
-    // var end2;
-    if (end > distinctHash.length) {
-      end = distinctHash.length;
-    }
-    for (let i = start; i < end; i++) {
-      const object = {};
-      // if(ops[i].transactionHash !== undefined){
-
-      data = await this.getTransactionFromHash(distinctHash[i]);
-      if (data !== null) {
-        object.txGas = await this.getTransactionGas(distinctHash[i]);
-        const dataObject = data.data;
-        // console.log("data object value::", dataObject.from)
-        object.from = web3.utils.toChecksumAddress(dataObject.from);
-        object.to = web3.utils.toChecksumAddress(dataObject.to);
-        object.timestamp = dataObject.timestamp;
-        object.hash = dataObject.hash;
-        const formattedDate = this.GetFormattedDate(object.timestamp);
-        let hisotricalEtherPrice;
-        if (dataObject.value !== 0) {
-          hisotricalEtherPrice = await this.getEtherHistoricalPrice(formattedDate);
-        }
-        if (dataObject.operations === undefined) {
-          // console.log("eth transfer")
-          // object.to = web3.utils.toChecksumAddress(dataObject.to);
-          object.txType = 'Eth';
-          object.from === web3.utils.toChecksumAddress(this.state.account)
-            ? (object.status = 'Send')
-            : (object.status = 'Receive');
-          object.name = 'Ethereum';
-          object.symbol = 'ETH';
-          object.image = '/images/eth.png';
-          object.value = dataObject.value.toFixed(3);
-          object.dollarValue = (object.value * hisotricalEtherPrice).toFixed(3);
-        } else {
-          const operationsLength = dataObject.operations.length;
-          if (operationsLength === 1) {
-            // console.log("token transfer")
-            // object.to = web3.utils.toChecksumAddress(dataObject.to);
-            if (dataObject.operations[0].type === 'approve') {
-              object.txType = 'Approval';
-            } else {
-              object.txType = 'Token';
-            }
-
-            object.from === web3.utils.toChecksumAddress(this.state.account)
-              ? (object.status = 'Send')
-              : (object.status = 'Receive');
-            const { tokenInfo } = dataObject.operations[0];
-            object.name = tokenInfo.name;
-            object.symbol = tokenInfo.symbol;
-            tokenInfo.image !== undefined
-              ? (object.image = tokenInfo.image)
-              : (object.image = null);
-            tokenInfo.decimals === '18'
-              ? (object.value = parseFloat(
-                  web3.utils.fromWei(dataObject.operations[0].value, 'ether')
-                ).toFixed(3))
-              : (object.value = (
-                  dataObject.operations[0].intValue / Math.pow(10, parseInt(tokenInfo.decimals))
-                ).toFixed(3));
-            // object.value = parseFloat(web3.utils.fromWei(dataObject.operations[0].value, 'ether')).toFixed(3);
-            tokenInfo.price !== false
-              ? (object.dollarValue = (object.value * tokenInfo.price.rate).toFixed(3))
-              : (object.dollarValue = null);
-          }
-          if (operationsLength >= 2) {
-            // console.log("trading transaction object:::", dataObject)
-            object.txType = 'TRADING';
-            // object.name="trading"
-            // object.symbol="decide"
-            const firstToken = {};
-            const secondToken = {};
-            if (dataObject.value !== 0) {
-              firstToken.name = 'Ethereum';
-              firstToken.symbol = 'ETH';
-              firstToken.image = '/images/eth.png';
-              firstToken.value = dataObject.value;
-              // const tempArr = dataObject.operations.filter((tempObject) => {
-              //   return (tempObject.from === dataObject.to);
-              // })
-              firstToken.dollarValue = (hisotricalEtherPrice * dataObject.value).toFixed(3);
-              // firstToken.dollarValue = ((dataObject.operations[0].usdPrice) * (dataObject.value)).toFixed(3);
-            } else {
-              const firstTokenTemp = dataObject.operations[0];
-
-              firstToken.name = firstTokenTemp.tokenInfo.name;
-              firstToken.symbol = firstTokenTemp.tokenInfo.symbol;
-              firstTokenTemp.tokenInfo.image !== undefined
-                ? (firstToken.image = firstTokenTemp.tokenInfo.image)
-                : (firstToken.image = null);
-              firstToken.value = parseFloat(
-                web3.utils.fromWei(firstTokenTemp.value, 'ether')
-              ).toFixed(3);
-              firstToken.dollarValue = (firstToken.value / firstTokenTemp.usdPrice).toFixed(3);
-            }
-            const tempArr1 = dataObject.operations.filter((tempObject) => {
-              return tempObject.to === dataObject.from;
-            });
-            if (tempArr1[0]) {
-              const secondTokenTemp = tempArr1[0].tokenInfo;
-              secondToken.name = secondTokenTemp.name;
-              secondToken.symbol = secondTokenTemp.symbol;
-              secondTokenTemp.image !== undefined
-                ? (secondToken.image = secondTokenTemp.image)
-                : (secondToken.image = null);
-              secondToken.value = parseFloat(
-                web3.utils.fromWei(tempArr1[0].value, 'ether')
-              ).toFixed(3);
-              secondToken.dollarValue = null;
-              if (secondTokenTemp.price !== false) {
-                secondToken.dollarValue = (secondTokenTemp.price.rate * secondToken.value).toFixed(
-                  3
-                );
-              }
-            }
-
-            object.firstToken = firstToken;
-            object.secondToken = secondToken;
-          }
-        }
-      }
-      console.log('object', object);
-      arr1.push(object);
-    }
-    console.log(' transaction history data object::', arr1);
-    this.setState({ testArr: arr1 });
-
-    this.setState({ contents, isLightTheme });
-  };
-
-  constructor() {
-    super();
-
-    this.state = {
-      account: '',
-      contents: '',
-      page: 1,
-      isLightTheme: '',
-      testArr: [],
-    };
-  }
-
   render() {
+    const generator = new AvatarGenerator();
     const { isLightTheme } = this.props;
     console.log('testArr object', this.state.testArr);
     return (
@@ -613,12 +622,14 @@ export default class index extends Component {
           <>
             <MainBlock className="boxSize">
               <DashboardHistoryContainer isLightTheme={isLightTheme}>
-                {/*{this.state.testArr.map((object, i, arr) => this.browserComponent(object))}*/}
-
                 <MainTable>
                   <TableHead>
                     <TableRow>
-                      <TokensTableHeader isLightTheme={isLightTheme}>Date</TokensTableHeader>
+                      <TokensTableHeader
+                        isLightTheme={isLightTheme}
+                        style={{ paddingLeft: '25px' }}>
+                        Date
+                      </TokensTableHeader>
                       <TokensTableHeader isLightTheme={isLightTheme}>From/To</TokensTableHeader>
                       <TokensTableHeader isLightTheme={isLightTheme} className="price-title">
                         Quantity
@@ -636,37 +647,38 @@ export default class index extends Component {
                       <TokensTableHeader isLightTheme={isLightTheme} />
                     </TableRow>
                   </TableHead>
+
                   <TableBody>
                     {this.state.testArr.map((object, i, arr) => (
-                      <TableRow>
+                      <>
                         {i !== 0 &&
                         this.convertTimestampToDate(object.timestamp) ===
                           this.convertTimestampToDate(arr[i - 1].timestamp) ? null : (
-                          <span>{this.convertTimestampToDate(object.timestamp)}</span>
+                          <TransactionDateTimestamp isLightTheme={isLightTheme}>
+                            {this.convertTimestampToDate(object.timestamp)}
+                          </TransactionDateTimestamp>
                         )}
-                        <TableCell>
-                          <img
-                            style={{ paddingTop: '10px' }}
-                            src={
-                              object.txType === 'TRADING'
-                                ? TradeIcon
-                                : object.status === 'Receive'
-                                ? ReceiveIcon
-                                : SendIcon
-                            }
-                            alt=""
-                          />
-                        </TableCell>
-                        <TableCell> {object.txGas}</TableCell>
-                        <TableCell> {object.from}</TableCell>
-                        <TableCell> {object.to}</TableCell>
-                        <TableCell> {object.value}</TableCell>
-                        <TableCell> {object.txType}</TableCell>
-                      </TableRow>
+
+                        <TableRow>
+                          <TableCell>
+                            <img
+                              style={{ paddingTop: '10px' }}
+                              src={
+                                object.txType === 'TRADING'
+                                  ? TradeIcon
+                                  : object.status === 'Receive'
+                                  ? ReceiveIcon
+                                  : SendIcon
+                              }
+                              alt=""
+                            />
+                          </TableCell>
+                        </TableRow>
+                      </>
                     ))}
                   </TableBody>
                 </MainTable>
-                <center>
+                <div>
                   <font color="green">
                     {this.state.page > 1 && (
                       <button
@@ -721,7 +733,7 @@ export default class index extends Component {
                       </svg>
                     </button>
                   </font>
-                </center>
+                </div>
               </DashboardHistoryContainer>
             </MainBlock>
           </>

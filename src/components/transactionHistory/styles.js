@@ -153,3 +153,13 @@ export const BlockChainName = styled.p`
 export const TestListItem = styled.li`
   color: ${(props) => (props.isLightTheme ? 'green' : 'blue')};
 `;
+
+export const TransactionDateTimestamp = styled.p`
+  margin-left: 26px;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0;
+  color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
+`;
