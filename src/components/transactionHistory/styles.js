@@ -149,3 +149,7 @@ export const BlockChainImg = styled.img`
 export const BlockChainName = styled.p`
   font-weight: ${(props) => (props.isLightTheme ? 'normal' : 'bold')};
 `;
+
+export const TestListItem = styled.li`
+  color: ${(props) => (props.isLightTheme ? 'green' : 'blue')};
+`;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { Component } from 'react';
 import Web3 from 'web3';
 import axios from 'axios';
 import Accordion from '@material-ui/core/Accordion';
@@ -15,7 +15,13 @@ import { MdContentCopy } from 'react-icons/md';
 import TradeIcon from '../../assets/icons/trade.svg';
 import SendIcon from '../../assets/icons/send.png';
 import ReceiveIcon from '../../assets/icons/receive.png';
-import { MainBlock, MainTable, TokensTableHeader, TokenTableLightContainer } from './styles';
+import {
+  MainBlock,
+  MainTable,
+  TestListItem,
+  TokensTableHeader,
+  TokenTableLightContainer,
+} from './styles';
 
 let contents = '';
 let ops = [];
@@ -25,23 +31,26 @@ let allHash = [];
 let distinctHash = [];
 let lightThemeFinal;
 
-export default function TransactionHistory({ accounts, isLightTheme }) {
-  console.log('history lightTheme', isLightTheme);
-  console.log('accounts', accounts);
-  const [account, setAccount] = useState('');
-  const [content, setContent] = useState('');
-  const [page, setPage] = useState(1);
+export default class index extends Component {
+  async componentDidUpdate() {
+    lightThemeFinal = this.props.isLightTheme;
+    console.log('isLightThemeValue456', lightThemeFinal);
+  }
 
-  useEffect(async () => {
-    setContent('');
-    await loadBlockchainData();
-  }, []);
+  async componentWillMount() {
+    // await this.loadWeb3();
+    lightThemeFinal = this.props.isLightTheme;
+    this.setState({ contents: '' });
+    await this.loadBlockchainData(lightThemeFinal);
+  }
 
-  const loadBlockchainData = async (url, config) => {
-    // const accounts =  props.address;
+  async loadBlockchainData(lightThemeFinal) {
+    // const web3 = window.
+
+    const accounts = this.props.address;
 
     console.log('account address inside transaction component::', accounts);
-    setAccount(accounts);
+    this.setState({ account: accounts });
     allHash = [];
     distinctHash = [];
     await axios
@@ -77,14 +86,13 @@ export default function TransactionHistory({ accounts, isLightTheme }) {
         }
         distinctHash = [...new Set(allHash)];
         console.log('final object response:::', distinctHash);
-        console.log('lightThemeFinal', isLightTheme);
-        await update(accounts);
+        console.log('lightThemeFinal', lightThemeFinal);
+        this.update(lightThemeFinal);
       });
-  };
+  }
 
-  const getTransactionFromHash = async (hash) => {
+  getTransactionFromHash = async (hash) => {
     let result;
-
     try {
       result = await axios.get(
         `https://api.ethplorer.io/getTxInfo/${hash}?apiKey=EK-qSPda-W9rX7yJ-UY93y&limit=1000`
@@ -95,7 +103,7 @@ export default function TransactionHistory({ accounts, isLightTheme }) {
     return result;
   };
 
-  const getTransactionGas = async (hash) => {
+  getTransactionGas = async (hash) => {
     const web3 = new Web3(
       new Web3.providers.HttpProvider(
         'https://mainnet.infura.io/v3/8b2159b7b0944586b64f0280c927d0a8'
@@ -106,7 +114,7 @@ export default function TransactionHistory({ accounts, isLightTheme }) {
     return web3.utils.fromWei(gasValueInWei.toString(), 'ether');
   };
 
-  const getEtherHistoricalPrice = async (date) => {
+  getEtherHistoricalPrice = async (date) => {
     let result;
     try {
       const temp = await axios.get(
@@ -119,7 +127,7 @@ export default function TransactionHistory({ accounts, isLightTheme }) {
     return result;
   };
 
-  function walletAddressCutter(addy) {
+  walletAddressCutter(addy) {
     if (addy === '') {
       return addy;
     }
@@ -130,22 +138,22 @@ export default function TransactionHistory({ accounts, isLightTheme }) {
     return addynew;
   }
 
-  function etherscanTxLink(link) {
+  etherscanTxLink(link) {
     link = `https://etherscan.io/tx/${link}`;
     return link;
   }
 
-  function convertTimestampToDate(epoch) {
+  convertTimestampToDate(epoch) {
     const myDate = new Date(epoch * 1000);
     return myDate.toLocaleDateString();
   }
 
-  function convertTimestampToTime(epoch) {
+  convertTimestampToTime(epoch) {
     const myDate = new Date(epoch * 1000);
     return myDate.toLocaleTimeString();
   }
 
-  function GetFormattedDate(epoch) {
+  GetFormattedDate(epoch) {
     const todayTime = new Date(epoch * 1000);
     const month = (todayTime.getMonth() + 1).toString();
     const day = todayTime.getDate().toString();
@@ -153,9 +161,8 @@ export default function TransactionHistory({ accounts, isLightTheme }) {
     return `${day}-${month}-${year}`;
   }
 
-  const browserComponent = (data) => {
+  browserComponent = (data) => {
     const generator = new AvatarGenerator();
-    // const { isLightTheme } = props;
     return (
       <>
         <Accordion
@@ -194,7 +201,7 @@ export default function TransactionHistory({ accounts, isLightTheme }) {
                   <font color="white">Trade</font>
                   <br />
                   <font style={{ fontSize: '10px', color: 'white' }}>
-                    {convertTimestampToTime(data.timestamp)}
+                    {this.convertTimestampToTime(data.timestamp)}
                   </font>
                 </div>
                 <div style={{ width: '18%', float: 'left', textAlign: 'left' }}>
@@ -302,7 +309,7 @@ export default function TransactionHistory({ accounts, isLightTheme }) {
                   </font>
                   <br />
                   <font style={{ fontSize: '10px', color: 'white' }}>
-                    {convertTimestampToTime(data.timestamp)}
+                    {this.convertTimestampToTime(data.timestamp)}
                   </font>
                 </div>
                 <div style={{ width: '41%', float: 'left', textAlign: 'left' }}>
@@ -383,8 +390,8 @@ export default function TransactionHistory({ accounts, isLightTheme }) {
                     />
                     <Typography variant="body2" color="red">
                       {data.status === 'Receive'
-                        ? walletAddressCutter(data.from)
-                        : walletAddressCutter(data.to)}
+                        ? this.walletAddressCutter(data.from)
+                        : this.walletAddressCutter(data.to)}
                     </Typography>
                   </Stack>
                 </div>
@@ -414,8 +421,8 @@ export default function TransactionHistory({ accounts, isLightTheme }) {
               <Stack direction="column">
                 <Typography variant="body2">Hash</Typography>
                 <Stack direction="row">
-                  <Typography href={etherscanTxLink(data.hash)} variant="caption">
-                    {walletAddressCutter(data.hash)}
+                  <Typography href={this.etherscanTxLink(data.hash)} variant="caption">
+                    {this.walletAddressCutter(data.hash)}
                   </Typography>
                   <IconButton edge="end" aria-label="copy" style={{ padding: '0px' }}>
                     <CopyToClipboard text={data.hash}>
@@ -431,377 +438,45 @@ export default function TransactionHistory({ accounts, isLightTheme }) {
     );
   };
 
-  const mobileComponent = (data) => {
-    const generator = new AvatarGenerator();
-    return (
-      <Accordion
-        style={{
-          background: 'transparent',
-          width: '90%',
-          borderTop: '1px',
-          borderBottom: '0px',
-          borderLeft: '0px',
-          borderRight: '0px',
-          borderColor: '#737373',
-          borderStyle: 'solid',
-          borderRadius: '0px',
-        }}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon style={{ fill: 'white' }} />}
-          aria-controls="panel1a-content"
-          id="panel1a-header">
-          <div style={{ width: '5%', float: 'left' }}>
-            <img
-              style={{ paddingTop: '10px' }}
-              src={
-                data.txType === 'TRADING'
-                  ? TradeIcon
-                  : data.status === 'Receive'
-                  ? ReceiveIcon
-                  : SendIcon
-              }
-              alt=""
-            />
-          </div>
-          {data.txType === 'TRADING' ? (
-            // design for trading type of tx
-            <>
-              <div style={{ width: '15%', float: 'left', textAlign: 'left' }}>
-                <font style={{ fontSize: '10px' }} color="white">
-                  Trade
-                </font>
-                <br />
-                <font style={{ fontSize: '7px', color: 'white' }}>
-                  {convertTimestampToTime(data.timestamp)}
-                </font>
-              </div>
-              <div style={{ width: '27%', float: 'left', textAlign: 'left' }}>
-                <Stack direction="row">
-                  {data.firstToken.image !== null ? (
-                    <img
-                      style={{
-                        display: 'inline',
-                        maxWidth: '25px',
-                        verticalAlign: 'top',
-                        height: '15px',
-                        margin: '6px',
-                      }}
-                      alt=""
-                      src={`https://ethplorer.io${data.firstToken.image}`}
-                    />
-                  ) : (
-                    <Avatar
-                      style={{
-                        display: 'inline',
-                        maxWidth: '25px',
-                        verticalAlign: 'top',
-                        height: '15px',
-                        margin: '6px',
-                      }}
-                      color="#737373"
-                      name={data.firstToken.symbol}
-                      round
-                      size="30"
-                      textSizeRatio={1.75}
-                    />
-                  )}
-                  <Stack direction="column">
-                    <Typography variant="caption" sx={{ paddingTop: '4px' }}>
-                      {`-${data.firstToken.value} ${data.firstToken.symbol}`}
-                    </Typography>
-                    {data.firstToken.dollarValue === null ? (
-                      <Typography variant="caption" sx={{ color: '#737373', fontSize: '8px' }}>
-                        N/A
-                      </Typography>
-                    ) : (
-                      <Typography variant="caption" sx={{ color: '#737373', fontSize: '8px' }}>
-                        {`$${data.firstToken.dollarValue} `}
-                      </Typography>
-                    )}
-                  </Stack>
-                </Stack>
-              </div>
-
-              <FaAngleRight style={{ marginTop: '18px', marginLeft: '15px' }} />
-
-              <div style={{ width: '35%', float: 'left', textAlign: 'left' }}>
-                <Stack direction="row">
-                  {data.secondToken.image !== null ? (
-                    <img
-                      style={{
-                        display: 'inline',
-                        maxWidth: '25px',
-                        verticalAlign: 'top',
-                        height: '15px',
-                        margin: '6px',
-                      }}
-                      alt=""
-                      src={`https://ethplorer.io${data.secondToken.image}`}
-                    />
-                  ) : (
-                    <Avatar
-                      style={{
-                        display: 'inline',
-                        maxWidth: '25px',
-                        verticalAlign: 'top',
-                        height: '15px',
-                        margin: '6px',
-                      }}
-                      color="#737373"
-                      name={data.secondToken.symbol}
-                      round
-                      size="30"
-                      textSizeRatio={1.75}
-                    />
-                  )}
-                  <Stack direction="column">
-                    <Typography variant="caption" sx={{ paddingTop: '4px' }}>
-                      {`+${data.secondToken.value} ${data.secondToken.symbol}`}
-                    </Typography>
-                    {data.secondToken.dollarValue === null ? (
-                      <Typography
-                        variant="caption"
-                        sx={{ color: '#737373', ml: 1, fontSize: '8px' }}>
-                        N/A
-                      </Typography>
-                    ) : (
-                      <Typography variant="caption" sx={{ color: '#737373', fontSize: '8px' }}>
-                        {`$${data.secondToken.dollarValue} `}
-                      </Typography>
-                    )}
-                  </Stack>
-                </Stack>
-              </div>
-            </>
-          ) : (
-            // desing for normal and token transfer
-            <>
-              <div style={{ width: '22%', float: 'left', textAlign: 'left' }}>
-                <font style={{ fontSize: '10px' }} color="white">
-                  {data.txType === 'Approval' ? data.txType : data.status}
-                </font>
-                <br />
-                <font style={{ fontSize: '7px', color: 'white' }}>
-                  {convertTimestampToTime(data.timestamp)}
-                </font>
-              </div>
-              <div style={{ width: '40%', float: 'left', textAlign: 'left' }}>
-                <Stack direction="row">
-                  {data.image !== null ? (
-                    <img
-                      style={{
-                        display: 'inline',
-                        maxWidth: '25px',
-                        verticalAlign: 'top',
-                        height: '15px',
-                        margin: '9px',
-                      }}
-                      alt=""
-                      src={`https://ethplorer.io${data.image}`}
-                    />
-                  ) : (
-                    <Avatar
-                      style={{
-                        display: 'inline',
-                        maxWidth: '25px',
-                        verticalAlign: 'top',
-                        height: '15px',
-                        margin: '9px',
-                      }}
-                      color="#737373"
-                      name={data.symbol}
-                      round
-                      size="30"
-                      textSizeRatio={1.75}
-                    />
-                  )}
-
-                  <Stack direction="column">
-                    {data.txType === 'Approval' ? (
-                      <div>
-                        <Typography variant="caption" sx={{ paddingTop: '4px' }}>
-                          {data.name}
-                        </Typography>
-                        <Typography variant="caption" sx={{ color: '#737373', fontSize: '8px' }}>
-                          {data.symbol}
-                        </Typography>
-                      </div>
-                    ) : (
-                      <div>
-                        <Typography variant="caption" sx={{ paddingTop: '4px' }}>
-                          {data.status === 'Receive'
-                            ? `+${data.value} ${data.symbol}`
-                            : `-${data.value} ${data.symbol}`}
-                        </Typography>
-                        {data.dollarValue === null ? (
-                          <Typography
-                            variant="caption"
-                            sx={{ color: '#737373', ml: 1, fontSize: '8px' }}>
-                            N/A
-                          </Typography>
-                        ) : (
-                          <Typography variant="caption" sx={{ color: '#737373', fontSize: '8px' }}>
-                            {`$${data.dollarValue} `}
-                          </Typography>
-                        )}
-                      </div>
-                    )}
-                  </Stack>
-
-                  {/* </div> */}
-                </Stack>
-              </div>
-
-              <div style={{ width: '15%', float: 'left', textAlign: 'left' }}>
-                <Typography variant="caption" color="white">
-                  {data.status === 'Receive' ? 'From' : 'To'}
-                </Typography>
-                <Stack direction="row" spacing={1}>
-                  <img
-                    width="7px"
-                    alt=""
-                    // style={{ marginTop: "5px" }}
-                    src={generator.generateRandomAvatar(data.from)}
-                  />
-                  <Typography variant="caption">
-                    {data.status === 'Receive'
-                      ? walletAddressCutter(data.from)
-                      : walletAddressCutter(data.to)}
-                  </Typography>
-                </Stack>
-              </div>
-            </>
-          )}
-        </AccordionSummary>
-        <AccordionDetails
-          style={{
-            backgroundColor: 'transparent',
-            textAlign: 'left',
-            borderTop: '1px',
-            borderBottom: '0px',
-            borderLeft: '0px',
-            borderRight: '0px',
-            borderColor: '#737373',
-            borderStyle: 'solid',
-            borderRadius: '0px',
-            marginLeft: '10px',
-            marginRight: '10px',
-          }}>
-          <Stack direction="row" spacing={5}>
-            <Stack direction="column">
-              <Typography variant="caption">Fee</Typography>
-              <Typography variant="caption" sx={{ fontSize: '8px' }}>
-                {data.txGas}ETH
-              </Typography>
-            </Stack>
-
-            <Stack direction="column">
-              <Typography variant="caption">Hash</Typography>
-              <Stack direction="row">
-                <Typography
-                  href={etherscanTxLink(data.hash)}
-                  variant="caption"
-                  sx={{ fontSize: '8px' }}>
-                  {walletAddressCutter(data.hash)}
-                </Typography>
-                <IconButton edge="end" aria-label="copy" style={{ padding: '0px' }}>
-                  <CopyToClipboard text={data.hash}>
-                    <MdContentCopy style={{ color: '#929292', padding: '0px', height: '13px' }} />
-                  </CopyToClipboard>
-                </IconButton>
-              </Stack>
-            </Stack>
-          </Stack>
-        </AccordionDetails>
-      </Accordion>
-    );
-  };
-
-  const change = (arr, isLightTheme) => {
-    const generator = new AvatarGenerator();
-    // const { isLightTheme } =  props;
-    console.log('lightTheme', isLightTheme);
-    contents = arr.map((object, i, arr) => (
-      <>
-        <BrowserView>
-          {i !== 0 &&
-          convertTimestampToDate(object.timestamp) ===
-            convertTimestampToDate(arr[i - 1].timestamp) ? null : (
-            <>
-              <Typography color="blue">{convertTimestampToDate(object.timestamp)}</Typography>
-              <MainBlock className="boxSize">
-                <TokenTableLightContainer isLightTheme={isLightTheme}>
-                  <MainTable>
-                    <TableHead>
-                      <TableRow>
-                        <TokensTableHeader isLightTheme={isLightTheme}>№</TokensTableHeader>
-                        <TokensTableHeader isLightTheme={isLightTheme}>Name</TokensTableHeader>
-                        <TokensTableHeader isLightTheme={isLightTheme} className="price-title">
-                          Price
-                        </TokensTableHeader>
-                        <TokensTableHeader isLightTheme={isLightTheme}>1H</TokensTableHeader>
-                        <TokensTableHeader isLightTheme={isLightTheme}>24H</TokensTableHeader>
-                        <TokensTableHeader isLightTheme={isLightTheme}>
-                          Fully Diluted Market Cap
-                        </TokensTableHeader>
-                        <TokensTableHeader isLightTheme={isLightTheme}>Volume</TokensTableHeader>
-                        <TokensTableHeader isLightTheme={isLightTheme}>
-                          Blockchain
-                        </TokensTableHeader>
-                        <TokensTableHeader isLightTheme={isLightTheme}>Added</TokensTableHeader>
-                      </TableRow>
-                    </TableHead>
-                  </MainTable>
-                </TokenTableLightContainer>
-              </MainBlock>
-            </>
-          )}
-
-          {browserComponent(object)}
-        </BrowserView>
-        <MobileView>{mobileComponent(object)}</MobileView>
-      </>
-    ));
-
+  change = (arr, isLightTheme) => {
     // console.log('contents', contents);
   };
 
-  const update = async (accounts) => {
+  update = async (isLightTheme) => {
     // try{
 
     const web3 = new Web3();
     arr1 = [];
-    const start = (page - 1) * 10;
-    let end = page * 10;
+    const start = (this.state.page - 1) * 10;
+    let end = this.state.page * 10;
     let data;
     // var end2;
     if (end > distinctHash.length) {
       end = distinctHash.length;
     }
-    console.log('distinctHash', distinctHash);
     for (let i = start; i < end; i++) {
       const object = {};
       // if(ops[i].transactionHash !== undefined){
 
-      data = await getTransactionFromHash(distinctHash[i]);
+      data = await this.getTransactionFromHash(distinctHash[i]);
       if (data !== null) {
-        object.txGas = await getTransactionGas(distinctHash[i]);
+        object.txGas = await this.getTransactionGas(distinctHash[i]);
         const dataObject = data.data;
         // console.log("data object value::", dataObject.from)
         object.from = web3.utils.toChecksumAddress(dataObject.from);
         object.to = web3.utils.toChecksumAddress(dataObject.to);
         object.timestamp = dataObject.timestamp;
         object.hash = dataObject.hash;
-        const formattedDate = GetFormattedDate(object.timestamp);
+        const formattedDate = this.GetFormattedDate(object.timestamp);
         let hisotricalEtherPrice;
         if (dataObject.value !== 0) {
-          hisotricalEtherPrice = await getEtherHistoricalPrice(formattedDate);
+          hisotricalEtherPrice = await this.getEtherHistoricalPrice(formattedDate);
         }
         if (dataObject.operations === undefined) {
           // console.log("eth transfer")
           // object.to = web3.utils.toChecksumAddress(dataObject.to);
           object.txType = 'Eth';
-          object.from === web3.utils.toChecksumAddress(accounts)
+          object.from === web3.utils.toChecksumAddress(this.state.account)
             ? (object.status = 'Send')
             : (object.status = 'Receive');
           object.name = 'Ethereum';
@@ -820,9 +495,7 @@ export default function TransactionHistory({ accounts, isLightTheme }) {
               object.txType = 'Token';
             }
 
-            console.log('account valid', accounts);
-
-            object.from === web3.utils.toChecksumAddress(accounts)
+            object.from === web3.utils.toChecksumAddress(this.state.account)
               ? (object.status = 'Send')
               : (object.status = 'Receive');
             const { tokenInfo } = dataObject.operations[0];
@@ -903,39 +576,128 @@ export default function TransactionHistory({ accounts, isLightTheme }) {
       arr1.push(object);
     }
     console.log(' transaction history data object::', arr1);
-    change(arr1, isLightTheme);
-    setContent(true);
-    // setState({ contents, isLightTheme });
-  };
-  console.log('accounts', accounts);
-  return (
-    <div>
-      {!contents ? (
-        <Typography variant="h3" sx={{ marginTop: '130px' }} align="center">
-          Loading...
-        </Typography>
-      ) : (
-        contents
-      )}
+    this.setState({ testArr: arr1 });
+    contents = arr1.map((object, i, arr) => (
+      <>
+        <BrowserView>
+          {i !== 0 &&
+          this.convertTimestampToDate(object.timestamp) ===
+            this.convertTimestampToDate(arr[i - 1].timestamp) ? null : (
+            <>
+              <Typography color="blue">{this.convertTimestampToDate(object.timestamp)}</Typography>
+              <MainBlock className="boxSize">
+                <TokenTableLightContainer isLightTheme={isLightTheme}>
+                  <MainTable>
+                    <TableHead>
+                      <TableRow>
+                        <TokensTableHeader isLightTheme={isLightTheme}>№</TokensTableHeader>
+                        <TokensTableHeader isLightTheme={isLightTheme}>Name</TokensTableHeader>
+                        <TokensTableHeader isLightTheme={isLightTheme} className="price-title">
+                          Price
+                        </TokensTableHeader>
+                        <TokensTableHeader isLightTheme={isLightTheme}>1H</TokensTableHeader>
+                        <TokensTableHeader isLightTheme={isLightTheme}>24H</TokensTableHeader>
+                        <TokensTableHeader isLightTheme={isLightTheme}>
+                          Fully Diluted Market Cap
+                        </TokensTableHeader>
+                        <TokensTableHeader isLightTheme={isLightTheme}>Volume</TokensTableHeader>
+                        <TokensTableHeader isLightTheme={isLightTheme}>
+                          Blockchain
+                        </TokensTableHeader>
+                        <TokensTableHeader isLightTheme={isLightTheme}>Added</TokensTableHeader>
+                      </TableRow>
+                    </TableHead>
+                  </MainTable>
+                </TokenTableLightContainer>
+              </MainBlock>
+            </>
+          )}
 
-      <br />
-      {contents && (
-        <center>
-          <font color="white">
-            {page > 1 && (
+          {this.browserComponent(object)}
+        </BrowserView>
+        {/*<MobileView>{this.mobileComponent(object)}</MobileView>*/}
+      </>
+    ));
+
+    this.setState({ contents, isLightTheme });
+  };
+
+  constructor() {
+    super();
+
+    this.state = {
+      account: '',
+      contents: '',
+      page: 1,
+      isLightTheme: '',
+      testArr: '',
+    };
+  }
+
+  render() {
+    const { isLightTheme } = this.props;
+    console.log('testArr', this.state.testArr);
+    console.log('finalLightTheme', isLightTheme);
+    return (
+      <div>
+        {!this.state.contents ? (
+          <Typography variant="h3" sx={{ marginTop: '130px' }} align="center">
+            Loading...
+          </Typography>
+        ) : (
+          this.state.contents
+          // <div>
+          //   {this.state.testArr.map((item) => (
+          //     <TestListItem isLightTheme={isLightTheme} key={item}>
+          //       {item.txGas}
+          //     </TestListItem>
+          //   ))}
+          // </div>
+        )}
+
+        <br />
+        {this.state.contents && (
+          <center>
+            <font color="white">
+              {this.state.page > 1 && (
+                <button
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    outline: 'none',
+                    transform: 'rotate(180deg)',
+                    cursor: 'pointer',
+                  }}
+                  onClick={async (e) => {
+                    if (this.state.page !== 1) {
+                      await this.setState({ page: this.state.page - 1 });
+                      this.update();
+                    }
+                  }}>
+                  <svg
+                    width="22"
+                    height="8"
+                    viewBox="0 0 22 8"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M21.3536 4.35355C21.5488 4.15829 21.5488 3.84171 21.3536 3.64645L18.1716 0.464466C17.9763 0.269204 17.6597 0.269204 17.4645 0.464466C17.2692 0.659728 17.2692 0.976311 17.4645 1.17157L20.2929 4L17.4645 6.82843C17.2692 7.02369 17.2692 7.34027 17.4645 7.53553C17.6597 7.7308 17.9763 7.7308 18.1716 7.53553L21.3536 4.35355ZM0 4.5H21V3.5H0V4.5Z"
+                      fill="white"
+                    />
+                  </svg>
+                </button>
+              )}{' '}
+              {this.state.page}
               <button
                 style={{
                   background: 'transparent',
                   border: 'none',
                   outline: 'none',
-                  transform: 'rotate(180deg)',
                   cursor: 'pointer',
                 }}
                 onClick={async (e) => {
-                  if (page !== 1) {
-                    setPage(page - 1);
-                    await update(accounts);
-                  }
+                  await this.setState({ page: this.state.page + 1 });
+                  this.update();
                 }}>
                 <svg
                   width="22"
@@ -949,34 +711,10 @@ export default function TransactionHistory({ accounts, isLightTheme }) {
                   />
                 </svg>
               </button>
-            )}{' '}
-            {page}
-            <button
-              style={{
-                background: 'transparent',
-                border: 'none',
-                outline: 'none',
-                cursor: 'pointer',
-              }}
-              onClick={async (e) => {
-                setPage(page + 1);
-                await update(accounts);
-              }}>
-              <svg
-                width="22"
-                height="8"
-                viewBox="0 0 22 8"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M21.3536 4.35355C21.5488 4.15829 21.5488 3.84171 21.3536 3.64645L18.1716 0.464466C17.9763 0.269204 17.6597 0.269204 17.4645 0.464466C17.2692 0.659728 17.2692 0.976311 17.4645 1.17157L20.2929 4L17.4645 6.82843C17.2692 7.02369 17.2692 7.34027 17.4645 7.53553C17.6597 7.7308 17.9763 7.7308 18.1716 7.53553L21.3536 4.35355ZM0 4.5H21V3.5H0V4.5Z"
-                  fill="white"
-                />
-              </svg>
-            </button>
-          </font>
-        </center>
-      )}
-    </div>
-  );
+            </font>
+          </center>
+        )}
+      </div>
+    );
+  }
 }
