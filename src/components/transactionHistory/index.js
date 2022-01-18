@@ -601,75 +601,85 @@ export default class index extends Component {
           </Typography>
         ) : (
           <>
+            <MainBlock className="boxSize">
+              <TokenTableLightContainer isLightTheme={isLightTheme}>
+                <MainTable>
+                  <TableHead>
+                    <TableRow>
+                      <TokensTableHeader isLightTheme={isLightTheme}>№</TokensTableHeader>
+                      <TokensTableHeader isLightTheme={isLightTheme}>Name</TokensTableHeader>
+                      <TokensTableHeader isLightTheme={isLightTheme} className="price-title">
+                        Price
+                      </TokensTableHeader>
+                      <TokensTableHeader isLightTheme={isLightTheme}>1H</TokensTableHeader>
+                      <TokensTableHeader isLightTheme={isLightTheme}>24H</TokensTableHeader>
+                      <TokensTableHeader isLightTheme={isLightTheme}>
+                        Fully Diluted Market Cap
+                      </TokensTableHeader>
+                      <TokensTableHeader isLightTheme={isLightTheme}>Volume</TokensTableHeader>
+                      <TokensTableHeader isLightTheme={isLightTheme}>Blockchain</TokensTableHeader>
+                      <TokensTableHeader isLightTheme={isLightTheme}>Added</TokensTableHeader>
+                    </TableRow>
+                  </TableHead>
+                </MainTable>
+              </TokenTableLightContainer>
+            </MainBlock>
             {this.state.testArr.map((object, i, arr) => (
               <div>
                 {i !== 0 &&
                 this.convertTimestampToDate(object.timestamp) ===
                   this.convertTimestampToDate(arr[i - 1].timestamp) ? null : (
                   <>
-                    <Typography color="blue">
+                    <Typography color="red">
                       {this.convertTimestampToDate(object.timestamp)}
                     </Typography>
-                    <MainBlock className="boxSize">
-                      <TokenTableLightContainer isLightTheme={isLightTheme}>
-                        <MainTable>
-                          <TableHead>
-                            <TableRow>
-                              <TokensTableHeader isLightTheme={isLightTheme}>№</TokensTableHeader>
-                              <TokensTableHeader isLightTheme={isLightTheme}>
-                                Name
-                              </TokensTableHeader>
-                              <TokensTableHeader
-                                isLightTheme={isLightTheme}
-                                className="price-title">
-                                Price
-                              </TokensTableHeader>
-                              <TokensTableHeader isLightTheme={isLightTheme}>1H</TokensTableHeader>
-                              <TokensTableHeader isLightTheme={isLightTheme}>24H</TokensTableHeader>
-                              <TokensTableHeader isLightTheme={isLightTheme}>
-                                Fully Diluted Market Cap
-                              </TokensTableHeader>
-                              <TokensTableHeader isLightTheme={isLightTheme}>
-                                Volume
-                              </TokensTableHeader>
-                              <TokensTableHeader isLightTheme={isLightTheme}>
-                                Blockchain
-                              </TokensTableHeader>
-                              <TokensTableHeader isLightTheme={isLightTheme}>
-                                Added
-                              </TokensTableHeader>
-                            </TableRow>
-                          </TableHead>
-                        </MainTable>
-                      </TokenTableLightContainer>
-                    </MainBlock>
                   </>
                 )}
 
                 {this.browserComponent(object)}
               </div>
             ))}
-          </>
-        )}
-
-        <br />
-        {this.state.testArr && (
-          <center>
-            <font color="white">
-              {this.state.page > 1 && (
+            <center>
+              <font color="white">
+                {this.state.page > 1 && (
+                  <button
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      outline: 'none',
+                      transform: 'rotate(180deg)',
+                      cursor: 'pointer',
+                    }}
+                    onClick={async (e) => {
+                      if (this.state.page !== 1) {
+                        await this.setState({ page: this.state.page - 1 });
+                        await this.update();
+                      }
+                    }}>
+                    <svg
+                      width="22"
+                      height="8"
+                      viewBox="0 0 22 8"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M21.3536 4.35355C21.5488 4.15829 21.5488 3.84171 21.3536 3.64645L18.1716 0.464466C17.9763 0.269204 17.6597 0.269204 17.4645 0.464466C17.2692 0.659728 17.2692 0.976311 17.4645 1.17157L20.2929 4L17.4645 6.82843C17.2692 7.02369 17.2692 7.34027 17.4645 7.53553C17.6597 7.7308 17.9763 7.7308 18.1716 7.53553L21.3536 4.35355ZM0 4.5H21V3.5H0V4.5Z"
+                        fill="white"
+                      />
+                    </svg>
+                  </button>
+                )}{' '}
+                {this.state.page}
                 <button
                   style={{
                     background: 'transparent',
                     border: 'none',
                     outline: 'none',
-                    transform: 'rotate(180deg)',
                     cursor: 'pointer',
                   }}
                   onClick={async (e) => {
-                    if (this.state.page !== 1) {
-                      await this.setState({ page: this.state.page - 1 });
-                      await this.update();
-                    }
+                    await this.setState({ page: this.state.page + 1 });
+                    await this.update();
                   }}>
                   <svg
                     width="22"
@@ -683,34 +693,15 @@ export default class index extends Component {
                     />
                   </svg>
                 </button>
-              )}{' '}
-              {this.state.page}
-              <button
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  outline: 'none',
-                  cursor: 'pointer',
-                }}
-                onClick={async (e) => {
-                  await this.setState({ page: this.state.page + 1 });
-                  await this.update();
-                }}>
-                <svg
-                  width="22"
-                  height="8"
-                  viewBox="0 0 22 8"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M21.3536 4.35355C21.5488 4.15829 21.5488 3.84171 21.3536 3.64645L18.1716 0.464466C17.9763 0.269204 17.6597 0.269204 17.4645 0.464466C17.2692 0.659728 17.2692 0.976311 17.4645 1.17157L20.2929 4L17.4645 6.82843C17.2692 7.02369 17.2692 7.34027 17.4645 7.53553C17.6597 7.7308 17.9763 7.7308 18.1716 7.53553L21.3536 4.35355ZM0 4.5H21V3.5H0V4.5Z"
-                    fill="white"
-                  />
-                </svg>
-              </button>
-            </font>
-          </center>
+              </font>
+            </center>
+          </>
         )}
+
+        {/*<br />*/}
+        {/*{this.state.testArr && (*/}
+
+        {/*)}*/}
       </div>
     );
   }
