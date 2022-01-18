@@ -11,7 +11,6 @@ import Investment from '../common/investment/investment';
 
 export default function Ethereum2Staking({ accountAddress }) {
   const [BeaconContent, setBeaconContent] = useState([]);
-  console.log('BeaconContent', BeaconContent);
   //useSelector is a function that takes currentState as an argument
   //and returns data from it and store the return values inside a variable within the scope
   //of the functional component
@@ -45,7 +44,7 @@ export default function Ethereum2Staking({ accountAddress }) {
 
   //implementing below logic for ETH2.0 staking
   useEffect(() => {
-    if (BeaconData) {
+    if (Array.isArray(BeaconData) || BeaconData.length > 0) {
       console.log('TestABC inside eth 2 implmentation', BeaconData);
       try {
         var content = BeaconData.map((object) => {
@@ -142,7 +141,7 @@ export default function Ethereum2Staking({ accountAddress }) {
       {/*    alt=""*/}
       {/*  />*/}
       {/*  Ethereum 2.0 staking -- ${BeaconTotal.toLocaleString()}*/}
-      {BeaconContent}
+      {/*{BeaconContent}*/}
       {/*</div>*/}
       {/*<br />*/}
     </React.Fragment>
