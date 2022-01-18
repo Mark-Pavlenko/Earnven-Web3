@@ -85,9 +85,9 @@ export default class index extends Component {
           }
         }
         distinctHash = [...new Set(allHash)];
-        console.log('final object response:::', distinctHash);
-        console.log('lightThemeFinal', lightThemeFinal);
-        this.update(lightThemeFinal);
+        // console.log('all hashes array response:::', distinctHash);
+        // console.log('lightThemeFinal', lightThemeFinal);
+        await this.update(lightThemeFinal);
       });
   }
 
@@ -438,10 +438,6 @@ export default class index extends Component {
     );
   };
 
-  change = (arr, isLightTheme) => {
-    // console.log('contents', contents);
-  };
-
   update = async (isLightTheme) => {
     // try{
 
@@ -604,62 +600,56 @@ export default class index extends Component {
             Loading...
           </Typography>
         ) : (
-          <div>
+          <>
             {this.state.testArr.map((object, i, arr) => (
-              <>
-                <BrowserView>
-                  {i !== 0 &&
-                  this.convertTimestampToDate(object.timestamp) ===
-                    this.convertTimestampToDate(arr[i - 1].timestamp) ? null : (
-                    <>
-                      <Typography color="blue">
-                        {this.convertTimestampToDate(object.timestamp)}
-                      </Typography>
-                      <MainBlock className="boxSize">
-                        <TokenTableLightContainer isLightTheme={isLightTheme}>
-                          <MainTable>
-                            <TableHead>
-                              <TableRow>
-                                <TokensTableHeader isLightTheme={isLightTheme}>№</TokensTableHeader>
-                                <TokensTableHeader isLightTheme={isLightTheme}>
-                                  Name
-                                </TokensTableHeader>
-                                <TokensTableHeader
-                                  isLightTheme={isLightTheme}
-                                  className="price-title">
-                                  Price
-                                </TokensTableHeader>
-                                <TokensTableHeader isLightTheme={isLightTheme}>
-                                  1H
-                                </TokensTableHeader>
-                                <TokensTableHeader isLightTheme={isLightTheme}>
-                                  24H
-                                </TokensTableHeader>
-                                <TokensTableHeader isLightTheme={isLightTheme}>
-                                  Fully Diluted Market Cap
-                                </TokensTableHeader>
-                                <TokensTableHeader isLightTheme={isLightTheme}>
-                                  Volume
-                                </TokensTableHeader>
-                                <TokensTableHeader isLightTheme={isLightTheme}>
-                                  Blockchain
-                                </TokensTableHeader>
-                                <TokensTableHeader isLightTheme={isLightTheme}>
-                                  Added
-                                </TokensTableHeader>
-                              </TableRow>
-                            </TableHead>
-                          </MainTable>
-                        </TokenTableLightContainer>
-                      </MainBlock>
-                    </>
-                  )}
+              <div>
+                {i !== 0 &&
+                this.convertTimestampToDate(object.timestamp) ===
+                  this.convertTimestampToDate(arr[i - 1].timestamp) ? null : (
+                  <>
+                    <Typography color="blue">
+                      {this.convertTimestampToDate(object.timestamp)}
+                    </Typography>
+                    <MainBlock className="boxSize">
+                      <TokenTableLightContainer isLightTheme={isLightTheme}>
+                        <MainTable>
+                          <TableHead>
+                            <TableRow>
+                              <TokensTableHeader isLightTheme={isLightTheme}>№</TokensTableHeader>
+                              <TokensTableHeader isLightTheme={isLightTheme}>
+                                Name
+                              </TokensTableHeader>
+                              <TokensTableHeader
+                                isLightTheme={isLightTheme}
+                                className="price-title">
+                                Price
+                              </TokensTableHeader>
+                              <TokensTableHeader isLightTheme={isLightTheme}>1H</TokensTableHeader>
+                              <TokensTableHeader isLightTheme={isLightTheme}>24H</TokensTableHeader>
+                              <TokensTableHeader isLightTheme={isLightTheme}>
+                                Fully Diluted Market Cap
+                              </TokensTableHeader>
+                              <TokensTableHeader isLightTheme={isLightTheme}>
+                                Volume
+                              </TokensTableHeader>
+                              <TokensTableHeader isLightTheme={isLightTheme}>
+                                Blockchain
+                              </TokensTableHeader>
+                              <TokensTableHeader isLightTheme={isLightTheme}>
+                                Added
+                              </TokensTableHeader>
+                            </TableRow>
+                          </TableHead>
+                        </MainTable>
+                      </TokenTableLightContainer>
+                    </MainBlock>
+                  </>
+                )}
 
-                  {this.browserComponent(object)}
-                </BrowserView>
-              </>
+                {this.browserComponent(object)}
+              </div>
             ))}
-          </div>
+          </>
         )}
 
         <br />
@@ -678,7 +668,7 @@ export default class index extends Component {
                   onClick={async (e) => {
                     if (this.state.page !== 1) {
                       await this.setState({ page: this.state.page - 1 });
-                      this.update();
+                      await this.update();
                     }
                   }}>
                   <svg
@@ -704,7 +694,7 @@ export default class index extends Component {
                 }}
                 onClick={async (e) => {
                   await this.setState({ page: this.state.page + 1 });
-                  this.update();
+                  await this.update();
                 }}>
                 <svg
                   width="22"
