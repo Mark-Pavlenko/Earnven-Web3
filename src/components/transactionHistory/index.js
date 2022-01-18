@@ -577,47 +577,6 @@ export default class index extends Component {
     }
     console.log(' transaction history data object::', arr1);
     this.setState({ testArr: arr1 });
-    contents = arr1.map((object, i, arr) => (
-      <>
-        <BrowserView>
-          {i !== 0 &&
-          this.convertTimestampToDate(object.timestamp) ===
-            this.convertTimestampToDate(arr[i - 1].timestamp) ? null : (
-            <>
-              <Typography color="blue">{this.convertTimestampToDate(object.timestamp)}</Typography>
-              <MainBlock className="boxSize">
-                <TokenTableLightContainer isLightTheme={isLightTheme}>
-                  <MainTable>
-                    <TableHead>
-                      <TableRow>
-                        <TokensTableHeader isLightTheme={isLightTheme}>№</TokensTableHeader>
-                        <TokensTableHeader isLightTheme={isLightTheme}>Name</TokensTableHeader>
-                        <TokensTableHeader isLightTheme={isLightTheme} className="price-title">
-                          Price
-                        </TokensTableHeader>
-                        <TokensTableHeader isLightTheme={isLightTheme}>1H</TokensTableHeader>
-                        <TokensTableHeader isLightTheme={isLightTheme}>24H</TokensTableHeader>
-                        <TokensTableHeader isLightTheme={isLightTheme}>
-                          Fully Diluted Market Cap
-                        </TokensTableHeader>
-                        <TokensTableHeader isLightTheme={isLightTheme}>Volume</TokensTableHeader>
-                        <TokensTableHeader isLightTheme={isLightTheme}>
-                          Blockchain
-                        </TokensTableHeader>
-                        <TokensTableHeader isLightTheme={isLightTheme}>Added</TokensTableHeader>
-                      </TableRow>
-                    </TableHead>
-                  </MainTable>
-                </TokenTableLightContainer>
-              </MainBlock>
-            </>
-          )}
-
-          {this.browserComponent(object)}
-        </BrowserView>
-        {/*<MobileView>{this.mobileComponent(object)}</MobileView>*/}
-      </>
-    ));
 
     this.setState({ contents, isLightTheme });
   };
@@ -630,33 +589,81 @@ export default class index extends Component {
       contents: '',
       page: 1,
       isLightTheme: '',
-      testArr: '',
+      testArr: [],
     };
   }
 
   render() {
     const { isLightTheme } = this.props;
-    console.log('testArr', this.state.testArr);
+    console.log('testArr object', this.state.testArr);
     console.log('finalLightTheme', isLightTheme);
     return (
       <div>
-        {!this.state.contents ? (
+        {this.state.testArr.length === 0 ? (
           <Typography variant="h3" sx={{ marginTop: '130px' }} align="center">
             Loading...
           </Typography>
         ) : (
-          this.state.contents
-          // <div>
-          //   {this.state.testArr.map((item) => (
-          //     <TestListItem isLightTheme={isLightTheme} key={item}>
-          //       {item.txGas}
-          //     </TestListItem>
-          //   ))}
-          // </div>
+          <div>
+            {this.state.testArr.map((object, i, arr) => (
+              <>
+                <BrowserView>
+                  {i !== 0 &&
+                  this.convertTimestampToDate(object.timestamp) ===
+                    this.convertTimestampToDate(arr[i - 1].timestamp) ? null : (
+                    <>
+                      <Typography color="blue">
+                        {this.convertTimestampToDate(object.timestamp)}
+                      </Typography>
+                      <MainBlock className="boxSize">
+                        <TokenTableLightContainer isLightTheme={isLightTheme}>
+                          <MainTable>
+                            <TableHead>
+                              <TableRow>
+                                <TokensTableHeader isLightTheme={isLightTheme}>№</TokensTableHeader>
+                                <TokensTableHeader isLightTheme={isLightTheme}>
+                                  Name
+                                </TokensTableHeader>
+                                <TokensTableHeader
+                                  isLightTheme={isLightTheme}
+                                  className="price-title">
+                                  Price
+                                </TokensTableHeader>
+                                <TokensTableHeader isLightTheme={isLightTheme}>
+                                  1H
+                                </TokensTableHeader>
+                                <TokensTableHeader isLightTheme={isLightTheme}>
+                                  24H
+                                </TokensTableHeader>
+                                <TokensTableHeader isLightTheme={isLightTheme}>
+                                  Fully Diluted Market Cap
+                                </TokensTableHeader>
+                                <TokensTableHeader isLightTheme={isLightTheme}>
+                                  Volume
+                                </TokensTableHeader>
+                                <TokensTableHeader isLightTheme={isLightTheme}>
+                                  Blockchain
+                                </TokensTableHeader>
+                                <TokensTableHeader isLightTheme={isLightTheme}>
+                                  Added
+                                </TokensTableHeader>
+                              </TableRow>
+                            </TableHead>
+                          </MainTable>
+                        </TokenTableLightContainer>
+                      </MainBlock>
+                    </>
+                  )}
+
+                  {this.browserComponent(object)}
+                </BrowserView>
+              </>
+            ))}
+          </div>
         )}
 
         <br />
-        {this.state.contents && (
+        {this.state.testArr && (
           <center>
             <font color="white">
               {this.state.page > 1 && (
