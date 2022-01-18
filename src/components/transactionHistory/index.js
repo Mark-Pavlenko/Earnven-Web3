@@ -662,76 +662,84 @@ export default class index extends Component {
                     </TableRow>
                   </TableHead>
                   <TableBody style={{}}>
-                    {this.state.testArr.map((object, i, arr) => (
-                      <>
-                        {i !== 0 &&
-                        this.convertTimestampToDate(object.timestamp) ===
-                          this.convertTimestampToDate(arr[i - 1].timestamp) ? null : (
-                          <TransactionDateTimestamp isLightTheme={isLightTheme}>
-                            {this.convertTimestampToDate(object.timestamp)}
-                          </TransactionDateTimestamp>
-                        )}
-                        {/*<div style={{ marginLeft: '100px', marginRight: '100px' }}>*/}
-                        <TransactionTableRow>
-                          <HistoryTableCell>
-                            <TransactionIcon
-                              src={
-                                object.txType === 'TRADING'
-                                  ? isLightTheme
-                                    ? TradeIconLight
-                                    : TradeIconDark
-                                  : object.status === 'Receive'
-                                  ? isLightTheme
-                                    ? receiveIconLight
-                                    : receiveIconDark
-                                  : SendIcon
-                              }
-                              alt="transaction_img"
-                            />
-                            <DateLabelsSubBlock>
-                              {object.txType === 'TRADING' ? (
-                                <TransactionName isLightTheme={isLightTheme}>Trade</TransactionName>
-                              ) : (
-                                <TransactionName isLightTheme={isLightTheme}>
-                                  {object.txType === 'Approval' ? object.txType : object.status}
-                                </TransactionName>
-                              )}
-                              <TransactionTimestamp>
-                                {this.convertTimestampToTime(object.timestamp)}
-                              </TransactionTimestamp>
-                            </DateLabelsSubBlock>
-                          </HistoryTableCell>
-                          <GetSenderTableCell isLightTheme={isLightTheme}>
-                            {/*{object.txType !== 'TRADING' && (*/}
-                            <div>
-                              <img
-                                alt="random_avatar_img"
-                                src={generator.generateRandomAvatar(object.from)}
+                    {this.state.testArr.map((object, i, arr) => {
+                      // console.log('object needable',);
+                      return (
+                        <>
+                          {i !== 0 &&
+                          this.convertTimestampToDate(object.timestamp) ===
+                            this.convertTimestampToDate(arr[i - 1].timestamp) ? null : (
+                            <TransactionDateTimestamp isLightTheme={isLightTheme}>
+                              {this.convertTimestampToDate(object.timestamp)}
+                            </TransactionDateTimestamp>
+                          )}
+                          {/*<div style={{ marginLeft: '100px', marginRight: '100px' }}>*/}
+                          <TransactionTableRow>
+                            <HistoryTableCell>
+                              <TransactionIcon
+                                src={
+                                  object.txType === 'TRADING'
+                                    ? isLightTheme
+                                      ? TradeIconLight
+                                      : TradeIconDark
+                                    : object.status === 'Receive'
+                                    ? isLightTheme
+                                      ? receiveIconLight
+                                      : receiveIconDark
+                                    : SendIcon
+                                }
+                                alt="transaction_img"
                               />
+                              <DateLabelsSubBlock>
+                                {object.txType === 'TRADING' ? (
+                                  <TransactionName isLightTheme={isLightTheme}>
+                                    Trade
+                                  </TransactionName>
+                                ) : (
+                                  <TransactionName isLightTheme={isLightTheme}>
+                                    {object.txType === 'Approval' ? object.txType : object.status}
+                                  </TransactionName>
+                                )}
+                                <TransactionTimestamp>
+                                  {this.convertTimestampToTime(object.timestamp)}
+                                </TransactionTimestamp>
+                              </DateLabelsSubBlock>
+                            </HistoryTableCell>
+                            <GetSenderTableCell isLightTheme={isLightTheme}>
+                              {/*{object.txType !== 'TRADING' && (*/}
+                              <div>
+                                <img
+                                  alt="random_avatar_img"
+                                  src={generator.generateRandomAvatar(object.from)}
+                                />
 
-                              <p>
-                                {object.status === 'Receive'
-                                  ? this.walletAddressCutter(object.from)
-                                  : this.walletAddressCutter(object.to)}
-                              </p>
-                            </div>
-                            {/*)}*/}
-                          </GetSenderTableCell>
-                          <TableCell>Ome sdadadadd</TableCell>
-                          <TableCell>Ome sdadadadd</TableCell>
-                          <TableCell>
-                            <EtherScanButton
-                              onClick={() => this.watchTransactionInfo(object.hash)}
-                              isLightTheme={isLightTheme}
-                              icon={etherScanIcon}
-                              etherScanDark={etherScanDark}
-                            />
-                          </TableCell>
-                        </TransactionTableRow>
+                                <p>
+                                  {object.status === 'Receive'
+                                    ? this.walletAddressCutter(object.from)
+                                    : this.walletAddressCutter(object.to)}
+                                </p>
+                              </div>
+                              {/*)}*/}
+                            </GetSenderTableCell>
+                            <TableCell>Ome sdadadadd</TableCell>
+                            <TableCell>
+                              <p>{parseFloat(object.txGas).toFixed(3)} ETH</p>
+                              {/*<p>{web3.utils.fromWei('0.024011379426259036', 'ether')}</p>*/}
+                            </TableCell>
+                            <TableCell>
+                              <EtherScanButton
+                                onClick={() => this.watchTransactionInfo(object.hash)}
+                                isLightTheme={isLightTheme}
+                                icon={etherScanIcon}
+                                etherScanDark={etherScanDark}
+                              />
+                            </TableCell>
+                          </TransactionTableRow>
 
-                        {/*</div>*/}
-                      </>
-                    ))}
+                          {/*</div>*/}
+                        </>
+                      );
+                    })}
                   </TableBody>
                 </TransactionsHistoryTable>
                 <div>
