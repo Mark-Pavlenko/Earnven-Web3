@@ -26,14 +26,15 @@ function* curveTokenSagaWorker(curveTokenAttributes) {
   if (crvTokenBalanceAmount > 0) {
     let object = {};
     object.cvxBalanceAmt = crvTokenBalanceAmount;
-    object.cvxTokenBalanceValue = object.cvxBalanceAmt / 10 ** curveTokenData.crvTokenDecimals;
-    object.cvxTokenPrice = cvxTokenApiData.cvxTokenPrice; //for timing hard coded;
-    object.cvxTokenValue = object.cvxTokenBalanceValue * object.cvxTokenPrice;
-    object.cvxTokenImageUrl = cvxTokenApiData.cvxImageUrl;
-    object.cvxTokenProtocol = 'Curve';
-    object.cvxTokenChain = 'Ethereum';
-    object.cvxTokenSymbol = 'CRV';
-    cvxTokenTotal = object.cvxTokenValue;
+    object.balance = object.cvxBalanceAmt / 10 ** curveTokenData.crvTokenDecimals;
+    object.price = cvxTokenApiData.cvxTokenPrice; //for timing hard coded;
+    object.totalValue = object.balance * object.price;
+    object.imageData = [cvxTokenApiData.cvxImageUrl];
+    object.tokens = [{ symbol: 'CRV', balance: object.balance }];
+    object.protocol = 'Curve';
+    object.chain = 'Ethereum';
+    object.symbol = 'CRV';
+    cvxTokenTotal = object.totalValue;
     cvxArrayOfData.push(object);
   }
 

@@ -27,6 +27,12 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useWeb3React } from '@web3-react/core';
+import { useDispatch } from 'react-redux';
+import {
+  setConvexStakingData,
+  setConvexStakingTokenImage,
+  setConvexStakingTotal,
+} from '../../store/convexStake/actions';
 
 export default function ConvexStaking({ accountAddress }) {
   const [ConvexCVXAmount, setConvexCVXAmount] = useState(0);
@@ -47,6 +53,9 @@ export default function ConvexStaking({ accountAddress }) {
   const [cvxStakingTotalAmount, setcvxStakingTotalAmount] = useState(0);
   const [CVXTokenImage, setCVXTokenImage] = useState(0);
   const [CvxTotalSupply, setCvxTotalSupply] = useState();
+  console.log('cvxStakingDataAttributes', cvxStakingDataAttributes);
+
+  const dispatch = useDispatch();
 
   //get useWeb3React hook
   const { account, activate, active, chainId, connector, deactivate, error, provider, setError } =
@@ -253,9 +262,8 @@ export default function ConvexStaking({ accountAddress }) {
               convexStakingClaimable =
                 (ConvexStakedData.earnedClaimbale / 10 ** 18) * cvxCrvTokenPrice;
               cvxTotalSupplyAmt = (ConvexStakedData.cvxTotalSupply / 10 ** 18) * cvxCrvTokenPrice;
-              object.cvxStakingAmt = convexStakingBalanceValue;
-              object.cvxStakingBalance = ConvexStakedData.convexStakingBalance / 10 ** 18;
-              object.cvxPrice = cvxCrvTokenPrice;
+              object.stakingAmt = convexStakingBalanceValue;
+              object.price = cvxCrvTokenPrice;
               //if token is 'cvxalETH+ETH-f' then claimable price should be crv token price
               if (stakingTokenSymbol == 'cvxalETH+ETH-f' || stakingTokenSymbol == 'cvxankrCRV') {
                 const cvxCrvTokenPriceData = await getConvexTokenPrice(
@@ -263,22 +271,25 @@ export default function ConvexStaking({ accountAddress }) {
                 );
                 cvxCrvTokenPrice = cvxCrvTokenPriceData.data.market_data.current_price.usd;
               }
-              object.cvxStakingClaimable =
+              object.stakingClaimable =
                 (ConvexStakedData.earnedClaimbale / 10 ** 18) * cvxCrvTokenPrice;
 
-              object.cvxStakingToken = stakingTokenSymbol;
-              object.cvxChain = 'Ethereum';
-              object.cvxProtocol = stakingTokenSymbol;
-              object.cvxTokenImgurl = CvxTokenImageUrl;
-              object.cvxTokenAddress = tokenAddress;
-              object.cvxStakingContractAddress = ConvexStakedData.stakingTokenAddress;
-              object.cvxTotalSupplyValue = cvxTotalSupplyAmt;
-              object.cvxTotal = parseFloat(
-                object.cvxStakingAmt + parseFloat(object.cvxStakingClaimable)
+              object.tokens = [
+                {
+                  symbol: stakingTokenSymbol,
+                  balance: ConvexStakedData.convexStakingBalance / 10 ** 18,
+                },
+              ];
+              object.chain = 'Ethereum';
+              object.protocol = stakingTokenSymbol;
+              object.imageData = [CvxTokenImageUrl];
+              object.tokenAddress = tokenAddress;
+              object.stakingContractAddress = ConvexStakedData.stakingTokenAddress;
+              object.liquidity = cvxTotalSupplyAmt;
+              object.totalValue = parseFloat(
+                object.stakingAmt + parseFloat(object.stakingClaimable)
               );
-              totalStaking += parseFloat(
-                object.cvxStakingAmt + parseFloat(object.cvxStakingClaimable)
-              );
+              totalStaking += parseFloat(object.stakingAmt + parseFloat(object.stakingClaimable));
               staking.push(object);
             }
 
@@ -287,10 +298,12 @@ export default function ConvexStaking({ accountAddress }) {
             CvxTokenImageUrl = '';
           }
         } //end of for loop
-
+        dispatch(setConvexStakingData(staking));
         setcvxStakingDataAttributes(staking);
         setcvxStakingTotalAmount(parseFloat(totalStaking).toFixed(2));
+        dispatch(setConvexStakingTotal(totalStaking));
         setCVXTokenImage(CvxTokenImageUrl);
+        //dispatch(setConvexStakingTokenImage(CvxTokenImageUrl));
         staking = [];
       } catch (err) {
         console.log('testcc No curve lp token holding for this user', accountAddress);
@@ -318,15 +331,7 @@ export default function ConvexStaking({ accountAddress }) {
           }}>
           <AccordionSummary>
             <React.Fragment>
-              <img
-                src={object.cvxTokenImgurl}
-                style={{
-                  height: '20px',
-                  display: 'inline-block',
-                }}
-                alt=""
-              />
-              {object.cvxStakingToken} -- {parseFloat(object.cvxTotal).toFixed(2)}
+              {object.token} -- {parseFloat(object.totalValue).toFixed(2)}
             </React.Fragment>
           </AccordionSummary>
 
@@ -338,20 +343,19 @@ export default function ConvexStaking({ accountAddress }) {
                 marginLeft: '15px',
               }}>
               <br />
-              {object.cvxStakingToken} &nbsp;&nbsp;&nbsp;&nbsp;{' '}
-              {parseFloat(object.cvxStakingAmt).toFixed(2)} USD
+              {object.token} &nbsp;&nbsp;&nbsp;&nbsp; {parseFloat(object.stakingAmt).toFixed(2)} USD
               <br />
-              Claimable &nbsp;&nbsp;&nbsp; {parseFloat(object.cvxStakingClaimable).toFixed(2)}
+              Claimable &nbsp;&nbsp;&nbsp; {parseFloat(object.stakingClaimable).toFixed(2)}
               <br />
-              Price &nbsp;&nbsp;&nbsp;&nbsp; {parseFloat(object.cvxPrice).toFixed(2)}
+              Price &nbsp;&nbsp;&nbsp;&nbsp; {parseFloat(object.price).toFixed(2)}
               <br />
-              Balance &nbsp;&nbsp;&nbsp;&nbsp; {parseFloat(object.cvxStakingBalance).toFixed(2)}
+              Balance &nbsp;&nbsp;&nbsp;&nbsp; {parseFloat(object.balance).toFixed(2)}
               <br />
-              Liquidity &nbsp;&nbsp;&nbsp; {parseFloat(object.cvxTotalSupplyValue).toFixed(2)}
+              Liquidity &nbsp;&nbsp;&nbsp; {parseFloat(object.totalSupplyValue).toFixed(2)}
               <br />
-              Chain &nbsp;&nbsp;&nbsp;&nbsp; {object.cvxChain}
+              Chain &nbsp;&nbsp;&nbsp;&nbsp; {object.chain}
               <br />
-              Protocol &nbsp;&nbsp;&nbsp;&nbsp; {object.cvxProtocol}
+              Protocol &nbsp;&nbsp;&nbsp;&nbsp; {object.protocol}
               <br />
             </div>
           </AccordionDetails>
@@ -386,23 +390,23 @@ export default function ConvexStaking({ accountAddress }) {
 
   return (
     <React.Fragment>
-      <h1>CONVEX</h1>
-      {parseFloat(cvxStakingTotalAmount) > 0 ? (
-        <div>
-          <img
-            src={ConvexCVXImage}
-            style={{
-              height: '20px',
-              display: 'inline-block',
-            }}
-            alt=""
-          />
-          Convex Total -- {parseFloat(cvxStakingTotalAmount).toLocaleString()}
-        </div>
-      ) : (
-        ''
-      )}
-      {stakingContent}
+      {/*<h1>CONVEX</h1>*/}
+      {/*{parseFloat(cvxStakingTotalAmount) > 0 ? (*/}
+      {/*  <div>*/}
+      {/*    <img*/}
+      {/*      src={ConvexCVXImage}*/}
+      {/*      style={{*/}
+      {/*        height: '20px',*/}
+      {/*        display: 'inline-block',*/}
+      {/*      }}*/}
+      {/*      alt=""*/}
+      {/*    />*/}
+      {/*    Convex Total -- {parseFloat(cvxStakingTotalAmount).toLocaleString()}*/}
+      {/*  </div>*/}
+      {/*) : (*/}
+      {/*  ''*/}
+      {/*)}*/}
+      {/*{stakingContent}*/}
     </React.Fragment>
   );
 }

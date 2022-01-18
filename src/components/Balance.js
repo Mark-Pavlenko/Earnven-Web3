@@ -6,7 +6,7 @@ import axios from 'axios';
 
 function Balance({ address }) {
   const [totalValue, settotalValue] = useState('00.00');
-
+  console.log('ball', totalValue);
   function CommaFormatted(amount) {
     const delimiter = ','; // replace comma if desired
     const ab = amount.split('.', 2);
@@ -61,29 +61,7 @@ function Balance({ address }) {
         // do smth.
       }
     }
-
     getBalance();
-    // const totalAccountValue = async () =>{
-    //     try{
-    //         const path = 'https://api.ethplorer.io/getAddressInfo/'+accountAddress+'?apiKey=EK-qSPda-W9rX7yJ-UY93y'
-    //         const response = await axios.get(path);
-    //         let tokens = response.data.tokens;
-    //         total= (response.data.ETH.price.rate)*(web3.utils.fromWei(response.data.ETH.rawBalance,'ether'));
-    //         if(tokens!==undefined){
-    //             for(var i = 0; i<tokens.length; i++){
-    //                 if(tokens[i].tokenInfo.price!==false){
-    //                     total = total + (tokens[i].tokenInfo.price.rate)*(web3.utils.fromWei(tokens[i].rawBalance,'ether'));
-
-    //                 }
-    //             }
-    //         }
-    //         settotalValue(CommaFormatted(total.toFixed(2)))
-    //     }
-    //     catch(error){
-    //         console.log(error);
-    //     }
-    // }
-    //  totalAccountValue();
   }, [totalValue, address]);
   return (
     <Box sx={{ pb: 2 }}>

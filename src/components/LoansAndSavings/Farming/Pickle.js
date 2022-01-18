@@ -35,12 +35,12 @@ const PickleStake = ({ accountAddress }) => {
     }
   }, [accountAddress]);
 
-  const pickleStakeArray = useSelector((state) => state.pickeStake.pickeStake);
+  const pickleStakeArray = useSelector((state) => state.pickeStake?.pickeStake);
 
   useEffect(() => {
     console.log('saga test', pickleStakeArray);
     let total = 0;
-    if (pickleStakeArray.length > 0) {
+    if (pickleStakeArray?.length > 0) {
       pickleStakeArray.map((object) => {
         total += parseFloat(object.value);
       });

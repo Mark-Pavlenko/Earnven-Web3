@@ -116,14 +116,14 @@ export async function fetchBalanceDill(attributes) {
     .then(async ({ data }) => {
       object.price = data.dill.dillWeeks[data.dill.dillWeeks.length - 1].picklePriceUsd;
       object.liquidity = data.dill.dillWeeks[data.dill.dillWeeks.length - 1].totalDillAmount;
-      object.value = object.price * attributes[1];
+      object.totalValue = object.price * attributes[1];
       console.log('attributes', attributes);
       object.balance = attributes[1];
       object.protocol = 'Pickle Finance';
       object.chain = 'Ethereum';
       object.icon = pickleIcon;
       object.tokenName = 'Dill';
-      object.total = object.value;
+      object.total = object.totalValue;
       asset.push(object);
     })
     .catch((err) => {

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import toggleArrowIcon from '../../../assets/icons/birdArrow-icon.svg';
 
 export const PoolsBlock = styled.div`
   background: ${(props) =>
@@ -11,6 +12,33 @@ export const PoolsBlock = styled.div`
   border-radius: 10px;
   padding-top: 1px;
   padding-bottom: 1px;
+  width: 48.5%;
+  @media (max-width: 768px) {
+    display: block;
+    width: 100%;
+  }
+`;
+
+export const ToggleButton = styled.div`
+  width: 28px;
+  height: 28px;
+  transform: ${(props) => (props.isOpen ? 'rotate(0deg)' : 'rotate(180deg)')};
+  background: url(${toggleArrowIcon}) no-repeat center center;
+  border-radius: 10px;
+  margin-left: 9px;
+  background-color: ${(props) =>
+    props.isOpen
+      ? props.isLightTheme
+        ? 'white' //light open
+        : 'white' //dark open
+      : props.isLightTheme
+      ? 'rgba(255, 255, 255, 0.16)' //light close
+      : 'rgba(31, 38, 92, 0.24)'}; //dark close
+  box-shadow: ${(props) =>
+    props.isOpen
+      ? 'inset 0 5px 10px -6px rgba(51, 78, 131, 0.12)'
+      : 'inset -1px -1px 3px 1px rgb(255 255 255 / 10%)'};
+  cursor: pointer;
 `;
 
 export const TotalValueField = styled.div`
@@ -59,6 +87,15 @@ export const Header = styled.div`
   justify-content: space-between;
   padding: 0 29px 0 26px;
   margin: 20px 0 0 0;
+`;
+
+export const InvestmentWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  @media (max-width: 768px) {
+    display: block;
+  }
 `;
 
 export const Title = styled.div`
