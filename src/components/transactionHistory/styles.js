@@ -71,7 +71,7 @@ export const TransactionsHistoryTable = styled(Table)`
   //margin-left: 45px;
   //margin-right: 45px;
   > tbody > tr:last-child {
-    background: #ff0000;
+    //background: #ff0000;
   }
 `;
 
@@ -106,4 +106,27 @@ export const TransactionName = styled.p`
 
 export const TransactionTimestamp = styled.p`
   color: #80868f;
+`;
+
+export const GetSenderTableCell = styled(TableCell)`
+  div {
+    display: flex;
+    flex-direction: row;
+
+    img {
+      width: 21px;
+      height: 21px;
+      margin-right: 5px;
+    }
+
+    p {
+      color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
+      font-family: 'Saira', sans-serif;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 22px;
+      letter-spacing: 0;
+    }
+  }
 `;

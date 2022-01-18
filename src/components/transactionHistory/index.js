@@ -42,7 +42,11 @@ import {
   TransactionTimestamp,
   TransactionIcon,
   TransactionTableRow,
+  GetSenderTableCell,
 } from './styles';
+import { EtherScanButton } from '../../screens/dashboard/styledComponents';
+import etherScanIcon from '../../assets/icons/etherScan-icon.svg';
+import etherScanDark from '../../assets/icons/etherScanDark-icon.svg';
 
 let contents = '';
 let ops = [];
@@ -610,6 +614,10 @@ export default class index extends Component {
     );
   };
 
+  watchTransactionInfo = (hash) => {
+    window.open(`https://etherscan.io/tx/${hash}`, '_blank');
+  };
+
   render() {
     const generator = new AvatarGenerator();
     const { isLightTheme } = this.props;
@@ -693,7 +701,34 @@ export default class index extends Component {
                               </TransactionTimestamp>
                             </DateLabelsSubBlock>
                           </HistoryTableCell>
+                          <GetSenderTableCell isLightTheme={isLightTheme}>
+                            {/*{object.txType !== 'TRADING' && (*/}
+                            <div>
+                              <img
+                                alt="random_avatar_img"
+                                src={generator.generateRandomAvatar(object.from)}
+                              />
+
+                              <p>
+                                {object.status === 'Receive'
+                                  ? this.walletAddressCutter(object.from)
+                                  : this.walletAddressCutter(object.to)}
+                              </p>
+                            </div>
+                            {/*)}*/}
+                          </GetSenderTableCell>
+                          <TableCell>Ome sdadadadd</TableCell>
+                          <TableCell>Ome sdadadadd</TableCell>
+                          <TableCell>
+                            <EtherScanButton
+                              onClick={() => this.watchTransactionInfo(object.hash)}
+                              isLightTheme={isLightTheme}
+                              icon={etherScanIcon}
+                              etherScanDark={etherScanDark}
+                            />
+                          </TableCell>
                         </TransactionTableRow>
+
                         {/*</div>*/}
                       </>
                     ))}
