@@ -161,9 +161,9 @@ export default class Assets extends Component {
                 erc20data[tx[j].contractAddress].decimals = tx[j].tokenDecimal;
               }
             } else {
-              if (tx[j].to.toLowerCase() === accounts.toLowerCase()) {
+              if (tx[j].to?.toLowerCase() === accounts?.toLowerCase()) {
                 erc20data[tx[j].contractAddress].balance += tx[j].value / 10 ** tx[j].tokenDecimal;
-              } else if (tx[j].from.toLowerCase() === accounts.toLowerCase()) {
+              } else if (tx[j].from?.toLowerCase() === accounts?.toLowerCase()) {
                 erc20data[tx[j].contractAddress].balance -= tx[j].value / 10 ** tx[j].tokenDecimal;
               }
             }
