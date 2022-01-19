@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Box from '@material-ui/core/Box';
 import { Table, TableContainer, TableCell, TableRow } from '@material-ui/core';
+import Avatar from 'react-avatar';
 
 export const TestBlock = styled.div`
   color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
@@ -84,7 +85,7 @@ export const TransactionTableRow = styled(TableRow)`
 export const HistoryTableCell = styled(TableCell)`
   display: flex;
   height: 71px;
-  //width: 200px;
+  width: 215px;
   margin-left: 29px;
   border-bottom: none;
   //background-color: red;
@@ -136,4 +137,48 @@ export const GasFeeStringValue = styled.p`
   color: ${(props) => (props.isLightTheme ? '#7E848F' : '#FFFFFF')};
   font-weight: 400;
   font-size: 14px;
+`;
+
+export const QuantityTableCell = styled(TableCell)`
+  //width: 200px;
+`;
+
+export const QuantityTableCellSubBlock = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid orange;
+  width: 330px;
+`;
+
+export const FirstTokenCurrencyBlock = styled.div`
+  //border: 1px solid black;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const FirstTokenSubBlock = styled.div`
+  //background-color: red;
+  margin-left: 5px;
+`;
+
+export const FirstTokenSubBlockUSDValue = styled.p`
+  font-size: 10px;
+  color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
+  line-height: 22px;
+  :last-child {
+    color: #737373;
+    line-height: 15px;
+  }
+`;
+
+export const MockAvatarIcon = styled(Avatar)`
+  background-color: #737373;
+  display: inline;
+  max-width: 21px;
+  max-height: 21px;
+  vertical-align: top;
+  height: 25px;
 `;

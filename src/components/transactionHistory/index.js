@@ -29,6 +29,7 @@ import gasPumpIconLight from '../../assets/icons/gasPumpHistoryLight.svg';
 import gasPumpIconDark from '../../assets/icons/gasPumpHistoryDark.svg';
 import receiveIconLight from '../../assets/icons/receiveIconLight.svg';
 import receiveIconDark from '../../assets/icons/receiveIconDark.svg';
+import TransactionHistoryTradeIcon from '../../assets/icons/TransactionHistoryTradeIcon.svg';
 import {
   MainBlock,
   TransactionHistoryTableHeader,
@@ -44,6 +45,12 @@ import {
   TransactionTableRow,
   GetSenderTableCell,
   GasFeeStringValue,
+  QuantityTableCell,
+  QuantityTableCellSubBlock,
+  FirstTokenSubBlock,
+  FirstTokenSubBlockUSDValue,
+  MockAvatarIcon,
+  FirstTokenCurrencyBlock,
 } from './styles';
 import { EtherScanButton } from '../../screens/dashboard/styledComponents';
 import etherScanIcon from '../../assets/icons/etherScan-icon.svg';
@@ -396,27 +403,27 @@ export default class transactionHistory extends Component {
                       <img
                         style={{
                           display: 'inline',
-                          maxWidth: '25px',
+                          maxWidth: '21px',
+                          maxHeight: '21px',
                           verticalAlign: 'top',
                           height: '25px',
-                          margin: '16px',
                         }}
                         alt=""
                         src={`https://ethplorer.io${data.firstToken.image}`}
                       />
                     ) : (
-                      <Avatar
+                      <MockAvatarIcon
                         style={{
                           display: 'inline',
-                          maxWidth: '25px',
+                          maxWidth: '21px',
+                          maxHeight: '21px',
                           verticalAlign: 'top',
                           height: '25px',
-                          margin: '16px',
                         }}
                         color="#737373"
                         name={data.firstToken.symbol}
                         round
-                        size="30"
+                        size="21"
                         textSizeRatio={1.75}
                       />
                     )}
@@ -445,27 +452,27 @@ export default class transactionHistory extends Component {
                       <img
                         style={{
                           display: 'inline',
-                          maxWidth: '25px',
+                          maxWidth: '21px',
+                          maxHeight: '21px',
                           verticalAlign: 'top',
                           height: '25px',
-                          margin: '16px',
                         }}
                         alt=""
                         src={`https://ethplorer.io${data.secondToken.image}`}
                       />
                     ) : (
-                      <Avatar
+                      <MockAvatarIcon
                         style={{
                           display: 'inline',
-                          maxWidth: '25px',
+                          maxWidth: '21px',
+                          maxHeight: '21px',
                           verticalAlign: 'top',
                           height: '25px',
-                          margin: '16px',
                         }}
                         color="#737373"
                         name={data.secondToken.symbol}
                         round
-                        size="30"
+                        size="21"
                         textSizeRatio={1.75}
                       />
                     )}
@@ -504,7 +511,8 @@ export default class transactionHistory extends Component {
                       <img
                         style={{
                           display: 'inline',
-                          maxWidth: '25px',
+                          maxWidth: '21px',
+                          maxHeight: '21px',
                           verticalAlign: 'top',
                           height: '25px',
                           margin: '9px',
@@ -513,10 +521,11 @@ export default class transactionHistory extends Component {
                         src={`https://ethplorer.io${data.image}`}
                       />
                     ) : (
-                      <Avatar
+                      <MockAvatarIcon
                         style={{
                           display: 'inline',
-                          maxWidth: '25px',
+                          maxWidth: '21px',
+                          maxHeight: '21px',
                           verticalAlign: 'top',
                           height: '25px',
                           margin: '9px',
@@ -524,7 +533,7 @@ export default class transactionHistory extends Component {
                         color="#737373"
                         name={data.symbol}
                         round
-                        size="30"
+                        size="21"
                         textSizeRatio={1.75}
                       />
                     )}
@@ -723,7 +732,6 @@ export default class transactionHistory extends Component {
                                   alt="random_avatar_img"
                                   src={generator.generateRandomAvatar(object.from)}
                                 />
-
                                 <p>
                                   {object.status === 'Receive'
                                     ? this.walletAddressCutter(object.from)
@@ -732,74 +740,70 @@ export default class transactionHistory extends Component {
                               </div>
                               {/*)}*/}
                             </GetSenderTableCell>
-                            <TableCell>
+                            <QuantityTableCell>
                               {object.txType === 'TRADING' ? (
-                                <div
-                                  style={{
-                                    border: '1px solid orange',
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between',
-                                  }}>
-                                  <div
-                                    style={{
-                                      border: '1px solid black',
-                                      display: 'flex',
-                                      flexDirection: 'row',
-                                    }}>
+                                <QuantityTableCellSubBlock>
+                                  <FirstTokenCurrencyBlock>
                                     {object.firstToken.image !== null ? (
                                       <img
                                         style={{
                                           display: 'inline',
-                                          maxWidth: '25px',
+                                          maxWidth: '21px',
+                                          maxHeight: '21px',
                                           verticalAlign: 'top',
-                                          height: '25px',
-                                          margin: '16px',
-                                          border: '3px solid pink',
                                         }}
                                         alt=""
                                         src={`https://ethplorer.io${object.firstToken.image}`}
                                       />
                                     ) : (
-                                      <Avatar
+                                      <MockAvatarIcon
                                         style={{
                                           display: 'inline',
-                                          maxWidth: '25px',
+                                          maxWidth: '21px',
+                                          maxHeight: '21px',
                                           verticalAlign: 'top',
                                           height: '25px',
-                                          margin: '16px',
                                         }}
                                         color="#737373"
                                         name={object.firstToken.symbol}
                                         round
-                                        size="30"
+                                        size="21"
                                         textSizeRatio={1.75}
                                       />
                                     )}
 
-                                    <p>
-                                      {`-${object.firstToken.value} ${object.firstToken.symbol}`}
-                                    </p>
-                                    {object.firstToken.dollarValue === null ||
-                                    isNaN(object.firstToken.dollarValue) ? (
-                                      <p style={{ color: '#737373' }}>N/A</p>
-                                    ) : (
-                                      <p style={{ color: '#737373' }}>
-                                        {`$${object.firstToken.dollarValue} `}
+                                    <FirstTokenSubBlock>
+                                      <p>
+                                        {`- ${object.firstToken.value} ${object.firstToken.symbol}`}
                                       </p>
-                                    )}
-                                  </div>
-                                  <Stack
+                                      {object.firstToken.dollarValue === null ||
+                                      isNaN(object.firstToken.dollarValue) ? (
+                                        <FirstTokenSubBlockUSDValue isLightTheme={isLightTheme}>
+                                          N/A
+                                        </FirstTokenSubBlockUSDValue>
+                                      ) : (
+                                        <FirstTokenSubBlockUSDValue
+                                          isLightTheme={
+                                            isLightTheme
+                                          }>{`$${object.firstToken.dollarValue} `}</FirstTokenSubBlockUSDValue>
+                                      )}
+                                    </FirstTokenSubBlock>
+                                  </FirstTokenCurrencyBlock>
+                                  <img
+                                    src={TransactionHistoryTradeIcon}
+                                    alt="TransactionHistoryTradeIcon"
+                                  />
+                                  <div
                                     style={{
                                       border: '2px solid green',
                                       display: 'flex',
                                       flexDirection: 'row',
+                                      alignItems: 'center',
                                     }}>
-                                    <Avatar
+                                    <MockAvatarIcon
                                       style={{
                                         display: 'inline',
                                         verticalAlign: 'top',
-                                        margin: '16px',
                                       }}
                                       color="#737373"
                                       name={
@@ -807,7 +811,7 @@ export default class transactionHistory extends Component {
                                           ? object.secondToken.image
                                           : object.secondToken.symbol
                                       }
-                                      size="30"
+                                      size="21"
                                       round
                                       textSizeRatio={1.75}
                                     />
@@ -827,42 +831,34 @@ export default class transactionHistory extends Component {
                                         {`$${object.secondToken.dollarValue} `}
                                       </Typography>
                                     )}
-                                  </Stack>
-                                </div>
+                                  </div>
+                                </QuantityTableCellSubBlock>
                               ) : (
-                                <div
-                                  style={{
-                                    border: '1px solid blue',
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                  }}>
+                                <QuantityTableCellSubBlock>
                                   {object.image !== null ? (
                                     <img
                                       style={{
                                         display: 'inline',
-                                        maxWidth: '25px',
+                                        maxWidth: '21px',
+                                        maxHeight: '21px',
                                         verticalAlign: 'top',
-                                        height: '25px',
-                                        margin: '16px',
-                                        border: '3px solid pink',
                                       }}
                                       alt=""
                                       src={`https://ethplorer.io${object.image}`}
                                     />
                                   ) : (
-                                    <Avatar
+                                    <MockAvatarIcon
                                       style={{
                                         display: 'inline',
-                                        maxWidth: '25px',
+                                        maxWidth: '21px',
+                                        maxHeight: '21px',
                                         verticalAlign: 'top',
                                         height: '25px',
-                                        margin: '16px',
                                       }}
                                       color="#737373"
                                       name={object.symbol}
                                       round
-                                      size="30"
+                                      size="21"
                                       textSizeRatio={1.75}
                                     />
                                   )}
@@ -876,7 +872,7 @@ export default class transactionHistory extends Component {
                                       <div>
                                         <Typography
                                           variant="body2"
-                                          sx={{ paddingTop: '4px', backgroundColor: 'red' }}>
+                                          sx={{ paddingTop: '4px', backgroundColor: 'yellow' }}>
                                           {object.status === 'Receive'
                                             ? `+${object.value} ${object.symbol}`
                                             : `-${object.value} ${object.symbol}`}
@@ -896,9 +892,9 @@ export default class transactionHistory extends Component {
                                       </div>
                                     )}
                                   </Stack>
-                                </div>
+                                </QuantityTableCellSubBlock>
                               )}
-                            </TableCell>
+                            </QuantityTableCell>
                             <TableCell>
                               <GasFeeStringValue isLightTheme={isLightTheme}>
                                 {object.txGas.toFixed(3)} ETH (${object.USDValue.toFixed(3)})
