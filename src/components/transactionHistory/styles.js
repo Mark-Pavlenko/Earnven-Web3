@@ -146,10 +146,11 @@ export const QuantityTableCell = styled(TableCell)`
 export const QuantityTableCellSubBlock = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
-  border: 1px solid orange;
-  width: 330px;
+  //border: 1px solid orange;
+  /* justify-content: space-between;
+  width: 330px;*/
+  gap: 15px;
 `;
 
 export const FirstTokenCurrencyBlock = styled.div`
@@ -164,7 +165,38 @@ export const FirstTokenSubBlock = styled.div`
   margin-left: 5px;
 `;
 
+export const TokenSubBlockTitle = styled.p`
+  color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
+`;
+
 export const FirstTokenSubBlockUSDValue = styled.p`
+  font-size: 10px;
+
+  line-height: 22px;
+  :last-child {
+    color: #737373;
+    line-height: 15px;
+  }
+`;
+
+export const SecondTokenSubBlock = styled.div`
+  //background-color: red;
+  margin-left: 5px;
+  //border: 2px solid green;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 145px;
+`;
+
+export const SecondTokenCurrencyBlock = styled.div`
+  //border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  margin-left: 5px;
+`;
+
+export const SecondTokenSubBlockUSDValue = styled.p`
   font-size: 10px;
   color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
   line-height: 22px;
@@ -181,4 +213,27 @@ export const MockAvatarIcon = styled(Avatar)`
   max-height: 21px;
   vertical-align: top;
   height: 25px;
+  margin-right: 5px;
+`;
+
+export const PlusTransactionValue = styled.span`
+  color: #00dfd1;
+`;
+export const MinusTransactionValue = styled.span``;
+
+export const PlainObjectBlock = styled.div`
+  color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
+`;
+
+export const PageNumberSpan = styled.span`
+  color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
+  margin-left: 10px;
+  margin-right: 10px;
+`;
+
+export const PaginationArrow = styled.button`
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
 `;

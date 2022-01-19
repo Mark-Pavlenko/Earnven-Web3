@@ -51,6 +51,14 @@ import {
   FirstTokenSubBlockUSDValue,
   MockAvatarIcon,
   FirstTokenCurrencyBlock,
+  SecondTokenSubBlock,
+  SecondTokenSubBlockUSDValue,
+  TokenSubBlockTitle,
+  SecondTokenCurrencyBlock,
+  PlusTransactionValue,
+  PlainObjectBlock,
+  PaginationArrow,
+  PageNumberSpan,
 } from './styles';
 import { EtherScanButton } from '../../screens/dashboard/styledComponents';
 import etherScanIcon from '../../assets/icons/etherScan-icon.svg';
@@ -297,9 +305,9 @@ export default class transactionHistory extends Component {
               firstToken.value = parseFloat(
                 web3.utils.fromWei(firstTokenTemp.value, 'ether')
               ).toFixed(3);
-              console.log('VALUE NEED', firstToken.value);
+              // console.log('VALUE NEED', firstToken.value);
               // not waited
-              console.log('USDPRICE NEED', firstTokenTemp.usdPrice);
+              // console.log('USDPRICE NEED', firstTokenTemp.usdPrice);
               // if (firstTokenTemp.usdPrice !== undefined) {
               firstToken.dollarValue = (
                 parseFloat(firstToken.value) / firstTokenTemp.usdPrice
@@ -407,6 +415,7 @@ export default class transactionHistory extends Component {
                           maxHeight: '21px',
                           verticalAlign: 'top',
                           height: '25px',
+                          borderRadius: '10px',
                         }}
                         alt=""
                         src={`https://ethplorer.io${data.firstToken.image}`}
@@ -419,6 +428,7 @@ export default class transactionHistory extends Component {
                           maxHeight: '21px',
                           verticalAlign: 'top',
                           height: '25px',
+                          borderRadius: '10px',
                         }}
                         color="#737373"
                         name={data.firstToken.symbol}
@@ -456,6 +466,7 @@ export default class transactionHistory extends Component {
                           maxHeight: '21px',
                           verticalAlign: 'top',
                           height: '25px',
+                          borderRadius: '10px',
                         }}
                         alt=""
                         src={`https://ethplorer.io${data.secondToken.image}`}
@@ -468,6 +479,7 @@ export default class transactionHistory extends Component {
                           maxHeight: '21px',
                           verticalAlign: 'top',
                           height: '25px',
+                          borderRadius: '10px',
                         }}
                         color="#737373"
                         name={data.secondToken.symbol}
@@ -516,26 +528,13 @@ export default class transactionHistory extends Component {
                           verticalAlign: 'top',
                           height: '25px',
                           margin: '9px',
+                          borderRadius: '10px',
                         }}
                         alt=""
                         src={`https://ethplorer.io${data.image}`}
                       />
                     ) : (
-                      <MockAvatarIcon
-                        style={{
-                          display: 'inline',
-                          maxWidth: '21px',
-                          maxHeight: '21px',
-                          verticalAlign: 'top',
-                          height: '25px',
-                          margin: '9px',
-                        }}
-                        color="#737373"
-                        name={data.symbol}
-                        round
-                        size="21"
-                        textSizeRatio={1.75}
-                      />
+                      <MockAvatarIcon name={data.symbol} round size="21" textSizeRatio={1.75} />
                     )}
 
                     <Stack direction="column">
@@ -551,9 +550,13 @@ export default class transactionHistory extends Component {
                       ) : (
                         <div>
                           <Typography variant="body2" sx={{ paddingTop: '4px' }}>
-                            {data.status === 'Receive'
-                              ? `+${data.value} ${data.symbol}`
-                              : `-${data.value} ${data.symbol}`}
+                            {data.status === 'Receive' ? (
+                              <PlusTransactionValue>
+                                `+${data.value} ${data.symbol}`
+                              </PlusTransactionValue>
+                            ) : (
+                              `-${data.value} ${data.symbol}`
+                            )}
                           </Typography>
                           {data.dollarValue === null ? (
                             <Typography variant="caption" sx={{ color: '#737373', ml: 1 }}>
@@ -751,6 +754,7 @@ export default class transactionHistory extends Component {
                                           maxWidth: '21px',
                                           maxHeight: '21px',
                                           verticalAlign: 'top',
+                                          borderRadius: '10px',
                                         }}
                                         alt=""
                                         src={`https://ethplorer.io${object.firstToken.image}`}
@@ -763,6 +767,7 @@ export default class transactionHistory extends Component {
                                           maxHeight: '21px',
                                           verticalAlign: 'top',
                                           height: '25px',
+                                          borderRadius: '10px',
                                         }}
                                         color="#737373"
                                         name={object.firstToken.symbol}
@@ -772,10 +777,10 @@ export default class transactionHistory extends Component {
                                       />
                                     )}
 
-                                    <FirstTokenSubBlock>
-                                      <p>
+                                    <FirstTokenSubBlock isLightTheme={isLightTheme}>
+                                      <TokenSubBlockTitle isLightTheme={isLightTheme}>
                                         {`- ${object.firstToken.value} ${object.firstToken.symbol}`}
-                                      </p>
+                                      </TokenSubBlockTitle>
                                       {object.firstToken.dollarValue === null ||
                                       isNaN(object.firstToken.dollarValue) ? (
                                         <FirstTokenSubBlockUSDValue isLightTheme={isLightTheme}>
@@ -793,13 +798,7 @@ export default class transactionHistory extends Component {
                                     src={TransactionHistoryTradeIcon}
                                     alt="TransactionHistoryTradeIcon"
                                   />
-                                  <div
-                                    style={{
-                                      border: '2px solid green',
-                                      display: 'flex',
-                                      flexDirection: 'row',
-                                      alignItems: 'center',
-                                    }}>
+                                  <SecondTokenSubBlock>
                                     <MockAvatarIcon
                                       style={{
                                         display: 'inline',
@@ -815,23 +814,24 @@ export default class transactionHistory extends Component {
                                       round
                                       textSizeRatio={1.75}
                                     />
-
-                                    <Typography variant="body2" sx={{ paddingTop: '4px' }}>
-                                      {`+${object.secondToken.value} ${object.secondToken.symbol}`}
-                                    </Typography>
-                                    {object.secondToken.dollarValue === null ||
-                                    isNaN(object.secondToken.dollarValue) ? (
-                                      <Typography
-                                        variant="caption"
-                                        sx={{ color: '#737373', ml: 1 }}>
-                                        N/A
-                                      </Typography>
-                                    ) : (
-                                      <Typography variant="caption" sx={{ color: '#737373' }}>
-                                        {`$${object.secondToken.dollarValue} `}
-                                      </Typography>
-                                    )}
-                                  </div>
+                                    <SecondTokenCurrencyBlock>
+                                      <TokenSubBlockTitle isLightTheme={isLightTheme}>
+                                        {object.secondToken.value !== undefined && (
+                                          <PlusTransactionValue>{`+ ${object.secondToken.value} ${object.secondToken.symbol}`}</PlusTransactionValue>
+                                        )}
+                                      </TokenSubBlockTitle>
+                                      {object.secondToken.dollarValue === null ||
+                                      isNaN(object.secondToken.dollarValue) ? (
+                                        <SecondTokenSubBlockUSDValue>
+                                          N/A
+                                        </SecondTokenSubBlockUSDValue>
+                                      ) : (
+                                        <SecondTokenSubBlockUSDValue>
+                                          {`$${object.secondToken.dollarValue} `}
+                                        </SecondTokenSubBlockUSDValue>
+                                      )}
+                                    </SecondTokenCurrencyBlock>
+                                  </SecondTokenSubBlock>
                                 </QuantityTableCellSubBlock>
                               ) : (
                                 <QuantityTableCellSubBlock>
@@ -842,6 +842,7 @@ export default class transactionHistory extends Component {
                                         maxWidth: '21px',
                                         maxHeight: '21px',
                                         verticalAlign: 'top',
+                                        borderRadius: '10px',
                                       }}
                                       alt=""
                                       src={`https://ethplorer.io${object.image}`}
@@ -854,6 +855,7 @@ export default class transactionHistory extends Component {
                                         maxHeight: '21px',
                                         verticalAlign: 'top',
                                         height: '25px',
+                                        borderRadius: '10px',
                                       }}
                                       color="#737373"
                                       name={object.symbol}
@@ -864,19 +866,21 @@ export default class transactionHistory extends Component {
                                   )}
                                   <Stack direction="column">
                                     {object.txType === 'Approval' ? (
-                                      <div style={{ backgroundColor: 'green' }}>
+                                      <PlainObjectBlock isLightTheme={isLightTheme}>
                                         {object.name}
                                         {object.symbol}
-                                      </div>
+                                      </PlainObjectBlock>
                                     ) : (
                                       <div>
-                                        <Typography
-                                          variant="body2"
-                                          sx={{ paddingTop: '4px', backgroundColor: 'yellow' }}>
-                                          {object.status === 'Receive'
-                                            ? `+${object.value} ${object.symbol}`
-                                            : `-${object.value} ${object.symbol}`}
-                                        </Typography>
+                                        <p>
+                                          {object.status === 'Receive' ? (
+                                            <PlusTransactionValue>
+                                              {`+${object.value} ${object.symbol}`}
+                                            </PlusTransactionValue>
+                                          ) : (
+                                            `-${object.value} ${object.symbol}`
+                                          )}
+                                        </p>
                                         {object.dollarValue === null ||
                                         isNaN(object.dollarValue) ? (
                                           <Typography
@@ -916,17 +920,12 @@ export default class transactionHistory extends Component {
                     })}
                   </TableBody>
                 </TransactionsHistoryTable>
-                <div>
+                <center>
                   <font color="green">
                     {this.state.page > 1 && (
-                      <button
+                      <PaginationArrow
                         style={{
-                          background: 'transparent',
-                          border: 'none',
-                          outline: 'none',
                           transform: 'rotate(180deg)',
-                          cursor: 'pointer',
-                          color: 'green',
                         }}
                         onClick={async (e) => {
                           if (this.state.page !== 1) {
@@ -934,6 +933,52 @@ export default class transactionHistory extends Component {
                             await this.update();
                           }
                         }}>
+                        {isLightTheme ? (
+                          <svg
+                            width="22"
+                            height="8"
+                            viewBox="0 0 22 8"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                              d="M21.3536 4.35355C21.5488 4.15829 21.5488 3.84171 21.3536 3.64645L18.1716 0.464466C17.9763 0.269204 17.6597 0.269204 17.4645 0.464466C17.2692 0.659728 17.2692 0.976311 17.4645 1.17157L20.2929 4L17.4645 6.82843C17.2692 7.02369 17.2692 7.34027 17.4645 7.53553C17.6597 7.7308 17.9763 7.7308 18.1716 7.53553L21.3536 4.35355ZM0 4.5H21V3.5H0V4.5Z"
+                              fill="black"
+                            />
+                          </svg>
+                        ) : (
+                          <svg
+                            width="22"
+                            height="8"
+                            viewBox="0 0 22 8"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                              d="M21.3536 4.35355C21.5488 4.15829 21.5488 3.84171 21.3536 3.64645L18.1716 0.464466C17.9763 0.269204 17.6597 0.269204 17.4645 0.464466C17.2692 0.659728 17.2692 0.976311 17.4645 1.17157L20.2929 4L17.4645 6.82843C17.2692 7.02369 17.2692 7.34027 17.4645 7.53553C17.6597 7.7308 17.9763 7.7308 18.1716 7.53553L21.3536 4.35355ZM0 4.5H21V3.5H0V4.5Z"
+                              fill="white"
+                            />
+                          </svg>
+                        )}
+                      </PaginationArrow>
+                    )}{' '}
+                    <PageNumberSpan isLightTheme={isLightTheme}>{this.state.page}</PageNumberSpan>
+                    <PaginationArrow
+                      onClick={async (e) => {
+                        await this.setState({ page: this.state.page + 1 });
+                        await this.update();
+                      }}>
+                      {isLightTheme ? (
+                        <svg
+                          width="22"
+                          height="8"
+                          viewBox="0 0 22 8"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M21.3536 4.35355C21.5488 4.15829 21.5488 3.84171 21.3536 3.64645L18.1716 0.464466C17.9763 0.269204 17.6597 0.269204 17.4645 0.464466C17.2692 0.659728 17.2692 0.976311 17.4645 1.17157L20.2929 4L17.4645 6.82843C17.2692 7.02369 17.2692 7.34027 17.4645 7.53553C17.6597 7.7308 17.9763 7.7308 18.1716 7.53553L21.3536 4.35355ZM0 4.5H21V3.5H0V4.5Z"
+                            fill="black"
+                          />
+                        </svg>
+                      ) : (
                         <svg
                           width="22"
                           height="8"
@@ -945,34 +990,10 @@ export default class transactionHistory extends Component {
                             fill="white"
                           />
                         </svg>
-                      </button>
-                    )}{' '}
-                    {this.state.page}
-                    <button
-                      style={{
-                        background: 'transparent',
-                        border: 'none',
-                        outline: 'none',
-                        cursor: 'pointer',
-                      }}
-                      onClick={async (e) => {
-                        await this.setState({ page: this.state.page + 1 });
-                        await this.update();
-                      }}>
-                      <svg
-                        width="22"
-                        height="8"
-                        viewBox="0 0 22 8"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          d="M21.3536 4.35355C21.5488 4.15829 21.5488 3.84171 21.3536 3.64645L18.1716 0.464466C17.9763 0.269204 17.6597 0.269204 17.4645 0.464466C17.2692 0.659728 17.2692 0.976311 17.4645 1.17157L20.2929 4L17.4645 6.82843C17.2692 7.02369 17.2692 7.34027 17.4645 7.53553C17.6597 7.7308 17.9763 7.7308 18.1716 7.53553L21.3536 4.35355ZM0 4.5H21V3.5H0V4.5Z"
-                          fill="white"
-                        />
-                      </svg>
-                    </button>
+                      )}
+                    </PaginationArrow>
                   </font>
-                </div>
+                </center>
               </DashboardHistoryContainer>
             </MainBlock>
           </>
