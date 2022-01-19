@@ -43,6 +43,7 @@ import {
   TransactionIcon,
   TransactionTableRow,
   GetSenderTableCell,
+  GasFeeStringValue,
 } from './styles';
 import { EtherScanButton } from '../../screens/dashboard/styledComponents';
 import etherScanIcon from '../../assets/icons/etherScan-icon.svg';
@@ -106,9 +107,7 @@ export default class transactionHistory extends Component {
           }
         }
         distinctHash = [...new Set(allHash)];
-        console.log('distinct hash', distinctHash);
-        // console.log('all hashes array response:::', distinctHash);
-        // console.log('lightThemeFinal', lightThemeFinal);
+        // console.log('distinct hash', distinctHash);
         await this.update(lightThemeFinal);
       });
   }
@@ -225,10 +224,12 @@ export default class transactionHistory extends Component {
           object.name = 'Ethereum';
           object.symbol = 'ETH';
           object.image = '/images/eth.png';
+
           object.value = dataObject.value.toFixed(3);
           object.dollarValue = (object.value * hisotricalEtherPrice).toFixed(3);
         } else {
           const operationsLength = dataObject.operations.length;
+          console.log('dataObject.operations', dataObject);
           if (operationsLength === 1) {
             // console.log("token transfer")
             // object.to = web3.utils.toChecksumAddress(dataObject.to);
@@ -275,10 +276,12 @@ export default class transactionHistory extends Component {
               //   return (tempObject.from === dataObject.to);
               // })
               firstToken.dollarValue = (hisotricalEtherPrice * dataObject.value).toFixed(3);
+              console.log('firstToken.dollarValue 1', firstToken.dollarValue);
+              console.log('dataObject test', dataObject);
               // firstToken.dollarValue = ((dataObject.operations[0].usdPrice) * (dataObject.value)).toFixed(3);
             } else {
               const firstTokenTemp = dataObject.operations[0];
-
+              console.log('firstTokenTemp', firstTokenTemp);
               firstToken.name = firstTokenTemp.tokenInfo.name;
               firstToken.symbol = firstTokenTemp.tokenInfo.symbol;
               firstTokenTemp.tokenInfo.image !== undefined
@@ -287,7 +290,15 @@ export default class transactionHistory extends Component {
               firstToken.value = parseFloat(
                 web3.utils.fromWei(firstTokenTemp.value, 'ether')
               ).toFixed(3);
-              firstToken.dollarValue = (firstToken.value / firstTokenTemp.usdPrice).toFixed(3);
+              console.log('VALUE NEED', firstToken.value);
+              // not waited
+              console.log('USDPRICE NEED', firstTokenTemp.usdPrice);
+              // if (firstTokenTemp.usdPrice !== undefined) {
+              firstToken.dollarValue = (
+                parseFloat(firstToken.value) / firstTokenTemp.usdPrice
+              ).toFixed(3);
+              console.log('firstToken.dollarValue actual', firstToken.dollarValue);
+              // }
             }
             const tempArr1 = dataObject.operations.filter((tempObject) => {
               return tempObject.to === dataObject.from;
@@ -707,6 +718,7 @@ export default class transactionHistory extends Component {
                             <GetSenderTableCell isLightTheme={isLightTheme}>
                               {/*{object.txType !== 'TRADING' && (*/}
                               <div>
+                                {object.status === 'Receive' ? 'From ' : 'To '}
                                 <img
                                   alt="random_avatar_img"
                                   src={generator.generateRandomAvatar(object.from)}
@@ -720,10 +732,177 @@ export default class transactionHistory extends Component {
                               </div>
                               {/*)}*/}
                             </GetSenderTableCell>
-                            <TableCell>Here will be quantity value</TableCell>
                             <TableCell>
-                              <p>{object.txGas.toFixed(3)} ETH</p>
-                              <p>{object.USDValue.toFixed(3)}$</p>
+                              {object.txType === 'TRADING' ? (
+                                <div
+                                  style={{
+                                    border: '1px solid orange',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                  }}>
+                                  <div
+                                    style={{
+                                      border: '1px solid black',
+                                      display: 'flex',
+                                      flexDirection: 'row',
+                                    }}>
+                                    {object.firstToken.image !== null ? (
+                                      <img
+                                        style={{
+                                          display: 'inline',
+                                          maxWidth: '25px',
+                                          verticalAlign: 'top',
+                                          height: '25px',
+                                          margin: '16px',
+                                          border: '3px solid pink',
+                                        }}
+                                        alt=""
+                                        src={`https://ethplorer.io${object.firstToken.image}`}
+                                      />
+                                    ) : (
+                                      <Avatar
+                                        style={{
+                                          display: 'inline',
+                                          maxWidth: '25px',
+                                          verticalAlign: 'top',
+                                          height: '25px',
+                                          margin: '16px',
+                                        }}
+                                        color="#737373"
+                                        name={object.firstToken.symbol}
+                                        round
+                                        size="30"
+                                        textSizeRatio={1.75}
+                                      />
+                                    )}
+
+                                    <p>
+                                      {`-${object.firstToken.value} ${object.firstToken.symbol}`}
+                                    </p>
+                                    {object.firstToken.dollarValue === null ||
+                                    isNaN(object.firstToken.dollarValue) ? (
+                                      <p style={{ color: '#737373' }}>N/A</p>
+                                    ) : (
+                                      <p style={{ color: '#737373' }}>
+                                        {`$${object.firstToken.dollarValue} `}
+                                      </p>
+                                    )}
+                                  </div>
+                                  <Stack
+                                    style={{
+                                      border: '2px solid green',
+                                      display: 'flex',
+                                      flexDirection: 'row',
+                                    }}>
+                                    <Avatar
+                                      style={{
+                                        display: 'inline',
+                                        verticalAlign: 'top',
+                                        margin: '16px',
+                                      }}
+                                      color="#737373"
+                                      name={
+                                        object.secondToken.image !== null
+                                          ? object.secondToken.image
+                                          : object.secondToken.symbol
+                                      }
+                                      size="30"
+                                      round
+                                      textSizeRatio={1.75}
+                                    />
+
+                                    <Typography variant="body2" sx={{ paddingTop: '4px' }}>
+                                      {`+${object.secondToken.value} ${object.secondToken.symbol}`}
+                                    </Typography>
+                                    {object.secondToken.dollarValue === null ||
+                                    isNaN(object.secondToken.dollarValue) ? (
+                                      <Typography
+                                        variant="caption"
+                                        sx={{ color: '#737373', ml: 1 }}>
+                                        N/A
+                                      </Typography>
+                                    ) : (
+                                      <Typography variant="caption" sx={{ color: '#737373' }}>
+                                        {`$${object.secondToken.dollarValue} `}
+                                      </Typography>
+                                    )}
+                                  </Stack>
+                                </div>
+                              ) : (
+                                <div
+                                  style={{
+                                    border: '1px solid blue',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                  }}>
+                                  {object.image !== null ? (
+                                    <img
+                                      style={{
+                                        display: 'inline',
+                                        maxWidth: '25px',
+                                        verticalAlign: 'top',
+                                        height: '25px',
+                                        margin: '16px',
+                                        border: '3px solid pink',
+                                      }}
+                                      alt=""
+                                      src={`https://ethplorer.io${object.image}`}
+                                    />
+                                  ) : (
+                                    <Avatar
+                                      style={{
+                                        display: 'inline',
+                                        maxWidth: '25px',
+                                        verticalAlign: 'top',
+                                        height: '25px',
+                                        margin: '16px',
+                                      }}
+                                      color="#737373"
+                                      name={object.symbol}
+                                      round
+                                      size="30"
+                                      textSizeRatio={1.75}
+                                    />
+                                  )}
+                                  <Stack direction="column">
+                                    {object.txType === 'Approval' ? (
+                                      <div style={{ backgroundColor: 'green' }}>
+                                        {object.name}
+                                        {object.symbol}
+                                      </div>
+                                    ) : (
+                                      <div>
+                                        <Typography
+                                          variant="body2"
+                                          sx={{ paddingTop: '4px', backgroundColor: 'red' }}>
+                                          {object.status === 'Receive'
+                                            ? `+${object.value} ${object.symbol}`
+                                            : `-${object.value} ${object.symbol}`}
+                                        </Typography>
+                                        {object.dollarValue === null ||
+                                        isNaN(object.dollarValue) ? (
+                                          <Typography
+                                            variant="caption"
+                                            sx={{ color: '#737373', ml: 1 }}>
+                                            N/A
+                                          </Typography>
+                                        ) : (
+                                          <Typography variant="caption" sx={{ color: '#737373' }}>
+                                            {`$${object.dollarValue} `}
+                                          </Typography>
+                                        )}
+                                      </div>
+                                    )}
+                                  </Stack>
+                                </div>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              <GasFeeStringValue isLightTheme={isLightTheme}>
+                                {object.txGas.toFixed(3)} ETH (${object.USDValue.toFixed(3)})
+                              </GasFeeStringValue>
                             </TableCell>
                             <TableCell>
                               <EtherScanButton

@@ -112,15 +112,16 @@ export const GetSenderTableCell = styled(TableCell)`
   div {
     display: flex;
     flex-direction: row;
+    color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
 
     img {
       width: 21px;
       height: 21px;
       margin-right: 5px;
+      margin-left: 5px;
     }
 
     p {
-      color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
       font-family: 'Saira', sans-serif;
       font-size: 14px;
       font-style: normal;
@@ -129,4 +130,10 @@ export const GetSenderTableCell = styled(TableCell)`
       letter-spacing: 0;
     }
   }
+`;
+
+export const GasFeeStringValue = styled.p`
+  color: ${(props) => (props.isLightTheme ? '#7E848F' : '#FFFFFF')};
+  font-weight: 400;
+  font-size: 14px;
 `;
