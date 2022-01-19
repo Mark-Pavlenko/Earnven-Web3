@@ -1445,6 +1445,7 @@ export default function Index({ accountAddress }) {
               return <Investment protocol={object} />;
             })}
             <CurveToken accountAddress={accountAddress} />
+
             {curveLpToken &&
               curveLpToken.map((object) => {
                 return <Investment protocol={object} />;
