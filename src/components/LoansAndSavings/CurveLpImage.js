@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { setCurveLpTokenImags } from '../../store/curveLpToken/actions';
 
 export default function CurveLpImage(token) {
   const [CurveLpTokenImageUrl, setCurveLpTokenImageUrl] = useState([]);
   const [CurveLpTokenImage, setCurveLpTokenImage] = useState([]);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     async function getData() {
@@ -19,6 +23,7 @@ export default function CurveLpImage(token) {
               : 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png', //get ether symbol
           }));
           setCurveLpTokenImageUrl(tokens);
+          dispatch(setCurveLpTokenImags(tokens));
         });
     }
     getData();
@@ -27,12 +32,13 @@ export default function CurveLpImage(token) {
   //to get tokenImage
   useEffect(() => {
     let imageContent = [];
-    let objectUrl = CurveLpTokenImageUrl.map((object) => (
+    let objectUrl = CurveLpTokenImageUrl.map((object, index) => (
       <React.Fragment>
         <img
           style={{
             height: '20px',
             width: '20px',
+            paddingLeft: '-10px',
             display: 'inline-block',
           }}
           src={object.logoURI}

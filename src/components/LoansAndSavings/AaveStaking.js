@@ -23,12 +23,15 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useWeb3React } from '@web3-react/core';
+import { useDispatch } from 'react-redux';
+import { setAaveTokenData } from '../../store/Aave/actions';
 
 export default function AaveStaking({ accountAddress }) {
   //varaible for AaveV2
   const [AaveV2BalanceAmt, setAaveV2BalanceAmt] = useState();
   const [AaveV2UsdPrice, setAaveV2UsdPrice] = useState();
   const [AaveAmountUSD, setAaveAmountUSD] = useState(0);
+
   const [AaveV2ClaimableAmt, setAaveV2ClaimableAmt] = useState(0);
   const [AaveV2ClaimableValue, setAaveV2ClaimableValue] = useState(0);
   //variable for stkABPT - balancer LP
@@ -37,12 +40,38 @@ export default function AaveStaking({ accountAddress }) {
   const [AaveStkABPTAmountUSD, setAaveStkABPTAmountUSD] = useState(0);
   const [AaveStkABPTClaimableAmt, setAaveStkABPTClaimableAmt] = useState(0);
   const [AaveStkABPTClaimableValue, setAaveStkABPTClaimableValue] = useState(0);
-
   //to get the total staking value Aave v2 + stkABPT + claimable
   const [AaveStakingTotal, setAaveStakingTotal] = useState();
   const [AaveLiquidityEth, setAaveLiquidityEth] = useState();
   const [AaveStkABPTImage, setAaveStkABPTImage] = useState();
+  const dispatch = useDispatch();
 
+  const AaveTokenData = [
+    {
+      totalValue: AaveStakingTotal,
+      Liquidity: AaveLiquidityEth,
+      Protocol: 'Aave',
+      Chain: 'Ethereum',
+      tokens: [
+        {
+          symbol: 'AAVE',
+          balance: AaveV2BalanceAmt,
+          value: AaveAmountUSD,
+          Claimable: AaveV2ClaimableValue,
+          Price: AaveV2UsdPrice,
+        },
+        {
+          symbol: 'stkABPT',
+          balance: AaveStkABPTBalanceAmt,
+          value: AaveStkABPTAmountUSD,
+          Claimable: AaveStkABPTClaimableValue,
+          price: AaveStkABPTPrice,
+        },
+      ],
+      tokenImage: [aaveLogo, AaveStkABPTImage],
+    },
+  ];
+  // dispatch(setAaveTokenData(AaveTokenData));
   //get useWeb3React hook
   const { account, activate, active, chainId, connector, deactivate, error, provider, setError } =
     useWeb3React();
@@ -119,7 +148,6 @@ export default function AaveStaking({ accountAddress }) {
 
       //Call the contract to get the value for staked Aave
       const AaveBalaceAmount = await checkAaveStake(accountAddress, Addresses.aaveStakingV2);
-      console.log('AaveBalaceAmount', AaveBalaceAmount);
       //call the contract to get the value from Staked Balancer LP
       const stkABPTBalance = await checkAaveStake(accountAddress, Addresses.aavestkABPT);
       //call the below function to get the aaveV2 Cliambale amount
@@ -217,7 +245,6 @@ export default function AaveStaking({ accountAddress }) {
 
   return (
     <div>
-      <h1>AAVE</h1>
       {parseInt(AaveAmountUSD) || parseInt(AaveStkABPTAmountUSD) ? (
         <div>
           <Accordion
@@ -226,9 +253,7 @@ export default function AaveStaking({ accountAddress }) {
               marginRight: '1px',
               color: 'black',
               width: '100%',
-              border: '1px',
-              borderColor: 'black',
-              borderStyle: 'hidden',
+              border: 'none',
             }}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}

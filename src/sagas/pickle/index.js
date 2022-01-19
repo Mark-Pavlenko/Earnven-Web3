@@ -15,7 +15,7 @@ function* pickleStakeworker(data) {
 }
 
 export function* getpickleDillSagaWatcher() {
-  yield takeEvery(actionTypes.SET_PICKLE_DILL, pickleDillworker);
+  yield takeEvery(actionTypes.GET_PICKLE_DILL, pickleDillworker);
 }
 
 function* pickleDillworker(data) {

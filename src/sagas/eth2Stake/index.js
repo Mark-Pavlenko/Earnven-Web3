@@ -26,6 +26,7 @@ function* eth2StakeSagaWorker(userAccountAddress) {
         }
 
         object.totalInvestment = parseFloat(object.ethPrice * object.totalDeposit).toFixed(2);
+        object.mainTokenSymbol = 'ETH';
         tot += parseFloat(object.totalInvestment);
         ethStaking.push(object);
         //setBeaconTotal(tot);

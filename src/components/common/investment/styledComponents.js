@@ -67,7 +67,7 @@ export const MockTokenImage = styled.img`
   max-width: 21px;
   max-height: 21px;
   border-radius: 50%;
-  border: 2px solid orange;
+  border: ${(props) => (props.isBorder ? 'none' : '2px solid orange')};
 `;
 
 export const TokenName = styled.div`

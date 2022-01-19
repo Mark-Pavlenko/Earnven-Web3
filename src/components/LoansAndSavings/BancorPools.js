@@ -14,6 +14,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 export default function BancorPools({ setPoolTotal, accountAddress, setDisplay }) {
   const [BancorPoolsData, setBancorPoolsData] = useState([]); // bancor
+  console.log('BancorPoolsData', BancorPoolsData);
   const [BancorPoolsContent, setBancorPoolsContent] = useState([]); // bancor
   const [BancorTotal, setBancorTotal] = useState(0); // Bancor Total
 
@@ -225,7 +226,6 @@ export default function BancorPools({ setPoolTotal, accountAddress, setDisplay }
   }, [accountAddress]);
   return (
     <div>
-      <h1>BANCOR</h1>
       <div
         style={{
           fontSize: '12px',
@@ -237,7 +237,6 @@ export default function BancorPools({ setPoolTotal, accountAddress, setDisplay }
         {BancorTotal ? <span>Bancor --- {numberWithCommas(BancorTotal)} USD</span> : ''}
       </div>
       {BancorPoolsContent}
-      <br />
     </div>
   );
 }

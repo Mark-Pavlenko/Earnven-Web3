@@ -72,7 +72,6 @@ export const SnowSwapStaking = ({ accountAddress }) => {
         )
         .then(async ({ data }) => {
           setUSDStakeValue(data.market_data.current_price.usd);
-          console.log('SnowSwapTotalStake', SnowSwapBalaceAmount);
           SnowSwapBalaceAmount !== 0 && setStakeBalance(SnowSwapBalaceAmount);
           balance = USDStakeValue * (SnowSwapBalaceAmount / 10 ** 18);
           claimable = USDStakeValue * (Claimable / 10 ** 18);
@@ -90,7 +89,6 @@ export const SnowSwapStaking = ({ accountAddress }) => {
 
   return (
     <>
-      <h1>SNOW SWAN</h1>
       <div>
         {finalValue && StakeBalance > 0 && flag && (
           <div>

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Addresses from '../../contractAddresses';
-import SushiSwapLogo from '../../assets/icons/Sushiswap.webp';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import SushiSwapLogo from '../../assets/icons/Sushiswap.webp';
 import { useDispatch, useSelector } from 'react-redux';
 import actionTypes from '../../constants/actionTypes';
 import SushiProtocol from '../common/investment/sushiProtocolComponent/sushiProtocol';
@@ -24,7 +24,6 @@ export default function SushiStaking({ accountAddress }) {
   };
   //use useSelector hook to get the current state from store
   const SLPTokenData = useSelector((state) => state.sushiStaking.sushiStakeData);
-  const SLPTokenTotalValue = useSelector((state) => state.sushiStaking.sushiStakeTotal);
   //then make dispatch/send an action
   const dispatch = useDispatch();
   //below function is used to get sushi staking balance from the subgraph
@@ -126,9 +125,5 @@ export default function SushiStaking({ accountAddress }) {
     }
     setSLPTokenDataContent(content);
   }, [SLPTokenData]);
-  return (
-    <React.Fragment>
-      <div>{SLPTokenDataContent}</div>
-    </React.Fragment>
-  );
+  return <React.Fragment>{SLPTokenData && <div>{SLPTokenDataContent}</div>}</React.Fragment>;
 }

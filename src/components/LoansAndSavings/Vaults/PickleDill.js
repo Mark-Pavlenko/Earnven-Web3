@@ -50,7 +50,7 @@ const PickleDill = ({ accountAddress }) => {
     }
   }, [accountAddress]);
 
-  const pickleDillArray = useSelector((state) => state.pickeDill.pickeDill);
+  const pickleDillArray = useSelector((state) => state.pickeDill?.pickeDill);
 
   useEffect(() => {
     console.log('saga test dill', pickleDillArray);
