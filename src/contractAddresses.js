@@ -43,6 +43,7 @@ const addresses = {
   CreamCZAR: `0x672473908587b10e65DAB177Dbaeadcbb30BF40B`,
   snxTokenAddress: '0xDC01020857afbaE65224CfCeDb265d1216064c59',
   cvxTokenAddress: '0x5f3b5dfeb7b28cdbd7faba78963ee202a494e2a2',
+  LqtyTokenAddress: '0x66017d22b0f8556afdd19fc67041899eb65a21bb',
 };
 
 export default addresses;
