@@ -1,7 +1,25 @@
 import styled from 'styled-components';
 
+export const DashboardTabsLayout = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 13px;
+
+  @media (max-width: 550px) {
+    flex-direction: column;
+    align-items: start;
+  }
+`;
+
 export const TokenButtonsBlock = styled.div`
   display: flex;
+  margin-top: -15px;
+
+  @media (max-width: 550px) {
+    margin-top: 0;
+    margin-left: -10px;
+  }
 `;
 
 export const SendButton = styled.div`

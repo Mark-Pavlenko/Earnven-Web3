@@ -5,33 +5,64 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { MobileView, BrowserView } from 'react-device-detect';
-import { Typography, Stack, IconButton } from '@material-ui/core';
+import { BrowserView, MobileView } from 'react-device-detect';
+import walletAddressCutter from '../../utils/helpers';
+import {
+  IconButton,
+  Stack,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@material-ui/core';
 import { AvatarGenerator } from 'random-avatar-generator';
-import { FaAngleRight, FaExclamationCircle } from 'react-icons/fa';
+import { FaAngleRight } from 'react-icons/fa';
 import Avatar from 'react-avatar';
-import { styled } from '@material-ui/core/styles';
-import Tooltip, { tooltipClasses } from '@material-ui/core/Tooltip';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { MdContentCopy } from 'react-icons/md';
-import ustIcon from '../../assets/icons/ust.png';
-import UserIcon from '../../assets/icons/userIcon.png';
-import TradeIcon from '../../assets/icons/trade.svg';
+import TradeIconLight from '../../assets/icons/tradeIconLight.svg';
+import TradeIconDark from '../../assets/icons/tradeIconDark.svg';
 import SendIcon from '../../assets/icons/send.png';
 import ReceiveIcon from '../../assets/icons/receive.png';
-
-// import AvatarGenerator from 'react-avatar-generator';
-
-const LightTooltip = styled(({ className, ...props }) => (
-  <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: theme.palette.common.white,
-    color: 'rgba(0, 0, 0, 0.87)',
-    boxShadow: theme.shadows[1],
-    fontSize: '11px',
-  },
-}));
+import gasPumpIconLight from '../../assets/icons/gasPumpHistoryLight.svg';
+import gasPumpIconDark from '../../assets/icons/gasPumpHistoryDark.svg';
+import receiveIconLight from '../../assets/icons/receiveIconLight.svg';
+import receiveIconDark from '../../assets/icons/receiveIconDark.svg';
+import TransactionHistoryTradeIcon from '../../assets/icons/TransactionHistoryTradeIcon.svg';
+import {
+  MainBlock,
+  TransactionHistoryTableHeader,
+  DashboardHistoryContainer,
+  TransactionDateTimestamp,
+  TransactionsHistoryTable,
+  LoadingBlock,
+  HistoryTableCell,
+  DateLabelsSubBlock,
+  TransactionName,
+  TransactionTimestamp,
+  TransactionIcon,
+  TransactionTableRow,
+  GetSenderTableCell,
+  GasFeeStringValue,
+  QuantityTableCell,
+  QuantityTableCellSubBlock,
+  FirstTokenSubBlock,
+  FirstTokenSubBlockUSDValue,
+  MockAvatarIcon,
+  FirstTokenCurrencyBlock,
+  SecondTokenSubBlock,
+  SecondTokenSubBlockUSDValue,
+  TokenSubBlockTitle,
+  SecondTokenCurrencyBlock,
+  PlusTransactionValue,
+  PlainObjectBlock,
+  PaginationArrow,
+  PageNumberSpan,
+} from './styles';
+import { EtherScanButton } from '../../screens/dashboard/styledComponents';
+import etherScanIcon from '../../assets/icons/etherScan-icon.svg';
+import etherScanDark from '../../assets/icons/etherScanDark-icon.svg';
 
 let contents = '';
 let ops = [];
@@ -40,636 +71,21 @@ let arr1 = [];
 let allHash = [];
 let distinctHash = [];
 
-export default class index extends Component {
+let lightThemeFinal;
+
+export default class transactionHistory extends Component {
   async componentWillMount() {
     // await this.loadWeb3();
+    lightThemeFinal = this.props.isLightTheme;
     this.setState({ contents: '' });
-    await this.loadBlockchainData();
+    await this.loadBlockchainData(lightThemeFinal);
   }
 
-  walletAddressCutter(addy) {
-    if (addy === '') {
-      return addy;
-    }
-    const l = addy.length;
-    const addynew = `${addy[0] + addy[1] + addy[2] + addy[3] + addy[4] + addy[5]}...${addy[l - 4]}${
-      addy[l - 3]
-    }${addy[l - 2]}${addy[l - 1]}`;
-    return addynew;
-  }
-
-  etherscanLink(link) {
-    link = `https://etherscan.io/address/${link}`;
-    return link;
-  }
-
-  etherscanTxLink(link) {
-    link = `https://etherscan.io/tx/${link}`;
-    return link;
-  }
-
-  convertTimestamp(epoch) {
-    const myDate = new Date(epoch * 1000);
-    // return myDate.toLocaleString();
-    return myDate.toLocaleDateString();
-  }
-
-  convertTimestampToTime(epoch) {
-    const myDate = new Date(epoch * 1000);
-    return myDate.toLocaleTimeString();
-  }
-
-  GetFormattedDate(epoch) {
-    const todayTime = new Date(epoch * 1000);
-    const month = (todayTime.getMonth() + 1).toString();
-    const day = todayTime.getDate().toString();
-    const year = todayTime.getFullYear().toString();
-    return `${day}-${month}-${year}`;
-  }
-
-  browserComponent = (data) => {
-    const generator = new AvatarGenerator();
-    return (
-      <Accordion
-        style={{
-          background: 'transparent',
-          width: '90%',
-          borderTop: '1px',
-          borderBottom: '0px',
-          borderLeft: '0px',
-          borderRight: '0px',
-          borderColor: '#737373',
-          borderStyle: 'solid',
-          borderRadius: '0px',
-        }}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon style={{ fill: 'white' }} />}
-          aria-controls="panel1a-content"
-          id="panel1a-header">
-          <div style={{ width: '10%', float: 'left' }}>
-            <img
-              style={{ paddingTop: '10px' }}
-              src={
-                data.txType === 'TRADING'
-                  ? TradeIcon
-                  : data.status === 'Receive'
-                  ? ReceiveIcon
-                  : SendIcon
-              }
-              alt=""
-            />
-          </div>
-          {data.txType === 'TRADING' ? (
-            // design for trading type of tx
-            <>
-              <div style={{ width: '20%', float: 'left', textAlign: 'left' }}>
-                <font color="white">Trade</font>
-                <br />
-                <font style={{ fontSize: '10px', color: 'white' }}>
-                  {this.convertTimestampToTime(data.timestamp)}
-                </font>
-              </div>
-              <div style={{ width: '18%', float: 'left', textAlign: 'left' }}>
-                <Stack direction="row">
-                  {data.firstToken.image !== null ? (
-                    <img
-                      style={{
-                        display: 'inline',
-                        maxWidth: '25px',
-                        verticalAlign: 'top',
-                        height: '25px',
-                        margin: '16px',
-                      }}
-                      alt=""
-                      src={`https://ethplorer.io${data.firstToken.image}`}
-                    />
-                  ) : (
-                    <Avatar
-                      style={{
-                        display: 'inline',
-                        maxWidth: '25px',
-                        verticalAlign: 'top',
-                        height: '25px',
-                        margin: '16px',
-                      }}
-                      color="#737373"
-                      name={data.firstToken.symbol}
-                      round
-                      size="30"
-                      textSizeRatio={1.75}
-                    />
-                  )}
-                  <Stack direction="column">
-                    <Typography variant="body2" sx={{ paddingTop: '4px' }}>
-                      {`-${data.firstToken.value} ${data.firstToken.symbol}`}
-                    </Typography>
-                    {data.firstToken.dollarValue === null ? (
-                      <Typography variant="caption" sx={{ color: '#737373' }}>
-                        N/A
-                      </Typography>
-                    ) : (
-                      <Typography variant="caption" sx={{ color: '#737373' }}>
-                        {`$${data.firstToken.dollarValue} `}
-                      </Typography>
-                    )}
-                  </Stack>
-                </Stack>
-              </div>
-
-              <FaAngleRight style={{ marginTop: '18px' }} />
-
-              <div style={{ width: '41%', float: 'left', textAlign: 'left', marginLeft: '15px' }}>
-                <Stack direction="row">
-                  {data.secondToken.image !== null ? (
-                    <img
-                      style={{
-                        display: 'inline',
-                        maxWidth: '25px',
-                        verticalAlign: 'top',
-                        height: '25px',
-                        margin: '16px',
-                      }}
-                      alt=""
-                      src={`https://ethplorer.io${data.secondToken.image}`}
-                    />
-                  ) : (
-                    <Avatar
-                      style={{
-                        display: 'inline',
-                        maxWidth: '25px',
-                        verticalAlign: 'top',
-                        height: '25px',
-                        margin: '16px',
-                      }}
-                      color="#737373"
-                      name={data.secondToken.symbol}
-                      round
-                      size="30"
-                      textSizeRatio={1.75}
-                    />
-                  )}
-                  <Stack direction="column">
-                    <Typography variant="body2" sx={{ paddingTop: '4px' }}>
-                      {`+${data.secondToken.value} ${data.secondToken.symbol}`}
-                    </Typography>
-                    {data.secondToken.dollarValue === null ? (
-                      <Typography variant="caption" sx={{ color: '#737373', ml: 1 }}>
-                        N/A
-                      </Typography>
-                    ) : (
-                      <Typography variant="caption" sx={{ color: '#737373' }}>
-                        {`$${data.secondToken.dollarValue} `}
-                      </Typography>
-                    )}
-                  </Stack>
-                </Stack>
-              </div>
-            </>
-          ) : (
-            // desing for normal and token transfer
-            <>
-              <div style={{ width: '30%', float: 'left', textAlign: 'left' }}>
-                <font color="white">{data.txType === 'Approval' ? data.txType : data.status}</font>
-                <br />
-                <font style={{ fontSize: '10px', color: 'white' }}>
-                  {this.convertTimestampToTime(data.timestamp)}
-                </font>
-              </div>
-              <div style={{ width: '41%', float: 'left', textAlign: 'left' }}>
-                <Stack direction="row">
-                  {data.image !== null ? (
-                    <img
-                      style={{
-                        display: 'inline',
-                        maxWidth: '25px',
-                        verticalAlign: 'top',
-                        height: '25px',
-                        margin: '9px',
-                      }}
-                      alt=""
-                      src={`https://ethplorer.io${data.image}`}
-                    />
-                  ) : (
-                    <Avatar
-                      style={{
-                        display: 'inline',
-                        maxWidth: '25px',
-                        verticalAlign: 'top',
-                        height: '25px',
-                        margin: '9px',
-                      }}
-                      color="#737373"
-                      name={data.symbol}
-                      round
-                      size="30"
-                      textSizeRatio={1.75}
-                    />
-                  )}
-
-                  <Stack direction="column">
-                    {data.txType === 'Approval' ? (
-                      <div>
-                        <Typography variant="body2" sx={{ paddingTop: '4px' }}>
-                          {data.name}
-                        </Typography>
-                        <Typography variant="caption" sx={{ color: '#737373' }}>
-                          {data.symbol}
-                        </Typography>
-                      </div>
-                    ) : (
-                      <div>
-                        <Typography variant="body2" sx={{ paddingTop: '4px' }}>
-                          {data.status === 'Receive'
-                            ? `+${data.value} ${data.symbol}`
-                            : `-${data.value} ${data.symbol}`}
-                        </Typography>
-                        {data.dollarValue === null ? (
-                          <Typography variant="caption" sx={{ color: '#737373', ml: 1 }}>
-                            N/A
-                          </Typography>
-                        ) : (
-                          <Typography variant="caption" sx={{ color: '#737373' }}>
-                            {`$${data.dollarValue} `}
-                          </Typography>
-                        )}
-                      </div>
-                    )}
-                  </Stack>
-
-                  {/* </div> */}
-                </Stack>
-              </div>
-
-              <div style={{ width: '15%', float: 'left', textAlign: 'left' }}>
-                <Typography variant="body1" color="white">
-                  {data.status === 'Receive' ? 'From' : 'To'}
-                </Typography>
-                <Stack direction="row" spacing={1}>
-                  <img
-                    width="17px"
-                    alt=""
-                    // style={{ marginTop: "5px" }}
-                    src={generator.generateRandomAvatar(data.from)}
-                  />
-                  <Typography variant="body2">
-                    {data.status === 'Receive'
-                      ? this.walletAddressCutter(data.from)
-                      : this.walletAddressCutter(data.to)}
-                  </Typography>
-                </Stack>
-              </div>
-            </>
-          )}
-        </AccordionSummary>
-        <AccordionDetails
-          style={{
-            backgroundColor: 'transparent',
-            textAlign: 'left',
-            borderTop: '1px',
-            borderBottom: '0px',
-            borderLeft: '0px',
-            borderRight: '0px',
-            borderColor: '#737373',
-            borderStyle: 'solid',
-            borderRadius: '0px',
-            marginLeft: '10px',
-            marginRight: '10px',
-          }}>
-          <Stack direction="row" spacing={20}>
-            <Stack direction="column">
-              <Typography variant="body2">Fee</Typography>
-              <Typography variant="caption">{data.txGas}ETH</Typography>
-            </Stack>
-
-            <Stack direction="column">
-              <Typography variant="body2">Hash</Typography>
-              <Stack direction="row">
-                <Typography href={this.etherscanTxLink(data.hash)} variant="caption">
-                  {this.walletAddressCutter(data.hash)}
-                </Typography>
-                <IconButton edge="end" aria-label="copy" style={{ padding: '0px' }}>
-                  <CopyToClipboard text={data.hash}>
-                    <MdContentCopy style={{ color: '#929292', padding: '0px', height: '13px' }} />
-                  </CopyToClipboard>
-                </IconButton>
-              </Stack>
-            </Stack>
-          </Stack>
-        </AccordionDetails>
-      </Accordion>
-    );
-  };
-
-  mobileComponent = (data) => {
-    const generator = new AvatarGenerator();
-    return (
-      <Accordion
-        style={{
-          background: 'transparent',
-          width: '90%',
-          borderTop: '1px',
-          borderBottom: '0px',
-          borderLeft: '0px',
-          borderRight: '0px',
-          borderColor: '#737373',
-          borderStyle: 'solid',
-          borderRadius: '0px',
-        }}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon style={{ fill: 'white' }} />}
-          aria-controls="panel1a-content"
-          id="panel1a-header">
-          <div style={{ width: '5%', float: 'left' }}>
-            <img
-              style={{ paddingTop: '10px' }}
-              src={
-                data.txType === 'TRADING'
-                  ? TradeIcon
-                  : data.status === 'Receive'
-                  ? ReceiveIcon
-                  : SendIcon
-              }
-              alt=""
-            />
-          </div>
-          {data.txType === 'TRADING' ? (
-            // design for trading type of tx
-            <>
-              <div style={{ width: '15%', float: 'left', textAlign: 'left' }}>
-                <font style={{ fontSize: '10px' }} color="white">
-                  Trade
-                </font>
-                <br />
-                <font style={{ fontSize: '7px', color: 'white' }}>
-                  {this.convertTimestampToTime(data.timestamp)}
-                </font>
-              </div>
-              <div style={{ width: '27%', float: 'left', textAlign: 'left' }}>
-                <Stack direction="row">
-                  {data.firstToken.image !== null ? (
-                    <img
-                      style={{
-                        display: 'inline',
-                        maxWidth: '25px',
-                        verticalAlign: 'top',
-                        height: '15px',
-                        margin: '6px',
-                      }}
-                      alt=""
-                      src={`https://ethplorer.io${data.firstToken.image}`}
-                    />
-                  ) : (
-                    <Avatar
-                      style={{
-                        display: 'inline',
-                        maxWidth: '25px',
-                        verticalAlign: 'top',
-                        height: '15px',
-                        margin: '6px',
-                      }}
-                      color="#737373"
-                      name={data.firstToken.symbol}
-                      round
-                      size="30"
-                      textSizeRatio={1.75}
-                    />
-                  )}
-                  <Stack direction="column">
-                    <Typography variant="caption" sx={{ paddingTop: '4px' }}>
-                      {`-${data.firstToken.value} ${data.firstToken.symbol}`}
-                    </Typography>
-                    {data.firstToken.dollarValue === null ? (
-                      <Typography variant="caption" sx={{ color: '#737373', fontSize: '8px' }}>
-                        N/A
-                      </Typography>
-                    ) : (
-                      <Typography variant="caption" sx={{ color: '#737373', fontSize: '8px' }}>
-                        {`$${data.firstToken.dollarValue} `}
-                      </Typography>
-                    )}
-                  </Stack>
-                </Stack>
-              </div>
-
-              <FaAngleRight style={{ marginTop: '18px', marginLeft: '15px' }} />
-
-              <div style={{ width: '35%', float: 'left', textAlign: 'left' }}>
-                <Stack direction="row">
-                  {data.secondToken.image !== null ? (
-                    <img
-                      style={{
-                        display: 'inline',
-                        maxWidth: '25px',
-                        verticalAlign: 'top',
-                        height: '15px',
-                        margin: '6px',
-                      }}
-                      alt=""
-                      src={`https://ethplorer.io${data.secondToken.image}`}
-                    />
-                  ) : (
-                    <Avatar
-                      style={{
-                        display: 'inline',
-                        maxWidth: '25px',
-                        verticalAlign: 'top',
-                        height: '15px',
-                        margin: '6px',
-                      }}
-                      color="#737373"
-                      name={data.secondToken.symbol}
-                      round
-                      size="30"
-                      textSizeRatio={1.75}
-                    />
-                  )}
-                  <Stack direction="column">
-                    <Typography variant="caption" sx={{ paddingTop: '4px' }}>
-                      {`+${data.secondToken.value} ${data.secondToken.symbol}`}
-                    </Typography>
-                    {data.secondToken.dollarValue === null ? (
-                      <Typography
-                        variant="caption"
-                        sx={{ color: '#737373', ml: 1, fontSize: '8px' }}>
-                        N/A
-                      </Typography>
-                    ) : (
-                      <Typography variant="caption" sx={{ color: '#737373', fontSize: '8px' }}>
-                        {`$${data.secondToken.dollarValue} `}
-                      </Typography>
-                    )}
-                  </Stack>
-                </Stack>
-              </div>
-            </>
-          ) : (
-            // desing for normal and token transfer
-            <>
-              <div style={{ width: '22%', float: 'left', textAlign: 'left' }}>
-                <font style={{ fontSize: '10px' }} color="white">
-                  {data.txType === 'Approval' ? data.txType : data.status}
-                </font>
-                <br />
-                <font style={{ fontSize: '7px', color: 'white' }}>
-                  {this.convertTimestampToTime(data.timestamp)}
-                </font>
-              </div>
-              <div style={{ width: '40%', float: 'left', textAlign: 'left' }}>
-                <Stack direction="row">
-                  {data.image !== null ? (
-                    <img
-                      style={{
-                        display: 'inline',
-                        maxWidth: '25px',
-                        verticalAlign: 'top',
-                        height: '15px',
-                        margin: '9px',
-                      }}
-                      alt=""
-                      src={`https://ethplorer.io${data.image}`}
-                    />
-                  ) : (
-                    <Avatar
-                      style={{
-                        display: 'inline',
-                        maxWidth: '25px',
-                        verticalAlign: 'top',
-                        height: '15px',
-                        margin: '9px',
-                      }}
-                      color="#737373"
-                      name={data.symbol}
-                      round
-                      size="30"
-                      textSizeRatio={1.75}
-                    />
-                  )}
-
-                  <Stack direction="column">
-                    {data.txType === 'Approval' ? (
-                      <div>
-                        <Typography variant="caption" sx={{ paddingTop: '4px' }}>
-                          {data.name}
-                        </Typography>
-                        <Typography variant="caption" sx={{ color: '#737373', fontSize: '8px' }}>
-                          {data.symbol}
-                        </Typography>
-                      </div>
-                    ) : (
-                      <div>
-                        <Typography variant="caption" sx={{ paddingTop: '4px' }}>
-                          {data.status === 'Receive'
-                            ? `+${data.value} ${data.symbol}`
-                            : `-${data.value} ${data.symbol}`}
-                        </Typography>
-                        {data.dollarValue === null ? (
-                          <Typography
-                            variant="caption"
-                            sx={{ color: '#737373', ml: 1, fontSize: '8px' }}>
-                            N/A
-                          </Typography>
-                        ) : (
-                          <Typography variant="caption" sx={{ color: '#737373', fontSize: '8px' }}>
-                            {`$${data.dollarValue} `}
-                          </Typography>
-                        )}
-                      </div>
-                    )}
-                  </Stack>
-
-                  {/* </div> */}
-                </Stack>
-              </div>
-
-              <div style={{ width: '15%', float: 'left', textAlign: 'left' }}>
-                <Typography variant="caption" color="white">
-                  {data.status === 'Receive' ? 'From' : 'To'}
-                </Typography>
-                <Stack direction="row" spacing={1}>
-                  <img
-                    width="7px"
-                    alt=""
-                    // style={{ marginTop: "5px" }}
-                    src={generator.generateRandomAvatar(data.from)}
-                  />
-                  <Typography variant="caption">
-                    {data.status === 'Receive'
-                      ? this.walletAddressCutter(data.from)
-                      : this.walletAddressCutter(data.to)}
-                  </Typography>
-                </Stack>
-              </div>
-            </>
-          )}
-        </AccordionSummary>
-        <AccordionDetails
-          style={{
-            backgroundColor: 'transparent',
-            textAlign: 'left',
-            borderTop: '1px',
-            borderBottom: '0px',
-            borderLeft: '0px',
-            borderRight: '0px',
-            borderColor: '#737373',
-            borderStyle: 'solid',
-            borderRadius: '0px',
-            marginLeft: '10px',
-            marginRight: '10px',
-          }}>
-          <Stack direction="row" spacing={5}>
-            <Stack direction="column">
-              <Typography variant="caption">Fee</Typography>
-              <Typography variant="caption" sx={{ fontSize: '8px' }}>
-                {data.txGas}ETH
-              </Typography>
-            </Stack>
-
-            <Stack direction="column">
-              <Typography variant="caption">Hash</Typography>
-              <Stack direction="row">
-                <Typography
-                  href={this.etherscanTxLink(data.hash)}
-                  variant="caption"
-                  sx={{ fontSize: '8px' }}>
-                  {this.walletAddressCutter(data.hash)}
-                </Typography>
-                <IconButton edge="end" aria-label="copy" style={{ padding: '0px' }}>
-                  <CopyToClipboard text={data.hash}>
-                    <MdContentCopy style={{ color: '#929292', padding: '0px', height: '13px' }} />
-                  </CopyToClipboard>
-                </IconButton>
-              </Stack>
-            </Stack>
-          </Stack>
-        </AccordionDetails>
-      </Accordion>
-    );
-  };
-
-  change = (arr) => {
-    const generator = new AvatarGenerator();
-    contents = arr.map((object, i, arr) => (
-      <div>
-        <BrowserView>
-          {i !== 0 &&
-          this.convertTimestamp(object.timestamp) ===
-            this.convertTimestamp(arr[i - 1].timestamp) ? null : (
-            <Typography>{this.convertTimestamp(object.timestamp)}</Typography>
-          )}
-          {/* {object.txType === 'TRADING' ? this.tradincomponent(object) :
-            this.normalTokenTransferComponent(object)} */}
-          {this.browserComponent(object)}
-        </BrowserView>
-        <MobileView>{this.mobileComponent(object)}</MobileView>
-      </div>
-    ));
-    // console.log(contents)
-  };
-
-  async loadBlockchainData() {
+  async loadBlockchainData(lightThemeFinal) {
     // const web3 = window.
 
     const accounts = this.props.address;
+
     console.log('account address inside transaction component::', accounts);
     this.setState({ account: accounts });
     allHash = [];
@@ -706,12 +122,12 @@ export default class index extends Component {
           }
         }
         distinctHash = [...new Set(allHash)];
-        // console.log("final object response:::", distinctHash)
-        this.update();
+        // console.log('distinct hash', distinctHash);
+        await this.update(lightThemeFinal);
       });
   }
 
-  getTransactionfromHash = async (hash) => {
+  getTransactionFromHash = async (hash) => {
     let result;
     try {
       result = await axios.get(
@@ -747,7 +163,41 @@ export default class index extends Component {
     return result;
   };
 
-  update = async () => {
+  walletAddressCutter(addy) {
+    if (addy === '') {
+      return addy;
+    }
+    const l = addy.length;
+    const addynew = `${addy[0] + addy[1] + addy[2] + addy[3] + addy[4] + addy[5]}...${addy[l - 4]}${
+      addy[l - 3]
+    }${addy[l - 2]}${addy[l - 1]}`;
+    return addynew;
+  }
+
+  etherscanTxLink(link) {
+    link = `https://etherscan.io/tx/${link}`;
+    return link;
+  }
+
+  convertTimestampToDate(epoch) {
+    const myDate = new Date(epoch * 1000);
+    return myDate.toLocaleDateString();
+  }
+
+  convertTimestampToTime(epoch) {
+    const myDate = new Date(epoch * 1000);
+    return myDate.toLocaleTimeString();
+  }
+
+  GetFormattedDate(epoch) {
+    const todayTime = new Date(epoch * 1000);
+    const month = (todayTime.getMonth() + 1).toString();
+    const day = todayTime.getDate().toString();
+    const year = todayTime.getFullYear().toString();
+    return `${day}-${month}-${year}`;
+  }
+
+  update = async (isLightTheme) => {
     // try{
 
     const web3 = new Web3();
@@ -763,9 +213,11 @@ export default class index extends Component {
       const object = {};
       // if(ops[i].transactionHash !== undefined){
 
-      data = await this.getTransactionfromHash(distinctHash[i]);
+      data = await this.getTransactionFromHash(distinctHash[i]);
       if (data !== null) {
-        object.txGas = await this.getTransactionGas(distinctHash[i]);
+        const txGasString = await this.getTransactionGas(distinctHash[i]);
+        object.txGas = parseFloat(txGasString);
+        object.USDValue = object.txGas * this.props.currentUSDPrice;
         const dataObject = data.data;
         // console.log("data object value::", dataObject.from)
         object.from = web3.utils.toChecksumAddress(dataObject.from);
@@ -787,10 +239,12 @@ export default class index extends Component {
           object.name = 'Ethereum';
           object.symbol = 'ETH';
           object.image = '/images/eth.png';
+
           object.value = dataObject.value.toFixed(3);
           object.dollarValue = (object.value * hisotricalEtherPrice).toFixed(3);
         } else {
           const operationsLength = dataObject.operations.length;
+          console.log('dataObject.operations', dataObject);
           if (operationsLength === 1) {
             // console.log("token transfer")
             // object.to = web3.utils.toChecksumAddress(dataObject.to);
@@ -837,10 +291,12 @@ export default class index extends Component {
               //   return (tempObject.from === dataObject.to);
               // })
               firstToken.dollarValue = (hisotricalEtherPrice * dataObject.value).toFixed(3);
+              console.log('firstToken.dollarValue 1', firstToken.dollarValue);
+              console.log('dataObject test', dataObject);
               // firstToken.dollarValue = ((dataObject.operations[0].usdPrice) * (dataObject.value)).toFixed(3);
             } else {
               const firstTokenTemp = dataObject.operations[0];
-
+              console.log('firstTokenTemp', firstTokenTemp);
               firstToken.name = firstTokenTemp.tokenInfo.name;
               firstToken.symbol = firstTokenTemp.tokenInfo.symbol;
               firstTokenTemp.tokenInfo.image !== undefined
@@ -849,21 +305,19 @@ export default class index extends Component {
               firstToken.value = parseFloat(
                 web3.utils.fromWei(firstTokenTemp.value, 'ether')
               ).toFixed(3);
-              firstToken.dollarValue = (firstToken.value / firstTokenTemp.usdPrice).toFixed(3);
+              // console.log('VALUE NEED', firstToken.value);
+              // not waited
+              // console.log('USDPRICE NEED', firstTokenTemp.usdPrice);
+              // if (firstTokenTemp.usdPrice !== undefined) {
+              firstToken.dollarValue = (
+                parseFloat(firstToken.value) / firstTokenTemp.usdPrice
+              ).toFixed(3);
+              console.log('firstToken.dollarValue actual', firstToken.dollarValue);
+              // }
             }
             const tempArr1 = dataObject.operations.filter((tempObject) => {
               return tempObject.to === dataObject.from;
             });
-            /* const secondTokenTemp = dataObject.operations[operationsLength - 1].tokenInfo
-            secondToken.name = secondTokenTemp.name;
-            secondToken.symbol = secondTokenTemp.symbol;
-            secondTokenTemp.image !== undefined ? secondToken.image = secondTokenTemp.image : secondToken.image = null;
-            secondToken.value = parseFloat(web3.utils.fromWei(dataObject.operations[operationsLength - 1].value, 'ether')).toFixed(3);
-            secondToken.dollarValue = null;
-            if (secondTokenTemp.price !== false) {
-              secondToken.dollarValue = (secondTokenTemp.price.rate * secondToken.value).toFixed(3)
-            } */
-
             if (tempArr1[0]) {
               const secondTokenTemp = tempArr1[0].tokenInfo;
               secondToken.name = secondTokenTemp.name;
@@ -887,16 +341,13 @@ export default class index extends Component {
           }
         }
       }
+      console.log('object', object);
       arr1.push(object);
     }
-    // console.log("data created in transaction history::", arr1);
-    this.change(arr1);
-    this.setState({ contents });
+    console.log(' transaction history data object::', arr1);
+    this.setState({ testArr: arr1 });
 
-    // }
-    // catch{
-    //     this.setState({page:this.state.page-1})
-    // }
+    this.setState({ contents, isLightTheme });
   };
 
   constructor() {
@@ -906,101 +357,648 @@ export default class index extends Component {
       account: '',
       contents: '',
       page: 1,
+      isLightTheme: '',
+      testArr: [],
     };
   }
 
-  render() {
+  browserComponent = (data) => {
+    const generator = new AvatarGenerator();
     return (
-      <div
-        style={{
-          width: '95%',
-          height: 'auto',
-          paddingBottom: '30px',
-          background: 'transparent',
-          borderRadius: '20px',
-          // marginRight: '20px'
-        }}>
-        {/*  <center> */}
-        {/* <Typography variant='h3' align='left' sx={{ marginTop: '10px' }} color="white"> History </Typography> */}
+      <>
+        <Accordion
+          style={{
+            background: 'orange',
+            // width: '90%',
+            borderTop: '1px',
+            borderBottom: '0px',
+            borderLeft: '0px',
+            borderRight: '0px',
+            borderColor: '#737373',
+            borderStyle: 'solid',
+            borderRadius: '0px',
+          }}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon style={{ fill: 'white' }} />}
+            aria-controls="panel1a-content"
+            id="panel1a-header">
+            <div style={{ width: '10%', float: 'left' }}>
+              <img
+                style={{ paddingTop: '10px' }}
+                src={
+                  data.txType === 'TRADING'
+                    ? TradeIconDark
+                    : data.status === 'Receive'
+                    ? ReceiveIcon
+                    : SendIcon
+                }
+                alt=""
+              />
+            </div>
+            {data.txType === 'TRADING' ? (
+              // design for trading type of tx
+              <>
+                <div style={{ width: '20%', float: 'left', textAlign: 'left' }}>
+                  <font color="white">Trade</font>
+                  <br />
+                  <font style={{ fontSize: '10px', color: 'white' }}>
+                    {this.convertTimestampToTime(data.timestamp)}
+                  </font>
+                </div>
+                <div style={{ width: '18%', float: 'left', textAlign: 'left' }}>
+                  <Stack direction="row">
+                    {data.firstToken.image !== null ? (
+                      <img
+                        style={{
+                          display: 'inline',
+                          maxWidth: '21px',
+                          maxHeight: '21px',
+                          verticalAlign: 'top',
+                          height: '25px',
+                          borderRadius: '10px',
+                        }}
+                        alt=""
+                        src={`https://ethplorer.io${data.firstToken.image}`}
+                      />
+                    ) : (
+                      <MockAvatarIcon
+                        style={{
+                          display: 'inline',
+                          maxWidth: '21px',
+                          maxHeight: '21px',
+                          verticalAlign: 'top',
+                          height: '25px',
+                          borderRadius: '10px',
+                        }}
+                        color="#737373"
+                        name={data.firstToken.symbol}
+                        round
+                        size="21"
+                        textSizeRatio={1.75}
+                      />
+                    )}
+                    <Stack direction="column">
+                      <Typography variant="body2" sx={{ paddingTop: '4px' }}>
+                        {`-${data.firstToken.value} ${data.firstToken.symbol}`}
+                      </Typography>
+                      {data.firstToken.dollarValue === null ? (
+                        <Typography variant="caption" sx={{ color: '#737373' }}>
+                          N/A
+                        </Typography>
+                      ) : (
+                        <Typography variant="caption" sx={{ color: '#737373' }}>
+                          {`$${data.firstToken.dollarValue} `}
+                        </Typography>
+                      )}
+                    </Stack>
+                  </Stack>
+                </div>
 
-        <br />
+                <FaAngleRight style={{ marginTop: '18px' }} />
 
-        {!this.state.contents ? (
-          <Typography variant="h3" sx={{ marginTop: '130px' }} align="center">
-            Loading...
-          </Typography>
-        ) : (
-          this.state.contents
-        )}
+                <div style={{ width: '41%', float: 'left', textAlign: 'left', marginLeft: '15px' }}>
+                  <Stack direction="row">
+                    {data.secondToken.image !== null ? (
+                      <img
+                        style={{
+                          display: 'inline',
+                          maxWidth: '21px',
+                          maxHeight: '21px',
+                          verticalAlign: 'top',
+                          height: '25px',
+                          borderRadius: '10px',
+                        }}
+                        alt=""
+                        src={`https://ethplorer.io${data.secondToken.image}`}
+                      />
+                    ) : (
+                      <MockAvatarIcon
+                        style={{
+                          display: 'inline',
+                          maxWidth: '21px',
+                          maxHeight: '21px',
+                          verticalAlign: 'top',
+                          height: '25px',
+                          borderRadius: '10px',
+                        }}
+                        color="#737373"
+                        name={data.secondToken.symbol}
+                        round
+                        size="21"
+                        textSizeRatio={1.75}
+                      />
+                    )}
+                    <Stack direction="column">
+                      <Typography variant="body2" sx={{ paddingTop: '4px' }}>
+                        {`+${data.secondToken.value} ${data.secondToken.symbol}`}
+                      </Typography>
+                      {data.secondToken.dollarValue === null ? (
+                        <Typography variant="caption" sx={{ color: '#737373', ml: 1 }}>
+                          N/A
+                        </Typography>
+                      ) : (
+                        <Typography variant="caption" sx={{ color: '#737373' }}>
+                          {`$${data.secondToken.dollarValue} `}
+                        </Typography>
+                      )}
+                    </Stack>
+                  </Stack>
+                </div>
+              </>
+            ) : (
+              // desing for normal and token transfer
+              <>
+                <div style={{ width: '30%', float: 'left', textAlign: 'left' }}>
+                  <font color="white">
+                    {data.txType === 'Approval' ? data.txType : data.status}
+                  </font>
+                  <br />
+                  <font style={{ fontSize: '10px', color: 'white' }}>
+                    {this.convertTimestampToTime(data.timestamp)}
+                  </font>
+                </div>
+                <div style={{ width: '41%', float: 'left', textAlign: 'left' }}>
+                  <Stack direction="row">
+                    {data.image !== null ? (
+                      <img
+                        style={{
+                          display: 'inline',
+                          maxWidth: '21px',
+                          maxHeight: '21px',
+                          verticalAlign: 'top',
+                          height: '25px',
+                          margin: '9px',
+                          borderRadius: '10px',
+                        }}
+                        alt=""
+                        src={`https://ethplorer.io${data.image}`}
+                      />
+                    ) : (
+                      <MockAvatarIcon name={data.symbol} round size="21" textSizeRatio={1.75} />
+                    )}
 
-        <br />
-        {this.state.contents && (
-          <center>
-            <font color="white">
-              {this.state.page > 1 && (
-                <button
-                  style={{
-                    background: 'transparent',
-                    border: 'none',
-                    outline: 'none',
-                    transform: 'rotate(180deg)',
-                    cursor: 'pointer',
-                  }}
-                  onClick={async (e) => {
-                    if (this.state.page !== 1) {
-                      await this.setState({ page: this.state.page - 1 });
-                      this.update();
-                    }
-                  }}>
-                  {' '}
-                  {/* &lt;{" "} */}
-                  <svg
-                    width="22"
-                    height="8"
-                    viewBox="0 0 22 8"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      d="M21.3536 4.35355C21.5488 4.15829 21.5488 3.84171 21.3536 3.64645L18.1716 0.464466C17.9763 0.269204 17.6597 0.269204 17.4645 0.464466C17.2692 0.659728 17.2692 0.976311 17.4645 1.17157L20.2929 4L17.4645 6.82843C17.2692 7.02369 17.2692 7.34027 17.4645 7.53553C17.6597 7.7308 17.9763 7.7308 18.1716 7.53553L21.3536 4.35355ZM0 4.5H21V3.5H0V4.5Z"
-                      fill="white"
+                    <Stack direction="column">
+                      {data.txType === 'Approval' ? (
+                        <div>
+                          <Typography variant="body2" sx={{ paddingTop: '4px' }}>
+                            {data.name}
+                          </Typography>
+                          <Typography variant="caption" sx={{ color: '#737373' }}>
+                            {data.symbol}
+                          </Typography>
+                        </div>
+                      ) : (
+                        <div>
+                          <Typography variant="body2" sx={{ paddingTop: '4px' }}>
+                            {data.status === 'Receive' ? (
+                              <PlusTransactionValue>
+                                `+${data.value} ${data.symbol}`
+                              </PlusTransactionValue>
+                            ) : (
+                              `-${data.value} ${data.symbol}`
+                            )}
+                          </Typography>
+                          {data.dollarValue === null ? (
+                            <Typography variant="caption" sx={{ color: '#737373', ml: 1 }}>
+                              N/A
+                            </Typography>
+                          ) : (
+                            <Typography variant="caption" sx={{ color: '#737373' }}>
+                              {`$${data.dollarValue} `}
+                            </Typography>
+                          )}
+                        </div>
+                      )}
+                    </Stack>
+
+                    {/* </div> */}
+                  </Stack>
+                </div>
+
+                <div style={{ width: '15%', float: 'left', textAlign: 'left' }}>
+                  <Typography variant="body1" color="white">
+                    {data.status === 'Receive' ? 'From' : 'To'}
+                  </Typography>
+                  <Stack direction="row" spacing={1}>
+                    <img
+                      width="17px"
+                      alt=""
+                      // style={{ marginTop: "5px" }}
+                      src={generator.generateRandomAvatar(data.from)}
                     />
-                  </svg>
-                </button>
-              )}{' '}
-              &nbsp;&nbsp;&nbsp;
-              {this.state.page} &nbsp;&nbsp;&nbsp;
-              <button
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  outline: 'none',
-                  cursor: 'pointer',
-                }}
-                onClick={async (e) => {
-                  await this.setState({ page: this.state.page + 1 });
-                  this.update();
-                }}>
-                {' '}
-                {/* &gt;{" "} */}
-                <svg
-                  width="22"
-                  height="8"
-                  viewBox="0 0 22 8"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M21.3536 4.35355C21.5488 4.15829 21.5488 3.84171 21.3536 3.64645L18.1716 0.464466C17.9763 0.269204 17.6597 0.269204 17.4645 0.464466C17.2692 0.659728 17.2692 0.976311 17.4645 1.17157L20.2929 4L17.4645 6.82843C17.2692 7.02369 17.2692 7.34027 17.4645 7.53553C17.6597 7.7308 17.9763 7.7308 18.1716 7.53553L21.3536 4.35355ZM0 4.5H21V3.5H0V4.5Z"
-                    fill="white"
-                  />
-                </svg>
-              </button>
-            </font>
-          </center>
+                    <Typography variant="body2" color="red">
+                      {data.status === 'Receive'
+                        ? this.walletAddressCutter(data.from)
+                        : this.walletAddressCutter(data.to)}
+                    </Typography>
+                  </Stack>
+                </div>
+              </>
+            )}
+          </AccordionSummary>
+          <AccordionDetails
+            style={{
+              backgroundColor: 'transparent',
+              textAlign: 'left',
+              borderTop: '1px',
+              borderBottom: '0px',
+              borderLeft: '0px',
+              borderRight: '0px',
+              borderColor: '#737373',
+              borderStyle: 'solid',
+              borderRadius: '0px',
+              marginLeft: '10px',
+              marginRight: '10px',
+            }}>
+            <Stack direction="row" spacing={20}>
+              <Stack direction="column">
+                <Typography variant="body2">Fee</Typography>
+                <Typography variant="caption">{data.txGas}ETH</Typography>
+              </Stack>
+
+              <Stack direction="column">
+                <Typography variant="body2">Hash</Typography>
+                <Stack direction="row">
+                  <Typography href={this.etherscanTxLink(data.hash)} variant="caption">
+                    {this.walletAddressCutter(data.hash)}
+                  </Typography>
+                  <IconButton edge="end" aria-label="copy" style={{ padding: '0px' }}>
+                    <CopyToClipboard text={data.hash}>
+                      <MdContentCopy style={{ color: '#929292', padding: '0px', height: '13px' }} />
+                    </CopyToClipboard>
+                  </IconButton>
+                </Stack>
+              </Stack>
+            </Stack>
+          </AccordionDetails>
+        </Accordion>
+      </>
+    );
+  };
+
+  watchTransactionInfo = (hash) => {
+    window.open(`https://etherscan.io/tx/${hash}`, '_blank');
+  };
+
+  render() {
+    const generator = new AvatarGenerator();
+    const { isLightTheme } = this.props;
+    console.log('testArr object', this.state.testArr);
+    return (
+      <>
+        {this.state.testArr.length === 0 ? (
+          <LoadingBlock>
+            <p>Loading...</p>
+          </LoadingBlock>
+        ) : (
+          <>
+            <MainBlock className="boxSize">
+              <DashboardHistoryContainer isLightTheme={isLightTheme}>
+                <TransactionsHistoryTable>
+                  <TableHead>
+                    <TableRow>
+                      <TransactionHistoryTableHeader
+                        isLightTheme={isLightTheme}
+                        style={{ paddingLeft: '25px' }}>
+                        Date
+                      </TransactionHistoryTableHeader>
+                      <TransactionHistoryTableHeader isLightTheme={isLightTheme}>
+                        From/To
+                      </TransactionHistoryTableHeader>
+                      <TransactionHistoryTableHeader
+                        isLightTheme={isLightTheme}
+                        className="price-title">
+                        Quantity
+                      </TransactionHistoryTableHeader>
+                      <TransactionHistoryTableHeader
+                        isLightTheme={isLightTheme}
+                        style={{ display: 'flex', flexDirection: 'row' }}>
+                        {isLightTheme ? (
+                          <img src={gasPumpIconLight} alt="gas_icon" />
+                        ) : (
+                          <img src={gasPumpIconDark} alt="gas_icon" />
+                        )}
+                        <span style={{ marginLeft: '5px' }}> Gas fee</span>
+                      </TransactionHistoryTableHeader>
+                      <TransactionHistoryTableHeader isLightTheme={isLightTheme} />
+                    </TableRow>
+                  </TableHead>
+                  <TableBody style={{}}>
+                    {this.state.testArr.map((object, i, arr) => {
+                      // console.log('object needable',);
+                      return (
+                        <>
+                          {i !== 0 &&
+                          this.convertTimestampToDate(object.timestamp) ===
+                            this.convertTimestampToDate(arr[i - 1].timestamp) ? null : (
+                            <TransactionDateTimestamp isLightTheme={isLightTheme}>
+                              {this.convertTimestampToDate(object.timestamp)}
+                            </TransactionDateTimestamp>
+                          )}
+                          {/*<div style={{ marginLeft: '100px', marginRight: '100px' }}>*/}
+                          <TransactionTableRow>
+                            <HistoryTableCell>
+                              <TransactionIcon
+                                src={
+                                  object.txType === 'TRADING'
+                                    ? isLightTheme
+                                      ? TradeIconLight
+                                      : TradeIconDark
+                                    : object.status === 'Receive'
+                                    ? isLightTheme
+                                      ? receiveIconLight
+                                      : receiveIconDark
+                                    : SendIcon
+                                }
+                                alt="transaction_img"
+                              />
+                              <DateLabelsSubBlock>
+                                {object.txType === 'TRADING' ? (
+                                  <TransactionName isLightTheme={isLightTheme}>
+                                    Trade
+                                  </TransactionName>
+                                ) : (
+                                  <TransactionName isLightTheme={isLightTheme}>
+                                    {object.txType === 'Approval' ? object.txType : object.status}
+                                  </TransactionName>
+                                )}
+                                <TransactionTimestamp>
+                                  {this.convertTimestampToTime(object.timestamp)}
+                                </TransactionTimestamp>
+                              </DateLabelsSubBlock>
+                            </HistoryTableCell>
+                            <GetSenderTableCell isLightTheme={isLightTheme}>
+                              {/*{object.txType !== 'TRADING' && (*/}
+                              <div>
+                                {object.status === 'Receive' ? 'From ' : 'To '}
+                                <img
+                                  alt="random_avatar_img"
+                                  src={generator.generateRandomAvatar(object.from)}
+                                />
+                                <p>
+                                  {object.status === 'Receive'
+                                    ? this.walletAddressCutter(object.from)
+                                    : this.walletAddressCutter(object.to)}
+                                </p>
+                              </div>
+                              {/*)}*/}
+                            </GetSenderTableCell>
+                            <QuantityTableCell>
+                              {object.txType === 'TRADING' ? (
+                                <QuantityTableCellSubBlock>
+                                  <FirstTokenCurrencyBlock>
+                                    {object.firstToken.image !== null ? (
+                                      <img
+                                        style={{
+                                          display: 'inline',
+                                          maxWidth: '21px',
+                                          maxHeight: '21px',
+                                          verticalAlign: 'top',
+                                          borderRadius: '10px',
+                                        }}
+                                        alt=""
+                                        src={`https://ethplorer.io${object.firstToken.image}`}
+                                      />
+                                    ) : (
+                                      <MockAvatarIcon
+                                        style={{
+                                          display: 'inline',
+                                          maxWidth: '21px',
+                                          maxHeight: '21px',
+                                          verticalAlign: 'top',
+                                          height: '25px',
+                                          borderRadius: '10px',
+                                        }}
+                                        color="#737373"
+                                        name={object.firstToken.symbol}
+                                        round
+                                        size="21"
+                                        textSizeRatio={1.75}
+                                      />
+                                    )}
+
+                                    <FirstTokenSubBlock isLightTheme={isLightTheme}>
+                                      <TokenSubBlockTitle isLightTheme={isLightTheme}>
+                                        {`- ${object.firstToken.value} ${object.firstToken.symbol}`}
+                                      </TokenSubBlockTitle>
+                                      {object.firstToken.dollarValue === null ||
+                                      isNaN(object.firstToken.dollarValue) ? (
+                                        <FirstTokenSubBlockUSDValue isLightTheme={isLightTheme}>
+                                          N/A
+                                        </FirstTokenSubBlockUSDValue>
+                                      ) : (
+                                        <FirstTokenSubBlockUSDValue
+                                          isLightTheme={
+                                            isLightTheme
+                                          }>{`$${object.firstToken.dollarValue} `}</FirstTokenSubBlockUSDValue>
+                                      )}
+                                    </FirstTokenSubBlock>
+                                  </FirstTokenCurrencyBlock>
+                                  <img
+                                    src={TransactionHistoryTradeIcon}
+                                    alt="TransactionHistoryTradeIcon"
+                                  />
+                                  <SecondTokenSubBlock>
+                                    <MockAvatarIcon
+                                      style={{
+                                        display: 'inline',
+                                        verticalAlign: 'top',
+                                      }}
+                                      color="#737373"
+                                      name={
+                                        object.secondToken.image !== null
+                                          ? object.secondToken.image
+                                          : object.secondToken.symbol
+                                      }
+                                      size="21"
+                                      round
+                                      textSizeRatio={1.75}
+                                    />
+                                    <SecondTokenCurrencyBlock>
+                                      <TokenSubBlockTitle isLightTheme={isLightTheme}>
+                                        {object.secondToken.value !== undefined && (
+                                          <PlusTransactionValue>{`+ ${object.secondToken.value} ${object.secondToken.symbol}`}</PlusTransactionValue>
+                                        )}
+                                      </TokenSubBlockTitle>
+                                      {object.secondToken.dollarValue === null ||
+                                      isNaN(object.secondToken.dollarValue) ? (
+                                        <SecondTokenSubBlockUSDValue>
+                                          N/A
+                                        </SecondTokenSubBlockUSDValue>
+                                      ) : (
+                                        <SecondTokenSubBlockUSDValue>
+                                          {`$${object.secondToken.dollarValue} `}
+                                        </SecondTokenSubBlockUSDValue>
+                                      )}
+                                    </SecondTokenCurrencyBlock>
+                                  </SecondTokenSubBlock>
+                                </QuantityTableCellSubBlock>
+                              ) : (
+                                <QuantityTableCellSubBlock>
+                                  {object.image !== null ? (
+                                    <img
+                                      style={{
+                                        display: 'inline',
+                                        maxWidth: '21px',
+                                        maxHeight: '21px',
+                                        verticalAlign: 'top',
+                                        borderRadius: '10px',
+                                      }}
+                                      alt=""
+                                      src={`https://ethplorer.io${object.image}`}
+                                    />
+                                  ) : (
+                                    <MockAvatarIcon
+                                      style={{
+                                        display: 'inline',
+                                        maxWidth: '21px',
+                                        maxHeight: '21px',
+                                        verticalAlign: 'top',
+                                        height: '25px',
+                                        borderRadius: '10px',
+                                      }}
+                                      color="#737373"
+                                      name={object.symbol}
+                                      round
+                                      size="21"
+                                      textSizeRatio={1.75}
+                                    />
+                                  )}
+                                  <Stack direction="column">
+                                    {object.txType === 'Approval' ? (
+                                      <PlainObjectBlock isLightTheme={isLightTheme}>
+                                        {object.name}
+                                        {object.symbol}
+                                      </PlainObjectBlock>
+                                    ) : (
+                                      <div>
+                                        <p>
+                                          {object.status === 'Receive' ? (
+                                            <PlusTransactionValue>
+                                              {`+${object.value} ${object.symbol}`}
+                                            </PlusTransactionValue>
+                                          ) : (
+                                            `-${object.value} ${object.symbol}`
+                                          )}
+                                        </p>
+                                        {object.dollarValue === null ||
+                                        isNaN(object.dollarValue) ? (
+                                          <Typography
+                                            variant="caption"
+                                            sx={{ color: '#737373', ml: 1 }}>
+                                            N/A
+                                          </Typography>
+                                        ) : (
+                                          <Typography variant="caption" sx={{ color: '#737373' }}>
+                                            {`$${object.dollarValue} `}
+                                          </Typography>
+                                        )}
+                                      </div>
+                                    )}
+                                  </Stack>
+                                </QuantityTableCellSubBlock>
+                              )}
+                            </QuantityTableCell>
+                            <TableCell>
+                              <GasFeeStringValue isLightTheme={isLightTheme}>
+                                {object.txGas.toFixed(3)} ETH (${object.USDValue.toFixed(3)})
+                              </GasFeeStringValue>
+                            </TableCell>
+                            <TableCell>
+                              <EtherScanButton
+                                onClick={() => this.watchTransactionInfo(object.hash)}
+                                isLightTheme={isLightTheme}
+                                icon={etherScanIcon}
+                                etherScanDark={etherScanDark}
+                              />
+                            </TableCell>
+                          </TransactionTableRow>
+
+                          {/*</div>*/}
+                        </>
+                      );
+                    })}
+                  </TableBody>
+                </TransactionsHistoryTable>
+                <center>
+                  <font color="green">
+                    {this.state.page > 1 && (
+                      <PaginationArrow
+                        style={{
+                          transform: 'rotate(180deg)',
+                        }}
+                        onClick={async (e) => {
+                          if (this.state.page !== 1) {
+                            await this.setState({ page: this.state.page - 1 });
+                            await this.update();
+                          }
+                        }}>
+                        {isLightTheme ? (
+                          <svg
+                            width="22"
+                            height="8"
+                            viewBox="0 0 22 8"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                              d="M21.3536 4.35355C21.5488 4.15829 21.5488 3.84171 21.3536 3.64645L18.1716 0.464466C17.9763 0.269204 17.6597 0.269204 17.4645 0.464466C17.2692 0.659728 17.2692 0.976311 17.4645 1.17157L20.2929 4L17.4645 6.82843C17.2692 7.02369 17.2692 7.34027 17.4645 7.53553C17.6597 7.7308 17.9763 7.7308 18.1716 7.53553L21.3536 4.35355ZM0 4.5H21V3.5H0V4.5Z"
+                              fill="black"
+                            />
+                          </svg>
+                        ) : (
+                          <svg
+                            width="22"
+                            height="8"
+                            viewBox="0 0 22 8"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                              d="M21.3536 4.35355C21.5488 4.15829 21.5488 3.84171 21.3536 3.64645L18.1716 0.464466C17.9763 0.269204 17.6597 0.269204 17.4645 0.464466C17.2692 0.659728 17.2692 0.976311 17.4645 1.17157L20.2929 4L17.4645 6.82843C17.2692 7.02369 17.2692 7.34027 17.4645 7.53553C17.6597 7.7308 17.9763 7.7308 18.1716 7.53553L21.3536 4.35355ZM0 4.5H21V3.5H0V4.5Z"
+                              fill="white"
+                            />
+                          </svg>
+                        )}
+                      </PaginationArrow>
+                    )}{' '}
+                    <PageNumberSpan isLightTheme={isLightTheme}>{this.state.page}</PageNumberSpan>
+                    <PaginationArrow
+                      onClick={async (e) => {
+                        await this.setState({ page: this.state.page + 1 });
+                        await this.update();
+                      }}>
+                      {isLightTheme ? (
+                        <svg
+                          width="22"
+                          height="8"
+                          viewBox="0 0 22 8"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M21.3536 4.35355C21.5488 4.15829 21.5488 3.84171 21.3536 3.64645L18.1716 0.464466C17.9763 0.269204 17.6597 0.269204 17.4645 0.464466C17.2692 0.659728 17.2692 0.976311 17.4645 1.17157L20.2929 4L17.4645 6.82843C17.2692 7.02369 17.2692 7.34027 17.4645 7.53553C17.6597 7.7308 17.9763 7.7308 18.1716 7.53553L21.3536 4.35355ZM0 4.5H21V3.5H0V4.5Z"
+                            fill="black"
+                          />
+                        </svg>
+                      ) : (
+                        <svg
+                          width="22"
+                          height="8"
+                          viewBox="0 0 22 8"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M21.3536 4.35355C21.5488 4.15829 21.5488 3.84171 21.3536 3.64645L18.1716 0.464466C17.9763 0.269204 17.6597 0.269204 17.4645 0.464466C17.2692 0.659728 17.2692 0.976311 17.4645 1.17157L20.2929 4L17.4645 6.82843C17.2692 7.02369 17.2692 7.34027 17.4645 7.53553C17.6597 7.7308 17.9763 7.7308 18.1716 7.53553L21.3536 4.35355ZM0 4.5H21V3.5H0V4.5Z"
+                            fill="white"
+                          />
+                        </svg>
+                      )}
+                    </PaginationArrow>
+                  </font>
+                </center>
+              </DashboardHistoryContainer>
+            </MainBlock>
+          </>
         )}
-        <br />
-        <br />
-        {/* </center> */}
-      </div>
+      </>
     );
   }
 }

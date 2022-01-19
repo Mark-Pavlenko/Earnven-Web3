@@ -16,7 +16,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { MdContentCopy } from 'react-icons/md';
 import ustIcon from '../../assets/icons/ust.png';
 import UserIcon from '../../assets/icons/userIcon.png';
-import TradeIcon from '../../assets/icons/trade.svg';
+import TradeIcon from '../../assets/icons/tradeIconDark.svg';
 import SendIcon from '../../assets/icons/send.png';
 import ReceiveIcon from '../../assets/icons/receive.png';
 
