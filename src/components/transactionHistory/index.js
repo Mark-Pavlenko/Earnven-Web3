@@ -54,14 +54,10 @@ let ops2 = [];
 let arr1 = [];
 let allHash = [];
 let distinctHash = [];
+
 let lightThemeFinal;
 
-export default class index extends Component {
-  async componentDidUpdate() {
-    lightThemeFinal = this.props.isLightTheme;
-    console.log('isLightThemeValue456', lightThemeFinal);
-  }
-
+export default class transactionHistory extends Component {
   async componentWillMount() {
     // await this.loadWeb3();
     lightThemeFinal = this.props.isLightTheme;
@@ -110,6 +106,7 @@ export default class index extends Component {
           }
         }
         distinctHash = [...new Set(allHash)];
+        console.log('distinct hash', distinctHash);
         // console.log('all hashes array response:::', distinctHash);
         // console.log('lightThemeFinal', lightThemeFinal);
         await this.update(lightThemeFinal);
@@ -204,7 +201,9 @@ export default class index extends Component {
 
       data = await this.getTransactionFromHash(distinctHash[i]);
       if (data !== null) {
-        object.txGas = await this.getTransactionGas(distinctHash[i]);
+        const txGasString = await this.getTransactionGas(distinctHash[i]);
+        object.txGas = parseFloat(txGasString);
+        object.USDValue = object.txGas * this.props.currentUSDPrice;
         const dataObject = data.data;
         // console.log("data object value::", dataObject.from)
         object.from = web3.utils.toChecksumAddress(dataObject.from);
@@ -721,10 +720,10 @@ export default class index extends Component {
                               </div>
                               {/*)}*/}
                             </GetSenderTableCell>
-                            <TableCell>Ome sdadadadd</TableCell>
+                            <TableCell>Here will be quantity value</TableCell>
                             <TableCell>
-                              <p>{parseFloat(object.txGas).toFixed(3)} ETH</p>
-                              {/*<p>{web3.utils.fromWei('0.024011379426259036', 'ether')}</p>*/}
+                              <p>{object.txGas.toFixed(3)} ETH</p>
+                              <p>{object.USDValue.toFixed(3)}$</p>
                             </TableCell>
                             <TableCell>
                               <EtherScanButton
