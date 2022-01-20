@@ -73,19 +73,19 @@ export default function CurveFarming({ accountAddress }) {
                   wordBreak: 'break-all',
                 }}>
                 {/*Get the Curve lp token Name */}
-                <CurveLpImage lpToken={object.crvStakeTokenName} /> {object.crvStakeTokenName}
-                &nbsp; &nbsp;{parseFloat(object.crvStakeTokenValue.toFixed(2)).toLocaleString()} USD
+                <CurveLpImage lpToken={object.tokenName} /> {object.tokenName}
+                &nbsp; &nbsp;{parseFloat(object.totalValue.toFixed(2)).toLocaleString()} USD
               </React.Fragment>
             </AccordionSummary>
             <AccordionDetails>
               <div style={{ display: 'inline-block', width: '70%', fontSize: '13px' }}>
                 Balance &nbsp;
-                {parseFloat(object.crvStakeTokenBalanceUSD.toFixed(2)).toLocaleString()}
+                {parseFloat(object.balanceUSD.toFixed(2)).toLocaleString()}
                 <br />
                 Price &nbsp;&nbsp;&nbsp;&nbsp;${object.crvStakeTokenPrice}
                 <br />
                 Value &nbsp;&nbsp;&nbsp;&nbsp;$
-                {parseFloat(object.crvStakeTokenValue.toFixed(2)).toLocaleString()}
+                {parseFloat(object.totalValue.toFixed(2)).toLocaleString()}
                 <br />
                 Chain &nbsp;&nbsp;Ethereum
                 <br />
@@ -95,9 +95,9 @@ export default function CurveFarming({ accountAddress }) {
                 &nbsp;&nbsp;{object.crvLiquidityGaugeClaimable > 0 ? <br /> : ''}
                 &nbsp;&nbsp;{object.crvLiquidityGaugeRewardClaimable}
                 <br />
-                &nbsp;&nbsp;{object.crvLiquidityGaugeV2Claimable}
+                &nbsp;&nbsp;{object.liquidityGaugeV2Claimable}
                 <br />
-                &nbsp;&nbsp;{object.crvLiquidityGaugeV2RewardClaim}
+                &nbsp;&nbsp;{object.liquidityGaugeV2RewardClaim}
                 <br />
                 &nbsp;&nbsp;{object.crvLiquidityGaugeV3Claimable}
                 <br />

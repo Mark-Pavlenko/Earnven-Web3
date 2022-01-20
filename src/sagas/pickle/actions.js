@@ -1,15 +1,22 @@
 import actionTypes from '../../constants/actionTypes';
 
-export const getpickleStake = (payload) => {
+export const setpickleStake = (payload) => {
   return {
-    type: actionTypes.GET_PICKLE_STAKE,
+    type: actionTypes.SET_PICKLE_STAKE,
     payload,
   };
 };
 
-export const getpickleDill = (payload) => {
+export const setpickleStakeTotal = (payload) => {
   return {
-    type: actionTypes.GET_PICKLE_DILL,
+    type: actionTypes.SET_PICKLE_STAKE_TOTAL,
+    payload,
+  };
+};
+
+export const setpickleDill = (payload) => {
+  return {
+    type: actionTypes.SET_PICKLE_DILL,
     payload,
   };
 };

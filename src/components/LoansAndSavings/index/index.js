@@ -3,6 +3,7 @@ import axios from 'axios';
 import Tooltip from '@material-ui/core/Tooltip';
 import YearnLogo from '../../../assets/icons/yearnLogo.png';
 import CurveLogo from '../../../assets/icons/curveLogo.png';
+import pickle from '../../../assets/icons/pickle_finance_logo.webp';
 import ETHLogo from '../../../assets/icons/eth.png';
 import SushiSwapLogo from '../../../assets/icons/Sushiswap.webp';
 
@@ -20,6 +21,7 @@ import BalancerV2 from '../LiqudityPools/BalancerV2';
 import BancorPools from '../BancorPools';
 import CompoundData from '../Compound';
 import Synthetix from '../Synthetix';
+import Liguity from '../Liquity';
 import Ethereum2Staking from '../Ethereum2Staking';
 import YearnFinance from '../YearnFinance';
 import ValueProtocol from '../../common/protocols/valueProtocol/valueProtocol';
@@ -28,9 +30,8 @@ import UniswapV2 from '../LiqudityPools/UniswapV2';
 
 import StakedProtocols from '../../common/stakedProtocols/stakedProtocols';
 import { useSelector } from 'react-redux';
-//import CurveToken from './CurveToken';
+import CurveToken from '../CurveToken';
 
-import PoolsProtocols from '../../common/investment/poolsProtocols/poolsProtocols';
 import PickleStake from '../Farming/Pickle';
 import PickleDill from '../Vaults/PickleDill';
 import CurveFarming from '../CurveFarming';
@@ -45,10 +46,7 @@ import {
   ToggleButton,
   InvestmentWrapper,
 } from './styledComponents';
-import { SynthetixProtocol } from '../../../store/synthetixProtocol/synthetixProtocol';
 import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
-import CurveToken from '../CurveToken';
-import { convexStake } from '../../../store/convexStake/reducer';
 import SushiProtocol from '../../common/investment/sushiProtocolComponent/sushiProtocol';
 
 // Below code is for task https://app.clickup.com/t/1je2y9d
@@ -75,12 +73,12 @@ export default function Index({ accountAddress }) {
   const uniswapV2array = useSelector((state) => state.uniswapV2stake.uniswapV2stake); //saga (incorrect data structure. Work over appropriate look)
   const uniswapV2lp = useSelector((state) => state.uniswapV2lp.uniswapV2lp); //saga
 
-  //liquity
+  //liquity (find out how to display data)
+  const liquityTokenData = useSelector((state) => state.liquityToken.liquityTokenData); //saga
+  const liquityTokenTotal = useSelector((state) => state.liquityToken.liquityTokenTotal); //saga
   const liquityStakeAmountUSD = useSelector(
     (state) => state.LiquityStakeReducer.liquityStakeAmountUSD //useEffect (wait for finish this protocol by Prabhakaran)
   );
-
-  console.log('liquityStakeAmountUSD', liquityStakeAmountUSD);
 
   //snx
   const snxCollateralData = useSelector((state) => state.SynthetixProtocol.snxData); //useEffect
@@ -90,7 +88,9 @@ export default function Index({ accountAddress }) {
 
   //pickle
   const pickeStake = useSelector((state) => state.pickeStake.pickeStake); //saga
+  const pickleStakeTotal = useSelector((state) => state.pickeStake.pickleStakeTotal); //saga
   const pickeDill = useSelector((state) => state.pickeDill.pickeDill); //saga
+  const pickeDillTotal = useSelector((state) => state.pickeDill.pickeDillTotal); //saga
 
   //balancerV2
   const balancerV2lp = useSelector((state) => state.balancerV2lp.balancerV2lp); //saga
@@ -99,16 +99,21 @@ export default function Index({ accountAddress }) {
   //convexStake
   const convexStakeData = useSelector((state) => state.convexStake.convexStakeData); //useEffect
   const convexStakeTotal = useSelector((state) => state.convexStake.convexStakeTotal); //useEffect
-  const convexStakeTotalString = parseFloat(convexStakeTotal).toFixed(2);
 
   //curve
   const curveToken = useSelector((state) => state.curveToken.curveTokenData); //saga
   const curveTokenTotal = useSelector((state) => state.curveToken.curveTokenTotal); //saga
   const curveLpToken = useSelector((state) => state.curveLpToken.curveLpTokenData); //useEffect
+  const curveLpTokenImages = useSelector((state) => state.curveLpToken.curveLpTokenImages); //useEffect
   const curveLpTokenTotal = useSelector((state) => state.curveLpToken.curveLpTokenTotal); //useEffect
-  const curveLpTokenTotalString = parseFloat(curveLpTokenTotal).toFixed(2);
   const curveStakingData = useSelector((state) => state.curveStaking.curveStakingData); //saga
   const curveStakingTotal = useSelector((state) => state.curveStaking.curveStakingTotal); //saga
+
+  console.log('CURVE curveToken', curveToken);
+  console.log('CURVE curveTokenTotal', curveTokenTotal);
+  console.log('CURVE curveStakingData', curveStakingData);
+  console.log('CURVE curveStakingTotal', curveStakingTotal);
+  console.log('CURVE curveLpTokenImages', curveLpTokenImages);
 
   //AAVE
   const AaveStakingData = useSelector((state) => state.AaveStaking.AaveStakingData); //component
@@ -188,6 +193,10 @@ export default function Index({ accountAddress }) {
     }),
     { imageData: [], tokens: [], totalValue: 0, totalPrice: 0, protocol: '', chain: '' }
   );
+
+  const balancerV2lpCommonTotal = balancerV2lp.reduce((el, acc) => {
+    return el + +acc.totalValue;
+  }, 0);
 
   //get the value from the child component of the curve lp token
   const getCurveLpToken = (data) => {
@@ -1270,15 +1279,20 @@ export default function Index({ accountAddress }) {
   console.log('TOTAL yearnFinanceTotal', yearnFinanceTotal);
   console.log('TOTAL eth2StakeTotal', eth2StakeTotal);
   console.log('TOTAL SLPTokenTotalValue', SLPTokenTotalValue);
+  console.log('TOTAL snxCollateralTotal', snxCollateralTotal);
+  console.log('TOTAL snxTokenTotal', snxTokenTotal);
+  console.log('TOTAL pickleStakeTotal', pickleStakeTotal);
+  console.log('TOTAL pickeDillTotal', pickeDillTotal);
+  console.log('TOTAL liquityTokenTotal', liquityTokenTotal);
+  console.log('TOTAL balancerV2lpCommonTotal', balancerV2lpCommonTotal);
+  console.log('TOTAL convexStakeTotal', convexStakeTotal);
+  console.log('TOTAL curveLpTokenTotal', curveLpTokenTotal);
+  console.log('TOTAL curveTokenTotal', curveTokenTotal);
   const sumObjectsByKey = (...objs) => {
     return objs.reduce((el, acc) => {
       return el + +acc.totalTokensBalance;
     }, 0);
   };
-
-  const balances = PoolsData.reduce((el, acc) => {
-    return el + +acc.totalInvestment;
-  }, 0);
 
   return (
     <InvestmentWrapper>
@@ -1308,14 +1322,21 @@ export default function Index({ accountAddress }) {
             <TotalEmptyCell></TotalEmptyCell>
             <TotalValue isLightTheme={theme}>
               $
-              {numberWithCommas(
-                parseFloat(
-                  +yearnYTokenTotal +
-                    (!isNaN(yearnFinanceTotal) ? yearnFinanceTotal : 0) +
-                    +eth2StakeTotal +
-                    +SLPTokenTotalValue
-                ).toFixed(2)
-              )}
+              {parseFloat(
+                yearnYTokenTotal +
+                  (!isNaN(yearnFinanceTotal) ? yearnFinanceTotal : 0) +
+                  +eth2StakeTotal +
+                  +SLPTokenTotalValue +
+                  snxCollateralTotal +
+                  snxTokenTotal +
+                  pickleStakeTotal +
+                  pickeDillTotal +
+                  liquityTokenTotal +
+                  balancerV2lpCommonTotal +
+                  convexStakeTotal +
+                  curveLpTokenTotal +
+                  curveTokenTotal
+              ).toFixed(2)}
             </TotalValue>
           </TotalValueField>
         </div>
@@ -1327,6 +1348,15 @@ export default function Index({ accountAddress }) {
             <SushiStaking accountAddress={accountAddress} />
             <UniswapV2 accountAddress={accountAddress} />
             <UniStaking accountAddress={accountAddress} />
+            <Liguity accountAddress={accountAddress} />
+            <Synthetix accountAddress={accountAddress} />
+            <PickleStake accountAddress={accountAddress} />
+            <PickleDill accountAddress={accountAddress} />
+            <BalancerV2 accountAddress={accountAddress} />
+            <ConvexStaking accountAddress={accountAddress} />
+            <CurveLpToken accountAddress={accountAddress} />
+            <CurveToken accountAddress={accountAddress} />
+            <CurveFarming accountAddress={accountAddress} />
             {/*============================>*/}
             yearnYToken/
             {yearnYTokenData &&
@@ -1341,7 +1371,7 @@ export default function Index({ accountAddress }) {
             BeaconData/
             {Array.isArray(BeaconData) &&
               BeaconData.map((object) => {
-                return <Investment protocol={object} />;
+                return <Investment protocol={object} logoImage={ETHLogo} />;
               })}
             SLPTokenData/
             {Array.isArray(SLPTokenData) &&
@@ -1365,6 +1395,46 @@ export default function Index({ accountAddress }) {
                   />
                 );
               })}
+            snxCollateralData/
+            {snxCollateralData.map((object) => {
+              return <Investment protocol={object} />;
+            })}
+            snxTokenData/
+            {snxTokenData.map((object) => {
+              return <Investment protocol={object} />;
+            })}
+            pickeStake/
+            {pickeStake.map((object) => {
+              return <Investment protocol={object} logoImage={pickle} />;
+            })}
+            pickeDill/
+            {pickeDill.map((object) => {
+              return <Investment protocol={object} logoImage={pickle} />;
+            })}
+            liquityTokenData/
+            {liquityTokenData.map((object) => {
+              return <Investment protocol={object} />;
+            })}
+            balancerV2lp/
+            {balancerV2lp.map((object) => {
+              return <Investment protocol={object} />;
+            })}
+            convexStakeData/
+            {convexStakeData.map((object) => {
+              return <Investment protocol={object} />;
+            })}
+            curveLpToken/
+            {curveLpToken.map((object) => {
+              return <Investment protocol={object} logoImage={CurveLogo} />;
+            })}
+            curveToken/
+            {curveToken.map((object) => {
+              return <Investment protocol={object} />;
+            })}
+            curveStakingData/
+            {curveStakingData.map((object) => {
+              return <Investment protocol={object} />;
+            })}
             <div>
               {/*{PoolsData.map((object) => {*/}
               {/*  return (*/}

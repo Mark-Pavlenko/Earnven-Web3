@@ -76,7 +76,7 @@ function* yearnFinanceSagaWorker(yearnAccountAddress) {
     } //enod of 2nd for loop
 
     yield put(actions.getYearnFinaceTokenData(yearnDataArray));
-    yield put(actions.getYearnFinanceTokenTotal(parseFloat(totalValue).toFixed(2)));
+    yield put(actions.getYearnFinanceTokenTotal(totalValue));
   }
 }
 
@@ -118,24 +118,22 @@ function* yearnFinanceYTokenSagaWorker(yearnTokenAttributes) {
         yearnTokenImageUrl = yearnTokenDataPrice.data.image.thumb;
 
         if (yearnTokenDataPoint) {
-          object.yTokenBalance = yearnTokenDataPoint.yTokenBalance;
+          object.balance = yearnTokenDataPoint.yTokenBalance;
           object.yTokenDecimals = yearnTokenDataPoint.yTokenDecimals;
-          let yTokenBalanceValue = object.yTokenBalance / 10 ** object.yTokenDecimals;
-          object.yTokenBalanceValue =
-            parseInt(yTokenBalanceValue.toString().split('e-')[1]) > 0 ? 0 : yTokenBalanceValue;
+          let balanceValue = object.balance / 10 ** object.yTokenDecimals;
+          object.balanceValue =
+            parseInt(balanceValue.toString().split('e-')[1]) > 0 ? 0 : balanceValue;
           object.yUnderlyingToken = yearnTokenDataPoint.yTokenUnderlyingToken;
-          object.yTokenPrice = yearnTokenPrice;
-          object.yTokenImageUrl = yearnTokenImageUrl;
-          object.yTokenValue = parseFloat(object.yTokenBalanceValue * object.yTokenPrice).toFixed(
-            2
-          );
+          object.price = yearnTokenPrice;
+          object.imageData = [yearnTokenImageUrl];
+          object.totalValue = parseFloat(object.balanceValue * object.price).toFixed(2);
           object.yTokenName = yearnTokenDataPoint.yTokenName;
-          object.yTokenSymbol = yearnTokenDataPoint.yTokenSymbol;
-          object.yTokenChain = 'Ethereum';
-          object.yTokenProtocol = 'Yearn';
+          object.tokenName = yearnTokenDataPoint.yTokenSymbol;
+          object.chain = 'Ethereum';
+          object.protocol = 'Yearn';
 
-          if (parseFloat(object.yTokenValue) > 0) {
-            yearnTokenTotalValue += parseFloat(object.yTokenValue);
+          if (parseFloat(object.totalValue) > 0) {
+            yearnTokenTotalValue += parseFloat(object.totalValue);
             yearnTokenDataSet.push(object);
           }
         }
@@ -143,6 +141,6 @@ function* yearnFinanceYTokenSagaWorker(yearnTokenAttributes) {
     } //end of for loop
 
     yield put(actions.getYTokenData(yearnTokenDataSet));
-    yield put(actions.getYTokenTotal(parseFloat(yearnTokenTotalValue).toFixed(2)));
+    yield put(actions.getYTokenTotal(yearnTokenTotalValue));
   }
 }

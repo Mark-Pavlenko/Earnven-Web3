@@ -15,8 +15,9 @@ function* liquityTokenSagaWorker(liquityTokenAttributes) {
   let object = {};
   //call the liquity contract
   //call the below method to get lqty vault and claimable data value from smart contract
+  let lqtyDepositData;
   try {
-    const lqtyDepositData = yield call(
+    lqtyDepositData = yield call(
       API.getLqtyDepositData,
       liquityTokenParams.accountAddress,
       liquityTokenParams.web3
@@ -41,6 +42,7 @@ function* liquityTokenSagaWorker(liquityTokenAttributes) {
   object.lusdTokenPrice = lusdTokenPriceData.lusdtokenPrice;
   object.lusdTokenImageUrl = lusdTokenPriceData.lusdImageUrl;
   object.ethPrice = ethTokenPrice;
+
   //Get Vault value
   if (parseFloat(lqtyDepositData.lqtyVaultValue) != 0) {
     object.lqtyVaultBalance = lqtyDepositData.lqtyVaultValue;
@@ -130,7 +132,6 @@ function* liquityTokenSagaWorker(liquityTokenAttributes) {
 
     LqtyArrayOfData.push(object);
   }
-
   yield put(actions.getLiquityTokenData(LqtyArrayOfData));
   yield put(
     actions.getLiquityTokenTotal(parseFloat(LqtyTokenTotalValue.toFixed(2)).toLocaleString())

@@ -236,8 +236,8 @@ export default function YearnFinance({ accountAddress }) {
         {/*{(parseFloat(YearnTotalValue) > 0 ? parseFloat(YearnTotalValue) : 0) +*/}
         {/*  (parseFloat(YearnTokenTotalValue) > 0 ? parseFloat(YearnTokenTotalValue) : 0)}*/}
         {/*USD*/}
-        {YearnContent}
-        {YearnTokenContent}
+        {/*{YearnContent}*/}
+        {/*{YearnTokenContent}*/}
       </div>
     </React.Fragment>
   );

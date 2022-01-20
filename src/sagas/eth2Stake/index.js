@@ -25,9 +25,11 @@ function* eth2StakeSagaWorker(userAccountAddress) {
           object.ethPrice = response2.data.ethereum.usd;
         }
 
-        object.totalInvestment = parseFloat(object.ethPrice * object.totalDeposit).toFixed(2);
-        object.mainTokenSymbol = 'ETH';
-        tot += parseFloat(object.totalInvestment);
+        object.totalValue = parseFloat(object.ethPrice * object.totalDeposit).toFixed(2);
+        object.tokenName = 'ETH';
+        object.chain = 'Ethereum';
+        object.protocol = 'Ethereum';
+        tot += parseFloat(object.totalValue);
         ethStaking.push(object);
         //setBeaconTotal(tot);
         console.log('TestABC ETH2 staking data', object);

@@ -39,5 +39,5 @@ function* curveTokenSagaWorker(curveTokenAttributes) {
   }
 
   yield put(actions.getCurveTokenData(cvxArrayOfData));
-  yield put(actions.getCurveTokenTotal(parseFloat(cvxTokenTotal.toFixed(2)).toLocaleString()));
+  yield put(actions.getCurveTokenTotal(cvxTokenTotal));
 }

@@ -27,7 +27,7 @@ const PickleStake = ({ accountAddress }) => {
       active ? dataSend.push(connector.getProvider()) : dataSend.push(ethers.getDefaultProvider());
       // dataSend.push(connector.getProvider());
       dispatch({
-        type: actionTypes.SET_PICKLE_STAKE,
+        type: actionTypes.GET_PICKLE_STAKE,
         payload: dataSend,
       });
     } catch (error) {

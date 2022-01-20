@@ -32,7 +32,7 @@ import {
   snxTotal,
 } from '../../store/synthetixProtocol/actions';
 
-export default function Synthetix({ accountAddress, onSynthetixTokenValue }) {
+export default function Synthetix({ accountAddress }) {
   const [SnxCollateralData, setSnxCollateralData] = useState([]);
   const [SnxTokenData, setSnxTokenData] = useState([]);
 
@@ -269,7 +269,7 @@ export default function Synthetix({ accountAddress, onSynthetixTokenValue }) {
                 object.price = snxTokenPriceData.snxPrice;
                 object.totalValue = object.snxTokenBalance * object.price;
                 object.tokenName = snxTokenDataPoint.snxTokenSymbol;
-                object.image = snxTokenPriceData.snxImageUrl;
+                object.imageData = [snxTokenPriceData.snxImageUrl];
                 object.protocol = 'Synthetix';
                 object.chain = 'Ethereum';
                 svxTokenTotalValue += object.totalValue;
@@ -295,7 +295,7 @@ export default function Synthetix({ accountAddress, onSynthetixTokenValue }) {
 
     fetchSynthetixData();
 
-    onSynthetixTokenValue(SnxTokenTotalValue);
+    // onSynthetixTokenValue(SnxTokenTotalValue);
   }, [accountAddress]);
 
   //Below process is used to implement the fetched SNX token in UI

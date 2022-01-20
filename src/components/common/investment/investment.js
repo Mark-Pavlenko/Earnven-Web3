@@ -12,6 +12,7 @@ import {
 } from './styledComponents';
 import { useSelector } from 'react-redux';
 import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
+import CurveLpImage from '../../LoansAndSavings/CurveLpImage';
 
 const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isStaked }) => {
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
