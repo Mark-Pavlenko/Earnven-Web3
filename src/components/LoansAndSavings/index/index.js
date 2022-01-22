@@ -79,6 +79,7 @@ export default function Index({ accountAddress }) {
   const liquityStakeAmountUSD = useSelector(
     (state) => state.LiquityStakeReducer.liquityStakeAmountUSD //useEffect (wait for finish this protocol by Prabhakaran)
   );
+  console.log('liquityTokenData', liquityTokenData);
 
   //snx
   const snxCollateralData = useSelector((state) => state.SynthetixProtocol.snxData); //useEffect
@@ -109,14 +110,18 @@ export default function Index({ accountAddress }) {
   const curveStakingData = useSelector((state) => state.curveStaking.curveStakingData); //saga
   const curveStakingTotal = useSelector((state) => state.curveStaking.curveStakingTotal); //saga
 
-  console.log('CURVE curveToken', curveToken);
-  console.log('CURVE curveTokenTotal', curveTokenTotal);
-  console.log('CURVE curveStakingData', curveStakingData);
-  console.log('CURVE curveStakingTotal', curveStakingTotal);
-  console.log('CURVE curveLpTokenImages', curveLpTokenImages);
-
   //AAVE
   const AaveStakingData = useSelector((state) => state.AaveStaking.AaveStakingData); //component
+  const AaveStakingTotal = useSelector((state) => state.AaveStaking.AaveStakingTotal); //component
+
+  //snowSwan
+  const snowSwanData = useSelector((state) => state.snowSwan.snowSwanData); //component
+
+  //cream
+  const creamData = useSelector((state) => state.cream.creamData); //component
+  const creamTotal = useSelector((state) => state.cream.creamTotal); //component
+
+  const [creamIronBankTotalValue, setCreamIronBankTotalValue] = useState(0);
 
   // Below code is for task https://app.clickup.com/t/1je2y9d
   // const [DisplaySavings, setDisplaySavings] = useState(null);
@@ -141,6 +146,7 @@ export default function Index({ accountAddress }) {
   const [SushiPoolsContent, setSushiPoolsContent] = useState([]); // Sushi v2
   const [SushiPoolsData, setSushiPoolsData] = useState([]); // Sushi v2
   const [SushiV2Total, setSushiV2Total] = useState([]); // Sushi v2 total
+
   //Compound
   const [CompoundSavingsContent, setCompoundSavingsContent] = useState([]); // compound v2
   const [CompoundLoansContent, setCompoundLoansContent] = useState([]); // compound v2 empty
@@ -168,6 +174,7 @@ export default function Index({ accountAddress }) {
   const [BalancerTotalv2, setBalancerTotalv2] = useState(0);
   const [BalancerPoolsDatav2, setBalancerPoolsDatav2] = useState([]);
   const [BalancerPoolsContentv2, setBalancerPoolsContentv2] = useState([]);
+
   //Curve Lp token
   const [CurveLpdata, setCurveLpData] = useState([]); // get curve lp token data
   //Synthetix data points
@@ -226,6 +233,10 @@ export default function Index({ accountAddress }) {
       total += el.totalValue;
     });
     setBalancerTotalv2(Math.round(total * 100) / 100);
+  };
+
+  const getCreamIronBankTotal = (value) => {
+    setCreamIronBankTotalValue(value);
   };
 
   useEffect(() => {
@@ -1054,6 +1065,8 @@ export default function Index({ accountAddress }) {
                 object.currentPrice = CurrentPrice;
                 object.tokenPoolPrice = TokenPoolPrice;
                 object.totalValue = sum;
+                object.chain = 'Ethereum';
+                object.protocol = 'Balancer V1';
                 tot += object.totalValue;
               }
             }
@@ -1288,6 +1301,10 @@ export default function Index({ accountAddress }) {
   console.log('TOTAL convexStakeTotal', convexStakeTotal);
   console.log('TOTAL curveLpTokenTotal', curveLpTokenTotal);
   console.log('TOTAL curveTokenTotal', curveTokenTotal);
+  console.log('TOTAL curveStakingTotal', curveStakingTotal);
+  console.log('TOTAL AaveStakingTotal', AaveStakingTotal);
+  console.log('TOTAL creamIronBankTotalValue', creamIronBankTotalValue);
+  console.log('TOTAL creamTotal', creamTotal);
   const sumObjectsByKey = (...objs) => {
     return objs.reduce((el, acc) => {
       return el + +acc.totalTokensBalance;
@@ -1319,7 +1336,7 @@ export default function Index({ accountAddress }) {
         <div style={{ padding: '0 29px 20px 26px', marginBottom: '20px' }}>
           <TotalValueField isLightTheme={theme}>
             <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
-            <TotalEmptyCell></TotalEmptyCell>
+            {/*<TotalEmptyCell></TotalEmptyCell>*/}
             <TotalValue isLightTheme={theme}>
               $
               {parseFloat(
@@ -1335,7 +1352,11 @@ export default function Index({ accountAddress }) {
                   balancerV2lpCommonTotal +
                   convexStakeTotal +
                   curveLpTokenTotal +
-                  curveTokenTotal
+                  curveTokenTotal +
+                  curveStakingTotal +
+                  +AaveStakingTotal +
+                  creamTotal +
+                  BalancerTotal
               ).toFixed(2)}
             </TotalValue>
           </TotalValueField>
@@ -1352,38 +1373,46 @@ export default function Index({ accountAddress }) {
             <Synthetix accountAddress={accountAddress} />
             <PickleStake accountAddress={accountAddress} />
             <PickleDill accountAddress={accountAddress} />
+            {/*BalancerV1 doesn't have own component and provide data from useEffect*/}
             <BalancerV2 accountAddress={accountAddress} />
             <ConvexStaking accountAddress={accountAddress} />
             <CurveLpToken accountAddress={accountAddress} />
             <CurveToken accountAddress={accountAddress} />
             <CurveFarming accountAddress={accountAddress} />
+            <AaveStaking accountAddress={accountAddress} />
+            <SnowSwapStaking accountAddress={accountAddress} />
+            {/*Bancor - doesn't return any data to see it in UI*/}
+            <BancorPools setPoolTotal={setBancorPoolTotal} accountAddress={accountAddress} />
+            <Cream setTotal={() => {}} setDisplay={() => {}} accountAddress={accountAddress} />
+            {/*Compound - doesn't return any data to see it in UI*/}
+            <CompoundData accountAddress={accountAddress} totalSavings={() => {}} />
             {/*============================>*/}
-            yearnYToken/
+            {/*yearnYToken/*/}
             {yearnYTokenData &&
               yearnYTokenData.map((object) => {
                 return <Investment protocol={object} />;
               })}
-            yearnFinanceData/
+            {/*yearnFinanceData/*/}
             {yearnFinanceData &&
               yearnFinanceData.map((object) => {
                 return <Investment protocol={object} />;
               })}
-            BeaconData/
+            {/*BeaconData/*/}
             {Array.isArray(BeaconData) &&
               BeaconData.map((object) => {
                 return <Investment protocol={object} logoImage={ETHLogo} />;
               })}
-            SLPTokenData/
+            {/*SLPTokenData/*/}
             {Array.isArray(SLPTokenData) &&
               SLPTokenData.map((object) => {
                 return <SushiProtocol protocol={object} logoImage={SushiSwapLogo} />;
               })}
-            uniswapV2array/
+            {/*uniswapV2array/*/}
             {Array.isArray(uniswapV2array) &&
               uniswapV2array.map((object) => {
                 return <SushiProtocol protocol={object} logoImage={SushiSwapLogo} />;
               })}
-            uniswapV2lp/
+            {/*uniswapV2lp/*/}
             {Array.isArray(uniswapV2lp) &&
               uniswapV2lp.map((object) => {
                 return (
@@ -1395,44 +1424,63 @@ export default function Index({ accountAddress }) {
                   />
                 );
               })}
-            snxCollateralData/
+            {/*snxCollateralData/*/}
             {snxCollateralData.map((object) => {
               return <Investment protocol={object} />;
             })}
-            snxTokenData/
+            {/*snxTokenData/*/}
             {snxTokenData.map((object) => {
               return <Investment protocol={object} />;
             })}
-            pickeStake/
+            {/*pickeStake/*/}
             {pickeStake.map((object) => {
               return <Investment protocol={object} logoImage={pickle} />;
             })}
-            pickeDill/
+            {/*pickeDill/*/}
             {pickeDill.map((object) => {
               return <Investment protocol={object} logoImage={pickle} />;
             })}
-            liquityTokenData/
+            {/*liquityTokenData/*/}
             {liquityTokenData.map((object) => {
               return <Investment protocol={object} />;
             })}
-            balancerV2lp/
+            {/*balancerV2lp/*/}
             {balancerV2lp.map((object) => {
               return <Investment protocol={object} />;
             })}
-            convexStakeData/
+            {/*convexStakeData/*/}
             {convexStakeData.map((object) => {
               return <Investment protocol={object} />;
             })}
-            curveLpToken/
+            {/*curveLpToken/*/}
             {curveLpToken.map((object) => {
               return <Investment protocol={object} logoImage={CurveLogo} />;
             })}
-            curveToken/
+            {/*curveToken/*/}
             {curveToken.map((object) => {
               return <Investment protocol={object} />;
             })}
-            curveStakingData/
+            {/*curveStakingData/*/}
             {curveStakingData.map((object) => {
+              return <Investment protocol={object} />;
+            })}
+            {/*AaveStakingData/*/}
+            {AaveStakingData &&
+              AaveStakingData.map((object) => {
+                return <Investment protocol={object} />;
+              })}
+            {/*CreamIronBank/*/}
+            <CreamIronBank accountAddress={accountAddress} />
+            {/*snowSwanData/*/}
+            {snowSwanData.map((object) => {
+              return <Investment protocol={object} />;
+            })}
+            {/*creamData/*/}
+            {creamData.map((object) => {
+              return <Investment protocol={object} logoImage={object.tokenImage} />;
+            })}
+            {/*BalancerPoolsData/*/}
+            {BalancerPoolsData.map((object) => {
               return <Investment protocol={object} />;
             })}
             <div>

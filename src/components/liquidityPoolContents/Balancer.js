@@ -91,7 +91,7 @@ export default function LiquidityPools() {
   const [AccountLiquidity, setAccountLiquidity] = useState('');
   const [ReceiveToken, setReceiveToken] = useState('');
   const [LiquidityAmount, setLiquidityAmount] = useState('');
-
+  console.log('Content', Content)
   const [AllTokens, setAllTokens] = useState([]);
 
   useEffect(() => {

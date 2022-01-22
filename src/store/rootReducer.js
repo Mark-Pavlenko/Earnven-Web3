@@ -22,6 +22,9 @@ import { convexStake } from './convexStake/reducer';
 import { curveLpToken } from './curveLpToken/reducer';
 import { AaveStaking } from './Aave/reducer';
 import { liquityToken } from './liquityToken/reducer';
+import { creamIronBank } from './creamIronBank/reducer';
+import { snowSwan } from './snowSwan/reducer';
+import { cream } from './cream/reducer';
 
 export const rootReducer = combineReducers({
   web3Reducer,
@@ -48,4 +51,7 @@ export const rootReducer = combineReducers({
   curveLpToken,
   AaveStaking,
   liquityToken,
+  creamIronBank,
+  snowSwan,
+  cream,
 });

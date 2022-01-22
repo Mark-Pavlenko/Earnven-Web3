@@ -110,7 +110,7 @@ export default function Liquity({ accountAddress, onSynthetixTokenValue }) {
                     {parseFloat(object.lqtyTokenVaultUSD).toLocaleString()}
                     <br />
                     &nbsp;&nbsp;&nbsp; LUSD Price &nbsp;&nbsp;&nbsp;&nbsp;$
-                    {object.lusdTokenPrice}
+                    {object.LUSDPrice}
                     <br />{' '}
                   </React.Fragment>
                 ) : (
@@ -124,7 +124,7 @@ export default function Liquity({ accountAddress, onSynthetixTokenValue }) {
                     &nbsp;&nbsp;&nbsp;Balance &nbsp;&nbsp;&nbsp;&nbsp;{' '}
                     {parseFloat(object.lqtyDebtAmt).toLocaleString()}
                     <br />
-                    &nbsp;&nbsp;&nbsp; LUSD Price &nbsp;&nbsp;&nbsp;&nbsp; {object.lusdTokenPrice}
+                    &nbsp;&nbsp;&nbsp; LUSD Price &nbsp;&nbsp;&nbsp;&nbsp; {object.LUSDPrice}
                     <br />
                   </React.Fragment>
                 ) : (
@@ -152,7 +152,7 @@ export default function Liquity({ accountAddress, onSynthetixTokenValue }) {
                     &nbsp;&nbsp;&nbsp;Balance &nbsp;&nbsp;&nbsp;&nbsp;{' '}
                     {parseFloat(object.lqtyStakingAmt).toLocaleString()}
                     <br />
-                    &nbsp;&nbsp; LQTY Price &nbsp;&nbsp;&nbsp;&nbsp; {object.lqtyTokenPrice}
+                    &nbsp;&nbsp; LQTY Price &nbsp;&nbsp;&nbsp;&nbsp; {object.LQTYPrice}
                     <br />
                   </React.Fragment>
                 ) : (

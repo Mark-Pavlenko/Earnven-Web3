@@ -15,8 +15,11 @@ import CreamIronBankContract from '../../abi/CreamIronBank.json';
 import Addresses from '../../contractAddresses';
 import ApiUrl from '../../apiUrls';
 import Investment from '../common/investment/investment';
+import { useDispatch } from 'react-redux';
+import { setCreamIronBankTotal } from '../../store/creamIronBank/actions';
 
-export default function CreamIronBank({ accountAddress, setIronBankSavings }) {
+export default function CreamIronBank({ accountAddress }) {
+  const dispatch = useDispatch();
   const [TotalSavings, setTotalSavings] = useState(0);
   console.log('TotalSavings', TotalSavings);
   const [CreamUSDT, setCreamUSDT] = useState({});
@@ -331,10 +334,6 @@ export default function CreamIronBank({ accountAddress, setIronBankSavings }) {
   }, [accountAddress]);
 
   useEffect(() => {
-    setIronBankSavings(TotalSavings);
-  }, [TotalSavings]);
-
-  useEffect(() => {
     setTotalSavings(
       parseFloat(
         CreamUSDT.totalValue +
@@ -446,6 +445,10 @@ export default function CreamIronBank({ accountAddress, setIronBankSavings }) {
   IronBankLayout(CreamAAVE);
   IronBankLayout(CreamMIM);
 
+  // const result = filteredTokensArray.reduce((el, acc) => {
+  //   return el + +acc.totalValue;
+  // }, 0);
+  // getTotalValue(result);
   return (
     <div>
       {filteredTokensArray &&

@@ -16,11 +16,15 @@ import Addresses from '../../contractAddresses';
 import ApiUrl from '../../apiUrls';
 import { toNumber } from 'lodash';
 
-export default function CompoundData({ accountAddress, displayProp, totalSavings }) {
+export default function CompoundData({ accountAddress, totalSavings }) {
   const [TotalSavings, setTotalSavings] = useState(0);
   const [CompoundCDaiToken, setCompoundCDaiToken] = useState({});
   const [CompoundCUsdtToken, setCompoundCUsdtToken] = useState({});
   const [CompoundCUsdcToken, setCompoundCUsdcToken] = useState({});
+
+  console.log('Compound', CompoundCDaiToken);
+  console.log('Compound', CompoundCUsdtToken);
+  console.log('Compound', CompoundCUsdcToken);
 
   async function loadWeb3() {
     if (window.ethereum) {
@@ -90,7 +94,6 @@ export default function CompoundData({ accountAddress, displayProp, totalSavings
           console.log('Error Message message', err);
         });
     } else {
-      displayProp(false);
       setToken({
         tokenName: '',
         symbol: '',
@@ -141,11 +144,6 @@ export default function CompoundData({ accountAddress, displayProp, totalSavings
 
   useEffect(() => {
     totalSavings(TotalSavings);
-    if (TotalSavings) {
-      displayProp(true);
-    } else {
-      displayProp(false);
-    }
   }, [TotalSavings]);
 
   useEffect(() => {

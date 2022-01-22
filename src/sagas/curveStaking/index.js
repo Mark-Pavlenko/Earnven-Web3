@@ -111,7 +111,7 @@ function* curveStakingClaimDataSagaWorker(curveStakingAttributes) {
     } // end of for loop
 
     yield put(actions.getCurveStakingData(crvStakingArrayOfData));
-    yield put(actions.getCurveStakingTotal(parseFloat(crvStakingTotalValue).toFixed(2)));
+    yield put(actions.getCurveStakingTotal(crvStakingTotalValue));
     crvStakingArrayOfData = [];
     crvStakingTotalValue = 0;
   }

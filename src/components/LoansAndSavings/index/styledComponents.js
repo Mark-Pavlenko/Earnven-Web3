@@ -56,7 +56,7 @@ export const TotalValueField = styled.div`
 `;
 
 export const TotalTitle = styled.span`
-  width: 50%;
+  max-width: 50%;
   font-family: Saira, serif;
   font-style: normal;
   font-weight: normal;

@@ -85,70 +85,138 @@ const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isS
           {tokens &&
             tokens.map((token) => {
               return (
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    fontWeight: '600',
-                    padding: '0 32px 11px 26px',
-                  }}>
-                  <div style={{ fontSize: '10px' }}>balance {token.symbol}</div>
-                  <div style={{ fontSize: '10px' }}>
-                    {numberWithCommas(parseFloat(token.balance).toFixed(2))}
+                <>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      fontWeight: '600',
+                      padding: '0 32px 11px 26px',
+                    }}>
+                    <div style={{ fontSize: '10px' }}>balance {token.symbol}</div>
+                    <div style={{ fontSize: '10px' }}>
+                      {numberWithCommas(parseFloat(token.balance).toFixed(2))}
+                    </div>
                   </div>
+                  {token.price && (
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        fontWeight: '600',
+                        padding: '0 32px 11px 26px',
+                      }}>
+                      <div style={{ fontSize: '10px' }}>price {token.symbol}</div>
+                      <div style={{ fontSize: '10px' }}>
+                        {numberWithCommas(parseFloat(token.price).toFixed(2))}
+                      </div>
+                    </div>
+                  )}
+                  {token.value && (
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        fontWeight: '600',
+                        padding: '0 32px 11px 26px',
+                      }}>
+                      <div style={{ fontSize: '10px' }}>value {token.symbol}</div>
+                      <div style={{ fontSize: '10px' }}>
+                        {numberWithCommas(parseFloat(token.value).toFixed(2))}
+                      </div>
+                    </div>
+                  )}
+                  {token.claimable && (
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        fontWeight: '600',
+                        padding: '0 32px 11px 26px',
+                      }}>
+                      <div style={{ fontSize: '10px' }}>claimable {token.symbol}</div>
+                      <div style={{ fontSize: '10px' }}>
+                        {numberWithCommas(parseFloat(token.claimable).toFixed(2))}
+                      </div>
+                    </div>
+                  )}
+                </>
+              );
+            })}
+          {/*{stakedToken && (*/}
+          {/*  <ContentWrapper isLightTheme={theme}>*/}
+          {/*    <div>Staked Token</div>*/}
+          {/*    <div>{stakedToken}</div>*/}
+          {/*  </ContentWrapper>*/}
+          {/*)}*/}
+          {/*{ethPrice && (*/}
+          {/*  <ContentWrapper isLightTheme={theme}>*/}
+          {/*    <div>Price</div>*/}
+          {/*    <div>{numberWithCommas(ethPrice)}</div>*/}
+          {/*  </ContentWrapper>*/}
+          {/*)}*/}
+          {/*{protocol.balance > 0 && (*/}
+          {/*  <ContentWrapper isLightTheme={theme}>*/}
+          {/*    <div>Balance</div>*/}
+          {/*    <div>{numberWithCommas(parseFloat(protocol.balance).toFixed(2))}</div>*/}
+          {/*  </ContentWrapper>*/}
+          {/*)}*/}
+          {/*{!stakedToken && protocol.price && (*/}
+          {/*  <ContentWrapper isLightTheme={theme}>*/}
+          {/*    <div>Price</div>*/}
+          {/*    <div>{`$${numberWithCommas(parseFloat(protocol.price).toFixed(2))}`}</div>*/}
+          {/*  </ContentWrapper>*/}
+          {/*)}*/}
+          {/*{protocol.stakingClaimable && (*/}
+          {/*  <ContentWrapper isLightTheme={theme}>*/}
+          {/*    <div>Claimable</div>*/}
+          {/*    <div>{`$${numberWithCommas(parseFloat(protocol.stakingClaimable).toFixed(2))}`}</div>*/}
+          {/*  </ContentWrapper>*/}
+          {/*)}*/}
+          {/*{protocol.liquidity && (*/}
+          {/*  <ContentWrapper isLightTheme={theme}>*/}
+          {/*    <div>Liquidity</div>*/}
+          {/*    <div>*/}
+          {/*      {protocol.liquidity*/}
+          {/*        ? `$${numberWithCommas(parseFloat(protocol.liquidity).toFixed(2))}`*/}
+          {/*        : `$0`}*/}
+          {/*    </div>*/}
+          {/*  </ContentWrapper>*/}
+          {/*)}*/}
+          {/*{Object.keys(protocolData).map((el) => {*/}
+          {/*  return (*/}
+          {/*    <ContentWrapper isLightTheme={theme}>*/}
+          {/*      <div>{el}</div>*/}
+          {/*      <div>{numberWithCommas(protocolData[el])}</div>*/}
+          {/*    </ContentWrapper>*/}
+          {/*  );*/}
+          {/*})}*/}
+          {Object.keys(protocol)
+            .filter(
+              (item) =>
+                item !== 'imageData' &&
+                item !== 'tokens' &&
+                item !== 'tokenList' &&
+                item !== 'currentPrice' &&
+                item !== 'tokenImage' &&
+                item !== 'index' &&
+                item !== 'underlyingAddress' &&
+                item !== 'icon' &&
+                item !== 'stakingContractAddress' &&
+                item !== 'tokenAddress' &&
+                item !== 'contractAddress' &&
+                item !== 'image'
+            )
+            .map((el) => {
+              return (
+                <div>
+                  <ContentWrapper isLightTheme={theme}>
+                    <div>{el}</div>
+                    <div>{numberWithCommas(protocol[el])}</div>
+                  </ContentWrapper>
                 </div>
               );
             })}
-          {stakedToken && (
-            <ContentWrapper isLightTheme={theme}>
-              <div>Staked Token</div>
-              <div>{stakedToken}</div>
-            </ContentWrapper>
-          )}
-          {ethPrice && (
-            <ContentWrapper isLightTheme={theme}>
-              <div>Price</div>
-              <div>{numberWithCommas(ethPrice)}</div>
-            </ContentWrapper>
-          )}
-
-          {protocol.balance > 0 && (
-            <ContentWrapper isLightTheme={theme}>
-              <div>Balance</div>
-              <div>{numberWithCommas(parseFloat(protocol.balance).toFixed(2))}</div>
-            </ContentWrapper>
-          )}
-
-          {!stakedToken && protocol.price && (
-            <ContentWrapper isLightTheme={theme}>
-              <div>Price</div>
-              <div>{`$${numberWithCommas(parseFloat(protocol.price).toFixed(2))}`}</div>
-            </ContentWrapper>
-          )}
-          {protocol.stakingClaimable && (
-            <ContentWrapper isLightTheme={theme}>
-              <div>Claimable</div>
-              <div>{`$${numberWithCommas(parseFloat(protocol.stakingClaimable).toFixed(2))}`}</div>
-            </ContentWrapper>
-          )}
-          {protocol.liquidity && (
-            <ContentWrapper isLightTheme={theme}>
-              <div>Liquidity</div>
-              <div>
-                {protocol.liquidity
-                  ? `$${numberWithCommas(parseFloat(protocol.liquidity).toFixed(2))}`
-                  : `$0`}
-              </div>
-            </ContentWrapper>
-          )}
-          {Object.keys(protocolData).map((el) => {
-            return (
-              <ContentWrapper isLightTheme={theme}>
-                <div>{el}</div>
-                <div>{numberWithCommas(protocolData[el])}</div>
-              </ContentWrapper>
-            );
-          })}
         </>
       )}
     </Main>

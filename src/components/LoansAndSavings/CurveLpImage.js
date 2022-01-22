@@ -11,18 +11,18 @@ export default function CurveLpImage(token) {
 
   useEffect(() => {
     async function getData() {
-      let fetchedTokens = token.lpToken.split('/');
-
+      let tokenNames = token.lpToken.split('/');
+      console.log('coingecko1', tokenNames);
       await axios
         .get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
         .then(async (response) => {
           let data = response.data.tokens;
-          let tokens = fetchedTokens.map((token) => ({
+          console.log('coingecko2', data);
+          let tokens = tokenNames.map((token) => ({
             logoURI: data.find((x) => x.symbol.toUpperCase() === token.toUpperCase())
               ? data.find((x) => x.symbol.toUpperCase() === token.toUpperCase()).logoURI
               : 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png', //get ether symbol
           }));
-          console.log('coingecko', tokens);
           setCurveLpTokenImageUrl(tokens);
           dispatch(setCurveLpTokenImags(tokens));
         });

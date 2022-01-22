@@ -125,6 +125,7 @@ export default function Sidebar({
   setTheme,
   global_wallet,
 }) {
+  console.log('global_wallet',  global_wallet)
   const [accountList, setaccountList] = useState([]);
   const [account, setaccount] = useState(false);
   const [myWallet, setMyWallet] = useState([]);
@@ -161,6 +162,7 @@ export default function Sidebar({
   const networksListId = openNetworksListMobilePopover ? 'simple-popover' : undefined;
 
   const currentWallet = JSON.parse(localStorage.getItem('mywallet'));
+  console.log('currentWallet', currentWallet)
   {
     currentWallet && console.log('currentWallet', currentWallet[0].address);
   }

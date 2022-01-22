@@ -2,6 +2,7 @@ import { put, call, select, takeEvery, putResolve } from 'redux-saga/effects';
 import * as API from '../../components/LoansAndSavings/api/Liquity/LiquityAPI';
 import * as actions from './actions';
 import actionTypes from '../../constants/actionTypes';
+import React from 'react';
 
 export function* getLiquityTokenSagaWatcher() {
   yield takeEvery(actionTypes.SET_LQTY_TOKEN_DATA, liquityTokenSagaWorker);
@@ -37,19 +38,18 @@ function* liquityTokenSagaWorker(liquityTokenAttributes) {
   const ethTokenPrice = yield call(API.getEthTokenPrice);
   // //-------------------------------Liquity Data fetch-----------------------------------------//
   //get the lqty and lusd price data
-  object.lqtyTokenPrice = lqtyTokenPriceData.lqtytokenPrice;
-  object.lqtyTokenImageUrl = lqtyTokenPriceData.lqtyImageUrl;
-  object.lusdTokenPrice = lusdTokenPriceData.lusdtokenPrice;
-  object.lusdTokenImageUrl = lusdTokenPriceData.lusdImageUrl;
+  object.LQTYPrice = lqtyTokenPriceData.lqtytokenPrice;
+  object.LUSDPrice = lusdTokenPriceData.lusdtokenPrice;
+  object.imageData = [lqtyTokenPriceData.lqtyImageUrl, lusdTokenPriceData.lusdImageUrl];
+  object.protocol = 'Liquity';
+  object.chain = 'Ethereum';
   object.ethPrice = ethTokenPrice;
 
   //Get Vault value
   if (parseFloat(lqtyDepositData.lqtyVaultValue) != 0) {
     object.lqtyVaultBalance = lqtyDepositData.lqtyVaultValue;
     object.lqtyTokenVaultUSD = object.lqtyVaultBalance / 10 ** 18;
-    object.lqtyTokenVaultValue = parseFloat(
-      object.lqtyTokenVaultUSD * object.lusdTokenPrice
-    ).toFixed(2);
+    object.lqtyTokenVaultValue = parseFloat(object.lqtyTokenVaultUSD * object.LUSDPrice).toFixed(2);
   }
 
   //Get the claimable data for lqty token
@@ -57,7 +57,7 @@ function* liquityTokenSagaWorker(liquityTokenAttributes) {
     object.lqtyTokenClaimBalance = lqtyDepositData.lqtyTokenClaimableValue;
     object.lqtyTokenClaimUSD = object.lqtyTokenClaimBalance / 10 ** 18;
     object.lqtyTokenClaimableValue = parseFloat(
-      object.lqtyTokenClaimUSD * object.lqtyTokenPrice
+      object.lqtyTokenClaimUSD * object.LQTYPrice
     ).toFixed(2);
   }
   //get the claimable data for lqtyEth token
@@ -77,9 +77,9 @@ function* liquityTokenSagaWorker(liquityTokenAttributes) {
         parseFloat(lqtyStakingData.data.data.users[0].stake.amount) != 0
       ) {
         object.lqtyStakingAmt = lqtyStakingData.data.data.users[0].stake.amount;
-        object.lqtyStakingLqtyValue = parseFloat(
-          object.lqtyStakingAmt * object.lqtyTokenPrice
-        ).toFixed(2);
+        object.lqtyStakingLqtyValue = parseFloat(object.lqtyStakingAmt * object.LQTYPrice).toFixed(
+          2
+        );
       }
     } catch (err) {
       console.log('Liquity Protocol not found for staking');
@@ -101,9 +101,7 @@ function* liquityTokenSagaWorker(liquityTokenAttributes) {
     try {
       if (parseFloat(lqtyStakingData.data.data.users[0].trove.debt) != 0) {
         object.lqtyDebtAmt = lqtyStakingData.data.data.users[0].trove.debt;
-        object.lqtyDebtLusdValue = parseFloat(object.lqtyDebtAmt * object.lusdTokenPrice).toFixed(
-          2
-        );
+        object.lqtyDebtLusdValue = parseFloat(object.lqtyDebtAmt * object.LUSDPrice).toFixed(2);
       }
     } catch (err) {
       console.log('Liquity Protocol not found debt data');

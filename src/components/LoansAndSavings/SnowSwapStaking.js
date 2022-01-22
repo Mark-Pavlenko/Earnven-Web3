@@ -14,13 +14,19 @@ import Addresses from '../../contractAddresses';
 import SnowSwapABI from '../../abi/SnowSwapContract.json';
 import axios from 'axios';
 import SnowSwapLogo from '../../assets/icons/snowswap-snow-logo.svg';
+import { setSnowSwanProtocolData } from '../../store/snowSwan/actions';
+import { useDispatch } from 'react-redux';
 
 export const SnowSwapStaking = ({ accountAddress }) => {
-  const [StakeBalance, setStakeBalance] = useState();
+  const dispatch = useDispatch();
+  const [StakeBalance, setStakeBalance] = useState('');
   const [flag, setflag] = useState(false);
   const [USDStakeValue, setUSDStakeValue] = useState();
   const [finalValue, setfinalValue] = useState();
   const [finalClaim, setfinalClaim] = useState();
+  console.log('SnowSwap finalValue', finalValue);
+  console.log('SnowSwap finalClaim', finalClaim);
+  console.log('SnowSwap USDStakeValue', USDStakeValue);
   async function loadWeb3() {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
@@ -65,23 +71,37 @@ export const SnowSwapStaking = ({ accountAddress }) => {
     async function getBlockchainData() {
       const SnowSwapBalaceAmount = await checkSnowSwapStake(accountAddress);
       const Claimable = await checkSnowSwapClaimStake(accountAddress);
+      const protocolData = [];
       // console.log('retunred values ---------', SnowSwapBalaceAmount[0]);
       await axios
         .get(
           `https://api.coingecko.com/api/v3/coins/ethereum/contract/0xfe9A29aB92522D14Fc65880d817214261D8479AE`
         )
         .then(async ({ data }) => {
+          const object = {};
           setUSDStakeValue(data.market_data.current_price.usd);
           SnowSwapBalaceAmount !== 0 && setStakeBalance(SnowSwapBalaceAmount);
           balance = USDStakeValue * (SnowSwapBalaceAmount / 10 ** 18);
           claimable = USDStakeValue * (Claimable / 10 ** 18);
           setfinalValue(parseFloat(balance).toFixed(2));
           setfinalClaim(parseFloat(claimable).toFixed(2));
-          balance != 0 && setflag(true);
+          if (data.market_data.current_price.usd > 0) {
+            balance !== 0 && setflag(true);
+            object.totalValue = parseFloat(balance).toFixed(2);
+            object.value = data.market_data.current_price.usd;
+            object.balance = SnowSwapBalaceAmount;
+            object.claimable = parseFloat(claimable).toFixed(2);
+            object.protocol = 'SnowSwap';
+            object.chain = 'Ethereum';
+            object.tokenName = 'SnowSwap';
+            object.imageData = [SnowSwapLogo];
+            protocolData.push(object);
+          }
         })
         .catch((err) => {
           console.log('error', err);
         });
+      dispatch(setSnowSwanProtocolData(protocolData));
     }
 
     getBlockchainData();
