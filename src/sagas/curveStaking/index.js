@@ -102,8 +102,8 @@ function* curveStakingClaimDataSagaWorker(curveStakingAttributes) {
         object.tokenName = crvStakeTokenName;
       }
       object.symbol = crvStakeTokenData.gauge.pool.lpToken.symbol;
-      object.balance = crvStakeTokenData.originalBalance;
-      object.balanceUSD = object.balance / 10 ** 18;
+      //object.balance = crvStakeTokenData.originalBalance;
+      object.balanceUSD = crvStakeTokenData.originalBalance / 10 ** 18;
       object.price = parseFloat(crvStakeTokenData.gauge.pool.virtualPrice).toFixed(2);
       object.totalValue = object.balanceUSD * object.price;
       crvStakingTotalValue += object.totalValue;

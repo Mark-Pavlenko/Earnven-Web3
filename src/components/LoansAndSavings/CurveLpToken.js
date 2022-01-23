@@ -123,7 +123,10 @@ export default function CurveLpToken({ accountAddress }) {
             object.totalValue = (curveLpDataPoint.curveLpTokenBalance / 10 ** 18) * tokenPrice;
             object.price = tokenPrice;
             object.chain = 'Ethereum';
-            object.liquidity = (curveLpDataPoint.curveLpTokenLiquidity / 10 ** 18) * tokenPrice;
+            object.liquidity = parseFloat(
+              (curveLpDataPoint.curveLpTokenLiquidity / 10 ** 18) * tokenPrice
+            ).toFixed(2);
+            //object.liquidity = (curveLpDataPoint.curveLpTokenLiquidity / 10 ** 18) * tokenPrice;
             object.protocol = curveLpDataPoint.curveLpTokenSymbol;
             curveLpTokenTotalValue += object.totalValue;
             staking.push(object);

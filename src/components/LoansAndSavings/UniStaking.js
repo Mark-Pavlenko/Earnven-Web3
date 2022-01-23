@@ -48,7 +48,6 @@ export default function UniStaking({ accountAddress }) {
   }, [uniswapV2array]);
 
   useEffect(() => {
-    console.log('check content', UniStateData.USDT);
     const content = (
       <div>
         {UniStateData.USDT && UniStateData.USDT !== 'null' && (

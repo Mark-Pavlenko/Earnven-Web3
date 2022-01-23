@@ -43,27 +43,28 @@ function* liquityTokenSagaWorker(liquityTokenAttributes) {
   object.imageData = [lqtyTokenPriceData.lqtyImageUrl, lusdTokenPriceData.lusdImageUrl];
   object.protocol = 'Liquity';
   object.chain = 'Ethereum';
+  object.tokenName = 'Liquity';
   object.ethPrice = ethTokenPrice;
 
   //Get Vault value
   if (parseFloat(lqtyDepositData.lqtyVaultValue) != 0) {
-    object.lqtyVaultBalance = lqtyDepositData.lqtyVaultValue;
-    object.lqtyTokenVaultUSD = object.lqtyVaultBalance / 10 ** 18;
+    //object.lqtyVaultBalance = lqtyDepositData.lqtyVaultValue;
+    object.lqtyTokenVaultUSD = lqtyDepositData.lqtyVaultValue / 10 ** 18;
     object.lqtyTokenVaultValue = parseFloat(object.lqtyTokenVaultUSD * object.LUSDPrice).toFixed(2);
   }
 
   //Get the claimable data for lqty token
   if (parseFloat(lqtyDepositData.lqtyTokenClaimableValue) != 0) {
-    object.lqtyTokenClaimBalance = lqtyDepositData.lqtyTokenClaimableValue;
-    object.lqtyTokenClaimUSD = object.lqtyTokenClaimBalance / 10 ** 18;
+    //object.lqtyTokenClaimBalance = lqtyDepositData.lqtyTokenClaimableValue;
+    object.lqtyTokenClaimUSD = lqtyDepositData.lqtyTokenClaimableValue / 10 ** 18;
     object.lqtyTokenClaimableValue = parseFloat(
       object.lqtyTokenClaimUSD * object.LQTYPrice
     ).toFixed(2);
   }
   //get the claimable data for lqtyEth token
   if (parseFloat(lqtyDepositData.lqtyTokenEthClaiableValue) > 0.001) {
-    object.lqtyEthClaimBalance = lqtyDepositData.lqtyTokenEthClaiableValue;
-    object.lqtyEthClaimUSD = object.lqtyEthClaimBalance / 10 ** 18;
+    //object.lqtyEthClaimBalance = lqtyDepositData.lqtyTokenEthClaiableValue;
+    object.lqtyEthClaimUSD = lqtyDepositData.lqtyTokenEthClaiableValue / 10 ** 18;
     object.lqtyEthClaimableValue = parseFloat(object.lqtyEthClaimUSD * object.ethPrice).toFixed(2);
   }
 
@@ -126,7 +127,7 @@ function* liquityTokenSagaWorker(liquityTokenAttributes) {
       LqtyTokenTotalValue -= parseFloat(object.lqtyDebtLusdValue);
     }
 
-    object.lqtyTokenTotalValue = LqtyTokenTotalValue;
+    object.totalValue = LqtyTokenTotalValue;
 
     LqtyArrayOfData.push(object);
   }

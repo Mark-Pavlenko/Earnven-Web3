@@ -46,11 +46,11 @@ export const getbalancerV2data = async (attributes) => {
           object.liquidity = res[i].poolId.totalLiquidity;
           object.tokens = res[i].poolId.tokens;
           object.totalShares = res[i].poolId.totalShares;
-          object.poolPercentage = (res[i].balance / res[i].poolId.totalShares) * 100;
+          object.poolPercentage = ((res[i].balance / res[i].poolId.totalShares) * 100).toString();
           object.totalValue = parseFloat(
             (res[i].poolId.totalLiquidity / res[i].poolId.totalShares) * res[i].balance
           ).toFixed(2);
-          object.price = object.totalValue / res[i].balance;
+          object.price = (object.totalValue / res[i].balance).toString();
           object.tokenList = res[i].poolId.tokensList;
           if (object.totalValue > 0) {
             pools.push(object);

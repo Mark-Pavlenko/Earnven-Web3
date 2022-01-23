@@ -50,81 +50,81 @@ export default function YearnFinance({ accountAddress }) {
   }, [accountAddress]);
 
   //use below process to fetch slp token data to intergrate in UI
-  // useEffect(() => {
-  //   if (YearnData.length > 0) {
-  //     try {
-  //       var content = YearnData.map((object) => {
-  //         return (
-  //           <>
-  //             <Investment protocol={object} logoImage={object.tokenImageUrl} />
-  //             {/*<Accordion*/}
-  //             {/*  style={{*/}
-  //             {/*    background: 'transparent',*/}
-  //             {/*    marginRight: '1px',*/}
-  //             {/*    color: 'black',*/}
-  //             {/*    width: '100%',*/}
-  //             {/*    border: '1px',*/}
-  //             {/*    borderColor: 'black',*/}
-  //             {/*    borderStyle: 'hidden', //solid*/}
-  //             {/*  }}>*/}
-  //             {/*  <AccordionSummary*/}
-  //             {/*    expandIcon={<ExpandMoreIcon />}*/}
-  //             {/*    aria-controls="panel1a-content"*/}
-  //             {/*    id="panel1a-header">*/}
-  //             {/*    <React.Fragment*/}
-  //             {/*      style={{*/}
-  //             {/*        display: 'inline-block',*/}
-  //             {/*        width: '100%',*/}
-  //             {/*        //textAlign: 'left',*/}
-  //             {/*        wordBreak: 'break-all',*/}
-  //             {/*      }}>*/}
-  //             {/*      <React.Fragment>*/}
-  //             {/*        <img*/}
-  //             {/*          style={{*/}
-  //             {/*            height: '20px',*/}
-  //             {/*            width: '20px',*/}
-  //             {/*            display: 'inline-block',*/}
-  //             {/*          }}*/}
-  //             {/*          src={object.tokenImageUrl}*/}
-  //             {/*          alt=""*/}
-  //             {/*        />*/}
-  //             {/*      </React.Fragment>*/}
-  //             {/*      {object.tokenName}&nbsp;*/}
-  //             {/*      {parseFloat(object.tokenValue).toLocaleString()} USD*/}
-  //             {/*    </React.Fragment>*/}
-  //             {/*  </AccordionSummary>*/}
-  //             {/*  <AccordionDetails>*/}
-  //             {/*    <div style={{ display: 'inline-block', width: '70%', fontSize: '12px' }}>*/}
-  //             {/*      Token name &nbsp;&nbsp; {object.tokenName}*/}
-  //             {/*      <br />*/}
-  //             {/*      Balance &nbsp; {parseFloat(object.tokenBalance).toFixed(2)}*/}
-  //             {/*      <br />*/}
-  //             {/*      Price &nbsp;&nbsp;&nbsp;&nbsp;${object.tokenPrice}*/}
-  //             {/*      <br />*/}
-  //             {/*      Value &nbsp;&nbsp;&nbsp;&nbsp;$*/}
-  //             {/*      {parseFloat(object.tokenValue).toLocaleString()}*/}
-  //             {/*      <br />*/}
-  //             {/*      APY &nbsp;&nbsp;&nbsp;&nbsp;*/}
-  //             {/*      {parseFloat(object.apy).toLocaleString()}%*/}
-  //             {/*      <br />*/}
-  //             {/*      Liquidity &nbsp;&nbsp;&nbsp;&nbsp;$*/}
-  //             {/*      {parseFloat(object.liquidity).toLocaleString()}*/}
-  //             {/*      <br />*/}
-  //             {/*      Chain &nbsp;&nbsp;&nbsp;&nbsp; {object.chain}*/}
-  //             {/*      <br />*/}
-  //             {/*      Protocol &nbsp;&nbsp; {object.protocol}*/}
-  //             {/*    </div>*/}
-  //             {/*  </AccordionDetails>*/}
-  //             {/*</Accordion>*/}
-  //           </>
-  //         );
-  //       });
-  //     } catch (err) {
-  //       console.log('No Curve LP token data found');
-  //     }
-  //   }
-  //   setYearnContent(content);
-  // }, [YearnData]);
+  useEffect(() => {
+    if (YearnData.length > 0) {
+      try {
+        var content = YearnData.map((object) => {
+          return (
+            <>
+              <Investment protocol={object} logoImage={object.tokenImageUrl} />
+              <Accordion
+                style={{
+                  background: 'transparent',
+                  marginRight: '1px',
+                  color: 'black',
+                  width: '100%',
+                  border: '1px',
+                  borderColor: 'black',
+                  borderStyle: 'hidden', //solid
+                }}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header">
+                  <React.Fragment
+                    style={{
+                      display: 'inline-block',
+                      width: '100%',
+                      //textAlign: 'left',
+                      wordBreak: 'break-all',
+                    }}>
+                    <React.Fragment>
+                      <img
+                        style={{
+                          height: '20px',
+                          width: '20px',
+                          display: 'inline-block',
+                        }}
+                        src={object.tokenImageUrl}
+                        alt=""
+                      />
+                    </React.Fragment>
+                    {object.tokenName}&nbsp;
+                    {parseFloat(object.tokenValue).toLocaleString()} USD
+                  </React.Fragment>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <div style={{ display: 'inline-block', width: '70%', fontSize: '12px' }}>
+                    Token name &nbsp;&nbsp; {object.tokenName}
+                    <br />
+                    Balance &nbsp; {parseFloat(object.tokenBalance).toFixed(2)}
+                    <br />
+                    Price &nbsp;&nbsp;&nbsp;&nbsp;${object.tokenPrice}
+                    <br />
+                    Value &nbsp;&nbsp;&nbsp;&nbsp;$
+                    {parseFloat(object.tokenValue).toLocaleString()}
+                    <br />
+                    APY &nbsp;&nbsp;&nbsp;&nbsp;
+                    {parseFloat(object.apy).toLocaleString()}%
+                    <br />
+                    Liquidity &nbsp;&nbsp;&nbsp;&nbsp;$
+                    {parseFloat(object.liquidity).toLocaleString()}
+                    <br />
+                    Chain &nbsp;&nbsp;&nbsp;&nbsp; {object.chain}
+                    <br />
+                    Protocol &nbsp;&nbsp; {object.protocol}
+                  </div>
+                </AccordionDetails>
+              </Accordion>
+            </>
+          );
+        });
+      } catch (err) {
+        console.log('No Curve LP token data found');
+      }
+    }
+    setYearnContent(content);
+  }, [YearnData]);
 
   //------Yearn.Finanace YToken data process-----------------//
   //Logic for yToken Yearn Finanace process

@@ -21,7 +21,6 @@ import { setCreamIronBankTotal } from '../../store/creamIronBank/actions';
 export default function CreamIronBank({ accountAddress }) {
   const dispatch = useDispatch();
   const [TotalSavings, setTotalSavings] = useState(0);
-  console.log('TotalSavings', TotalSavings);
   const [CreamUSDT, setCreamUSDT] = useState({});
   const [CreamDAI, setCreamDAI] = useState({});
   const [CreamUSDC, setCreamUSDC] = useState({});
@@ -453,7 +452,14 @@ export default function CreamIronBank({ accountAddress }) {
     <div>
       {filteredTokensArray &&
         filteredTokensArray.map((object, index) => {
-          return <Investment key={index} protocol={object} logoImage={object.image} />;
+          return (
+            <Investment
+              key={index}
+              protocol={object}
+              logoImage={object.image}
+              protocolName={'Cream Iron Bank'}
+            />
+          );
         })}
     </div>
   );

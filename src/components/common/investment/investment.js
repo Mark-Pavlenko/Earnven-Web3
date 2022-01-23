@@ -29,16 +29,21 @@ const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isS
     totalValue,
     tokenName,
   } = protocol;
-  const protocolData = {
-    Value: isStaked ? totalInvestment : `$${parseFloat(totalValue).toFixed(2)}`,
-    // Balance: isStaked
-    //   ? totalDeposit
-    //   : parseFloat(protocol.balance ? protocol.balance : protocol.balanceShares / 10 ** 18).toFixed(
-    //       3
-    //     ),
-    Chain: chain ? chain : protocol.chain,
-    Protocol: protocolName ? protocolName : protocol.protocol,
-  };
+
+  function isNumber(char) {
+    return /\d/.test(char);
+  }
+
+  // const protocolData = {
+  //   Value: isStaked ? totalInvestment : `$${parseFloat(totalValue).toFixed(2)}`,
+  //   // Balance: isStaked
+  //   //   ? totalDeposit
+  //   //   : parseFloat(protocol.balance ? protocol.balance : protocol.balanceShares / 10 ** 18).toFixed(
+  //   //       3
+  //   //     ),
+  //   Chain: chain ? chain : protocol.chain,
+  //   Protocol: protocolName ? protocolName : protocol.protocol,
+  // };
 
   const toggleHandler = () => {
     setIsOpen(!isOpen);
@@ -108,7 +113,7 @@ const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isS
                       }}>
                       <div style={{ fontSize: '10px' }}>price {token.symbol}</div>
                       <div style={{ fontSize: '10px' }}>
-                        {numberWithCommas(parseFloat(token.price).toFixed(2))}
+                        {`$${numberWithCommas(parseFloat(token.price).toFixed(2))}`}
                       </div>
                     </div>
                   )}
@@ -122,7 +127,7 @@ const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isS
                       }}>
                       <div style={{ fontSize: '10px' }}>value {token.symbol}</div>
                       <div style={{ fontSize: '10px' }}>
-                        {numberWithCommas(parseFloat(token.value).toFixed(2))}
+                        {`$${numberWithCommas(parseFloat(token.value).toFixed(2))}`}
                       </div>
                     </div>
                   )}
@@ -136,7 +141,7 @@ const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isS
                       }}>
                       <div style={{ fontSize: '10px' }}>claimable {token.symbol}</div>
                       <div style={{ fontSize: '10px' }}>
-                        {numberWithCommas(parseFloat(token.claimable).toFixed(2))}
+                        {`$${numberWithCommas(parseFloat(token.claimable).toFixed(2))}`}
                       </div>
                     </div>
                   )}
@@ -195,6 +200,8 @@ const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isS
             .filter(
               (item) =>
                 item !== 'imageData' &&
+                item !== 'tokenName' &&
+                item !== 'symbol' &&
                 item !== 'tokens' &&
                 item !== 'tokenList' &&
                 item !== 'currentPrice' &&
@@ -205,6 +212,10 @@ const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isS
                 item !== 'stakingContractAddress' &&
                 item !== 'tokenAddress' &&
                 item !== 'contractAddress' &&
+                item !== 'apy' &&
+                item !== 'tokenDecimal' &&
+                item !== 'protocol' &&
+                item !== 'yTokenDecimals' &&
                 item !== 'image'
             )
             .map((el) => {
@@ -212,11 +223,35 @@ const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isS
                 <div>
                   <ContentWrapper isLightTheme={theme}>
                     <div>{el}</div>
-                    <div>{numberWithCommas(protocol[el])}</div>
+                    <div>
+                      {isNumber(protocol[el]) &&
+                        el !== 'balance' &&
+                        el !== 'poolPercentage' &&
+                        el !== 'totalTokensBalance' &&
+                        el !== 'cTokenBalance' && <span>$</span>}
+                      {el === 'poolPercentage' && <span>%</span>}
+                      <span>
+                        {isNumber(protocol[el])
+                          ? numberWithCommas(parseFloat(protocol[el]).toFixed(2))
+                          : protocol[el]}
+                      </span>
+                    </div>
                   </ContentWrapper>
                 </div>
               );
             })}
+          {protocolName && (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                fontWeight: '600',
+                padding: '0 32px 11px 26px',
+              }}>
+              <div style={{ fontSize: '10px' }}>Protocol</div>
+              <div style={{ fontSize: '10px' }}>{protocolName}</div>
+            </div>
+          )}
         </>
       )}
     </Main>

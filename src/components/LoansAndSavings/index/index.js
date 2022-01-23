@@ -41,7 +41,6 @@ import {
   Title,
   TotalValueField,
   TotalTitle,
-  TotalEmptyCell,
   TotalValue,
   ToggleButton,
   InvestmentWrapper,
@@ -79,7 +78,6 @@ export default function Index({ accountAddress }) {
   const liquityStakeAmountUSD = useSelector(
     (state) => state.LiquityStakeReducer.liquityStakeAmountUSD //useEffect (wait for finish this protocol by Prabhakaran)
   );
-  console.log('liquityTokenData', liquityTokenData);
 
   //snx
   const snxCollateralData = useSelector((state) => state.SynthetixProtocol.snxData); //useEffect
@@ -1368,6 +1366,7 @@ export default function Index({ accountAddress }) {
             <Ethereum2Staking accountAddress={accountAddress} />
             <SushiStaking accountAddress={accountAddress} />
             <UniswapV2 accountAddress={accountAddress} />
+            {/*UniStaking displays data with another structure*/}
             <UniStaking accountAddress={accountAddress} />
             <Liguity accountAddress={accountAddress} />
             <Synthetix accountAddress={accountAddress} />
@@ -1390,12 +1389,12 @@ export default function Index({ accountAddress }) {
             {/*yearnYToken/*/}
             {yearnYTokenData &&
               yearnYTokenData.map((object) => {
-                return <Investment protocol={object} />;
+                return <Investment protocol={object} protocolName={'Yearn'} />;
               })}
             {/*yearnFinanceData/*/}
             {yearnFinanceData &&
               yearnFinanceData.map((object) => {
-                return <Investment protocol={object} />;
+                return <Investment protocol={object} protocolName={'Yearn'} />;
               })}
             {/*BeaconData/*/}
             {Array.isArray(BeaconData) &&
@@ -1426,62 +1425,286 @@ export default function Index({ accountAddress }) {
               })}
             {/*snxCollateralData/*/}
             {snxCollateralData.map((object) => {
-              return <Investment protocol={object} />;
+              return <Investment protocol={object} protocolName={'Sythentix'} />;
             })}
             {/*snxTokenData/*/}
             {snxTokenData.map((object) => {
-              return <Investment protocol={object} />;
+              return <Investment protocol={object} protocolName={'Sythentix'} />;
             })}
             {/*pickeStake/*/}
             {pickeStake.map((object) => {
-              return <Investment protocol={object} logoImage={pickle} />;
+              return (
+                <Investment protocol={object} logoImage={pickle} protocolName={'Pickle Finance'} />
+              );
             })}
             {/*pickeDill/*/}
             {pickeDill.map((object) => {
-              return <Investment protocol={object} logoImage={pickle} />;
+              return (
+                <Investment protocol={object} logoImage={pickle} protocolName={'Pickle Dill'} />
+              );
             })}
             {/*liquityTokenData/*/}
             {liquityTokenData.map((object) => {
-              return <Investment protocol={object} />;
+              return <Investment protocol={object} protocolName={'liquity'} />;
             })}
             {/*balancerV2lp/*/}
             {balancerV2lp.map((object) => {
-              return <Investment protocol={object} />;
+              return <Investment protocol={object} protocolName={'Balancer V2'} />;
             })}
             {/*convexStakeData/*/}
             {convexStakeData.map((object) => {
-              return <Investment protocol={object} />;
+              return <Investment protocol={object} protocolName={'Convex'} />;
             })}
             {/*curveLpToken/*/}
             {curveLpToken.map((object) => {
-              return <Investment protocol={object} logoImage={CurveLogo} />;
+              return <Investment protocol={object} logoImage={CurveLogo} protocolName={'Curve'} />;
             })}
             {/*curveToken/*/}
             {curveToken.map((object) => {
-              return <Investment protocol={object} />;
+              return <Investment protocol={object} protocolName={'Curve'} />;
             })}
             {/*curveStakingData/*/}
             {curveStakingData.map((object) => {
-              return <Investment protocol={object} />;
+              return <Investment protocol={object} protocolName={'Curve'} />;
             })}
             {/*AaveStakingData/*/}
             {AaveStakingData &&
               AaveStakingData.map((object) => {
-                return <Investment protocol={object} />;
+                return <Investment protocol={object} protocolName={'AAVE'} />;
               })}
             {/*CreamIronBank/*/}
             <CreamIronBank accountAddress={accountAddress} />
             {/*snowSwanData/*/}
             {snowSwanData.map((object) => {
-              return <Investment protocol={object} />;
+              return <Investment protocol={object} protocolName={'Snow Swan'} />;
             })}
             {/*creamData/*/}
             {creamData.map((object) => {
-              return <Investment protocol={object} logoImage={object.tokenImage} />;
+              return (
+                <Investment
+                  protocol={object}
+                  logoImage={object.tokenImage}
+                  protocolName={'Cream'}
+                />
+              );
             })}
             {/*BalancerPoolsData/*/}
             {BalancerPoolsData.map((object) => {
-              return <Investment protocol={object} />;
+              return <Investment protocol={object} protocolName={'Balancer'} />;
+            })}
+            <div>
+              {/*{PoolsData.map((object) => {*/}
+              {/*  return (*/}
+              {/*    <ValueProtocol*/}
+              {/*      totalInvestment={object.totalInvestment}*/}
+              {/*      token0Symbol={object.token0Symbol}*/}
+              {/*      token1Symbol={object.token1Symbol}*/}
+              {/*      liquidity={object.liquidity}*/}
+              {/*      protocol={'Uniswap V2'}*/}
+              {/*    />*/}
+              {/*  );*/}
+              {/*})}*/}
+              {/*{SushiPoolsData.map((object) => {*/}
+              {/*  return (*/}
+              {/*    <ValueProtocol*/}
+              {/*      totalInvestment={object.totalInvestment}*/}
+              {/*      token0Symbol={object.token0Symbol}*/}
+              {/*      token1Symbol={object.token1Symbol}*/}
+              {/*      liquidity={object.liquidity}*/}
+              {/*      protocol={'Uniswap V2'}*/}
+              {/*    />*/}
+              {/*  );*/}
+              {/*})}*/}
+              {/*<BancorPools*/}
+              {/*  setPoolTotal={setBancorPoolTotal}*/}
+              {/*  setDisplay={setDisplayBancor}*/}
+              {/*  accountAddress={accountAddress}*/}
+              {/*/>*/}
+              {/*{BalancerPoolsData.map((object, index) => {*/}
+              {/*  return (*/}
+              {/*    <Investment*/}
+              {/*      key={index}*/}
+              {/*      protocol={object}*/}
+              {/*      chain={'Ethereum'}*/}
+              {/*      protocolName={'Balancer V1'}*/}
+              {/*    />*/}
+              {/*  );*/}
+              {/*})}*/}
+              {/*{BalancerPoolsDatav2.map((object, index) => {*/}
+              {/*  return (*/}
+              {/*    <Investment*/}
+              {/*      key={index}*/}
+              {/*      protocol={object}*/}
+              {/*      chain={'Ethereum'}*/}
+              {/*      protocolName={'Balancer V2'}*/}
+              {/*    />*/}
+              {/*  );*/}
+              {/*})}*/}
+              {/*{yearnYTokenData.map((object, index) => {*/}
+              {/*  return <Investment key={index} protocol={object} />;*/}
+              {/*})}*/}
+              {/*<UniswapV2 accountAddress={accountAddress} />*/}
+              {/*<AaveStaking accountAddress={accountAddress} />*/}
+              {/*<Cream*/}
+              {/*  setTotal={setCreamTotal}*/}
+              {/*  setDisplay={setCreamDisplay}*/}
+              {/*  accountAddress={accountAddress}*/}
+              {/*/>*/}
+              {/*{SavingsContent}*/}
+              {/*<CreamIronBank*/}
+              {/*  setIronBankSavings={setIronBankSavings}*/}
+              {/*  accountAddress={accountAddress}*/}
+              {/*/>*/}
+              {/*{CompoundSavingsContent}*/}
+            </div>
+          </>
+        )}
+      </PoolsBlock>
+      {/*==========================================================================================================>*/}
+      <PoolsBlock //second
+        isLightTheme={theme}
+        // style={{
+        //   display:
+        //     PoolsData.length > 0 ||
+        //     BalancerPoolsData.length > 0 ||
+        //     BalancerPoolsDatav2.length > 0 ||
+        //     CompoundSavingsData.length > 0 ||
+        //     yearnYTokenData.length > 0 ||
+        //     SushiPoolsData.length > 0 ||
+        //     DisplayBancor
+        //       ? ''
+        //       : 'none',
+        // }}
+      >
+        <Header>
+          <Title isLightTheme={theme}>{'Saving/Loans'}</Title>
+          <ToggleButton onClick={poolsHandler} isOpen={isPoolsOpen} />
+        </Header>
+        <div style={{ padding: '0 29px 20px 26px', marginBottom: '20px' }}>
+          <TotalValueField isLightTheme={theme}>
+            <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
+            {/*<TotalEmptyCell></TotalEmptyCell>*/}
+            <TotalValue isLightTheme={theme}>
+              $
+              {parseFloat(
+                (!isNaN(yearnFinanceTotal) ? yearnFinanceTotal : 0) +
+                  +eth2StakeTotal +
+                  +SLPTokenTotalValue +
+                  snxCollateralTotal +
+                  snxTokenTotal +
+                  pickleStakeTotal +
+                  pickeDillTotal +
+                  liquityTokenTotal +
+                  balancerV2lpCommonTotal +
+                  convexStakeTotal +
+                  curveLpTokenTotal +
+                  curveTokenTotal +
+                  curveStakingTotal +
+                  +AaveStakingTotal +
+                  creamTotal +
+                  BalancerTotal
+              ).toFixed(2)}
+            </TotalValue>
+          </TotalValueField>
+        </div>
+        {isPoolsOpen && (
+          <>
+            {/*============================>*/}
+            {/*BeaconData/*/}
+            {Array.isArray(BeaconData) &&
+              BeaconData.map((object) => {
+                return <Investment protocol={object} logoImage={ETHLogo} />;
+              })}
+            {/*SLPTokenData/*/}
+            {Array.isArray(SLPTokenData) &&
+              SLPTokenData.map((object) => {
+                return <SushiProtocol protocol={object} logoImage={SushiSwapLogo} />;
+              })}
+            {/*uniswapV2array/*/}
+            {Array.isArray(uniswapV2array) &&
+              uniswapV2array.map((object) => {
+                return <SushiProtocol protocol={object} logoImage={SushiSwapLogo} />;
+              })}
+            {/*uniswapV2lp/*/}
+            {Array.isArray(uniswapV2lp) &&
+              uniswapV2lp.map((object) => {
+                return (
+                  <ValueProtocol
+                    protocol={object}
+                    token0Symbol={object.token0Symbol}
+                    token1Symbol={object.token1Symbol}
+                    totalInvestment={object.totalInvestment}
+                  />
+                );
+              })}
+            {/*snxCollateralData/*/}
+            {snxCollateralData.map((object) => {
+              return <Investment protocol={object} protocolName={'Sythentix'} />;
+            })}
+            {/*snxTokenData/*/}
+            {snxTokenData.map((object) => {
+              return <Investment protocol={object} protocolName={'Sythentix'} />;
+            })}
+            {/*pickeStake/*/}
+            {pickeStake.map((object) => {
+              return (
+                <Investment protocol={object} logoImage={pickle} protocolName={'Pickle Finance'} />
+              );
+            })}
+            {/*pickeDill/*/}
+            {pickeDill.map((object) => {
+              return (
+                <Investment protocol={object} logoImage={pickle} protocolName={'Pickle Dill'} />
+              );
+            })}
+            {/*liquityTokenData/*/}
+            {liquityTokenData.map((object) => {
+              return <Investment protocol={object} protocolName={'liquity'} />;
+            })}
+            {/*balancerV2lp/*/}
+            {balancerV2lp.map((object) => {
+              return <Investment protocol={object} protocolName={'Balancer V2'} />;
+            })}
+            {/*convexStakeData/*/}
+            {convexStakeData.map((object) => {
+              return <Investment protocol={object} protocolName={'Convex'} />;
+            })}
+            {/*curveLpToken/*/}
+            {curveLpToken.map((object) => {
+              return <Investment protocol={object} logoImage={CurveLogo} protocolName={'Curve'} />;
+            })}
+            {/*curveToken/*/}
+            {curveToken.map((object) => {
+              return <Investment protocol={object} protocolName={'Curve'} />;
+            })}
+            {/*curveStakingData/*/}
+            {curveStakingData.map((object) => {
+              return <Investment protocol={object} protocolName={'Curve'} />;
+            })}
+            {/*AaveStakingData/*/}
+            {AaveStakingData &&
+              AaveStakingData.map((object) => {
+                return <Investment protocol={object} protocolName={'AAVE'} />;
+              })}
+            {/*CreamIronBank/*/}
+            <CreamIronBank accountAddress={accountAddress} />
+            {/*snowSwanData/*/}
+            {snowSwanData.map((object) => {
+              return <Investment protocol={object} protocolName={'Snow Swan'} />;
+            })}
+            {/*creamData/*/}
+            {creamData.map((object) => {
+              return (
+                <Investment
+                  protocol={object}
+                  logoImage={object.tokenImage}
+                  protocolName={'Cream'}
+                />
+              );
+            })}
+            {/*BalancerPoolsData/*/}
+            {BalancerPoolsData.map((object) => {
+              return <Investment protocol={object} protocolName={'Balancer'} />;
             })}
             <div>
               {/*{PoolsData.map((object) => {*/}

@@ -11,7 +11,6 @@ export function* getpickleStakeSagaWatcher() {
 function* pickleStakeworker(data) {
   const attributes = data.payload;
   const lp = yield call(API_LP.fetchBalance, attributes);
-  console.log('pickleStakeworker', lp);
   yield put(actions.setpickleStake(lp[0]));
   yield put(actions.setpickleStakeTotal(lp[1]));
 }

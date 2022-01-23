@@ -61,8 +61,6 @@ function* yearnFinanceSagaWorker(yearnAccountAddress) {
             object.totalTokensBalance =
               parseFloat(res[i].balanceShares).toFixed(2) / 10 ** object.tokenDecimal;
             object.tokenPrice = parseFloat(result.data[j].tvl.price).toFixed(2);
-            console.log('ccccc1', object.tokenBalance);
-            console.log('ccccc2', object.tokenPrice);
             object.tokenValue = parseFloat(object.tokenBalance * object.tokenPrice).toFixed(2);
             object.liquidity = parseFloat(result.data[j].tvl.tvl).toFixed(2);
             object.apy = result.data[j].apy.net_apy * 100;
@@ -118,9 +116,9 @@ function* yearnFinanceYTokenSagaWorker(yearnTokenAttributes) {
         yearnTokenImageUrl = yearnTokenDataPrice.data.image.thumb;
 
         if (yearnTokenDataPoint) {
-          object.balance = yearnTokenDataPoint.yTokenBalance;
+          // object.balance = yearnTokenDataPoint.yTokenBalance;
           object.yTokenDecimals = yearnTokenDataPoint.yTokenDecimals;
-          let balanceValue = object.balance / 10 ** object.yTokenDecimals;
+          let balanceValue = yearnTokenDataPoint.yTokenBalance / 10 ** object.yTokenDecimals;
           object.balanceValue =
             parseInt(balanceValue.toString().split('e-')[1]) > 0 ? 0 : balanceValue;
           object.yUnderlyingToken = yearnTokenDataPoint.yTokenUnderlyingToken;

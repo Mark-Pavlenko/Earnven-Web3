@@ -55,6 +55,8 @@ export const getuniswapV2data = async (attributes) => {
           object.token0Symbol = res[i].pair.token0.symbol;
           object.token1Symbol = res[i].pair.token1.symbol;
           object.liquidity = res[i].pair.reserveUSD;
+          object.protocol = 'Uniswap V2';
+          object.chain = 'Ethereum';
           object.volume = res[i].pair.volumeUSD;
           let Images = [];
           object.totalInvestment = (
