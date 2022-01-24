@@ -17,6 +17,7 @@ import { getpickleStakeSagaWatcher } from './pickle';
 import { getpickleDillSagaWatcher } from './pickle';
 import { getCurveStakingSagaWatcher } from './curveStaking';
 import { getLiquityTokenSagaWatcher } from './liquityToken';
+import { getOlympusTokenSagaWatcher } from './olympusStaking';
 export default function* watchRootSaga() {
   yield all([
     call(getAccountBalanceSagaWatcher),
@@ -35,5 +36,6 @@ export default function* watchRootSaga() {
     call(getpickleDillSagaWatcher),
     call(getCurveStakingSagaWatcher),
     call(getLiquityTokenSagaWatcher),
+    call(getOlympusTokenSagaWatcher),
   ]);
 }

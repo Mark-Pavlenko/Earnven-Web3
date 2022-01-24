@@ -22,6 +22,7 @@ import { convexStake } from './convexStake/reducer';
 import { curveLpToken } from './curveLpToken/reducer';
 import { AaveStaking } from './Aave/reducer';
 import { liquityToken } from './liquityToken/reducer';
+import { olympusStaking } from './olympusStaking/reducer';
 
 export const rootReducer = combineReducers({
   web3Reducer,
@@ -48,4 +49,5 @@ export const rootReducer = combineReducers({
   curveLpToken,
   AaveStaking,
   liquityToken,
+  olympusStaking,
 });
