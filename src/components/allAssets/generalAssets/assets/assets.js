@@ -25,6 +25,7 @@ import {
   AssetsColumn,
   AssetDataRaw,
   ColumnHeader,
+  TokenBalance,
   TotalEmptyCell,
   AddGroupButton,
   TotalValueField,
@@ -34,6 +35,7 @@ import {
 } from './styledComponents';
 import { ToggleButton } from '../../../styled/styledComponents';
 import { BrowserView, MobileView } from 'react-device-detect';
+import { numberWithCommas } from '../../../../commonFunctions/commonFunctions';
 
 let contents = '';
 const stage1Tokens = [];
@@ -326,6 +328,7 @@ export default class Assets extends Component {
         }
 
         arr2.push(object);
+        console.log('arr2', arr2);
       }
     }
     // this.change(arr2);
@@ -458,7 +461,7 @@ export default class Assets extends Component {
       page: 1,
       totalValue: '00.00',
       hideShowMore: false,
-      isOpen: false,
+      isOpen: true,
     };
   }
 
@@ -477,7 +480,9 @@ export default class Assets extends Component {
         <TotalValueField isLight={this.props.isLightTheme}>
           <TotalTitle isLight={this.props.isLightTheme}>{'Total Value'}</TotalTitle>
           <TotalEmptyCell></TotalEmptyCell>
-          <TotalValue isLight={this.props.isLightTheme}>{`$${this.state.totalValue}`}</TotalValue>
+          <TotalValue isLight={this.props.isLightTheme}>{`$${numberWithCommas(
+            this.state.totalValue
+          )}`}</TotalValue>
         </TotalValueField>
 
         {this.state.isOpen && (
@@ -527,8 +532,13 @@ export default class Assets extends Component {
                             </div>
                           )}
                           <NameWrapper>
-                            <TokenName isLight={this.props.isLightTheme}>{object.name}</TokenName>
-                            <Part isLight={this.props.isLightTheme}>{'17%'}</Part>
+                            <div style={{ display: 'flex' }}>
+                              <TokenName isLight={this.props.isLightTheme}>{object.name}</TokenName>
+                              <Part isLight={this.props.isLightTheme}>{`${object.rate}%`}</Part>
+                            </div>
+                            <TokenBalance isLight={this.props.isLightTheme}>
+                              {object.balance}
+                            </TokenBalance>
                           </NameWrapper>
                         </AssetsColumn>
 

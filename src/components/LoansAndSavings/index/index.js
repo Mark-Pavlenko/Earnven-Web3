@@ -47,6 +47,7 @@ import {
 } from './styledComponents';
 import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
 import SushiProtocol from '../../common/investment/sushiProtocolComponent/sushiProtocol';
+import OlympusStaking from '../OlympusStaking';
 
 // Below code is for task https://app.clickup.com/t/1je2y9d
 // import CompoundData from './Compound';
@@ -123,8 +124,6 @@ export default function Index({ accountAddress }) {
   //olympus
   const olympusTokenData = useSelector((state) => state.olympusStaking.olympusTokenData); //saga
   const olympusTokenTotal = useSelector((state) => state.olympusStaking.olympusTokenTotal); //saga
-
-  console.log('olympusTokenData', olympusTokenData);
 
   const [creamIronBankTotalValue, setCreamIronBankTotalValue] = useState(0);
 
@@ -1390,6 +1389,7 @@ export default function Index({ accountAddress }) {
             <Cream setTotal={() => {}} setDisplay={() => {}} accountAddress={accountAddress} />
             {/*Compound - doesn't return any data to see it in UI*/}
             <CompoundData accountAddress={accountAddress} totalSavings={() => {}} />
+            <OlympusStaking accountAddress={accountAddress} />
             {/*============================>*/}
             {/*BeaconData/*/}
             {Array.isArray(BeaconData) &&
@@ -1475,7 +1475,8 @@ export default function Index({ accountAddress }) {
                     curveStakingTotal +
                     +AaveStakingTotal +
                     creamIronBankTotalValue +
-                    creamTotal
+                    creamTotal +
+                    +olympusTokenTotal
                 ).toFixed(2)
               )}
             </TotalValue>
@@ -1516,6 +1517,16 @@ export default function Index({ accountAddress }) {
                   protocol={object}
                   logoImage={object.tokenImage}
                   protocolName={'Cream'}
+                />
+              );
+            })}
+            {/*olympusTokenData/*/}
+            {olympusTokenData.map((object) => {
+              return (
+                <Investment
+                  protocol={object}
+                  protocolName={'Olympus'}
+                  logoImage={object.tokenImage}
                 />
               );
             })}
