@@ -98,7 +98,8 @@ export default function Index({ accountAddress }) {
   //convexStake
   const convexStakeData = useSelector((state) => state.convexStake.convexStakeData); //useEffect
   const convexStakeTotal = useSelector((state) => state.convexStake.convexStakeTotal); //useEffect
-
+  const convexStakeTotalLocal = parseFloat(convexStakeTotal).toFixed(2);
+  console.log('convexStakeTotalLocal', +convexStakeTotalLocal);
   //curve
   const curveToken = useSelector((state) => state.curveToken.curveTokenData); //saga
   const curveTokenTotal = useSelector((state) => state.curveToken.curveTokenTotal); //saga
@@ -239,8 +240,8 @@ export default function Index({ accountAddress }) {
     setBalancerTotalv2(Math.round(total * 100) / 100);
   };
 
-  const getCreamIronBankTotal = (value) => {
-    setCreamIronBankTotalValue(value);
+  const getCteamIronBankTotal = (total) => {
+    setCreamIronBankTotalValue(total);
   };
 
   useEffect(() => {
@@ -1315,6 +1316,13 @@ export default function Index({ accountAddress }) {
     }, 0);
   };
 
+  console.log('Saving', pickleStakeTotal);
+  console.log('Saving', liquityTokenTotal);
+  console.log('Saving', convexStakeTotalLocal);
+  console.log('Saving', curveStakingTotal);
+  console.log('Saving', AaveStakingTotal);
+  console.log('Saving', creamTotal);
+
   return (
     <InvestmentWrapper>
       {/*=========================================>*/}
@@ -1340,19 +1348,20 @@ export default function Index({ accountAddress }) {
         <div style={{ padding: '0 29px 20px 26px', marginBottom: '20px' }}>
           <TotalValueField isLightTheme={theme}>
             <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
-            {/*<TotalEmptyCell></TotalEmptyCell>*/}
             <TotalValue isLightTheme={theme}>
               $
-              {parseFloat(
-                yearnYTokenTotal +
-                  (!isNaN(yearnFinanceTotal) ? yearnFinanceTotal : 0) +
-                  +eth2StakeTotal +
-                  +SLPTokenTotalValue +
-                  balancerV2lpCommonTotal +
-                  curveLpTokenTotal +
-                  curveTokenTotal +
-                  BalancerTotal
-              ).toFixed(2)}
+              {numberWithCommas(
+                parseFloat(
+                  yearnYTokenTotal +
+                    (!isNaN(yearnFinanceTotal) ? yearnFinanceTotal : 0) +
+                    +eth2StakeTotal +
+                    +SLPTokenTotalValue +
+                    balancerV2lpCommonTotal +
+                    curveLpTokenTotal +
+                    curveTokenTotal +
+                    BalancerTotal
+                ).toFixed(2)
+              )}
             </TotalValue>
           </TotalValueField>
         </div>
@@ -1459,14 +1468,17 @@ export default function Index({ accountAddress }) {
             {/*<TotalEmptyCell></TotalEmptyCell>*/}
             <TotalValue isLightTheme={theme}>
               $
-              {parseFloat(
-                pickleStakeTotal +
-                  liquityTokenTotal +
-                  convexStakeTotal +
-                  curveStakingTotal +
-                  +AaveStakingTotal +
-                  creamTotal
-              ).toFixed(2)}
+              {numberWithCommas(
+                parseFloat(
+                  pickleStakeTotal +
+                    liquityTokenTotal +
+                    +convexStakeTotalLocal +
+                    curveStakingTotal +
+                    +AaveStakingTotal +
+                    creamIronBankTotalValue +
+                    creamTotal
+                ).toFixed(2)
+              )}
             </TotalValue>
           </TotalValueField>
         </div>
@@ -1497,7 +1509,7 @@ export default function Index({ accountAddress }) {
                 return <Investment protocol={object} protocolName={'AAVE'} />;
               })}
             {/*CreamIronBank/*/}
-            <CreamIronBank accountAddress={accountAddress} />
+            <CreamIronBank accountAddress={accountAddress} getTotal={getCteamIronBankTotal} />
             {/*creamData/*/}
             {creamData.map((object) => {
               return (
@@ -1537,15 +1549,17 @@ export default function Index({ accountAddress }) {
             {/*<TotalEmptyCell></TotalEmptyCell>*/}
             <TotalValue isLightTheme={theme}>
               $
-              {parseFloat(
-                +SLPTokenTotalValue +
-                  pickeDillTotal +
-                  liquityTokenTotal +
-                  convexStakeTotal +
-                  curveLpTokenTotal +
-                  curveTokenTotal +
-                  +AaveStakingTotal
-              ).toFixed(2)}
+              {numberWithCommas(
+                parseFloat(
+                  +SLPTokenTotalValue +
+                    pickeDillTotal +
+                    liquityTokenTotal +
+                    +convexStakeTotalLocal +
+                    curveLpTokenTotal +
+                    curveTokenTotal +
+                    +AaveStakingTotal
+                ).toFixed(2)
+              )}
             </TotalValue>
           </TotalValueField>
         </div>
@@ -1634,12 +1648,13 @@ export default function Index({ accountAddress }) {
             {/*<TotalEmptyCell></TotalEmptyCell>*/}
             <TotalValue isLightTheme={theme}>
               $
-              {parseFloat(
-                pickeDillTotal +
+              {numberWithCommas(
+                parseFloat(
                   curveLpTokenTotal +
-                  (!isNaN(yearnFinanceTotal) ? yearnFinanceTotal : 0) +
-                  pickeDillTotal
-              ).toFixed(2)}
+                    (!isNaN(yearnFinanceTotal) ? yearnFinanceTotal : 0) +
+                    pickeDillTotal
+                ).toFixed(2)
+              )}
             </TotalValue>
           </TotalValueField>
         </div>
@@ -1690,7 +1705,7 @@ export default function Index({ accountAddress }) {
             <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
             {/*<TotalEmptyCell></TotalEmptyCell>*/}
             <TotalValue isLightTheme={theme}>
-              ${parseFloat(snxCollateralTotal + snxTokenTotal).toFixed(2)}
+              ${numberWithCommas(parseFloat(snxCollateralTotal + snxTokenTotal).toFixed(2))}
             </TotalValue>
           </TotalValueField>
         </div>

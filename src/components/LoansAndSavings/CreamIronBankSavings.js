@@ -18,7 +18,7 @@ import Investment from '../common/investment/investment';
 import { useDispatch } from 'react-redux';
 import { setCreamIronBankTotal } from '../../store/creamIronBank/actions';
 
-export default function CreamIronBank({ accountAddress }) {
+export default function CreamIronBank({ accountAddress, getTotal }) {
   const dispatch = useDispatch();
   const [TotalSavings, setTotalSavings] = useState(0);
   const [CreamUSDT, setCreamUSDT] = useState({});
@@ -444,10 +444,13 @@ export default function CreamIronBank({ accountAddress }) {
   IronBankLayout(CreamAAVE);
   IronBankLayout(CreamMIM);
 
-  // const result = filteredTokensArray.reduce((el, acc) => {
-  //   return el + +acc.totalValue;
-  // }, 0);
-  // getTotalValue(result);
+  if (filteredTokensArray.length > 0) {
+    const result = filteredTokensArray.reduce((el, acc) => {
+      return el + +acc.totalValue;
+    }, 0);
+    getTotal(result);
+  }
+
   return (
     <div>
       {filteredTokensArray &&

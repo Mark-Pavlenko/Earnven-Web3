@@ -221,16 +221,14 @@ export default function AaveStaking({ accountAddress }) {
           //get total value of stkABPT staking balancer LP by its usdvalue and claimable
           totalstkABPTStaking = parseFloat(stkABPTUSDValue) + parseFloat(AaveStkABPTClaimableValue);
           //sum the total
-          AaveStakingTotalValue = (
-            parseFloat(totalAaveV2Staking) + parseFloat(totalstkABPTStaking)
-          ).toFixed(2);
+          AaveStakingTotalValue = parseFloat(totalAaveV2Staking) + parseFloat(totalstkABPTStaking);
 
           setAaveStakingTotal(AaveStakingTotalValue.toLocaleString());
           setAaveLiquidityEth(parseFloat(AaveTotlLiqudityBalance.toFixed(2)).toLocaleString());
 
           const AaveTokensData = [
             {
-              totalValue: AaveStakingTotalValue.toLocaleString(),
+              totalValue: AaveStakingTotalValue,
               liquidity: parseFloat(AaveTotlLiqudityBalance.toFixed(2)).toLocaleString(),
               protocol: 'Aave',
               chain: 'Ethereum',

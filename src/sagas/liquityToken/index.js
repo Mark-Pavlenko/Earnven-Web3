@@ -132,7 +132,5 @@ function* liquityTokenSagaWorker(liquityTokenAttributes) {
     LqtyArrayOfData.push(object);
   }
   yield put(actions.getLiquityTokenData(LqtyArrayOfData));
-  yield put(
-    actions.getLiquityTokenTotal(parseFloat(LqtyTokenTotalValue.toFixed(2)).toLocaleString())
-  );
+  yield put(actions.getLiquityTokenTotal(parseFloat(LqtyTokenTotalValue.toFixed(2))));
 }
