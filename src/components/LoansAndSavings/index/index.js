@@ -99,7 +99,7 @@ export default function Index({ accountAddress }) {
   const convexStakeData = useSelector((state) => state.convexStake.convexStakeData); //useEffect
   const convexStakeTotal = useSelector((state) => state.convexStake.convexStakeTotal); //useEffect
   const convexStakeTotalLocal = parseFloat(convexStakeTotal).toFixed(2);
-  console.log('convexStakeTotalLocal', +convexStakeTotalLocal);
+
   //curve
   const curveToken = useSelector((state) => state.curveToken.curveTokenData); //saga
   const curveTokenTotal = useSelector((state) => state.curveToken.curveTokenTotal); //saga
@@ -119,6 +119,12 @@ export default function Index({ accountAddress }) {
   //cream
   const creamData = useSelector((state) => state.cream.creamData); //component
   const creamTotal = useSelector((state) => state.cream.creamTotal); //component
+
+  //olympus
+  const olympusTokenData = useSelector((state) => state.olympusStaking.olympusTokenData); //saga
+  const olympusTokenTotal = useSelector((state) => state.olympusStaking.olympusTokenTotal); //saga
+
+  console.log('olympusTokenData', olympusTokenData);
 
   const [creamIronBankTotalValue, setCreamIronBankTotalValue] = useState(0);
 
@@ -1315,13 +1321,6 @@ export default function Index({ accountAddress }) {
       return el + +acc.totalTokensBalance;
     }, 0);
   };
-
-  console.log('Saving', pickleStakeTotal);
-  console.log('Saving', liquityTokenTotal);
-  console.log('Saving', convexStakeTotalLocal);
-  console.log('Saving', curveStakingTotal);
-  console.log('Saving', AaveStakingTotal);
-  console.log('Saving', creamTotal);
 
   return (
     <InvestmentWrapper>

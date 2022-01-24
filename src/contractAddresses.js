@@ -44,6 +44,9 @@ const addresses = {
   snxTokenAddress: '0xDC01020857afbaE65224CfCeDb265d1216064c59',
   cvxTokenAddress: '0x5f3b5dfeb7b28cdbd7faba78963ee202a494e2a2',
   LqtyTokenAddress: '0x66017d22b0f8556afdd19fc67041899eb65a21bb',
+  OHMV2TokenAddress: '0x64aa3364F17a4D01c6f1751Fd97C2BD3D7e7f1D5',
+  sOHMV2TokenAddress: '0x04906695D6D12CF5459975d7C3C03356E4Ccd460',
+  gOHMTokenAddress: '0x0ab87046fBb341D058F17CBC4c1133F25a20a52f',
 };
 
 export default addresses;

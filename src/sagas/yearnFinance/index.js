@@ -60,13 +60,17 @@ function* yearnFinanceSagaWorker(yearnAccountAddress) {
             object.imageData = [result.data[j].token.icon];
             object.totalTokensBalance =
               parseFloat(res[i].balanceShares).toFixed(2) / 10 ** object.tokenDecimal;
-            object.tokenPrice = parseFloat(result.data[j].tvl.price).toFixed(2);
-            object.tokenValue = parseFloat(object.tokenBalance * object.tokenPrice).toFixed(2);
+            object.tokenPrice = result.data[j].tvl.price;
+            console.log('xcxcxc', object.totalTokensBalance);
+            console.log('xcxcxc', object.tokenPrice);
+            object.tokenValue = parseFloat(object.totalTokensBalance * object.tokenPrice).toFixed(
+              2
+            );
             object.liquidity = parseFloat(result.data[j].tvl.tvl).toFixed(2);
             object.apy = result.data[j].apy.net_apy * 100;
             object.chain = 'Ethereum';
             object.protocol = 'Yearn';
-            totalValue += parseFloat(object.tokenValue);
+            totalValue += parseFloat(object.totalTokensBalance);
             yearnDataArray.push(object);
           }
         }

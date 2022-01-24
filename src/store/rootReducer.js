@@ -25,6 +25,7 @@ import { liquityToken } from './liquityToken/reducer';
 import { creamIronBank } from './creamIronBank/reducer';
 import { snowSwan } from './snowSwan/reducer';
 import { cream } from './cream/reducer';
+import { olympusStaking } from './olympusStaking/reducer';
 
 export const rootReducer = combineReducers({
   web3Reducer,
@@ -54,4 +55,5 @@ export const rootReducer = combineReducers({
   creamIronBank,
   snowSwan,
   cream,
+  olympusStaking,
 });
