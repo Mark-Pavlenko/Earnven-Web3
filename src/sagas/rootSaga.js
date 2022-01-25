@@ -18,6 +18,9 @@ import { getpickleDillSagaWatcher } from './pickle';
 import { getCurveStakingSagaWatcher } from './curveStaking';
 import { getLiquityTokenSagaWatcher } from './liquityToken';
 import { getOlympusTokenSagaWatcher } from './olympusStaking';
+import { getethApiSagaWatcher } from './ethExplorerApi';
+import { getmStableSagaWatcher } from './mStable';
+import { getmStableFarmSagaWatcher, getmStablePoolsSagaWatcher } from './mStable';
 export default function* watchRootSaga() {
   yield all([
     call(getAccountBalanceSagaWatcher),
@@ -37,5 +40,9 @@ export default function* watchRootSaga() {
     call(getCurveStakingSagaWatcher),
     call(getLiquityTokenSagaWatcher),
     call(getOlympusTokenSagaWatcher),
+    call(getethApiSagaWatcher),
+    call(getmStableSagaWatcher),
+    call(getmStableFarmSagaWatcher),
+    call(getmStablePoolsSagaWatcher),
   ]);
 }

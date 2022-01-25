@@ -30,6 +30,7 @@ import { makeStyles } from '@material-ui/styles';
 import { createTheme, StyledEngineProvider, ThemeProvider } from '@material-ui/core/styles';
 import { fontSize, fontStyle, fontWeight } from '@material-ui/system';
 import Accounts from './walletsList/Accounts';
+import actionTypes from '../../../constants/actionTypes';
 
 import menurender_customhook from './menurender_customhook';
 import { useSelector, useDispatch } from 'react-redux';
@@ -72,6 +73,25 @@ export default function Account({ address, name, global_wallet, setTheme }) {
   const { flag_menu } = menurender_customhook();
 
   const classes = useStyles();
+
+  useEffect(() => {
+    if (currentWallet) {
+      try {
+        //   fetchData();
+        console.log('api checkethapi ioko');
+        try {
+          dispatch({
+            type: actionTypes.SET_ETH_API,
+            payload: localStorage.getItem('selected-account'),
+          });
+        } catch (err) {
+          console.log('error in dispatch account eth api', err);
+        }
+      } catch (error) {
+        console.log('error in dispatch account eth api', error);
+      }
+    }
+  }, [selectedAccount]);
 
   const navigate = useNavigate();
   const anchorRef = useRef(null);

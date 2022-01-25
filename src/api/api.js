@@ -39,3 +39,11 @@ export const getNFTdata = async (attributes) => {
   );
   return response;
 };
+
+export const getethApidata = async (attributes) => {
+  const response = await fetch(
+    `https://api.ethplorer.io/getAddressInfo/${attributes}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
+  );
+  const data = await response.json();
+  return data;
+};

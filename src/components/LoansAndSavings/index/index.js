@@ -29,6 +29,9 @@ import PoolsProtocols from '../../common/investment/poolsProtocols/poolsProtocol
 import PickleStake from '../Farming/Pickle';
 import PickleDill from '../Vaults/PickleDill';
 import CurveFarming from '../CurveFarming';
+import MstableSavings from '../Savings/MstableSavings';
+import MstableFarm from '../Farming/MstableFarm';
+import MstablePools from '../LiqudityPools/MstablePools';
 // import UniswapV2 from './LiqudityPools/UniswapV2';
 import {
   PoolsBlock,
@@ -66,6 +69,9 @@ export default function Index({ accountAddress }) {
   const snxCollateralData = useSelector((state) => state.SynthetixProtocol.snxData);
   const snxTokenData = useSelector((state) => state.SynthetixProtocol.snxTokenData);
   const snxTokenTotal = useSelector((state) => state.SynthetixProtocol.snxTokenTotal);
+  const Mstablepools = useSelector((state) => state.mStableSavingsPool.mStableSavingsPool);
+  const mstableSavings = useSelector((state) => state.mStableSavings.mStableSavings);
+  const mstableStake = useSelector((state) => state.mStableSavingsFarm.mStableSavingsFarm);
 
   const snxCollateralTotal = useSelector((state) => state.SynthetixProtocol.snxTotal);
   const SLPTokenTotalValue = useSelector((state) => state.sushiStaking.sushiStakeTotal);
@@ -1269,7 +1275,8 @@ export default function Index({ accountAddress }) {
             CompoundSavingsData.length > 0 ||
             yearnYTokenData.length > 0 ||
             SushiPoolsData.length > 0 ||
-            DisplayBancor
+            DisplayBancor ||
+            Mstablepools.length > 0
               ? ''
               : 'none',
         }}>
@@ -1365,6 +1372,7 @@ export default function Index({ accountAddress }) {
             {CompoundSavingsContent}
           </>
         )}
+        <MstablePools accountAddress={accountAddress} />
       </PoolsBlock>
       {/*=========================================>*/}
       <PoolsBlock //second
@@ -1380,7 +1388,9 @@ export default function Index({ accountAddress }) {
             SLPTokenData.length > 0 ||
             curveLpToken.length > 0 ||
             uniswapV2array.length > 0 ||
-            liquityStakeAmountUSD > 0
+            liquityStakeAmountUSD > 0 ||
+            mstableStake.length > 0 ||
+            mstableSavings.length > 0
               ? ''
               : 'none',
         }}>
@@ -1470,6 +1480,8 @@ export default function Index({ accountAddress }) {
             <LiquityStaking accountAddress={accountAddress} />
             <ConvexStaking accountAddress={accountAddress} />
             <SnowSwapStaking accountAddress={accountAddress} />
+            <MstableSavings accountAddress={accountAddress} />
+            <MstableFarm accountAddress={accountAddress} />
           </>
         )}
       </PoolsBlock>
@@ -1524,7 +1536,7 @@ export default function Index({ accountAddress }) {
         </div>
         {isOthersOpen && (
           <>
-            <PickleDill accountAddress={accountAddress} />
+            {/* <PickleDill accountAddress={accountAddress} /> */}
             {pickeDill.map((object, index) => {
               return <Investment key={index} protocol={object} logoImage={object.icon} />;
             })}

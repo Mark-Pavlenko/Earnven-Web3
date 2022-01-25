@@ -37,7 +37,7 @@ const PickleDill = ({ accountAddress }) => {
         payload: dataSend,
       });
     } catch (err) {
-      console.log('error in dispatch dill', err);
+      console.log('error in dispatch dill new', err);
     }
     return balance;
   }
@@ -46,7 +46,7 @@ const PickleDill = ({ accountAddress }) => {
     try {
       fetchData();
     } catch (error) {
-      console.log('dispatch error in pickle dill', error);
+      console.log('dispatch error in pickle dill new', error);
     }
   }, [accountAddress]);
 

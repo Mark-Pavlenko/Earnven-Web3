@@ -50,18 +50,22 @@ export const getuniswapV2data = async (attributes) => {
           object.id = res[i].pair.id;
           object.balance = res[i].liquidityTokenBalance;
           object.tokenSupply = res[i].pair.totalSupply;
-          object.token0name = res[i].pair.token0.name;
-          object.token1name = res[i].pair.token1.name;
-          object.token0Symbol = res[i].pair.token0.symbol;
-          object.token1Symbol = res[i].pair.token1.symbol;
+          // object.token0name = res[i].pair.token0.name;
+          // object.token1name = res[i].pair.token1.name;
+          object.name = res[i].pair.token0.name + '-' + res[i].pair.token1.name;
+          // object.token0Symbol = res[i].pair.token0.symbol;
+          // object.token1Symbol = res[i].pair.token1.symbol;
+          object.symbol = res[i].pair.token0.symbol + '-' + res[i].pair.token1.symbol;
           object.liquidity = res[i].pair.reserveUSD;
           object.volume = res[i].pair.volumeUSD;
+          object.protocol = 'Uniswap V2';
+          object.chain = 'Ethereum';
           let Images = [];
-          object.totalInvestment = (
+          object.value = (
             (res[i].pair.reserveUSD / res[i].pair.totalSupply) *
             res[i].liquidityTokenBalance
           ).toFixed(2);
-          object.price = object.totalInvestment / res[i].liquidityTokenBalance;
+          object.price = object.value / res[i].liquidityTokenBalance;
           await axios
             .get(
               `https://api.coingecko.com/api/v3/coins/ethereum/contract/${res[i].pair.token0.id}`
@@ -82,13 +86,14 @@ export const getuniswapV2data = async (attributes) => {
             .catch((err) => {
               console.log('error in fetching Uniswap v2', err);
             });
-          object.imageData = Images;
-          if (object.totalInvestment > 0) {
-            tot += parseFloat(object.totalInvestment);
+          object.tokenImages = Images;
+          if (object.value > 0) {
+            tot += parseFloat(object.value);
+            object.totalValue = tot;
             pools.push(object);
           }
         }
-        pools.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
+        pools.sort((a, b) => parseFloat(b.value) - parseFloat(a.value));
       }
     });
   return pools;
