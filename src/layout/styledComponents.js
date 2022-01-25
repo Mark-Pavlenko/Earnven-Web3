@@ -3,11 +3,11 @@ import { experimentalStyled as styled } from '@material-ui/core/styles';
 export const RootStyle = styled('div')`
   background: ${(props) =>
     props.isLightTheme
-      ? `url(${require(`./../assets/images/lightDashboard.jpg`).default})`
+      ? `url(${require(`./../assets/images/lightBg2048x3448.jpg`).default})`
       : `#0B0E1D`};
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  @media (min-width: 1281px) {
+  //background-repeat: no-repeat;
+  background-size: 100%;
+  @media (min-width: 1921px) {
     background-size: 100% 100%;
     background: ${(props) =>
       props.isLightTheme
