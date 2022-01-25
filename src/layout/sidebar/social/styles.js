@@ -5,7 +5,8 @@ export const MainLinksLayout = styled.div`
   margin-top: auto;
   margin-bottom: 55px;
 
-  @media screen and (max-width: 1445px) and (min-width: 1281px) {
+  @media screen and (max-width: 1279px) and (min-width: 710px) {
+    margin-top: 0;
   }
 `;
 
@@ -18,6 +19,10 @@ export const InfoLinksList = styled.div`
 
   @media screen and (max-width: 1445px) and (min-width: 1281px) {
     margin-left: 27px;
+  }
+
+  @media screen and (max-width: 1280px) and (min-width: 710px) {
+    margin-left: 103px;
   }
 `;
 
@@ -86,7 +91,10 @@ export const NetworksGridList = styled.ul`
     margin-left: 20px;
     gap: 12px;
     display: flex;
-    //justify-content: center;
+  }
+
+  @media screen and (max-width: 1280px) and (min-width: 710px) {
+    margin-left: 95px;
   }
 `;
 

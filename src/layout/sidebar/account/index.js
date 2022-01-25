@@ -1,36 +1,17 @@
 // import { experimentalStyled as styled } from '@material-ui/core/styles';
-import styled from 'styled-components';
 import accountLogo from '../../../assets/icons/accountlogo.png';
 import { createStyles } from '@material-ui/styles';
-import {
-  Box,
-  Typography,
-  Avatar,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
-  Stack,
-  Divider,
-  ListItem,
-  IconButton,
-  List,
-} from '@material-ui/core';
+import { ListItemIcon, ListItemText } from '@material-ui/core';
 import React, { useState, useRef, useEffect } from 'react';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import { RiSettings5Line } from 'react-icons/ri';
-import { VscAdd } from 'react-icons/vsc';
 import './styles';
 import { useNavigate } from 'react-router-dom';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { MdContentCopy } from 'react-icons/md';
 import AccountBalance from '../../../components/accountBalance';
 import WalletListPopover from './walletsListOptionsPopover';
 import { makeStyles } from '@material-ui/styles';
-import { createTheme, StyledEngineProvider, ThemeProvider } from '@material-ui/core/styles';
-import { fontSize, fontStyle, fontWeight } from '@material-ui/system';
 import Accounts from './walletsList/Accounts';
-
+import useMediaQuery from '@mui/material/useMediaQuery';
 import menurender_customhook from './menurender_customhook';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -68,6 +49,8 @@ export default function Account({ address, name, global_wallet, setTheme }) {
   const currentWallet = JSON.parse(localStorage.getItem('mywallet'));
 
   // console.log('selectedAccount', selectedAccount);
+
+  // console.log('mobileSize', mobileSize);
 
   const { flag_menu } = menurender_customhook();
 
@@ -138,6 +121,9 @@ export default function Account({ address, name, global_wallet, setTheme }) {
     }
   }
 
+  const mobileSize = useMediaQuery('(max-width:400px)');
+  const tabletSize = useMediaQuery('(max-width:800px)');
+
   return (
     <>
       {address ? (
@@ -161,6 +147,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
               <AccountBalance address={address} />
             </WalletsListBlock>
           </AccountStyle>
+          {/* here */}
           <WalletListPopover
             sx={{ ml: -2.2, mt: '3px' }}
             isLightTheme={themeType}

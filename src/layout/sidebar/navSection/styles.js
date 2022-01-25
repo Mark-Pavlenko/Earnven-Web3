@@ -128,11 +128,15 @@ export const NavList = styled(List)`
   margin-left: 61px;
   margin-bottom: 21px;
 
-  @media (max-width: 1280px) {
-    margin-left: 0;
+  @media (max-width: 1445px) {
+    margin-top: 15px;
   }
 
   @media screen and (max-width: 1445px) and (min-width: 1281px) {
+    margin-left: 0;
+  }
+
+  @media (max-width: 709px) {
     margin-left: 0;
   }
 `;

@@ -12,8 +12,10 @@ export const AccountStyle = styled.div`
   justify-content: end;
   margin-top: 28px;
   margin-right: 20px;
-  @media (max-width: 1280px) {
-    display: none;
+
+  @media (max-width: 1279px) {
+    justify-content: start;
+    //display: none;
   }
 
   @media screen and (max-width: 1445px) and (min-width: 1281px) {
@@ -45,8 +47,18 @@ export const WalletsListBlock = styled.div`
   width: 186px;
   height: 74px;
 
+  @media (max-width: 709px) {
+    margin-left: 35px;
+  }
+
   @media screen and (max-width: 1445px) and (min-width: 1281px) {
     width: 108px;
+  }
+
+  @media screen and (max-width: 1280px) and (min-width: 710px) {
+    //width: auto;
+    margin-top: 10px;
+    margin-left: 95px;
   }
 `;
 

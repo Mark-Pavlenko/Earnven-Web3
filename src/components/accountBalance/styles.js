@@ -11,7 +11,7 @@ export const AccountBalanceValue = styled.p`
   line-height: 31px;
   letter-spacing: 0;
 
-  @media screen and (max-width: 1445px) and (min-width: 1281px) {
+  @media (max-width: 1445px) {
     display: none;
   }
 `;

@@ -48,6 +48,9 @@ import {
   LogoTitleImg,
   MobileLogoBlockWalletsList,
   CloseTabletSidebarIcon,
+  ChangeThemeBtnTablet,
+  SidebarTabletNetworkButton,
+  SidebarTabletHeaderBtnsLayout,
 } from './styles';
 import lightIcon from '../../assets/icons/lightIcon.svg';
 import darkIcon from '../../assets/icons/darkIcon.svg';
@@ -119,6 +122,7 @@ const gasType = [
 const MINUTE_MS = 10000;
 
 import PersonAdd from '@material-ui/icons/PersonAdd';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 export default function Sidebar({
   isOpenSidebar,
@@ -300,6 +304,9 @@ export default function Sidebar({
     setGasPricesContent(content);
   }, [GasPrices]);
 
+  const mobileScreen = useMediaQuery('(min-width:710px)');
+  const laptopScreen = useMediaQuery('(min-width:1280px)');
+
   // main sidebar content
   const desktopSidebarLayoutContent = (
     <Scrollbar
@@ -313,24 +320,66 @@ export default function Sidebar({
       }}>
       <SidebarMainLayout isLightTheme={isLightTheme}>
         <LogoBlock>
-          <LogoImg src={CompanyLogo} alt="" />
-          <LogoTitleImg
-            className="Earnven"
-            src={isLightTheme ? Earnven : Dark_Earnven_logo}
-            alt=""
-          />
-          {isLightTheme ? (
-            <CloseTabletSidebarIcon
-              src={CloseMobileSidebarLight}
+          <div style={{ display: 'flex', marginLeft: '40px' }}>
+            <LogoImg src={CompanyLogo} alt="" />
+            <LogoTitleImg
+              className="Earnven"
+              src={isLightTheme ? Earnven : Dark_Earnven_logo}
               alt=""
-              onClick={() => onCloseSidebar()}
             />
-          ) : (
-            <CloseTabletSidebarIcon
-              src={CloseMobileSidebarDark}
-              alt=""
-              onClick={() => onCloseSidebar()}
-            />
+          </div>
+
+          {mobileScreen && !laptopScreen && (
+            <SidebarTabletHeaderBtnsLayout>
+              {isLightTheme ? (
+                <SidebarTabletNetworkButton
+                  isLightTheme={isLightTheme}
+                  startIcon={<img src={pyramidIcon} alt="pyramide_icon" />}
+                  endIcon={<img src={chevronDown} alt="chevron_icon" />}
+                  onClick={handleMobileNetworksListClick}>
+                  Network
+                </SidebarTabletNetworkButton>
+              ) : (
+                <SidebarTabletNetworkButton
+                  isLightTheme={isLightTheme}
+                  startIcon={<img src={pyramidIcon} alt="pyramide_icon" />}
+                  endIcon={<img src={chevronDownDark} alt="chevron_icon" />}
+                  onClick={handleMobileNetworksListClick}>
+                  Network
+                </SidebarTabletNetworkButton>
+              )}
+              <GasButton
+                isLightTheme={isLightTheme}
+                startIcon={<img src={gasIcon} alt="" />}
+                onClick={handleMobileGasItemClick}
+                sx={{
+                  ...(open && {
+                    bgcolor: (theme) =>
+                      alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
+                  }),
+                }}>
+                39
+              </GasButton>
+              <ChangeThemeBtnTablet
+                onClick={() => {
+                  setDynamicTheme();
+                }}>
+                {isLightTheme ? <img src={lightIcon} alt="" /> : <img src={darkIcon} alt="" />}
+              </ChangeThemeBtnTablet>
+              {isLightTheme ? (
+                <CloseTabletSidebarIcon
+                  src={CloseMobileSidebarLight}
+                  alt=""
+                  onClick={() => onCloseSidebar()}
+                />
+              ) : (
+                <CloseTabletSidebarIcon
+                  src={CloseMobileSidebarDark}
+                  alt=""
+                  onClick={() => onCloseSidebar()}
+                />
+              )}
+            </SidebarTabletHeaderBtnsLayout>
           )}
         </LogoBlock>
         <Account
@@ -685,7 +734,7 @@ export default function Sidebar({
           // BackdropProps={{ invisible: true }}
           PaperProps={{
             sx: {
-              width: '95%',
+              width: '97%',
               overflow: 'auto',
               height: 'auto',
               backgroundColor: 'transparent',

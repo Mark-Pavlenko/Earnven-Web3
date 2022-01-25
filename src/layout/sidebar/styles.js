@@ -40,7 +40,7 @@ export const SidebarMainLayout = styled.div`
 `;
 
 export const LogoTitleImg = styled.img`
-  //width: 90%;
+  width: 75%;
 `;
 
 export const LogoBlock = styled.div`
@@ -48,7 +48,7 @@ export const LogoBlock = styled.div`
   flex-direction: row;
   justify-content: end;
   margin-top: 32px;
-  margin-right: 41px;
+  margin-right: 20px;
   margin-left: 124px;
   //width: 150px;
   width: auto;
@@ -65,8 +65,9 @@ export const LogoBlock = styled.div`
     margin-right: 0;
   }
 
-  @media screen and (max-width: 780px) and (min-width: 710px) {
-    background-color: red;
+  //background-color: red;
+  @media screen and (max-width: 1280px) and (min-width: 710px) {
+    justify-content: space-between;
   }
 `;
 
@@ -101,7 +102,7 @@ export const CloseMobileSidebarIcon = styled.img`
 
 export const CloseTabletSidebarIcon = styled.img`
   //margin-left: 140px;
-  margin-left: auto;
+  //margin-left: auto;
   cursor: pointer;
   @media (min-width: 1281px) {
     display: none;
@@ -116,9 +117,19 @@ export const LogoImg = styled.img`
 `;
 
 export const SidebarMobileIconsBlock = styled.div`
-  @media (min-width: 1281px) {
+  @media (min-width: 710px) {
     display: none;
   }
+`;
+
+export const SidebarTabletHeaderBtnsLayout = styled.div`
+  //background-color: green;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: auto;
+  width: 395px;
 `;
 
 export const SidebarMobileIconSubBlock = styled.div`
@@ -148,6 +159,33 @@ export const SidebarMobileNetworkButton = styled(Button)`
 }
   :hover {
     background-color: transparent !important;
+    
+  
+`;
+
+export const SidebarTabletNetworkButton = styled(Button)`
+  margin-left: 20px;
+
+  width:161px;
+  height: 40px;
+  font-size: 16px;
+  font-weight: 500;
+  font-style: normal;
+  border: none;
+  border-radius: 10px;
+  color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
+  background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#10142D')};
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+      : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+  @media (max-width: 709px){
+    display: none;
+  }
+  :hover {
+    background-color: transparent !important;
+
+
 `;
 
 export const MainSidebarMobilePopoverContent = styled.div`
@@ -258,8 +296,15 @@ export const ChangeThemeBtnMobile = styled(IconButton)`
   display: flex;
   margin: 16px 30px 5px;
   margin-right: auto;
-  @media screen and (max-width: 780px) and (min-width: 710px) {
+  @media screen and (max-width: 1280px) and (min-width: 710px) {
     display: none;
+  }
+`;
+
+export const ChangeThemeBtnTablet = styled(IconButton)`
+  display: none;
+  @media screen and (max-width: 1280px) and (min-width: 710px) {
+    display: block;
   }
 `;
 
