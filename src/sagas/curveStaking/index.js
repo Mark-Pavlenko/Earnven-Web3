@@ -71,12 +71,12 @@ function* curveStakingClaimDataSagaWorker(curveStakingAttributes) {
       //if claimable availble from crvLiquidityGaugeReward source
       if (crvLiquidityGaugeV2) {
         if (parseFloat(crvLiquidityGaugeV2.crvGaugeV2ClaimableValue).toFixed(2) > 0.0001) {
-          object.liquidityGaugeV2Claimable = parseFloat(
+          object.Claimable = parseFloat(
             crvLiquidityGaugeV2.crvGaugeV2ClaimableValue / 10 ** 18
           ).toFixed(2);
         }
         if (parseFloat(crvLiquidityGaugeV2.crvGaugeV2RewardTotalValue).toFixed(3) > 0.0001) {
-          object.liquidityGaugeV2RewardClaim = parseFloat(
+          object.Liquidity = parseFloat(
             crvLiquidityGaugeV2.crvGaugeV2RewardTotalValue / 10 ** 18
           ).toFixed(2);
         }

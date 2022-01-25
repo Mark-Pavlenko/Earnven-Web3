@@ -116,26 +116,26 @@ export default function CurveFarming({ accountAddress }) {
 
   return (
     <React.Fragment>
-      <div
-        style={{
-          fontSize: '15px',
-          marginRight: '15px',
-          display: CrvStakingTokenData.length > 0 ? '' : 'none',
-        }}>
-        <img
-          src={CurveLogo}
-          style={{
-            height: '30px',
-            marginTop: '',
-            marginLeft: '15px',
-            display: 'inline-block',
-          }}
-          alt=""
-        />
-        Curve Staking-- ${CrvStakingTokenTotal} USD
-        {CrvStakingTokenContent}
-      </div>
-      <br />
+      {/*<div*/}
+      {/*  style={{*/}
+      {/*    fontSize: '15px',*/}
+      {/*    marginRight: '15px',*/}
+      {/*    display: CrvStakingTokenData.length > 0 ? '' : 'none',*/}
+      {/*  }}>*/}
+      {/*  <img*/}
+      {/*    src={CurveLogo}*/}
+      {/*    style={{*/}
+      {/*      height: '30px',*/}
+      {/*      marginTop: '',*/}
+      {/*      marginLeft: '15px',*/}
+      {/*      display: 'inline-block',*/}
+      {/*    }}*/}
+      {/*    alt=""*/}
+      {/*  />*/}
+      {/*  Curve Staking-- ${CrvStakingTokenTotal} USD*/}
+      {/*  {CrvStakingTokenContent}*/}
+      {/*</div>*/}
+      {/*<br />*/}
     </React.Fragment>
   );
 }

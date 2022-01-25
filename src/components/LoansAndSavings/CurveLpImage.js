@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setCurveLpTokenImags } from '../../store/curveLpToken/actions';
 
-export default function CurveLpImage(token) {
+export default function CurveLpImage(Token) {
   const [CurveLpTokenImageUrl, setCurveLpTokenImageUrl] = useState([]);
   const [CurveLpTokenImage, setCurveLpTokenImage] = useState([]);
 
@@ -11,24 +11,22 @@ export default function CurveLpImage(token) {
 
   useEffect(() => {
     async function getData() {
-      let tokenNames = token.lpToken.split('/');
-      console.log('coingecko1', tokenNames);
+      let tokenNames = Token.lpToken.split('/');
       await axios
         .get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
         .then(async (response) => {
           let data = response.data.tokens;
-          console.log('coingecko2', data);
           let tokens = tokenNames.map((token) => ({
             logoURI: data.find((x) => x.symbol.toUpperCase() === token.toUpperCase())
               ? data.find((x) => x.symbol.toUpperCase() === token.toUpperCase()).logoURI
               : 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png', //get ether symbol
           }));
           setCurveLpTokenImageUrl(tokens);
-          dispatch(setCurveLpTokenImags(tokens));
+          // dispatch(setCurveLpTokenImags(tokens));
         });
     }
     getData();
-  }, [token]);
+  }, [Token]);
 
   //to get tokenImage
   useEffect(() => {
@@ -37,10 +35,12 @@ export default function CurveLpImage(token) {
       <React.Fragment>
         <img
           style={{
-            height: '20px',
-            width: '20px',
-            paddingLeft: '-10px',
-            display: 'inline-block',
+            display: 'flex',
+            marginLeft: index !== 0 ? '-10px' : '0',
+            maxWidth: '21px',
+            maxHeight: '21px',
+            borderRadius: '50%',
+            border: '2px solid orange',
           }}
           src={object.logoURI}
           alt=""
@@ -51,5 +51,5 @@ export default function CurveLpImage(token) {
     setCurveLpTokenImage(imageContent);
   }, [CurveLpTokenImageUrl]);
 
-  return <div>{CurveLpTokenImage}</div>;
+  return <div style={{ display: 'flex', marginRight: '5px' }}>{CurveLpTokenImage}</div>;
 }

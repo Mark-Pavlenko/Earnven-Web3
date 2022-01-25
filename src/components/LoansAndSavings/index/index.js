@@ -73,6 +73,23 @@ export default function Index({ accountAddress }) {
   const uniswapV2array = useSelector((state) => state.uniswapV2stake.uniswapV2stake); //saga (incorrect data structure. Work over appropriate look)
   const uniswapV2lp = useSelector((state) => state.uniswapV2lp.uniswapV2lp); //saga
 
+  console.log('token1Symbol', uniswapV2lp[1]?.token1Symbol.replace(/,/g, ' '));
+
+  const deletePluses = (data) => {
+    return data?.map((object) => {
+      if (object.token1Symbol === 'yDAI+yUSDC+yUSDT+yTUSD') {
+        return {
+          ...object,
+          token1Symbol: 'yDAI yUSDC yUSDT yTUSD',
+        };
+      } else {
+        return { ...object };
+      }
+    });
+  };
+
+  const uniswapV2lpCorrectTokenName = deletePluses(uniswapV2lp);
+
   //liquity (find out how to display data)
   const liquityTokenData = useSelector((state) => state.liquityToken.liquityTokenData); //saga
   const liquityTokenTotal = useSelector((state) => state.liquityToken.liquityTokenTotal); //saga
@@ -95,7 +112,7 @@ export default function Index({ accountAddress }) {
   //balancerV2
   const balancerV2lp = useSelector((state) => state.balancerV2lp.balancerV2lp); //saga
   const balancerV2tot = useSelector((state) => state.balancerV2lp.balancerV2tot); //don't put to redux separately. Needs to take from object
-
+  console.log('balancerV2lp', balancerV2lp);
   //convexStake
   const convexStakeData = useSelector((state) => state.convexStake.convexStakeData); //useEffect
   const convexStakeTotal = useSelector((state) => state.convexStake.convexStakeTotal); //useEffect
@@ -109,6 +126,24 @@ export default function Index({ accountAddress }) {
   const curveLpTokenTotal = useSelector((state) => state.curveLpToken.curveLpTokenTotal); //useEffect
   const curveStakingData = useSelector((state) => state.curveStaking.curveStakingData); //saga
   const curveStakingTotal = useSelector((state) => state.curveStaking.curveStakingTotal); //saga
+  console.log('imagesdata', curveStakingData);
+  console.log('images', curveStakingTotal);
+
+  useEffect(() => {
+    const curveStakingDataWithImages = (data, images) => {
+      return data.map((el) => {
+        images.map((image) => {
+          console.log('sdsdsd1', el.tokenName);
+          console.log('sdsdsd2', image.tokenName);
+        });
+      });
+    };
+
+    console.log(
+      'curveStakingDataWithImages',
+      curveStakingDataWithImages(curveStakingData, curveLpTokenImages)
+    );
+  }, [curveStakingData, curveLpTokenImages]);
 
   //AAVE
   const AaveStakingData = useSelector((state) => state.AaveStaking.AaveStakingData); //component
@@ -124,7 +159,7 @@ export default function Index({ accountAddress }) {
   //olympus
   const olympusTokenData = useSelector((state) => state.olympusStaking.olympusTokenData); //saga
   const olympusTokenTotal = useSelector((state) => state.olympusStaking.olympusTokenTotal); //saga
-
+  console.log('olympusTokenData', olympusTokenData);
   const [creamIronBankTotalValue, setCreamIronBankTotalValue] = useState(0);
 
   // Below code is for task https://app.clickup.com/t/1je2y9d
@@ -1501,7 +1536,7 @@ export default function Index({ accountAddress }) {
             })}
             {/*curveStakingData/*/}
             {curveStakingData.map((object) => {
-              return <Investment protocol={object} protocolName={'Curve'} />;
+              return <Investment protocol={object} protocolName={'Curve'} isCurveStaking={true} />;
             })}
             {/*AaveStakingData/*/}
             {AaveStakingData &&
@@ -1521,15 +1556,16 @@ export default function Index({ accountAddress }) {
               );
             })}
             {/*olympusTokenData/*/}
-            {olympusTokenData.map((object) => {
-              return (
-                <Investment
-                  protocol={object}
-                  protocolName={'Olympus'}
-                  logoImage={object.tokenImage}
-                />
-              );
-            })}
+            {olympusTokenData &&
+              olympusTokenData.map((object) => {
+                return (
+                  <Investment
+                    protocol={object}
+                    protocolName={'Olympus'}
+                    logoImage={object.tokenImage}
+                  />
+                );
+              })}
           </>
         )}
       </PoolsBlock>
@@ -1587,8 +1623,8 @@ export default function Index({ accountAddress }) {
                 return <SushiProtocol protocol={object} logoImage={SushiSwapLogo} />;
               })}
             {/*uniswapV2lp/*/}
-            {Array.isArray(uniswapV2lp) &&
-              uniswapV2lp.map((object) => {
+            {Array.isArray(uniswapV2lpCorrectTokenName) &&
+              uniswapV2lpCorrectTokenName.map((object) => {
                 return (
                   <ValueProtocol
                     protocol={object}

@@ -14,7 +14,15 @@ import { useSelector } from 'react-redux';
 import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
 import CurveLpImage from '../../LoansAndSavings/CurveLpImage';
 
-const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isStaked }) => {
+const Investment = ({
+  protocol,
+  protocolName,
+  logoImage,
+  chain,
+  stakedToken,
+  isStaked,
+  isCurveStaking,
+}) => {
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -54,19 +62,36 @@ const Investment = ({ protocol, protocolName, logoImage, chain, stakedToken, isS
     <Main isOpen={isOpen} isLightTheme={theme}>
       <TotalValue isOpen={isOpen}>
         <div style={{ display: 'flex' }}>
-          <ImagesWrapper>
-            {imageData ? (
-              imageData?.map((name, index) => <TokenImage firstElement={index} src={name} />)
-            ) : (
-              <MockTokenImage src={logoImage} isBorder={!logoImage} />
-            )}
-          </ImagesWrapper>
+          {isCurveStaking ? (
+            <div>
+              <CurveLpImage lpToken={protocol.tokenName} />
+            </div>
+          ) : (
+            <ImagesWrapper>
+              {imageData ? (
+                imageData?.map((name, index) => <TokenImage firstElement={index} src={name} />)
+              ) : (
+                <MockTokenImage src={logoImage} isBorder={!logoImage} />
+              )}
+            </ImagesWrapper>
+          )}
 
-          <div style={{ display: 'flex' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
             {tokens ? (
               tokens.map((name, index) => (
                 <>
-                  {index !== 0 && <div>{gap}</div>}
+                  {index !== 0 && (
+                    <div
+                      style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      {gap}
+                    </div>
+                  )}
                   <TokenName isLightTheme={theme}>{`${name.symbol}`}</TokenName>
                 </>
               ))

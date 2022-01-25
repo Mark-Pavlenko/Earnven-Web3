@@ -42,6 +42,7 @@ export const getuniswapV2data = async (attributes) => {
         }`,
     })
     .then(async (response) => {
+      console.log('response', response);
       if (response.data.data) {
         let tot = 0;
         const res = response.data.data.liquidityPositions;
