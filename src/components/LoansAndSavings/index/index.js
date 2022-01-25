@@ -50,6 +50,7 @@ import UniswapV2 from '../LiqudityPools/UniswapV2';
 import CurveToken from '../CurveToken';
 import { convexStake } from '../../../store/convexStake/reducer';
 import SushiProtocol from '../../common/investment/sushiProtocolComponent/sushiProtocol';
+import SushiLPToken from '../SushiLPToken';
 
 // Below code is for task https://app.clickup.com/t/1je2y9d
 // import CompoundData from './Compound';
@@ -93,6 +94,10 @@ export default function Index({ accountAddress }) {
   //AAVE
   const AaveStakingData = useSelector((state) => state.AaveStaking.AaveStakingData);
 
+  //sushiSwapLP token
+  const SushiPoolsData = useSelector((state) => state.sushiSwap.sushiSwapLPData);
+  const SushiV2Total = useSelector((state) => state.sushiSwap.sushiSwapLPTotal);
+
   // Below code is for task https://app.clickup.com/t/1je2y9d
   // const [DisplaySavings, setDisplaySavings] = useState(null);
   //const [TotalCompoundSavings, setTotalCompoundSavings] = useState(0);
@@ -114,8 +119,8 @@ export default function Index({ accountAddress }) {
 
   //Sushi v2
   const [SushiPoolsContent, setSushiPoolsContent] = useState([]); // Sushi v2
-  const [SushiPoolsData, setSushiPoolsData] = useState([]); // Sushi v2
-  const [SushiV2Total, setSushiV2Total] = useState([]); // Sushi v2 total
+  //const [SushiPoolsData, setSushiPoolsData] = useState([]); // Sushi v2
+  //const [SushiV2Total, setSushiV2Total] = useState([]); // Sushi v2 total
   //Compound
   const [CompoundSavingsContent, setCompoundSavingsContent] = useState([]); // compound v2
   const [CompoundLoansContent, setCompoundLoansContent] = useState([]); // compound v2 empty
@@ -346,45 +351,46 @@ export default function Index({ accountAddress }) {
     setPoolsContent(content);
   }, [PoolsData]);
 
-  useEffect(() => {
-    const content = SushiPoolsData.map((object) => (
-      <Tooltip
-        title={
-          <>
-            Token 0 : {object.token0name} <br />
-            Token 1 : {object.token1name} <br />
-            Pool Share : {parseFloat((object.tokenBalance / object.tokenSupply) * 100).toFixed(
-              2
-            )} % <br />
-            Pool Liquidity : {parseFloat(object.liquidity).toFixed(2)} <br />
-            Total Investment : {object.totalInvestment} USD <br />
-            LP Token Balance : {parseFloat(object.tokenBalance).toFixed(2)}
-          </>
-        }>
-        <div style={{ width: '90%', marginTop: '12px', marginLeft: '30px' }}>
-          <div
-            style={{
-              display: 'inline-block',
-              width: '45%',
-              textAlign: 'left',
-              wordBreak: 'break-all',
-            }}>
-            ${object.token0Symbol}-${object.token1Symbol}
-          </div>
+  //created seperate component as SushiLPToken.js, so no need here and commented
+  // useEffect(() => {
+  //   const content = SushiPoolsData.map((object) => (
+  //     <Tooltip
+  //       title={
+  //         <>
+  //           Token 0 : {object.token0name} <br />
+  //           Token 1 : {object.token1name} <br />
+  //           Pool Share : {parseFloat((object.tokenBalance / object.tokenSupply) * 100).toFixed(
+  //             2
+  //           )} % <br />
+  //           Pool Liquidity : {parseFloat(object.liquidity).toFixed(2)} <br />
+  //           Total Investment : {object.totalInvestment} USD <br />
+  //           LP Token Balance : {parseFloat(object.tokenBalance).toFixed(2)}
+  //         </>
+  //       }>
+  //       <div style={{ width: '90%', marginTop: '12px', marginLeft: '30px' }}>
+  //         <div
+  //           style={{
+  //             display: 'inline-block',
+  //             width: '45%',
+  //             textAlign: 'left',
+  //             wordBreak: 'break-all',
+  //           }}>
+  //           ${object.token0Symbol}-${object.token1Symbol}
+  //         </div>
 
-          <div style={{ display: 'inline-block', width: '15%' }} />
+  //         <div style={{ display: 'inline-block', width: '15%' }} />
 
-          <div style={{ display: 'inline-block', width: '40%', fontSize: '13px' }}>
-            {object.totalInvestment} USD
-          </div>
+  //         <div style={{ display: 'inline-block', width: '40%', fontSize: '13px' }}>
+  //           {object.totalInvestment} USD
+  //         </div>
 
-          <br />
-        </div>
-      </Tooltip>
-    ));
+  //         <br />
+  //       </div>
+  //     </Tooltip>
+  //   ));
 
-    setSushiPoolsContent(content);
-  }, [SushiPoolsData]);
+  //   setSushiPoolsContent(content);
+  // }, [SushiPoolsData]);
 
   useEffect(() => {
     const content = CompoundLoansData.map((object) => (
@@ -1097,78 +1103,78 @@ export default function Index({ accountAddress }) {
           }
         });
     }
-
-    async function getSushiV2Data() {
-      await axios
-        .post(
-          `https://gateway.thegraph.com/api/${addresses.graph_API}/subgraphs/id/0x4bb4c1b0745ef7b4642feeccd0740dec417ca0a0-0`,
-          {
-            query: `{
-                    users(
-                     where:{
-                       id:"${accountAddress}"
-                     }
-                   ){
-                     liquidityPositions(first:1000
-                         where:{
-                         liquidityTokenBalance_gt:0
-                         }
-                     ){
-                       liquidityTokenBalance
-                       pair{
-                         id
-                         totalSupply
-                         reserveUSD
-                         token0{
-                           id
-                           name
-                           symbol
-                         }
-                         token1{
-                           id
-                           name
-                           symbol
-                         }
-                       }
-                     }
-                   } 
-                   }`,
-          }
-        )
-        .then(async (response) => {
-          if (response.data.data) {
-            if (response.data.data.users[0]) {
-              let tot = 0;
-              const pools = [];
-              try {
-                const res = response.data.data.users[0].liquidityPositions;
-                for (let i = 0; i < res.length; i++) {
-                  const object = {};
-                  object.id = res[i].pair.id;
-                  object.tokenBalance = res[i].liquidityTokenBalance;
-                  object.tokenSupply = res[i].pair.totalSupply;
-                  object.token0name = res[i].pair.token0.name;
-                  object.token1name = res[i].pair.token1.name;
-                  object.token0Symbol = res[i].pair.token0.symbol;
-                  object.token1Symbol = res[i].pair.token1.symbol;
-                  object.liquidity = res[i].pair.reserveUSD;
-                  object.totalInvestment = (
-                    (res[i].liquidityTokenBalance / res[i].pair.totalSupply) *
-                    res[i].pair.reserveUSD
-                  ).toFixed(2);
-                  tot += parseFloat(object.totalInvestment);
-                  pools.push(object);
-                }
-                pools.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
-                setSushiV2Total(tot);
-                setSushiPoolsData(pools);
-              } catch (err) {
-                console.log(err);
-              }
-            }
-          }
-        });
-    }
+    //created a seperate component SushiLPToken.js , so commented this logic here
+    // async function getSushiV2Data() {
+    //   await axios
+    //     .post(
+    //       `https://gateway.thegraph.com/api/${addresses.graph_API}/subgraphs/id/0x4bb4c1b0745ef7b4642feeccd0740dec417ca0a0-0`,
+    //       {
+    //         query: `{
+    //                 users(
+    //                  where:{
+    //                    id:"${accountAddress}"
+    //                  }
+    //                ){
+    //                  liquidityPositions(first:1000
+    //                      where:{
+    //                      liquidityTokenBalance_gt:0
+    //                      }
+    //                  ){
+    //                    liquidityTokenBalance
+    //                    pair{
+    //                      id
+    //                      totalSupply
+    //                      reserveUSD
+    //                      token0{
+    //                        id
+    //                        name
+    //                        symbol
+    //                      }
+    //                      token1{
+    //                        id
+    //                        name
+    //                        symbol
+    //                      }
+    //                    }
+    //                  }
+    //                }
+    //                }`,
+    //       }
+    //     )
+    //     .then(async (response) => {
+    //       if (response.data.data) {
+    //         if (response.data.data.users[0]) {
+    //           let tot = 0;
+    //           const pools = [];
+    //           try {
+    //             const res = response.data.data.users[0].liquidityPositions;
+    //             for (let i = 0; i < res.length; i++) {
+    //               const object = {};
+    //               object.id = res[i].pair.id;
+    //               object.tokenBalance = res[i].liquidityTokenBalance;
+    //               object.tokenSupply = res[i].pair.totalSupply;
+    //               object.token0name = res[i].pair.token0.name;
+    //               object.token1name = res[i].pair.token1.name;
+    //               object.token0Symbol = res[i].pair.token0.symbol;
+    //               object.token1Symbol = res[i].pair.token1.symbol;
+    //               object.liquidity = res[i].pair.reserveUSD;
+    //               object.totalInvestment = (
+    //                 (res[i].liquidityTokenBalance / res[i].pair.totalSupply) *
+    //                 res[i].pair.reserveUSD
+    //               ).toFixed(2);
+    //               tot += parseFloat(object.totalInvestment);
+    //               pools.push(object);
+    //             }
+    //             pools.sort((a, b) => parseFloat(b.totalInvestment) - parseFloat(a.totalInvestment));
+    //             setSushiV2Total(tot);
+    //             setSushiPoolsData(pools);
+    //           } catch (err) {
+    //             console.log(err);
+    //           }
+    //         }
+    //       }
+    //     });
+    // }
 
     async function getCurveData() {
       await axios
@@ -1247,7 +1253,7 @@ export default function Index({ accountAddress }) {
     getAaveV2Data();
     getUniV2Data();
     getBalancerData();
-    getSushiV2Data();
+    //getSushiV2Data();
     getCurveData();
     getBalancerV2Data();
   }, [accountAddress]);
@@ -1318,17 +1324,18 @@ export default function Index({ accountAddress }) {
                 />
               );
             })}
-            {SushiPoolsData.map((object) => {
+            {/* {SushiPoolsData.map((object) => {
               return (
                 <ValueProtocol
-                  totalInvestment={object.totalInvestment}
+                  totalInvestment={object.value}
                   token0Symbol={object.token0Symbol}
                   token1Symbol={object.token1Symbol}
                   liquidity={object.liquidity}
-                  protocol={'Uniswap V2'}
+                  protocol={'SushiSwap V2'}
                 />
               );
-            })}
+            })} */}
+            <SushiLPToken accountAddress={accountAddress} />
             <BancorPools
               setPoolTotal={setBancorPoolTotal}
               setDisplay={setDisplayBancor}
