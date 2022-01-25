@@ -23,19 +23,7 @@ const UniswapV2 = ({ accountAddress }) => {
 
   useEffect(() => {
     const content = PoolsData.map((object) => (
-      <Tooltip
-        title={
-          <>
-            Token 0 : {object.token0name} <br />
-            Token 1 : {object.token1name} <br />
-            Pool Share : {parseFloat((object.tokenBalance / object.tokenSupply) * 100).toFixed(
-              2
-            )} % <br />
-            Pool Liquidity : {parseFloat(object.liquidity).toFixed(2)} <br />
-            Total Investment : {object.totalInvestment} USD <br />
-            LP Token Balance : {parseFloat(object.tokenBalance).toFixed(2)}
-          </>
-        }>
+      <Tooltip>
         <div style={{ width: '90%', marginTop: '12px', marginLeft: '30px' }}>
           <div
             style={{
@@ -44,24 +32,23 @@ const UniswapV2 = ({ accountAddress }) => {
               textAlign: 'left',
               wordBreak: 'break-all',
             }}>
-            <div style={{ display: 'flex' }}>
-              {object.imageData.map((obj) => (
-                <div style={{ display: 'flex', marginLeft: '-10px' }}>
-                  <img
-                    src={obj}
-                    alt="noimage"
-                    style={{ maxWidth: '100%', maxHeight: '100%' }}
-                    width="30px"
-                    height="30px"></img>
-                  {/* <>${obj.symbol}-</> */}
-                </div>
-              ))}
-            </div>
-            ${object.token0Symbol}-${object.token1Symbol}
+            {/*<div style={{ display: 'flex' }}>*/}
+            {/*  {object.tokenImages.map((obj) => (*/}
+            {/*    <div style={{ display: 'flex', marginLeft: '-10px' }}>*/}
+            {/*      <img*/}
+            {/*        src={obj}*/}
+            {/*        alt="noimage"*/}
+            {/*        style={{ maxWidth: '100%', maxHeight: '100%' }}*/}
+            {/*        width="30px"*/}
+            {/*        height="30px"></img>*/}
+            {/*      /!* <>${obj.symbol}-</> *!/*/}
+            {/*    </div>*/}
+            {/*  ))}*/}
+            {/*</div>*/}${object.token0Symbol}-${object.token1Symbol}
           </div>
           <div style={{ display: 'flex', width: '300px' }}>
             <p>Value</p>
-            <>&nbsp;-&nbsp;{parseFloat(object.totalInvestment).toFixed(2)}&nbsp;USD</>
+            <>&nbsp;-&nbsp;{parseFloat(object.value).toFixed(2)}&nbsp;USD</>
           </div>
           <div style={{ display: 'flex', width: '300px' }}>
             <p>LP price</p>
@@ -71,9 +58,9 @@ const UniswapV2 = ({ accountAddress }) => {
             <p>LP balance</p>
             <>
               &nbsp;-&nbsp;
-              {object.tokenBalance < 0.001
-                ? parseFloat(object.tokenBalance).toFixed(5)
-                : parseFloat(object.tokenBalance).toFixed(3)}
+              {object.balance < 0.001
+                ? parseFloat(object.balance).toFixed(5)
+                : parseFloat(object.balance).toFixed(3)}
               &nbsp;
             </>
           </div>
@@ -111,23 +98,24 @@ const UniswapV2 = ({ accountAddress }) => {
     setPoolsData(uniswapV2array);
     let total = 0;
     if (uniswapV2array.length > 0) {
+      console.log('uniswapv2', uniswapV2array);
       uniswapV2array.map((object) => {
-        total += parseFloat(object.totalInvestment);
+        total += parseFloat(object.value);
       });
       setUniV2Total(parseFloat(total).toFixed(2));
     }
   }, [uniswapV2array]);
   return (
     <div>
-      {/*<div*/}
-      {/*  style={{*/}
-      {/*    fontSize: '12px',*/}
-      {/*    marginLeft: '15px',*/}
-      {/*    display: PoolsData.length > 0 ? '' : 'none',*/}
-      {/*  }}>*/}
-      {/*  Uniswap V2 --- {UniV2Total} USD*/}
-      {/*</div>*/}
-      {/*{PoolsContent}*/}
+      <div
+        style={{
+          fontSize: '12px',
+          marginLeft: '15px',
+          display: PoolsData.length > 0 ? '' : 'none',
+        }}>
+        Uniswap V2 --- {UniV2Total} USD
+      </div>
+      {PoolsContent}
     </div>
   );
 };
