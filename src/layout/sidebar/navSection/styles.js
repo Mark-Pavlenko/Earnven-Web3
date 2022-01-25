@@ -20,6 +20,12 @@ const ListItemGeneralStyles = css`
     width: 330px;
     height: 47px;
   }
+
+  @media screen and (max-width: 1445px) and (min-width: 1281px) {
+    margin-left: 0;
+    padding-left: 0;
+    width: auto;
+  }
 `;
 
 export const ListItemElement = styled(ListItem)`
@@ -36,6 +42,12 @@ export const ListItemElement = styled(ListItem)`
       props.isLightTheme
         ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
         : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+
+    @media screen and (max-width: 1445px) and (min-width: 1281px) {
+      margin-left: 0;
+      padding-left: 0;
+      width: auto;
+    }
   }
 
   @media (max-width: 1280px) {
@@ -79,6 +91,10 @@ export const ItemSubTextDisabled = styled(ListItemText)`
   @media (max-width: 1280px) {
     margin-left: 82px;
   }
+
+  @media screen and (max-width: 1445px) and (min-width: 1281px) {
+    margin-left: 55px;
+  }
 `;
 
 export const ListItemElementIcon = MUIStyles(ListItemIcon)({
@@ -113,8 +129,10 @@ export const NavList = styled(List)`
   margin-bottom: 21px;
 
   @media (max-width: 1280px) {
-    //margin-top: 20px;
     margin-left: 0;
-    //margin-left: -22px;
-  } ;
+  }
+
+  @media screen and (max-width: 1445px) and (min-width: 1281px) {
+    margin-left: 0;
+  }
 `;

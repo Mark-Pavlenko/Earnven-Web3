@@ -1,6 +1,18 @@
 import styled from 'styled-components';
 import { Drawer, List, Button, IconButton } from '@material-ui/core';
 
+export const DrawerLayoutDesktop = styled(Drawer)`
+  @media (max-width: 1444px) {
+    display: none;
+  }
+`;
+
+export const DrawerLayoutTablet = styled(Drawer)`
+  @media (min-width: 1445px) {
+    display: none;
+  }
+`;
+
 export const DrawerLayoutMobile = styled(Drawer)`
   @media (min-width: 1281px) {
     display: none;
@@ -21,6 +33,14 @@ export const SidebarMainLayout = styled.div`
   @media (max-width: 1280px) {
     //height: auto;
   }
+
+  @media (max-height: 680px) {
+    background-color: red;
+  }
+`;
+
+export const LogoTitleImg = styled.img`
+  //width: 90%;
 `;
 
 export const LogoBlock = styled.div`
@@ -38,6 +58,10 @@ export const LogoBlock = styled.div`
     margin-left: 15px;
     justify-content: start;
   }
+
+  @media screen and (max-width: 1445px) and (min-width: 1281px) {
+    margin-left: 2px;
+  }
 `;
 
 export const CloseMobileSidebarIcon = styled.img`
@@ -50,6 +74,9 @@ export const CloseMobileSidebarIcon = styled.img`
 
 export const LogoImg = styled.img`
   margin-right: 10px;
+  @media screen and (max-width: 1445px) and (min-width: 1281px) {
+    margin-right: 5px;
+  }
 `;
 
 export const SidebarMobileIconsBlock = styled.div`

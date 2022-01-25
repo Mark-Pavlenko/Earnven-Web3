@@ -21,6 +21,13 @@ export const HeaderLayoutBig = styled.div`
   @media (min-width: 1280px) {
     display: grid;
     grid-template-columns: 30% 70%;
+  }
+
+  @media screen and (max-width: 1445px) and (min-width: 1281px) {
+    margin-left: 150px;
+  }
+
+  @media (min-width: 1446px) {
     margin-left: 314px;
   }
 `;

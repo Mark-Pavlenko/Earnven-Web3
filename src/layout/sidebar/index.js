@@ -43,6 +43,9 @@ import {
   MobileSidebarComingSoonLabel,
   MobileSidebarNetworksListSubBlock,
   EthereumActiveNetwork,
+  DrawerLayoutDesktop,
+  DrawerLayoutTablet,
+  LogoTitleImg,
 } from './styles';
 import lightIcon from '../../assets/icons/lightIcon.svg';
 import darkIcon from '../../assets/icons/darkIcon.svg';
@@ -296,7 +299,7 @@ export default function Sidebar({
   }, [GasPrices]);
 
   // main sidebar content
-  const mainSidebarLayoutContent = (
+  const desktopSidebarLayoutContent = (
     <Scrollbar
       sx={{
         height: '100vh',
@@ -309,7 +312,11 @@ export default function Sidebar({
       <SidebarMainLayout isLightTheme={isLightTheme}>
         <LogoBlock>
           <LogoImg src={CompanyLogo} alt="" />
-          <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
+          <LogoTitleImg
+            className="Earnven"
+            src={isLightTheme ? Earnven : Dark_Earnven_logo}
+            alt=""
+          />
           {isLightTheme ? (
             <CloseMobileSidebarIcon
               src={CloseMobileSidebarLight}
@@ -635,7 +642,7 @@ export default function Sidebar({
     <RootStyle>
       {/* sidebar for desktop versions */}
       <MHidden width="lgDown">
-        <Drawer
+        <DrawerLayoutDesktop
           open
           variant="persistent"
           PaperProps={{
@@ -647,8 +654,23 @@ export default function Sidebar({
               border: 'none',
             },
           }}>
-          {mainSidebarLayoutContent}
-        </Drawer>
+          {desktopSidebarLayoutContent}
+        </DrawerLayoutDesktop>
+
+        <DrawerLayoutTablet
+          open
+          variant="persistent"
+          PaperProps={{
+            sx: {
+              width: '155px',
+              height: 'auto',
+              overflow: 'auto',
+              backgroundColor: 'transparent !important',
+              border: 'none',
+            },
+          }}>
+          {desktopSidebarLayoutContent}
+        </DrawerLayoutTablet>
       </MHidden>
 
       {/* sidebar for mobiles versions */}
@@ -667,7 +689,7 @@ export default function Sidebar({
               backgroundColor: 'transparent',
             },
           }}>
-          {mainSidebarLayoutContent}
+          {desktopSidebarLayoutContent}
         </DrawerLayoutMobile>
 
         {/* Sidebar with wallets list */}

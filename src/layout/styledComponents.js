@@ -36,9 +36,13 @@ export const MainStyle = styled('div')`
   }
 
   @media (min-width: 1280px) {
-    margin-left: 314px;
+    margin-left: 150px;
     margin-top: -24px;
     height: 100vh;
     background-size: 100% 100%;
+  }
+
+  @media (min-width: 1445px) {
+    margin-left: 314px;
   }
 `;
