@@ -139,4 +139,8 @@ export const NavList = styled(List)`
   @media (max-width: 709px) {
     margin-left: 0;
   }
+
+  @media screen and (min-width: 1445px) and (max-height: 800px) {
+    margin-top: 10px;
+  }
 `;

@@ -51,6 +51,7 @@ import {
   ChangeThemeBtnTablet,
   SidebarTabletNetworkButton,
   SidebarTabletHeaderBtnsLayout,
+  MobileLogoTitle,
 } from './styles';
 import lightIcon from '../../assets/icons/lightIcon.svg';
 import darkIcon from '../../assets/icons/darkIcon.svg';
@@ -320,14 +321,19 @@ export default function Sidebar({
       }}>
       <SidebarMainLayout isLightTheme={isLightTheme}>
         <LogoBlock>
-          <div style={{ display: 'flex', marginLeft: '40px' }}>
-            <LogoImg src={CompanyLogo} alt="" />
-            <LogoTitleImg
-              className="Earnven"
-              src={isLightTheme ? Earnven : Dark_Earnven_logo}
-              alt=""
-            />
-          </div>
+          {mobileScreen ? (
+            <>
+              <LogoImg src={CompanyLogo} alt="" />
+              {/*<MobileLogoTitle isLightTheme={isLightTheme}>Earnven</MobileLogoTitle>*/}
+              <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
+            </>
+          ) : (
+            <>
+              <LogoImg src={CompanyLogo} alt="" />
+              {/*<MobileLogoTitle isLightTheme={isLightTheme}>Earnven</MobileLogoTitle>*/}
+              <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
+            </>
+          )}
 
           {mobileScreen && !laptopScreen && (
             <SidebarTabletHeaderBtnsLayout>

@@ -50,7 +50,6 @@ export const LogoBlock = styled.div`
   margin-top: 32px;
   margin-right: 20px;
   margin-left: 124px;
-  //width: 150px;
   width: auto;
   height: 42px;
 
@@ -61,13 +60,17 @@ export const LogoBlock = styled.div`
   }
 
   @media screen and (max-width: 1445px) and (min-width: 1281px) {
-    margin-left: 2px;
-    margin-right: 0;
+    margin-left: 60px;
+    //margin-right: 0;
   }
 
   //background-color: red;
   @media screen and (max-width: 1280px) and (min-width: 710px) {
     justify-content: space-between;
+  }
+
+  @media (min-width: 1446px) {
+    margin-right: 30px;
   }
 `;
 
@@ -114,6 +117,10 @@ export const LogoImg = styled.img`
   @media screen and (max-width: 1445px) and (min-width: 1281px) {
     margin-right: 5px;
   }
+`;
+
+export const MobileLogoTitle = styled.p`
+  color: ${(props) => (props.isLightTheme ? `black` : `white`)};
 `;
 
 export const SidebarMobileIconsBlock = styled.div`

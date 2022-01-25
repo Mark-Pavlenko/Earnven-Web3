@@ -22,6 +22,10 @@ export const AccountStyle = styled.div`
     justify-content: center;
     margin-right: 0px;
   }
+
+  @media (max-height: 800px) {
+    margin-top: 10px;
+  }
 `;
 
 const handleBackgroundColorBtn = (isLightTheme, isBlockActivated) => {
@@ -59,6 +63,10 @@ export const WalletsListBlock = styled.div`
     //width: auto;
     margin-top: 10px;
     margin-left: 95px;
+  }
+
+  @media (max-height: 800px) {
+    margin-top: 0;
   }
 `;
 
