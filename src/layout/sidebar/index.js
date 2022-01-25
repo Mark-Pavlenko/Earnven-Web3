@@ -683,10 +683,11 @@ export default function Sidebar({
           // BackdropProps={{ invisible: true }}
           PaperProps={{
             sx: {
-              width: '360px',
+              width: '95%',
               overflow: 'auto',
               height: 'auto',
               backgroundColor: 'transparent',
+              backdropFilter: 'blur(15px)',
             },
           }}>
           {desktopSidebarLayoutContent}
