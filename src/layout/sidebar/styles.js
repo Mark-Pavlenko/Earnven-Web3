@@ -34,8 +34,8 @@ export const SidebarMainLayout = styled.div`
     //height: auto;
   }
 
-  @media (max-height: 680px) {
-    background-color: red;
+  @media screen and (max-width: 780px) and (min-width: 710px) {
+    //background-color: red;
   }
 `;
 
@@ -44,6 +44,33 @@ export const LogoTitleImg = styled.img`
 `;
 
 export const LogoBlock = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  margin-top: 32px;
+  margin-right: 41px;
+  margin-left: 124px;
+  //width: 150px;
+  width: auto;
+  height: 42px;
+
+  @media (max-width: 1280px) {
+    margin-top: 20px;
+    margin-left: 15px;
+    justify-content: start;
+  }
+
+  @media screen and (max-width: 1445px) and (min-width: 1281px) {
+    margin-left: 2px;
+    margin-right: 0;
+  }
+
+  @media screen and (max-width: 780px) and (min-width: 710px) {
+    background-color: red;
+  }
+`;
+
+export const MobileLogoBlockWalletsList = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: end;
@@ -66,6 +93,15 @@ export const LogoBlock = styled.div`
 
 export const CloseMobileSidebarIcon = styled.img`
   margin-left: 140px;
+  cursor: pointer;
+  @media (min-width: 1281px) {
+    display: none;
+  } ;
+`;
+
+export const CloseTabletSidebarIcon = styled.img`
+  //margin-left: 140px;
+  margin-left: auto;
   cursor: pointer;
   @media (min-width: 1281px) {
     display: none;
@@ -222,6 +258,9 @@ export const ChangeThemeBtnMobile = styled(IconButton)`
   display: flex;
   margin: 16px 30px 5px;
   margin-right: auto;
+  @media screen and (max-width: 780px) and (min-width: 710px) {
+    display: none;
+  }
 `;
 
 export const SidebarMobileDelimiter = styled.div`
@@ -231,4 +270,8 @@ export const SidebarMobileDelimiter = styled.div`
   //opacity: 0.05;
   background-color: #dae5f4;
   margin-bottom: 20px;
+
+  @media screen and (max-width: 780px) and (min-width: 710px) {
+    margin-top: 15px;
+  }
 `;

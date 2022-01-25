@@ -46,6 +46,8 @@ import {
   DrawerLayoutDesktop,
   DrawerLayoutTablet,
   LogoTitleImg,
+  MobileLogoBlockWalletsList,
+  CloseTabletSidebarIcon,
 } from './styles';
 import lightIcon from '../../assets/icons/lightIcon.svg';
 import darkIcon from '../../assets/icons/darkIcon.svg';
@@ -318,13 +320,13 @@ export default function Sidebar({
             alt=""
           />
           {isLightTheme ? (
-            <CloseMobileSidebarIcon
+            <CloseTabletSidebarIcon
               src={CloseMobileSidebarLight}
               alt=""
               onClick={() => onCloseSidebar()}
             />
           ) : (
-            <CloseMobileSidebarIcon
+            <CloseTabletSidebarIcon
               src={CloseMobileSidebarDark}
               alt=""
               onClick={() => onCloseSidebar()}
@@ -540,7 +542,7 @@ export default function Sidebar({
       }}>
       <SidebarMainLayout isLightTheme={isLightTheme}>
         {/*content for wallets list*/}
-        <LogoBlock>
+        <MobileLogoBlockWalletsList>
           <LogoImg src={CompanyLogo} alt="" />
           <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
           {isLightTheme ? (
@@ -556,7 +558,7 @@ export default function Sidebar({
               onClick={() => onCloseWalletsListMobile()}
             />
           )}
-        </LogoBlock>
+        </MobileLogoBlockWalletsList>
         <MyWalletsLabel isLightTheme={isLightTheme}>
           <p isLightTheme={isLightTheme}>{accountList.length > 0 && 'My Wallet'}</p>
         </MyWalletsLabel>

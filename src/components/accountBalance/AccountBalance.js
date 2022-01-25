@@ -37,7 +37,7 @@ function AccountBalance({ address, accountBalance }) {
             ${accountBalance?.finalTotal}
           </AccountBalanceValue>
           <AccountBalanceValueTablet isLightTheme={themeType}>
-            ${accountBalance?.finalTotal?.substring(0)}...
+            ${accountBalance?.finalTotal?.substring(0, 3)}...
           </AccountBalanceValueTablet>
         </>
       )}
