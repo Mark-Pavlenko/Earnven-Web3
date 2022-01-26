@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { string } from 'prop-types';
 import actionTypes from '../../constants/actionTypes';
 import { useDispatch, useSelector } from 'react-redux';
-import { AccountBalanceValue } from './styles';
+import { AccountBalanceValue, AccountBalanceValueTablet } from './styles';
 
 function AccountBalance({ address, accountBalance }) {
   const themeType = useSelector((state) => state.themeReducer.isLightTheme);
@@ -25,14 +25,21 @@ function AccountBalance({ address, accountBalance }) {
     totalAccountValue();
   }, [totalValue, address]);
 
+  console.log('accountBalance', accountBalance);
+
   return (
     <>
       {isLoading ? (
         <div style={{ color: 'red' }}>loading</div>
       ) : (
-        <AccountBalanceValue isLightTheme={themeType}>
-          ${accountBalance?.finalTotal}
-        </AccountBalanceValue>
+        <>
+          <AccountBalanceValue isLightTheme={themeType}>
+            ${accountBalance?.finalTotal}
+          </AccountBalanceValue>
+          <AccountBalanceValueTablet isLightTheme={themeType}>
+            ${accountBalance?.finalTotal?.substring(0, 3)}...
+          </AccountBalanceValueTablet>
+        </>
       )}
     </>
   );

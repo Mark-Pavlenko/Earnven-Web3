@@ -1,6 +1,18 @@
 import styled from 'styled-components';
 import { Drawer, List, Button, IconButton } from '@material-ui/core';
 
+export const DrawerLayoutDesktop = styled(Drawer)`
+  @media (max-width: 1444px) {
+    display: none;
+  }
+`;
+
+export const DrawerLayoutTablet = styled(Drawer)`
+  @media (min-width: 1445px) {
+    display: none;
+  }
+`;
+
 export const DrawerLayoutMobile = styled(Drawer)`
   @media (min-width: 1281px) {
     display: none;
@@ -21,9 +33,48 @@ export const SidebarMainLayout = styled.div`
   @media (max-width: 1280px) {
     //height: auto;
   }
+
+  @media screen and (max-width: 780px) and (min-width: 710px) {
+    //background-color: red;
+  }
+`;
+
+export const LogoTitleImg = styled.img`
+  width: 75%;
 `;
 
 export const LogoBlock = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  margin-top: 32px;
+  margin-right: 20px;
+  margin-left: 124px;
+  width: auto;
+  height: 42px;
+
+  @media (max-width: 1280px) {
+    margin-top: 20px;
+    margin-left: 15px;
+    justify-content: start;
+  }
+
+  @media screen and (max-width: 1445px) and (min-width: 1281px) {
+    margin-left: 60px;
+    //margin-right: 0;
+  }
+
+  //background-color: red;
+  @media screen and (max-width: 1280px) and (min-width: 710px) {
+    justify-content: space-between;
+  }
+
+  @media (min-width: 1446px) {
+    margin-right: 30px;
+  }
+`;
+
+export const MobileLogoBlockWalletsList = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: end;
@@ -38,6 +89,10 @@ export const LogoBlock = styled.div`
     margin-left: 15px;
     justify-content: start;
   }
+
+  @media screen and (max-width: 1445px) and (min-width: 1281px) {
+    margin-left: 2px;
+  }
 `;
 
 export const CloseMobileSidebarIcon = styled.img`
@@ -48,14 +103,40 @@ export const CloseMobileSidebarIcon = styled.img`
   } ;
 `;
 
+export const CloseTabletSidebarIcon = styled.img`
+  //margin-left: 140px;
+  //margin-left: auto;
+  cursor: pointer;
+  @media (min-width: 1281px) {
+    display: none;
+  } ;
+`;
+
 export const LogoImg = styled.img`
   margin-right: 10px;
+  @media screen and (max-width: 1445px) and (min-width: 1281px) {
+    margin-right: 5px;
+  }
+`;
+
+export const MobileLogoTitle = styled.p`
+  color: ${(props) => (props.isLightTheme ? `black` : `white`)};
 `;
 
 export const SidebarMobileIconsBlock = styled.div`
-  @media (min-width: 1281px) {
+  @media (min-width: 710px) {
     display: none;
   }
+`;
+
+export const SidebarTabletHeaderBtnsLayout = styled.div`
+  //background-color: green;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: auto;
+  width: 395px;
 `;
 
 export const SidebarMobileIconSubBlock = styled.div`
@@ -85,6 +166,33 @@ export const SidebarMobileNetworkButton = styled(Button)`
 }
   :hover {
     background-color: transparent !important;
+    
+  
+`;
+
+export const SidebarTabletNetworkButton = styled(Button)`
+  margin-left: 20px;
+
+  width:161px;
+  height: 40px;
+  font-size: 16px;
+  font-weight: 500;
+  font-style: normal;
+  border: none;
+  border-radius: 10px;
+  color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
+  background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#10142D')};
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+      : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+  @media (max-width: 709px){
+    display: none;
+  }
+  :hover {
+    background-color: transparent !important;
+
+
 `;
 
 export const MainSidebarMobilePopoverContent = styled.div`
@@ -195,6 +303,16 @@ export const ChangeThemeBtnMobile = styled(IconButton)`
   display: flex;
   margin: 16px 30px 5px;
   margin-right: auto;
+  @media screen and (max-width: 1280px) and (min-width: 710px) {
+    display: none;
+  }
+`;
+
+export const ChangeThemeBtnTablet = styled(IconButton)`
+  display: none;
+  @media screen and (max-width: 1280px) and (min-width: 710px) {
+    display: block;
+  }
 `;
 
 export const SidebarMobileDelimiter = styled.div`
@@ -204,4 +322,8 @@ export const SidebarMobileDelimiter = styled.div`
   //opacity: 0.05;
   background-color: #dae5f4;
   margin-bottom: 20px;
+
+  @media screen and (max-width: 780px) and (min-width: 710px) {
+    margin-top: 15px;
+  }
 `;
