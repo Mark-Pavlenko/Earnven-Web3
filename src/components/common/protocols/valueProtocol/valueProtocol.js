@@ -18,19 +18,19 @@ const ValueProtocol = ({
   token1Symbol,
   liquidity,
   protocol,
+  token1SymbolArray,
   protocolName,
-  totalInvestment,
   logoImage,
 }) => {
-  console.log('liquidity', protocol.liquidity);
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
 
   const [isOpen, setIsOpen] = useState(false);
+  const tokenNamesArray = ['yDAI', 'yUSDC', 'yUSDT', 'yTUSD'];
 
   const toggleHandler = () => {
     setIsOpen(!isOpen);
   };
-  const { imageData, balance, volume, price } = protocol;
+  const { imageData, balance, volume, price, totalInvestment } = protocol;
   return (
     <Main isOpen={isOpen} isLightTheme={theme}>
       <TotalValue isOpen={isOpen}>

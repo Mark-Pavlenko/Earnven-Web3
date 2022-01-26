@@ -70,7 +70,8 @@ export const MockTokenImage = styled.img`
   border: 2px solid orange;
 `;
 
-export const TokenName = styled.div`
+export const TokenName = styled.span`
+  //word-break: break-word;
   font-size: 12px;
   font-weight: 600;
   color: ${(props) => (props.isLightTheme ? '#1E1E20' : 'white')};

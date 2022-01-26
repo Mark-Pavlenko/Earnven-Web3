@@ -45,17 +45,6 @@ const Investment = ({
     return /\d/.test(char);
   }
 
-  // const protocolData = {
-  //   Value: isStaked ? totalInvestment : `$${parseFloat(totalValue).toFixed(2)}`,
-  //   // Balance: isStaked
-  //   //   ? totalDeposit
-  //   //   : parseFloat(protocol.balance ? protocol.balance : protocol.balanceShares / 10 ** 18).toFixed(
-  //   //       3
-  //   //     ),
-  //   Chain: chain ? chain : protocol.chain,
-  //   Protocol: protocolName ? protocolName : protocol.protocol,
-  // };
-
   const toggleHandler = () => {
     setIsOpen(!isOpen);
   };
@@ -228,6 +217,7 @@ const Investment = ({
             .filter(
               (item) =>
                 item !== 'imageData' &&
+                item !== 'id' &&
                 item !== 'tokenName' &&
                 item !== 'symbol' &&
                 item !== 'tokens' &&
@@ -268,76 +258,76 @@ const Investment = ({
                 </div>
               );
             })}
-          {protocolName && (
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                fontWeight: '600',
-                padding: '0 32px 11px 26px',
-              }}>
-              <div style={{ fontSize: '10px' }}>Protocol</div>
-              <div style={{ fontSize: '10px' }}>{protocolName}</div>
-            </div>
-          )}
-          {stakedToken && (
-            <ContentWrapper isLightTheme={theme}>
-              <div>Staked Token</div>
-              <div>{stakedToken}</div>
-            </ContentWrapper>
-          )}
-          {ethPrice && (
-            <ContentWrapper isLightTheme={theme}>
-              <div>Price</div>
-              <div>{numberWithCommas(ethPrice)}</div>
-            </ContentWrapper>
-          )}
-          {protocol.balance > 0 && (
-            <ContentWrapper isLightTheme={theme}>
-              <div>Balance</div>
-              <div>{numberWithCommas(parseFloat(protocol.balance).toFixed(2))}</div>
-            </ContentWrapper>
-          )}
-          {protocol.apy > 0 && (
-            <ContentWrapper isLightTheme={theme}>
-              <div>APY</div>
-              <div>{numberWithCommas(parseFloat(protocol.apy).toFixed(2))}%</div>
-            </ContentWrapper>
-          )}
-          {protocol.totalStaked > 0 && (
-            <ContentWrapper isLightTheme={theme}>
-              <div>Staked</div>
-              <div>${numberWithCommas(parseFloat(protocol.totalStaked).toFixed(2))}</div>
-            </ContentWrapper>
-          )}
-          {protocol.claimable > 0 && (
-            <ContentWrapper isLightTheme={theme}>
-              <div>Claimable</div>
-              <div>${numberWithCommas(parseFloat(protocol.claimable).toFixed(2))}</div>
-            </ContentWrapper>
-          )}
-          {!stakedToken && protocol.price && (
-            <ContentWrapper isLightTheme={theme}>
-              <div>Price</div>
-              <div>{`$${numberWithCommas(parseFloat(protocol.price).toFixed(2))}`}</div>
-            </ContentWrapper>
-          )}
-          {protocol.stakingClaimable && (
-            <ContentWrapper isLightTheme={theme}>
-              <div>Claimable</div>
-              <div>{`$${numberWithCommas(parseFloat(protocol.stakingClaimable).toFixed(2))}`}</div>
-            </ContentWrapper>
-          )}
-          {protocol.liquidity && (
-            <ContentWrapper isLightTheme={theme}>
-              <div>Liquidity</div>
-              <div>
-                {protocol.liquidity
-                  ? `$${numberWithCommas(parseFloat(protocol.liquidity).toFixed(2))}`
-                  : `$0`}
-              </div>
-            </ContentWrapper>
-          )}
+          {/*{protocolName && (*/}
+          {/*  <div*/}
+          {/*    style={{*/}
+          {/*      display: 'flex',*/}
+          {/*      justifyContent: 'space-between',*/}
+          {/*      fontWeight: '600',*/}
+          {/*      padding: '0 32px 11px 26px',*/}
+          {/*    }}>*/}
+          {/*    <div style={{ fontSize: '10px' }}>Protocol</div>*/}
+          {/*    <div style={{ fontSize: '10px' }}>{protocolName}</div>*/}
+          {/*  </div>*/}
+          {/*)}*/}
+          {/*{stakedToken && (*/}
+          {/*  <ContentWrapper isLightTheme={theme}>*/}
+          {/*    <div>Staked Token</div>*/}
+          {/*    <div>{stakedToken}</div>*/}
+          {/*  </ContentWrapper>*/}
+          {/*)}*/}
+          {/*{ethPrice && (*/}
+          {/*  <ContentWrapper isLightTheme={theme}>*/}
+          {/*    <div>Price</div>*/}
+          {/*    <div>{numberWithCommas(ethPrice)}</div>*/}
+          {/*  </ContentWrapper>*/}
+          {/*)}*/}
+          {/*{protocol.balance > 0 && (*/}
+          {/*  <ContentWrapper isLightTheme={theme}>*/}
+          {/*    <div>Balance</div>*/}
+          {/*    <div>{numberWithCommas(parseFloat(protocol.balance).toFixed(2))}</div>*/}
+          {/*  </ContentWrapper>*/}
+          {/*)}*/}
+          {/*{protocol.apy > 0 && (*/}
+          {/*  <ContentWrapper isLightTheme={theme}>*/}
+          {/*    <div>APY</div>*/}
+          {/*    <div>{numberWithCommas(parseFloat(protocol.apy).toFixed(2))}%</div>*/}
+          {/*  </ContentWrapper>*/}
+          {/*)}*/}
+          {/*{protocol.totalStaked > 0 && (*/}
+          {/*  <ContentWrapper isLightTheme={theme}>*/}
+          {/*    <div>Staked</div>*/}
+          {/*    <div>${numberWithCommas(parseFloat(protocol.totalStaked).toFixed(2))}</div>*/}
+          {/*  </ContentWrapper>*/}
+          {/*)}*/}
+          {/*{protocol.claimable > 0 && (*/}
+          {/*  <ContentWrapper isLightTheme={theme}>*/}
+          {/*    <div>Claimable</div>*/}
+          {/*    <div>${numberWithCommas(parseFloat(protocol.claimable).toFixed(2))}</div>*/}
+          {/*  </ContentWrapper>*/}
+          {/*)}*/}
+          {/*{!stakedToken && protocol.price && (*/}
+          {/*  <ContentWrapper isLightTheme={theme}>*/}
+          {/*    <div>Price</div>*/}
+          {/*    <div>{`$${numberWithCommas(parseFloat(protocol.price).toFixed(2))}`}</div>*/}
+          {/*  </ContentWrapper>*/}
+          {/*)}*/}
+          {/*{protocol.stakingClaimable && (*/}
+          {/*  <ContentWrapper isLightTheme={theme}>*/}
+          {/*    <div>Claimable</div>*/}
+          {/*    <div>{`$${numberWithCommas(parseFloat(protocol.stakingClaimable).toFixed(2))}`}</div>*/}
+          {/*  </ContentWrapper>*/}
+          {/*)}*/}
+          {/*{protocol.liquidity && (*/}
+          {/*  <ContentWrapper isLightTheme={theme}>*/}
+          {/*    <div>Liquidity</div>*/}
+          {/*    <div>*/}
+          {/*      {protocol.liquidity*/}
+          {/*        ? `$${numberWithCommas(parseFloat(protocol.liquidity).toFixed(2))}`*/}
+          {/*        : `$0`}*/}
+          {/*    </div>*/}
+          {/*  </ContentWrapper>*/}
+          {/*)}*/}
         </>
       )}
     </Main>

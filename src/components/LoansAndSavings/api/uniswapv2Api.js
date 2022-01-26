@@ -51,11 +51,11 @@ export const getuniswapV2data = async (attributes) => {
           object.id = res[i].pair.id;
           object.balance = res[i].liquidityTokenBalance;
           object.tokenSupply = res[i].pair.totalSupply;
-          // object.token0name = res[i].pair.token0.name;
-          // object.token1name = res[i].pair.token1.name;
+          object.token0name = res[i].pair.token0.name;
+          object.token1name = res[i].pair.token1.name;
           object.name = res[i].pair.token0.name + '-' + res[i].pair.token1.name;
-          // object.token0Symbol = res[i].pair.token0.symbol;
-          // object.token1Symbol = res[i].pair.token1.symbol;
+          object.token0Symbol = res[i].pair.token0.symbol;
+          object.token1Symbol = res[i].pair.token1.symbol;
           object.symbol = res[i].pair.token0.symbol + '-' + res[i].pair.token1.symbol;
           object.liquidity = res[i].pair.reserveUSD;
           object.protocol = 'Uniswap V2';
@@ -92,7 +92,7 @@ export const getuniswapV2data = async (attributes) => {
           object.imageData = Images;
           if (object.value > 0) {
             tot += parseFloat(object.value);
-            object.totalValue = tot;
+            object.totalInvestment = tot;
             pools.push(object);
           }
         }

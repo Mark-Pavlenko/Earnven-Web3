@@ -107,15 +107,15 @@ const UniswapV2 = ({ accountAddress }) => {
   }, [uniswapV2array]);
   return (
     <div>
-      <div
-        style={{
-          fontSize: '12px',
-          marginLeft: '15px',
-          display: PoolsData.length > 0 ? '' : 'none',
-        }}>
-        Uniswap V2 --- {UniV2Total} USD
-      </div>
-      {PoolsContent}
+      {/*<div*/}
+      {/*  style={{*/}
+      {/*    fontSize: '12px',*/}
+      {/*    marginLeft: '15px',*/}
+      {/*    display: PoolsData.length > 0 ? '' : 'none',*/}
+      {/*  }}>*/}
+      {/*  Uniswap V2 --- {UniV2Total} USD*/}
+      {/*</div>*/}
+      {/*{PoolsContent}*/}
     </div>
   );
 };

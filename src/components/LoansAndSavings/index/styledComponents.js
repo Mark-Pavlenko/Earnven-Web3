@@ -13,6 +13,7 @@ export const PoolsBlock = styled.div`
   padding-top: 1px;
   padding-bottom: 1px;
   width: 48.5%;
+  //min-width: 325px;
   @media (max-width: 768px) {
     display: block;
     width: 100%;
