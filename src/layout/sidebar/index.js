@@ -305,7 +305,8 @@ export default function Sidebar({
     setGasPricesContent(content);
   }, [GasPrices]);
 
-  const mobileScreen = useMediaQuery('(min-width:710px)');
+  const isPhoneScreen = useMediaQuery('(max-width:709px)');
+  const startOfTabletScreen = useMediaQuery('(min-width:710px)');
   const laptopScreen = useMediaQuery('(min-width:1280px)');
 
   // main sidebar content
@@ -321,7 +322,7 @@ export default function Sidebar({
       }}>
       <SidebarMainLayout isLightTheme={isLightTheme}>
         <LogoBlock>
-          {mobileScreen ? (
+          {startOfTabletScreen ? (
             <>
               <LogoImg src={CompanyLogo} alt="" />
               {/*<MobileLogoTitle isLightTheme={isLightTheme}>Earnven</MobileLogoTitle>*/}
@@ -335,7 +336,7 @@ export default function Sidebar({
             </>
           )}
 
-          {mobileScreen && !laptopScreen && (
+          {startOfTabletScreen && !laptopScreen && (
             <SidebarTabletHeaderBtnsLayout>
               {isLightTheme ? (
                 <SidebarTabletNetworkButton
@@ -354,6 +355,7 @@ export default function Sidebar({
                   Network
                 </SidebarTabletNetworkButton>
               )}
+
               <GasButton
                 isLightTheme={isLightTheme}
                 startIcon={<img src={gasIcon} alt="" />}
@@ -415,6 +417,193 @@ export default function Sidebar({
               </SidebarMobileNetworkButton>
             )}
 
+            {/* Network popover for mobiles */}
+            {isPhoneScreen && (
+              <Popover
+                id={networksListId}
+                open={openNetworksListMobilePopover}
+                anchorEl={anchorEl}
+                onClose={handleNetworksListClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+                }}
+                anchorReference="anchorPosition"
+                anchorPosition={{ top: 100, left: 10 }}
+                PaperProps={{
+                  sx: {
+                    mt: 7,
+                    ml: 2.2,
+
+                    width: '345px',
+                    height: '540px',
+                    overflow: 'inherit',
+                    borderRadius: '10px',
+                    // background: (theme) => '#E5E5E5',
+                    mixBlendMode: 'normal',
+                    boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+                    backdropFilter: 'blur(15px)',
+                    ...sx,
+                  },
+                  style: {
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                  },
+                }}>
+                <MainSidebarMobilePopoverContent>
+                  <MobileSidebarNetworksList isLightTheme={isLightTheme}>
+                    <EthereumActiveNetwork
+                      isLightTheme={isLightTheme}
+                      style={{ marginBottom: '10px' }}>
+                      <img src={ethIcon} alt={'network_icon'} />
+                      <span>Ethereum</span>
+                    </EthereumActiveNetwork>
+                    <div>
+                      <img src={AvalancheIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                      {/*<MobileSidebarNetworksListSubBlock>*/}
+                      <span style={{ color: '#b3b3b4' }}> Avalanche</span>
+                      <MobileSidebarComingSoonLabel style={{ marginLeft: '-76px' }}>
+                        Coming soon
+                      </MobileSidebarComingSoonLabel>
+                      {/*</MobileSidebarNetworksListSubBlock>*/}
+                    </div>
+                    <div>
+                      <img src={bscIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                      {/*<MobileSidebarNetworksListSubBlock>*/}
+                      <span style={{ color: '#b3b3b4' }}>BSC</span>
+                      <MobileSidebarComingSoonLabel style={{ marginLeft: '-30px' }}>
+                        Coming soon
+                      </MobileSidebarComingSoonLabel>
+                      {/*</MobileSidebarNetworksListSubBlock>*/}
+                    </div>
+                    <div>
+                      <img src={arbitrumIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                      {/*<MobileSidebarNetworksListSubBlock>*/}
+                      <span style={{ color: '#b3b3b4' }}> Arbitrum</span>
+                      <MobileSidebarComingSoonLabel style={{ marginLeft: '-65px' }}>
+                        Coming soon
+                      </MobileSidebarComingSoonLabel>
+                      {/*</MobileSidebarNetworksListSubBlock>*/}
+                    </div>
+                    {/*<Button startIcon={<img src={bscIcon} alt={'network_icon'} />}>BSC</Button>*/}
+                    <div>
+                      <img src={fantomIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                      {/*<MobileSidebarNetworksListSubBlock>*/}
+                      <span style={{ color: '#b3b3b4' }}> Fantom</span>
+                      <MobileSidebarComingSoonLabel style={{ marginLeft: '-55px' }}>
+                        Coming soon
+                      </MobileSidebarComingSoonLabel>
+                      {/*</MobileSidebarNetworksListSubBlock>*/}
+                    </div>
+                    <div>
+                      <img src={Polygon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                      {/*<MobileSidebarNetworksListSubBlock>*/}
+                      <span style={{ color: '#b3b3b4' }}>Polygon</span>
+                      <MobileSidebarComingSoonLabel style={{ marginLeft: '-60px' }}>
+                        Coming soon
+                      </MobileSidebarComingSoonLabel>
+                      {/*</MobileSidebarNetworksListSubBlock>*/}
+                    </div>
+                  </MobileSidebarNetworksList>
+                </MainSidebarMobilePopoverContent>
+              </Popover>
+            )}
+
+            {/* Network popover for tablets*/}
+            {startOfTabletScreen && !laptopScreen && (
+              <Popover
+                id={networksListId}
+                open={openNetworksListMobilePopover}
+                anchorEl={anchorEl}
+                onClose={handleNetworksListClose}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                PaperProps={{
+                  sx: {
+                    mt: 6,
+                    ml: -10,
+
+                    width: '345px',
+                    height: '540px',
+                    overflow: 'inherit',
+                    borderRadius: '10px',
+                    // background: (theme) => '#E5E5E5',
+                    mixBlendMode: 'normal',
+                    boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+                    backdropFilter: 'blur(15px)',
+                    ...sx,
+                  },
+                  style: {
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                  },
+                }}>
+                <MainSidebarMobilePopoverContent>
+                  <MobileSidebarNetworksList isLightTheme={isLightTheme}>
+                    <EthereumActiveNetwork
+                      isLightTheme={isLightTheme}
+                      style={{ marginBottom: '10px' }}>
+                      <img src={ethIcon} alt={'network_icon'} />
+                      <span>Ethereum</span>
+                    </EthereumActiveNetwork>
+                    <div>
+                      <img src={AvalancheIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                      {/*<MobileSidebarNetworksListSubBlock>*/}
+                      <span style={{ color: '#b3b3b4' }}> Avalanche</span>
+                      <MobileSidebarComingSoonLabel style={{ marginLeft: '-76px' }}>
+                        Coming soon
+                      </MobileSidebarComingSoonLabel>
+                      {/*</MobileSidebarNetworksListSubBlock>*/}
+                    </div>
+                    <div>
+                      <img src={bscIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                      {/*<MobileSidebarNetworksListSubBlock>*/}
+                      <span style={{ color: '#b3b3b4' }}>BSC</span>
+                      <MobileSidebarComingSoonLabel style={{ marginLeft: '-30px' }}>
+                        Coming soon
+                      </MobileSidebarComingSoonLabel>
+                      {/*</MobileSidebarNetworksListSubBlock>*/}
+                    </div>
+                    <div>
+                      <img src={arbitrumIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                      {/*<MobileSidebarNetworksListSubBlock>*/}
+                      <span style={{ color: '#b3b3b4' }}> Arbitrum</span>
+                      <MobileSidebarComingSoonLabel style={{ marginLeft: '-65px' }}>
+                        Coming soon
+                      </MobileSidebarComingSoonLabel>
+                      {/*</MobileSidebarNetworksListSubBlock>*/}
+                    </div>
+                    {/*<Button startIcon={<img src={bscIcon} alt={'network_icon'} />}>BSC</Button>*/}
+                    <div>
+                      <img src={fantomIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                      {/*<MobileSidebarNetworksListSubBlock>*/}
+                      <span style={{ color: '#b3b3b4' }}> Fantom</span>
+                      <MobileSidebarComingSoonLabel style={{ marginLeft: '-55px' }}>
+                        Coming soon
+                      </MobileSidebarComingSoonLabel>
+                      {/*</MobileSidebarNetworksListSubBlock>*/}
+                    </div>
+                    <div>
+                      <img src={Polygon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                      {/*<MobileSidebarNetworksListSubBlock>*/}
+                      <span style={{ color: '#b3b3b4' }}>Polygon</span>
+                      <MobileSidebarComingSoonLabel style={{ marginLeft: '-60px' }}>
+                        Coming soon
+                      </MobileSidebarComingSoonLabel>
+                      {/*</MobileSidebarNetworksListSubBlock>*/}
+                    </div>
+                  </MobileSidebarNetworksList>
+                </MainSidebarMobilePopoverContent>
+              </Popover>
+            )}
+
+            {/* Gas button */}
             <GasButton
               isLightTheme={isLightTheme}
               startIcon={<img src={gasIcon} alt="" />}
@@ -429,147 +618,117 @@ export default function Sidebar({
             </GasButton>
 
             {/*Gas Items Price*/}
-            <Popover
-              id={id}
-              open={openGasPricesMobilePopover}
-              anchorEl={anchorEl}
-              onClose={handleGasItemListClose}
-              anchorReference="anchorPosition"
-              anchorPosition={{ top: 100, left: 10 }}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              transformOrigin={{
-                vertical: 'center',
-                horizontal: 'left',
-              }}
-              PaperProps={{
-                sx: {
-                  mt: 7,
-                  ml: 2.2,
+            {isPhoneScreen && (
+              <Popover
+                id={id}
+                open={openGasPricesMobilePopover}
+                anchorEl={anchorEl}
+                onClose={handleGasItemListClose}
+                // anchorOrigin={{
+                //   vertical: 'bottom',
+                //   horizontal: 'right',
+                // }}
+                // transformOrigin={{
+                //   vertical: 'top',
+                //   horizontal: 'right',
+                // }}
 
-                  width: '345px',
-                  height: '540px',
-                  overflow: 'inherit',
-                  borderRadius: '10px',
-                  // background: (theme) => '#E5E5E5',
-                  mixBlendMode: 'normal',
-                  boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-                  backdropFilter: 'blur(15px)',
-                  ...sx,
-                },
-                style: {
-                  backgroundColor: 'transparent',
-                  boxShadow: 'none',
-                },
-              }}>
-              <MainSidebarMobilePopoverContent>
-                <SidebarMobilePopoverGasPriceTitle isLightTheme={isLightTheme}>
-                  Realtime Gas Prices
-                </SidebarMobilePopoverGasPriceTitle>
-                <SidebarMobileGasItemsBlock>{GasPricesContent}</SidebarMobileGasItemsBlock>
-                <SidebarMobilePopoverLink>
-                  Provided by{' '}
-                  <a href={'https://etherscan.io/'} target="_blank">
-                    etherscan.io
-                  </a>
-                </SidebarMobilePopoverLink>
-              </MainSidebarMobilePopoverContent>
-            </Popover>
+                anchorReference="anchorPosition"
+                anchorPosition={{ top: 100, left: 10 }}
+                transformOrigin={{
+                  vertical: 'center',
+                  horizontal: 'left',
+                }}
+                PaperProps={{
+                  sx: {
+                    mt: 7,
+                    ml: 2.2,
 
-            <Popover
-              id={networksListId}
-              open={openNetworksListMobilePopover}
-              anchorEl={anchorEl}
-              onClose={handleNetworksListClose}
-              anchorReference="anchorPosition"
-              anchorPosition={{ top: 100, left: 10 }}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              transformOrigin={{
-                vertical: 'center',
-                horizontal: 'left',
-              }}
-              PaperProps={{
-                sx: {
-                  mt: 7,
-                  ml: 2.2,
+                    width: '345px',
+                    height: '540px',
+                    overflow: 'inherit',
+                    borderRadius: '10px',
+                    // backgroundColor: 'red',
+                    mixBlendMode: 'normal',
+                    boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+                    backdropFilter: 'blur(15px)',
+                    ...sx,
+                  },
+                  style: {
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                  },
+                }}>
+                <MainSidebarMobilePopoverContent>
+                  <SidebarMobilePopoverGasPriceTitle isLightTheme={isLightTheme}>
+                    Realtime Gas Prices 123
+                  </SidebarMobilePopoverGasPriceTitle>
+                  <SidebarMobileGasItemsBlock>{GasPricesContent}</SidebarMobileGasItemsBlock>
+                  <SidebarMobilePopoverLink>
+                    Provided by{' '}
+                    <a href={'https://etherscan.io/'} target="_blank">
+                      etherscan.io
+                    </a>
+                  </SidebarMobilePopoverLink>
+                </MainSidebarMobilePopoverContent>
+              </Popover>
+            )}
 
-                  width: '345px',
-                  height: '540px',
-                  overflow: 'inherit',
-                  borderRadius: '10px',
-                  // background: (theme) => '#E5E5E5',
-                  mixBlendMode: 'normal',
-                  boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-                  backdropFilter: 'blur(15px)',
-                  ...sx,
-                },
-                style: {
-                  backgroundColor: 'transparent',
-                  boxShadow: 'none',
-                },
-              }}>
-              <MainSidebarMobilePopoverContent>
-                <MobileSidebarNetworksList isLightTheme={isLightTheme}>
-                  <EthereumActiveNetwork
-                    isLightTheme={isLightTheme}
-                    style={{ marginBottom: '10px' }}>
-                    <img src={ethIcon} alt={'network_icon'} />
-                    <span>Ethereum</span>
-                  </EthereumActiveNetwork>
-                  <div>
-                    <img src={AvalancheIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
-                    {/*<MobileSidebarNetworksListSubBlock>*/}
-                    <span style={{ color: '#b3b3b4' }}> Avalanche</span>
-                    <MobileSidebarComingSoonLabel style={{ marginLeft: '-76px' }}>
-                      Coming soon
-                    </MobileSidebarComingSoonLabel>
-                    {/*</MobileSidebarNetworksListSubBlock>*/}
-                  </div>
-                  <div>
-                    <img src={bscIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
-                    {/*<MobileSidebarNetworksListSubBlock>*/}
-                    <span style={{ color: '#b3b3b4' }}>BSC</span>
-                    <MobileSidebarComingSoonLabel style={{ marginLeft: '-30px' }}>
-                      Coming soon
-                    </MobileSidebarComingSoonLabel>
-                    {/*</MobileSidebarNetworksListSubBlock>*/}
-                  </div>
-                  <div>
-                    <img src={arbitrumIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
-                    {/*<MobileSidebarNetworksListSubBlock>*/}
-                    <span style={{ color: '#b3b3b4' }}> Arbitrum</span>
-                    <MobileSidebarComingSoonLabel style={{ marginLeft: '-65px' }}>
-                      Coming soon
-                    </MobileSidebarComingSoonLabel>
-                    {/*</MobileSidebarNetworksListSubBlock>*/}
-                  </div>
-                  {/*<Button startIcon={<img src={bscIcon} alt={'network_icon'} />}>BSC</Button>*/}
-                  <div>
-                    <img src={fantomIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
-                    {/*<MobileSidebarNetworksListSubBlock>*/}
-                    <span style={{ color: '#b3b3b4' }}> Fantom</span>
-                    <MobileSidebarComingSoonLabel style={{ marginLeft: '-55px' }}>
-                      Coming soon
-                    </MobileSidebarComingSoonLabel>
-                    {/*</MobileSidebarNetworksListSubBlock>*/}
-                  </div>
-                  <div>
-                    <img src={Polygon} alt={'network_icon'} style={{ marginTop: '22px' }} />
-                    {/*<MobileSidebarNetworksListSubBlock>*/}
-                    <span style={{ color: '#b3b3b4' }}>Polygon</span>
-                    <MobileSidebarComingSoonLabel style={{ marginLeft: '-60px' }}>
-                      Coming soon
-                    </MobileSidebarComingSoonLabel>
-                    {/*</MobileSidebarNetworksListSubBlock>*/}
-                  </div>
-                </MobileSidebarNetworksList>
-              </MainSidebarMobilePopoverContent>
-            </Popover>
+            {startOfTabletScreen && !laptopScreen && (
+              // Gas prices for tablets
+              <Popover
+                id={id}
+                open={openGasPricesMobilePopover}
+                anchorEl={anchorEl}
+                onClose={handleGasItemListClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                // anchorReference="anchorPosition"
+                // anchorPosition={{ top: 100, left: 10 }}
+                // transformOrigin={{
+                //   vertical: 'center',
+                //   horizontal: 'left',
+                // }}
+                PaperProps={{
+                  sx: {
+                    mt: 1,
+                    ml: 2.2,
+
+                    width: '345px',
+                    height: '540px',
+                    overflow: 'inherit',
+                    borderRadius: '10px',
+                    // backgroundColor: 'red',
+                    mixBlendMode: 'normal',
+                    boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+                    backdropFilter: 'blur(15px)',
+                    ...sx,
+                  },
+                  style: {
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                  },
+                }}>
+                <MainSidebarMobilePopoverContent>
+                  <SidebarMobilePopoverGasPriceTitle isLightTheme={isLightTheme}>
+                    Realtime Gas Prices 456
+                  </SidebarMobilePopoverGasPriceTitle>
+                  <SidebarMobileGasItemsBlock>{GasPricesContent}</SidebarMobileGasItemsBlock>
+                  <SidebarMobilePopoverLink>
+                    Provided by{' '}
+                    <a href={'https://etherscan.io/'} target="_blank">
+                      etherscan.io
+                    </a>
+                  </SidebarMobilePopoverLink>
+                </MainSidebarMobilePopoverContent>
+              </Popover>
+            )}
           </SidebarMobileIconSubBlock>
           <ChangeThemeBtnMobile
             onClick={() => {
