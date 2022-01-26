@@ -13,8 +13,7 @@ export const PoolsBlock = styled.div`
   padding-top: 1px;
   padding-bottom: 1px;
   width: 48.5%;
-  //min-width: 325px;
-  @media (max-width: 768px) {
+  @media (max-width: 1150px) {
     display: block;
     width: 100%;
   }
@@ -94,7 +93,7 @@ export const InvestmentWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  @media (max-width: 768px) {
+  @media (max-width: 1150px) {
     display: block;
   }
 `;
@@ -112,7 +111,7 @@ export const LeftColumnWrapper = styled.div`
   width: 50%;
   padding-right: 14px;
   box-sizing: border-box;
-  @media (max-width: 768px) {
+  @media (max-width: 1150px) {
     width: 100%;
     padding-right: 0;
   }
@@ -122,14 +121,14 @@ export const RightColumnWrapper = styled.div`
   width: 50%;
   padding-left: 14px;
   box-sizing: border-box;
-  @media (max-width: 768px) {
+  @media (max-width: 1150px) {
     width: 100%;
   }
 `;
 
 export const ContentWrapper = styled.div`
   display: flex;
-  @media (max-width: 768px) {
+  @media (max-width: 1150px) {
     display: block;
   }
 `;

@@ -71,7 +71,7 @@ export const MockTokenImage = styled.img`
 `;
 
 export const TokenName = styled.span`
-  //word-break: break-word;
+  line-height: 21px;
   font-size: 12px;
   font-weight: 600;
   color: ${(props) => (props.isLightTheme ? '#1E1E20' : 'white')};
@@ -80,6 +80,7 @@ export const TokenName = styled.span`
 export const ImagesWrapper = styled.div`
   display: flex;
   margin-right: 5px;
+  align-items: center;
 `;
 
 export const ContentWrapper = styled.div`

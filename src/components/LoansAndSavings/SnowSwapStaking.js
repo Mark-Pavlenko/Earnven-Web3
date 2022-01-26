@@ -94,7 +94,6 @@ export const SnowSwapStaking = ({ accountAddress }) => {
             object.protocol = 'SnowSwap';
             object.chain = 'Ethereum';
             object.tokenName = 'SnowSwap';
-            object.imageData = [SnowSwapLogo];
             protocolData.push(object);
           }
         })

@@ -10,6 +10,9 @@ export const Main = styled.div`
       : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
   padding: 20px;
   border-radius: 10px;
+  @media (max-width: 1150px) {
+    padding: 0 29px 0 26px;
+  }
 `;
 
 export const Header = styled.div`

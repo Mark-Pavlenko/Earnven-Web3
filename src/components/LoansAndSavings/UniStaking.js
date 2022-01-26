@@ -29,6 +29,7 @@ export default function UniStaking({ accountAddress }) {
   }, [accountAddress]);
 
   const uniswapV2array = useSelector((state) => state.uniswapV2stake.uniswapV2stake);
+  console.log('uniswapV2array', uniswapV2array);
   useEffect(() => {
     let tot = 0;
     setUniStateData(uniswapV2array);

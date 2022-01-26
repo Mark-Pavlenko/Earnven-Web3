@@ -72,17 +72,13 @@ const Investment = ({
             style={{
               display: 'flex',
               flexWrap: 'wrap',
-              justifyContent: 'center',
               alignItems: 'center',
             }}>
             {tokens ? (
               tokens.map((name, index) => (
                 <>
                   {index !== 0 && (
-                    <div
-                      style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                      {gap}
-                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>{gap}</div>
                   )}
                   <TokenName isLightTheme={theme}>{`${name.symbol}`}</TokenName>
                 </>
@@ -230,9 +226,7 @@ const Investment = ({
                 item !== 'stakingContractAddress' &&
                 item !== 'tokenAddress' &&
                 item !== 'contractAddress' &&
-                item !== 'apy' &&
                 item !== 'tokenDecimal' &&
-                item !== 'protocol' &&
                 item !== 'yTokenDecimals' &&
                 item !== 'image'
             )

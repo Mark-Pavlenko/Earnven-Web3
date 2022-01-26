@@ -29,9 +29,9 @@ export const MainStyle = styled('div')`
   }
 
   @media (max-width: 1024px) {
-    padding-right: 35px;
+    //padding-right: 35px;
     padding-bottom: 20px;
-    padding-left: 35px;
+    //padding-left: 35px;
   }
 
   @media (min-width: 1280px) {
@@ -41,5 +41,10 @@ export const MainStyle = styled('div')`
 
   @media (min-width: 1445px) {
     margin-left: 314px;
+  }
+
+  @media (min-width: 375px) {
+    padding-right: 0;
+    padding-left: 0;
   }
 `;
