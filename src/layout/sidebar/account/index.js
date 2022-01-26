@@ -142,8 +142,78 @@ export default function Account({ address, name, global_wallet, setTheme }) {
     }
   }
 
-  const mobileSize = useMediaQuery('(max-width:400px)');
-  const tabletSize = useMediaQuery('(max-width:800px)');
+  const mobileSize = useMediaQuery('(max-width:709px)');
+  const startTabletSize = useMediaQuery('(min-width:710px)');
+  const endTabletSize = useMediaQuery('(max-width:1280px)');
+  const laptopSize = useMediaQuery('(min-width:1281px)');
+  const bigTabletSize = useMediaQuery('(max-width:1445px)');
+  const desktopSize = useMediaQuery('(min-width:1446px)');
+
+  const accountListContent = (
+    <>
+      {/* my wallet*/}
+      <MyWalletsLabel isLightTheme={themeType}>
+        <p isLightTheme={themeType}>{accountList.length > 0 && 'My Wallet'}</p>
+      </MyWalletsLabel>
+      <WalletsList isMetamaskWallet={true}>
+        {accountList && (
+          <WalletsListItem isLightTheme={themeType}>
+            <Accounts
+              setaccount_menuclose={(w) => setaccount(w)}
+              onClick={() => {
+                hideAccountPopover();
+              }}
+              onReRender={handleReRender}
+              address={JSON.parse(global_wallet)[0].address}
+              name={JSON.parse(global_wallet)[0].name}
+              globalWalletsList={JSON.stringify(JSON.parse(global_wallet)[0])}
+              currentWalletAddress={currentWallet[0].address}
+              isMetamaskWallet={true}
+              // endTabletSize={endTabletSize}
+            />
+          </WalletsListItem>
+        )}
+      </WalletsList>
+      {/* all wallets */}
+      <MyWalletsLabel isLightTheme={themeType} allWalletsListMobile={true}>
+        <p isLightTheme={themeType}>{accountList.length > 0 && 'Watchlist'}</p>
+      </MyWalletsLabel>
+      <div>
+        <WalletsList>
+          {accountList &&
+            accountList.map((option) => (
+              <WalletsListItem isLightTheme={themeType}>
+                <Accounts
+                  setaccount_menuclose={(w) => setaccount(w)}
+                  onClick={() => {
+                    hideAccountPopover();
+                  }}
+                  onReRender={handleReRender}
+                  address={option.address}
+                  name={option.name}
+                  globalWalletsList={global_wallet}
+                  currentWalletAddress={currentWallet[0].address}
+                  isMetamaskWallet={false}
+                />
+              </WalletsListItem>
+            ))}
+          <AddNewWalletListItem isLightTheme={themeType} onClick={routeToConnectWallet}>
+            <ListItemIcon sx={{ mr: 1, minWidth: '17px' }}>
+              <AddWalletIcon isLightTheme={themeType} />
+            </ListItemIcon>
+            <ListItemText
+              primaryTypographyProps={{
+                variant: 'watchlist_font_balance',
+              }}
+              sx={{ opacity: 0.5, marginTop: '2px' }}>
+              New Wallet
+            </ListItemText>
+          </AddNewWalletListItem>
+        </WalletsList>
+        {/* add new item element */}
+      </div>
+    </>
+  );
 
   return (
     <>
@@ -168,75 +238,115 @@ export default function Account({ address, name, global_wallet, setTheme }) {
               <AccountBalance address={address} />
             </WalletsListBlock>
           </AccountStyle>
-          {/* here */}
-          <WalletListPopover
-            sx={{ ml: -2.2, mt: '3px' }}
-            isLightTheme={themeType}
-            open={account}
-            onClose={hideAccountPopover}
-            anchorEl={anchorRef.current}>
-            {/* my wallet*/}
-            <MyWalletsLabel isLightTheme={themeType}>
-              <p isLightTheme={themeType}>{accountList.length > 0 && 'My Wallet'}</p>
-            </MyWalletsLabel>
-            <WalletsList isMetamaskWallet={true}>
-              {accountList && (
-                <WalletsListItem isLightTheme={themeType}>
-                  <Accounts
-                    setaccount_menuclose={(w) => setaccount(w)}
-                    onClick={() => {
-                      hideAccountPopover();
-                    }}
-                    onReRender={handleReRender}
-                    address={JSON.parse(global_wallet)[0].address}
-                    name={JSON.parse(global_wallet)[0].name}
-                    globalWalletsList={JSON.stringify(JSON.parse(global_wallet)[0])}
-                    currentWalletAddress={currentWallet[0].address}
-                    isMetamaskWallet={true}
-                  />
-                </WalletsListItem>
-              )}
-            </WalletsList>
 
-            {/* all wallets */}
-            <MyWalletsLabel isLightTheme={themeType} allWalletsListMobile={true}>
-              <p isLightTheme={themeType}>{accountList.length > 0 && 'Watchlist'}</p>
-            </MyWalletsLabel>
-            <div>
-              <WalletsList>
-                {accountList &&
-                  accountList.map((option) => (
-                    <WalletsListItem isLightTheme={themeType}>
-                      <Accounts
-                        setaccount_menuclose={(w) => setaccount(w)}
-                        onClick={() => {
-                          hideAccountPopover();
-                        }}
-                        onReRender={handleReRender}
-                        address={option.address}
-                        name={option.name}
-                        globalWalletsList={global_wallet}
-                        currentWalletAddress={currentWallet[0].address}
-                        isMetamaskWallet={false}
-                      />
-                    </WalletsListItem>
-                  ))}
-                <AddNewWalletListItem isLightTheme={themeType} onClick={routeToConnectWallet}>
-                  <ListItemIcon sx={{ mr: 1, minWidth: '17px' }}>
-                    <AddWalletIcon isLightTheme={themeType} />
-                  </ListItemIcon>
-                  <ListItemText
-                    primaryTypographyProps={{
-                      variant: 'watchlist_font_balance',
-                    }}
-                    sx={{ opacity: 0.5, marginTop: '2px' }}>
-                    New Wallet
-                  </ListItemText>
-                </AddNewWalletListItem>
+          {/*size till 1280px */}
+          {endTabletSize && (
+            <WalletListPopover
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              isLightTheme={themeType}
+              open={account}
+              onClose={hideAccountPopover}
+              anchorEl={anchorRef.current}>
+              <MyWalletsLabel isLightTheme={themeType}>
+                <p isLightTheme={themeType}>{accountList.length > 0 && 'My Wallet'}</p>
+              </MyWalletsLabel>
+              <WalletsList isMetamaskWallet={true}>
+                {accountList && (
+                  <WalletsListItem isLightTheme={themeType}>
+                    <Accounts
+                      setaccount_menuclose={(w) => setaccount(w)}
+                      onClick={() => {
+                        hideAccountPopover();
+                      }}
+                      onReRender={handleReRender}
+                      address={JSON.parse(global_wallet)[0].address}
+                      name={JSON.parse(global_wallet)[0].name}
+                      globalWalletsList={JSON.stringify(JSON.parse(global_wallet)[0])}
+                      currentWalletAddress={currentWallet[0].address}
+                      isMetamaskWallet={true}
+                      endTabletSize={true}
+                    />
+                  </WalletsListItem>
+                )}
               </WalletsList>
-              {/* add new item element */}
-            </div>
-          </WalletListPopover>
+              {/* all wallets */}
+              <MyWalletsLabel isLightTheme={themeType} allWalletsListMobile={true}>
+                <p isLightTheme={themeType}>{accountList.length > 0 && 'Watchlist'}</p>
+              </MyWalletsLabel>
+              <div>
+                <WalletsList>
+                  {accountList &&
+                    accountList.map((option) => (
+                      <WalletsListItem isLightTheme={themeType}>
+                        <Accounts
+                          setaccount_menuclose={(w) => setaccount(w)}
+                          onClick={() => {
+                            hideAccountPopover();
+                          }}
+                          onReRender={handleReRender}
+                          address={option.address}
+                          name={option.name}
+                          globalWalletsList={global_wallet}
+                          currentWalletAddress={currentWallet[0].address}
+                          isMetamaskWallet={false}
+                        />
+                      </WalletsListItem>
+                    ))}
+                  <AddNewWalletListItem isLightTheme={themeType} onClick={routeToConnectWallet}>
+                    <ListItemIcon sx={{ mr: 1, minWidth: '17px' }}>
+                      <AddWalletIcon isLightTheme={themeType} />
+                    </ListItemIcon>
+                    <ListItemText
+                      primaryTypographyProps={{
+                        variant: 'watchlist_font_balance',
+                      }}
+                      sx={{ opacity: 0.5, marginTop: '2px' }}>
+                      New Wallet
+                    </ListItemText>
+                  </AddNewWalletListItem>
+                </WalletsList>
+                {/* add new item element */}
+              </div>
+            </WalletListPopover>
+          )}
+
+          {/* size from 1281 till 1445px */}
+          {laptopSize && bigTabletSize && (
+            <WalletListPopover
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              isLightTheme={themeType}
+              open={account}
+              onClose={hideAccountPopover}
+              anchorEl={anchorRef.current}>
+              f{accountListContent}
+            </WalletListPopover>
+          )}
+
+          {/*size form 1446px*/}
+          {desktopSize && (
+            <WalletListPopover
+              sx={{ ml: -2.2, mt: '3px' }}
+              isLightTheme={themeType}
+              open={account}
+              onClose={hideAccountPopover}
+              anchorEl={anchorRef.current}>
+              {accountListContent}
+            </WalletListPopover>
+          )}
         </div>
       ) : (
         <EnterAccountBlock isLightTheme={themeType}>

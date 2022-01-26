@@ -307,6 +307,7 @@ export default function Sidebar({
 
   const isPhoneScreen = useMediaQuery('(max-width:709px)');
   const startOfTabletScreen = useMediaQuery('(min-width:710px)');
+  const displayAccountsMobile = useMediaQuery('(min-width:780px)');
   const laptopScreen = useMediaQuery('(min-width:1280px)');
 
   // main sidebar content
@@ -391,12 +392,15 @@ export default function Sidebar({
           )}
         </LogoBlock>
         {/* Account block for mobile devices*/}
-        <Account
-          address={address}
-          name={name}
-          setTheme={isLightTheme}
-          global_wallet={global_wallet}
-        />
+        {displayAccountsMobile && (
+          <Account
+            address={address}
+            name={name}
+            setTheme={isLightTheme}
+            global_wallet={global_wallet}
+          />
+        )}
+
         <NavSection sx={{ px: 8, color: 'black' }} navConfig={newSideBard} address={address} />
         <SidebarMobileIconsBlock>
           <SidebarMobileIconSubBlock>
@@ -795,6 +799,7 @@ export default function Sidebar({
                 currentWalletAddress={currentWallet[0].address}
                 isMetamaskWallet={true}
                 isMobileWalletsList={true}
+                endTabletSize={false}
               />
             </WalletsListItem>
           )}

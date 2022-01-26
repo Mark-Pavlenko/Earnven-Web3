@@ -246,10 +246,13 @@ export const WalletListItemAccountLogo = styled(Avatar)`
   width: 21px;
   height: 21px;
 
-  @media (max-width: 1280px) {
-    width: ${(props) => (props.isMetamaskWallet ? '46px' : '21px')};
-    height: ${(props) => (props.isMetamaskWallet ? '46px' : '21px')};
-    margin-top: ${(props) => (props.isMobileWalletsList ? '8px' : '0px')};
+  @media (max-width: 710px) {
+    width: ${(props) =>
+      props.isMetamaskWallet && props.endTabletSize === false ? '46px' : '21px'};
+    height: ${(props) =>
+      props.isMetamaskWallet && props.endTabletSize === false ? '46px' : '21px'};
+    margin-top: ${(props) =>
+      props.isMobileWalletsList && props.endTabletSize === false ? '8px' : '0px'};
   }
 `;
 
