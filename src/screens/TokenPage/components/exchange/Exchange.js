@@ -1,11 +1,9 @@
 import React from 'react';
-// import { Main } from './styledComponents';
 import { Main, Title } from '../styledComponentsCommon';
 
-const Exchange = () => {
+const Exchange = ({ isLightTheme }) => {
   return (
-    <Main>
-      {' '}
+    <Main isLightTheme={isLightTheme}>
       <Title>{'Exchange'}</Title>
     </Main>
   );

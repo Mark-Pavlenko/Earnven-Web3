@@ -3,12 +3,21 @@ import styled from 'styled-components';
 export const Main = styled.div`
   background: ${({ isLightTheme }) =>
     isLightTheme ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)'};
-  border-radius: 10px;
-  margin-bottom: 35px;
+  box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
+  border-radius: 30px;
+  margin: 25px 0 35px 0;
+  padding: 20px 15px;
   width: 100%;
 `;
 
 export const Header = styled.div`
+  height: 41px;
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const NetWrapper = styled.div`
+  margin-top: 15px;
   height: 41px;
   display: flex;
   justify-content: space-between;
@@ -33,9 +42,8 @@ export const TokenPlatformLogo = styled.div`
   }
 `;
 
-export const Links = styled.div`
-  margin-left: 50px;
-  width: 100%;
+export const LeftSide = styled.div`
+  width: 404px;
   display: flex;
   justify-content: space-between;
 `;
@@ -44,12 +52,19 @@ export const TokenLinks = styled.div`
   display: flex;
 `;
 
+export const MainLinks = styled.div`
+  //width: 100px;
+  display: flex;
+  //justify-content: space-between;
+`;
+
 export const TokenLink = styled.div`
   display: block;
   position: relative;
   width: 41px;
   height: 41px;
-  background-color: #ffffff;
+  background: ${({ isLightTheme }) => (isLightTheme ? '#FFFFFF' : 'rgba(31, 38, 92, 0.24)')};
+  box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
   border-radius: 7px;
   border: none;
   cursor: pointer;

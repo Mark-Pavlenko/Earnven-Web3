@@ -1,41 +1,66 @@
 import styled from 'styled-components';
 
 export const Main = styled.div`
-  //border: 1px solid red;
-  max-width: 1920px;
+  max-width: 1535px;
+
+  @media (max-width: 480px) {
+    width: 375px;
+  }
+`;
+
+export const Desktop = styled.div`
+  display: block;
+  @media (max-width: 480px) {
+    display: none;
+  }
+`;
+
+export const Mobile = styled.div`
+  display: none;
+  @media (max-width: 480px) {
+    display: block;
+  }
 `;
 
 export const TopContainer = styled.div`
-  //border: 1px solid green;
   margin: 35px 0 0 0;
   display: flex;
   justify-content: space-between;
 
   @media (max-width: 1440px) {
     flex-direction: column;
-    //width: 100%;
   }
 `;
 
 export const LeftSideWrapper = styled.div`
-  max-width: 885px;
-  width: 62%;
+  //max-width: 885px;
+  width: 60%;
   margin-right: 35px;
-  //border: 1px solid red;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+
+  @media (max-width: 1440px) {
+    width: 100%;
+  }
 `;
 
 export const RightSideWrapper = styled.div`
   //width: 525px;
-  width: 38%;
-  //border: 1px solid red;
+  width: 40%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+
+  @media (max-width: 1440px) {
+    //max-width: 885px;
+    width: 100%;
+  }
 `;
 
 export const BottomContainer = styled.div`
-  //border: 1px solid red;
+  @media (max-width: 1440px) {
+    //max-width: 885px;
+    width: 100%;
+  }
 `;

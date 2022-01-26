@@ -1,10 +1,10 @@
 import React from 'react';
-import { Wrapper, InfoCard, Mark, Value } from './styledComponents';
 import { Main, Title } from '../styledComponentsCommon';
+import { Wrapper, InfoCard, Mark, Value } from './styledComponents';
 
-const Performance = () => {
+const Performance = ({ isLightTheme }) => {
   return (
-    <Main>
+    <Main isLightTheme={isLightTheme}>
       <Title>{'Performance'}</Title>
       <Wrapper>
         <InfoCard>
