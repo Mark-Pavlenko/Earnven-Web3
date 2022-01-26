@@ -4,6 +4,14 @@ import { List } from '@material-ui/core';
 export const MainLinksLayout = styled.div`
   margin-top: auto;
   margin-bottom: 55px;
+
+  @media screen and (max-width: 1279px) and (min-width: 710px) {
+    margin-top: 0;
+  }
+
+  @media (max-height: 800px) {
+    margin-bottom: 20px;
+  }
 `;
 
 export const InfoLinksList = styled.div`
@@ -11,6 +19,15 @@ export const InfoLinksList = styled.div`
 
   @media (max-width: 1280px) {
     margin-left: 38px;
+  }
+
+  @media screen and (max-width: 1445px) and (min-width: 1281px) {
+    margin-left: 27px;
+    margin-bottom: 20px;
+  }
+
+  @media screen and (max-width: 1280px) and (min-width: 710px) {
+    margin-left: 103px;
   }
 `;
 
@@ -20,13 +37,25 @@ export const InfoListItem = styled(List)`
   color: black;
   font-size: 14px;
   font-weight: 400;
+
+  @media screen and (max-width: 1445px) and (min-width: 1281px) {
+    margin-bottom: 2px;
+  }
+
+  @media screen and (min-width: 1445px) and (max-height: 800px) {
+    margin-bottom: 10px;
+  }
 `;
 
 export const InfoListItemLink = styled('a')(({ isLightTheme }) => ({
-  color: isLightTheme ? 'black !important' : 'white !important',
+  color: isLightTheme ? 'black' : 'white',
   fontWeight: 400,
   fontSize: '14px',
   textDecoration: 'none',
+  '@media screen and (max-width: 1445px) and (min-width: 1281px)': {
+    fontSize: '10px',
+  },
+
   '&:hover': {
     color: '#4453AD !important',
     fontWeight: 500,
@@ -46,6 +75,10 @@ export const NetworksGridList = styled.ul`
 
   li:first-child {
     margin-bottom: 20px;
+
+    @media screen and (max-width: 1445px) and (min-width: 1281px) {
+      margin-bottom: 10px;
+    }
   }
 
   li:hover {
@@ -62,6 +95,32 @@ export const NetworksGridList = styled.ul`
     margin-left: 36px;
     margin-bottom: 47px;
   }
+
+  @media screen and (max-width: 1445px) and (min-width: 1281px) {
+    margin-left: 20px;
+    gap: 12px;
+    display: flex;
+  }
+
+  @media screen and (max-width: 1280px) and (min-width: 710px) {
+    margin-left: 95px;
+  }
+
+  @media (max-height: 800px) {
+    margin-top: 5px;
+  }
 `;
 
-export const NetworksSubColumn = styled.div``;
+export const NetworksSubColumn = styled.div`
+  img {
+    width: 20px;
+    height: 20px;
+  }
+
+  @media screen and (max-width: 1445px) and (min-width: 1281px) {
+    img {
+      width: 18px;
+      height: 18px;
+    }
+  }
+`;

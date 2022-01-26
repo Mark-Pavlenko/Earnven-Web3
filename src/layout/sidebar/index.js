@@ -43,6 +43,15 @@ import {
   MobileSidebarComingSoonLabel,
   MobileSidebarNetworksListSubBlock,
   EthereumActiveNetwork,
+  DrawerLayoutDesktop,
+  DrawerLayoutTablet,
+  LogoTitleImg,
+  MobileLogoBlockWalletsList,
+  CloseTabletSidebarIcon,
+  ChangeThemeBtnTablet,
+  SidebarTabletNetworkButton,
+  SidebarTabletHeaderBtnsLayout,
+  MobileLogoTitle,
 } from './styles';
 import lightIcon from '../../assets/icons/lightIcon.svg';
 import darkIcon from '../../assets/icons/darkIcon.svg';
@@ -114,6 +123,7 @@ const gasType = [
 const MINUTE_MS = 10000;
 
 import PersonAdd from '@material-ui/icons/PersonAdd';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 export default function Sidebar({
   isOpenSidebar,
@@ -295,8 +305,11 @@ export default function Sidebar({
     setGasPricesContent(content);
   }, [GasPrices]);
 
+  const mobileScreen = useMediaQuery('(min-width:710px)');
+  const laptopScreen = useMediaQuery('(min-width:1280px)');
+
   // main sidebar content
-  const mainSidebarLayoutContent = (
+  const desktopSidebarLayoutContent = (
     <Scrollbar
       sx={{
         height: '100vh',
@@ -308,20 +321,71 @@ export default function Sidebar({
       }}>
       <SidebarMainLayout isLightTheme={isLightTheme}>
         <LogoBlock>
-          <LogoImg src={CompanyLogo} alt="" />
-          <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
-          {isLightTheme ? (
-            <CloseMobileSidebarIcon
-              src={CloseMobileSidebarLight}
-              alt=""
-              onClick={() => onCloseSidebar()}
-            />
+          {mobileScreen ? (
+            <>
+              <LogoImg src={CompanyLogo} alt="" />
+              {/*<MobileLogoTitle isLightTheme={isLightTheme}>Earnven</MobileLogoTitle>*/}
+              <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
+            </>
           ) : (
-            <CloseMobileSidebarIcon
-              src={CloseMobileSidebarDark}
-              alt=""
-              onClick={() => onCloseSidebar()}
-            />
+            <>
+              <LogoImg src={CompanyLogo} alt="" />
+              {/*<MobileLogoTitle isLightTheme={isLightTheme}>Earnven</MobileLogoTitle>*/}
+              <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
+            </>
+          )}
+
+          {mobileScreen && !laptopScreen && (
+            <SidebarTabletHeaderBtnsLayout>
+              {isLightTheme ? (
+                <SidebarTabletNetworkButton
+                  isLightTheme={isLightTheme}
+                  startIcon={<img src={pyramidIcon} alt="pyramide_icon" />}
+                  endIcon={<img src={chevronDown} alt="chevron_icon" />}
+                  onClick={handleMobileNetworksListClick}>
+                  Network
+                </SidebarTabletNetworkButton>
+              ) : (
+                <SidebarTabletNetworkButton
+                  isLightTheme={isLightTheme}
+                  startIcon={<img src={pyramidIcon} alt="pyramide_icon" />}
+                  endIcon={<img src={chevronDownDark} alt="chevron_icon" />}
+                  onClick={handleMobileNetworksListClick}>
+                  Network
+                </SidebarTabletNetworkButton>
+              )}
+              <GasButton
+                isLightTheme={isLightTheme}
+                startIcon={<img src={gasIcon} alt="" />}
+                onClick={handleMobileGasItemClick}
+                sx={{
+                  ...(open && {
+                    bgcolor: (theme) =>
+                      alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
+                  }),
+                }}>
+                39
+              </GasButton>
+              <ChangeThemeBtnTablet
+                onClick={() => {
+                  setDynamicTheme();
+                }}>
+                {isLightTheme ? <img src={lightIcon} alt="" /> : <img src={darkIcon} alt="" />}
+              </ChangeThemeBtnTablet>
+              {isLightTheme ? (
+                <CloseTabletSidebarIcon
+                  src={CloseMobileSidebarLight}
+                  alt=""
+                  onClick={() => onCloseSidebar()}
+                />
+              ) : (
+                <CloseTabletSidebarIcon
+                  src={CloseMobileSidebarDark}
+                  alt=""
+                  onClick={() => onCloseSidebar()}
+                />
+              )}
+            </SidebarTabletHeaderBtnsLayout>
           )}
         </LogoBlock>
         <Account
@@ -533,7 +597,7 @@ export default function Sidebar({
       }}>
       <SidebarMainLayout isLightTheme={isLightTheme}>
         {/*content for wallets list*/}
-        <LogoBlock>
+        <MobileLogoBlockWalletsList>
           <LogoImg src={CompanyLogo} alt="" />
           <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
           {isLightTheme ? (
@@ -549,7 +613,7 @@ export default function Sidebar({
               onClick={() => onCloseWalletsListMobile()}
             />
           )}
-        </LogoBlock>
+        </MobileLogoBlockWalletsList>
         <MyWalletsLabel isLightTheme={isLightTheme}>
           <p isLightTheme={isLightTheme}>{accountList.length > 0 && 'My Wallet'}</p>
         </MyWalletsLabel>
@@ -635,7 +699,7 @@ export default function Sidebar({
     <RootStyle>
       {/* sidebar for desktop versions */}
       <MHidden width="lgDown">
-        <Drawer
+        <DrawerLayoutDesktop
           open
           variant="persistent"
           PaperProps={{
@@ -647,8 +711,23 @@ export default function Sidebar({
               border: 'none',
             },
           }}>
-          {mainSidebarLayoutContent}
-        </Drawer>
+          {desktopSidebarLayoutContent}
+        </DrawerLayoutDesktop>
+
+        <DrawerLayoutTablet
+          open
+          variant="persistent"
+          PaperProps={{
+            sx: {
+              width: '155px',
+              height: 'auto',
+              overflow: 'auto',
+              backgroundColor: 'transparent !important',
+              border: 'none',
+            },
+          }}>
+          {desktopSidebarLayoutContent}
+        </DrawerLayoutTablet>
       </MHidden>
 
       {/* sidebar for mobiles versions */}
@@ -661,13 +740,14 @@ export default function Sidebar({
           // BackdropProps={{ invisible: true }}
           PaperProps={{
             sx: {
-              width: '360px',
+              width: '97%',
               overflow: 'auto',
               height: 'auto',
               backgroundColor: 'transparent',
+              backdropFilter: 'blur(15px)',
             },
           }}>
-          {mainSidebarLayoutContent}
+          {desktopSidebarLayoutContent}
         </DrawerLayoutMobile>
 
         {/* Sidebar with wallets list */}

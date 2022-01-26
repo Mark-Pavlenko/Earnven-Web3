@@ -12,9 +12,20 @@ export const AccountStyle = styled.div`
   justify-content: end;
   margin-top: 28px;
   margin-right: 20px;
-  @media (max-width: 1280px) {
-    display: none;
-  } ;
+
+  @media (max-width: 1279px) {
+    justify-content: start;
+    //display: none;
+  }
+
+  @media screen and (max-width: 1445px) and (min-width: 1281px) {
+    justify-content: center;
+    margin-right: 0px;
+  }
+
+  @media (max-height: 800px) {
+    margin-top: 10px;
+  }
 `;
 
 const handleBackgroundColorBtn = (isLightTheme, isBlockActivated) => {
@@ -39,6 +50,24 @@ export const WalletsListBlock = styled.div`
   border-radius: 10px;
   width: 186px;
   height: 74px;
+
+  @media (max-width: 709px) {
+    margin-left: 35px;
+  }
+
+  @media screen and (max-width: 1445px) and (min-width: 1281px) {
+    width: 108px;
+  }
+
+  @media screen and (max-width: 1280px) and (min-width: 710px) {
+    //width: auto;
+    margin-top: 10px;
+    margin-left: 95px;
+  }
+
+  @media (max-height: 800px) {
+    margin-top: 0;
+  }
 `;
 
 export const FirstWalletsListBlock = styled.div`
@@ -58,6 +87,19 @@ export const UserAvatar = styled(Avatar)`
 export const WalletAddress = styled.p`
   color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
   font-size: 14px;
+
+  @media screen and (max-width: 1445px) and (min-width: 1281px) {
+    display: none;
+  }
+`;
+
+export const WalletAddressMobile = styled.p`
+  color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
+  font-size: 14px;
+
+  @media screen and (max-width: 1445px) and (min-width: 1281px) {
+    display: none;
+  }
 `;
 
 export const WalletArrow = styled.span`

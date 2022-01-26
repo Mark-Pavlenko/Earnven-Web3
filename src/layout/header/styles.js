@@ -14,13 +14,20 @@ export const HeaderLayoutBig = styled.div`
     grid-template-columns: 40% 60%;
     margin-left: 0;
   }
-  @media (max-width: 710px) {
+  @media (max-width: 780px) {
     display: none;
   }
 
   @media (min-width: 1280px) {
     display: grid;
     grid-template-columns: 30% 70%;
+  }
+
+  @media screen and (max-width: 1445px) and (min-width: 1281px) {
+    margin-left: 150px;
+  }
+
+  @media (min-width: 1446px) {
     margin-left: 314px;
   }
 `;
@@ -32,7 +39,7 @@ export const HeaderLayoutMobile = styled.div`
   @media (min-width: 2100px) {
     background: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};
   }
-  @media (min-width: 711px) {
+  @media (min-width: 781px) {
     display: none;
   }
 `;
@@ -66,7 +73,7 @@ export const HeaderTitle = styled.div`
     font-weight: 1000;
   }
 
-  @media (max-width: 711px) {
+  @media (max-width: 780px) {
     margin-top: 23px;
     margin-left: 15px;
   }
@@ -103,7 +110,7 @@ export const BurgerSidebarIconButton = styled(IconButton)`
     }
   }
 
-  @media (max-width: 710px) {
+  @media (max-width: 780px) {
     margin-left: auto;
   }
 
@@ -126,7 +133,7 @@ export const UserAvatarIconButton = styled(IconButton)`
     height: 40px;
   }
 
-  @media (max-width: 711px) {
+  @media (max-width: 780px) {
     //margin-right: 20px;
     margin-right: 4px;
     //margin-top: 20px;
