@@ -208,6 +208,9 @@ export const MobileSidebarNetworksList = styled(List)`
   margin-top: 30px;
   margin-left: 53px;
 
+  @media (max-width: 1280px) {
+    margin-top: 15px;
+  }
   div {
     display: flex;
     flex-direction: row;

@@ -10,8 +10,8 @@ export const AccountBalanceValue = styled.p`
   font-weight: 500;
   line-height: 31px;
   letter-spacing: 0;
-
-  @media (max-width: 1445px) {
+  display: block;
+  @media screen and (max-width: 1445px) and (min-width: 1280px) {
     display: none;
   }
 `;
@@ -27,8 +27,10 @@ export const AccountBalanceValueTablet = styled.p`
   font-weight: 500;
   line-height: 31px;
   letter-spacing: 0;
-
-  @media (min-width: 1445px) {
-    display: none;
+  display: none;
+  @media screen and (max-width: 1445px) and (min-width: 1280px) {
+    display: block;
   }
+
+  //@media screen and (max-width: 1279px) and (min-width: 710px) {
 `;

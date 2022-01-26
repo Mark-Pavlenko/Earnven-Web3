@@ -390,6 +390,7 @@ export default function Sidebar({
             </SidebarTabletHeaderBtnsLayout>
           )}
         </LogoBlock>
+        {/* Account block for mobile devices*/}
         <Account
           address={address}
           name={name}
@@ -433,7 +434,7 @@ export default function Sidebar({
                   horizontal: 'left',
                 }}
                 anchorReference="anchorPosition"
-                anchorPosition={{ top: 100, left: 10 }}
+                anchorPosition={{ top: 110, left: 10 }}
                 PaperProps={{
                   sx: {
                     mt: 7,
