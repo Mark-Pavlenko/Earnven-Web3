@@ -3,9 +3,9 @@ import { Wrapper, InfoCard, Mark, Value } from './styledComponents';
 import { Main, Title } from '../styledComponentsCommon';
 import CoinGeckoLogo from '../../../../assets/icons/CoinGeckoLogo.png';
 
-const Stats = () => {
+const Stats = ({ isLightTheme }) => {
   return (
-    <Main>
+    <Main isLightTheme={isLightTheme}>
       <Title>{'Stats'}</Title>
       <Wrapper>
         <InfoCard>

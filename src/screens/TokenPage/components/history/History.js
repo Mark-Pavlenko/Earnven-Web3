@@ -1,10 +1,9 @@
 import React from 'react';
-// import { Main } from './styledComponents';
 import { Main, Title } from '../styledComponentsCommon';
 
-const History = () => {
+const History = ({ isLightTheme }) => {
   return (
-    <Main>
+    <Main isLightTheme={isLightTheme}>
       <Title>{'History'}</Title>
     </Main>
   );
