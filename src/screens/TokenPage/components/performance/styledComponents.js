@@ -10,6 +10,10 @@ export const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+
+  @media (max-width: 480px) {
+    justify-content: space-between;
+  }
 `;
 
 export const InfoCard = styled.div`
@@ -37,14 +41,29 @@ export const InfoCard = styled.div`
   &:nth-child(6) {
     background-image: url(${performance_6});
   }
+
+  @media (max-width: 480px) {
+    width: 165px;
+    background-size: cover;
+    margin: 10px 0;
+    border-radius: 20px;
+  }
 `;
 
 export const Mark = styled.div`
   font-size: 10px;
   margin: 20px 0 0 10px;
+
+  @media (max-width: 480px) {
+    margin: 30px 0 0 20px;
+  }
 `;
 
 export const Value = styled.div`
   font-size: 16px;
   margin: 14px 0 0 10px;
+
+  @media (max-width: 480px) {
+    margin: 14px 0 0 15px;
+  }
 `;

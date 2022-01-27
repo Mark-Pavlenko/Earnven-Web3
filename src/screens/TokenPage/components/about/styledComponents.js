@@ -4,6 +4,11 @@ export const Content = styled.div`
   font-size: 14px;
   font-weight: 400;
   padding: 10px;
+  color: #1e1e20;
+
+  @media (max-width: 480px) {
+    padding: 0;
+  }
 `;
 
 export const Button = styled.div`
