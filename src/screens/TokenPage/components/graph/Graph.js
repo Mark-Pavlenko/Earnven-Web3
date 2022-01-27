@@ -6,7 +6,6 @@ import sendIcon from '../../../../assets/icons/send-icon.svg';
 import ethLogoBlue from '../../../../assets/icons/ethLogoBlue.png';
 import etherScan from '../../../../assets/icons/etherScan-icon.svg';
 import etherScanDark from '../../../../assets/icons/etherScanDark-icon.svg';
-// import Chart from '../chart/Chart';
 
 const Graph = ({ isLightTheme }) => {
   return (
