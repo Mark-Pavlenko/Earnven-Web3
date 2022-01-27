@@ -367,7 +367,8 @@ export default class LightThemeChart extends Component {
               onClick={() => this.updateData('ytd')}
               className={this.state.selection === 'ytd' ? 'light-active' : 'change-buttons--light'}>
               1D
-            </button>{' '}
+            </button>
+            {''}
             <button
               id="one_week"
               onClick={() => this.updateData('one_week')}
