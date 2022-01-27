@@ -5,28 +5,53 @@ import {
   GET_WALLETS_LIST,
 } from '../../constants/actionTypes';
 
-let isLightTheme;
-isLightTheme =
-  localStorage.getItem('selectedTheme') === null || localStorage.getItem('selectedTheme') === 'Day';
+let selectedAddress;
+let selectedName;
+let walletsList;
+let myWallet;
+
+if (localStorage.getItem('selected-account') === null) {
+  selectedAddress = 'noAddress';
+} else {
+  selectedAddress = localStorage.getItem('selected-account');
+}
+
+if (localStorage.getItem('selected-name') === null) {
+  selectedName = 'noName';
+} else {
+  selectedName = localStorage.getItem('selected-name');
+}
+
+if (localStorage.getItem('wallets') === null) {
+  walletsList = [];
+} else {
+  walletsList = JSON.parse(localStorage.getItem('wallets'));
+}
+
+if (localStorage.getItem('mywallet') === null) {
+  myWallet = [];
+} else {
+  myWallet = JSON.parse(localStorage.getItem('mywallet'))[0];
+  console.log('myWallet', myWallet);
+}
 
 const initialState = {
-  isLightTheme,
+  selectedAddress,
+  selectedName,
+  walletsList,
+  myWallet,
+  currentWalletAddress: myWallet.address,
 };
 
-export const themeReducer = (state = initialState, action) => {
+export const initSidebarValuesReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'GET_THEME':
-      console.log('action from reducer', action.type);
+    case 'GET_SELECTED_ADDRESS':
+      console.log('GET_SELECTED_ADDRESS', action.type);
       return {
         ...state,
-        isLightTheme: action.isLightTheme,
+        selectedAddress: action.selectedAddress,
       };
     default:
       return state;
   }
 };
-
-// export const getThemeTask = (isLightTheme) => (dispatch) => {
-//   console.log('isLightTheme', isLightTheme);
-//   return dispatch({ type: 'GET_THEME', isLightTheme: isLightTheme });
-// };

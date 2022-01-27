@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-
+import { useNavigate } from 'react-router';
 // material
 import Popover from '@mui/material/Popover';
 import { Drawer, ListItemIcon, List, ListItem, Button } from '@material-ui/core';
@@ -52,6 +52,7 @@ import {
   SidebarTabletNetworkButton,
   SidebarTabletHeaderBtnsLayout,
   MobileLogoTitle,
+  EnterAccountBlockMobileScreens,
 } from './styles';
 import lightIcon from '../../assets/icons/lightIcon.svg';
 import darkIcon from '../../assets/icons/darkIcon.svg';
@@ -61,11 +62,16 @@ import {
   AccountWalletBalance,
   AddNewWalletListItem,
   AddWalletIcon,
+  ConnectLabel,
+  EnterAccountBlock,
+  EnterAccountFlexItem,
+  EnterAccountSubRow,
   ManageWalletsListItem,
   MyWalletsLabel,
   NewWalletLabel,
   WalletsList,
   WalletsListItem,
+  WelcomeSpan,
 } from './account/styles';
 import Accounts from './account/walletsList/Accounts';
 import Box from '@material-ui/core/Box';
@@ -166,7 +172,7 @@ export default function Sidebar({
 
   const openGasPricesMobilePopover = Boolean(anchorEl);
   const openNetworksListMobilePopover = Boolean(mobileNetworksListEl);
-
+  const navigate = useNavigate();
   const id = openGasPricesMobilePopover ? 'simple-popover' : undefined;
   const networksListId = openNetworksListMobilePopover ? 'simple-popover' : undefined;
 
@@ -307,6 +313,9 @@ export default function Sidebar({
   const displayAccountsMobile = useMediaQuery('(min-width:780px)');
   const laptopScreen = useMediaQuery('(min-width:1280px)');
 
+  const reduxWalletsList = useSelector((state) => state.initSidebarValuesReducer.walletsList);
+  const reduxMyWallet = useSelector((state) => state.initSidebarValuesReducer.myWallet);
+
   // main sidebar content
   const desktopSidebarLayoutContent = (
     <Scrollbar
@@ -397,7 +406,19 @@ export default function Sidebar({
             global_wallet={global_wallet}
           />
         )}
-
+        <EnterAccountBlock isLightTheme={isLightTheme}>
+          <EnterAccountSubRow>
+            <EnterAccountFlexItem style={{ marginBottom: '5px' }}>
+              <WelcomeSpan>Welcome</WelcomeSpan>
+            </EnterAccountFlexItem>
+            <EnterAccountFlexItem>
+              <ConnectLabel>Connect an Ethereum wallet to manage your portfolio</ConnectLabel>
+            </EnterAccountFlexItem>
+            <EnterAccountFlexItem>
+              <Button>Connect Wallet</Button>
+            </EnterAccountFlexItem>
+          </EnterAccountSubRow>
+        </EnterAccountBlock>
         <NavSection sx={{ px: 8, color: 'black' }} navConfig={newSideBard} address={address} />
         <SidebarMobileIconsBlock>
           <SidebarMobileIconSubBlock>
@@ -626,15 +647,6 @@ export default function Sidebar({
                 open={openGasPricesMobilePopover}
                 anchorEl={anchorEl}
                 onClose={handleGasItemListClose}
-                // anchorOrigin={{
-                //   vertical: 'bottom',
-                //   horizontal: 'right',
-                // }}
-                // transformOrigin={{
-                //   vertical: 'top',
-                //   horizontal: 'right',
-                // }}
-
                 anchorReference="anchorPosition"
                 anchorPosition={{ top: 100, left: 10 }}
                 transformOrigin={{
@@ -691,12 +703,6 @@ export default function Sidebar({
                   vertical: 'top',
                   horizontal: 'right',
                 }}
-                // anchorReference="anchorPosition"
-                // anchorPosition={{ top: 100, left: 10 }}
-                // transformOrigin={{
-                //   vertical: 'center',
-                //   horizontal: 'left',
-                // }}
                 PaperProps={{
                   sx: {
                     mt: 1,
@@ -775,29 +781,37 @@ export default function Sidebar({
             />
           )}
         </MobileLogoBlockWalletsList>
-        <MyWalletsLabel isLightTheme={isLightTheme}>
-          <p isLightTheme={isLightTheme}>{accountList.length > 0 && 'My Wallet'}</p>
-        </MyWalletsLabel>
+        {reduxMyWallet.length !== 0 ? (
+          <MyWalletsLabel isLightTheme={isLightTheme}>
+            <p isLightTheme={isLightTheme}>{accountList.length > 0 && 'My Wallet'}</p>
+          </MyWalletsLabel>
+        ) : (
+          <p>Enter account 12345</p>
+        )}
         <WalletsList>
-          {accountList && (
+          {reduxWalletsList.length !== 0 && (
             <WalletsListItem
               isLightTheme={isLightTheme}
               isMetamaskWallet={true}
               isMobileWalletsList={true}>
-              <Accounts
-                setaccount_menuclose={(w) => setaccount(w)}
-                onClick={() => {
-                  hideAccountPopover();
-                }}
-                onReRender={handleReRender}
-                address={JSON.parse(global_wallet)[0].address}
-                name={JSON.parse(global_wallet)[0].name}
-                globalWalletsList={JSON.stringify(JSON.parse(global_wallet)[0])}
-                currentWalletAddress={currentWallet[0].address}
-                isMetamaskWallet={true}
-                isMobileWalletsList={true}
-                endTabletSize={false}
-              />
+              {reduxWalletsList.length !== 0 ? (
+                <Accounts
+                  setaccount_menuclose={(w) => setaccount(w)}
+                  onClick={() => {
+                    hideAccountPopover();
+                  }}
+                  onReRender={handleReRender}
+                  address={JSON.parse(global_wallet)[0].address}
+                  name={JSON.parse(global_wallet)[0].name}
+                  globalWalletsList={JSON.stringify(JSON.parse(global_wallet)[0])}
+                  currentWalletAddress={currentWallet[0].address}
+                  isMetamaskWallet={true}
+                  isMobileWalletsList={true}
+                  endTabletSize={false}
+                />
+              ) : (
+                <p>Enter the account aboba</p>
+              )}
             </WalletsListItem>
           )}
         </WalletsList>
@@ -811,18 +825,22 @@ export default function Sidebar({
             {accountList &&
               accountList.map((option) => (
                 <WalletsListItem isLightTheme={isLightTheme}>
-                  <Accounts
-                    setaccount_menuclose={(w) => setaccount(w)}
-                    onClick={() => {
-                      hideAccountPopover();
-                    }}
-                    onReRender={handleReRender}
-                    address={option.address}
-                    name={option.name}
-                    globalWalletsList={global_wallet}
-                    currentWalletAddress={currentWallet[0].address}
-                    isMetamaskWallet={false}
-                  />
+                  {reduxWalletsList.length !== 0 ? (
+                    <Accounts
+                      setaccount_menuclose={(w) => setaccount(w)}
+                      onClick={() => {
+                        hideAccountPopover();
+                      }}
+                      onReRender={handleReRender}
+                      address={option.address}
+                      name={option.name}
+                      globalWalletsList={global_wallet}
+                      currentWalletAddress={currentWallet[0].address}
+                      isMetamaskWallet={false}
+                    />
+                  ) : (
+                    <p>Enter account qwhajsa</p>
+                  )}
                 </WalletsListItem>
               ))}
             <AddNewWalletListItem isLightTheme={isLightTheme} onClick={routeToConnectWallet}>
