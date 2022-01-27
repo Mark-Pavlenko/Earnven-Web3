@@ -16,14 +16,14 @@ export const Header = styled.div`
 
 export const TokenPlatformLogo = styled.div`
   display: flex;
-  width: 69px;
+  width: 80px;
   height: 100%;
   align-items: center;
-  justify-content: space-between;
 
   & img {
     width: 20px;
     height: 20px;
+    margin-right: 10px;
   }
 
   & p {
@@ -42,29 +42,6 @@ export const Links = styled.div`
 
 export const TokenLinks = styled.div`
   display: flex;
-`;
-
-export const TokenLink = styled.div`
-  display: block;
-  position: relative;
-  width: 41px;
-  height: 41px;
-  background-color: #ffffff;
-  border-radius: 7px;
-  border: none;
-  cursor: pointer;
-  margin-right: 20px;
-
-  &:last-child {
-    margin-right: 0;
-  }
-
-  & img {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-  }
 `;
 
 export const Net = styled.div`

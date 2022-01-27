@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import {
-  BottomContainer,
-  Desktop,
-  Mobile,
-  LeftSideWrapper,
   Main,
-  RightSideWrapper,
+  Mobile,
+  Desktop,
   TopContainer,
+  LeftSideWrapper,
+  BottomContainer,
+  RightSideWrapper,
 } from './styledComponents';
-import Graph from './components/graph/Graph';
-import Performance from './components/performance/Performance';
 import Stats from './components/stats/Stats';
 import About from './components/about/About';
+import Graph from './components/graph/Graph';
 import History from './components/history/History';
 import Exchange from './components/exchange/Exchange';
 import GraphMob from './components/graphMob/GraphMob';
-import { useSelector } from 'react-redux';
+import Performance from './components/performance/Performance';
 
 const TokenPage = () => {
   const [textAbout, setTextAbout] = useState(
