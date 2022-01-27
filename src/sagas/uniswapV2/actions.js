@@ -13,3 +13,10 @@ export const getuniswapV2stake = (payload) => {
     payload,
   };
 };
+
+export const getuniswapV2stakeTotal = (payload) => {
+  return {
+    type: actionTypes.GET_UNISWAPV2_STAKE_TOTAL,
+    payload,
+  };
+};

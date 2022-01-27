@@ -114,7 +114,8 @@ export default function LiquidityPools() {
           }));
           console.log(tokens.filter((token) => token.logoURI === ''));
           setAllTokens(tokens);
-        });
+        }).catch((res) => {
+            console.log('liquidity pools Balancer returns error', res)});
     }
 
     getData();

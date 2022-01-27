@@ -66,7 +66,7 @@ export default function Index({ accountAddress }) {
   const yearnYTokenTotal = useSelector((state) => state.yearnFinance.yearnYTokenTotal); //saga
   const yearnFinanceData = useSelector((state) => state.yearnFinance.yearnFinanceData); //saga
   const yearnFinanceTotal = useSelector((state) => state.yearnFinance.yearnFinanceTotal); //saga (could return undefined - the reason in sagas)
-
+  console.log('yearnYTokenData', yearnYTokenData);
   //beacon (didn't get data)
   const BeaconData = useSelector((state) => state.eth2Stake.eth2StakeData); //saga
   const eth2StakeTotal = useSelector((state) => state.eth2Stake.eth2StakeTotal); //saga
@@ -77,8 +77,8 @@ export default function Index({ accountAddress }) {
 
   //uniswap (need to get total value from the object and put in redux separately)
   const uniswapV2array = useSelector((state) => state.uniswapV2stake.uniswapV2stake); //saga (incorrect data structure. Work over appropriate look)
+  const uniswapV2StakeTotal = useSelector((state) => state.uniswapV2stake.uniswapV2stakeTotal); //saga (incorrect data structure. Work over appropriate look)
   const uniswapV2lp = useSelector((state) => state.uniswapV2lp.uniswapV2lp); //saga
-  console.log('uniswapV2lp', uniswapV2array);
 
   useEffect(() => {
     const stringWithGaps = uniswapV2lp.map((el) => {
@@ -131,7 +131,6 @@ export default function Index({ accountAddress }) {
   const curveToken = useSelector((state) => state.curveToken.curveTokenData); //saga
   const curveTokenTotal = useSelector((state) => state.curveToken.curveTokenTotal); //saga
   const curveLpToken = useSelector((state) => state.curveLpToken.curveLpTokenData); //useEffect
-  const curveLpTokenImages = useSelector((state) => state.curveLpToken.curveLpTokenImages); //useEffect
   const curveLpTokenTotal = useSelector((state) => state.curveLpToken.curveLpTokenTotal); //useEffect
   const curveStakingData = useSelector((state) => state.curveStaking.curveStakingData); //saga
   const curveStakingTotal = useSelector((state) => state.curveStaking.curveStakingTotal); //saga
@@ -152,7 +151,8 @@ export default function Index({ accountAddress }) {
   const olympusTokenTotal = useSelector((state) => state.olympusStaking.olympusTokenTotal); //saga
 
   const [creamIronBankTotalValue, setCreamIronBankTotalValue] = useState(0);
-
+  const [uniStakingTotal, setUniStakingTotal] = useState(0);
+  console.log('uniStakingTotal', uniStakingTotal);
   //sushiSwapLP token
   const SushiPoolsData = useSelector((state) => state.sushiSwap.sushiSwapLPData);
   const SushiV2Total = useSelector((state) => state.sushiSwap.sushiSwapLPTotal);
@@ -277,6 +277,10 @@ export default function Index({ accountAddress }) {
 
   const getCteamIronBankTotal = (total) => {
     setCreamIronBankTotalValue(total);
+  };
+
+  const getUniStakingTotal = (total) => {
+    setUniStakingTotal(total);
   };
 
   useEffect(() => {
@@ -1233,6 +1237,8 @@ export default function Index({ accountAddress }) {
   console.log('TOTAL AaveStakingTotal', AaveStakingTotal);
   console.log('TOTAL creamIronBankTotalValue', creamIronBankTotalValue);
   console.log('TOTAL creamTotal', creamTotal);
+  console.log('TOTAL uniswapV2StakeTotal', uniswapV2StakeTotal);
+  console.log('TOTAL uniStakingTotal', uniStakingTotal);
   const sumObjectsByKey = (...objs) => {
     return objs.reduce((el, acc) => {
       return el + +acc.totalTokensBalance;
@@ -1271,13 +1277,14 @@ export default function Index({ accountAddress }) {
                 parseFloat(
                   yearnYTokenTotal +
                     (!isNaN(yearnFinanceTotal) ? yearnFinanceTotal : 0) +
-                    +eth2StakeTotal +
                     +SLPTokenTotalValue +
                     balancerV2lpCommonTotal +
                     curveLpTokenTotal +
                     curveTokenTotal +
                     BalancerTotal +
-                    uniswapV2lpTotal
+                    uniswapV2lpTotal +
+                    uniStakingTotal +
+                    SushiV2Total
                 ).toFixed(2)
               )}
             </TotalValue>
@@ -1291,7 +1298,7 @@ export default function Index({ accountAddress }) {
             <SushiStaking accountAddress={accountAddress} />
             <UniswapV2 accountAddress={accountAddress} />
             {/*UniStaking displays data with another structure*/}
-            <UniStaking accountAddress={accountAddress} />
+            <UniStaking getTotal={getUniStakingTotal} accountAddress={accountAddress} />
             <Liguity accountAddress={accountAddress} />
             <Synthetix accountAddress={accountAddress} />
             <PickleStake accountAddress={accountAddress} />
@@ -1321,21 +1328,15 @@ export default function Index({ accountAddress }) {
               SLPTokenData.map((object) => {
                 return <SushiProtocol protocol={object} logoImage={SushiSwapLogo} />;
               })}
-            {/*uniswapV2array/*/}
-            {Array.isArray(uniswapV2array) &&
-              uniswapV2array.map((object) => {
+            {/*SushiPoolsData/*/}
+            {Array.isArray(SushiPoolsData) &&
+              SushiPoolsData.map((object) => {
                 return <SushiProtocol protocol={object} logoImage={SushiSwapLogo} />;
               })}
-            {/*uniswapV2lp/*/}
-            {Array.isArray(uniswapV2lpWithGaps) &&
-              uniswapV2lpWithGaps.map((object) => {
-                return (
-                  <ValueProtocol
-                    token0Symbol={object.token0Symbol}
-                    token1Symbol={object.token1Symbol}
-                    protocol={object}
-                  />
-                );
+            {/*uniswapV2lp/ uniswapV2lpWithGaps/*/}
+            {Array.isArray(uniswapV2lp) &&
+              uniswapV2lp.map((object) => {
+                return <Investment protocol={object} protocolName={'Uniswap V2'} />;
               })}
             {/*balancerV2lp/*/}
             {balancerV2lp.map((object) => {
@@ -1351,7 +1352,6 @@ export default function Index({ accountAddress }) {
             })}
             {/*snowSwanData/*/}
             {snowSwanData.map((object) => {
-              console.log('snowSwanData', object);
               return (
                 <Investment protocol={object} protocolName={'Snow Swan'} logoImage={SnowSwapLogo} />
               );
@@ -1499,7 +1499,9 @@ export default function Index({ accountAddress }) {
                     curveLpTokenTotal +
                     curveTokenTotal +
                     +AaveStakingTotal +
-                    liquityStakeAmountUSD
+                    liquityStakeAmountUSD +
+                    uniStakingTotal +
+                    uniswapV2StakeTotal
                 ).toFixed(2)
               )}
             </TotalValue>
@@ -1516,19 +1518,18 @@ export default function Index({ accountAddress }) {
             {/*uniswapV2array/*/}
             {Array.isArray(uniswapV2array) &&
               uniswapV2array.map((object) => {
-                return <SushiProtocol protocol={object} logoImage={SushiSwapLogo} />;
-              })}
-            {/*uniswapV2lp/*/}
-            {Array.isArray(uniswapV2lpWithGaps) &&
-              uniswapV2lpWithGaps.map((object) => {
                 return (
-                  <ValueProtocol
+                  <Investment
                     protocol={object}
-                    token0Symbol={object.token0Symbol}
-                    token1Symbol={object.token1Symbol}
-                    totalInvestment={object.totalInvestment}
+                    protocolName={'Uniswap V2'}
+                    logoImage={object.icon}
                   />
                 );
+              })}
+            {/*uniswapV2lp/*/}
+            {Array.isArray(uniswapV2lp) &&
+              uniswapV2lp.map((object) => {
+                return <Investment protocol={object} protocolName={'Uniswap V2'} />;
               })}
             {/*pickeDill/*/}
             {pickeDill.map((object) => {
@@ -1563,7 +1564,7 @@ export default function Index({ accountAddress }) {
                 <Investment protocol={object} protocolName={'Snow Swan'} logoImage={SnowSwapLogo} />
               );
             })}
-            <UniStaking accountAddress={accountAddress} />
+            <UniStaking getTotal={getUniStakingTotal} accountAddress={accountAddress} />
             <PickleStake accountAddress={accountAddress} />
             <LiquityStaking accountAddress={accountAddress} />
             <ConvexStaking accountAddress={accountAddress} />

@@ -227,6 +227,7 @@ const Investment = ({
                 item !== 'tokenAddress' &&
                 item !== 'contractAddress' &&
                 item !== 'tokenDecimal' &&
+                item !== 'protocol' &&
                 item !== 'yTokenDecimals' &&
                 item !== 'image'
             )
