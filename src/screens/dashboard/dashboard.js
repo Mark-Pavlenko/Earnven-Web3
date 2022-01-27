@@ -135,7 +135,7 @@ export default function Dashboard({ test, changeTheme }) {
           <Container>
             <MainBlocks>
               <LeftSideWrapper>
-                <PortfolioPerf address={address} totalValue={`$${totalValue}`} />
+                <PortfolioPerf address={address} totalValue={`$${totalValue}`} theme={theme} />
                 <Mobile>
                   <AllAssets isLightTheme={theme} address={address} />
                 </Mobile>
