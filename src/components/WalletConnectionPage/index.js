@@ -235,6 +235,8 @@ export default function WalletPageConnection() {
     isWrongAddress: bool,
   };
 
+  console.log('typeof', typeof localStorage.getItem('selected-account'));
+
   return (
     <RootStyle isLightTheme={themeType}>
       {localStorage.getItem('wallets') === null && (

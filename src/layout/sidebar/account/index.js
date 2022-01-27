@@ -169,7 +169,6 @@ export default function Account({ address, name, global_wallet, setTheme }) {
               globalWalletsList={JSON.stringify(JSON.parse(global_wallet)[0])}
               currentWalletAddress={currentWallet[0].address}
               isMetamaskWallet={true}
-              // endTabletSize={endTabletSize}
             />
           </WalletsListItem>
         )}

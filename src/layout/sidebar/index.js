@@ -171,9 +171,6 @@ export default function Sidebar({
   const networksListId = openNetworksListMobilePopover ? 'simple-popover' : undefined;
 
   const currentWallet = JSON.parse(localStorage.getItem('mywallet'));
-  {
-    currentWallet && console.log('currentWallet', currentWallet[0].address);
-  }
 
   //------
   const handleReRender = () => {
