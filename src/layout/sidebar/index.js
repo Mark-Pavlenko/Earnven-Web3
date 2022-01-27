@@ -398,6 +398,7 @@ export default function Sidebar({
           )}
         </LogoBlock>
         {/* Account block for mobile devices*/}
+
         {displayAccountsMobile && (
           <Account
             address={address}
@@ -406,19 +407,23 @@ export default function Sidebar({
             global_wallet={global_wallet}
           />
         )}
-        <EnterAccountBlock isLightTheme={isLightTheme}>
-          <EnterAccountSubRow>
-            <EnterAccountFlexItem style={{ marginBottom: '5px' }}>
-              <WelcomeSpan>Welcome</WelcomeSpan>
-            </EnterAccountFlexItem>
-            <EnterAccountFlexItem>
-              <ConnectLabel>Connect an Ethereum wallet to manage your portfolio</ConnectLabel>
-            </EnterAccountFlexItem>
-            <EnterAccountFlexItem>
-              <Button>Connect Wallet</Button>
-            </EnterAccountFlexItem>
-          </EnterAccountSubRow>
-        </EnterAccountBlock>
+        {reduxWalletsList.length === 0 ||
+          (reduxMyWallet.length === 0 && (
+            <EnterAccountBlock isLightTheme={isLightTheme}>
+              <EnterAccountSubRow>
+                <EnterAccountFlexItem style={{ marginBottom: '5px' }}>
+                  <WelcomeSpan>Welcome</WelcomeSpan>
+                </EnterAccountFlexItem>
+                <EnterAccountFlexItem>
+                  <ConnectLabel>Connect an Ethereum wallet to manage your portfolio</ConnectLabel>
+                </EnterAccountFlexItem>
+                <EnterAccountFlexItem>
+                  <Button>Connect Wallet</Button>
+                </EnterAccountFlexItem>
+              </EnterAccountSubRow>
+            </EnterAccountBlock>
+          ))}
+
         <NavSection sx={{ px: 8, color: 'black' }} navConfig={newSideBard} address={address} />
         <SidebarMobileIconsBlock>
           <SidebarMobileIconSubBlock>

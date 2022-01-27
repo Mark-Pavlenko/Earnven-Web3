@@ -154,39 +154,44 @@ export default function Account({ address, name, global_wallet, setTheme }) {
   const bigTabletSize = useMediaQuery('(max-width:1445px)');
   const desktopSize = useMediaQuery('(min-width:1446px)');
 
+  const reduxWalletsList = useSelector((state) => state.initSidebarValuesReducer.walletsList);
+  const reduxMyWallet = useSelector((state) => state.initSidebarValuesReducer.myWallet);
+
   const accountListContent = (
     <>
       {/* my wallet*/}
-      <MyWalletsLabel isLightTheme={themeType}>
-        <p isLightTheme={themeType}>{accountList.length > 0 && 'My Wallet'}</p>
-      </MyWalletsLabel>
-      <WalletsList isMetamaskWallet={true}>
-        {accountList.length !== 0 ? (
-          <WalletsListItem isLightTheme={themeType}>
-            <Accounts
-              setaccount_menuclose={(w) => setaccount(w)}
-              onClick={() => {
-                hideAccountPopover();
-              }}
-              onReRender={handleReRender}
-              address={JSON.parse(global_wallet)[0].address}
-              name={JSON.parse(global_wallet)[0].name}
-              globalWalletsList={JSON.stringify(JSON.parse(global_wallet)[0])}
-              currentWalletAddress={currentWallet[0].address}
-              isMetamaskWallet={true}
-            />
-          </WalletsListItem>
-        ) : (
-          <p>Enter the account qwerty</p>
-        )}
-      </WalletsList>
+      {reduxMyWallet.length !== 0 && (
+        <>
+          <MyWalletsLabel isLightTheme={themeType}>
+            <p isLightTheme={themeType}>{accountList.length > 0 && 'My Wallet'}</p>
+          </MyWalletsLabel>
+          <WalletsList isMetamaskWallet={true}>
+            <WalletsListItem isLightTheme={themeType}>
+              <Accounts
+                setaccount_menuclose={(w) => setaccount(w)}
+                onClick={() => {
+                  hideAccountPopover();
+                }}
+                onReRender={handleReRender}
+                address={JSON.parse(global_wallet)[0].address}
+                name={JSON.parse(global_wallet)[0].name}
+                globalWalletsList={JSON.stringify(JSON.parse(global_wallet)[0])}
+                currentWalletAddress={currentWallet[0].address}
+                isMetamaskWallet={true}
+              />
+            </WalletsListItem>
+          </WalletsList>
+        </>
+        // ) : (
+        //   <p>Enter the account qwerty</p>
+      )}
       {/* all wallets */}
       <MyWalletsLabel isLightTheme={themeType} allWalletsListMobile={true}>
         <p isLightTheme={themeType}>{accountList.length > 0 && 'Watchlist'}</p>
       </MyWalletsLabel>
       <div>
         <WalletsList>
-          {accountList &&
+          {reduxWalletsList.length !== 0 &&
             accountList.map((option) => (
               <WalletsListItem isLightTheme={themeType}>
                 <Accounts

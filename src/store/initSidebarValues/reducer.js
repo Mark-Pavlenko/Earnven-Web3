@@ -9,6 +9,7 @@ let selectedAddress;
 let selectedName;
 let walletsList;
 let myWallet;
+let currentWallet;
 
 if (localStorage.getItem('selected-account') === null) {
   selectedAddress = 'noAddress';
@@ -40,7 +41,7 @@ const initialState = {
   selectedName,
   walletsList,
   myWallet,
-  currentWalletAddress: myWallet.address,
+  // currentWalletAddress: myWallet.address,
 };
 
 export const initSidebarValuesReducer = (state = initialState, action) => {
