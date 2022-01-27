@@ -11,7 +11,7 @@ const About = ({ isLightTheme, textAbout }) => {
   return (
     <Main isLightTheme={isLightTheme}>
       <Title>{'About'}</Title>
-      <Content>
+      <Content isLightTheme={isLightTheme}>
         <p>
           {!showedMore && textAbout.split('').length > 500
             ? textAbout.split('').slice(0, 500).join('') + '...'
@@ -19,7 +19,7 @@ const About = ({ isLightTheme, textAbout }) => {
         </p>
       </Content>
       {textAbout.split('').length > 500 ? (
-        <Button onClick={toggleHandler}>
+        <Button isLightTheme={isLightTheme} onClick={toggleHandler}>
           <span>{!showedMore ? 'Show More' : 'Show Less'}</span>
         </Button>
       ) : null}

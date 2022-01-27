@@ -1,9 +1,10 @@
 import React from 'react';
-import { Net, Header, Links, TokenLinks, TokenLink, TokenPlatformLogo } from './styledComponents';
-import { Main } from '../styledComponentsCommon';
+import { Net, Header, Links, TokenLinks, TokenPlatformLogo } from './styledComponents';
+import { Main, TokenLink } from '../styledComponentsCommon';
 import sendIcon from '../../../../assets/icons/send-icon.svg';
 import ethLogoBlue from '../../../../assets/icons/ethLogoBlue.png';
 import etherScan from '../../../../assets/icons/etherScan-icon.svg';
+import etherScanDark from '../../../../assets/icons/etherScanDark-icon.svg';
 
 const Graph = ({ isLightTheme }) => {
   return (
@@ -15,21 +16,20 @@ const Graph = ({ isLightTheme }) => {
         </TokenPlatformLogo>
         <Links>
           <TokenLinks>
-            <TokenLink>
+            <TokenLink isLightTheme={isLightTheme}>
               <img alt={'EtherScan'} src={etherScan} />
             </TokenLink>
-            <TokenLink>
+            <TokenLink isLightTheme={isLightTheme}>
               <img alt={'EtherScan'} src={etherScan} />
             </TokenLink>
-            <TokenLink>
+            <TokenLink isLightTheme={isLightTheme}>
               <img alt={'EtherScan'} src={etherScan} />
             </TokenLink>
-            <TokenLink>
-              <img alt={'EtherScan'} src={etherScan} />
+            <TokenLink isLightTheme={isLightTheme}>
+              <img alt={'EtherScan'} src={isLightTheme ? etherScan : etherScanDark} />
             </TokenLink>
           </TokenLinks>
-
-          <TokenLink>
+          <TokenLink isLightTheme={isLightTheme}>
             <img alt={'Send'} src={sendIcon} />
           </TokenLink>
         </Links>
