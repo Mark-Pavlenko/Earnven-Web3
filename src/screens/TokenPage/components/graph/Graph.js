@@ -1,10 +1,12 @@
 import React from 'react';
 import { Net, Header, Links, TokenLinks, TokenPlatformLogo } from './styledComponents';
 import { Main, TokenLink } from '../styledComponentsCommon';
+import PortfolioPerf from '../../../../components/portfolioperf/portfolioperf';
 import sendIcon from '../../../../assets/icons/send-icon.svg';
 import ethLogoBlue from '../../../../assets/icons/ethLogoBlue.png';
 import etherScan from '../../../../assets/icons/etherScan-icon.svg';
 import etherScanDark from '../../../../assets/icons/etherScanDark-icon.svg';
+// import Chart from '../chart/Chart';
 
 const Graph = ({ isLightTheme }) => {
   return (
@@ -38,13 +40,13 @@ const Graph = ({ isLightTheme }) => {
         <img alt={'Net'} src={ethLogoBlue} />
         <p>{'MIR Token'}</p>
       </Net>
-      <br />
-      <br />
-      <br />
-      -------Graph-------
-      <br />
-      <br />
-      <br />
+      <PortfolioPerf
+        theme={isLightTheme}
+        address={'0x00057ef157d01c28da3e545487a4d93f55b70842'}
+        totalValue={'$58,888'}
+        difValue={'+13,8%'}
+        isTokenPage={true}
+      />
     </Main>
   );
 };

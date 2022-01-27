@@ -12,6 +12,7 @@ import sendIcon from '../../../../assets/icons/send-icon.svg';
 import ethLogoBlue from '../../../../assets/icons/ethLogoBlue.png';
 import etherScan from '../../../../assets/icons/etherScan-icon.svg';
 import { TokenLink } from '../styledComponentsCommon';
+import PortfolioPerf from '../../../../components/portfolioperf/portfolioperf';
 
 const GraphMob = ({ isLightTheme, social }) => {
   return (
@@ -62,13 +63,13 @@ const GraphMob = ({ isLightTheme, social }) => {
           ) : null}
         </MainLinks>
       </NetWrapper>
-      <br />
-      <br />
-      <br />
-      -------Graph-------
-      <br />
-      <br />
-      <br />
+      <PortfolioPerf
+        theme={isLightTheme}
+        address={'0x00057ef157d01c28da3e545487a4d93f55b70842'}
+        totalValue={'$58,888.00'}
+        difValue={'+13,8%'}
+        isTokenPage={true}
+      />
     </Main>
   );
 };

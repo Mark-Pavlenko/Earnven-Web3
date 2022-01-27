@@ -11,13 +11,23 @@ export default class PortfolioPerf extends Component {
   }
 
   render() {
-    const { theme, totalValue, address } = this.props;
+    const { theme, totalValue, address, difValue, isTokenPage } = this.props;
     return (
       <>
         {theme ? (
-          <LightThemeChart address={address} totalValue={totalValue} />
+          <LightThemeChart
+            address={address}
+            totalValue={totalValue}
+            difValue={difValue}
+            isTokenPage={isTokenPage}
+          />
         ) : (
-          <DarkThemeChart address={address} totalValue={totalValue} />
+          <DarkThemeChart
+            address={address}
+            totalValue={totalValue}
+            difValue={difValue}
+            isTokenPage={isTokenPage}
+          />
         )}
       </>
     );

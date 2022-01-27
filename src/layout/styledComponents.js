@@ -6,7 +6,7 @@ export const RootStyle = styled('div')`
     props.isLightTheme
       ? `url(${require(`./../assets/images/lightBg2048x3448.jpg`).default})`
       : `#0B0E1D`};
-  @media (min-width: 1281px) {
+  @media (min-width: 1921px) {
     background: ${(props) =>
       props.isLightTheme
         ? `url(${require(`./../assets/images/lightDashboardBig.jpg`).default})`
