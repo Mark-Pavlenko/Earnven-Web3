@@ -5,13 +5,13 @@ import {
   Header,
   MainLinks,
   TokenLinks,
-  TokenLink,
   NetWrapper,
   TokenPlatformLogo,
 } from './styledComponents';
 import sendIcon from '../../../../assets/icons/send-icon.svg';
 import ethLogoBlue from '../../../../assets/icons/ethLogoBlue.png';
 import etherScan from '../../../../assets/icons/etherScan-icon.svg';
+import { TokenLink } from '../styledComponentsCommon';
 
 const GraphMob = ({ isLightTheme, social }) => {
   return (

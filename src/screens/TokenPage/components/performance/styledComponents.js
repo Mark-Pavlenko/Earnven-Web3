@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import performance_1 from '../../../../assets/images/performance-1.jpg';
-import performance_2 from '../../../../assets/images/performance-2.jpg';
-import performance_3 from '../../../../assets/images/performance-3.jpg';
-import performance_4 from '../../../../assets/images/performance-4.jpg';
-import performance_5 from '../../../../assets/images/performance-5.jpg';
-import performance_6 from '../../../../assets/images/performance-6.jpg';
+import performanceD1 from '../../../../assets/images/performanceD1.png';
+import performanceD2 from '../../../../assets/images/performanceD2.png';
+import performanceD3 from '../../../../assets/images/performanceD3.png';
+import performanceD4 from '../../../../assets/images/performanceD4.png';
+import performanceD5 from '../../../../assets/images/performanceD5.png';
+import performanceD6 from '../../../../assets/images/performanceD6.png';
 
 export const Wrapper = styled.div`
   display: flex;
@@ -17,29 +17,29 @@ export const Wrapper = styled.div`
 `;
 
 export const InfoCard = styled.div`
+  position: relative;
   width: 132px;
   height: 90px;
   margin: 5px;
   border-radius: 10px;
-  box-shadow: 4px 6px 20px -5px rgba(51, 78, 131, 0.17);
 
   &:nth-child(1) {
-    background-image: url(${performance_1});
+    background-image: url(${performanceD1});
   }
   &:nth-child(2) {
-    background-image: url(${performance_2});
+    background-image: url(${performanceD2});
   }
   &:nth-child(3) {
-    background-image: url(${performance_3});
+    background-image: url(${performanceD3});
   }
   &:nth-child(4) {
-    background-image: url(${performance_4});
+    background-image: url(${performanceD4});
   }
   &:nth-child(5) {
-    background-image: url(${performance_5});
+    background-image: url(${performanceD5});
   }
   &:nth-child(6) {
-    background-image: url(${performance_6});
+    background-image: url(${performanceD6});
   }
 
   @media (max-width: 480px) {

@@ -33,7 +33,6 @@ export const TopContainer = styled.div`
 `;
 
 export const LeftSideWrapper = styled.div`
-  //max-width: 885px;
   width: 60%;
   margin-right: 35px;
   display: flex;
@@ -46,21 +45,18 @@ export const LeftSideWrapper = styled.div`
 `;
 
 export const RightSideWrapper = styled.div`
-  //width: 525px;
   width: 40%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
 
   @media (max-width: 1440px) {
-    //max-width: 885px;
     width: 100%;
   }
 `;
 
 export const BottomContainer = styled.div`
   @media (max-width: 1440px) {
-    //max-width: 885px;
     width: 100%;
   }
 `;
