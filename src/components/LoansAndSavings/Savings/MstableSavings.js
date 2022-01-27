@@ -152,7 +152,7 @@ const MstableSavings = ({ accountAddress }) => {
   }, [pickleDillArray1]);
   return (
     <div>
-      {flag && (
+      {flag ? (
         <div
           style={{
             display: pickleDillArray.length > 0 ? '' : 'none',
@@ -161,6 +161,8 @@ const MstableSavings = ({ accountAddress }) => {
             return <Investment key={index} protocol={object} logoImage={object.tokenImage} />;
           })}
         </div>
+      ) : (
+        ''
       )}
     </div>
   );

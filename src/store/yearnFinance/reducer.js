@@ -13,7 +13,6 @@ const initialState = {
 export const yearnFinance = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.GET_YFI_TOKEN_DATA:
-      console.log('GET_YFI_TOKEN_DATA', action?.payload);
       return {
         ...state,
         yearnFinanceData: action?.payload,

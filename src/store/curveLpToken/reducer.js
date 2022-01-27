@@ -16,7 +16,8 @@ export const curveLpToken = (state = initialState, action) => {
     case actionTypes.GET_CRV_LP_TOKEN_IMAGES:
       return {
         ...state,
-        curveLpTokenImages: action?.payload,
+        curveLpTokenImages: [...state.curveLpTokenImages, action?.payload],
+        // curveLpTokenImages: [...state.curveLpTokenImages, action?.payload].flat(),
       };
     case actionTypes.SET_CURVE_LP_TOKEN_TOTAL:
       return {

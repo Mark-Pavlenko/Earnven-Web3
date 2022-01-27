@@ -33,7 +33,7 @@ import {
   setCurveLpTokenTotalAction,
 } from '../../store/curveLpToken/actions';
 
-export default function CurveLpToken({ accountAddress, onCurveLptoken }) {
+export default function CurveLpToken({ accountAddress }) {
   const [CurveLpTokenData, setCurveLpTokenData] = useState([]);
   const [CurveLpTokenTotal, setCurveLpTokenTotal] = useState([]);
   const [CurveLpTokenContent, setCurveLpTokenContent] = useState([]);
@@ -123,8 +123,10 @@ export default function CurveLpToken({ accountAddress, onCurveLptoken }) {
             object.totalValue = (curveLpDataPoint.curveLpTokenBalance / 10 ** 18) * tokenPrice;
             object.price = tokenPrice;
             object.chain = 'Ethereum';
-            object.curveLpTokenLiquidity =
-              (curveLpDataPoint.curveLpTokenLiquidity / 10 ** 18) * tokenPrice;
+            object.liquidity = parseFloat(
+              (curveLpDataPoint.curveLpTokenLiquidity / 10 ** 18) * tokenPrice
+            ).toFixed(2);
+            //object.liquidity = (curveLpDataPoint.curveLpTokenLiquidity / 10 ** 18) * tokenPrice;
             object.protocol = curveLpDataPoint.curveLpTokenSymbol;
             curveLpTokenTotalValue += object.totalValue;
             staking.push(object);
@@ -207,7 +209,6 @@ export default function CurveLpToken({ accountAddress, onCurveLptoken }) {
     }
 
     setCurveLpTokenContent(content);
-    onCurveLptoken(CurveLpTokenData);
   }, [CurveLpTokenData, accountAddress]);
 
   return (

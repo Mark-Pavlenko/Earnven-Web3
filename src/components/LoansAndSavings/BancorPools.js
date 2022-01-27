@@ -12,7 +12,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Tooltip from '@material-ui/core/Tooltip';
 
-export default function BancorPools({ setPoolTotal, accountAddress, setDisplay }) {
+export default function BancorPools({ setPoolTotal, accountAddress }) {
   const [BancorPoolsData, setBancorPoolsData] = useState([]); // bancor
   console.log('BancorPoolsData', BancorPoolsData);
   const [BancorPoolsContent, setBancorPoolsContent] = useState([]); // bancor
@@ -53,6 +53,10 @@ export default function BancorPools({ setPoolTotal, accountAddress, setDisplay }
       .then(async (response) => {
         if (response.data.data.users[0]) {
           const res = response.data.data.users[0].smartTokenBalances;
+          console.log(
+            'response.data.data.users[0].smartTokenBalances',
+            response.data.data.users[0].smartTokenBalances
+          );
           const pools = [];
           for (var i = 0; i < res.length; i++) {
             await axios
@@ -71,9 +75,12 @@ export default function BancorPools({ setPoolTotal, accountAddress, setDisplay }
             await axios
               .get(`https://api-v2.bancor.network/pools`)
               .then(async ({ data }) => {
+                console.log('response.data.data.users[0].smartTokenBalances', data.data);
+
                 let pool = data.data.filter((item) => {
                   return item.symbol === res[i].smartToken.symbol;
                 });
+                console.log('pool', pool);
                 res[i].type = 'Token';
                 if (pool.length > 0) {
                   res[i].type = 'USD';
@@ -114,11 +121,6 @@ export default function BancorPools({ setPoolTotal, accountAddress, setDisplay }
 
   useEffect(() => {
     setPoolTotal(BancorTotal);
-    if (BancorPoolsData.length > 0) {
-      setDisplay(true);
-    } else {
-      setDisplay(false);
-    }
     setPoolTotal(BancorTotal);
   }, [BancorTotal, BancorPoolsData, accountAddress]);
 

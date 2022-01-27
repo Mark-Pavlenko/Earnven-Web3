@@ -2,6 +2,7 @@ import axios from 'axios';
 import Web3 from 'web3';
 import UniStakingABI from '../../../abi/uniStakingContract.json';
 import Addresses from '../../../contractAddresses';
+import UniswapV2 from '../LiqudityPools/UniswapV2';
 export const getuniswapV2data = async (attributes) => {
   const pools = [];
   await axios
@@ -55,7 +56,7 @@ export const getuniswapV2data = async (attributes) => {
           object.name = res[i].pair.token0.name + '-' + res[i].pair.token1.name;
           // object.token0Symbol = res[i].pair.token0.symbol;
           // object.token1Symbol = res[i].pair.token1.symbol;
-          object.symbol = res[i].pair.token0.symbol + '-' + res[i].pair.token1.symbol;
+          object.tokenName = res[i].pair.token0.symbol + '-' + res[i].pair.token1.symbol;
           object.liquidity = res[i].pair.reserveUSD;
           object.volume = res[i].pair.volumeUSD;
           object.protocol = 'Uniswap V2';
@@ -86,7 +87,7 @@ export const getuniswapV2data = async (attributes) => {
             .catch((err) => {
               console.log('error in fetching Uniswap v2', err);
             });
-          object.tokenImages = Images;
+          object.imageData = Images;
           if (object.value > 0) {
             tot += parseFloat(object.value);
             object.totalValue = tot;
@@ -100,7 +101,8 @@ export const getuniswapV2data = async (attributes) => {
 };
 
 export const getuniswapV2stakedata = async (attributes) => {
-  let object = {};
+  let pools = [];
+  let tot = 0;
   async function getWeb3() {
     const provider = Web3.givenProvider || Addresses.alchemyAPI;
     const web3 = new Web3(provider);
@@ -187,67 +189,141 @@ export const getuniswapV2stakedata = async (attributes) => {
     .then(async (response) => {
       // USDT ----------------------------------------------------------------------
       if (USDTAmount > 0) {
-        let USDT = [];
-        USDT.push(response.data.data.USDT[0].reserveUSD);
-        USDT.push(response.data.data.USDT[0].volumeUSD);
-        USDT.push(response.data.data.USDT[0].reserveUSD / response.data.data.USDT[0].totalSupply);
-        USDT.push(
+        let object = {};
+        object.liquidity = response.data.data.USDT[0].reserveUSD;
+        object.volume = response.data.data.USDT[0].volumeUSD;
+        object.claimable = USDTAmountClaimables;
+        object.balance = USDTAmount;
+        object.price =
+          response.data.data.USDT[0].reserveUSD / response.data.data.USDT[0].totalSupply;
+        object.protocol = 'Uniswap V2';
+        object.tokenName = 'USDT';
+        object.value =
           (response.data.data.USDT[0].reserveUSD / response.data.data.USDT[0].totalSupply) *
-            USDTAmount
-        );
-        USDT.push(USDTAmount);
-        USDT.push(USDTAmountClaimables);
-        object.USDT = USDT;
-      } else {
-        object.USDT = 'null';
+          USDTAmount;
+        tot = tot + object.value;
+        object.totalValue = tot;
+        object.icon = imageUni;
+        object.chain = 'Ethereum';
+        // USDT.push(response.data.data.USDT[0].reserveUSD);
+        // USDT.push(response.data.data.USDT[0].volumeUSD);
+        // USDT.push(response.data.data.USDT[0].reserveUSD / response.data.data.USDT[0].totalSupply);
+        // USDT.push(
+        //   (response.data.data.USDT[0].reserveUSD / response.data.data.USDT[0].totalSupply) *
+        //     USDTAmount
+        // );
+        // USDT.push(USDTAmount);
+        // USDT.push(USDTAmountClaimables);
+        // object.USDT = USDT;
+        pools.push(object);
       }
+      // else {
+      //   object.USDT = 'null';
+      // }
       // Dai ----------------------------------------------------------------------
       if (DAIAmount > 0) {
         let DAI = [];
-        DAI.push(response.data.data.DAI[0].reserveUSD);
-        DAI.push(response.data.data.DAI[0].volumeUSD);
-        DAI.push(response.data.data.DAI[0].reserveUSD / response.data.data.DAI[0].totalSupply);
-        DAI.push(
-          (response.data.data.DAI[0].reserveUSD / response.data.data.DAI[0].totalSupply) * DAIAmount
-        );
-        DAI.push(DAIAmount);
-        DAI.push(DAIAmountClaimables);
-        object.DAI = DAI;
-      } else {
-        object.DAI = 'null';
+        let object = {};
+        object.liquidity = response.data.data.DAI[0].reserveUSD;
+        object.volume = response.data.data.DAI[0].volumeUSD;
+        object.claimable = DAIAmountClaimables;
+        object.balance = DAIAmount;
+        object.price = response.data.data.DAI[0].reserveUSD / response.data.data.DAI[0].totalSupply;
+        object.protocol = 'Uniswap V2';
+        object.chain = 'Ethereum';
+        object.tokenName = 'DAI';
+        object.value =
+          (response.data.data.DAI[0].reserveUSD / response.data.data.DAI[0].totalSupply) *
+          DAIAmount;
+        tot = tot + object.value;
+        object.totalValue = tot;
+        object.icon = imageUni;
+
+        // DAI.push(response.data.data.DAI[0].reserveUSD);
+        // DAI.push(response.data.data.DAI[0].volumeUSD);
+        // DAI.push(response.data.data.DAI[0].reserveUSD / response.data.data.DAI[0].totalSupply);
+        // DAI.push(
+        //   (response.data.data.DAI[0].reserveUSD / response.data.data.DAI[0].totalSupply) * DAIAmount
+        // );
+        // DAI.push(DAIAmount);
+        // DAI.push(DAIAmountClaimables);
+        // object.DAI = DAI;
+        pools.push(object);
       }
+      //  else {
+      //   object.DAI = 'null';
+      // }
       // USDC -----------------------------------------------------------------------
       if (USDCAmount > 0) {
         let USDC = [];
-        USDC.push(response.data.data.USDC[0].reserveUSD);
-        USDC.push(response.data.data.USDC[0].volumeUSD);
-        USDC.push(response.data.data.USDC[0].reserveUSD / response.data.data.USDC[0].totalSupply);
-        USDC.push(
+        let object = {};
+        object.liquidity = response.data.data.USDC[0].reserveUSD;
+        object.volume = response.data.data.USDC[0].volumeUSD;
+        object.claimable = USDCAmountClaimables;
+        object.balance = USDCAmount;
+        object.price =
+          response.data.data.USDC[0].reserveUSD / response.data.data.USDC[0].totalSupply;
+        object.protocol = 'Uniswap V2';
+        object.chain = 'Ethereum';
+        object.tokenName = 'USDC';
+        object.value =
           (response.data.data.USDC[0].reserveUSD / response.data.data.USDC[0].totalSupply) *
-            USDCAmount
-        );
-        USDC.push(USDCAmount);
-        USDC.push(USDCAmountClaimables);
-        object.USDC = USDC;
-      } else {
-        object.USDC = 'null';
+          USDCAmount;
+        tot = tot + object.value;
+        object.totalValue = tot;
+        object.icon = imageUni;
+
+        // USDC.push(response.data.data.USDC[0].reserveUSD);
+        // USDC.push(response.data.data.USDC[0].volumeUSD);
+        // USDC.push(response.data.data.USDC[0].reserveUSD / response.data.data.USDC[0].totalSupply);
+        // USDC.push(
+        //   (response.data.data.USDC[0].reserveUSD / response.data.data.USDC[0].totalSupply) *
+        //     USDCAmount
+        // );
+        // USDC.push(USDCAmount);
+        // USDC.push(USDCAmountClaimables);
+        // object.USDC = USDC;
+        pools.push(object);
       }
+      //  else {
+      //   object.USDC = 'null';
+      // }
       // WBTC ----------------------------------------------------------------------
       if (WBTCAmount > 0) {
         let WBTC = [];
-        WBTC.push(response.data.data.WBTC[0].reserveUSD);
-        WBTC.push(response.data.data.WBTC[0].volumeUSD);
-        WBTC.push(response.data.data.WBTC[0].reserveUSD / response.data.data.WBTC[0].totalSupply);
-        WBTC.push(
+        let object = {};
+        object.liquidity = response.data.data.WBTC[0].reserveUSD;
+        object.volume = response.data.data.WBTC[0].volumeUSD;
+        object.claimable = WBTCAmountClaimables;
+        object.balance = WBTCAmount;
+        object.price =
+          response.data.data.WBTC[0].reserveUSD / response.data.data.WBTC[0].totalSupply;
+        object.protocol = 'Uniswap V2';
+        object.tokenName = 'WBTC';
+        object.chain = 'Ethereum';
+        object.value =
           (response.data.data.WBTC[0].reserveUSD / response.data.data.WBTC[0].totalSupply) *
-            WBTCAmount
-        );
-        WBTC.push(WBTCAmount);
-        WBTC.push(WBTCAmountClaimable);
-        object.WBTC = WBTC;
-      } else {
-        object.WBTC = 'null';
+          WBTCAmount;
+        tot = tot + object.value;
+        object.totalValue = tot;
+        object.icon = imageUni;
+
+        // WBTC.push(response.data.data.WBTC[0].reserveUSD);
+        // WBTC.push(response.data.data.WBTC[0].volumeUSD);
+        // WBTC.push(response.data.data.WBTC[0].reserveUSD / response.data.data.WBTC[0].totalSupply);
+        // WBTC.push(
+        //   (response.data.data.WBTC[0].reserveUSD / response.data.data.WBTC[0].totalSupply) *
+        //     WBTCAmount
+        // );
+        // WBTC.push(WBTCAmount);
+        // WBTC.push(WBTCAmountClaimable);
+        // object.WBTC = WBTC;
+        pools.push(object);
       }
+      // } else {
+      //   object.WBTC = 'null';
+      // }
     });
-  return object;
+  console.log('uniswapApi', pools);
+  return pools;
 };

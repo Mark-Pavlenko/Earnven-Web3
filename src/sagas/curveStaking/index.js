@@ -71,12 +71,12 @@ function* curveStakingClaimDataSagaWorker(curveStakingAttributes) {
       //if claimable availble from crvLiquidityGaugeReward source
       if (crvLiquidityGaugeV2) {
         if (parseFloat(crvLiquidityGaugeV2.crvGaugeV2ClaimableValue).toFixed(2) > 0.0001) {
-          object.crvLiquidityGaugeV2Claimable = parseFloat(
+          object.Claimable = parseFloat(
             crvLiquidityGaugeV2.crvGaugeV2ClaimableValue / 10 ** 18
           ).toFixed(2);
         }
         if (parseFloat(crvLiquidityGaugeV2.crvGaugeV2RewardTotalValue).toFixed(3) > 0.0001) {
-          object.crvLiquidityGaugeV2RewardClaim = parseFloat(
+          object.Liquidity = parseFloat(
             crvLiquidityGaugeV2.crvGaugeV2RewardTotalValue / 10 ** 18
           ).toFixed(2);
         }
@@ -97,22 +97,30 @@ function* curveStakingClaimDataSagaWorker(curveStakingAttributes) {
       }
       crvStakeTokenName = crvStakeTokenData.gauge.pool.lpToken.name.replace('Curve.fi ', '');
       if (crvStakeTokenName == 'Factory USD Metapool: Frax') {
-        object.crvStakeTokenName = 'FRAX/3CRV'; // change to meaning full name to get the token image
+        object.tokenName = 'FRAX/3CRV'; // change to meaning full name to get the token image
       } else {
-        object.crvStakeTokenName = crvStakeTokenName;
+        object.tokenName = crvStakeTokenName;
       }
-      object.crvStakeTokenSymbol = crvStakeTokenData.gauge.pool.lpToken.symbol;
-      object.crvStakeTokenBalance = crvStakeTokenData.originalBalance;
-      object.crvStakeTokenBalanceUSD = object.crvStakeTokenBalance / 10 ** 18;
-      object.crvStakeTokenPrice = parseFloat(crvStakeTokenData.gauge.pool.virtualPrice).toFixed(2);
-      object.crvStakeTokenValue = object.crvStakeTokenBalanceUSD * object.crvStakeTokenPrice;
-      crvStakingTotalValue += object.crvStakeTokenValue;
+      object.symbol = crvStakeTokenData.gauge.pool.lpToken.symbol;
+      //object.balance = crvStakeTokenData.originalBalance;
+      object.balanceUSD = crvStakeTokenData.originalBalance / 10 ** 18;
+      object.price = parseFloat(crvStakeTokenData.gauge.pool.virtualPrice).toFixed(2);
+      object.totalValue = object.balanceUSD * object.price;
+      crvStakingTotalValue += object.totalValue;
       crvStakingArrayOfData.push(object);
     } // end of for loop
 
     yield put(actions.getCurveStakingData(crvStakingArrayOfData));
-    yield put(actions.getCurveStakingTotal(parseFloat(crvStakingTotalValue).toFixed(2)));
+    yield put(actions.getCurveStakingTotal(crvStakingTotalValue));
     crvStakingArrayOfData = [];
     crvStakingTotalValue = 0;
   }
 }
+
+// crvLiquidityGaugeClaimable: "4685.99"
+// crvStakeTokenBalance: "410987583746823477949189"
+// crvStakeTokenBalanceUSD: 410987.5837468235
+// crvStakeTokenName: "USDN/3Crv"
+// crvStakeTokenPrice: "1.05"
+// crvStakeTokenSymbol: "usdn3CRV"
+// crvStakeTokenValue: 431536.9629341647

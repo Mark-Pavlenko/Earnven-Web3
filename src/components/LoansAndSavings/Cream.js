@@ -11,11 +11,14 @@ Version           Date                         Description
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import addresses from '../../contractAddresses';
+import { useDispatch } from 'react-redux';
+import { setCreamData, setCreamTotal } from '../../store/cream/actions';
 
 export default function Cream({ setTotal, setDisplay, accountAddress }) {
+  const dispatch = useDispatch();
   const [CreamTokens, setCreamTokens] = useState([]);
   const [TotalCream, setTotalCream] = useState(0);
-
+  console.log('TotalCream', TotalCream);
   const numberWithCommas = (x) => {
     x = x.toString();
     var pattern = /(-?\d+)(\d{3})/;
@@ -90,7 +93,7 @@ export default function Cream({ setTotal, setDisplay, accountAddress }) {
                   address = item.market.underlyingAddress;
               }
               return {
-                symbol: item.symbol,
+                tokenName: item.symbol,
                 cTokenBalance: parseFloat(item.cTokenBalance).toFixed(2),
                 name: item.market.name,
                 usdPrice: parseFloat(item.market.underlyingPriceUSD).toFixed(2),
@@ -110,7 +113,7 @@ export default function Cream({ setTotal, setDisplay, accountAddress }) {
                   parseFloat(item.market.underlyingPriceUSD)
                 ).toFixed(2),
                 underlyingAddress: address,
-                cTokenValue: (
+                totalValue: (
                   parseFloat(item.cTokenBalance) * parseFloat(item.market.underlyingPriceUSD)
                 ).toFixed(2),
                 index: index,
@@ -119,7 +122,7 @@ export default function Cream({ setTotal, setDisplay, accountAddress }) {
             });
             for (let i = 0; i < tokens.length; i++) {
               let { image, usdPrice } = await getImage(tokens[i]);
-              tokens[i].image = image;
+              tokens[i].tokenImage = image;
               tokens[i].usdPrice = parseFloat(usdPrice).toFixed(2);
               tokens[i].totalSuppliedvalue = (
                 parseFloat(tokens[i].totalSupplied) * parseFloat(usdPrice)
@@ -130,11 +133,12 @@ export default function Cream({ setTotal, setDisplay, accountAddress }) {
               tokens[i].totalRedeemedValue = (
                 parseFloat(tokens[i].totalRedeemed) * parseFloat(usdPrice)
               ).toFixed(2);
-              tokens[i].cTokenValue = (
+              tokens[i].totalValue = (
                 parseFloat(tokens[i].cTokenBalance) * parseFloat(usdPrice)
               ).toFixed(2);
             }
             setCreamTokens(tokens);
+            dispatch(setCreamData(tokens));
           }
         });
     }
@@ -144,9 +148,10 @@ export default function Cream({ setTotal, setDisplay, accountAddress }) {
   useEffect(() => {
     let total = 0;
     for (let i = 0; i < CreamTokens.length; i++) {
-      total = parseFloat(total) + parseFloat(CreamTokens[i].cTokenValue);
+      total = parseFloat(total) + parseFloat(CreamTokens[i].totalValue);
     }
     setTotalCream(total);
+    dispatch(setCreamTotal(total));
   }, [CreamTokens]);
 
   useEffect(() => {
@@ -184,7 +189,7 @@ export default function Cream({ setTotal, setDisplay, accountAddress }) {
                   marginLeft: '20px',
                 }}>
                 {item.symbol} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{' '}
-                {numberWithCommas(item.cTokenValue)} USD
+                {numberWithCommas(item.totalValue)} USD
               </div>
               <div
                 style={{

@@ -6,3 +6,10 @@ export const setAaveTokenData = (payload) => {
     payload,
   };
 };
+
+export const setAaveTokenTotal = (payload) => {
+  return {
+    type: actionTypes.SET_AAVE_STAKING_TOTAL,
+    payload,
+  };
+};

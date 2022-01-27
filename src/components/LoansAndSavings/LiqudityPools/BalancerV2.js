@@ -120,16 +120,16 @@ const BalancerV2 = ({ accountAddress }) => {
   }, [balancerV2array]);
   return (
     <div>
-      <div
-        style={{
-          fontSize: '12px',
-          marginLeft: '15px',
-          display: BalancerPoolsDatav2.length > 0 ? '' : 'none',
-        }}>
-        Balancer V2 ---{parseFloat(BalancerTotalv2).toFixed(2)} USD
-      </div>
-      {BalancerPoolsContentv2}
-      <br />
+      {/*<div*/}
+      {/*  style={{*/}
+      {/*    fontSize: '12px',*/}
+      {/*    marginLeft: '15px',*/}
+      {/*    display: BalancerPoolsDatav2.length > 0 ? '' : 'none',*/}
+      {/*  }}>*/}
+      {/*  Balancer V2 ---{parseFloat(BalancerTotalv2).toFixed(2)} USD*/}
+      {/*</div>*/}
+      {/*{BalancerPoolsContentv2}*/}
+      {/*<br />*/}
     </div>
   );
 };
