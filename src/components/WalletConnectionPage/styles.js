@@ -3,9 +3,22 @@ import styled from 'styled-components';
 import { Button, TextField } from '@material-ui/core';
 
 export const RootStyle = styled.div`
-  background: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};
+  @media (max-width: 1280px) {
+    background: ${(props) =>
+      props.isLightTheme
+        ? `url(${require(`../../assets/images/lightDashboard.jpg`).default})`
+        : `#0B0E1D`};
+  }
+
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+
   @media (min-width: 1281px) {
-    background: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};
+    background-size: 100% 100%;
+    background: ${(props) =>
+      props.isLightTheme
+        ? `url(${require(`../../assets/images/lightDashboardBig.jpg`).default})`
+        : `#0B0E1D`};
   }
 `;
 
@@ -30,6 +43,26 @@ export const MainStyle = styled.div`
   @media (min-width: 1280px) {
     //margin-top: 72px;
     //margin-left: 314px;
+  }
+`;
+
+export const MainStyleFirstConnection = styled.div`
+  display: flex;
+  justify-content: center;
+
+  height: 100vh;
+
+  @media (max-width: 710px) {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  @media screen and (max-width: 1445px) and (min-width: 1281px) {
+    margin-left: 150px;
+  }
+
+  @media (min-width: 1446px) {
+    margin-left: 315px;
   }
 `;
 

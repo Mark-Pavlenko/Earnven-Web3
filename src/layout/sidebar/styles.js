@@ -70,7 +70,7 @@ export const LogoBlock = styled.div`
   }
 
   @media (min-width: 1446px) {
-    margin-right: 30px;
+    margin-right: 50px;
   }
 `;
 

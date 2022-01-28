@@ -180,7 +180,7 @@ export const WelcomeSpan = styled.span`
 export const ConnectLabel = styled.span`
   font-size: 12px;
   line-height: 18px;
-  color: #1e1e20;
+  color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#FFFFFF')};
   opacity: 0.6;
 `;
 
@@ -262,7 +262,7 @@ const manageItemsButtons = css`
 
 export const AddNewWalletListItem = styled(ListItem)`
   ${manageItemsButtons};
-  margin-top: 20px;
+  //margin-top: 20px;
 `;
 
 export const ManageWalletsListItem = styled(ListItem)`

@@ -154,6 +154,9 @@ export default function Sidebar({
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
   const dispatch = useDispatch();
 
+  const reduxWalletsList = useSelector((state) => state.initSidebarValuesReducer.walletsList);
+  const reduxMyWallet = useSelector((state) => state.initSidebarValuesReducer.myWallet);
+
   const handleMobileGasItemClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -192,6 +195,11 @@ export default function Sidebar({
   const routeToConnectWallet = () => {
     navigate('/app/connect-wallet');
     setaccount(false);
+  };
+
+  const routeToInitialConnectPage = () => {
+    navigate('/');
+    localStorage.removeItem('setnavigation');
   };
 
   //------
@@ -313,8 +321,7 @@ export default function Sidebar({
   const displayAccountsMobile = useMediaQuery('(min-width:780px)');
   const laptopScreen = useMediaQuery('(min-width:1280px)');
 
-  const reduxWalletsList = useSelector((state) => state.initSidebarValuesReducer.walletsList);
-  const reduxMyWallet = useSelector((state) => state.initSidebarValuesReducer.myWallet);
+  console.log('reduxWalletsList qwerty', reduxWalletsList);
 
   // main sidebar content
   const desktopSidebarLayoutContent = (
@@ -400,29 +407,34 @@ export default function Sidebar({
         {/* Account block for mobile devices*/}
 
         {displayAccountsMobile && (
+          // <p>Here will account content</p>
           <Account
             address={address}
             name={name}
             setTheme={isLightTheme}
             global_wallet={global_wallet}
           />
+          // localStorage.getItem('selected-account')
         )}
-        {reduxWalletsList.length === 0 ||
-          (reduxMyWallet.length === 0 && (
+        {reduxWalletsList.length === 0 &&
+          localStorage.getItem('setnavigation') !== null &&
+          localStorage.getItem('wallets') === null && (
             <EnterAccountBlock isLightTheme={isLightTheme}>
               <EnterAccountSubRow>
                 <EnterAccountFlexItem style={{ marginBottom: '5px' }}>
                   <WelcomeSpan>Welcome</WelcomeSpan>
                 </EnterAccountFlexItem>
                 <EnterAccountFlexItem>
-                  <ConnectLabel>Connect an Ethereum wallet to manage your portfolio</ConnectLabel>
+                  <ConnectLabel isLightTheme={isLightTheme}>
+                    Connect an Ethereum wallet to manage your portfolio
+                  </ConnectLabel>
                 </EnterAccountFlexItem>
                 <EnterAccountFlexItem>
-                  <Button>Connect Wallet</Button>
+                  <Button onClick={routeToInitialConnectPage}>Connect Wallet</Button>
                 </EnterAccountFlexItem>
               </EnterAccountSubRow>
             </EnterAccountBlock>
-          ))}
+          )}
 
         <NavSection sx={{ px: 8, color: 'black' }} navConfig={newSideBard} address={address} />
         <SidebarMobileIconsBlock>
@@ -756,6 +768,11 @@ export default function Sidebar({
     </Scrollbar>
   );
 
+  console.log('global_wallet', JSON.parse(global_wallet));
+  console.log('reduxMyWallet', reduxMyWallet);
+  console.log('global_wallet_redux', reduxWalletsList);
+  console.log('reduxWalletsList.length', reduxWalletsList.length);
+
   // main sidebar wallet content (mobiles only)
   const mainSidebarWalletsListContent = (
     <Scrollbar
@@ -767,116 +784,124 @@ export default function Sidebar({
         boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
         '& .simplebar-content': { display: 'flex', flexDirection: 'column' },
       }}>
-      <SidebarMainLayout isLightTheme={isLightTheme}>
-        {/*content for wallets list*/}
-        <MobileLogoBlockWalletsList>
-          <LogoImg src={CompanyLogo} alt="" />
-          <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
-          {isLightTheme ? (
-            <CloseMobileSidebarIcon
-              src={CloseMobileSidebarLight}
-              alt=""
-              onClick={() => onCloseWalletsListMobile()}
-            />
+      {reduxWalletsList.length !== 0 && reduxMyWallet.length !== 0 && true ? (
+        <SidebarMainLayout isLightTheme={isLightTheme}>
+          {/*content for wallets list*/}
+          {reduxWalletsList.length !== 0 && reduxMyWallet.length !== 0 ? (
+            <MobileLogoBlockWalletsList>
+              <LogoImg src={CompanyLogo} alt="" />
+              <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
+              {isLightTheme ? (
+                <CloseMobileSidebarIcon
+                  src={CloseMobileSidebarLight}
+                  alt=""
+                  onClick={() => onCloseWalletsListMobile()}
+                />
+              ) : (
+                <CloseMobileSidebarIcon
+                  src={CloseMobileSidebarDark}
+                  alt=""
+                  onClick={() => onCloseWalletsListMobile()}
+                />
+              )}
+            </MobileLogoBlockWalletsList>
           ) : (
-            <CloseMobileSidebarIcon
-              src={CloseMobileSidebarDark}
-              alt=""
-              onClick={() => onCloseWalletsListMobile()}
-            />
+            <p>Content</p>
           )}
-        </MobileLogoBlockWalletsList>
-        {reduxMyWallet.length !== 0 ? (
+          {/*{reduxWalletsList.length !== 0 && accountList.length > 0 ? (*/}
           <MyWalletsLabel isLightTheme={isLightTheme}>
-            <p isLightTheme={isLightTheme}>{accountList.length > 0 && 'My Wallet'}</p>
+            <p>{'My Wallet'}</p>
           </MyWalletsLabel>
-        ) : (
-          <p>Enter account 12345</p>
-        )}
-        <WalletsList>
-          {reduxWalletsList.length !== 0 && (
-            <WalletsListItem
-              isLightTheme={isLightTheme}
-              isMetamaskWallet={true}
-              isMobileWalletsList={true}>
-              {reduxWalletsList.length !== 0 ? (
+          {/*) : (<p>Enter account 12345</p>*/}
+          {/*)}*/}
+          {reduxWalletsList.length !== 0 && reduxMyWallet.length !== 0 ? (
+            <WalletsList>
+              <WalletsListItem
+                isLightTheme={isLightTheme}
+                isMetamaskWallet={true}
+                isMobileWalletsList={true}>
+                {/*{reduxWalletsList.length !== 0 ? (*/}
                 <Accounts
                   setaccount_menuclose={(w) => setaccount(w)}
                   onClick={() => {
                     hideAccountPopover();
                   }}
                   onReRender={handleReRender}
-                  address={JSON.parse(global_wallet)[0].address}
-                  name={JSON.parse(global_wallet)[0].name}
-                  globalWalletsList={JSON.stringify(JSON.parse(global_wallet)[0])}
+                  address={reduxWalletsList[0].address}
+                  name={reduxWalletsList[0].name}
+                  globalWalletsList={reduxWalletsList[0]}
                   currentWalletAddress={currentWallet[0].address}
                   isMetamaskWallet={true}
                   isMobileWalletsList={true}
                   endTabletSize={false}
                 />
-              ) : (
-                <p>Enter the account aboba</p>
-              )}
-            </WalletsListItem>
+                {/*) : (*/}
+                {/*  <p>Enter the account aboba</p>*/}
+                {/*)}*/}
+              </WalletsListItem>
+            </WalletsList>
+          ) : (
+            <p>Test content</p>
           )}
-        </WalletsList>
+          {/* all wallets */}
+          <MyWalletsLabel isLightTheme={isLightTheme} allWalletsListMobile={true}>
+            <p isLightTheme={isLightTheme}>{accountList.length > 0 && 'Watchlist'}</p>
+          </MyWalletsLabel>
+          <div>
+            <WalletsList>
+              {accountList &&
+                accountList.map((option) => (
+                  <WalletsListItem isLightTheme={isLightTheme}>
+                    {reduxWalletsList.length !== 0 ? (
+                      <Accounts
+                        setaccount_menuclose={(w) => setaccount(w)}
+                        onClick={() => {
+                          hideAccountPopover();
+                        }}
+                        onReRender={handleReRender}
+                        address={option.address}
+                        name={option.name}
+                        globalWalletsList={global_wallet}
+                        currentWalletAddress={currentWallet[0].address}
+                        isMetamaskWallet={false}
+                      />
+                    ) : (
+                      <p>Enter account qwhajsa</p>
+                    )}
+                  </WalletsListItem>
+                ))}
+              <AddNewWalletListItem isLightTheme={isLightTheme} onClick={routeToConnectWallet}>
+                <ListItemIcon sx={{ mr: 1, minWidth: '17px' }}>
+                  <AddWalletIcon isLightTheme={isLightTheme} />
+                </ListItemIcon>
+                <NewWalletLabel
+                  isMobileWalletsList={true}
+                  primaryTypographyProps={{
+                    variant: 'watchlist_font_balance',
+                  }}>
+                  New Wallet
+                </NewWalletLabel>
+              </AddNewWalletListItem>
 
-        {/* all wallets */}
-        <MyWalletsLabel isLightTheme={isLightTheme} allWalletsListMobile={true}>
-          <p isLightTheme={isLightTheme}>{accountList.length > 0 && 'Watchlist'}</p>
-        </MyWalletsLabel>
-        <div>
-          <WalletsList>
-            {accountList &&
-              accountList.map((option) => (
-                <WalletsListItem isLightTheme={isLightTheme}>
-                  {reduxWalletsList.length !== 0 ? (
-                    <Accounts
-                      setaccount_menuclose={(w) => setaccount(w)}
-                      onClick={() => {
-                        hideAccountPopover();
-                      }}
-                      onReRender={handleReRender}
-                      address={option.address}
-                      name={option.name}
-                      globalWalletsList={global_wallet}
-                      currentWalletAddress={currentWallet[0].address}
-                      isMetamaskWallet={false}
-                    />
-                  ) : (
-                    <p>Enter account qwhajsa</p>
-                  )}
-                </WalletsListItem>
-              ))}
-            <AddNewWalletListItem isLightTheme={isLightTheme} onClick={routeToConnectWallet}>
-              <ListItemIcon sx={{ mr: 1, minWidth: '17px' }}>
-                <AddWalletIcon isLightTheme={isLightTheme} />
-              </ListItemIcon>
-              <NewWalletLabel
-                isMobileWalletsList={true}
-                primaryTypographyProps={{
-                  variant: 'watchlist_font_balance',
-                }}>
-                New Wallet
-              </NewWalletLabel>
-            </AddNewWalletListItem>
-
-            <ManageWalletsListItem isLightTheme={isLightTheme} onClick={routeToConnectWallet}>
-              <ListItemIcon sx={{ mr: 1, minWidth: '17px' }}>
-                <AccountWalletBalance isLightTheme={isLightTheme} />
-              </ListItemIcon>
-              <NewWalletLabel
-                isMobileWalletsList={true}
-                primaryTypographyProps={{
-                  variant: 'watchlist_font_balance',
-                }}>
-                Manage Wallets
-              </NewWalletLabel>
-            </ManageWalletsListItem>
-          </WalletsList>
-          {/* add new item element */}
-        </div>
-      </SidebarMainLayout>
+              <ManageWalletsListItem isLightTheme={isLightTheme} onClick={routeToConnectWallet}>
+                <ListItemIcon sx={{ mr: 1, minWidth: '17px' }}>
+                  <AccountWalletBalance isLightTheme={isLightTheme} />
+                </ListItemIcon>
+                <NewWalletLabel
+                  isMobileWalletsList={true}
+                  primaryTypographyProps={{
+                    variant: 'watchlist_font_balance',
+                  }}>
+                  Manage Wallets
+                </NewWalletLabel>
+              </ManageWalletsListItem>
+            </WalletsList>
+            {/* add new item element */}
+          </div>
+        </SidebarMainLayout>
+      ) : (
+        <p>Test content</p>
+      )}
     </Scrollbar>
   );
 
@@ -949,7 +974,11 @@ export default function Sidebar({
               backgroundColor: 'transparent',
             },
           }}>
-          {mainSidebarWalletsListContent}
+          {reduxWalletsList.length !== 0 && reduxMyWallet.length !== 0 ? (
+            <>{mainSidebarWalletsListContent}</>
+          ) : (
+            <div>Content test</div>
+          )}
         </DrawerLayoutMobile>
       </MHidden>
     </RootStyle>

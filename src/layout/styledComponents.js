@@ -7,6 +7,7 @@ export const RootStyle = styled('div')`
       : `#0B0E1D`};
   background-repeat: no-repeat;
   background-size: 100% 100%;
+
   @media (min-width: 1281px) {
     background-size: 100% 100%;
     background: ${(props) =>

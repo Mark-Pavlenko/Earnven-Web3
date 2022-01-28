@@ -3,6 +3,7 @@ import GET_THEME from '../../constants/actionTypes';
 let isLightTheme;
 isLightTheme =
   localStorage.getItem('selectedTheme') === null || localStorage.getItem('selectedTheme') === 'Day';
+if (localStorage.getItem('selectedTheme') === null) localStorage.setItem('selectedTheme', 'Day');
 
 const initialState = {
   isLightTheme,

@@ -19,10 +19,6 @@ export default function AppLayout() {
   const [open, setOpen] = useState(false);
   const [openWalletsListMobile, setOpenWalletsListMobile] = useState(false);
 
-  console.log("localStorage.getItem('selected-account')", localStorage.getItem('selected-account'));
-  console.log("localStorage.getItem('selected-name')", localStorage.getItem('selected-name'));
-  console.log("localStorage.getItem('wallets')", localStorage.getItem('wallets'));
-
   // 0x49a2dcc237a65cc1f412ed47e0594602f6141936;
   // null;
   const arr = [
