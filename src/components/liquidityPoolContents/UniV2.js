@@ -17,7 +17,7 @@ import Addresses from '../../contractAddresses';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import Select from 'react-select';
 import tokenURIs from '../../screens/Exchange/tokenURIs';
 
 import PropTypes from 'prop-types';
@@ -29,6 +29,8 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { Add } from '@material-ui/icons';
 // import AmountInput from '../components/amountInput'
+
+import mockImg from '../../assets/icons/plus-icon.svg'
 
 import { Button } from '@material-ui/core';
 import { Link, useParams } from 'react-router-dom';
@@ -788,6 +790,125 @@ export default function LiquidityPools() {
 
   const [isModalOpen, setIsModalOpen] = useState(false)
 
+ const optionsForType = [
+    {
+      value: "vacation",
+      label: (
+          <div>
+            <div>
+              <img style={{ fill: "green" }} src={mockImg} />
+            </div>
+            <div>Vacation</div>
+          </div>
+      ),
+    },
+
+  ];
+
+  const options = [
+    {
+      label: '1',
+      value: '1'
+    },
+    {
+      label: '2',
+      value: '2'
+    },
+    {
+      label: '3',
+      value: '3'
+    },
+    {
+      label: '4',
+      value: '4'
+    },
+    {
+      label: '5',
+      value: '5'
+    },
+  ];
+
+  const selectStyle = {
+    menu: (provided, state) => ({
+      ...provided,
+      width: "100%",
+      background: "rgba(255, 255, 255, 0.16)",
+      boxSizing: "border-box",
+      boxShadow: "inset 2px 2px 4px rgba(255, 255, 255, 0.1)",
+      borderTop: 'none',
+      borderRadius: "0 0 7px 7px",
+      mixBlendMode: 'normal',
+      backdropFilter: 'blur(35px)',
+      marginTop: '0',
+      padding: '0 20px 0 11px',
+    }),
+    control: (provided, state) => { //valueLine
+      console.log('fasdvwrgsvDS', provided)
+      return {
+        ...provided,
+        background: state.menuIsOpen ? "rgba(255, 255, 255, 0.16)" : "#FFFFFF",
+        boxShadow: state.menuIsOpen ? "inset 2px 2px 4px rgba(255, 255, 255, 0.1)" : 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
+        backdropFilter: 'blur(35px)',
+        mixBlendMode: 'normal',
+        border: 'none',
+        borderRadius: state.menuIsOpen ? "7px 7px 0 0" : "7px",
+        color: "#464C52",
+        height: "60px",
+        width: "100%",
+        cursor: "pointer",
+        marginBottom: '0',
+        // ":hover": { border: "none" },
+      }
+    },
+    placeholder: (provided, state) => ({
+      ...provided,
+      color: "#464C52",
+      fontSize: "18px",
+      textAlign: "left",
+    }),
+    dropdownIndicator: (provided, state) => ({
+      // ...provided,
+      height: "20px",
+      width: "20px",
+      color: "#4453AD",
+      margin: "0 5px",
+    }),
+    indicatorsContainer: () => ({
+      color: "transparent",
+    }),
+    singleValue: (provided, state) => ({
+      ...provided,
+      color: "#464C52",
+      fontSize: "18px",
+      background: state.isSelected ? "black" : "transparent",
+    }),
+    option: (provided, state) => {
+      return {
+        ...provided,
+        ":hover": {
+          background: '#FFFFFF',
+          boxShadow: 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
+          borderRadius: '7px',
+        },
+        background: state.isFocused
+            ? 'transparent'
+            : state.isSelected
+                ? 'rgba(255, 255, 255, 0.16)'
+                : undefined,
+        boxShadow: state.isFocused
+            ? '7px 21px 22px -15px rgba(51, 78, 131, 0.17)'
+            : state.isSelected
+                ? '7px 21px 22px -15px rgba(51, 78, 131, 0.17)'
+                : undefined,
+        color: "#616161",
+        mixBlendMode: 'normal',
+        alignItems: 'center',
+        height: '60px',
+        padding: "5px 10px",
+        fontSize: "18px",
+      }
+    },
+  };
   return (
     <div>
       <button onClick={() => {setIsModalOpen(true)}}>Open</button>
@@ -809,8 +930,15 @@ export default function LiquidityPools() {
           }}>
           {Loading ? 'Loading...' : 'Show More'}
         </button>
-        <ModalContainer isOpen={isModalOpen} onClose={() => {setIsModalOpen(false)}}>
-          Main Content
+        <ModalContainer title={'Add Liquidity'} isOpen={isModalOpen} onClose={() => {setIsModalOpen(false)}}>
+          <div style={{width: '100%'}}>
+            <Select
+                defaultValue={'5'}
+                styles={selectStyle}
+              options={options}
+          />
+          {/*<div style={{height: '60px', background: 'white', margin: '25px 0'}}></div>*/}
+          </div>
         </ModalContainer>
       </center>
     </div>
