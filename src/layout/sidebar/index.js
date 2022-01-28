@@ -194,6 +194,7 @@ export default function Sidebar({
 
   const routeToConnectWallet = () => {
     navigate('/app/connect-wallet');
+    localStorage.setItem('firstConnection', false);
     setaccount(false);
   };
 

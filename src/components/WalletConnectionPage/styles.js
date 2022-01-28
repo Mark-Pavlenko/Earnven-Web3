@@ -2,7 +2,9 @@
 import styled from 'styled-components';
 import { Button, TextField } from '@material-ui/core';
 
-export const RootStyle = styled.div`
+//----------
+
+export const RootStyleFirstConnection = styled.div`
   @media (max-width: 1280px) {
     background: ${(props) =>
       props.isLightTheme
@@ -14,13 +16,16 @@ export const RootStyle = styled.div`
   background-size: 100% 100%;
 
   @media (min-width: 1281px) {
-    background-size: 100% 100%;
     background: ${(props) =>
       props.isLightTheme
         ? `url(${require(`../../assets/images/lightDashboardBig.jpg`).default})`
         : `#0B0E1D`};
   }
 `;
+
+//----------
+
+export const RootStyle = styled.div``;
 
 export const MainStyle = styled.div`
   display: flex;

@@ -136,6 +136,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
 
   const routeToConnectWallet = () => {
     navigate('/app/connect-wallet');
+    localStorage.setItem('firstConnection', false);
     setaccount(false);
   };
 

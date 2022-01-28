@@ -4,6 +4,7 @@ let isLightTheme;
 isLightTheme =
   localStorage.getItem('selectedTheme') === null || localStorage.getItem('selectedTheme') === 'Day';
 if (localStorage.getItem('selectedTheme') === null) localStorage.setItem('selectedTheme', 'Day');
+if (localStorage.getItem('firstConnection') === null) localStorage.setItem('firstConnection', true);
 
 const initialState = {
   isLightTheme,
