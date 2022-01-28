@@ -70,7 +70,7 @@ export const LogoBlock = styled.div`
   }
 
   @media (min-width: 1446px) {
-    margin-right: 30px;
+    margin-right: 50px;
   }
 `;
 
@@ -208,6 +208,9 @@ export const MobileSidebarNetworksList = styled(List)`
   margin-top: 30px;
   margin-left: 53px;
 
+  @media (max-width: 1280px) {
+    margin-top: 15px;
+  }
   div {
     display: flex;
     flex-direction: row;
@@ -325,5 +328,46 @@ export const SidebarMobileDelimiter = styled.div`
 
   @media screen and (max-width: 780px) and (min-width: 710px) {
     margin-top: 15px;
+  }
+`;
+
+export const EnterAccountBlockMobileScreens = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  //margin-left: auto;
+  margin-left: 45px;
+  margin-right: 20px;
+  width: 169px;
+  height: 38px;
+
+  span {
+    color: #4453ad;
+    font-family: 'Saira', sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 31px;
+    letter-spacing: 0;
+  }
+
+  p {
+    color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
+    font-family: 'Saira', sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 19px;
+  }
+
+  @media screen and (min-width: 710px) and (max-width: 1280px) {
+    margin-left: 100px;
+  }
+
+  @media (min-width: 780px) {
+    display: none;
+  }
+
+  @media (max-width: 709px) {
   }
 `;

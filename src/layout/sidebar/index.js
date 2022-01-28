@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-
+import { useNavigate } from 'react-router';
 // material
 import Popover from '@mui/material/Popover';
 import { Drawer, ListItemIcon, List, ListItem, Button } from '@material-ui/core';
@@ -52,6 +52,7 @@ import {
   SidebarTabletNetworkButton,
   SidebarTabletHeaderBtnsLayout,
   MobileLogoTitle,
+  EnterAccountBlockMobileScreens,
 } from './styles';
 import lightIcon from '../../assets/icons/lightIcon.svg';
 import darkIcon from '../../assets/icons/darkIcon.svg';
@@ -61,11 +62,16 @@ import {
   AccountWalletBalance,
   AddNewWalletListItem,
   AddWalletIcon,
+  ConnectLabel,
+  EnterAccountBlock,
+  EnterAccountFlexItem,
+  EnterAccountSubRow,
   ManageWalletsListItem,
   MyWalletsLabel,
   NewWalletLabel,
   WalletsList,
   WalletsListItem,
+  WelcomeSpan,
 } from './account/styles';
 import Accounts from './account/walletsList/Accounts';
 import Box from '@material-ui/core/Box';
@@ -135,7 +141,6 @@ export default function Sidebar({
   setTheme,
   global_wallet,
 }) {
-  console.log('global_wallet',  global_wallet)
   const [accountList, setaccountList] = useState([]);
   const [account, setaccount] = useState(false);
   const [myWallet, setMyWallet] = useState([]);
@@ -148,6 +153,9 @@ export default function Sidebar({
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
   const dispatch = useDispatch();
+
+  const reduxWalletsList = useSelector((state) => state.initSidebarValuesReducer.walletsList);
+  const reduxMyWallet = useSelector((state) => state.initSidebarValuesReducer.myWallet);
 
   const handleMobileGasItemClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -167,15 +175,11 @@ export default function Sidebar({
 
   const openGasPricesMobilePopover = Boolean(anchorEl);
   const openNetworksListMobilePopover = Boolean(mobileNetworksListEl);
-
+  const navigate = useNavigate();
   const id = openGasPricesMobilePopover ? 'simple-popover' : undefined;
   const networksListId = openNetworksListMobilePopover ? 'simple-popover' : undefined;
 
   const currentWallet = JSON.parse(localStorage.getItem('mywallet'));
-  console.log('currentWallet', currentWallet)
-  {
-    currentWallet && console.log('currentWallet', currentWallet[0].address);
-  }
 
   //------
   const handleReRender = () => {
@@ -190,7 +194,13 @@ export default function Sidebar({
 
   const routeToConnectWallet = () => {
     navigate('/app/connect-wallet');
+    localStorage.setItem('firstConnection', false);
     setaccount(false);
+  };
+
+  const routeToInitialConnectPage = () => {
+    navigate('/');
+    localStorage.removeItem('setnavigation');
   };
 
   //------
@@ -307,8 +317,12 @@ export default function Sidebar({
     setGasPricesContent(content);
   }, [GasPrices]);
 
-  const mobileScreen = useMediaQuery('(min-width:710px)');
+  const isPhoneScreen = useMediaQuery('(max-width:709px)');
+  const startOfTabletScreen = useMediaQuery('(min-width:710px)');
+  const displayAccountsMobile = useMediaQuery('(min-width:780px)');
   const laptopScreen = useMediaQuery('(min-width:1280px)');
+
+  console.log('reduxWalletsList qwerty', reduxWalletsList);
 
   // main sidebar content
   const desktopSidebarLayoutContent = (
@@ -323,7 +337,7 @@ export default function Sidebar({
       }}>
       <SidebarMainLayout isLightTheme={isLightTheme}>
         <LogoBlock>
-          {mobileScreen ? (
+          {startOfTabletScreen ? (
             <>
               <LogoImg src={CompanyLogo} alt="" />
               {/*<MobileLogoTitle isLightTheme={isLightTheme}>Earnven</MobileLogoTitle>*/}
@@ -337,7 +351,7 @@ export default function Sidebar({
             </>
           )}
 
-          {mobileScreen && !laptopScreen && (
+          {startOfTabletScreen && !laptopScreen && (
             <SidebarTabletHeaderBtnsLayout>
               {isLightTheme ? (
                 <SidebarTabletNetworkButton
@@ -356,6 +370,7 @@ export default function Sidebar({
                   Network
                 </SidebarTabletNetworkButton>
               )}
+
               <GasButton
                 isLightTheme={isLightTheme}
                 startIcon={<img src={gasIcon} alt="" />}
@@ -390,12 +405,38 @@ export default function Sidebar({
             </SidebarTabletHeaderBtnsLayout>
           )}
         </LogoBlock>
-        <Account
-          address={address}
-          name={name}
-          setTheme={isLightTheme}
-          global_wallet={global_wallet}
-        />
+        {/* Account block for mobile devices*/}
+
+        {displayAccountsMobile && (
+          // <p>Here will account content</p>
+          <Account
+            address={address}
+            name={name}
+            setTheme={isLightTheme}
+            global_wallet={global_wallet}
+          />
+          // localStorage.getItem('selected-account')
+        )}
+        {reduxWalletsList.length === 0 &&
+          localStorage.getItem('setnavigation') !== null &&
+          localStorage.getItem('wallets') === null && (
+            <EnterAccountBlock isLightTheme={isLightTheme}>
+              <EnterAccountSubRow>
+                <EnterAccountFlexItem style={{ marginBottom: '5px' }}>
+                  <WelcomeSpan>Welcome</WelcomeSpan>
+                </EnterAccountFlexItem>
+                <EnterAccountFlexItem>
+                  <ConnectLabel isLightTheme={isLightTheme}>
+                    Connect an Ethereum wallet to manage your portfolio
+                  </ConnectLabel>
+                </EnterAccountFlexItem>
+                <EnterAccountFlexItem>
+                  <Button onClick={routeToInitialConnectPage}>Connect Wallet</Button>
+                </EnterAccountFlexItem>
+              </EnterAccountSubRow>
+            </EnterAccountBlock>
+          )}
+
         <NavSection sx={{ px: 8, color: 'black' }} navConfig={newSideBard} address={address} />
         <SidebarMobileIconsBlock>
           <SidebarMobileIconSubBlock>
@@ -417,6 +458,193 @@ export default function Sidebar({
               </SidebarMobileNetworkButton>
             )}
 
+            {/* Network popover for mobiles */}
+            {isPhoneScreen && (
+              <Popover
+                id={networksListId}
+                open={openNetworksListMobilePopover}
+                anchorEl={anchorEl}
+                onClose={handleNetworksListClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+                }}
+                anchorReference="anchorPosition"
+                anchorPosition={{ top: 110, left: 10 }}
+                PaperProps={{
+                  sx: {
+                    mt: 7,
+                    ml: 2.2,
+
+                    width: '345px',
+                    height: '540px',
+                    overflow: 'inherit',
+                    borderRadius: '10px',
+                    // background: (theme) => '#E5E5E5',
+                    mixBlendMode: 'normal',
+                    boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+                    backdropFilter: 'blur(15px)',
+                    ...sx,
+                  },
+                  style: {
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                  },
+                }}>
+                <MainSidebarMobilePopoverContent>
+                  <MobileSidebarNetworksList isLightTheme={isLightTheme}>
+                    <EthereumActiveNetwork
+                      isLightTheme={isLightTheme}
+                      style={{ marginBottom: '10px' }}>
+                      <img src={ethIcon} alt={'network_icon'} />
+                      <span>Ethereum</span>
+                    </EthereumActiveNetwork>
+                    <div>
+                      <img src={AvalancheIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                      {/*<MobileSidebarNetworksListSubBlock>*/}
+                      <span style={{ color: '#b3b3b4' }}> Avalanche</span>
+                      <MobileSidebarComingSoonLabel style={{ marginLeft: '-76px' }}>
+                        Coming soon
+                      </MobileSidebarComingSoonLabel>
+                      {/*</MobileSidebarNetworksListSubBlock>*/}
+                    </div>
+                    <div>
+                      <img src={bscIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                      {/*<MobileSidebarNetworksListSubBlock>*/}
+                      <span style={{ color: '#b3b3b4' }}>BSC</span>
+                      <MobileSidebarComingSoonLabel style={{ marginLeft: '-30px' }}>
+                        Coming soon
+                      </MobileSidebarComingSoonLabel>
+                      {/*</MobileSidebarNetworksListSubBlock>*/}
+                    </div>
+                    <div>
+                      <img src={arbitrumIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                      {/*<MobileSidebarNetworksListSubBlock>*/}
+                      <span style={{ color: '#b3b3b4' }}> Arbitrum</span>
+                      <MobileSidebarComingSoonLabel style={{ marginLeft: '-65px' }}>
+                        Coming soon
+                      </MobileSidebarComingSoonLabel>
+                      {/*</MobileSidebarNetworksListSubBlock>*/}
+                    </div>
+                    {/*<Button startIcon={<img src={bscIcon} alt={'network_icon'} />}>BSC</Button>*/}
+                    <div>
+                      <img src={fantomIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                      {/*<MobileSidebarNetworksListSubBlock>*/}
+                      <span style={{ color: '#b3b3b4' }}> Fantom</span>
+                      <MobileSidebarComingSoonLabel style={{ marginLeft: '-55px' }}>
+                        Coming soon
+                      </MobileSidebarComingSoonLabel>
+                      {/*</MobileSidebarNetworksListSubBlock>*/}
+                    </div>
+                    <div>
+                      <img src={Polygon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                      {/*<MobileSidebarNetworksListSubBlock>*/}
+                      <span style={{ color: '#b3b3b4' }}>Polygon</span>
+                      <MobileSidebarComingSoonLabel style={{ marginLeft: '-60px' }}>
+                        Coming soon
+                      </MobileSidebarComingSoonLabel>
+                      {/*</MobileSidebarNetworksListSubBlock>*/}
+                    </div>
+                  </MobileSidebarNetworksList>
+                </MainSidebarMobilePopoverContent>
+              </Popover>
+            )}
+
+            {/* Network popover for tablets*/}
+            {startOfTabletScreen && !laptopScreen && (
+              <Popover
+                id={networksListId}
+                open={openNetworksListMobilePopover}
+                anchorEl={anchorEl}
+                onClose={handleNetworksListClose}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                PaperProps={{
+                  sx: {
+                    mt: 6,
+                    ml: -10,
+
+                    width: '345px',
+                    height: '540px',
+                    overflow: 'inherit',
+                    borderRadius: '10px',
+                    // background: (theme) => '#E5E5E5',
+                    mixBlendMode: 'normal',
+                    boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+                    backdropFilter: 'blur(15px)',
+                    ...sx,
+                  },
+                  style: {
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                  },
+                }}>
+                <MainSidebarMobilePopoverContent>
+                  <MobileSidebarNetworksList isLightTheme={isLightTheme}>
+                    <EthereumActiveNetwork
+                      isLightTheme={isLightTheme}
+                      style={{ marginBottom: '10px' }}>
+                      <img src={ethIcon} alt={'network_icon'} />
+                      <span>Ethereum</span>
+                    </EthereumActiveNetwork>
+                    <div>
+                      <img src={AvalancheIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                      {/*<MobileSidebarNetworksListSubBlock>*/}
+                      <span style={{ color: '#b3b3b4' }}> Avalanche</span>
+                      <MobileSidebarComingSoonLabel style={{ marginLeft: '-76px' }}>
+                        Coming soon
+                      </MobileSidebarComingSoonLabel>
+                      {/*</MobileSidebarNetworksListSubBlock>*/}
+                    </div>
+                    <div>
+                      <img src={bscIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                      {/*<MobileSidebarNetworksListSubBlock>*/}
+                      <span style={{ color: '#b3b3b4' }}>BSC</span>
+                      <MobileSidebarComingSoonLabel style={{ marginLeft: '-30px' }}>
+                        Coming soon
+                      </MobileSidebarComingSoonLabel>
+                      {/*</MobileSidebarNetworksListSubBlock>*/}
+                    </div>
+                    <div>
+                      <img src={arbitrumIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                      {/*<MobileSidebarNetworksListSubBlock>*/}
+                      <span style={{ color: '#b3b3b4' }}> Arbitrum</span>
+                      <MobileSidebarComingSoonLabel style={{ marginLeft: '-65px' }}>
+                        Coming soon
+                      </MobileSidebarComingSoonLabel>
+                      {/*</MobileSidebarNetworksListSubBlock>*/}
+                    </div>
+                    {/*<Button startIcon={<img src={bscIcon} alt={'network_icon'} />}>BSC</Button>*/}
+                    <div>
+                      <img src={fantomIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                      {/*<MobileSidebarNetworksListSubBlock>*/}
+                      <span style={{ color: '#b3b3b4' }}> Fantom</span>
+                      <MobileSidebarComingSoonLabel style={{ marginLeft: '-55px' }}>
+                        Coming soon
+                      </MobileSidebarComingSoonLabel>
+                      {/*</MobileSidebarNetworksListSubBlock>*/}
+                    </div>
+                    <div>
+                      <img src={Polygon} alt={'network_icon'} style={{ marginTop: '22px' }} />
+                      {/*<MobileSidebarNetworksListSubBlock>*/}
+                      <span style={{ color: '#b3b3b4' }}>Polygon</span>
+                      <MobileSidebarComingSoonLabel style={{ marginLeft: '-60px' }}>
+                        Coming soon
+                      </MobileSidebarComingSoonLabel>
+                      {/*</MobileSidebarNetworksListSubBlock>*/}
+                    </div>
+                  </MobileSidebarNetworksList>
+                </MainSidebarMobilePopoverContent>
+              </Popover>
+            )}
+
+            {/* Gas button */}
             <GasButton
               isLightTheme={isLightTheme}
               startIcon={<img src={gasIcon} alt="" />}
@@ -431,147 +659,102 @@ export default function Sidebar({
             </GasButton>
 
             {/*Gas Items Price*/}
-            <Popover
-              id={id}
-              open={openGasPricesMobilePopover}
-              anchorEl={anchorEl}
-              onClose={handleGasItemListClose}
-              anchorReference="anchorPosition"
-              anchorPosition={{ top: 100, left: 10 }}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              transformOrigin={{
-                vertical: 'center',
-                horizontal: 'left',
-              }}
-              PaperProps={{
-                sx: {
-                  mt: 7,
-                  ml: 2.2,
+            {isPhoneScreen && (
+              <Popover
+                id={id}
+                open={openGasPricesMobilePopover}
+                anchorEl={anchorEl}
+                onClose={handleGasItemListClose}
+                anchorReference="anchorPosition"
+                anchorPosition={{ top: 100, left: 10 }}
+                transformOrigin={{
+                  vertical: 'center',
+                  horizontal: 'left',
+                }}
+                PaperProps={{
+                  sx: {
+                    mt: 7,
+                    ml: 2.2,
 
-                  width: '345px',
-                  height: '540px',
-                  overflow: 'inherit',
-                  borderRadius: '10px',
-                  // background: (theme) => '#E5E5E5',
-                  mixBlendMode: 'normal',
-                  boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-                  backdropFilter: 'blur(15px)',
-                  ...sx,
-                },
-                style: {
-                  backgroundColor: 'transparent',
-                  boxShadow: 'none',
-                },
-              }}>
-              <MainSidebarMobilePopoverContent>
-                <SidebarMobilePopoverGasPriceTitle isLightTheme={isLightTheme}>
-                  Realtime Gas Prices
-                </SidebarMobilePopoverGasPriceTitle>
-                <SidebarMobileGasItemsBlock>{GasPricesContent}</SidebarMobileGasItemsBlock>
-                <SidebarMobilePopoverLink>
-                  Provided by{' '}
-                  <a href={'https://etherscan.io/'} target="_blank">
-                    etherscan.io
-                  </a>
-                </SidebarMobilePopoverLink>
-              </MainSidebarMobilePopoverContent>
-            </Popover>
+                    width: '345px',
+                    height: '540px',
+                    overflow: 'inherit',
+                    borderRadius: '10px',
+                    // backgroundColor: 'red',
+                    mixBlendMode: 'normal',
+                    boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+                    backdropFilter: 'blur(15px)',
+                    ...sx,
+                  },
+                  style: {
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                  },
+                }}>
+                <MainSidebarMobilePopoverContent>
+                  <SidebarMobilePopoverGasPriceTitle isLightTheme={isLightTheme}>
+                    Realtime Gas Prices 123
+                  </SidebarMobilePopoverGasPriceTitle>
+                  <SidebarMobileGasItemsBlock>{GasPricesContent}</SidebarMobileGasItemsBlock>
+                  <SidebarMobilePopoverLink>
+                    Provided by{' '}
+                    <a href={'https://etherscan.io/'} target="_blank">
+                      etherscan.io
+                    </a>
+                  </SidebarMobilePopoverLink>
+                </MainSidebarMobilePopoverContent>
+              </Popover>
+            )}
 
-            <Popover
-              id={networksListId}
-              open={openNetworksListMobilePopover}
-              anchorEl={anchorEl}
-              onClose={handleNetworksListClose}
-              anchorReference="anchorPosition"
-              anchorPosition={{ top: 100, left: 10 }}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              transformOrigin={{
-                vertical: 'center',
-                horizontal: 'left',
-              }}
-              PaperProps={{
-                sx: {
-                  mt: 7,
-                  ml: 2.2,
+            {startOfTabletScreen && !laptopScreen && (
+              // Gas prices for tablets
+              <Popover
+                id={id}
+                open={openGasPricesMobilePopover}
+                anchorEl={anchorEl}
+                onClose={handleGasItemListClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                PaperProps={{
+                  sx: {
+                    mt: 1,
+                    ml: 2.2,
 
-                  width: '345px',
-                  height: '540px',
-                  overflow: 'inherit',
-                  borderRadius: '10px',
-                  // background: (theme) => '#E5E5E5',
-                  mixBlendMode: 'normal',
-                  boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-                  backdropFilter: 'blur(15px)',
-                  ...sx,
-                },
-                style: {
-                  backgroundColor: 'transparent',
-                  boxShadow: 'none',
-                },
-              }}>
-              <MainSidebarMobilePopoverContent>
-                <MobileSidebarNetworksList isLightTheme={isLightTheme}>
-                  <EthereumActiveNetwork
-                    isLightTheme={isLightTheme}
-                    style={{ marginBottom: '10px' }}>
-                    <img src={ethIcon} alt={'network_icon'} />
-                    <span>Ethereum</span>
-                  </EthereumActiveNetwork>
-                  <div>
-                    <img src={AvalancheIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
-                    {/*<MobileSidebarNetworksListSubBlock>*/}
-                    <span style={{ color: '#b3b3b4' }}> Avalanche</span>
-                    <MobileSidebarComingSoonLabel style={{ marginLeft: '-76px' }}>
-                      Coming soon
-                    </MobileSidebarComingSoonLabel>
-                    {/*</MobileSidebarNetworksListSubBlock>*/}
-                  </div>
-                  <div>
-                    <img src={bscIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
-                    {/*<MobileSidebarNetworksListSubBlock>*/}
-                    <span style={{ color: '#b3b3b4' }}>BSC</span>
-                    <MobileSidebarComingSoonLabel style={{ marginLeft: '-30px' }}>
-                      Coming soon
-                    </MobileSidebarComingSoonLabel>
-                    {/*</MobileSidebarNetworksListSubBlock>*/}
-                  </div>
-                  <div>
-                    <img src={arbitrumIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
-                    {/*<MobileSidebarNetworksListSubBlock>*/}
-                    <span style={{ color: '#b3b3b4' }}> Arbitrum</span>
-                    <MobileSidebarComingSoonLabel style={{ marginLeft: '-65px' }}>
-                      Coming soon
-                    </MobileSidebarComingSoonLabel>
-                    {/*</MobileSidebarNetworksListSubBlock>*/}
-                  </div>
-                  {/*<Button startIcon={<img src={bscIcon} alt={'network_icon'} />}>BSC</Button>*/}
-                  <div>
-                    <img src={fantomIcon} alt={'network_icon'} style={{ marginTop: '22px' }} />
-                    {/*<MobileSidebarNetworksListSubBlock>*/}
-                    <span style={{ color: '#b3b3b4' }}> Fantom</span>
-                    <MobileSidebarComingSoonLabel style={{ marginLeft: '-55px' }}>
-                      Coming soon
-                    </MobileSidebarComingSoonLabel>
-                    {/*</MobileSidebarNetworksListSubBlock>*/}
-                  </div>
-                  <div>
-                    <img src={Polygon} alt={'network_icon'} style={{ marginTop: '22px' }} />
-                    {/*<MobileSidebarNetworksListSubBlock>*/}
-                    <span style={{ color: '#b3b3b4' }}>Polygon</span>
-                    <MobileSidebarComingSoonLabel style={{ marginLeft: '-60px' }}>
-                      Coming soon
-                    </MobileSidebarComingSoonLabel>
-                    {/*</MobileSidebarNetworksListSubBlock>*/}
-                  </div>
-                </MobileSidebarNetworksList>
-              </MainSidebarMobilePopoverContent>
-            </Popover>
+                    width: '345px',
+                    height: '540px',
+                    overflow: 'inherit',
+                    borderRadius: '10px',
+                    // backgroundColor: 'red',
+                    mixBlendMode: 'normal',
+                    boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+                    backdropFilter: 'blur(15px)',
+                    ...sx,
+                  },
+                  style: {
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                  },
+                }}>
+                <MainSidebarMobilePopoverContent>
+                  <SidebarMobilePopoverGasPriceTitle isLightTheme={isLightTheme}>
+                    Realtime Gas Prices 456
+                  </SidebarMobilePopoverGasPriceTitle>
+                  <SidebarMobileGasItemsBlock>{GasPricesContent}</SidebarMobileGasItemsBlock>
+                  <SidebarMobilePopoverLink>
+                    Provided by{' '}
+                    <a href={'https://etherscan.io/'} target="_blank">
+                      etherscan.io
+                    </a>
+                  </SidebarMobilePopoverLink>
+                </MainSidebarMobilePopoverContent>
+              </Popover>
+            )}
           </SidebarMobileIconSubBlock>
           <ChangeThemeBtnMobile
             onClick={() => {
@@ -586,6 +769,11 @@ export default function Sidebar({
     </Scrollbar>
   );
 
+  console.log('global_wallet', JSON.parse(global_wallet));
+  console.log('reduxMyWallet', reduxMyWallet);
+  console.log('global_wallet_redux', reduxWalletsList);
+  console.log('reduxWalletsList.length', reduxWalletsList.length);
+
   // main sidebar wallet content (mobiles only)
   const mainSidebarWalletsListContent = (
     <Scrollbar
@@ -597,103 +785,124 @@ export default function Sidebar({
         boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
         '& .simplebar-content': { display: 'flex', flexDirection: 'column' },
       }}>
-      <SidebarMainLayout isLightTheme={isLightTheme}>
-        {/*content for wallets list*/}
-        <MobileLogoBlockWalletsList>
-          <LogoImg src={CompanyLogo} alt="" />
-          <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
-          {isLightTheme ? (
-            <CloseMobileSidebarIcon
-              src={CloseMobileSidebarLight}
-              alt=""
-              onClick={() => onCloseWalletsListMobile()}
-            />
+      {reduxWalletsList.length !== 0 && reduxMyWallet.length !== 0 && true ? (
+        <SidebarMainLayout isLightTheme={isLightTheme}>
+          {/*content for wallets list*/}
+          {reduxWalletsList.length !== 0 && reduxMyWallet.length !== 0 ? (
+            <MobileLogoBlockWalletsList>
+              <LogoImg src={CompanyLogo} alt="" />
+              <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
+              {isLightTheme ? (
+                <CloseMobileSidebarIcon
+                  src={CloseMobileSidebarLight}
+                  alt=""
+                  onClick={() => onCloseWalletsListMobile()}
+                />
+              ) : (
+                <CloseMobileSidebarIcon
+                  src={CloseMobileSidebarDark}
+                  alt=""
+                  onClick={() => onCloseWalletsListMobile()}
+                />
+              )}
+            </MobileLogoBlockWalletsList>
           ) : (
-            <CloseMobileSidebarIcon
-              src={CloseMobileSidebarDark}
-              alt=""
-              onClick={() => onCloseWalletsListMobile()}
-            />
+            <p>Content</p>
           )}
-        </MobileLogoBlockWalletsList>
-        <MyWalletsLabel isLightTheme={isLightTheme}>
-          <p isLightTheme={isLightTheme}>{accountList.length > 0 && 'My Wallet'}</p>
-        </MyWalletsLabel>
-        <WalletsList>
-          {accountList && (
-            <WalletsListItem
-              isLightTheme={isLightTheme}
-              isMetamaskWallet={true}
-              isMobileWalletsList={true}>
-              <Accounts
-                setaccount_menuclose={(w) => setaccount(w)}
-                onClick={() => {
-                  hideAccountPopover();
-                }}
-                onReRender={handleReRender}
-                address={JSON.parse(global_wallet)[0].address}
-                name={JSON.parse(global_wallet)[0].name}
-                globalWalletsList={JSON.stringify(JSON.parse(global_wallet)[0])}
-                currentWalletAddress={currentWallet[0].address}
+          {/*{reduxWalletsList.length !== 0 && accountList.length > 0 ? (*/}
+          <MyWalletsLabel isLightTheme={isLightTheme}>
+            <p>{'My Wallet'}</p>
+          </MyWalletsLabel>
+          {/*) : (<p>Enter account 12345</p>*/}
+          {/*)}*/}
+          {reduxWalletsList.length !== 0 && reduxMyWallet.length !== 0 ? (
+            <WalletsList>
+              <WalletsListItem
+                isLightTheme={isLightTheme}
                 isMetamaskWallet={true}
-                isMobileWalletsList={true}
-              />
-            </WalletsListItem>
+                isMobileWalletsList={true}>
+                {/*{reduxWalletsList.length !== 0 ? (*/}
+                <Accounts
+                  setaccount_menuclose={(w) => setaccount(w)}
+                  onClick={() => {
+                    hideAccountPopover();
+                  }}
+                  onReRender={handleReRender}
+                  address={reduxWalletsList[0].address}
+                  name={reduxWalletsList[0].name}
+                  globalWalletsList={reduxWalletsList[0]}
+                  currentWalletAddress={currentWallet[0].address}
+                  isMetamaskWallet={true}
+                  isMobileWalletsList={true}
+                  endTabletSize={false}
+                />
+                {/*) : (*/}
+                {/*  <p>Enter the account aboba</p>*/}
+                {/*)}*/}
+              </WalletsListItem>
+            </WalletsList>
+          ) : (
+            <p>Test content</p>
           )}
-        </WalletsList>
+          {/* all wallets */}
+          <MyWalletsLabel isLightTheme={isLightTheme} allWalletsListMobile={true}>
+            <p isLightTheme={isLightTheme}>{accountList.length > 0 && 'Watchlist'}</p>
+          </MyWalletsLabel>
+          <div>
+            <WalletsList>
+              {accountList &&
+                accountList.map((option) => (
+                  <WalletsListItem isLightTheme={isLightTheme}>
+                    {reduxWalletsList.length !== 0 ? (
+                      <Accounts
+                        setaccount_menuclose={(w) => setaccount(w)}
+                        onClick={() => {
+                          hideAccountPopover();
+                        }}
+                        onReRender={handleReRender}
+                        address={option.address}
+                        name={option.name}
+                        globalWalletsList={global_wallet}
+                        currentWalletAddress={currentWallet[0].address}
+                        isMetamaskWallet={false}
+                      />
+                    ) : (
+                      <p>Enter account qwhajsa</p>
+                    )}
+                  </WalletsListItem>
+                ))}
+              <AddNewWalletListItem isLightTheme={isLightTheme} onClick={routeToConnectWallet}>
+                <ListItemIcon sx={{ mr: 1, minWidth: '17px' }}>
+                  <AddWalletIcon isLightTheme={isLightTheme} />
+                </ListItemIcon>
+                <NewWalletLabel
+                  isMobileWalletsList={true}
+                  primaryTypographyProps={{
+                    variant: 'watchlist_font_balance',
+                  }}>
+                  New Wallet
+                </NewWalletLabel>
+              </AddNewWalletListItem>
 
-        {/* all wallets */}
-        <MyWalletsLabel isLightTheme={isLightTheme} allWalletsListMobile={true}>
-          <p isLightTheme={isLightTheme}>{accountList.length > 0 && 'Watchlist'}</p>
-        </MyWalletsLabel>
-        <div>
-          <WalletsList>
-            {accountList &&
-              accountList.map((option) => (
-                <WalletsListItem isLightTheme={isLightTheme}>
-                  <Accounts
-                    setaccount_menuclose={(w) => setaccount(w)}
-                    onClick={() => {
-                      hideAccountPopover();
-                    }}
-                    onReRender={handleReRender}
-                    address={option.address}
-                    name={option.name}
-                    globalWalletsList={global_wallet}
-                    currentWalletAddress={currentWallet[0].address}
-                    isMetamaskWallet={false}
-                  />
-                </WalletsListItem>
-              ))}
-            <AddNewWalletListItem isLightTheme={isLightTheme} onClick={routeToConnectWallet}>
-              <ListItemIcon sx={{ mr: 1, minWidth: '17px' }}>
-                <AddWalletIcon isLightTheme={isLightTheme} />
-              </ListItemIcon>
-              <NewWalletLabel
-                isMobileWalletsList={true}
-                primaryTypographyProps={{
-                  variant: 'watchlist_font_balance',
-                }}>
-                New Wallet
-              </NewWalletLabel>
-            </AddNewWalletListItem>
-
-            <ManageWalletsListItem isLightTheme={isLightTheme} onClick={routeToConnectWallet}>
-              <ListItemIcon sx={{ mr: 1, minWidth: '17px' }}>
-                <AccountWalletBalance isLightTheme={isLightTheme} />
-              </ListItemIcon>
-              <NewWalletLabel
-                isMobileWalletsList={true}
-                primaryTypographyProps={{
-                  variant: 'watchlist_font_balance',
-                }}>
-                Manage Wallets
-              </NewWalletLabel>
-            </ManageWalletsListItem>
-          </WalletsList>
-          {/* add new item element */}
-        </div>
-      </SidebarMainLayout>
+              <ManageWalletsListItem isLightTheme={isLightTheme} onClick={routeToConnectWallet}>
+                <ListItemIcon sx={{ mr: 1, minWidth: '17px' }}>
+                  <AccountWalletBalance isLightTheme={isLightTheme} />
+                </ListItemIcon>
+                <NewWalletLabel
+                  isMobileWalletsList={true}
+                  primaryTypographyProps={{
+                    variant: 'watchlist_font_balance',
+                  }}>
+                  Manage Wallets
+                </NewWalletLabel>
+              </ManageWalletsListItem>
+            </WalletsList>
+            {/* add new item element */}
+          </div>
+        </SidebarMainLayout>
+      ) : (
+        <p>Test content</p>
+      )}
     </Scrollbar>
   );
 
@@ -766,7 +975,11 @@ export default function Sidebar({
               backgroundColor: 'transparent',
             },
           }}>
-          {mainSidebarWalletsListContent}
+          {reduxWalletsList.length !== 0 && reduxMyWallet.length !== 0 ? (
+            <>{mainSidebarWalletsListContent}</>
+          ) : (
+            <div>Content test</div>
+          )}
         </DrawerLayoutMobile>
       </MHidden>
     </RootStyle>

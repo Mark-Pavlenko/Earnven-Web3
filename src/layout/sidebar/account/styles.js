@@ -110,20 +110,86 @@ export const WalletArrow = styled.span`
 
 export const EnterAccountBlock = styled.div`
   display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 170px;
   margin-top: 30px;
-  margin-left: auto;
-  margin-right: 20px;
-  width: 169px;
-  height: 38px;
+  margin-left: 122px;
 
-  p {
-    color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
-    font-family: 'Saira', sans-serif;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 19px;
+  @media screen and (min-width: 1281px) and (max-width: 1445px) {
+    margin-left: 0;
+    width: 150px;
   }
+  @media screen and (min-width: 781px) and (max-width: 1280px) {
+    width: 100px;
+  }
+
+  //@media screen and (min-width: 780px) and (max-width: 1280px) {
+  @media screen and (min-width: 781px) and (max-width: 1280px) {
+    margin-left: 100px;
+  }
+
+  @media screen and (min-width: 721px) and (max-width: 779px) {
+    margin-left: 80px;
+    width: 150px;
+  }
+
+  @media (max-width: 720px) {
+    //margin-left: 30px;
+    //margin: 0 auto;
+    margin-top: 30px;
+    margin-left: 30px;
+  }
+
+  @media (max-width: 400px) {
+    margin: 0 auto;
+    margin-top: 30px;
+  }
+
+  //@media (max-width: 779px) {
+  //  margin-left: 30px;
+  //}
+`;
+
+export const EnterAccountSubRow = styled.div`
+  //border: 1px solid blue;
+  //@media screen and (min-width: 1281px) and (max-width: 1445px) {
+  //}
+  //@media (max-width: 780px) {
+  //  dispay: none;
+  //}
+`;
+
+export const EnterAccountFlexItem = styled.div`
+  text-align: center;
+
+  button {
+    width: 150px;
+    height: 40px;
+    margin-top: 5px;
+    background: #ffffff;
+    box-shadow: inset 0 5px 9px -6px rgba(51, 78, 131, 0.05);
+    border-radius: 10px;
+    color: #4453ad;
+  }
+`;
+
+export const WelcomeSpan = styled.span`
+  color: #4453ad;
+  font-family: 'Saira', sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 31px;
+  letter-spacing: 0;
+  text-align: left;
+`;
+
+export const ConnectLabel = styled.span`
+  font-size: 12px;
+  line-height: 18px;
+  color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#FFFFFF')};
+  opacity: 0.6;
 `;
 
 export const MyWalletsLabel = styled(Box)`
@@ -204,7 +270,7 @@ const manageItemsButtons = css`
 
 export const AddNewWalletListItem = styled(ListItem)`
   ${manageItemsButtons};
-  margin-top: 20px;
+  //margin-top: 20px;
 `;
 
 export const ManageWalletsListItem = styled(ListItem)`
@@ -246,10 +312,13 @@ export const WalletListItemAccountLogo = styled(Avatar)`
   width: 21px;
   height: 21px;
 
-  @media (max-width: 1280px) {
-    width: ${(props) => (props.isMetamaskWallet ? '46px' : '21px')};
-    height: ${(props) => (props.isMetamaskWallet ? '46px' : '21px')};
-    margin-top: ${(props) => (props.isMobileWalletsList ? '8px' : '0px')};
+  @media (max-width: 710px) {
+    width: ${(props) =>
+      props.isMetamaskWallet && props.endTabletSize === false ? '46px' : '21px'};
+    height: ${(props) =>
+      props.isMetamaskWallet && props.endTabletSize === false ? '46px' : '21px'};
+    margin-top: ${(props) =>
+      props.isMobileWalletsList && props.endTabletSize === false ? '8px' : '0px'};
   }
 `;
 

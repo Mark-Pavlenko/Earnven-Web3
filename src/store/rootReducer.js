@@ -30,6 +30,7 @@ import { ethExplorerApi } from './ethExplorerApi/reducer';
 import { mStableSavings } from './mStable/reducer';
 import { mStableSavingsFarm, mStableSavingsPool } from './mStable/reducer';
 import { sushiSwap } from './sushiSwap/reducer';
+import { initSidebarValuesReducer } from './initSidebarValues/reducer';
 
 export const rootReducer = combineReducers({
   web3Reducer,
@@ -65,4 +66,5 @@ export const rootReducer = combineReducers({
   mStableSavingsFarm,
   mStableSavingsPool,
   sushiSwap,
+  initSidebarValuesReducer,
 });

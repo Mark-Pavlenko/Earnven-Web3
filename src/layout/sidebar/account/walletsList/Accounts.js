@@ -96,6 +96,7 @@ export default function Accounts(
     currentWalletAddress,
     isMetamaskWallet,
     isMobileWalletsList,
+    endTabletSize,
   },
   props
 ) {
@@ -180,6 +181,7 @@ export default function Accounts(
             alt="photoURL"
             isMetamaskWallet={isMetamaskWallet}
             isMobileWalletsList={isMobileWalletsList}
+            endTabletSize={endTabletSize}
           />
         ) : (
           <WalletListItemAccountLogo src={accountLogo} alt="photoURL" />
