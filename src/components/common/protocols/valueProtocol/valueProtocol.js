@@ -18,19 +18,19 @@ const ValueProtocol = ({
   token1Symbol,
   liquidity,
   protocol,
+  token1SymbolArray,
   protocolName,
-  totalInvestment,
   logoImage,
-  chain,
 }) => {
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
 
   const [isOpen, setIsOpen] = useState(false);
+  const tokenNamesArray = ['yDAI', 'yUSDC', 'yUSDT', 'yTUSD'];
 
   const toggleHandler = () => {
     setIsOpen(!isOpen);
   };
-  const { imageData, balance, volume, price } = protocol;
+  const { imageData, balance, volume, price, totalInvestment } = protocol;
   return (
     <Main isOpen={isOpen} isLightTheme={theme}>
       <TotalValue isOpen={isOpen}>
@@ -64,7 +64,7 @@ const ValueProtocol = ({
             }}>
             <div style={{ fontSize: '10px' }}>Liquidity</div>
             <div style={{ fontSize: '10px' }}>
-              ${numberWithCommas(parseFloat(liquidity).toFixed(2))}
+              {`$${numberWithCommas(parseFloat(protocol.liquidity).toFixed(2))}`}
             </div>
           </div>
           {/*<div*/}
@@ -85,7 +85,7 @@ const ValueProtocol = ({
               padding: '0 32px 11px 26px',
             }}>
             <div style={{ fontSize: '10px' }}>Value</div>
-            <div style={{ fontSize: '10px' }}>${numberWithCommas(totalInvestment)}</div>
+            <div style={{ fontSize: '10px' }}>{`$${numberWithCommas(totalInvestment)}`}</div>
           </div>
           {balance && (
             <div
@@ -96,7 +96,9 @@ const ValueProtocol = ({
                 padding: '0 32px 11px 26px',
               }}>
               <div style={{ fontSize: '10px' }}>Balance</div>
-              <div style={{ fontSize: '10px' }}>{balance}</div>
+              <div style={{ fontSize: '10px' }}>
+                {numberWithCommas(parseFloat(balance).toFixed(2))}
+              </div>
             </div>
           )}
           {volume && (
@@ -108,10 +110,12 @@ const ValueProtocol = ({
                 padding: '0 32px 11px 26px',
               }}>
               <div style={{ fontSize: '10px' }}>Volume</div>
-              <div style={{ fontSize: '10px' }}>{volume}</div>
+              <div style={{ fontSize: '10px' }}>{`$${numberWithCommas(
+                parseFloat(volume).toFixed(2)
+              )}`}</div>
             </div>
           )}
-          {chain && (
+          {protocol.chain && (
             <div
               style={{
                 display: 'flex',
@@ -120,7 +124,7 @@ const ValueProtocol = ({
                 padding: '0 32px 11px 26px',
               }}>
               <div style={{ fontSize: '10px' }}>Chain</div>
-              <div style={{ fontSize: '10px' }}>{chain}</div>
+              <div style={{ fontSize: '10px' }}>{protocol.chain}</div>
             </div>
           )}
           {price && (
@@ -131,11 +135,13 @@ const ValueProtocol = ({
                 fontWeight: '600',
                 padding: '0 32px 11px 26px',
               }}>
-              <div style={{ fontSize: '10px' }}>Price</div>
-              <div style={{ fontSize: '10px' }}>{price}</div>
+              <div style={{ fontSize: '10px' }}>Price</div>{' '}
+              <div style={{ fontSize: '10px' }}>
+                {`$${numberWithCommas(parseFloat(price).toFixed(2))}`}
+              </div>
             </div>
           )}
-          {protocolName && (
+          {protocol.protocol && (
             <div
               style={{
                 display: 'flex',
@@ -144,7 +150,7 @@ const ValueProtocol = ({
                 padding: '0 32px 11px 26px',
               }}>
               <div style={{ fontSize: '10px' }}>Protocol</div>
-              <div style={{ fontSize: '10px' }}>{protocolName}</div>
+              <div style={{ fontSize: '10px' }}>{protocol.protocol}</div>
             </div>
           )}
         </>

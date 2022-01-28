@@ -4,8 +4,15 @@ export const Main = styled.div`
   width: 100%;
   background: ${(props) =>
     props.isLight ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)'};
+  box-shadow: ${(props) =>
+    props.isLight
+      ? 'inset 2px 2px 4px rgba(255, 255, 255, 0.1);'
+      : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
   padding: 20px;
   border-radius: 10px;
+  @media (max-width: 1150px) {
+    padding: 0 29px 0 26px;
+  }
 `;
 
 export const Header = styled.div`
@@ -91,13 +98,23 @@ export const TokenName = styled.div`
   color: ${(props) => (props.isLight ? '#1e1e20' : '#ffffff')};
 `;
 
+export const TokenBalance = styled.div`
+  font-family: Saira, sans-serif;
+  font-style: normal;
+  color: ${(props) => (props.isLight ? '#80868F' : '#ffffff')};
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 22px;
+`;
+
 export const NameWrapper = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
-  height: 50px;
-  float: left;
-  text-align: initial;
+  align-items: flex-start;
+  //height: 50px;
+  //float: left;
+  //text-align: initial;
 `;
 
 export const APYPercent = styled.div`
@@ -226,7 +243,7 @@ export const TotalEmptyCell = styled.div`
 `;
 
 export const Part = styled.div`
-  width: 30px;
+  width: fit-content;
   height: 21px;
   background: ${(props) => (props.isLight ? '#ffffff' : '#4453ad')};
   box-shadow: inset 0 5px 10px -6px rgba(51, 78, 131, 0.12);
@@ -241,4 +258,9 @@ export const Part = styled.div`
   justify-content: center;
   color: ${(props) => (props.isLight ? '#1E1E20' : '#ffffff')};
   margin-left: 5px;
+  padding: 3px;
+  //&:hover {
+  //  background-color: #eceef7;
+  //  color: #1e1e20;
+  //}
 `;

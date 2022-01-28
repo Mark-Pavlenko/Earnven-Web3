@@ -91,7 +91,7 @@ export default function LiquidityPools() {
   const [AccountLiquidity, setAccountLiquidity] = useState('');
   const [ReceiveToken, setReceiveToken] = useState('');
   const [LiquidityAmount, setLiquidityAmount] = useState('');
-
+  console.log('Content', Content)
   const [AllTokens, setAllTokens] = useState([]);
 
   useEffect(() => {
@@ -114,7 +114,8 @@ export default function LiquidityPools() {
           }));
           console.log(tokens.filter((token) => token.logoURI === ''));
           setAllTokens(tokens);
-        });
+        }).catch((res) => {
+            console.log('liquidity pools Balancer returns error', res)});
     }
 
     getData();

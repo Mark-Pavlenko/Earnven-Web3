@@ -59,6 +59,7 @@ export async function fetchBalance(attributes) {
       .catch((err) => {
         console.log('error in fetching pickle staking', err);
       });
+    let totalsArray = [];
     for (let i = 0; i < data.tokens.length; i++) {
       for (let j = 0; j < pickleGaugeAddressList.length; j++) {
         if (
@@ -87,7 +88,8 @@ export async function fetchBalance(attributes) {
                     dataArray[x].details.valueBalance / dataArray[x].details.tokenBalance;
                   object.value = object.price * object.balance;
                   tot = tot + object.value;
-                  object.total = tot;
+                  object.totalValue = tot;
+                  totalsArray.push(object.totalValue);
                   object.tokenName = dataArray[x].farmNickname;
                 }
               }
@@ -101,10 +103,15 @@ export async function fetchBalance(attributes) {
         }
       }
     }
+
+    const commonTotal = totalsArray.reduce(function (s, v) {
+      return s + (v || 0);
+    }, 0);
+
     console.log('final object', pool);
-    return pool;
+    return [[...pool], commonTotal];
   } catch (err) {
-    console.log('error in pickle stakeing', err);
+    console.log('error in pickle staking', err);
   }
 }
 

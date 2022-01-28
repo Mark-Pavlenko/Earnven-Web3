@@ -18,8 +18,7 @@ import Investment from '../common/investment/investment';
 export default function YearnFinance({ accountAddress }) {
   const [YearnContent, setYearnContent] = useState([]);
   const [YearnTokenContent, setYearnTokenContent] = useState([]);
-  console.log('YearnContent', YearnContent);
-  console.log('YearnTokenContent', YearnTokenContent);
+
   //get useWeb3React hook
   const { account, activate, active, chainId, connector, deactivate, error, provider, setError } =
     useWeb3React();
@@ -35,7 +34,6 @@ export default function YearnFinance({ accountAddress }) {
   //------Yearn.Finanace yVault data process-----------------//
   const YearnData = useSelector((state) => state.yearnFinance.yearnFinanceData);
   const YearnTotalValue = useSelector((state) => state.yearnFinance.yearnFinanceTotal);
-  console.log('YearnTotalValue', YearnTotalValue);
   const yearnAccountAddress = { accountAddress: accountAddress };
   useEffect(() => {
     const getYearnUserData = async () => {
@@ -59,65 +57,65 @@ export default function YearnFinance({ accountAddress }) {
           return (
             <>
               <Investment protocol={object} logoImage={object.tokenImageUrl} />
-              {/*<Accordion*/}
-              {/*  style={{*/}
-              {/*    background: 'transparent',*/}
-              {/*    marginRight: '1px',*/}
-              {/*    color: 'black',*/}
-              {/*    width: '100%',*/}
-              {/*    border: '1px',*/}
-              {/*    borderColor: 'black',*/}
-              {/*    borderStyle: 'hidden', //solid*/}
-              {/*  }}>*/}
-              {/*  <AccordionSummary*/}
-              {/*    expandIcon={<ExpandMoreIcon />}*/}
-              {/*    aria-controls="panel1a-content"*/}
-              {/*    id="panel1a-header">*/}
-              {/*    <React.Fragment*/}
-              {/*      style={{*/}
-              {/*        display: 'inline-block',*/}
-              {/*        width: '100%',*/}
-              {/*        //textAlign: 'left',*/}
-              {/*        wordBreak: 'break-all',*/}
-              {/*      }}>*/}
-              {/*      <React.Fragment>*/}
-              {/*        <img*/}
-              {/*          style={{*/}
-              {/*            height: '20px',*/}
-              {/*            width: '20px',*/}
-              {/*            display: 'inline-block',*/}
-              {/*          }}*/}
-              {/*          src={object.tokenImageUrl}*/}
-              {/*          alt=""*/}
-              {/*        />*/}
-              {/*      </React.Fragment>*/}
-              {/*      {object.tokenName}&nbsp;*/}
-              {/*      {parseFloat(object.tokenValue).toLocaleString()} USD*/}
-              {/*    </React.Fragment>*/}
-              {/*  </AccordionSummary>*/}
-              {/*  <AccordionDetails>*/}
-              {/*    <div style={{ display: 'inline-block', width: '70%', fontSize: '12px' }}>*/}
-              {/*      Token name &nbsp;&nbsp; {object.tokenName}*/}
-              {/*      <br />*/}
-              {/*      Balance &nbsp; {parseFloat(object.tokenBalance).toFixed(2)}*/}
-              {/*      <br />*/}
-              {/*      Price &nbsp;&nbsp;&nbsp;&nbsp;${object.tokenPrice}*/}
-              {/*      <br />*/}
-              {/*      Value &nbsp;&nbsp;&nbsp;&nbsp;$*/}
-              {/*      {parseFloat(object.tokenValue).toLocaleString()}*/}
-              {/*      <br />*/}
-              {/*      APY &nbsp;&nbsp;&nbsp;&nbsp;*/}
-              {/*      {parseFloat(object.apy).toLocaleString()}%*/}
-              {/*      <br />*/}
-              {/*      Liquidity &nbsp;&nbsp;&nbsp;&nbsp;$*/}
-              {/*      {parseFloat(object.liquidity).toLocaleString()}*/}
-              {/*      <br />*/}
-              {/*      Chain &nbsp;&nbsp;&nbsp;&nbsp; {object.chain}*/}
-              {/*      <br />*/}
-              {/*      Protocol &nbsp;&nbsp; {object.protocol}*/}
-              {/*    </div>*/}
-              {/*  </AccordionDetails>*/}
-              {/*</Accordion>*/}
+              <Accordion
+                style={{
+                  background: 'transparent',
+                  marginRight: '1px',
+                  color: 'black',
+                  width: '100%',
+                  border: '1px',
+                  borderColor: 'black',
+                  borderStyle: 'hidden', //solid
+                }}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header">
+                  <React.Fragment
+                    style={{
+                      display: 'inline-block',
+                      width: '100%',
+                      //textAlign: 'left',
+                      wordBreak: 'break-all',
+                    }}>
+                    <React.Fragment>
+                      <img
+                        style={{
+                          height: '20px',
+                          width: '20px',
+                          display: 'inline-block',
+                        }}
+                        src={object.tokenImageUrl}
+                        alt=""
+                      />
+                    </React.Fragment>
+                    {object.tokenName}&nbsp;
+                    {parseFloat(object.tokenValue).toLocaleString()} USD
+                  </React.Fragment>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <div style={{ display: 'inline-block', width: '70%', fontSize: '12px' }}>
+                    Token name &nbsp;&nbsp; {object.tokenName}
+                    <br />
+                    Balance &nbsp; {parseFloat(object.tokenBalance).toFixed(2)}
+                    <br />
+                    Price &nbsp;&nbsp;&nbsp;&nbsp;${object.tokenPrice}
+                    <br />
+                    Value &nbsp;&nbsp;&nbsp;&nbsp;$
+                    {parseFloat(object.tokenValue).toLocaleString()}
+                    <br />
+                    APY &nbsp;&nbsp;&nbsp;&nbsp;
+                    {parseFloat(object.apy).toLocaleString()}%
+                    <br />
+                    Liquidity &nbsp;&nbsp;&nbsp;&nbsp;$
+                    {parseFloat(object.liquidity).toLocaleString()}
+                    <br />
+                    Chain &nbsp;&nbsp;&nbsp;&nbsp; {object.chain}
+                    <br />
+                    Protocol &nbsp;&nbsp; {object.protocol}
+                  </div>
+                </AccordionDetails>
+              </Accordion>
             </>
           );
         });
@@ -238,8 +236,8 @@ export default function YearnFinance({ accountAddress }) {
         {/*{(parseFloat(YearnTotalValue) > 0 ? parseFloat(YearnTotalValue) : 0) +*/}
         {/*  (parseFloat(YearnTokenTotalValue) > 0 ? parseFloat(YearnTokenTotalValue) : 0)}*/}
         {/*USD*/}
-        {YearnContent}
-        {YearnTokenContent}
+        {/*{YearnContent}*/}
+        {/*{YearnTokenContent}*/}
       </div>
     </React.Fragment>
   );

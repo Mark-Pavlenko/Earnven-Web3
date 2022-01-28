@@ -44,86 +44,86 @@ export default function SushiStaking({ accountAddress }) {
   }, [accountAddress]);
 
   //use below process to fetch slp token data to intergrate in UI
-  useEffect(() => {
-    if (SLPTokenData.length > 0) {
-      try {
-        var content = SLPTokenData.map((object) => {
-          return (
-            <SushiProtocol protocol={object} protocolName={'Sushi'} logoImage={SushiSwapLogo} />
-            // <Accordion
-            //   style={{
-            //     background: 'transparent',
-            //     marginRight: '1px',
-            //     color: 'black',
-            //     width: '100%',
-            //     border: '1px',
-            //     borderColor: 'black',
-            //     borderStyle: 'hidden', //solid
-            //   }}>
-            //   <AccordionSummary
-            //     expandIcon={<ExpandMoreIcon />}
-            //     aria-controls="panel1a-content"
-            //     id="panel1a-header">
-            //     <React.Fragment
-            //       style={{
-            //         display: 'inline-block',
-            //         width: '100%',
-            //         wordBreak: 'break-all',
-            //       }}>
-            //       <React.Fragment>
-            //         <img
-            //           style={{
-            //             height: '20px',
-            //             width: '20px',
-            //             display: 'inline-block',
-            //           }}
-            //           src={object.sushiLPToken0ImageUrl}
-            //           alt=""
-            //         />
-            //         <img
-            //           style={{
-            //             height: '20px',
-            //             width: '20px',
-            //             display: 'inline-block',
-            //           }}
-            //           src={object.sushiLPToken1ImageUrl}
-            //           alt=""
-            //         />
-            //       </React.Fragment>
-            //       {object.sushiLpTokenSymbol}&nbsp;
-            //       {parseFloat(object.sushiLpTokenValue).toLocaleString()} USD
-            //     </React.Fragment>
-            //   </AccordionSummary>
-            //   <AccordionDetails>
-            //     <div style={{ display: 'inline-block', width: '70%', fontSize: '12px' }}>
-            //       Staked token &nbsp;&nbsp; {object.sushiLpTokenSymbol}
-            //       <br />
-            //       Balance &nbsp; {parseFloat(object.sushiLpTokenBalance).toFixed(5)}
-            //       <br />
-            //       Price &nbsp;&nbsp;&nbsp;&nbsp;${object.sushiLpTokenPrice}
-            //       <br />
-            //       Value &nbsp;&nbsp;&nbsp;&nbsp;$
-            //       {parseFloat(object.sushiLpTokenValue).toLocaleString()}
-            //       <br />
-            //       Volume &nbsp;&nbsp;&nbsp;&nbsp;$
-            //       {parseFloat(object.sushiLpTokenVolume).toLocaleString()}
-            //       <br />
-            //       Liquidity &nbsp;&nbsp;&nbsp;&nbsp;$
-            //       {parseFloat(object.sushiLpTokenLiquidity).toLocaleString()}
-            //       <br />
-            //       Chain &nbsp;&nbsp;&nbsp;&nbsp; {object.sushiLpProtocol}
-            //       <br />
-            //       Protocol &nbsp;&nbsp; {object.sushiLpChain}
-            //     </div>
-            //   </AccordionDetails>
-            // </Accordion>
-          );
-        });
-      } catch (err) {
-        console.log('No Curve LP token data found');
-      }
-    }
-    setSLPTokenDataContent(content);
-  }, [SLPTokenData]);
+  // useEffect(() => {
+  //   if (SLPTokenData.length > 0) {
+  //     try {
+  //       var content = SLPTokenData.map((object) => {
+  //         return (
+  //           <SushiProtocol protocol={object} protocolName={'Sushi'} logoImage={SushiSwapLogo} />
+  //           // <Accordion
+  //           //   style={{
+  //           //     background: 'transparent',
+  //           //     marginRight: '1px',
+  //           //     color: 'black',
+  //           //     width: '100%',
+  //           //     border: '1px',
+  //           //     borderColor: 'black',
+  //           //     borderStyle: 'hidden', //solid
+  //           //   }}>
+  //           //   <AccordionSummary
+  //           //     expandIcon={<ExpandMoreIcon />}
+  //           //     aria-controls="panel1a-content"
+  //           //     id="panel1a-header">
+  //           //     <React.Fragment
+  //           //       style={{
+  //           //         display: 'inline-block',
+  //           //         width: '100%',
+  //           //         wordBreak: 'break-all',
+  //           //       }}>
+  //           //       <React.Fragment>
+  //           //         <img
+  //           //           style={{
+  //           //             height: '20px',
+  //           //             width: '20px',
+  //           //             display: 'inline-block',
+  //           //           }}
+  //           //           src={object.sushiLPToken0ImageUrl}
+  //           //           alt=""
+  //           //         />
+  //           //         <img
+  //           //           style={{
+  //           //             height: '20px',
+  //           //             width: '20px',
+  //           //             display: 'inline-block',
+  //           //           }}
+  //           //           src={object.sushiLPToken1ImageUrl}
+  //           //           alt=""
+  //           //         />
+  //           //       </React.Fragment>
+  //           //       {object.sushiLpTokenSymbol}&nbsp;
+  //           //       {parseFloat(object.sushiLpTokenValue).toLocaleString()} USD
+  //           //     </React.Fragment>
+  //           //   </AccordionSummary>
+  //           //   <AccordionDetails>
+  //           //     <div style={{ display: 'inline-block', width: '70%', fontSize: '12px' }}>
+  //           //       Staked token &nbsp;&nbsp; {object.sushiLpTokenSymbol}
+  //           //       <br />
+  //           //       Balance &nbsp; {parseFloat(object.sushiLpTokenBalance).toFixed(5)}
+  //           //       <br />
+  //           //       Price &nbsp;&nbsp;&nbsp;&nbsp;${object.sushiLpTokenPrice}
+  //           //       <br />
+  //           //       Value &nbsp;&nbsp;&nbsp;&nbsp;$
+  //           //       {parseFloat(object.sushiLpTokenValue).toLocaleString()}
+  //           //       <br />
+  //           //       Volume &nbsp;&nbsp;&nbsp;&nbsp;$
+  //           //       {parseFloat(object.sushiLpTokenVolume).toLocaleString()}
+  //           //       <br />
+  //           //       Liquidity &nbsp;&nbsp;&nbsp;&nbsp;$
+  //           //       {parseFloat(object.sushiLpTokenLiquidity).toLocaleString()}
+  //           //       <br />
+  //           //       Chain &nbsp;&nbsp;&nbsp;&nbsp; {object.sushiLpProtocol}
+  //           //       <br />
+  //           //       Protocol &nbsp;&nbsp; {object.sushiLpChain}
+  //           //     </div>
+  //           //   </AccordionDetails>
+  //           // </Accordion>
+  //         );
+  //       });
+  //     } catch (err) {
+  //       console.log('No Curve LP token data found');
+  //     }
+  //   }
+  //   setSLPTokenDataContent(content);
+  // }, [SLPTokenData]);
   return <React.Fragment>{SLPTokenData && <div>{SLPTokenDataContent}</div>}</React.Fragment>;
 }

@@ -102,39 +102,39 @@ export default function LiquityStaking({ accountAddress }) {
 
   return (
     <div>
-      {parseInt(LiquityStakeAmountUSD) ? (
-        <div>
-          <div
-            style={{
-              fontSize: '12px',
-              marginLeft: '15px',
-            }}>
-            Liquity Staking --- {LiquityStakeAmountUSD} USD
-          </div>
-          <div>
-            <img
-              src={LiquityLogo}
-              style={{
-                height: '40px',
-                marginTop: '1em',
-                display: 'inline-block',
-                marginLeft: '30px',
-              }}
-              alt=""
-            />
-            <div
-              style={{
-                fontSize: '13px',
-                display: 'inline-block',
-                marginLeft: '20px',
-              }}>
-              LQTY &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {LiquityStakeAmountUSD} USD
-            </div>
-          </div>
-        </div>
-      ) : (
-        ''
-      )}
+      {/*{parseInt(LiquityStakeAmountUSD) ? (*/}
+      {/*  <div>*/}
+      {/*    <div*/}
+      {/*      style={{*/}
+      {/*        fontSize: '12px',*/}
+      {/*        marginLeft: '15px',*/}
+      {/*      }}>*/}
+      {/*      Liquity Staking --- {LiquityStakeAmountUSD} USD*/}
+      {/*    </div>*/}
+      {/*    <div>*/}
+      {/*      <img*/}
+      {/*        src={LiquityLogo}*/}
+      {/*        style={{*/}
+      {/*          height: '40px',*/}
+      {/*          marginTop: '1em',*/}
+      {/*          display: 'inline-block',*/}
+      {/*          marginLeft: '30px',*/}
+      {/*        }}*/}
+      {/*        alt=""*/}
+      {/*      />*/}
+      {/*      <div*/}
+      {/*        style={{*/}
+      {/*          fontSize: '13px',*/}
+      {/*          display: 'inline-block',*/}
+      {/*          marginLeft: '20px',*/}
+      {/*        }}>*/}
+      {/*        LQTY &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {LiquityStakeAmountUSD} USD*/}
+      {/*      </div>*/}
+      {/*    </div>*/}
+      {/*  </div>*/}
+      {/*) : (*/}
+      {/*  ''*/}
+      {/*)}*/}
     </div>
   );
 }

@@ -64,6 +64,8 @@ export const TokenImage = styled.img`
 
 export const MockTokenImage = styled.img`
   display: flex;
+  justify-content: center;
+  align-items: center;
   max-width: 21px;
   max-height: 21px;
   border-radius: 50%;
@@ -78,6 +80,8 @@ export const TokenName = styled.div`
 
 export const ImagesWrapper = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
   margin-right: 5px;
 `;
 

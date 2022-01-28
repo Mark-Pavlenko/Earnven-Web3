@@ -88,7 +88,7 @@ const MstableFarm = ({ accountAddress }) => {
   }
   return (
     <div>
-      {flag && (
+      {flag ? (
         <div
           style={{
             display: pickleDillArray.length > 0 ? '' : 'none',
@@ -97,6 +97,8 @@ const MstableFarm = ({ accountAddress }) => {
             return <Investment key={index} protocol={object} logoImage={object.tokenImage} />;
           })}
         </div>
+      ) : (
+        ''
       )}
     </div>
   );

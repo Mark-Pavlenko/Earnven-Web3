@@ -20,7 +20,7 @@ const SushiProtocol = ({ protocol, protocolName, logoImage }) => {
   const { imageData, tokens, price, sushiLpTokenValue, sushiLpTokenSymbol } = protocol;
 
   const protocolData = {
-    Value: `$${protocol.sushiLpTokenValue}`,
+    Value: `$${parseFloat(protocol.sushiLpTokenValue).toFixed(2)}`,
     Liquidity: protocol.sushiLpTokenLiquidity
       ? `$${parseFloat(protocol.sushiLpTokenLiquidity).toFixed(2)}`
       : `$0`,
@@ -31,7 +31,7 @@ const SushiProtocol = ({ protocol, protocolName, logoImage }) => {
     ).toFixed(3),
     Chain: protocol.sushiLpProtocol,
     Protocol: protocol.sushiLpChain,
-    Volume: protocol.sushiLpTokenVolume,
+    Volume: `$${protocol.sushiLpTokenVolume}`,
     Price: `$${protocol.sushiLpTokenPrice}`,
   };
 

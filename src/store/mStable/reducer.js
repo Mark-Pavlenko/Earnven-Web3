@@ -38,6 +38,7 @@ export const mStableSavingsPool = (state = initialStatePool, action) => {
   switch (action.type) {
     case actionTypes.GET_MSTABLE_POOL:
       return {
+        ...state,
         mStableSavingsPool: action?.payload,
       };
     default:

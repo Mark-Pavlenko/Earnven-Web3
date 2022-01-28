@@ -22,6 +22,9 @@ import { convexStake } from './convexStake/reducer';
 import { curveLpToken } from './curveLpToken/reducer';
 import { AaveStaking } from './Aave/reducer';
 import { liquityToken } from './liquityToken/reducer';
+import { creamIronBank } from './creamIronBank/reducer';
+import { snowSwan } from './snowSwan/reducer';
+import { cream } from './cream/reducer';
 import { olympusStaking } from './olympusStaking/reducer';
 import { ethExplorerApi } from './ethExplorerApi/reducer';
 import { mStableSavings } from './mStable/reducer';
@@ -54,6 +57,9 @@ export const rootReducer = combineReducers({
   curveLpToken,
   AaveStaking,
   liquityToken,
+  creamIronBank,
+  snowSwan,
+  cream,
   olympusStaking,
   ethExplorerApi,
   mStableSavings,

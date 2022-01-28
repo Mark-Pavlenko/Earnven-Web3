@@ -11,7 +11,7 @@ import usdticon from '../../assets/icons/usdtlogo.png';
 import daiicon from '../../assets/icons/dailogo.png';
 import wbtcicon from '../../assets/icons/wbtclogo.png';
 
-export default function UniStaking({ accountAddress }) {
+export default function UniStaking({ accountAddress, getTotal }) {
   const [UniStateData, setUniStateData] = useState([]);
   const dispatch = useDispatch();
   const [stakeContent, setstakeContent] = useState([]);
@@ -29,6 +29,7 @@ export default function UniStaking({ accountAddress }) {
   }, [accountAddress]);
 
   const uniswapV2array = useSelector((state) => state.uniswapV2stake.uniswapV2stake);
+  console.log('uniswapV2array', uniswapV2array);
   useEffect(() => {
     let tot = 0;
     setUniStateData(uniswapV2array);
@@ -44,11 +45,12 @@ export default function UniStaking({ accountAddress }) {
     if (uniswapV2array.WBTC && uniswapV2array.WBTC !== 'null') {
       tot = tot + uniswapV2array.WBTC[3];
     }
+    console.log('tottottot', tot);
     setstakeTotal(tot);
+    getTotal(tot);
   }, [uniswapV2array]);
 
   useEffect(() => {
-    console.log('check content', UniStateData.USDT);
     const content = (
       <div>
         {UniStateData.USDT && UniStateData.USDT !== 'null' && (

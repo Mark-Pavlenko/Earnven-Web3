@@ -289,7 +289,8 @@ export default function ConvexStaking({ accountAddress }) {
               object.totalValue = parseFloat(
                 object.stakingAmt + parseFloat(object.stakingClaimable)
               );
-              totalStaking += parseFloat(object.stakingAmt + parseFloat(object.stakingClaimable));
+              totalStaking += object.stakingAmt + parseFloat(object.stakingClaimable);
+
               staking.push(object);
             }
 

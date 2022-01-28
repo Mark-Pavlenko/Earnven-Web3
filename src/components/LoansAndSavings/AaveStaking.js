@@ -24,7 +24,7 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useWeb3React } from '@web3-react/core';
 import { useDispatch } from 'react-redux';
-import { setAaveTokenData } from '../../store/Aave/actions';
+import { setAaveTokenData, setAaveTokenTotal } from '../../store/Aave/actions';
 
 export default function AaveStaking({ accountAddress }) {
   //varaible for AaveV2
@@ -57,20 +57,21 @@ export default function AaveStaking({ accountAddress }) {
           symbol: 'AAVE',
           balance: AaveV2BalanceAmt,
           value: AaveAmountUSD,
-          Claimable: AaveV2ClaimableValue,
-          Price: AaveV2UsdPrice,
+          claimable: AaveV2ClaimableValue,
+          price: AaveV2UsdPrice,
         },
         {
           symbol: 'stkABPT',
           balance: AaveStkABPTBalanceAmt,
           value: AaveStkABPTAmountUSD,
-          Claimable: AaveStkABPTClaimableValue,
+          claimable: AaveStkABPTClaimableValue,
           price: AaveStkABPTPrice,
         },
       ],
       tokenImage: [aaveLogo, AaveStkABPTImage],
     },
   ];
+  // console.log('AaveTokenData', AaveTokenData);
   // dispatch(setAaveTokenData(AaveTokenData));
   //get useWeb3React hook
   const { account, activate, active, chainId, connector, deactivate, error, provider, setError } =
@@ -162,6 +163,7 @@ export default function AaveStaking({ accountAddress }) {
       await axios
         .get('https://aave-api-v2.aave.com/data/pools', {})
         .then(async (response) => {
+          let object = {};
           //get the price for Staked Aave V2
           if (response.data[0].symbol === 'stkAAVE') {
             AaveV2UsdPrice = response.data[0].price.usd;
@@ -219,12 +221,39 @@ export default function AaveStaking({ accountAddress }) {
           //get total value of stkABPT staking balancer LP by its usdvalue and claimable
           totalstkABPTStaking = parseFloat(stkABPTUSDValue) + parseFloat(AaveStkABPTClaimableValue);
           //sum the total
-          AaveStakingTotalValue = (
-            parseFloat(totalAaveV2Staking) + parseFloat(totalstkABPTStaking)
-          ).toFixed(2);
+          AaveStakingTotalValue = parseFloat(totalAaveV2Staking) + parseFloat(totalstkABPTStaking);
 
           setAaveStakingTotal(AaveStakingTotalValue.toLocaleString());
           setAaveLiquidityEth(parseFloat(AaveTotlLiqudityBalance.toFixed(2)).toLocaleString());
+
+          const AaveTokensData = [
+            {
+              totalValue: AaveStakingTotalValue,
+              liquidity: parseFloat(AaveTotlLiqudityBalance.toFixed(2)).toLocaleString(),
+              protocol: 'Aave',
+              chain: 'Ethereum',
+              tokens: [
+                {
+                  symbol: 'AAVE',
+                  balance: parseFloat(AaveBalaceAmount / 10 ** 18),
+                  value: parseFloat(AaveV2USDValue.toFixed(2)).toLocaleString(),
+                  claimable: AaveV2ClaimableValue.toFixed(2),
+                  price: parseFloat(AaveV2UsdPrice).toFixed(2),
+                },
+                {
+                  symbol: 'stkABPT',
+                  balance: stkABPTBalance,
+                  value: stkABPTUSDValue.toLocaleString(),
+                  claimable: stkABPRClaimableValue.toFixed(2),
+                  price: parseFloat(stkABPTUsdPrice).toFixed(2),
+                },
+              ],
+              imageData: [stkABPTImageUrl, aaveLogo],
+            },
+          ];
+          dispatch(setAaveTokenData(AaveTokensData));
+          // dispatch(setAaveTokenTotal(AaveStakingTotalValue));
+
           //reset the value
           AaveV2ClaimableValue = 0;
           AaveV2USDValue = 0;
@@ -245,95 +274,95 @@ export default function AaveStaking({ accountAddress }) {
 
   return (
     <div>
-      {parseInt(AaveAmountUSD) || parseInt(AaveStkABPTAmountUSD) ? (
-        <div>
-          <Accordion
-            style={{
-              background: 'transparent',
-              marginRight: '1px',
-              color: 'black',
-              width: '100%',
-              border: 'none',
-            }}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header">
-              <img
-                src={aaveLogo}
-                style={{
-                  height: '30px',
-                  display: 'inline-block',
-                }}
-                alt=""
-              />
-              &nbsp;
-              <React.Fragment
-                style={{
-                  display: 'inline-block',
-                  width: '100%',
-                }}></React.Fragment>
-              Aave Staking -{' '}
-              {parseFloat(AaveStakingTotal) > 0 ? AaveStakingTotal.toLocaleString() : ''} USD
-            </AccordionSummary>
-            <AccordionDetails>
-              <div
-                style={{
-                  fontSize: '15px',
-                  display: 'inline-block',
-                  marginLeft: '15px',
-                }}>
-                <br />
-                <img
-                  src={aaveLogo}
-                  style={{
-                    height: '15px',
-                    marginTop: '',
-                    display: 'inline-block',
-                  }}
-                  alt=""
-                />
-                &nbsp;AAVE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {AaveAmountUSD} USD
-                <br />
-                Claimable &nbsp;&nbsp;&nbsp; {AaveV2ClaimableValue}
-                <br />
-                Price &nbsp;&nbsp;&nbsp;&nbsp; {AaveV2UsdPrice}
-                <br />
-                Balance &nbsp;&nbsp;&nbsp;&nbsp; {AaveV2BalanceAmt.toFixed(2)}
-                <br />
-                Liquidity &nbsp;&nbsp;&nbsp; {AaveLiquidityEth}
-                <br />
-                Protocol &nbsp;&nbsp;&nbsp;&nbsp; Aave
-                <br />
-                Chain &nbsp;&nbsp;&nbsp;&nbsp; Ethereum
-                <br />
-                {parseInt(AaveStkABPTAmountUSD) ? (
-                  <React.Fragment>
-                    <br />
-                    <img
-                      src={AaveStkABPTImage}
-                      style={{
-                        height: '20px',
-                        marginTop: '',
-                        display: 'inline-block',
-                      }}
-                      alt=""
-                    />
-                    &nbsp;stkABPT &nbsp;&nbsp;&nbsp;&nbsp; {AaveStkABPTAmountUSD} USD
-                    <br />
-                    Claimable &nbsp;&nbsp;&nbsp;&nbsp; {AaveStkABPTClaimableValue}
-                  </React.Fragment>
-                ) : (
-                  ''
-                )}
-                <br />
-              </div>
-            </AccordionDetails>
-          </Accordion>
-        </div>
-      ) : (
-        ''
-      )}
+      {/*{parseInt(AaveAmountUSD) || parseInt(AaveStkABPTAmountUSD) ? (*/}
+      {/*  <div>*/}
+      {/*    <Accordion*/}
+      {/*      style={{*/}
+      {/*        background: 'transparent',*/}
+      {/*        marginRight: '1px',*/}
+      {/*        color: 'black',*/}
+      {/*        width: '100%',*/}
+      {/*        border: 'none',*/}
+      {/*      }}>*/}
+      {/*      <AccordionSummary*/}
+      {/*        expandIcon={<ExpandMoreIcon />}*/}
+      {/*        aria-controls="panel1a-content"*/}
+      {/*        id="panel1a-header">*/}
+      {/*        <img*/}
+      {/*          src={aaveLogo}*/}
+      {/*          style={{*/}
+      {/*            height: '30px',*/}
+      {/*            display: 'inline-block',*/}
+      {/*          }}*/}
+      {/*          alt=""*/}
+      {/*        />*/}
+      {/*        &nbsp;*/}
+      {/*        <React.Fragment*/}
+      {/*          style={{*/}
+      {/*            display: 'inline-block',*/}
+      {/*            width: '100%',*/}
+      {/*          }}></React.Fragment>*/}
+      {/*        Aave Staking -{' '}*/}
+      {/*        {parseFloat(AaveStakingTotal) > 0 ? AaveStakingTotal.toLocaleString() : ''} USD*/}
+      {/*      </AccordionSummary>*/}
+      {/*      <AccordionDetails>*/}
+      {/*        <div*/}
+      {/*          style={{*/}
+      {/*            fontSize: '15px',*/}
+      {/*            display: 'inline-block',*/}
+      {/*            marginLeft: '15px',*/}
+      {/*          }}>*/}
+      {/*          <br />*/}
+      {/*          <img*/}
+      {/*            src={aaveLogo}*/}
+      {/*            style={{*/}
+      {/*              height: '15px',*/}
+      {/*              marginTop: '',*/}
+      {/*              display: 'inline-block',*/}
+      {/*            }}*/}
+      {/*            alt=""*/}
+      {/*          />*/}
+      {/*          &nbsp;AAVE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {AaveAmountUSD} USD*/}
+      {/*          <br />*/}
+      {/*          Claimable &nbsp;&nbsp;&nbsp; {AaveV2ClaimableValue}*/}
+      {/*          <br />*/}
+      {/*          Price &nbsp;&nbsp;&nbsp;&nbsp; {AaveV2UsdPrice}*/}
+      {/*          <br />*/}
+      {/*          Balance &nbsp;&nbsp;&nbsp;&nbsp; {AaveV2BalanceAmt.toFixed(2)}*/}
+      {/*          <br />*/}
+      {/*          Liquidity &nbsp;&nbsp;&nbsp; {AaveLiquidityEth}*/}
+      {/*          <br />*/}
+      {/*          Protocol &nbsp;&nbsp;&nbsp;&nbsp; Aave*/}
+      {/*          <br />*/}
+      {/*          Chain &nbsp;&nbsp;&nbsp;&nbsp; Ethereum*/}
+      {/*          <br />*/}
+      {/*          {parseInt(AaveStkABPTAmountUSD) ? (*/}
+      {/*            <React.Fragment>*/}
+      {/*              <br />*/}
+      {/*              <img*/}
+      {/*                src={AaveStkABPTImage}*/}
+      {/*                style={{*/}
+      {/*                  height: '20px',*/}
+      {/*                  marginTop: '',*/}
+      {/*                  display: 'inline-block',*/}
+      {/*                }}*/}
+      {/*                alt=""*/}
+      {/*              />*/}
+      {/*              &nbsp;stkABPT &nbsp;&nbsp;&nbsp;&nbsp; {AaveStkABPTAmountUSD} USD*/}
+      {/*              <br />*/}
+      {/*              Claimable &nbsp;&nbsp;&nbsp;&nbsp; {AaveStkABPTClaimableValue}*/}
+      {/*            </React.Fragment>*/}
+      {/*          ) : (*/}
+      {/*            ''*/}
+      {/*          )}*/}
+      {/*          <br />*/}
+      {/*        </div>*/}
+      {/*      </AccordionDetails>*/}
+      {/*    </Accordion>*/}
+      {/*  </div>*/}
+      {/*) : (*/}
+      {/*  ''*/}
+      {/*)}*/}
     </div>
   );
 }

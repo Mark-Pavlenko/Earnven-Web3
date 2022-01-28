@@ -15,10 +15,12 @@ import CreamIronBankContract from '../../abi/CreamIronBank.json';
 import Addresses from '../../contractAddresses';
 import ApiUrl from '../../apiUrls';
 import Investment from '../common/investment/investment';
+import { useDispatch } from 'react-redux';
+import { setCreamIronBankTotal } from '../../store/creamIronBank/actions';
 
-export default function CreamIronBank({ accountAddress, setIronBankSavings }) {
+export default function CreamIronBank({ accountAddress, getTotal }) {
+  const dispatch = useDispatch();
   const [TotalSavings, setTotalSavings] = useState(0);
-  console.log('TotalSavings', TotalSavings);
   const [CreamUSDT, setCreamUSDT] = useState({});
   const [CreamDAI, setCreamDAI] = useState({});
   const [CreamUSDC, setCreamUSDC] = useState({});
@@ -331,10 +333,6 @@ export default function CreamIronBank({ accountAddress, setIronBankSavings }) {
   }, [accountAddress]);
 
   useEffect(() => {
-    setIronBankSavings(TotalSavings);
-  }, [TotalSavings]);
-
-  useEffect(() => {
     setTotalSavings(
       parseFloat(
         CreamUSDT.totalValue +
@@ -446,11 +444,25 @@ export default function CreamIronBank({ accountAddress, setIronBankSavings }) {
   IronBankLayout(CreamAAVE);
   IronBankLayout(CreamMIM);
 
+  if (filteredTokensArray.length > 0) {
+    const result = filteredTokensArray.reduce((el, acc) => {
+      return el + +acc.totalValue;
+    }, 0);
+    getTotal(result);
+  }
+
   return (
     <div>
       {filteredTokensArray &&
         filteredTokensArray.map((object, index) => {
-          return <Investment key={index} protocol={object} logoImage={object.image} />;
+          return (
+            <Investment
+              key={index}
+              protocol={object}
+              logoImage={object.image}
+              protocolName={'Cream Iron Bank'}
+            />
+          );
         })}
     </div>
   );

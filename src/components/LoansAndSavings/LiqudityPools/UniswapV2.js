@@ -32,20 +32,19 @@ const UniswapV2 = ({ accountAddress }) => {
               textAlign: 'left',
               wordBreak: 'break-all',
             }}>
-            <div style={{ display: 'flex' }}>
-              {object.tokenImages.map((obj) => (
-                <div style={{ display: 'flex', marginLeft: '-10px' }}>
-                  <img
-                    src={obj}
-                    alt="noimage"
-                    style={{ maxWidth: '100%', maxHeight: '100%' }}
-                    width="30px"
-                    height="30px"></img>
-                  {/* <>${obj.symbol}-</> */}
-                </div>
-              ))}
-            </div>
-            ${object.token0Symbol}-${object.token1Symbol}
+            {/*<div style={{ display: 'flex' }}>*/}
+            {/*  {object.tokenImages.map((obj) => (*/}
+            {/*    <div style={{ display: 'flex', marginLeft: '-10px' }}>*/}
+            {/*      <img*/}
+            {/*        src={obj}*/}
+            {/*        alt="noimage"*/}
+            {/*        style={{ maxWidth: '100%', maxHeight: '100%' }}*/}
+            {/*        width="30px"*/}
+            {/*        height="30px"></img>*/}
+            {/*      /!* <>${obj.symbol}-</> *!/*/}
+            {/*    </div>*/}
+            {/*  ))}*/}
+            {/*</div>*/}${object.token0Symbol}-${object.token1Symbol}
           </div>
           <div style={{ display: 'flex', width: '300px' }}>
             <p>Value</p>
@@ -108,15 +107,15 @@ const UniswapV2 = ({ accountAddress }) => {
   }, [uniswapV2array]);
   return (
     <div>
-      <div
-        style={{
-          fontSize: '12px',
-          marginLeft: '15px',
-          display: PoolsData.length > 0 ? '' : 'none',
-        }}>
-        Uniswap V2 --- {UniV2Total} USD
-      </div>
-      {PoolsContent}
+      {/*<div*/}
+      {/*  style={{*/}
+      {/*    fontSize: '12px',*/}
+      {/*    marginLeft: '15px',*/}
+      {/*    display: PoolsData.length > 0 ? '' : 'none',*/}
+      {/*  }}>*/}
+      {/*  Uniswap V2 --- {UniV2Total} USD*/}
+      {/*</div>*/}
+      {/*{PoolsContent}*/}
     </div>
   );
 };

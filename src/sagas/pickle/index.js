@@ -5,13 +5,14 @@ import actionTypes from '../../constants/actionTypes';
 import * as API_LP from '../../../src/components/LoansAndSavings/api/pickleApi';
 
 export function* getpickleStakeSagaWatcher() {
-  yield takeEvery(actionTypes.SET_PICKLE_STAKE, pickleStakeworker);
+  yield takeEvery(actionTypes.GET_PICKLE_STAKE, pickleStakeworker);
 }
 
 function* pickleStakeworker(data) {
   const attributes = data.payload;
   const lp = yield call(API_LP.fetchBalance, attributes);
-  yield put(actions.getpickleStake(lp));
+  yield put(actions.setpickleStake(lp[0]));
+  yield put(actions.setpickleStakeTotal(lp[1]));
 }
 
 export function* getpickleDillSagaWatcher() {
@@ -21,5 +22,5 @@ export function* getpickleDillSagaWatcher() {
 function* pickleDillworker(data) {
   const attributes = data.payload;
   const lp = yield call(API_LP.fetchBalanceDill, attributes);
-  yield put(actions.getpickleDill(lp));
+  yield put(actions.setpickleDill(lp));
 }

@@ -33,7 +33,7 @@ const PickleDill = ({ accountAddress }) => {
     dataSend.push(balance);
     try {
       dispatch({
-        type: actionTypes.SET_PICKLE_DILL,
+        type: actionTypes.GET_PICKLE_DILL,
         payload: dataSend,
       });
     } catch (err) {

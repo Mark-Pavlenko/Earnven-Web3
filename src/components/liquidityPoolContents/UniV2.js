@@ -113,13 +113,14 @@ export default function LiquidityPools() {
           let data = response.data.tokens;
           let tokens = fetchedTokens.map((token) => ({
             ...token,
-            logoURI: data.find((x) => x.address == token.address)
-              ? data.find((x) => x.address == token.address).logoURI
-              : tokenURIs.find((x) => x.address == token.address).logoURI,
+            logoURI: data.find((x) => x.address === token.address)
+              ? data.find((x) => x.address === token.address).logoURI
+              : tokenURIs.find((x) => x.address === token.address).logoURI,
           }));
           console.log(tokens.filter((token) => token.logoURI === ''));
           setAllTokens(tokens);
-        });
+        }).catch((res) => {
+            console.log('liquidity pools Uniswap-V2 returns error', res)});
     }
     getData();
   }, []);
