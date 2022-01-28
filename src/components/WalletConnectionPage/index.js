@@ -83,6 +83,7 @@ export default function WalletPageConnection() {
       window.web3 = new Web3(window.ethereum);
       await window.ethereum.enable();
       const accounts = await window.web3.eth.getAccounts();
+      localStorage.setItem('firstConnection', false);
       routeToDashboard(accounts[0], 'metamask');
     } else if (window.web3) {
       window.web3 = new Web3(window.web3.currentProvider);
@@ -214,6 +215,7 @@ export default function WalletPageConnection() {
   const trackAddress = () => {
     const validAddress = Web3.utils.isAddress(address);
     if (validAddress) {
+      localStorage.setItem('firstConnection', false);
       routeToDashboard(address, null);
       seterrorMsg(false);
     } else {

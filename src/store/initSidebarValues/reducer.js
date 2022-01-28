@@ -9,6 +9,7 @@ let selectedAddress;
 let selectedName;
 let walletsList;
 let myWallet;
+let firstConnection;
 let currentWallet;
 
 if (localStorage.getItem('selected-account') === null) {
@@ -36,11 +37,19 @@ if (localStorage.getItem('mywallet') === null) {
   console.log('myWallet', myWallet);
 }
 
+// if (localStorage.getItem('firstConnection') === null) {
+//   localStorage.setItem('firstConnection', true);
+//   firstConnection = true;
+// } else {
+//   firstConnection = false;
+// }
+
 const initialState = {
   selectedAddress,
   selectedName,
   walletsList,
   myWallet,
+  firstConnection: localStorage.getItem('firstConnection'),
   // currentWalletAddress: myWallet.address,
 };
 

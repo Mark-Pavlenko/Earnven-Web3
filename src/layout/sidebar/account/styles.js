@@ -135,7 +135,15 @@ export const EnterAccountBlock = styled.div`
   }
 
   @media (max-width: 720px) {
+    //margin-left: 30px;
+    //margin: 0 auto;
+    margin-top: 30px;
     margin-left: 30px;
+  }
+
+  @media (max-width: 400px) {
+    margin: 0 auto;
+    margin-top: 30px;
   }
 
   //@media (max-width: 779px) {
