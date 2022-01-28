@@ -32,6 +32,7 @@ import { Add } from '@material-ui/icons';
 
 import { Button } from '@material-ui/core';
 import { Link, useParams } from 'react-router-dom';
+import ModalContainer from "../common/modalContainer/modalContainer";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -86,8 +87,6 @@ export default function LiquidityPools() {
 
   const [Data, setData] = useState([]); //UNI V2 Pools
   const [Content, setContent] = useState(''); //UNI V2 Pools
-  const [TokenA, setTokenA] = useState('');
-  const [TokenB, setTokenB] = useState('');
   const [Page, setPage] = useState('');
   const [AmountTokenA, setAmountTokenA] = useState('');
   const [AmountTokenB, setAmountTokenB] = useState('');
@@ -787,8 +786,11 @@ export default function LiquidityPools() {
       .send({ from: accounts[0] });
   }
 
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   return (
     <div>
+      <button onClick={() => {setIsModalOpen(true)}}>Open</button>
       {Content}
       <br />
       <center>
@@ -807,6 +809,9 @@ export default function LiquidityPools() {
           }}>
           {Loading ? 'Loading...' : 'Show More'}
         </button>
+        <ModalContainer isOpen={isModalOpen} onClose={() => {setIsModalOpen(false)}}>
+          Main Content
+        </ModalContainer>
       </center>
     </div>
   );
