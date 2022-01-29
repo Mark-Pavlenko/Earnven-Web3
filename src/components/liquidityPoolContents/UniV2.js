@@ -35,6 +35,7 @@ import mockImg from '../../assets/icons/plus-icon.svg'
 import { Button } from '@material-ui/core';
 import { Link, useParams } from 'react-router-dom';
 import ModalContainer from "../common/modalContainer/modalContainer";
+import {  SelectWrapper } from './styledComponents';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -909,6 +910,7 @@ export default function LiquidityPools() {
       }
     },
   };
+  // @ts-ignore
   return (
     <div>
       <button onClick={() => {setIsModalOpen(true)}}>Open</button>
@@ -931,14 +933,14 @@ export default function LiquidityPools() {
           {Loading ? 'Loading...' : 'Show More'}
         </button>
         <ModalContainer title={'Add Liquidity'} isOpen={isModalOpen} onClose={() => {setIsModalOpen(false)}}>
-          <div style={{width: '100%'}}>
+          <SelectWrapper>
             <Select
                 defaultValue={'5'}
                 styles={selectStyle}
               options={options}
           />
           {/*<div style={{height: '60px', background: 'white', margin: '25px 0'}}></div>*/}
-          </div>
+          </SelectWrapper>
         </ModalContainer>
       </center>
     </div>
