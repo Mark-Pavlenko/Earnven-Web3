@@ -29,7 +29,28 @@ export const MainContent = styled.div`
   backdrop-filter: blur(35px);
   border-radius: 10px;
   @media (max-width: 768px) {
-    padding: 18px 0 30px 0;
+    padding: 18px 15px 30px 15px;
+    //width: 100%;
+  }
+  @media (max-width: 525px) {
+    width: 100%;
+  }
+`;
+
+export const Content = styled.div`
+  width: 475px;
+  height: calc(100% - 48px);
+  margin: 34px 107px 0 107px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @media (max-width: 768px) {
+    margin: 34px 0 0 0;
+    width: 475px;
+  }
+
+  @media (max-width: 525px) {
+    width: 100%;
   }
 `;
 
@@ -57,16 +78,4 @@ export const Title = styled.div`
   font-weight: 600;
   font-size: 26px;
   line-height: 41px;
-`;
-
-export const Content = styled.div`
-  width: 475px;
-  height: calc(100% - 48px);
-  margin: 34px 107px 0 107px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  @media (max-width: 768px) {
-    margin: 34px 0 0 0;
-  }
 `;
