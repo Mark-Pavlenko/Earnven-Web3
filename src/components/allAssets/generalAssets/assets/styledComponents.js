@@ -264,3 +264,16 @@ export const Part = styled.div`
   //  color: #1e1e20;
   //}
 `;
+
+// =====================================>
+
+export const GridTable = styled.div`
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 10px;
+`;
+
+export const FirstEl = styled.div`
+  grid-column: span 2;
+`;

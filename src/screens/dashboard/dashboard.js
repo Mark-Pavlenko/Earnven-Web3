@@ -5,10 +5,10 @@ import History from '../History';
 import DashboardTabs from './tabs/tabs';
 import Page from '../../components/Page';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Balance from '../../components/Balance';
 import sendIcon from '../../assets/icons/send-icon.svg';
-import { Box, Container, Grid } from '@material-ui/core';
+import { Box, Container, Grid, Typography } from '@material-ui/core';
 import AllAssets from '../../components/allAssets/generalAssets/assets/assets';
 import LoansAndSavings from '../../components/LoansAndSavings/index';
 import etherScanIcon from '../../assets/icons/etherScan-icon.svg';
@@ -23,8 +23,45 @@ import {
   RightSideWrapper,
   Mobile,
   DashboardTabsLayout,
+  GridTable,
+  FirstEl,
+  ThirdEl,
+  Cell,
 } from './styledComponents';
 import axios from 'axios';
+import {
+  AddGroupButton,
+  APYPercent,
+  APYWrapper,
+  AssetDataRaw,
+  AssetImageMobile,
+  AssetName,
+  AssetsColumn,
+  AssetValue,
+  AssetValueWrapper,
+  ColumnHeader,
+  EthereumTokenImage,
+  Header,
+  Main,
+  MainMobile,
+  NameWrapper,
+  Part,
+  Percentage,
+  Title,
+  TokenBalance,
+  TokenImage,
+  TokenName,
+  TotalEmptyCell,
+  TotalTitle,
+  TotalValue,
+  TotalValueField,
+  Value,
+} from '../../components/allAssets/generalAssets/assets/styledComponents';
+import { ToggleButton } from '../../components/styled/styledComponents';
+import { numberWithCommas } from '../../commonFunctions/commonFunctions';
+import { BrowserView, MobileView } from 'react-device-detect';
+import ethImage from '../../assets/icons/eth.png';
+import Avatar from 'react-avatar';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;

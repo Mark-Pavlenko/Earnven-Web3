@@ -32,6 +32,8 @@ import {
   AssetImageMobile,
   AssetValueWrapper,
   EthereumTokenImage,
+  GridTable,
+  FirstEl,
 } from './styledComponents';
 import { ToggleButton } from '../../../styled/styledComponents';
 import { BrowserView, MobileView } from 'react-device-detect';
@@ -467,173 +469,258 @@ export default class Assets extends Component {
 
   render() {
     return (
-      <Main isLight={this.props.isLightTheme}>
-        <Header>
-          <Title isLight={this.props.isLightTheme}>{'Ethereum Assets'}</Title>
-          <ToggleButton
-            onClick={() => {
-              this.setState({ isOpen: !this.state.isOpen });
-            }}
-            isOpen={this.state.isOpen}
-          />
-        </Header>
-        <TotalValueField isLight={this.props.isLightTheme}>
-          <TotalTitle isLight={this.props.isLightTheme}>{'Total Value'}</TotalTitle>
-          <TotalEmptyCell></TotalEmptyCell>
-          <TotalValue isLight={this.props.isLightTheme}>{`$${numberWithCommas(
-            this.state.totalValue
-          )}`}</TotalValue>
-        </TotalValueField>
+      <>
+        <Main isLight={this.props.isLightTheme}>
+          <Header>
+            <Title isLight={this.props.isLightTheme}>{'Ethereum Assets'}</Title>
+            <ToggleButton
+              onClick={() => {
+                this.setState({ isOpen: !this.state.isOpen });
+              }}
+              isOpen={this.state.isOpen}
+            />
+          </Header>
+          <TotalValueField isLight={this.props.isLightTheme}>
+            <TotalTitle isLight={this.props.isLightTheme}>{'Total Value'}</TotalTitle>
+            <TotalEmptyCell></TotalEmptyCell>
+            <TotalValue isLight={this.props.isLightTheme}>{`$${numberWithCommas(
+              this.state.totalValue
+            )}`}</TotalValue>
+          </TotalValueField>
 
-        {this.state.isOpen && (
-          <div>
-            <ColumnHeader>
-              <AssetName isLight={this.props.isLightTheme}>{'Assets'}</AssetName>
-              <Percentage isLight={this.props.isLightTheme}>{'APY'}</Percentage>
-              <Value isLight={this.props.isLightTheme}>{'Value'}</Value>
-            </ColumnHeader>
-            <center>
-              {arr2.map((object) => (
-                <div>
-                  <BrowserView>
-                    <Link to={`/${this.state.account}/token/${object.coingecko}`}>
-                      <AssetDataRaw isLight={this.props.isLightTheme}>
-                        <AssetsColumn>
-                          {object.image ? (
-                            object.name === 'Ethereum' ? (
-                              <EthereumTokenImage alt="" src={ethImage} />
+          {this.state.isOpen && (
+            <div>
+              <ColumnHeader>
+                <AssetName isLight={this.props.isLightTheme}>{'Assets'}</AssetName>
+                <Percentage isLight={this.props.isLightTheme}>{'APY'}</Percentage>
+                <Value isLight={this.props.isLightTheme}>{'Value'}</Value>
+              </ColumnHeader>
+              <center>
+                {arr2.map((object) => (
+                  <div>
+                    <BrowserView>
+                      <Link to={`/${this.state.account}/token/${object.coingecko}`}>
+                        <AssetDataRaw isLight={this.props.isLightTheme}>
+                          <AssetsColumn>
+                            {object.image ? (
+                              object.name === 'Ethereum' ? (
+                                <EthereumTokenImage alt="" src={ethImage} />
+                              ) : (
+                                <TokenImage
+                                  alt=""
+                                  src={
+                                    object.image
+                                      ? object.image[0] === '/'
+                                        ? `https://ethplorer.io${object.image}`
+                                        : `${object.image}`
+                                      : ''
+                                  }
+                                />
+                              )
                             ) : (
-                              <TokenImage
-                                alt=""
-                                src={
-                                  object.image
-                                    ? object.image[0] === '/'
-                                      ? `https://ethplorer.io${object.image}`
-                                      : `${object.image}`
-                                    : ''
-                                }
-                              />
-                            )
-                          ) : (
-                            <div>
-                              <Avatar
-                                style={{
-                                  display: 'inline',
-                                  maxWidth: '20px',
-                                  verticalAlign: 'top',
-                                  height: '20px',
-                                }}
-                                color="#737373"
-                                name={object.name}
-                                round
-                                size="25"
-                                textSizeRatio={1}
-                              />
-                            </div>
-                          )}
-                          <NameWrapper>
-                            <div style={{ display: 'flex' }}>
-                              <TokenName isLight={this.props.isLightTheme}>{object.name}</TokenName>
-                              <Part isLight={this.props.isLightTheme}>{`${object.rate}%`}</Part>
-                            </div>
-                            <TokenBalance isLight={this.props.isLightTheme}>
-                              {object.balance}
-                            </TokenBalance>
-                          </NameWrapper>
-                        </AssetsColumn>
+                              <div>
+                                <Avatar
+                                  style={{
+                                    display: 'inline',
+                                    maxWidth: '20px',
+                                    verticalAlign: 'top',
+                                    height: '20px',
+                                  }}
+                                  color="#737373"
+                                  name={object.name}
+                                  round
+                                  size="25"
+                                  textSizeRatio={1}
+                                />
+                              </div>
+                            )}
+                            <NameWrapper>
+                              <div style={{ display: 'flex' }}>
+                                <TokenName isLight={this.props.isLightTheme}>
+                                  {object.name}
+                                </TokenName>
+                                <Part isLight={this.props.isLightTheme}>{`${object.rate}%`}</Part>
+                              </div>
+                              <TokenBalance isLight={this.props.isLightTheme}>
+                                {object.balance}
+                              </TokenBalance>
+                            </NameWrapper>
+                          </AssetsColumn>
 
-                        <APYWrapper>
-                          <APYPercent isLight={this.props.isLightTheme}>
-                            {((object.totalInvestment / this.state.totalValue) * 100).toFixed(2)} %
-                          </APYPercent>
-                        </APYWrapper>
+                          <APYWrapper>
+                            <APYPercent isLight={this.props.isLightTheme}>
+                              {((object.totalInvestment / this.state.totalValue) * 100).toFixed(2)}{' '}
+                              %
+                            </APYPercent>
+                          </APYWrapper>
+                          <AssetValueWrapper>
+                            <AssetValue>
+                              <font
+                                color={this.props.isLightTheme ? 'black' : '#ffffff'}
+                                style={{ fontSize: '14px' }}>
+                                <br /> ${object.totalInvestment}{' '}
+                              </font>
+                              <font
+                                color={parseFloat(object.profit) > 0 ? '#03DAC6' : '#ff1f1f'}
+                                style={{ fontSize: '10px' }}>
+                                {' '}
+                                <br />
+                                {object.profit} %
+                              </font>
+                            </AssetValue>
+                          </AssetValueWrapper>
+                        </AssetDataRaw>
+                      </Link>
+                    </BrowserView>
+                    <MobileView>
+                      <Link to={`/app/token/${object.coingecko}`}>
+                        <MainMobile>
+                          <div style={{ height: '50px' }}>
+                            <AssetImageMobile alt="" src={`https://ethplorer.io${object.image}`} />
+                            &nbsp;&nbsp;<font color="white">{object.name}</font>
+                          </div>
 
-                        {/*<div*/}
-                        {/*  style={{*/}
-                        {/*    width: '30%',*/}
-                        {/*    height: '50px',*/}
-                        {/*    float: 'left',*/}
-                        {/*    textAlign: 'initial',*/}
-                        {/*    paddingLeft: '40px',*/}
-                        {/*  }}>*/}
-                        {/*  <font color="#737373" style={{ fontSize: '13px' }}>*/}
-                        {/*    {' '}*/}
-                        {/*    <br /> {object.balance} {object.symbol} - ${object.rate}{' '}*/}
-                        {/*  </font>*/}
-                        {/*</div>*/}
-
-                        <AssetValueWrapper>
-                          <AssetValue>
-                            <font
-                              color={this.props.isLightTheme ? 'black' : '#ffffff'}
-                              style={{ fontSize: '14px' }}>
-                              <br /> ${object.totalInvestment}{' '}
-                            </font>
-                            <font
-                              color={parseFloat(object.profit) > 0 ? '#03DAC6' : '#ff1f1f'}
-                              style={{ fontSize: '10px' }}>
+                          <div style={{ height: '50px' }}>
+                            <font color="white">
                               {' '}
                               <br />
                               {object.profit} %
                             </font>
-                          </AssetValue>
-                        </AssetValueWrapper>
-                      </AssetDataRaw>
-                    </Link>
-                  </BrowserView>
-                  <MobileView>
-                    <Link to={`/app/token/${object.coingecko}`}>
-                      <MainMobile>
-                        <div style={{ height: '50px' }}>
-                          <AssetImageMobile alt="" src={`https://ethplorer.io${object.image}`} />
-                          &nbsp;&nbsp;<font color="white">{object.name}</font>
-                        </div>
+                          </div>
 
-                        <div style={{ height: '50px' }}>
-                          <font color="white">
-                            {' '}
-                            <br />
-                            {object.profit} %
-                          </font>
-                        </div>
+                          <div style={{ height: '50px' }}>
+                            <font color="white">
+                              {' '}
+                              <br /> {object.balance} {object.symbol} | ${object.rate}{' '}
+                            </font>
+                          </div>
 
-                        <div style={{ height: '50px' }}>
-                          <font color="white">
-                            {' '}
-                            <br /> {object.balance} {object.symbol} | ${object.rate}{' '}
-                          </font>
-                        </div>
-
-                        <div style={{ height: '50px' }}>
-                          <font color="white">
-                            <br /> ${object.totalInvestment}{' '}
-                          </font>
-                        </div>
-                        <br />
-                      </MainMobile>
-                    </Link>
-                  </MobileView>
-                </div>
-              ))}
-              {/*{this.state.contents}*/}
-              {!this.state.hideShowMore && (
-                <div>
-                  <Typography
-                    variant="caption"
-                    align="right"
-                    style={{ cursor: 'pointer' }}
-                    onClick={async (e) => {
-                      await this.setState({ page: this.state.page + 1 });
-                      this.update();
-                    }}>
-                    <AddGroupButton isLight={this.props.isLightTheme}>{'Show More'}</AddGroupButton>
-                  </Typography>
-                </div>
-              )}
-            </center>
-          </div>
-        )}
-      </Main>
+                          <div style={{ height: '50px' }}>
+                            <font color="white">
+                              <br /> ${object.totalInvestment}{' '}
+                            </font>
+                          </div>
+                          <br />
+                        </MainMobile>
+                      </Link>
+                    </MobileView>
+                  </div>
+                ))}
+                {/*{this.state.contents}*/}
+                {!this.state.hideShowMore && (
+                  <div>
+                    <Typography
+                      variant="caption"
+                      align="right"
+                      style={{ cursor: 'pointer' }}
+                      onClick={async (e) => {
+                        await this.setState({ page: this.state.page + 1 });
+                        this.update();
+                      }}>
+                      <AddGroupButton isLight={this.props.isLightTheme}>
+                        {'Show More'}
+                      </AddGroupButton>
+                    </Typography>
+                  </div>
+                )}
+              </center>
+            </div>
+          )}
+        </Main>
+        {/*=======================================================>*/}
+        <Main isLight={this.props.isLightTheme}>
+          <Header>
+            <Title isLight={this.props.isLightTheme}>{'Ethereum Assets'}</Title>
+            <ToggleButton
+            // onClick={() => {
+            //   this.setState({ isOpen: !this.state.isOpen });
+            // }}
+            // isOpen={this.state.isOpen}
+            />
+          </Header>
+          <TotalValueField isLight={this.props.isLightTheme}>
+            <TotalTitle isLight={this.props.isLightTheme}>{'Total Value'}</TotalTitle>
+            <TotalEmptyCell></TotalEmptyCell>
+            <TotalValue isLight={this.props.isLightTheme}>
+              1322123.23
+              {/*  {`$${numberWithCommas(*/}
+              {/*  this.state.totalValue*/}
+              {/*)}`}*/}
+            </TotalValue>
+          </TotalValueField>
+          <GridTable>
+            <FirstEl>{'Assets'}</FirstEl>
+            <div>{'APY'}</div>
+            <div>{'Value'}</div>
+            {arr2.map((object) => (
+              <>
+                {/*<BrowserView>*/}
+                {/*  <Link to={`/${this.state.account}/token/${object.coingecko}`}>*/}
+                {object.image ? (
+                  object.name === 'Ethereum' ? (
+                    <EthereumTokenImage alt="" src={ethImage} />
+                  ) : (
+                    <TokenImage
+                      alt=""
+                      src={
+                        object.image
+                          ? object.image[0] === '/'
+                            ? `https://ethplorer.io${object.image}`
+                            : `${object.image}`
+                          : ''
+                      }
+                    />
+                  )
+                ) : (
+                  <div>
+                    <Avatar
+                      style={{
+                        display: 'inline',
+                        maxWidth: '20px',
+                        verticalAlign: 'top',
+                        height: '20px',
+                      }}
+                      color="#737373"
+                      name={object.name}
+                      round
+                      size="25"
+                      textSizeRatio={1}
+                    />
+                  </div>
+                )}
+                <NameWrapper>
+                  <div style={{ display: 'flex' }}>
+                    <TokenName isLight={this.props.isLightTheme}>{object.name}</TokenName>
+                    <Part isLight={this.props.isLightTheme}>{`${object.rate}%`}</Part>
+                  </div>
+                  <TokenBalance isLight={this.props.isLightTheme}>{object.balance}</TokenBalance>
+                </NameWrapper>
+                <APYWrapper>
+                  <APYPercent isLight={this.props.isLightTheme}>
+                    {((object.totalInvestment / this.state.totalValue) * 100).toFixed(2)} %
+                  </APYPercent>
+                </APYWrapper>
+                <AssetValue>
+                  <font
+                    color={this.props.isLightTheme ? 'black' : '#ffffff'}
+                    style={{ fontSize: '14px' }}>
+                    <br /> ${object.totalInvestment}{' '}
+                  </font>
+                  <font
+                    color={parseFloat(object.profit) > 0 ? '#03DAC6' : '#ff1f1f'}
+                    style={{ fontSize: '10px' }}>
+                    {' '}
+                    <br />
+                    {object.profit} %
+                  </font>
+                </AssetValue>
+                {/*  </Link>*/}
+                {/*</BrowserView>*/}
+              </>
+            ))}
+          </GridTable>
+        </Main>
+      </>
     );
   }
 }
