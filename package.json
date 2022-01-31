@@ -42,6 +42,7 @@
     "history": "^5.0.0",
     "html-react-parser": "^1.2.7",
     "lodash": "^4.17.21",
+    "material-ui-popup-state": "^2.0.0",
     "node-sass": "^6.0.1",
     "numeral": "^2.0.6",
     "prettier": "^2.4.1",

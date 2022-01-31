@@ -8,7 +8,7 @@ import Solana from '../../assets/icons/solana.svg';
 import Polkadot from '../../assets/icons/polkadot.svg';
 import Polygon from '../../assets/icons/polygon.svg';
 
-import { ReactSelectLayout, ComingSoonLabel } from './style';
+import { ReactSelectLayout, ComingSoonLabel } from './styles';
 
 const networks = [
   { value: 'eth', label: 'Ethereum', icon: EthereumIcon },
