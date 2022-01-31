@@ -31,6 +31,7 @@ import Box from '@material-ui/core/Box';
 
 import { Button } from '@material-ui/core';
 import { Link, useParams } from 'react-router-dom';
+import {LiquidityPoolsTable} from "./liquidityPoolsTable";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -125,8 +126,8 @@ export default function LiquidityPools() {
   }, []);
 
   useEffect(() => {
-    var content = Data.map((object) => (
-      <>
+    var content = Data.map((object) => {
+      return (<>
         <br />
         <Accordion
           style={{
@@ -508,8 +509,8 @@ export default function LiquidityPools() {
             </div>
           </AccordionDetails>
         </Accordion>
-      </>
-    ));
+      </>)
+  });
     setContent(content);
   }, [
     Data,
@@ -764,9 +765,10 @@ export default function LiquidityPools() {
       .send({ from: accounts[0] });
   }
 
+  console.log('datapok', Data)
   return (
     <div>
-      {Content}
+      <LiquidityPoolsTable data={Data}/>
       <br />
       <center>
         <button

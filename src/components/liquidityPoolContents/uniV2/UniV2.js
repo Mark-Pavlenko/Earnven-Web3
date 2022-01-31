@@ -55,6 +55,7 @@ import {
 } from './StyledComponents';
 import {SelectOptionsWithJSX} from "../HOC/selectOptionsWithJSX";
 import {TokenButtonsBlock} from "../../../screens/dashboard/styledComponents";
+import {LiquidityPoolsTable} from "./liquidityPoolsTable";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -624,13 +625,19 @@ export default function LiquidityPools() {
                   }
                 });
               var data2 = Data;
-              data2.push(res[i]);
+              data2.push({
+                date: res[i].date,
+                id: res[i].id,
+                reserveUSD: res[i].reserveUSD,
+                volumeUSD: res[i].dailyVolumeUSD,
+                token0: res[i].token0,
+                token1: res[i].token1,
+              });
               console.log(data2);
               setData([...data2]);
             }
             // setData(Data.concat(res))
             setLoading(false);
-            console.log(res);
           }
         });
     }
