@@ -1,13 +1,19 @@
 import GET_THEME from '../../constants/actionTypes';
 
 let isLightTheme;
+let isFirstConnection;
 isLightTheme =
   localStorage.getItem('selectedTheme') === null || localStorage.getItem('selectedTheme') === 'Day';
 if (localStorage.getItem('selectedTheme') === null) localStorage.setItem('selectedTheme', 'Day');
-if (localStorage.getItem('firstConnection') === null) localStorage.setItem('firstConnection', true);
+
+isFirstConnection =
+  localStorage.getItem('firstConnection') === null || localStorage.getItem('firstConnection', true);
+if (localStorage.getItem('firstConnection') === null)
+  localStorage.setItem('firstConnection', 'true');
 
 const initialState = {
   isLightTheme,
+  isFirstConnection,
 };
 
 export const themeReducer = (state = initialState, action) => {

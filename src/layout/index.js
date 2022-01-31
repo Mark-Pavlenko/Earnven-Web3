@@ -18,6 +18,8 @@ export default function AppLayout() {
   console.log('reduxWalletsList', reduxWalletsList);
   console.log('reduxMyWallet', reduxMyWallet);
 
+  const isFirstConnection = localStorage.getItem('firstConnection');
+
   function capitalizeFirstLetter(string) {
     return string?.charAt(0).toUpperCase() + string?.slice(1);
   }
@@ -25,7 +27,7 @@ export default function AppLayout() {
 
   return (
     <>
-      <RootStyle isLightTheme={themeType}>
+      <RootStyle isLightTheme={themeType} isFirstConnection={isFirstConnection}>
         <Header
           onOpenSidebar={() => setOpen(true)}
           onOpenMobileWalletsList={() => setOpenWalletsListMobile(true)}

@@ -39,7 +39,7 @@ export default function PopupMobile(props) {
             },
           }
         : {
-            background: '#0B0E1D',
+            background: '#10142D',
             mixBlendMode: 'normal',
             // backdropFilter: 'blur(20px)',
             boxShadow: '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',

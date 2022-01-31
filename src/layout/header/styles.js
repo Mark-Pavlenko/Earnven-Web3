@@ -6,10 +6,10 @@ import lightDashboardBig from '../../assets/images/lightDashboardBig.jpg';
 export const HeaderLayoutBig = styled.div`
   height: 102px;
 
-  background: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};
+  background: ${(props) => (props.isLightTheme ? `transparent` : `#10142D`)};
 
   @media (min-width: 2100px) {
-    background: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};
+    background: ${(props) => (props.isLightTheme ? `transparent` : `#10142D`)};
   }
 
   @media screen and (min-width: 711px) and (max-width: 1280px) {
@@ -41,9 +41,9 @@ export const HeaderLayoutBig = styled.div`
 export const HeaderLayoutMobile = styled.div`
   height: 142px;
 
-  background: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};
+  background: ${(props) => (props.isLightTheme ? `transparent` : `#10142D`)};
   @media (min-width: 2100px) {
-    background: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};
+    background: ${(props) => (props.isLightTheme ? `transparent` : `#10142D`)};
   }
   @media (min-width: 781px) {
     display: none;

@@ -34,7 +34,7 @@ export default function Popup(props) {
             opacity: 0.8,
           }
         : {
-            background: '#0B0E1D',
+            background: '#10142D',
             minWidth: '1110px',
             minHeight: '595px',
             mixBlendMode: 'normal',
