@@ -24,27 +24,28 @@ export default function AppLayout() {
   const finalTitle = capitalizeFirstLetter(title);
 
   return (
-    <RootStyle isLightTheme={themeType}>
-      <Header
-        onOpenSidebar={() => setOpen(true)}
-        onOpenMobileWalletsList={() => setOpenWalletsListMobile(true)}
-        themeType={themeType}
-        finalTitle={finalTitle}
-      />
-      <Sidebar
-        isOpenSidebar={open}
-        onCloseSidebar={() => setOpen(false)}
-        isOpenWalletsListMobile={openWalletsListMobile}
-        onCloseWalletsListMobile={() => setOpenWalletsListMobile(false)}
-        address={localStorage.getItem('selected-account')}
-        name={localStorage.getItem('selected-name')}
-        global_wallet={localStorage.getItem('wallets')}
-        themeType={themeType}
-      />
-
-      <MainStyle isLightTheme={themeType} appBarMobile={64} appBarDesktop={92}>
-        <Outlet />
-      </MainStyle>
-    </RootStyle>
+    <>
+      <RootStyle isLightTheme={themeType}>
+        <Header
+          onOpenSidebar={() => setOpen(true)}
+          onOpenMobileWalletsList={() => setOpenWalletsListMobile(true)}
+          themeType={themeType}
+          finalTitle={finalTitle}
+        />
+        <Sidebar
+          isOpenSidebar={open}
+          onCloseSidebar={() => setOpen(false)}
+          isOpenWalletsListMobile={openWalletsListMobile}
+          onCloseWalletsListMobile={() => setOpenWalletsListMobile(false)}
+          address={localStorage.getItem('selected-account')}
+          name={localStorage.getItem('selected-name')}
+          global_wallet={localStorage.getItem('wallets')}
+          themeType={themeType}
+        />
+        <MainStyle isLightTheme={themeType} appBarMobile={64} appBarDesktop={92}>
+          <Outlet />
+        </MainStyle>
+      </RootStyle>
+    </>
   );
 }
