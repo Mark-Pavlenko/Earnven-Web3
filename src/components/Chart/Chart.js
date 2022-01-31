@@ -37,6 +37,7 @@ export const Chart = () => {
     axios
       .get(`https://api.coingecko.com/api/v3/coins/${tokenid}`, {}, {})
       .then(async (response) => {
+        console.log(response);
         await setTokenAddress(response.data.contract_address);
         await setSelection(response.data);
       });
@@ -128,7 +129,7 @@ export const Chart = () => {
         var unrealisedProfit = currentValue - totalDetails.usd;
         var profitPercent = (unrealisedProfit / totalDetails.usd) * 100;
 
-        setCurrentValue(currentValue);
+        setCurrentValue(currntValue);
         setAvgTotalPrice(avgTotalPrice);
         setProfit(unrealisedProfit);
         setProfitPercent(profitPercent);

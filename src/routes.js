@@ -53,7 +53,7 @@ export default function Router() {
     { path: 'defimadeasy', element: <DefiMadeEasy /> },
     { path: 'assets', element: <AllAssetsPage /> },
     // { path: 'token/:tokenid', element: <TokenDetailsPage /> },
-    { path: 'token/:tokenid', element: <TokenPage /> },
+    { path: 'token/:tokenId', element: <TokenPage /> },
     { path: 'token', element: <TokenDetailsPage /> },
     {
       path: 'uniswap/address/:token0/:token1',

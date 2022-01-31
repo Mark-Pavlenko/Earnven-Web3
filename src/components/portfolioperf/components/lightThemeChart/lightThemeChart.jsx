@@ -227,7 +227,24 @@ export default class LightThemeChart extends Component {
     if (this.state.account !== this.props.address) {
       this.getAddressChartHistory();
     }
-    if (this.state.options.title.text !== this.props.totalValue) {
+    // if (this.state.options.title.text !== this.props.totalValue) {
+    //   this.setState(() => {
+    //     return {
+    //       ...this.state,
+    //       options: {
+    //         ...this.state.options,
+    //         title: {
+    //           ...this.state.options.title,
+    //           text: this.props.totalValue,
+    //         },
+    //       },
+    //     };
+    //   });
+    // }
+    if (
+      this.state.options.subtitle.text !== this.props.difValue ||
+      this.state.options.title.text !== this.props.totalValue
+    ) {
       this.setState(() => {
         return {
           ...this.state,
@@ -236,6 +253,11 @@ export default class LightThemeChart extends Component {
             title: {
               ...this.state.options.title,
               text: this.props.totalValue,
+            },
+            subtitle: {
+              ...this.state.options.subtitle,
+              text: this.props.difValue,
+              offsetX: this.props.totalValue.split('').length * 21 + 10,
             },
           },
         };

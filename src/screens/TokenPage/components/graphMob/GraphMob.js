@@ -14,7 +14,13 @@ import etherScan from '../../../../assets/icons/etherScan-icon.svg';
 import { TokenLink } from '../styledComponentsCommon';
 import PortfolioPerf from '../../../../components/portfolioperf/portfolioperf';
 
-const GraphMob = ({ isLightTheme, social }) => {
+const GraphMob = ({
+  isLightTheme,
+  social,
+  address,
+  current_price,
+  price_change_percentage_24h,
+}) => {
   return (
     <Main isLightTheme={isLightTheme}>
       <Header>
@@ -65,9 +71,9 @@ const GraphMob = ({ isLightTheme, social }) => {
       </NetWrapper>
       <PortfolioPerf
         theme={isLightTheme}
-        address={'0x00057ef157d01c28da3e545487a4d93f55b70842'}
-        totalValue={'$58,888.00'}
-        difValue={'+13,8%'}
+        address={address}
+        totalValue={current_price ? `$${current_price}` : ''}
+        difValue={price_change_percentage_24h ? `${price_change_percentage_24h}%` : ''}
         isTokenPage={true}
       />
     </Main>

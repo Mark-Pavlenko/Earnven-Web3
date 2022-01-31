@@ -14,7 +14,7 @@ export const Header = styled.div`
   justify-content: space-between;
 `;
 
-export const TokenPlatformLogo = styled.div`
+export const Chain = styled.div`
   display: flex;
   width: 80px;
   height: 100%;
@@ -44,7 +44,7 @@ export const TokenLinks = styled.div`
   display: flex;
 `;
 
-export const Net = styled.div`
+export const TokenName = styled.div`
   display: flex;
   height: 41px;
   line-height: 41px;

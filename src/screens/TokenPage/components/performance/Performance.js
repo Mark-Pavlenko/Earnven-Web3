@@ -2,14 +2,14 @@ import React from 'react';
 import { Main, Title } from '../styledComponentsCommon';
 import { Wrapper, InfoCard, Mark, Value } from './styledComponents';
 
-const Performance = ({ isLightTheme }) => {
+const Performance = ({ isLightTheme, tokensHolding }) => {
   return (
     <Main isLightTheme={isLightTheme}>
       <Title>{'Performance'}</Title>
       <Wrapper>
         <InfoCard>
           <Mark>{'Tokens Holding'}</Mark>
-          <Value>{'19065,14 $MIR'}</Value>
+          <Value>{`${tokensHolding}`}</Value>
         </InfoCard>
         <InfoCard>
           <Mark>{'Total HODL Value'}</Mark>
