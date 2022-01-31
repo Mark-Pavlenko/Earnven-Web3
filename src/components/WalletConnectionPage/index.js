@@ -222,8 +222,8 @@ export default function WalletPageConnection() {
     const validAddress = Web3.utils.isAddress(address);
     if (validAddress) {
       localStorage.setItem('firstConnection', false);
-      window.location.reload();
       routeToDashboard(address, null);
+      window.location.reload();
       seterrorMsg(false);
     } else {
       seterrorMsg(true);

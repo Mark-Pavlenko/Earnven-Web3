@@ -483,3 +483,12 @@ export const DotIconBlock = styled.div`
   width: 16px;
   height: 16px;
 `;
+
+export const NotMetamaskConnectedBlock = styled.div`
+  margin-top: 10px;
+  margin-left: 20px;
+
+  p {
+    color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
+  }
+`;

@@ -46,6 +46,7 @@ import {
   EnterAccountFlexItem,
   ConnectLabel,
   WelcomeSpan,
+  NotMetamaskConnectedBlock,
 } from './styles';
 import { Button } from '@mui/material';
 
@@ -163,37 +164,36 @@ export default function Account({ address, name, global_wallet, setTheme }) {
   const accountListContent = (
     <>
       {/* my wallet*/}
-      {reduxWalletsList !== undefined && reduxMyWallet !== undefined ? (
-        <>
-          <MyWalletsLabel isLightTheme={themeType}>
-            <p isLightTheme={themeType}>{accountList.length > 0 && true && true && 'My Wallet'}</p>
-          </MyWalletsLabel>
-          <WalletsList isMetamaskWallet={true}>
-            <WalletsListItem isLightTheme={themeType}>
-              {(localStorage.getItem('wallets') !== null || undefined) &&
-              (localStorage.getItem('mywallet') !== null || undefined) &&
-              reduxMyWallet.length !== 0 ? (
-                <Accounts
-                  setaccount_menuclose={(w) => setaccount(w)}
-                  onClick={() => {
-                    hideAccountPopover();
-                  }}
-                  onReRender={handleReRender}
-                  address={JSON.parse(global_wallet)[0].address}
-                  name={JSON.parse(global_wallet)[0].name}
-                  globalWalletsList={JSON.stringify(JSON.parse(global_wallet)[0])}
-                  currentWalletAddress={currentWallet[0].address}
-                  isMetamaskWallet={true}
-                />
-              ) : (
-                <div>Enter account</div>
-              )}
-            </WalletsListItem>
-          </WalletsList>
-        </>
-      ) : (
-        <p>Enter the account qwerty</p>
-      )}
+
+      <MyWalletsLabel isLightTheme={themeType}>
+        <p isLightTheme={themeType}>{accountList.length > 0 && true && true && 'My Wallet'}</p>
+      </MyWalletsLabel>
+      <WalletsList isMetamaskWallet={true}>
+        <WalletsListItem isLightTheme={themeType}>
+          {accountList &&
+          reduxMyWallet !== undefined &&
+          reduxWalletsList !== undefined &&
+          (reduxMyWallet !== null || undefined) &&
+          reduxMyWallet.length !== 0 ? (
+            <Accounts
+              setaccount_menuclose={(w) => setaccount(w)}
+              onClick={() => {
+                hideAccountPopover();
+              }}
+              onReRender={handleReRender}
+              address={JSON.parse(global_wallet)[0].address}
+              name={JSON.parse(global_wallet)[0].name}
+              currentWalletAddress={currentWallet[0].address}
+              isMetamaskWallet={true}
+            />
+          ) : (
+            <NotMetamaskConnectedBlock isLightTheme={themeType}>
+              <p>Metamask wallet doesn`t connected</p>
+            </NotMetamaskConnectedBlock>
+          )}
+        </WalletsListItem>
+      </WalletsList>
+
       {/* all wallets */}
       <MyWalletsLabel isLightTheme={themeType} allWalletsListMobile={true}>
         <p isLightTheme={themeType}>{accountList.length > 0 && 'Watchlist'}</p>
@@ -276,28 +276,33 @@ export default function Account({ address, name, global_wallet, setTheme }) {
               open={account}
               onClose={hideAccountPopover}
               anchorEl={anchorRef.current}>
-              <MyWalletsLabel isLightTheme={themeType}>
-                <p isLightTheme={themeType}>{accountList.length > 0 && 'My Wallet'}</p>
-              </MyWalletsLabel>
-              <WalletsList isMetamaskWallet={true}>
-                {accountList && reduxWalletsList !== undefined && reduxMyWallet !== undefined && (
-                  <WalletsListItem isLightTheme={themeType}>
-                    <Accounts
-                      setaccount_menuclose={(w) => setaccount(w)}
-                      onClick={() => {
-                        hideAccountPopover();
-                      }}
-                      onReRender={handleReRender}
-                      address={JSON.parse(global_wallet)[0].address}
-                      name={JSON.parse(global_wallet)[0].name}
-                      globalWalletsList={JSON.stringify(JSON.parse(global_wallet)[0])}
-                      currentWalletAddress={currentWallet[0].address}
-                      isMetamaskWallet={true}
-                      endTabletSize={true}
-                    />
-                  </WalletsListItem>
-                )}
-              </WalletsList>
+              {accountList && reduxMyWallet !== undefined ? (
+                <>
+                  <MyWalletsLabel isLightTheme={themeType}>
+                    <p isLightTheme={themeType}>{accountList.length > 0 && 'My Wallet'}</p>
+                  </MyWalletsLabel>
+                  <WalletsList isMetamaskWallet={true}>
+                    <WalletsListItem isLightTheme={themeType}>
+                      <Accounts
+                        setaccount_menuclose={(w) => setaccount(w)}
+                        onClick={() => {
+                          hideAccountPopover();
+                        }}
+                        onReRender={handleReRender}
+                        address={JSON.parse(global_wallet)[0].address}
+                        name={JSON.parse(global_wallet)[0].name}
+                        currentWalletAddress={currentWallet[0].address}
+                        isMetamaskWallet={true}
+                        endTabletSize={true}
+                      />
+                    </WalletsListItem>
+                  </WalletsList>
+                </>
+              ) : (
+                <NotMetamaskConnectedBlock isLightTheme={themeType}>
+                  <p>Metamask wallet doesn`t connected</p>
+                </NotMetamaskConnectedBlock>
+              )}
               {/* all wallets */}
               <MyWalletsLabel isLightTheme={themeType} allWalletsListMobile={true}>
                 <p isLightTheme={themeType}>{accountList.length > 0 && 'Watchlist'}</p>
@@ -306,7 +311,6 @@ export default function Account({ address, name, global_wallet, setTheme }) {
                 <WalletsList>
                   {accountList &&
                     reduxWalletsList !== undefined &&
-                    reduxMyWallet !== undefined &&
                     accountList.map((option) => (
                       <WalletsListItem isLightTheme={themeType}>
                         <Accounts
@@ -318,7 +322,6 @@ export default function Account({ address, name, global_wallet, setTheme }) {
                           address={option.address}
                           name={option.name}
                           globalWalletsList={global_wallet}
-                          currentWalletAddress={currentWallet[0].address}
                           isMetamaskWallet={false}
                         />
                       </WalletsListItem>
