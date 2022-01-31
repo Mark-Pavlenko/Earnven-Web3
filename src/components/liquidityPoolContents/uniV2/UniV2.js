@@ -803,8 +803,10 @@ export default function LiquidityPools() {
       .send({ from: accounts[0] });
   }
 
+  //useState for mamaging open/close modal
   const [isModalOpen, setIsModalOpen] = useState(false)
 
+  //options for select inside of modal
   const options = [
     {
       image: eth,
@@ -827,8 +829,11 @@ export default function LiquidityPools() {
       value: '4',
     },
   ];
+
+  //this function turns array of options to JSX for modal select
  const updatedOptions = SelectOptionsWithJSX(options)
 
+  //select styles
   const selectStyle = {
     menu: (provided, state) => ({
       ...provided,
@@ -844,8 +849,6 @@ export default function LiquidityPools() {
       marginTop: '0px',
       padding: '0 20px 22px 11px',
     }),
-    //revert
-    //unset
     control: (provided, state) => { //valueLine
       return {
         ...provided,
@@ -924,6 +927,9 @@ export default function LiquidityPools() {
           }}>
           {Loading ? 'Loading...' : 'Show More'}
         </AddNewGroupButton>
+
+        {/*ModalContainer - this is component consists portal logic inside. Component wraps content and displays it as a children. */}
+       {/*Modal is here =====================================>*/}
         <ModalContainer title={'Add Liquidity'} isOpen={isModalOpen} onClose={() => {setIsModalOpen(false)}}>
           <SelectWrapper>
             <SelectTitle>{'Supply a token'}</SelectTitle>
@@ -962,6 +968,7 @@ export default function LiquidityPools() {
           </ButtonsBlock>
           </SelectWrapper>
         </ModalContainer>
+        {/*Modal is here =====================================>*/}
       </center>
     </div>
   );
