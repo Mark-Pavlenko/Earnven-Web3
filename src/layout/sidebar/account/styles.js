@@ -194,7 +194,6 @@ export const ConnectLabel = styled.span`
 
 export const MyWalletsLabel = styled(Box)`
   margin-left: 25px;
-
   margin-top: ${(props) => (props.allWalletsListMobile ? '17px' : '25px')};
 
   p {
@@ -270,7 +269,7 @@ const manageItemsButtons = css`
 
 export const AddNewWalletListItem = styled(ListItem)`
   ${manageItemsButtons};
-  //margin-top: 20px;
+  margin-top: 20px;
 `;
 
 export const ManageWalletsListItem = styled(ListItem)`
@@ -485,7 +484,7 @@ export const DotIconBlock = styled.div`
 `;
 
 export const NotMetamaskConnectedBlock = styled.div`
-  margin-top: 10px;
+  margin-top: 20px;
   margin-left: 20px;
 
   p {

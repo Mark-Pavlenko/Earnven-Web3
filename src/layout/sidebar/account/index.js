@@ -165,34 +165,36 @@ export default function Account({ address, name, global_wallet, setTheme }) {
     <>
       {/* my wallet*/}
 
-      <MyWalletsLabel isLightTheme={themeType}>
-        <p isLightTheme={themeType}>{accountList.length > 0 && true && true && 'My Wallet'}</p>
-      </MyWalletsLabel>
-      <WalletsList isMetamaskWallet={true}>
-        <WalletsListItem isLightTheme={themeType}>
-          {accountList &&
-          reduxMyWallet !== undefined &&
-          reduxWalletsList !== undefined &&
-          (reduxMyWallet !== null || undefined) &&
-          reduxMyWallet.length !== 0 ? (
-            <Accounts
-              setaccount_menuclose={(w) => setaccount(w)}
-              onClick={() => {
-                hideAccountPopover();
-              }}
-              onReRender={handleReRender}
-              address={JSON.parse(global_wallet)[0].address}
-              name={JSON.parse(global_wallet)[0].name}
-              currentWalletAddress={currentWallet[0].address}
-              isMetamaskWallet={true}
-            />
-          ) : (
-            <NotMetamaskConnectedBlock isLightTheme={themeType}>
-              <p>Metamask wallet doesn`t connected</p>
-            </NotMetamaskConnectedBlock>
-          )}
-        </WalletsListItem>
-      </WalletsList>
+      {accountList &&
+      reduxMyWallet !== undefined &&
+      reduxWalletsList !== undefined &&
+      (reduxMyWallet !== null || undefined) &&
+      reduxMyWallet.length !== 0 ? (
+        <>
+          <MyWalletsLabel isLightTheme={themeType}>
+            <p>My Wallet</p>
+          </MyWalletsLabel>
+          <WalletsList isMetamaskWallet={true}>
+            <WalletsListItem isLightTheme={themeType}>
+              <Accounts
+                setaccount_menuclose={(w) => setaccount(w)}
+                onClick={() => {
+                  hideAccountPopover();
+                }}
+                onReRender={handleReRender}
+                address={JSON.parse(global_wallet)[0].address}
+                name={JSON.parse(global_wallet)[0].name}
+                currentWalletAddress={currentWallet[0].address}
+                isMetamaskWallet={true}
+              />
+            </WalletsListItem>
+          </WalletsList>
+        </>
+      ) : (
+        <NotMetamaskConnectedBlock isLightTheme={themeType}>
+          <p>Metamask wallet doesn`t connect</p>
+        </NotMetamaskConnectedBlock>
+      )}
 
       {/* all wallets */}
       <MyWalletsLabel isLightTheme={themeType} allWalletsListMobile={true}>
@@ -201,8 +203,6 @@ export default function Account({ address, name, global_wallet, setTheme }) {
       <div>
         <WalletsList>
           {reduxWalletsList !== undefined &&
-            reduxMyWallet !== undefined &&
-            reduxWalletsList.length !== 0 &&
             accountList.map((option) => (
               <WalletsListItem isLightTheme={themeType}>
                 <Accounts
@@ -214,7 +214,6 @@ export default function Account({ address, name, global_wallet, setTheme }) {
                   address={option.address}
                   name={option.name}
                   globalWalletsList={global_wallet}
-                  currentWalletAddress={currentWallet[0].address}
                   isMetamaskWallet={false}
                 />
               </WalletsListItem>
@@ -279,7 +278,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
               {accountList && reduxMyWallet !== undefined ? (
                 <>
                   <MyWalletsLabel isLightTheme={themeType}>
-                    <p isLightTheme={themeType}>{accountList.length > 0 && 'My Wallet'}</p>
+                    <p>My Wallet</p>
                   </MyWalletsLabel>
                   <WalletsList isMetamaskWallet={true}>
                     <WalletsListItem isLightTheme={themeType}>
@@ -300,7 +299,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
                 </>
               ) : (
                 <NotMetamaskConnectedBlock isLightTheme={themeType}>
-                  <p>Metamask wallet doesn`t connected</p>
+                  <p>Metamask wallet doesn`t connect</p>
                 </NotMetamaskConnectedBlock>
               )}
               {/* all wallets */}
