@@ -54,6 +54,7 @@ import SushiProtocol from '../../common/investment/sushiProtocolComponent/sushiP
 import OlympusStaking from '../OlympusStaking';
 import { ToggleButton } from '../../styled/styledComponents';
 import SushiLPToken from '../SushiLPToken';
+import AlchemixVault from '../Vaults/AlchemixVault';
 
 // Below code is for task https://app.clickup.com/t/1je2y9d
 // import CompoundData from './Compound';
@@ -61,6 +62,8 @@ export default function Index({ accountAddress }) {
   //general
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
 
+  //alchemis
+  const alchemixepools = useSelector((state) => state.alchemixVaults.alchemixVaults);
   //yearn (didn't get data)
   const yearnYTokenData = useSelector((state) => state.yearnFinance.yearnYTokenData); //saga
   const yearnYTokenTotal = useSelector((state) => state.yearnFinance.yearnYTokenTotal); //saga
@@ -1376,6 +1379,7 @@ export default function Index({ accountAddress }) {
             creamData.length > 0 ||
             olympusTokenData.length > 0 ||
             Mstablepools.length > 0 ||
+            alchemixepools.length > 0 ||
             creamIronBankTotalValue > 0
               ? ''
               : 'none',
@@ -1459,6 +1463,7 @@ export default function Index({ accountAddress }) {
         )}
         {/*MstablePools/*/}
         <MstablePools accountAddress={accountAddress} />
+        <AlchemixVault accountAddress={accountAddress} />
       </PoolsBlock>
       {/*==========================================================================================================>*/}
       <PoolsBlock //third
