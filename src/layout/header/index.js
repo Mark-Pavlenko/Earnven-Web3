@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import sidebarBurgerLightIcon from '../../assets/icons/sidebarBurgerLightIcon.png';
 import sidebarBurgerDarkIcon from '../../assets/icons/sidebarBurgerDarkIcon.png';
 import userMockAvatar from '../../assets/icons/userMockAvatar.png';
+import NewNetworkSelect from '../../components/networkDropDown/newNetworkSelect';
 // material
 import { alpha, experimentalStyled as styled } from '@material-ui/core/styles';
 import IconButton from '@mui/material/IconButton';
@@ -93,7 +94,13 @@ function Header({ onOpenSidebar, onOpenMobileWalletsList, finalTitle }) {
             <SearchTokensDark />
           )}
           <SearchTokensMobile isLightTheme={isLightTheme} />
-          <NetworkSelectHeader isLightTheme={isLightTheme} />
+
+          {/*Old network select*/}
+          {/*<NetworkSelectHeader isLightTheme={isLightTheme} />*/}
+
+          {/*Actual network select*/}
+          <NewNetworkSelect />
+
           <GasDropdownMenu isLightTheme={isLightTheme} />
           {/*<LanguageDropDown />*/}
           {/*<HelpDropDown />*/}
