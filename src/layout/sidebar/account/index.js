@@ -157,34 +157,42 @@ export default function Account({ address, name, global_wallet, setTheme }) {
 
   const reduxWalletsList = useSelector((state) => state.initSidebarValuesReducer.walletsList);
   const reduxMyWallet = useSelector((state) => state.initSidebarValuesReducer.myWallet);
+  console.log('reduxWalletsList abc', reduxWalletsList);
+  console.log('reduxMyWallet def', reduxMyWallet);
 
   const accountListContent = (
     <>
       {/* my wallet*/}
-      {reduxMyWallet.length !== 0 && reduxWalletsList.length !== 0 && true && (
+      {reduxWalletsList !== undefined && reduxMyWallet !== undefined ? (
         <>
           <MyWalletsLabel isLightTheme={themeType}>
-            <p isLightTheme={themeType}>{accountList.length > 0 && 'My Wallet'}</p>
+            <p isLightTheme={themeType}>{accountList.length > 0 && true && true && 'My Wallet'}</p>
           </MyWalletsLabel>
           <WalletsList isMetamaskWallet={true}>
             <WalletsListItem isLightTheme={themeType}>
-              <Accounts
-                setaccount_menuclose={(w) => setaccount(w)}
-                onClick={() => {
-                  hideAccountPopover();
-                }}
-                onReRender={handleReRender}
-                address={JSON.parse(global_wallet)[0].address}
-                name={JSON.parse(global_wallet)[0].name}
-                globalWalletsList={JSON.stringify(JSON.parse(global_wallet)[0])}
-                currentWalletAddress={currentWallet[0].address}
-                isMetamaskWallet={true}
-              />
+              {(localStorage.getItem('wallets') !== null || undefined) &&
+              (localStorage.getItem('mywallet') !== null || undefined) &&
+              reduxMyWallet.length !== 0 ? (
+                <Accounts
+                  setaccount_menuclose={(w) => setaccount(w)}
+                  onClick={() => {
+                    hideAccountPopover();
+                  }}
+                  onReRender={handleReRender}
+                  address={JSON.parse(global_wallet)[0].address}
+                  name={JSON.parse(global_wallet)[0].name}
+                  globalWalletsList={JSON.stringify(JSON.parse(global_wallet)[0])}
+                  currentWalletAddress={currentWallet[0].address}
+                  isMetamaskWallet={true}
+                />
+              ) : (
+                <div>Enter account</div>
+              )}
             </WalletsListItem>
           </WalletsList>
         </>
-        // ) : (
-        //   <p>Enter the account qwerty</p>
+      ) : (
+        <p>Enter the account qwerty</p>
       )}
       {/* all wallets */}
       <MyWalletsLabel isLightTheme={themeType} allWalletsListMobile={true}>
@@ -192,7 +200,9 @@ export default function Account({ address, name, global_wallet, setTheme }) {
       </MyWalletsLabel>
       <div>
         <WalletsList>
-          {reduxWalletsList.length !== 0 &&
+          {reduxWalletsList !== undefined &&
+            reduxMyWallet !== undefined &&
+            reduxWalletsList.length !== 0 &&
             accountList.map((option) => (
               <WalletsListItem isLightTheme={themeType}>
                 <Accounts
@@ -270,7 +280,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
                 <p isLightTheme={themeType}>{accountList.length > 0 && 'My Wallet'}</p>
               </MyWalletsLabel>
               <WalletsList isMetamaskWallet={true}>
-                {accountList && (
+                {accountList && reduxWalletsList !== undefined && reduxMyWallet !== undefined && (
                   <WalletsListItem isLightTheme={themeType}>
                     <Accounts
                       setaccount_menuclose={(w) => setaccount(w)}
@@ -295,6 +305,8 @@ export default function Account({ address, name, global_wallet, setTheme }) {
               <div>
                 <WalletsList>
                   {accountList &&
+                    reduxWalletsList !== undefined &&
+                    reduxMyWallet !== undefined &&
                     accountList.map((option) => (
                       <WalletsListItem isLightTheme={themeType}>
                         <Accounts

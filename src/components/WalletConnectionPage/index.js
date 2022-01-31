@@ -76,6 +76,9 @@ export default function WalletPageConnection() {
   const [address, setstate] = useState('');
   const [errorMsg, seterrorMsg] = useState(false);
 
+  const reduxMyWallet = useSelector((state) => state.initSidebarValuesReducer.myWallet);
+  // console.log('reduxMyWallet');
+
   // console.log('is metamask wallet connect', active);
   //metamask web3-react connection
   const connectMetamask = async () => {
@@ -85,6 +88,9 @@ export default function WalletPageConnection() {
       const accounts = await window.web3.eth.getAccounts();
       localStorage.setItem('firstConnection', false);
       routeToDashboard(accounts[0], 'metamask');
+      // if (localStorage.getItem('mywallet') === null || undefined) {
+      window.location.reload();
+      // }
     } else if (window.web3) {
       window.web3 = new Web3(window.web3.currentProvider);
     } else {
@@ -216,6 +222,7 @@ export default function WalletPageConnection() {
     const validAddress = Web3.utils.isAddress(address);
     if (validAddress) {
       localStorage.setItem('firstConnection', false);
+      window.location.reload();
       routeToDashboard(address, null);
       seterrorMsg(false);
     } else {

@@ -95,7 +95,7 @@ function FirstConnectionNavItemDisabled({ item, active, address }) {
           ...isActiveRoot,
         }}>
         <ListItemElementDisabledIcon>{icon && icon}</ListItemElementDisabledIcon>
-        <ListItemText style={{ marginTop: '-10px' }} disableTypography primary={title} />
+        <ListItemText disableTypography primary={title} />
       </ListItemElementDisabled>
     </ListItemElementDisabledLayout>
   );

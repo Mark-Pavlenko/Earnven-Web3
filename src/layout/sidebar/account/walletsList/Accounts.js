@@ -172,6 +172,9 @@ export default function Accounts(
     navigate(`/${address}/dashboard`, { replace: true });
   };
 
+  const reduxWalletsList = useSelector((state) => state.initSidebarValuesReducer.walletsList);
+  const reduxMyWallet = useSelector((state) => state.initSidebarValuesReducer.myWallet);
+
   return (
     <>
       <WalletsListLayout ref={anchorRef} isMetamaskWallet={isMetamaskWallet}>

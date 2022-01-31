@@ -69,7 +69,6 @@ function Header({ onOpenSidebar, onOpenMobileWalletsList, finalTitle }) {
 
   const reduxWalletsList = useSelector((state) => state.initSidebarValuesReducer.walletsList);
   const reduxMyWallet = useSelector((state) => state.initSidebarValuesReducer.myWallet);
-  console.log('reduxMyWallet', reduxMyWallet);
 
   return (
     <>
