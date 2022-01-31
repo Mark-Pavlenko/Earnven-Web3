@@ -163,6 +163,14 @@
         "stateMutability": "view",
         "type": "function",
         "gas": 1665
+      },
+      {
+        "name": "pricePerShare",
+        "outputs": [{ "type": "uint256", "name": "" }],
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "gas": 1665
       }
   ]
   

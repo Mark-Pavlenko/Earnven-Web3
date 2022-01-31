@@ -31,6 +31,7 @@ import { mStableSavings } from './mStable/reducer';
 import { mStableSavingsFarm, mStableSavingsPool } from './mStable/reducer';
 import { sushiSwap } from './sushiSwap/reducer';
 import { initSidebarValuesReducer } from './initSidebarValues/reducer';
+import { alchemixVaults } from './alchemix/reducer';
 
 export const rootReducer = combineReducers({
   web3Reducer,
@@ -67,4 +68,5 @@ export const rootReducer = combineReducers({
   mStableSavingsPool,
   sushiSwap,
   initSidebarValuesReducer,
+  alchemixVaults,
 });

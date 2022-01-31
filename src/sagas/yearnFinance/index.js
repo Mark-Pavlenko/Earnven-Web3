@@ -50,27 +50,37 @@ function* yearnFinanceSagaWorker(yearnAccountAddress) {
             //   'getHumanValue',
             //   getHumanValue(res[i].balanceShares, object.tokenDecimal).toString()
             // );
+            if (
+              result.data[j].address.toLowerCase() ==
+                '0xda816459f1ab5631232fe5e97a05bbbb94970c95'.toLowerCase() ||
+              result.data[j].address.toLowerCase() ==
+                '0xa258C4606Ca8206D8aA700cE2143D7db854D168c'.toLowerCase()
+            ) {
+              object.tokens = [
+                {
+                  symbol: result.data[j].token.display_name + ' ' + 'V2',
+                  balance: parseFloat(res[i].balanceShares).toFixed(2) / 10 ** object.tokenDecimal,
+                },
+              ];
+            } else {
+              object.tokens = [
+                {
+                  symbol: result.data[j].token.display_name + ' ' + 'V2',
+                  balance: parseFloat(res[i].balanceShares).toFixed(2) / 10 ** object.tokenDecimal,
+                },
+              ];
+            }
 
-            object.tokens = [
-              {
-                symbol: result.data[j].token.display_name,
-                balance: parseFloat(res[i].balanceShares).toFixed(2) / 10 ** object.tokenDecimal,
-              },
-            ];
             object.imageData = [result.data[j].token.icon];
             object.totalTokensBalance =
               parseFloat(res[i].balanceShares).toFixed(2) / 10 ** object.tokenDecimal;
-            object.tokenPrice = result.data[j].tvl.price;
-            console.log('xcxcxc', object.totalTokensBalance);
-            console.log('xcxcxc', object.tokenPrice);
-            object.tokenValue = parseFloat(object.totalTokensBalance * object.tokenPrice).toFixed(
-              2
-            );
+            object.tokenPrice = parseFloat(result.data[j].tvl.price).toFixed(2);
+            object.tokenValue = parseFloat(object.tokenBalance * object.tokenPrice).toFixed(2);
             object.liquidity = parseFloat(result.data[j].tvl.tvl).toFixed(2);
             object.apy = result.data[j].apy.net_apy * 100;
             object.chain = 'Ethereum';
             object.protocol = 'Yearn';
-            totalValue += parseFloat(object.totalTokensBalance);
+            totalValue += parseFloat(object.tokenValue);
             yearnDataArray.push(object);
           }
         }
@@ -78,7 +88,7 @@ function* yearnFinanceSagaWorker(yearnAccountAddress) {
     } //enod of 2nd for loop
 
     yield put(actions.getYearnFinaceTokenData(yearnDataArray));
-    yield put(actions.getYearnFinanceTokenTotal(totalValue));
+    yield put(actions.getYearnFinanceTokenTotal(parseFloat(totalValue).toFixed(2)));
   }
 }
 
@@ -120,22 +130,24 @@ function* yearnFinanceYTokenSagaWorker(yearnTokenAttributes) {
         yearnTokenImageUrl = yearnTokenDataPrice.data.image.thumb;
 
         if (yearnTokenDataPoint) {
-          // object.balance = yearnTokenDataPoint.yTokenBalance;
+          object.yTokenBalance = yearnTokenDataPoint.yTokenBalance;
           object.yTokenDecimals = yearnTokenDataPoint.yTokenDecimals;
-          let balanceValue = yearnTokenDataPoint.yTokenBalance / 10 ** object.yTokenDecimals;
-          object.balanceValue =
-            parseInt(balanceValue.toString().split('e-')[1]) > 0 ? 0 : balanceValue;
+          let yTokenBalanceValue = object.yTokenBalance / 10 ** object.yTokenDecimals;
+          object.yTokenBalanceValue =
+            parseInt(yTokenBalanceValue.toString().split('e-')[1]) > 0 ? 0 : yTokenBalanceValue;
           object.yUnderlyingToken = yearnTokenDataPoint.yTokenUnderlyingToken;
-          object.price = yearnTokenPrice;
-          object.imageData = [yearnTokenImageUrl];
-          object.totalValue = parseFloat(object.balanceValue * object.price).toFixed(2);
+          object.yTokenPrice = yearnTokenPrice;
+          object.yTokenImageUrl = yearnTokenImageUrl;
+          object.yTokenValue = parseFloat(object.yTokenBalanceValue * object.yTokenPrice).toFixed(
+            2
+          );
           object.yTokenName = yearnTokenDataPoint.yTokenName;
-          object.tokenName = yearnTokenDataPoint.yTokenSymbol;
-          object.chain = 'Ethereum';
-          object.protocol = 'Yearn';
+          object.yTokenSymbol = yearnTokenDataPoint.yTokenSymbol;
+          object.yTokenChain = 'Ethereum';
+          object.yTokenProtocol = 'Yearn';
 
-          if (parseFloat(object.totalValue) > 0) {
-            yearnTokenTotalValue += parseFloat(object.totalValue);
+          if (parseFloat(object.yTokenValue) > 0) {
+            yearnTokenTotalValue += parseFloat(object.yTokenValue);
             yearnTokenDataSet.push(object);
           }
         }
@@ -143,6 +155,6 @@ function* yearnFinanceYTokenSagaWorker(yearnTokenAttributes) {
     } //end of for loop
 
     yield put(actions.getYTokenData(yearnTokenDataSet));
-    yield put(actions.getYTokenTotal(yearnTokenTotalValue));
+    yield put(actions.getYTokenTotal(parseFloat(yearnTokenTotalValue).toFixed(2)));
   }
 }
