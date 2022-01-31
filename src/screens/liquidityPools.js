@@ -7,7 +7,7 @@ import Box from '@material-ui/core/Box';
 
 import Bancor from '../components/liquidityPoolContents/Bancor';
 import Curve from '../components/liquidityPoolContents/Curve';
-import UniV2 from '../components/liquidityPoolContents/UniV2';
+import UniV2 from '../components/liquidityPoolContents/uniV2/UniV2';
 import SushiV2 from '../components/liquidityPoolContents/SushiV2';
 import Balancer from '../components/liquidityPoolContents/Balancer';
 import UniV3 from '../components/liquidityPoolContents/UniV3';

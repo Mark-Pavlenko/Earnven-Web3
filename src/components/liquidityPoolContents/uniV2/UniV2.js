@@ -5,20 +5,24 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import OneClickLiquidity from '../../abi/UniV2PoolsOneClick.json';
-import AmountInput from '../../components/amountInput';
+import OneClickLiquidity from '../../../abi/UniV2PoolsOneClick.json';
+import AmountInput from '../../amountInput';
 import Web3 from 'web3';
-import TransparentButton from '../../components/TransparentButton';
-import ERC20ABI from '../../abi/ERC20.json';
-import ROUTERABI from '../../abi/UniRouterV2.json';
-import FACTORYABI from '../../abi/UniFactoryV2.json';
-import Addresses from '../../contractAddresses';
+import TransparentButton from '../../TransparentButton';
+import ERC20ABI from '../../../abi/ERC20.json';
+import ROUTERABI from '../../../abi/UniRouterV2.json';
+import FACTORYABI from '../../../abi/UniFactoryV2.json';
+import Addresses from '../../../contractAddresses';
 
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import tokenURIs from '../../screens/Exchange/tokenURIs';
+import Select from 'react-select';
+import tokenURIs from '../../../screens/Exchange/tokenURIs';
+import eth from '../../../assets/icons/ethereum.svg'
+import uni from '../../../assets/icons/uniswap-icon.svg'
+import ethLend from '../../../assets/icons/ethLend-icon.svg'
+import mkr from '../../../assets/icons/mkr.svg'
 
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
@@ -30,8 +34,27 @@ import Box from '@material-ui/core/Box';
 import { Add } from '@material-ui/icons';
 // import AmountInput from '../components/amountInput'
 
+import mockImg from '../../../assets/icons/plus-icon.svg'
+
 import { Button } from '@material-ui/core';
 import { Link, useParams } from 'react-router-dom';
+import ModalContainer from "../../common/modalContainer/modalContainer";
+import {  SelectWrapper } from '../styledComponents';
+import {
+  SelectTitle,
+  ChangeToken,
+  ButtonsBlock,
+  AddNewGroupButton,
+  ModalInput,
+  SupplyTokenButton,
+  InputBlock,
+  Balance,
+  LinksContainer,
+  ModalLink,
+  ModalLinkRight,
+} from './StyledComponents';
+import {SelectOptionsWithJSX} from "../HOC/selectOptionsWithJSX";
+import {TokenButtonsBlock} from "../../../screens/dashboard/styledComponents";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -86,8 +109,6 @@ export default function LiquidityPools() {
 
   const [Data, setData] = useState([]); //UNI V2 Pools
   const [Content, setContent] = useState(''); //UNI V2 Pools
-  const [TokenA, setTokenA] = useState('');
-  const [TokenB, setTokenB] = useState('');
   const [Page, setPage] = useState('');
   const [AmountTokenA, setAmountTokenA] = useState('');
   const [AmountTokenB, setAmountTokenB] = useState('');
@@ -254,7 +275,7 @@ export default function LiquidityPools() {
                     height:'35px',
                     borderRadius:'10px',
                     color:'white',
-                    paddingLeft:'15px', 
+                    paddingLeft:'15px',
                     paddingRight:'15px',
                 }}
                 placeholder='Supply Token Address'
@@ -308,6 +329,7 @@ export default function LiquidityPools() {
                     </FormControl>
                     <br />
                     <br />
+                    {/*submit one------------------------------------------------->*/}
                     Supply Token Amount : &nbsp;&nbsp;
                     <AmountInput
                       onChange={(e) => {
@@ -329,7 +351,6 @@ export default function LiquidityPools() {
                     />
                   </center>
                 </div>
-                {/* -OR- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */}
                 <div
                   style={{
                     width: '50%',
@@ -339,19 +360,12 @@ export default function LiquidityPools() {
                     {/* <input
             type='text'
             onChange={(e)=>{setSupplyToken(e.target.value)}}
-            style={{background:'transparent',
-                    borderColor:'#737373',
-                    borderStyle:'solid',
-                    borderWidth:'1px',
-                    height:'35px',
-                    borderRadius:'10px',
-                    color:'white',
-                    paddingLeft:'15px', 
-                    paddingRight:'15px',
-                }}
                 placeholder='Supply Token Address'
         >
         </input>  */}
+                    {/*submit one finish------------------------------------------------->*/}
+                  {/*submit two------------------------------------------------->*/}
+
                     Ether Amount : &nbsp;&nbsp;
                     <AmountInput
                       onChange={(e) => {
@@ -372,6 +386,8 @@ export default function LiquidityPools() {
                 <br /> <br />
                 <center>
                   {' '}
+                  {/*submit two finish------------------------------------------------->*/}
+
                   OR <br />
                   <br />
                   <br />
@@ -433,7 +449,7 @@ export default function LiquidityPools() {
                         height:'35px',
                         borderRadius:'10px',
                         color:'white',
-                        paddingLeft:'15px', 
+                        paddingLeft:'15px',
                         paddingRight:'15px',
                     }}
                     placeholder='Receive Token Address'/>  */}
@@ -787,26 +803,172 @@ export default function LiquidityPools() {
       .send({ from: accounts[0] });
   }
 
+  //useState for mamaging open/close modal
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  //options for select inside of modal
+  const options = [
+    {
+      image: eth,
+      name: 'Ethereum',
+      value: '1',
+    },
+    {
+      image: uni,
+      name: 'Uniswap',
+      value: '2',
+    },
+    {
+      image: mkr,
+      name: 'Uniswap MKR Pool (v1)',
+      value: '3',
+    },
+    {
+      image: mkr,
+      name: 'Uniswap MKR Pool (v1)',
+      value: '4',
+    },
+  ];
+
+  //this function turns array of options to JSX for modal select
+ const updatedOptions = SelectOptionsWithJSX(options)
+
+  //select styles
+  const selectStyle = {
+    menu: (provided, state) => ({
+      ...provided,
+      width: "100%",
+      height: 'fitContent',
+      background: "rgba(255, 255, 255, 0.16)",
+      boxSizing: "border-box",
+      boxShadow: "inset 2px 0px 0px rgba(255, 255, 255, 0.1)",
+      borderTop: 'none',
+      borderRadius: "0 0 7px 7px",
+      mixBlendMode: 'normal',
+      backdropFilter: 'blur(35px)',
+      marginTop: '0px',
+      padding: '0 20px 22px 11px',
+    }),
+    control: (provided, state) => { //valueLine
+      return {
+        ...provided,
+        background: state.menuIsOpen ? "rgba(255, 255, 255, 0.16)" : "#FFFFFF",
+        boxShadow: state.menuIsOpen ? "inset 2px 2px 4px rgba(255, 255, 255, 0.1)" : 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
+        backdropFilter: 'blur(35px)',
+        mixBlendMode: 'normal',
+        border: 'none',
+        borderRadius: state.menuIsOpen ? "7px 7px 0 0" : "7px",
+        color: "#464C52",
+        height: "60px",
+        width: "100%",
+        cursor: "pointer",
+        marginBottom: '20px',
+        paddingRight: '28px',
+        paddingLeft: '12px',
+      }
+    },
+    placeholder: (provided, state) => ({
+      ...provided,
+      color: "#464C52",
+      fontSize: "18px",
+      textAlign: "left",
+    }),
+    dropdownIndicator: (provided, state) => ({
+      // ...provided,
+      height: "20px",
+      width: "20px",
+      color: "#4453AD",
+    }),
+    indicatorsContainer: () => ({
+      color: "transparent",
+    }),
+    singleValue: (provided, state) => ({
+      ...provided,
+      color: "#464C52",
+      fontSize: "18px",
+      background: state.isSelected ? "black" : "transparent",
+    }),
+    option: (provided, state) => {
+      return {
+        ...provided,
+        ":hover": {
+          background: '#FFFFFF',
+          boxShadow: 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
+          borderRadius: '7px',
+        },
+        // -------------------------------->
+        background: state.isSelected
+            ? 'rgba(255, 255, 255, 0.16)'
+            : 'transparent',
+        // -------------------------------->
+        boxShadow: state.isSelected
+            && '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',
+        // -------------------------------->
+        display: 'flex',
+        color: "#616161",
+        mixBlendMode: 'normal',
+        height: state.isSelected ? '43px' : '60px',
+        padding: "5px 10px",
+        fontSize: "18px",
+        borderRadius: '7px',
+      }
+    },
+  };
+
   return (
     <div>
+      <button onClick={() => {setIsModalOpen(true)}}>Open</button>
       {Content}
       <br />
       <center>
-        <button
+        <AddNewGroupButton
           onClick={(e) => {
             setPage(Page + 1);
-          }}
-          style={{
-            height: '25px',
-            width: '100px',
-            background: 'transparent',
-            border: '1px solid #ac6afc',
-            cursor: 'pointer',
-            color: 'white',
-            borderRadius: '10px',
           }}>
           {Loading ? 'Loading...' : 'Show More'}
-        </button>
+        </AddNewGroupButton>
+
+        {/*ModalContainer - this is component consists portal logic inside. Component wraps content and displays it as a children. */}
+       {/*Modal is here =====================================>*/}
+        <ModalContainer title={'Add Liquidity'} isOpen={isModalOpen} onClose={() => {setIsModalOpen(false)}}>
+          <SelectWrapper>
+            <SelectTitle>{'Supply a token'}</SelectTitle>
+            <Select
+                defaultValue={'Ethereum'}
+                styles={selectStyle}
+              options={updatedOptions}
+          />
+          <InputBlock>
+            <ModalInput type="number"/>
+            <Balance>{`Balance: ${5}`}</Balance>
+          </InputBlock>
+            <ButtonsBlock>
+              <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>
+            </ButtonsBlock>
+            <ButtonsBlock>
+              <ChangeToken>{'Or'}</ChangeToken>
+            </ButtonsBlock>
+            <SelectTitle>{'Supply a token'}</SelectTitle>
+            <InputBlock>
+              <ModalInput type="number"/>
+              <Balance>{`Balance: ${5}`}</Balance>
+            </InputBlock>
+            <InputBlock>
+              <ModalInput type="number"/>
+              <Balance>{`Balance: ${5}`}</Balance>
+            </InputBlock>
+            <LinksContainer>
+              <ModalLink href={'#'}>aaa</ModalLink>
+              <ModalLinkRight href={'#'}>bbb</ModalLinkRight>
+              <ModalLink href={'#'}>ccc</ModalLink>
+              <ModalLinkRight href={'#'}>ddd</ModalLinkRight>
+            </LinksContainer>
+          <ButtonsBlock>
+            <SupplyTokenButton>{`Supply tokens`}</SupplyTokenButton>
+          </ButtonsBlock>
+          </SelectWrapper>
+        </ModalContainer>
+        {/*Modal is here =====================================>*/}
       </center>
     </div>
   );
