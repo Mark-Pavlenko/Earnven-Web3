@@ -20,11 +20,20 @@ function* twitterPostsWorker(mockTwitterObject) {
       //get the respective user data
       for (let j = 0; j < twitterPosts.data.includes.users.length; j++) {
         let object = {};
+        let entitiesUrl;
         const tweetData = twitterPosts.data.includes.users[j];
         if (tweeterTweets.author_id === tweetData.id) {
+          if (tweeterTweets.entities) {
+            try {
+              entitiesUrl = tweeterTweets.entities.urls[0].url;
+            } catch (err) {
+              //console.log('');
+            }
+          }
           object.username = tweetData.username ? tweetData.username : '';
           object.profile_image_url = tweetData.profile_image_url ? tweetData.profile_image_url : '';
-          object.url = tweetData.url ? tweetData.url : '';
+          //object.url = tweetData.url ? tweetData.url : '';
+          object.url = entitiesUrl ? entitiesUrl : '';
           object.public_metrics = tweetData.public_metrics ? tweetData.public_metrics : '';
           object.created_at = tweeterTweets.created_at ? tweeterTweets.created_at : '';
           object.id = tweeterTweets.id;

@@ -16,33 +16,43 @@ import {
   ListItemElementLayout,
   ListItemElementDisabledLayout,
 } from './styles';
+import { initSidebarValuesReducer } from '../../../store/initSidebarValues/reducer';
 
 // active navigation element
 function NavItem({ item, active, address }) {
   const themeType = useSelector((state) => state.themeReducer.isLightTheme);
+
   const { title, path, icon, info, children } = item;
   const isActiveRoot = active(`/${address}${path}`);
+
+  const isFirstConnection = localStorage.getItem('firstConnection');
+  console.log('isFirstConnection 123', isFirstConnection);
 
   function setNavigation() {
     localStorage.setItem('setnavigation', item.path);
   }
 
   return (
-    <ListItemElement
-      isLightTheme={themeType}
-      onClick={() => {
-        setNavigation();
-      }}
-      component={RouterLink}
-      to={`/${address}/${path}`}
-      sx={{
-        mt: 0.2,
-        ...isActiveRoot,
-      }}>
-      <ListItemElementIcon>{icon && icon}</ListItemElementIcon>
-      <ListItemText disableTypography primary={title} />
-      {info && info}
-    </ListItemElement>
+    <>
+      <ListItemElement
+        // button
+        // disableGutters
+        // disabled
+        isLightTheme={themeType}
+        onClick={() => {
+          setNavigation();
+        }}
+        component={RouterLink}
+        to={`/${address}/${path}`}
+        sx={{
+          mt: 0.2,
+          ...isActiveRoot,
+        }}>
+        <ListItemElementIcon>{icon && icon}</ListItemElementIcon>
+        <ListItemText disableTypography primary={title} />
+        {info && info}
+      </ListItemElement>
+    </>
   );
 }
 
@@ -69,6 +79,28 @@ function NavItemDisabled({ item, active, address }) {
   );
 }
 
+//first connection navItem disabled
+function FirstConnectionNavItemDisabled({ item, active, address }) {
+  const themeType = useSelector((state) => state.themeReducer.isLightTheme);
+  const { title, path, icon, info, children } = item;
+  const isActiveRoot = active(`/${address}${path}`);
+
+  return (
+    <ListItemElementDisabledLayout>
+      <ListItemElementDisabled
+        isLightTheme={themeType}
+        button
+        disableGutters
+        sx={{
+          ...isActiveRoot,
+        }}>
+        <ListItemElementDisabledIcon>{icon && icon}</ListItemElementDisabledIcon>
+        <ListItemText style={{ marginTop: '-10px' }} disableTypography primary={title} />
+      </ListItemElementDisabled>
+    </ListItemElementDisabledLayout>
+  );
+}
+
 // general navigation block
 export default function NavSection({ navConfig, address, ...other }) {
   const dispatch = useDispatch();
@@ -85,24 +117,54 @@ export default function NavSection({ navConfig, address, ...other }) {
     dispatch({ type: 'SET_CURRENT_ROUTE_TITLE', payload: currentRouteTitle });
   };
 
+  const firstConnection = useSelector((state) => state.initSidebarValuesReducer.firstConnection);
+  const reduxWalletsList = useSelector((state) => state.initSidebarValuesReducer.walletsList);
+  console.log('reduxWalletsList', reduxWalletsList);
+  console.log('firstConnection', firstConnection);
+  console.log('navConfig', navConfig);
+
   return (
     <MainNavLayout>
-      <NavList disablePadding>
-        {navConfig.map((item) => {
-          // disabled last two elements in navBar
-          return item.title === 'yield farms' || item.title === 'savings' ? (
-            <NavItemDisabled key={item.title} item={item} active={match} address={address} />
-          ) : (
-            <NavItem
-              key={item.title}
-              item={item}
-              active={match}
-              address={address}
-              onClick={getRouteTitle()}
-            />
-          );
-        })}
-      </NavList>
+      {reduxWalletsList.length === 0 ? (
+        <NavList disablePadding>
+          {navConfig.map((item) => {
+            // disabled last two elements in navBar
+            return item.title !== 'home' ? (
+              <FirstConnectionNavItemDisabled
+                key={item.title}
+                item={item}
+                active={match}
+                address={address}
+              />
+            ) : (
+              <NavItem
+                key={item.title}
+                item={item}
+                active={match}
+                address={address}
+                onClick={getRouteTitle()}
+              />
+            );
+          })}
+        </NavList>
+      ) : (
+        <NavList disablePadding>
+          {navConfig.map((item) => {
+            // disabled last two elements in navBar
+            return item.title === 'yield farms' || item.title === 'savings' ? (
+              <NavItemDisabled key={item.title} item={item} active={match} address={address} />
+            ) : (
+              <NavItem
+                key={item.title}
+                item={item}
+                active={match}
+                address={address}
+                onClick={getRouteTitle()}
+              />
+            );
+          })}
+        </NavList>
+      )}
     </MainNavLayout>
   );
 }

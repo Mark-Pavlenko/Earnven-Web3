@@ -64,8 +64,12 @@ function Header({ onOpenSidebar, onOpenMobileWalletsList, finalTitle }) {
     }
   }
 
-  console.log('isLightTheme', isLightTheme);
-  console.log('token header', Token);
+  // console.log('isLightTheme', isLightTheme);
+  // console.log('token header', Token);
+
+  const reduxWalletsList = useSelector((state) => state.initSidebarValuesReducer.walletsList);
+  const reduxMyWallet = useSelector((state) => state.initSidebarValuesReducer.myWallet);
+  console.log('reduxMyWallet', reduxMyWallet);
 
   return (
     <>
@@ -105,9 +109,11 @@ function Header({ onOpenSidebar, onOpenMobileWalletsList, finalTitle }) {
       </HeaderLayoutBig>
       <HeaderLayoutMobile isLightTheme={isLightTheme}>
         <MobileSubLayout>
-          <UserAvatarIconButton onClick={onOpenMobileWalletsList}>
-            <img src={userMockAvatar} alt="mockAvatar" />
-          </UserAvatarIconButton>
+          {reduxWalletsList.length !== 0 && (
+            <UserAvatarIconButton onClick={onOpenMobileWalletsList}>
+              <img src={userMockAvatar} alt="mockAvatar" />
+            </UserAvatarIconButton>
+          )}
           <SearchTokensMobile isLightTheme={isLightTheme} />
           <ChangeThemeBtnHeader
             onClick={() => {
