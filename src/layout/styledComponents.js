@@ -45,6 +45,6 @@ export const MainStyle = styled('div')`
 
   @media (min-width: 1445px) {
     margin-left: 314px;
-    max-width: 1606px;
+    max-width: 1635px;
   }
 `;
