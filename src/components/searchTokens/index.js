@@ -81,7 +81,7 @@ export class SearchTokensLight extends Component {
                 fontSize: '10px',
                 backgroundColor: '#F2F8FF',
                 '&:hover': {
-                  backgroundColor: '#ffffff',
+                  backgroundColor: 'red',
                   borderRadius: '10px',
                 },
                 '& > div': { height: '25px' },

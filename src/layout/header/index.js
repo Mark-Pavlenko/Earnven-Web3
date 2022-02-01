@@ -16,10 +16,9 @@ import GasDropdownMenu from '../../components/gasDropDownMenu/index';
 import LanguageDropDown from '../../components/languageDropDown';
 import HelpDropDown from '../../components/helpDropDown';
 
-import TestSearchInput from '../../components/searchTokens/testInput';
+import SearchTokens from '../../components/searchTokens/testInput';
 import SearchTokensLight from '../../components/searchTokens';
 import SearchTokensDark from '../../components/searchTokens/searchTokensDark';
-import SearchTokens from '../../components/searchTokens';
 
 import darkIcon from '../../assets/icons/darkIcon.svg';
 import lightIcon from '../../assets/icons/lightIcon.svg';
@@ -90,8 +89,8 @@ function Header({ onOpenSidebar, onOpenMobileWalletsList, finalTitle }) {
         <HeaderItemsBlock>
           {/*<SearchTokens />*/}
 
-          <SearchTokensLight parentCallback={callbackFunction} isLightTheme={isLightTheme} />
-          <TestSearchInput parentCallback={callbackFunction} isLightTheme={isLightTheme} />
+          {/*<SearchTokensLight parentCallback={callbackFunction} isLightTheme={isLightTheme} />*/}
+          <SearchTokens parentCallback={callbackFunction} isLightTheme={isLightTheme} />
 
           {/*search tokens mobile version*/}
           {/*<SearchTokensMobile isLightTheme={isLightTheme} />*/}

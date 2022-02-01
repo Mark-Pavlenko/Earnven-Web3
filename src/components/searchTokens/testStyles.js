@@ -5,8 +5,16 @@ import TextField from '@mui/material/TextField';
 export const TokensListBox = styled(Box)``;
 
 export const FoundTokenBlock = styled.div`
+  :hover {
+    color: ${(props) => (props.isLightTheme ? '#4453AD' : '#8F86FF')};
+  }
+
   span {
     color: ${(props) => (props.isLightTheme ? `black` : `white`)};
+
+    :hover {
+      color: ${(props) => (props.isLightTheme ? '#4453AD' : '#8F86FF')};
+    }
   }
 `;
 
