@@ -39,7 +39,12 @@ export const MainStyle = styled('div')`
     background-size: 100% 100%;
   }
 
+  @media screen and (max-width: 1445px) and (min-width: 1281px) {
+    max-width: 1770px;
+  }
+
   @media (min-width: 1445px) {
     margin-left: 314px;
+    max-width: 1606px;
   }
 `;

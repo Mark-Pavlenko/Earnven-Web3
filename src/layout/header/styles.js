@@ -34,7 +34,7 @@ export const HeaderLayoutBig = styled.div`
 
   @media (min-width: 1446px) {
     margin-left: 314px;
-    max-width: 1606px;
+    max-width: 1570px;
   }
 `;
 
@@ -95,9 +95,15 @@ export const HeaderTitle = styled.div`
 `;
 
 export const HeaderItemsBlock = styled.div`
-  @media screen and (min-width: 710px) {
+  @media screen and (min-width: 710px) and (max-width: 1444px) {
     display: flex;
     justify-content: space-around;
+    align-items: center;
+  }
+
+  @media (min-width: 1445px) {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
   }
 `;
@@ -154,5 +160,9 @@ export const UserAvatarIconButton = styled(IconButton)`
 export const ChangeThemeBtnHeader = styled(IconButton)`
   @media (max-width: 1280px) {
     display: none;
+  }
+
+  @media screen and (min-width: 1445px) and (max-width: 1920px) {
+    margin-right: 25px;
   }
 `;
