@@ -1,80 +1,149 @@
 import * as React from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles, withStyles } from '@material-ui/styles';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import countries from './testCountriesArr';
 import { SearchIcon } from './styles';
 import searchIcon from '../../assets/icons/searchIconLight.png';
+import { FoundTokenBlock, TokensListBox, TokensListTextField } from './testStyles';
+import { Component } from 'react';
+import PropTypes from 'prop-types';
+import { getAllTokens, getSearchedTokens } from '../../store/searchedTokens/actions';
+import { connect } from 'react-redux';
 
-const useStyles = makeStyles({
+const styles = () => ({
   noBorder: {
     border: 'none',
   },
 });
 
-export default function TestTokensSelect({ isLightTheme }) {
-  const classes = useStyles();
+export class TestTokensSelect extends Component {
+  sendData = () => {
+    console.log('this.state.token', this.state.token);
+    this.props.parentCallback(this.state.token);
+  };
 
-  return (
-    <Autocomplete
-      freeSolo
-      autoComplete
-      autoHighlight
-      options={countries}
-      getOptionLabel={(option) => option.label}
-      renderOption={(props, option) => (
-        <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-          <img
-            loading="lazy"
-            width="20"
-            src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-            srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-            alt=""
+  searchTokens = async (event) => {
+    // console.log('change input value');
+    event.preventDefault();
+    this.props.getSearchedTokens(event.target.value);
+    await this.setState({ results: this.props.chosenTokensList });
+    console.log('chosenTokenList', this.props.chosenTokensList);
+    this.setState({ searchContent: event.target.value.id });
+  };
+
+  submitSearch = async (event, value) => {
+    event.preventDefault();
+    // console.log(value)
+    if (value) {
+      await this.setState({ token: value.id });
+      this.sendData();
+    }
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchContent: '',
+      results: [],
+      redirect: false,
+      token: '',
+    };
+  }
+
+  render() {
+    const { classes } = this.props;
+    const isLightTheme = this.props.isLightTheme;
+
+    return (
+      <Autocomplete
+        autoHighlight
+        onFocus={() => {
+          this.props.getAllTokens();
+        }}
+        onChange={(event, value) => {
+          this.submitSearch(event, value);
+        }}
+        options={this.state.results}
+        getOptionLabel={(option) => option.name}
+        renderOption={(props, option) => (
+          <TokensListBox
+            component="li"
+            sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
+            {...props}
+            style={{
+              marginTop: '-8px',
+              height: '30px',
+              backgroundColor: isLightTheme ? '#FFFFFF29' : '#11132C',
+            }}>
+            <img loading="lazy" width="20" src={option.image.small} alt="" />
+            <FoundTokenBlock isLightTheme={isLightTheme}>
+              <span>{option.name}</span>
+            </FoundTokenBlock>
+          </TokensListBox>
+        )}
+        ListboxProps={{
+          style: {
+            maxHeight: '230px',
+            backgroundColor: isLightTheme ? '#FFFFFF29' : '#11132C',
+          },
+        }}
+        renderInput={(params) => (
+          <TokensListTextField
+            {...params}
+            InputProps={{
+              ...params.InputProps,
+              endAdornment: (
+                <>
+                  <SearchIcon src={searchIcon} alt="" />
+                </>
+              ),
+              classes: { notchedOutline: classes.noBorder },
+              sx: { color: '#878995', paddingRight: '0px !important' },
+            }}
+            id="filled-search"
+            onChange={this.searchTokens}
+            variant="outlined"
+            label="Search tokens..."
+            InputLabelProps={{
+              style: {
+                color: isLightTheme ? 'black' : 'white',
+                fontSize: 14,
+                fontWeight: 400,
+                opacity: 0.5,
+              },
+            }}
+            style={{
+              width: 242,
+              height: 40,
+              backgroundColor: isLightTheme ? '#ffffff' : '#10142c',
+              boxShadow: isLightTheme
+                ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+                : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+              mixBlendMode: isLightTheme ? 'none' : 'normal',
+              backdropFilter: isLightTheme ? 'none' : 'blur(35px)',
+              borderRadius: '10px',
+            }}
+            size="small"
           />
-          {option.label} ({option.code}) +{option.phone}
-        </Box>
-      )}
-      ListboxProps={{ style: { maxHeight: '230px' } }}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          InputProps={{
-            ...params.InputProps,
-            endAdornment: (
-              <>
-                <SearchIcon src={searchIcon} alt="" />
-              </>
-            ),
-            classes: { notchedOutline: classes.noBorder },
-            sx: { color: '#878995' },
-          }}
-          id="filled-search"
-          // onChange={this.searchTokens}
-          variant="outlined"
-          label="Search tokens..."
-          InputLabelProps={{
-            style: {
-              color: isLightTheme ? 'black' : 'white',
-              fontSize: 14,
-              fontWeight: 400,
-              opacity: 0.5,
-            },
-          }}
-          style={{
-            width: 242,
-            height: 40,
-            backgroundColor: isLightTheme ? '#ffffff' : '#10142c',
-            boxShadow: isLightTheme
-              ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
-              : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-            mixBlendMode: isLightTheme ? 'none' : 'normal',
-            backdropFilter: isLightTheme ? 'none' : 'blur(35px)',
-            borderRadius: '10px',
-          }}
-          size="small"
-        />
-      )}
-    />
-  );
+        )}
+      />
+    );
+  }
 }
+
+TestTokensSelect.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  chosenTokensList: state.chosenTokensList.chosenTokensList,
+});
+
+const mapDispatchToProps = {
+  getSearchedTokens,
+  getAllTokens,
+};
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(TestTokensSelect));

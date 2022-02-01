@@ -14,13 +14,6 @@ const styles = () => ({
   noBorder: {
     border: 'none',
   },
-  labelRoot: {
-    fontSize: 14,
-    fontWeight: 400,
-  },
-  option: {
-    color: '#ff0000',
-  },
 });
 
 export class SearchTokensLight extends Component {
@@ -105,11 +98,7 @@ export class SearchTokensLight extends Component {
               {...params}
               InputProps={{
                 ...params.InputProps,
-                endAdornment: (
-                  <>
-                    <SearchIcon src={searchIcon} alt="" />
-                  </>
-                ),
+                endAdornment: <SearchIcon src={searchIcon} alt="" />,
                 classes: { notchedOutline: classes.noBorder },
               }}
               id="filled-search"

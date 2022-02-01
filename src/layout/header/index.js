@@ -91,7 +91,7 @@ function Header({ onOpenSidebar, onOpenMobileWalletsList, finalTitle }) {
           {/*<SearchTokens />*/}
 
           <SearchTokensLight parentCallback={callbackFunction} isLightTheme={isLightTheme} />
-          <TestSearchInput isLightTheme={isLightTheme} />
+          <TestSearchInput parentCallback={callbackFunction} isLightTheme={isLightTheme} />
 
           {/*search tokens mobile version*/}
           {/*<SearchTokensMobile isLightTheme={isLightTheme} />*/}
