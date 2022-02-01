@@ -23,6 +23,7 @@ import { getmStableSagaWatcher } from './mStable';
 import { getmStableFarmSagaWatcher, getmStablePoolsSagaWatcher } from './mStable';
 import { getSushiSwapLPSagaWatcher } from './sushiSwap';
 import { getalchemixVaultsSagaWatcher } from './alchemix';
+import { getcompoundTokenSagaWatcher } from './compoundFinance';
 
 export default function* watchRootSaga() {
   yield all([
@@ -49,5 +50,6 @@ export default function* watchRootSaga() {
     call(getmStablePoolsSagaWatcher),
     call(getSushiSwapLPSagaWatcher),
     call(getalchemixVaultsSagaWatcher),
+    call(getcompoundTokenSagaWatcher),
   ]);
 }

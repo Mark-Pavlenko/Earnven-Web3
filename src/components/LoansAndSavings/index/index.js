@@ -55,6 +55,7 @@ import OlympusStaking from '../OlympusStaking';
 import { ToggleButton } from '../../styled/styledComponents';
 import SushiLPToken from '../SushiLPToken';
 import AlchemixVault from '../Vaults/AlchemixVault';
+import CompoundFinance from '../CompoundFinance';
 
 // Below code is for task https://app.clickup.com/t/1je2y9d
 // import CompoundData from './Compound';
@@ -159,6 +160,8 @@ export default function Index({ accountAddress }) {
   //sushiSwapLP token
   const SushiPoolsData = useSelector((state) => state.sushiSwap.sushiSwapLPData);
   const SushiV2Total = useSelector((state) => state.sushiSwap.sushiSwapLPTotal);
+  //Compound
+  let compTokenDataValue = useSelector((state) => state.compoundFinance.compTokenData); //saga
 
   // Below code is for task https://app.clickup.com/t/1je2y9d
   // const [DisplaySavings, setDisplaySavings] = useState(null);
@@ -1263,7 +1266,8 @@ export default function Index({ accountAddress }) {
             curveLpToken.length > 0 ||
             curveToken.length > 0 ||
             snowSwanData.length > 0 ||
-            BalancerPoolsData.length > 0
+            BalancerPoolsData.length > 0 ||
+            compTokenDataValue.length > 0
               ? ''
               : 'none',
         }}>
@@ -1320,6 +1324,7 @@ export default function Index({ accountAddress }) {
             {/*Compound - doesn't return any data to see it in UI*/}
             <CompoundData accountAddress={accountAddress} totalSavings={() => {}} />
             <OlympusStaking accountAddress={accountAddress} />
+            <CompoundFinance accountAddress={accountAddress} />
             {/*============================>*/}
             {/*BeaconData/*/}
             {Array.isArray(BeaconData) &&

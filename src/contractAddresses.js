@@ -47,6 +47,8 @@ const addresses = {
   OHMV2TokenAddress: '0x64aa3364F17a4D01c6f1751Fd97C2BD3D7e7f1D5',
   sOHMV2TokenAddress: '0x04906695D6D12CF5459975d7C3C03356E4Ccd460',
   gOHMTokenAddress: '0x0ab87046fBb341D058F17CBC4c1133F25a20a52f',
+  compTrollerAddress: '0x3d9819210a31b4961b30ef54be2aed79b9c9cd3b',
+  compTokenAddress: '0xc00e94cb662c3520282e6f5717214004a7f26888',
 };
 
 export default addresses;
