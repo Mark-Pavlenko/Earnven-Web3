@@ -158,8 +158,6 @@ export default function Account({ address, name, global_wallet, setTheme }) {
 
   const reduxWalletsList = useSelector((state) => state.initSidebarValuesReducer.walletsList);
   const reduxMyWallet = useSelector((state) => state.initSidebarValuesReducer.myWallet);
-  console.log('reduxWalletsList abc', reduxWalletsList);
-  console.log('reduxMyWallet def', reduxMyWallet);
 
   const accountListContent = (
     <>

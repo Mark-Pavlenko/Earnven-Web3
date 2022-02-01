@@ -26,7 +26,6 @@ function NavItem({ item, active, address }) {
   const isActiveRoot = active(`/${address}${path}`);
 
   const isFirstConnection = localStorage.getItem('firstConnection');
-  console.log('isFirstConnection 123', isFirstConnection);
 
   function setNavigation() {
     localStorage.setItem('setnavigation', item.path);
@@ -119,9 +118,6 @@ export default function NavSection({ navConfig, address, ...other }) {
 
   const firstConnection = useSelector((state) => state.initSidebarValuesReducer.firstConnection);
   const reduxWalletsList = useSelector((state) => state.initSidebarValuesReducer.walletsList);
-  console.log('reduxWalletsList', reduxWalletsList);
-  console.log('firstConnection', firstConnection);
-  console.log('navConfig', navConfig);
 
   return (
     <MainNavLayout>

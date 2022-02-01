@@ -3,10 +3,12 @@ import {
   DesktopNetworkButton,
   EthereumActiveNetwork,
   MainSidebarMobilePopoverContent,
-  MobileSidebarComingSoonLabel,
-  MobileSidebarNetworksList,
+  DesktopComingSoonLabel,
+  DesktopNetworksList,
   DesktopNetworksListBlock,
   InactiveDesktopListNetworkButton,
+  DesktopNetworksListItem,
+  DesktopNetworksListItemLabelsBlock,
 } from './styles';
 import chevronUp from '../../assets/icons/chevronUp.svg';
 import pyramidIcon from '../../assets/icons/pyramidIcon.svg';
@@ -55,8 +57,8 @@ export default function NewNetworkSelect() {
                 sx: {
                   marginTop: '15px',
                   width: '155px',
-                  height: '275px',
-                  backgroundColor: isLightTheme ? '#ffffff29' : '#1F265C3D',
+                  height: '310px',
+                  backgroundColor: isLightTheme ? '#ffffff29' : '#10142D',
                   boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
                   backdropFilter: 'blur(35px)',
                   mixBlendMode: 'normal',
@@ -70,6 +72,52 @@ export default function NewNetworkSelect() {
                   endIcon={<img src={chevronUp} alt="chevron_icon" />}>
                   Network
                 </InactiveDesktopListNetworkButton>
+                <DesktopNetworksList isLightTheme={isLightTheme}>
+                  <DesktopNetworksListItem>
+                    <img src={arbitrumIcon} alt={'network_icon'} />
+                    <DesktopNetworksListItemLabelsBlock>
+                      <span style={{ color: '#b3b3b4' }}> Arbitrum</span>
+                      <DesktopComingSoonLabel>Coming soon</DesktopComingSoonLabel>
+                    </DesktopNetworksListItemLabelsBlock>
+                  </DesktopNetworksListItem>
+
+                  <EthereumActiveNetwork isLightTheme={isLightTheme} style={{}}>
+                    <img src={ethIcon} alt={'network_icon'} />
+                    <span>Ethereum</span>
+                  </EthereumActiveNetwork>
+
+                  <DesktopNetworksListItem>
+                    <img src={AvalancheIcon} alt={'network_icon'} />
+                    <DesktopNetworksListItemLabelsBlock>
+                      <span style={{ color: '#b3b3b4' }}> Avalanche</span>
+                      <DesktopComingSoonLabel>Coming soon</DesktopComingSoonLabel>
+                    </DesktopNetworksListItemLabelsBlock>
+                  </DesktopNetworksListItem>
+
+                  <DesktopNetworksListItem>
+                    <img src={bscIcon} alt={'network_icon'} />
+                    <DesktopNetworksListItemLabelsBlock>
+                      <span style={{ color: '#b3b3b4' }}>BSC</span>
+                      <DesktopComingSoonLabel>Coming soon</DesktopComingSoonLabel>
+                    </DesktopNetworksListItemLabelsBlock>
+                  </DesktopNetworksListItem>
+
+                  <DesktopNetworksListItem>
+                    <img src={fantomIcon} alt={'network_icon'} />
+                    <DesktopNetworksListItemLabelsBlock>
+                      <span style={{ color: '#b3b3b4' }}> Fantom</span>
+                      <DesktopComingSoonLabel>Coming soon</DesktopComingSoonLabel>
+                    </DesktopNetworksListItemLabelsBlock>
+                  </DesktopNetworksListItem>
+
+                  <DesktopNetworksListItem>
+                    <img src={Polygon} alt={'network_icon'} />
+                    <DesktopNetworksListItemLabelsBlock>
+                      <span style={{ color: '#b3b3b4' }}>Polygon</span>
+                      <DesktopComingSoonLabel>Coming soon</DesktopComingSoonLabel>
+                    </DesktopNetworksListItemLabelsBlock>
+                  </DesktopNetworksListItem>
+                </DesktopNetworksList>
               </DesktopNetworksListBlock>
             </Popover>
           </div>

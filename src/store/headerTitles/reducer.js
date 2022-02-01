@@ -13,7 +13,7 @@ export const headerTitlesReducer = (state = initialState, action) => {
         headerTitles: action?.payload,
       };
     case actionTypes.SET_CURRENT_ROUTE_TITLE:
-      console.log('route title payload', action?.payload);
+      // console.log('route title payload', action?.payload);
       if (action?.payload === '/app/connect-wallet') {
         return {
           currentRouteTitle: 'Connect to Earnven',

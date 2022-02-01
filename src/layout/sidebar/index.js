@@ -768,12 +768,6 @@ export default function Sidebar({
     </Scrollbar>
   );
 
-  console.log('global_wallet', JSON.parse(global_wallet));
-  console.log('reduxMyWallet', reduxMyWallet);
-  console.log('global_wallet_redux', reduxWalletsList);
-  console.log('reduxWalletsList.length', reduxWalletsList);
-  console.log('reduxMyWallet.length', reduxMyWallet);
-
   // main sidebar wallet content (mobiles only)
   const mainSidebarWalletsListContent = (
     <Scrollbar
