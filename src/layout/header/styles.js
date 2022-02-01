@@ -24,7 +24,7 @@ export const HeaderLayoutBig = styled.div`
 
   @media (min-width: 1280px) {
     display: grid;
-    grid-template-columns: 30% 70%;
+    grid-template-columns: 40% 60%;
   }
 
   @media screen and (max-width: 1445px) and (min-width: 1281px) {
@@ -34,7 +34,7 @@ export const HeaderLayoutBig = styled.div`
 
   @media (min-width: 1446px) {
     margin-left: 314px;
-    max-width: 1570px;
+    max-width: 1605px;
   }
 `;
 
@@ -95,9 +95,15 @@ export const HeaderTitle = styled.div`
 `;
 
 export const HeaderItemsBlock = styled.div`
-  @media screen and (min-width: 710px) and (max-width: 1444px) {
+  @media screen and (min-width: 710px) and (max-width: 1280px) {
     display: flex;
     justify-content: space-around;
+    align-items: center;
+  }
+
+  @media screen and (min-width: 1281px) and (max-width: 1444px) {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
   }
 
@@ -163,6 +169,6 @@ export const ChangeThemeBtnHeader = styled(IconButton)`
   }
 
   @media screen and (min-width: 1445px) and (max-width: 1920px) {
-    margin-right: 25px;
+    //margin-right: 25px;
   }
 `;

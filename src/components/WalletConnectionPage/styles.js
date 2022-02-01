@@ -72,7 +72,7 @@ export const MainStyleFirstConnection = styled.div`
 
   @media (min-width: 1446px) {
     margin-left: 315px;
-    max-width: 1606px;
+    max-width: 1605px;
   }
 
   @media screen and (max-width: 1445px) and (min-width: 1281px) {
