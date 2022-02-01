@@ -356,7 +356,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
               open={account}
               onClose={hideAccountPopover}
               anchorEl={anchorRef.current}>
-              f{accountListContent}
+              {accountListContent}
             </WalletListPopover>
           )}
 
