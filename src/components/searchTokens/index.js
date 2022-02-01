@@ -1,94 +1,155 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import { withStyles, makeStyles } from '@material-ui/styles';
+import PropTypes from 'prop-types';
+import searchIcon from '../../assets/icons/searchIconLight.png';
+import { Box } from '@material-ui/core';
+import { getAllTokens, getSearchedTokens } from '../../store/searchedTokens/actions';
 
-import './styles.scss';
+import { MainLayout, SearchIcon, CoinItem } from './styles';
 
-const list = [
-  { id: 1, name: 'Tom', type: 'Cat' },
-  { id: 2, name: 'Zeus', type: 'Labrador' },
-  { id: 3, name: 'Jax', type: 'Malamute' },
-  { id: 4, name: 'Seb', type: 'Developer' },
-  { id: 5, name: 'MacBook', type: 'Notebook' },
-];
+const styles = () => ({
+  noBorder: {
+    border: 'none',
+  },
+  labelRoot: {
+    fontSize: 14,
+    fontWeight: 400,
+  },
+  option: {
+    color: '#ff0000',
+  },
+});
 
-const searchFilter = (searchValue, list, searchBy = 'name') => {
-  let lowerCaseQuery = searchValue.toLowerCase();
-  return searchValue
-    ? list.filter((x) => x[searchBy].toLowerCase().includes(lowerCaseQuery))
-    : list;
-};
+export class SearchTokensLight extends Component {
+  sendData = () => {
+    this.props.parentCallback(this.state.token);
+  };
 
-const DropdownItems = () => {
-  const [visible, setVisible] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
-  const [selectedItem, setSelectedItem] = useState(null);
-  const dropdownRef = useRef(null);
+  searchTokens = async (event) => {
+    // console.log('change input value');
+    event.preventDefault();
+    this.props.getSearchedTokens(event.target.value);
+    await this.setState({ results: this.props.chosenTokensList });
+    console.log('chosenTokenList', this.props.chosenTokensList);
+    this.setState({ searchContent: event.target.value.id });
+  };
 
-  // click away listener
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClick, false);
-    return () => document.removeEventListener('mousedown', handleClick, false);
-  }, []);
-
-  const handleClick = (e) => {
-    if (dropdownRef.current.contains(e.target)) {
-      return;
+  submitSearch = async (event, value) => {
+    event.preventDefault();
+    // console.log(value)
+    if (value) {
+      await this.setState({ token: value.id });
+      this.sendData();
     }
-    setVisible(false);
   };
 
-  const handleChange = (e) => {
-    setSearchValue(e.target.value);
-    if (!visible) {
-      setVisible(true);
-    }
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchContent: '',
+      results: [],
+      redirect: false,
+      token: '',
+    };
+  }
 
-  const selectItem = (item) => {
-    setSearchValue(item.name);
-    setSelectedItem(item.id);
-    setVisible(false);
-  };
+  render() {
+    const isLightTheme = this.props.isLightTheme;
+    console.log('search field light theme', isLightTheme);
 
-  const selectChange = (e) => {
-    console.log(e.target.value);
-  };
-  return (
-    <div className="container">
-      <div tabIndex="0" className="input_container">
-        <input
-          className="input"
-          type="text"
-          placeholder="Search Text"
-          value={searchValue}
-          onChange={handleChange}
+    const { classes } = this.props;
+
+    // const borderClasses = useStyles();
+
+    return (
+      <MainLayout isLightTheme={isLightTheme}>
+        <Autocomplete
+          freeSolo
+          blurOnSelect
+          autoComplete
+          autoHighlight
           onFocus={() => {
-            // if (searchValue) {
-            setVisible(true);
-            // };
+            this.props.getAllTokens();
           }}
+          onChange={(event, value) => {
+            this.submitSearch(event, value);
+          }}
+          options={this.state.results}
+          getOptionLabel={(option) => option.name}
+          renderOption={(props, option) => (
+            // token item block styles
+            <Box
+              component="li"
+              sx={{
+                fontFamily: 'Saira, sans-serif',
+                fontSize: '10px',
+                backgroundColor: '#F2F8FF',
+                '&:hover': {
+                  backgroundColor: '#ffffff',
+                  borderRadius: '10px',
+                },
+                '& > div': { height: '25px' },
+              }}
+              {...props}>
+              <CoinItem>
+                <img src={option.image.small} alt="coin icon" />
+                <span>{option.name}</span>
+              </CoinItem>
+            </Box>
+          )}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <>
+                    <SearchIcon src={searchIcon} alt="" />
+                  </>
+                ),
+                classes: { notchedOutline: classes.noBorder },
+              }}
+              id="filled-search"
+              onChange={this.searchTokens}
+              variant="outlined"
+              label="Search tokens..."
+              InputLabelProps={{
+                style: {
+                  color: isLightTheme ? 'black' : 'white',
+                  fontSize: 14,
+                  fontWeight: 400,
+                  opacity: 0.5,
+                },
+              }}
+              style={{
+                backgroundColor: this.props.isLightTheme ? '#ffffff' : '#10142c',
+                width: 242,
+                height: 40,
+                borderRadius: '10px',
+              }}
+              size="small"
+            />
+          )}
         />
-      </div>
-      <div ref={dropdownRef} className={`dropdown ${visible ? 'v' : ''}`}>
-        {visible && (
-          <ul>
-            {!list && (
-              <li key="zxc" className="dropdown_item">
-                no result
-              </li>
-            )}
-            {/* you can remove the searchFilter if you get results from Filtered API like Google search */}
-            {list &&
-              searchFilter(searchValue, list).map((x) => (
-                <li key={x.id} onClick={() => selectItem(x)} className="dropdown_item">
-                  <div className="item_text1">{x.name}</div>
-                  <div className="item_text2">{x.type}</div>
-                </li>
-              ))}
-          </ul>
-        )}
-      </div>
-    </div>
-  );
+      </MainLayout>
+    );
+  }
+}
+
+SearchTokensLight.propTypes = {
+  classes: PropTypes.object.isRequired,
 };
 
-export default DropdownItems;
+const mapStateToProps = (state) => ({
+  chosenTokensList: state.chosenTokensList.chosenTokensList,
+});
+
+const mapDispatchToProps = {
+  getSearchedTokens,
+  getAllTokens,
+};
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(SearchTokensLight));

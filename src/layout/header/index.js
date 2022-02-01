@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import sidebarBurgerLightIcon from '../../assets/icons/sidebarBurgerLightIcon.png';
 import sidebarBurgerDarkIcon from '../../assets/icons/sidebarBurgerDarkIcon.png';
 import userMockAvatar from '../../assets/icons/userMockAvatar.png';
-import NewNetworkSelect from '../../components/networkDropDown/newNetworkSelect';
+import DesktopNetworkSelect from '../../components/networkDropDown/newNetworkSelect';
 // material
 import { alpha, experimentalStyled as styled } from '@material-ui/core/styles';
 import IconButton from '@mui/material/IconButton';
@@ -16,13 +16,14 @@ import GasDropdownMenu from '../../components/gasDropDownMenu/index';
 import LanguageDropDown from '../../components/languageDropDown';
 import HelpDropDown from '../../components/helpDropDown';
 
-import SearchTokensLight from '../../components/searchTokens/searchTokensLight';
+import TestSearchInput from '../../components/searchTokens/testInput';
+import SearchTokensLight from '../../components/searchTokens';
 import SearchTokensDark from '../../components/searchTokens/searchTokensDark';
 import SearchTokens from '../../components/searchTokens';
 
 import darkIcon from '../../assets/icons/darkIcon.svg';
 import lightIcon from '../../assets/icons/lightIcon.svg';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
   HeaderLayoutBig,
@@ -88,18 +89,18 @@ function Header({ onOpenSidebar, onOpenMobileWalletsList, finalTitle }) {
         </HeaderFirstLayout>
         <HeaderItemsBlock>
           {/*<SearchTokens />*/}
-          {isLightTheme ? (
-            <SearchTokensLight parentCallback={callbackFunction} isLightTheme={isLightTheme} />
-          ) : (
-            <SearchTokensDark />
-          )}
-          <SearchTokensMobile isLightTheme={isLightTheme} />
+
+          <SearchTokensLight parentCallback={callbackFunction} isLightTheme={isLightTheme} />
+          <TestSearchInput isLightTheme={isLightTheme} />
+
+          {/*search tokens mobile version*/}
+          {/*<SearchTokensMobile isLightTheme={isLightTheme} />*/}
 
           {/*Old network select*/}
           {/*<NetworkSelectHeader isLightTheme={isLightTheme} />*/}
 
           {/*Actual network select*/}
-          <NewNetworkSelect />
+          <DesktopNetworkSelect />
 
           <GasDropdownMenu isLightTheme={isLightTheme} />
           {/*<LanguageDropDown />*/}
