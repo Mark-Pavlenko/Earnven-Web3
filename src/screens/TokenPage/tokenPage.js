@@ -44,8 +44,19 @@ const TokenPage = () => {
   );
   const [social, setSocial] = useState(true);
   const [tokenData, setTokenData] = useState(null);
+  const [tokenAddress, setTokenAddress] = useState(null);
   const [walletData, setWalletData] = useState(null);
   const theme = useSelector((state) => state?.themeReducer.isLightTheme);
+
+  const balanceConverter = (balance) => {
+    // const balanceArr = balance ? balance.split('e+') : [];
+    // const rez =
+    //   balanceArr.length > 1
+    //     ? parseFloat(balanceArr[0]) * 10 ** (balanceArr[1] - 18).toFixed(2)
+    //     : parseFloat(balance).toFixed(2);
+    // console.log(rez);
+    return 'rez';
+  };
 
   useEffect(() => {
     axios.get(`https://api.coingecko.com/api/v3/coins/${tokenId}`, {}).then(async (response) => {
@@ -58,19 +69,31 @@ const TokenPage = () => {
       .then(async (response) => {
         console.log('response2', response);
         await setWalletData(response.data);
+        await setTokenAddress(
+          tokenId === 'ethereum'
+            ? address
+            : response.data.tokens.find(
+                (e) => e.tokenInfo.name?.toLowerCase() === tokenId.toLowerCase()
+              ).tokenInfo.address
+        );
       });
   }, [tokenId]);
 
   const tokensHolding =
     tokenId === 'ethereum'
-      ? walletData?.ETH.balance.toFixed(2) + '$ETH' || ''
-      : parseFloat(
+      ? // ? walletData?.ETH.balance.toFixed(2) + '$ETH' || ''
+        balanceConverter(walletData?.ETH.balance) + '$ETH' || ''
+      : balanceConverter(
           walletData?.tokens.find((el) => el.tokenInfo.name?.toLowerCase() === tokenId)?.balance
-        ).toExponential(2) +
+        ) +
+          // : parseFloat(
+          //     walletData?.tokens.find((el) => el.tokenInfo.name?.toLowerCase() === tokenId)?.balance
+          //   ).toFixed(2) +
           `$${
             walletData?.tokens.find((el) => el.tokenInfo.name?.toLowerCase() === tokenId)?.tokenInfo
               .symbol
           }` || '';
+
   // const totalHoldValue=tokensHolding ? tokensHolding*
 
   return (
@@ -80,7 +103,7 @@ const TokenPage = () => {
           <LeftSideWrapper>
             <Graph
               isLightTheme={theme}
-              address={address}
+              tokenId={tokenId}
               tokenName={tokenData?.name || ''}
               tokenSymbol={tokenData?.symbol || ''}
               tokenImage={tokenData?.image.small || ''}
@@ -116,7 +139,7 @@ const TokenPage = () => {
       <Mobile>
         <GraphMob
           isLightTheme={theme}
-          address={address}
+          tokenId={tokenId}
           current_price={
             numberWithCommas(tokenData?.market_data.current_price.usd.toFixed(2)) || ''
           }

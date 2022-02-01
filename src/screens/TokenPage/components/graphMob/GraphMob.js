@@ -12,12 +12,12 @@ import sendIcon from '../../../../assets/icons/send-icon.svg';
 import ethLogoBlue from '../../../../assets/icons/ethLogoBlue.png';
 import etherScan from '../../../../assets/icons/etherScan-icon.svg';
 import { TokenLink } from '../styledComponentsCommon';
-import PortfolioPerf from '../../../../components/portfolioperf/portfolioperf';
+import Chart from '../chart/chart';
 
 const GraphMob = ({
   isLightTheme,
   social,
-  address,
+  tokenId,
   current_price,
   price_change_percentage_24h,
 }) => {
@@ -69,12 +69,11 @@ const GraphMob = ({
           ) : null}
         </MainLinks>
       </NetWrapper>
-      <PortfolioPerf
+      <Chart
         theme={isLightTheme}
-        address={address}
+        tokenId={tokenId}
         totalValue={current_price ? `$${current_price}` : ''}
         difValue={price_change_percentage_24h ? `${price_change_percentage_24h}%` : ''}
-        isTokenPage={true}
       />
     </Main>
   );

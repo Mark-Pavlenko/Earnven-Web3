@@ -6,10 +6,11 @@ import sendIcon from '../../../../assets/icons/send-icon.svg';
 import ethLogoBlue from '../../../../assets/icons/ethLogoBlue.png';
 import etherScan from '../../../../assets/icons/etherScan-icon.svg';
 import etherScanDark from '../../../../assets/icons/etherScanDark-icon.svg';
+import Chart from '../chart/chart';
 
 const Graph = ({
   isLightTheme,
-  address,
+  tokenId,
   tokenName,
   tokenSymbol,
   tokenImage,
@@ -47,12 +48,13 @@ const Graph = ({
         <img alt={tokenSymbol} src={tokenImage} />
         <p>{tokenName}</p>
       </TokenName>
-      <PortfolioPerf
+      {/*<PortfolioPerf*/}
+      <Chart
         theme={isLightTheme}
-        address={address}
+        tokenId={tokenId}
         totalValue={current_price ? `$${current_price}` : ''}
         difValue={price_change_percentage_24h ? `${price_change_percentage_24h}%` : ''}
-        isTokenPage={true}
+        // isTokenPage={true}
       />
     </Main>
   );
