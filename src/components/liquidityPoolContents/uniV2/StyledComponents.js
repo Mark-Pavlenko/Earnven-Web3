@@ -42,6 +42,19 @@ export const ModalInput = styled.input`
 `;
 
 export const InputBlock = styled.div``;
+export const BlockTokens = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-bottom: 5px;
+  align-items: center;
+`;
+
+export const BlockTokenName = styled.div`
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  color: #1e1e20;
+`;
 export const Balance = styled.div`
   display: flex;
   justify-content: flex-end;

@@ -31,6 +31,7 @@ import Box from '@material-ui/core/Box';
 
 import { Button } from '@material-ui/core';
 import { Link, useParams } from 'react-router-dom';
+import {LiquidityPoolsTable} from "./liquidityPoolsTable/liquidityPoolsTable";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -97,18 +98,17 @@ export default function LiquidityPools() {
   const [LiquidityAmount, setLiquidityAmount] = useState('');
 
   const [AllTokens, setAllTokens] = useState([]);
-
+  console.log('AllTokens', AllTokens);
   useEffect(() => {
     async function getData() {
       let fetchedTokens;
       await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {}).then(async (response) => {
         setAllTokens(response.data.records);
         fetchedTokens = response.data.records;
-        console.log(response.data.records);
       });
       await axios
         .get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
-        .then(async (response) => {
+        .then(async (responsef) => {
           let data = response.data.tokens;
           let tokens = fetchedTokens.map((token) => ({
             ...token,
@@ -116,7 +116,6 @@ export default function LiquidityPools() {
               ? data.find((x) => x.address == token.address).logoURI
               : tokenURIs.find((x) => x.address == token.address).logoURI,
           }));
-          console.log(tokens.filter((token) => token.logoURI === ''));
           setAllTokens(tokens);
         }).catch((res) => {
             console.log('liquidity pools Sushiswap-V2 returns error', res)});
@@ -125,8 +124,8 @@ export default function LiquidityPools() {
   }, []);
 
   useEffect(() => {
-    var content = Data.map((object) => (
-      <>
+    var content = Data.map((object) => {
+      return (<>
         <br />
         <Accordion
           style={{
@@ -508,8 +507,8 @@ export default function LiquidityPools() {
             </div>
           </AccordionDetails>
         </Accordion>
-      </>
-    ));
+      </>)
+  });
     setContent(content);
   }, [
     Data,
@@ -568,7 +567,6 @@ export default function LiquidityPools() {
           }
         )
         .then(async (response) => {
-          console.log(response);
           if (response.data.data) {
             var res = response.data.data.pairDayDatas;
             for (var i = 0; i < res.length; i++) {
@@ -579,6 +577,7 @@ export default function LiquidityPools() {
                   {}
                 )
                 .then((response) => {
+                  console.log('tokens response', response.data)
                   if (response.data.image) {
                     // console.log(response.data.image)
                     res[i].token0.image = response.data.image;
@@ -766,7 +765,7 @@ export default function LiquidityPools() {
 
   return (
     <div>
-      {Content}
+      <LiquidityPoolsTable data={Data} />
       <br />
       <center>
         <button
@@ -775,7 +774,7 @@ export default function LiquidityPools() {
           }}
           style={{
             height: '25px',
-            width: '100px',
+            width: '10f0px',
             background: 'transparent',
             border: '1px solid #ac6afc',
             cursor: 'pointer',
