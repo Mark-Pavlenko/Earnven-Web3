@@ -1,14 +1,13 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { withStyles, makeStyles } from '@material-ui/styles';
-import PropTypes from 'prop-types';
-import searchIcon from '../../assets/icons/searchIconLight.png';
-import { Box } from '@material-ui/core';
-import { getAllTokens, getSearchedTokens } from '../../store/searchedTokens/actions';
+import * as React from 'react';
+import { makeStyles, withStyles } from '@material-ui/styles';
+import Autocomplete from '@mui/material/Autocomplete';
 
-import { MainLayout, SearchIcon, CoinItem } from './styles';
+import searchIcon from '../../assets/icons/searchIconLight.png';
+import { FoundTokenBlock, TokensListBox, TokensListTextField, SearchIcon } from './styles';
+import { Component } from 'react';
+import PropTypes from 'prop-types';
+import { getAllTokens, getSearchedTokens } from '../../store/searchedTokens/actions';
+import { connect } from 'react-redux';
 
 const styles = () => ({
   noBorder: {
@@ -16,8 +15,9 @@ const styles = () => ({
   },
 });
 
-export class SearchTokensLight extends Component {
+export class TestTokensSelect extends Component {
   sendData = () => {
+    console.log('this.state.token', this.state.token);
     this.props.parentCallback(this.state.token);
   };
 
@@ -50,85 +50,106 @@ export class SearchTokensLight extends Component {
   }
 
   render() {
-    const isLightTheme = this.props.isLightTheme;
-    console.log('search field light theme', isLightTheme);
-
     const { classes } = this.props;
+    const isLightTheme = this.props.isLightTheme;
+    const smallScreenSize = this.props.smallScreenSize;
 
-    // const borderClasses = useStyles();
+    // console.log('smallScreenSize', smallScreenSize);
 
     return (
-      <MainLayout isLightTheme={isLightTheme}>
-        <Autocomplete
-          freeSolo
-          blurOnSelect
-          autoComplete
-          autoHighlight
-          onFocus={() => {
-            this.props.getAllTokens();
-          }}
-          onChange={(event, value) => {
-            this.submitSearch(event, value);
-          }}
-          options={this.state.results}
-          getOptionLabel={(option) => option.name}
-          renderOption={(props, option) => (
-            // token item block styles
-            <Box
-              component="li"
-              sx={{
-                fontFamily: 'Saira, sans-serif',
-                fontSize: '10px',
-                backgroundColor: '#F2F8FF',
-                '&:hover': {
-                  backgroundColor: 'red',
-                  borderRadius: '10px',
-                },
-                '& > div': { height: '25px' },
-              }}
-              {...props}>
-              <CoinItem>
-                <img src={option.image.small} alt="coin icon" />
-                <span>{option.name}</span>
-              </CoinItem>
-            </Box>
-          )}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              InputProps={{
-                ...params.InputProps,
-                endAdornment: <SearchIcon src={searchIcon} alt="" />,
-                classes: { notchedOutline: classes.noBorder },
-              }}
-              id="filled-search"
-              onChange={this.searchTokens}
-              variant="outlined"
-              label="Search tokens..."
-              InputLabelProps={{
-                style: {
-                  color: isLightTheme ? 'black' : 'white',
-                  fontSize: 14,
-                  fontWeight: 400,
-                  opacity: 0.5,
-                },
-              }}
-              style={{
-                backgroundColor: this.props.isLightTheme ? '#ffffff' : '#10142c',
-                width: 242,
-                height: 40,
-                borderRadius: '10px',
-              }}
-              size="small"
-            />
-          )}
-        />
-      </MainLayout>
+      <Autocomplete
+        autoHighlight
+        onFocus={() => {
+          this.props.getAllTokens();
+        }}
+        onChange={(event, value) => {
+          this.submitSearch(event, value);
+        }}
+        options={this.state.results}
+        getOptionLabel={(option) => option.name}
+        renderOption={(props, option) => (
+          <TokensListBox
+            component="li"
+            sx={{
+              width: '221px',
+              marginLeft: '11px',
+              fontSize: '10px',
+              '& > img': { mr: 2, flexShrink: 0 },
+              '&:hover': {
+                fontWeight: 600,
+                backgroundColor: isLightTheme ? '#ffffff !important' : '#1F265C3D !important',
+                boxShadow: isLightTheme
+                  ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+                  : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+                mixBlendMode: isLightTheme ? 'none' : 'normal',
+                backdropFilter: isLightTheme ? 'none' : 'blur(35px)',
+                borderRadius: '7px',
+              },
+            }}
+            {...props}
+            style={{
+              marginTop: '-8px',
+              backgroundColor: isLightTheme ? '#FFFFFF29' : '#11132C',
+              height: '20px !important',
+            }}>
+            <img loading="lazy" width="20" src={option.image.small} alt="" />
+            <FoundTokenBlock isLightTheme={isLightTheme}>
+              <span>{option.name}</span>
+            </FoundTokenBlock>
+          </TokensListBox>
+        )}
+        ListboxProps={{
+          style: {
+            maxHeight: '230px',
+            backgroundColor: isLightTheme ? '#FFFFFF29' : '#11132C',
+          },
+        }}
+        renderInput={(params) => (
+          <TokensListTextField
+            {...params}
+            InputProps={{
+              ...params.InputProps,
+              endAdornment: (
+                <>
+                  <SearchIcon src={searchIcon} alt="" />
+                </>
+              ),
+              classes: { notchedOutline: classes.noBorder },
+              sx: { color: '#878995', paddingRight: '0px !important' },
+            }}
+            id="filled-search"
+            onChange={this.searchTokens}
+            variant="outlined"
+            label="Search tokens..."
+            InputLabelProps={{
+              style: {
+                color: isLightTheme ? 'black' : 'white',
+                fontSize: 14,
+                fontWeight: 400,
+                opacity: 0.5,
+              },
+            }}
+            style={{
+              width: 250,
+              height: 40,
+              backgroundColor: isLightTheme ? '#FFFFFF29' : '#10142c',
+              boxShadow: isLightTheme
+                ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+                : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+              mixBlendMode: isLightTheme ? 'normal' : 'normal',
+              backdropFilter: isLightTheme ? 'blur(35px)' : 'blur(35px)',
+              borderRadius: '10px',
+              // marginTop: '30px',
+            }}
+            size="small"
+          />
+        )}
+      />
     );
   }
 }
 
-SearchTokensLight.propTypes = {
+TestTokensSelect.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
@@ -141,4 +162,4 @@ const mapDispatchToProps = {
   getAllTokens,
 };
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(SearchTokensLight));
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(TestTokensSelect));

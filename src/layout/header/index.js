@@ -12,7 +12,7 @@ import GasDropdownMenu from '../../components/gasDropDownMenu/index';
 import LanguageDropDown from '../../components/languageDropDown';
 import HelpDropDown from '../../components/helpDropDown';
 
-import SearchTokens from '../../components/searchTokens/testInput';
+import SearchTokens from '../../components/searchTokens';
 
 import darkIcon from '../../assets/icons/darkIcon.svg';
 import lightIcon from '../../assets/icons/lightIcon.svg';

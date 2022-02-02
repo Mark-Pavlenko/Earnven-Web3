@@ -3,7 +3,7 @@ import MenuPopover from './MenuPopover';
 import SearchTokensButtonMobileLight from '../../assets/icons/searchTokensButtonMobileLight.svg';
 import SearchTokensButtonMobileDark from '../../assets/icons/searchTokensButtonMobileDark.svg';
 import { SearchTokensMobileButton } from './styles';
-import SearchTokens from '../searchTokens/testInput';
+import SearchTokens from '../searchTokens';
 import { useNavigate, useParams } from 'react-router-dom';
 import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
 import Popover from '@mui/material/Popover';
