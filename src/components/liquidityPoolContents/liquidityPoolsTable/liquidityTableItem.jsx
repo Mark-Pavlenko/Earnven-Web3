@@ -42,7 +42,7 @@ import { SelectOptionsWithJSX } from '../HOC/selectOptionsWithJSX';
 import Web3 from 'web3';
 import TransparentButton from '../../TransparentButton';
 import ERC20ABI from '../../../abi/ERC20.json';
-import ROUTERABI from '../../../abi/IUniswapV2Router02.json';
+import ROUTERABI from '../../../abi/UniRouterV2.json';
 import FACTORYABI from '../../../abi/UniFactoryV2.json';
 import Addresses from '../../../contractAddresses';
 import axios from 'axios';
