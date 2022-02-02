@@ -65,6 +65,7 @@ export const InfoListItemLink = styled('a')(({ isLightTheme }) => ({
 export const NetworksGridList = styled.ul`
   display: inline-flex;
   flex-wrap: wrap;
+  list-style-type: none;
   gap: 20px;
   margin-top: 20px;
   margin-left: 120px;
