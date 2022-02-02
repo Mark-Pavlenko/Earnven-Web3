@@ -401,6 +401,7 @@ export default function LiquidityPools() {
                   OR <br />
                   <br />
                   <br />
+                  {/*Input with button for swap tokens just between pair -------------------->*/}
                   {object.token0.name} Amount : &nbsp;&nbsp;
                   <AmountInput
                     onChange={(e) => {
@@ -418,7 +419,11 @@ export default function LiquidityPools() {
                   <br />
                   <TransparentButton
                     onClick={(e) => {
-                      addLiquidityNormal(
+                      console.log('TransparentButton', object.token0.id)
+                      console.log('TransparentButton', object.token1.id)
+                      console.log('TransparentButton', AmountTokenA)
+                      console.log('TransparentButton', AmountTokenB)
+                     return addLiquidityNormal(
                         object.token0.id,
                         object.token1.id,
                         AmountTokenA,
@@ -427,6 +432,7 @@ export default function LiquidityPools() {
                     }}
                     value="Add Liquidity Classic Method"
                   />
+                  {/*Input with button for swap tokens just between pair -------------------->*/}
                 </center>
                 <br />
                 <br />

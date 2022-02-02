@@ -12,7 +12,6 @@ import {
 } from './style';
 
 export const LiquidityPoolsTable = ({ data }) => {
-  console.log('asdasdasd', data);
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
 
   return (

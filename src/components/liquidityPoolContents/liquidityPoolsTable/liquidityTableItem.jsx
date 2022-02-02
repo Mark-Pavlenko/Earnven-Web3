@@ -46,12 +46,17 @@ import ROUTERABI from '../../../abi/UniRouterV2.json';
 import FACTORYABI from '../../../abi/UniFactoryV2.json';
 import Addresses from '../../../contractAddresses';
 import axios from 'axios';
+import AmountInput from '../../amountInput';
 
 export const LiquidityTableItem = ({ item, index, theme }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedModal, setSelectedModal] = useState('');
-  const [tokenReverses, setTokensReverses] = useState();
+  const [outValue, setOutValue] = useState('');
+  const [inValue, setInValue] = useState('');
 
+  const [TokenA, setTokenA] = useState('');
+  const [TokenB, setTokenB] = useState('');
+  console.log('outValue', outValue);
   const switchModal = (e) => {
     setSelectedModal(e.target.id);
     setIsModalVisible(true);
@@ -160,6 +165,7 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
       value: '4',
     },
   ];
+
   const updatedOptions = SelectOptionsWithJSX(options);
 
   async function loadWeb3() {
@@ -196,6 +202,68 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
     // console.log('NewContract', NewContract.methods.getAmountIn(1000, rserves[0], reserves[1]).call());
   }
 
+  async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB) {
+    const start = parseInt(Date.now() / 1000) + 180;
+    await loadWeb3();
+    const web3 = window.web3;
+    const accounts = await web3.eth.getAccounts();
+    var tokenAContract = new web3.eth.Contract(ERC20ABI, tokenA);
+    var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
+    await tokenAContract.methods
+      .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenA, 'ether'))
+      .send({ from: accounts[0] });
+    await tokenBContract.methods
+      .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenB, 'ether'))
+      .send({ from: accounts[0] });
+    const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.sushiRouter);
+    await UniRouter.methods
+      .addLiquidity(
+        tokenA,
+        tokenB,
+        web3.utils.toWei(amountTokenA, 'ether'),
+        web3.utils.toWei(amountTokenB, 'ether'),
+        0,
+        0,
+        accounts[0],
+        start.toString()
+      )
+      .send({ from: accounts[0] });
+  }
+
+  const convertTokenPrice = async (inputId, value, token1, token2) => {
+    const stringValue = value.toString();
+    console.log('stringValue', stringValue);
+
+    await loadWeb3();
+    const web3 = window.web3;
+
+    const NewContract = new web3.eth.Contract(
+      ROUTERABI,
+      '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+    );
+    if (!isNaN(stringValue)) {
+      if (inputId === 'firstInput') {
+        const convertedValue = await NewContract.methods
+          .getAmountsOut(web3.utils.toWei(stringValue), [token1, token2])
+          .call();
+        //setOutValue(convertedValue[1]);
+        setOutValue(web3.utils.toWei(convertedValue[1]));
+        setInValue(value);
+      }
+      if (inputId === 'secondInput') {
+        const convertedValue = await NewContract.methods
+          .getAmountsIn(web3.utils.toWei(stringValue), [token1, token2])
+          .call();
+        //setInValue(convertedValue[0]);
+        setInValue(web3.utils.toWei(convertedValue[0]));
+        setOutValue(value);
+      }
+    } else {
+      setInValue('');
+      setOutValue('');
+    }
+  };
+
   return (
     <>
       {isModalVisible && (
@@ -219,6 +287,7 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
               <ChangeToken>{'Or'}</ChangeToken>
             </ButtonsBlock>
             <SelectTitle>{'Supply a token'}</SelectTitle>
+            {/*input-------------------->*/}
             <InputBlock>
               <BlockTokens>
                 <div>
@@ -226,9 +295,23 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
                 </div>
                 <BlockTokenName>{item.token0.name}</BlockTokenName>
               </BlockTokens>
-              <ModalInput type="number" />
+              <ModalInput
+                value={inValue}
+                onChange={(e) => {
+                  setTokenA(e.target.value);
+                  convertTokenPrice(
+                    'firstInput',
+                    parseInt(e.target.value),
+                    item.token0.id,
+                    item.token1.id
+                  );
+                }}
+                type="number"
+              />
               <Balance>{`Balance: ${5}`}</Balance>
             </InputBlock>
+            {/*input-------------------->*/}
+            {/*input-------------------->*/}
             <InputBlock>
               <BlockTokens>
                 <div>
@@ -236,9 +319,22 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
                 </div>
                 <BlockTokenName>{item.token1.name}</BlockTokenName>
               </BlockTokens>
-              <ModalInput type="number" />
+              <ModalInput
+                value={outValue}
+                onChange={(e) => {
+                  setTokenB(e.target.value);
+                  convertTokenPrice(
+                    'secondInput',
+                    parseInt(e.target.value),
+                    item.token0.id,
+                    item.token1.id
+                  );
+                }}
+                type="number"
+              />
               <Balance>{`Balance: ${5}`}</Balance>
             </InputBlock>
+            {/*input-------------------->*/}
             <LinksContainer>
               <ModalLink href={'#'}>aaa</ModalLink>
               <ModalLinkRight href={'#'}>bbb</ModalLinkRight>
@@ -246,7 +342,10 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
               <ModalLinkRight href={'#'}>ddd</ModalLinkRight>
             </LinksContainer>
             <ButtonsBlock>
-              <SupplyTokenButton>{`Supply tokens`}</SupplyTokenButton>
+              <SupplyTokenButton
+                onClick={() => {
+                  addLiquidityNormal(item.token0.id, item.token1.id, TokenA, TokenB);
+                }}>{`Supply tokens`}</SupplyTokenButton>
             </ButtonsBlock>
           </SelectWrapper>
         </ModalContainer>

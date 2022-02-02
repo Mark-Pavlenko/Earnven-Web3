@@ -98,6 +98,8 @@ export default function LiquidityPools() {
   const [LiquidityAmount, setLiquidityAmount] = useState('');
 
   const [AllTokens, setAllTokens] = useState([]);
+  console.log('AllTokens', AllTokens)
+  console.log('Data', Data)
 
   useEffect(() => {
     async function getData() {
@@ -123,6 +125,7 @@ export default function LiquidityPools() {
     getData();
   }, []);
 
+  //worked useEffect
   useEffect(() => {
     var content = Data.map((object) => {
       return (<>
@@ -358,6 +361,7 @@ export default function LiquidityPools() {
                   OR <br />
                   <br />
                   <br />
+                  {/*Input with button for swap tokens just between pair -------------------->*/}
                   {object.token0.name} Amount : &nbsp;&nbsp;
                   <AmountInput
                     onChange={(e) => {
@@ -374,16 +378,10 @@ export default function LiquidityPools() {
                   <br />
                   <br />
                   <TransparentButton
-                    onClick={(e) => {
-                      addLiquidityNormal(
-                        object.token0.id,
-                        object.token1.id,
-                        AmountTokenA,
-                        AmountTokenB
-                      );
-                    }}
+                    onClick={(e) => {}}
                     value="Add Liquidity Classic Method"
                   />
+                  {/*Input with button for swap tokens just between pair -------------------->*/}
                 </center>
                 <br />
                 <br />
@@ -732,34 +730,6 @@ export default function LiquidityPools() {
     await oneClickContract.methods
       .addLiquidityOneClickETH(tokenA, tokenB)
       .send({ from: accounts[0], value: web3.utils.toWei(ethAmount, 'ether') });
-  }
-
-  async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB) {
-    const start = parseInt(Date.now() / 1000) + 180;
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var tokenAContract = new web3.eth.Contract(ERC20ABI, tokenA);
-    var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
-    await tokenAContract.methods
-      .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenA, 'ether'))
-      .send({ from: accounts[0] });
-    await tokenBContract.methods
-      .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenB, 'ether'))
-      .send({ from: accounts[0] });
-    const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.sushiRouter);
-    await UniRouter.methods
-      .addLiquidity(
-        tokenA,
-        tokenB,
-        web3.utils.toWei(amountTokenA, 'ether'),
-        web3.utils.toWei(amountTokenB, 'ether'),
-        0,
-        0,
-        accounts[0],
-        start.toString()
-      )
-      .send({ from: accounts[0] });
   }
 
   return (
