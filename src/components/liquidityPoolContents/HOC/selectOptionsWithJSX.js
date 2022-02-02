@@ -8,18 +8,18 @@ export const SelectOptionsWithJSX = (options) => {
         <div style={{ display: 'flex' }}>
           <div
             style={{
-              height: '100%',
+              // height: '100%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              // paddingTop: '5px',
             }}>
-            <Image src={option.image} alt={option.name} />
+            <Image src={option.image} />
           </div>
           <Name>{option.name}</Name>
         </div>
       ),
       value: option.value,
+      address: option.address,
     };
   });
 };

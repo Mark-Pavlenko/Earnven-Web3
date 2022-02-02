@@ -120,11 +120,20 @@ export default function LiquidityPools() {
   const [LiquidityAmount, setLiquidityAmount] = useState('');
 
   const [AllTokens, setAllTokens] = useState([]);
-
+  const [allTokensSelect, setAllTokensSelect] = useState([]);
   useEffect(() => {
     async function getData() {
       let fetchedTokens;
       await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {}).then(async (response) => {
+        const selectOptions = []
+        for (let i = 0; i < response.data.records.length; i++) {
+          let object = {};
+          object.name = response.data.records[i].name;
+          object.value = response.data.records[i].name;
+          object.address = response.data.records[i].address;
+          selectOptions.push(object)
+        }
+        setAllTokensSelect(selectOptions)
         setAllTokens(response.data.records);
         fetchedTokens = response.data.records;
         console.log(response.data.records);
@@ -813,32 +822,32 @@ export default function LiquidityPools() {
   //useState for mamaging open/close modal
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  //options for select inside of modal
-  const options = [
-    {
-      image: eth,
-      name: 'Ethereum',
-      value: '1',
-    },
-    {
-      image: uni,
-      name: 'Uniswap',
-      value: '2',
-    },
-    {
-      image: mkr,
-      name: 'Uniswap MKR Pool (v1)',
-      value: '3',
-    },
-    {
-      image: mkr,
-      name: 'Uniswap MKR Pool (v1)',
-      value: '4',
-    },
-  ];
+  // //options for select inside of modal
+  // const options = [
+  //   {
+  //     image: eth,
+  //     name: 'Ethereum',
+  //     value: '1',
+  //   },
+  //   {
+  //     image: uni,
+  //     name: 'Uniswap',
+  //     value: '2',
+  //   },
+  //   {
+  //     image: mkr,
+  //     name: 'Uniswap MKR Pool (v1)',
+  //     value: '3',
+  //   },
+  //   {
+  //     image: mkr,
+  //     name: 'Uniswap MKR Pool (v1)',
+  //     value: '4',
+  //   },
+  // ];
 
   //this function turns array of options to JSX for modal select
- const updatedOptions = SelectOptionsWithJSX(options)
+ const updatedOptions = SelectOptionsWithJSX(allTokensSelect)
 
   //select styles
   const selectStyle = {
@@ -921,6 +930,10 @@ export default function LiquidityPools() {
       }
     },
   };
+
+  const handler = (data) => {
+    console.log('vfvfvfv', data)
+  }
 
   return (
     <div>

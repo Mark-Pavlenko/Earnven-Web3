@@ -98,7 +98,7 @@ export default function LiquidityPools() {
   const [LiquidityAmount, setLiquidityAmount] = useState('');
 
   const [AllTokens, setAllTokens] = useState([]);
-  console.log('AllTokens', AllTokens);
+
   useEffect(() => {
     async function getData() {
       let fetchedTokens;
@@ -108,7 +108,7 @@ export default function LiquidityPools() {
       });
       await axios
         .get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
-        .then(async (responsef) => {
+        .then(async (response) => {
           let data = response.data.tokens;
           let tokens = fetchedTokens.map((token) => ({
             ...token,
@@ -577,7 +577,6 @@ export default function LiquidityPools() {
                   {}
                 )
                 .then((response) => {
-                  console.log('tokens response', response.data)
                   if (response.data.image) {
                     // console.log(response.data.image)
                     res[i].token0.image = response.data.image;
@@ -774,7 +773,7 @@ export default function LiquidityPools() {
           }}
           style={{
             height: '25px',
-            width: '10f0px',
+            width: '100px',
             background: 'transparent',
             border: '1px solid #ac6afc',
             cursor: 'pointer',
