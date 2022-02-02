@@ -22,7 +22,7 @@ export default function MenuPopover({ children, isLightTheme, sx, ...other }) {
           overflow: 'inherit',
 
           borderRadius: '10px',
-          background: (theme) => '#E5E5E5',
+          background: (theme) => '#FFFFFF29',
           mixBlendMode: 'normal',
           boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
           backdropFilter: 'blur(35px)',

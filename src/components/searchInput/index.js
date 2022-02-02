@@ -4,7 +4,7 @@ import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 
-export default function index({ value, onSubmit1, ...props }) {
+export default function index({ value, onSubmit1, isLightTheme, ...props }) {
   return (
     <>
       <Paper

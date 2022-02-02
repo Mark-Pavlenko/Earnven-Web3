@@ -5,39 +5,45 @@ import lightDashboardBig from '../../assets/images/lightDashboardBig.jpg';
 
 export const HeaderLayoutBig = styled.div`
   height: 102px;
-  background: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};
+
+  background: ${(props) => (props.isLightTheme ? `transparent` : `#10142D`)};
+
   @media (min-width: 2100px) {
-    background: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};
+    background: ${(props) => (props.isLightTheme ? `transparent` : `#10142D`)};
   }
+
   @media screen and (min-width: 711px) and (max-width: 1280px) {
     display: grid;
     grid-template-columns: 40% 60%;
     margin-left: 0;
   }
+
   @media (max-width: 780px) {
     display: none;
   }
 
   @media (min-width: 1280px) {
     display: grid;
-    grid-template-columns: 30% 70%;
+    grid-template-columns: 40% 60%;
   }
 
   @media screen and (max-width: 1445px) and (min-width: 1281px) {
     margin-left: 150px;
+    max-width: 1770px;
   }
 
   @media (min-width: 1446px) {
     margin-left: 314px;
+    max-width: 1605px;
   }
 `;
 
 export const HeaderLayoutMobile = styled.div`
   height: 142px;
 
-  background: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};
+  background: ${(props) => (props.isLightTheme ? `transparent` : `#10142D`)};
   @media (min-width: 2100px) {
-    background: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};
+    background: ${(props) => (props.isLightTheme ? `transparent` : `#10142D`)};
   }
   @media (min-width: 781px) {
     display: none;
@@ -89,9 +95,21 @@ export const HeaderTitle = styled.div`
 `;
 
 export const HeaderItemsBlock = styled.div`
-  @media screen and (min-width: 710px) {
+  @media screen and (min-width: 710px) and (max-width: 1280px) {
     display: flex;
     justify-content: space-around;
+    align-items: center;
+  }
+
+  @media screen and (min-width: 1281px) and (max-width: 1444px) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  @media (min-width: 1445px) {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
   }
 `;
@@ -148,5 +166,9 @@ export const UserAvatarIconButton = styled(IconButton)`
 export const ChangeThemeBtnHeader = styled(IconButton)`
   @media (max-width: 1280px) {
     display: none;
+  }
+
+  @media screen and (min-width: 1445px) and (max-width: 1920px) {
+    //margin-right: 25px;
   }
 `;

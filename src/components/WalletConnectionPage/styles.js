@@ -4,33 +4,37 @@ import { Button, TextField } from '@material-ui/core';
 
 //----------
 
+// export const RootStyleFirstConnection = styled.div`
+//
+// `;
+
+//----------
+
 export const RootStyleFirstConnection = styled.div`
   @media (max-width: 1280px) {
     background: ${(props) =>
-      props.isLightTheme
+      props.isLightTheme && props.isFirstConnection
         ? `url(${require(`../../assets/images/lightDashboard.jpg`).default})`
-        : `#0B0E1D`};
+        : `#10142D`};
   }
 
   background-repeat: no-repeat;
   background-size: 100% 100%;
 
+  // SHOULD BE FIXED
   @media (min-width: 1281px) {
     background: ${(props) =>
-      props.isLightTheme
+      props.isLightTheme && props.isFirstConnection
         ? `url(${require(`../../assets/images/lightDashboardBig.jpg`).default})`
-        : `#0B0E1D`};
+        : `#10142D`};
   }
 `;
-
-//----------
 
 export const RootStyle = styled.div``;
 
 export const MainStyle = styled.div`
   display: flex;
   justify-content: center;
-
   height: 100vh;
 
   @media (max-width: 710px) {
@@ -68,6 +72,11 @@ export const MainStyleFirstConnection = styled.div`
 
   @media (min-width: 1446px) {
     margin-left: 315px;
+    max-width: 1605px;
+  }
+
+  @media screen and (max-width: 1445px) and (min-width: 1281px) {
+    max-width: 1770px;
   }
 `;
 

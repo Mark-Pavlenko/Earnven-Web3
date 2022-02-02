@@ -26,7 +26,6 @@ function NavItem({ item, active, address }) {
   const isActiveRoot = active(`/${address}${path}`);
 
   const isFirstConnection = localStorage.getItem('firstConnection');
-  console.log('isFirstConnection 123', isFirstConnection);
 
   function setNavigation() {
     localStorage.setItem('setnavigation', item.path);
@@ -95,7 +94,7 @@ function FirstConnectionNavItemDisabled({ item, active, address }) {
           ...isActiveRoot,
         }}>
         <ListItemElementDisabledIcon>{icon && icon}</ListItemElementDisabledIcon>
-        <ListItemText style={{ marginTop: '-10px' }} disableTypography primary={title} />
+        <ListItemText disableTypography primary={title} />
       </ListItemElementDisabled>
     </ListItemElementDisabledLayout>
   );
@@ -119,9 +118,6 @@ export default function NavSection({ navConfig, address, ...other }) {
 
   const firstConnection = useSelector((state) => state.initSidebarValuesReducer.firstConnection);
   const reduxWalletsList = useSelector((state) => state.initSidebarValuesReducer.walletsList);
-  console.log('reduxWalletsList', reduxWalletsList);
-  console.log('firstConnection', firstConnection);
-  console.log('navConfig', navConfig);
 
   return (
     <MainNavLayout>

@@ -75,6 +75,7 @@ export default function WalletPageConnection() {
   const navigate = useNavigate();
   const [address, setstate] = useState('');
   const [errorMsg, seterrorMsg] = useState(false);
+  const isFirstConnection = useSelector((state) => state.themeReducer.isFirstConnection);
 
   // console.log('is metamask wallet connect', active);
   //metamask web3-react connection
@@ -85,6 +86,9 @@ export default function WalletPageConnection() {
       const accounts = await window.web3.eth.getAccounts();
       localStorage.setItem('firstConnection', false);
       routeToDashboard(accounts[0], 'metamask');
+      // if (localStorage.getItem('mywallet') === null || undefined) {
+      window.location.reload();
+      // }
     } else if (window.web3) {
       window.web3 = new Web3(window.web3.currentProvider);
     } else {
@@ -217,6 +221,7 @@ export default function WalletPageConnection() {
     if (validAddress) {
       localStorage.setItem('firstConnection', false);
       routeToDashboard(address, null);
+      window.location.reload();
       seterrorMsg(false);
     } else {
       seterrorMsg(true);
@@ -239,18 +244,9 @@ export default function WalletPageConnection() {
     isWrongAddress: bool,
   };
 
-  const reduxWalletsList = useSelector((state) => state.initSidebarValuesReducer.walletsList);
-  let isWalletConnected = reduxWalletsList.length !== 0;
-  console.log('isWalletConnected', isWalletConnected);
-  const laptopScreen = useMediaQuery('(min-width:1280px)');
-  console.log('setnavigation', localStorage.getItem('setnavigation'));
-
-  const isFirstConnection = localStorage.getItem('firstConnection');
-  console.log('isFirstConnection', isFirstConnection);
-
   return (
     <>
-      {isFirstConnection ? (
+      {isFirstConnection === true ? (
         <RootStyleFirstConnection isLightTheme={themeType} isFirstConnection={isFirstConnection}>
           {localStorage.getItem('wallets') === null && (
             <Header
