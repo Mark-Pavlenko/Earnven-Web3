@@ -4,21 +4,15 @@ import { useParams, useNavigate } from 'react-router-dom';
 import sidebarBurgerLightIcon from '../../assets/icons/sidebarBurgerLightIcon.png';
 import sidebarBurgerDarkIcon from '../../assets/icons/sidebarBurgerDarkIcon.png';
 import userMockAvatar from '../../assets/icons/userMockAvatar.png';
-import DesktopNetworkSelect from '../../components/networkDropDown/newNetworkSelect';
-// material
-import { alpha, experimentalStyled as styled } from '@material-ui/core/styles';
-import IconButton from '@mui/material/IconButton';
+import DesktopNetworkSelect from '../../components/networkDropDown';
 
 import SearchTokensMobile from '../../components/searchTokensMobile';
-import NetworkSelectHeader from '../../components/networkDropDown';
 import GasDropdownMenu from '../../components/gasDropDownMenu/index';
 
 import LanguageDropDown from '../../components/languageDropDown';
 import HelpDropDown from '../../components/helpDropDown';
 
 import SearchTokens from '../../components/searchTokens/testInput';
-import SearchTokensLight from '../../components/searchTokens';
-import SearchTokensDark from '../../components/searchTokens/searchTokensDark';
 
 import darkIcon from '../../assets/icons/darkIcon.svg';
 import lightIcon from '../../assets/icons/lightIcon.svg';
@@ -65,11 +59,7 @@ function Header({ onOpenSidebar, onOpenMobileWalletsList, finalTitle }) {
     }
   }
 
-  // console.log('isLightTheme', isLightTheme);
-  // console.log('token header', Token);
-
   const reduxWalletsList = useSelector((state) => state.initSidebarValuesReducer.walletsList);
-  const reduxMyWallet = useSelector((state) => state.initSidebarValuesReducer.myWallet);
 
   return (
     <>
@@ -120,7 +110,8 @@ function Header({ onOpenSidebar, onOpenMobileWalletsList, finalTitle }) {
               <img src={userMockAvatar} alt="mockAvatar" />
             </UserAvatarIconButton>
           )}
-          <SearchTokensMobile isLightTheme={isLightTheme} />
+          <SearchTokensMobile isLightTheme={isLightTheme} parentCallback={callbackFunction} />
+
           <ChangeThemeBtnHeader
             onClick={() => {
               setDynamicTheme();

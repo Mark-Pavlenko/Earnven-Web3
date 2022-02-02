@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { makeStyles, withStyles } from '@material-ui/styles';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import countries from './testCountriesArr';
 import { SearchIcon } from './styles';
 import searchIcon from '../../assets/icons/searchIconLight.png';
 import { FoundTokenBlock, TokensListBox, TokensListTextField } from './testStyles';
@@ -11,6 +8,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { getAllTokens, getSearchedTokens } from '../../store/searchedTokens/actions';
 import { connect } from 'react-redux';
+import { useMediaQuery } from '@material-ui/core';
 
 const styles = () => ({
   noBorder: {
@@ -55,6 +53,9 @@ export class TestTokensSelect extends Component {
   render() {
     const { classes } = this.props;
     const isLightTheme = this.props.isLightTheme;
+    const smallScreenSize = this.props.smallScreenSize;
+
+    // console.log('smallScreenSize', smallScreenSize);
 
     return (
       <Autocomplete
@@ -139,6 +140,7 @@ export class TestTokensSelect extends Component {
               mixBlendMode: isLightTheme ? 'normal' : 'normal',
               backdropFilter: isLightTheme ? 'blur(35px)' : 'blur(35px)',
               borderRadius: '10px',
+              // marginTop: '30px',
             }}
             size="small"
           />

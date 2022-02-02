@@ -57,7 +57,6 @@ import {
 import lightIcon from '../../assets/icons/lightIcon.svg';
 import darkIcon from '../../assets/icons/darkIcon.svg';
 import GasDropdownMenu from '../../components/gasDropDownMenu';
-import NetworkSelectHeader from '../../components/networkDropDown';
 import {
   AccountWalletBalance,
   AddNewWalletListItem,
