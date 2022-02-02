@@ -134,7 +134,7 @@ export const ItemButtons = styled.div`
   }
 `;
 
-export const Balance = styled.div`
+export const BalanceValue = styled.div`
   grid-area: balance;
   @media (min-width: 375px) and (max-width: 840px) {
     margin-bottom: 10px;
