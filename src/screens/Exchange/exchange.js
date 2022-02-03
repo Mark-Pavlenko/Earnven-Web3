@@ -35,6 +35,7 @@ import Loader from 'react-loader-spinner';
 import Avatar from 'react-avatar';
 import ethImage from '../../assets/icons/eth.png';
 import NukeExchange from './nukeExchange';
+import { useSelector } from 'react-redux';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -81,7 +82,7 @@ const CurrencySelect = styled.button`
   font-size: 18px;
   font-weight: 600;
   background-color: transparent;
-  color: '#737373'
+  color: #737373
   border-radius: 12px;
   outline: none;
   cursor: pointer;
@@ -91,9 +92,10 @@ const CurrencySelect = styled.button`
   margin: 0 0.5rem;
   :focus,
   :hover {
-    background-color: 'blue'
+    background-color: blue
   }
 `;
+
 const erc20Abi = [
   'function balanceOf(address owner) view returns (uint256)',
   'function approve(address _spender, uint256 _value) public returns (bool success)',
@@ -124,14 +126,11 @@ export default function Exchange() {
   const [TokenFromAmount, setTokenFromAmount] = useState();
   const [TokenToAmount, setTokenToAmount] = useState();
   const [Slippage, setSlippage] = useState(2);
-  const [Price, setPrice] = useState(0);
-  const [minPrice, setMinPrice] = useState(0);
   const [AllTokens, setAllTokens] = useState([]);
   const [Sources, setSources] = useState([]);
   const [open, setOpen] = useState(false);
   const [protocolsRateList, setprotocolsRateList] = useState([]);
   const [ethPrice, setethPrice] = useState(0);
-  const [toTokenToId, settoTokenToId] = useState('');
   const [selectedRate, setselectedRate] = useState(null);
   const [newSelectedRate, setnewSelectedRate] = useState(null);
   const [txSuccess, settxSuccess] = useState(false);
@@ -139,27 +138,16 @@ export default function Exchange() {
   const [selectedExchangeName, setselectedExchangeName] = useState('');
   const [currencyModal, setcurrencyModal] = useState(false);
   const [currencyToModal, setcurrencyToModal] = useState(false);
-  const [updateBalance, setupdateBalance] = useState(true);
   const [toTokens, settoTokens] = useState([]);
-  // const [tokenToDollarValue, settokenToDollarValue] = useState(0)
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+
+  const getAddressInfoExplorerAPI = useSelector((state) => state.ethExplorerApi.ethExplorerApi);
+  console.log('getAddressInfoExplorerAPI', getAddressInfoExplorerAPI);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
   useEffect(() => {
     async function getData() {
-      console.log('get data called');
-      // let fetchedTokens;
-      // let tokens;
-      // await axios.get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
-      // await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {})
-      //     .then(async (response) => {
-      //         settoTokens(response.data.records)
-      //         fetchedTokens = response.data.records;
-      //         // fetchedTokens = response.data.tokens;
-      //         // console.log(response.data.records)
-      //     })
       await axios
         .get(
           `https://api.ethplorer.io/getAddressInfo/${address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`,
@@ -167,7 +155,7 @@ export default function Exchange() {
           {}
         )
         .then(async (response) => {
-          // console.log(response)
+          console.log('get address info res', response.data);
           const arr1 = [];
           if (response.data.ETH.balance !== 0) {
             const tempObj = {};
@@ -177,6 +165,7 @@ export default function Exchange() {
             tempObj.balance = response.data.ETH.balance.toFixed(3).toString();
             tempObj.logoURI = ethImage;
             arr1.push(tempObj);
+            console.log('tokens arr with eth', arr1);
           }
           var tokens = response.data.tokens;
           for (let i = 0; i < tokens.length; i++) {
@@ -196,7 +185,7 @@ export default function Exchange() {
             }
             arr1.push(tempObj);
           }
-          console.log('new list objects:::', arr1);
+          console.log('selected wallet tokens arr', arr1);
           setAllTokens(arr1);
         });
       await axios
@@ -468,11 +457,13 @@ export default function Exchange() {
               protocolQuote.image =
                 'https://assets.coingecko.com/markets/images/565/small/0x-protocol.png?1596623034';
             }
+            console.log('protocolQuote', protocolQuote);
             differentQuoteList.push(protocolQuote);
           } catch {
             console.log(`error come for ${protocolsList[i]}`);
           }
         }
+        console.log('selectedExchangeName', differentQuoteList);
         differentQuoteList.sort((a, b) => b.netReceived - a.netReceived);
         setselectedRate(differentQuoteList[0]);
         setselectedExchangeName(differentQuoteList[0].name);

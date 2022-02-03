@@ -67,36 +67,11 @@ const CurrencySelect = styled.button`
   }
 `;
 
-const erc20Abi = [
-  'function balanceOf(address owner) view returns (uint256)',
-  'function approve(address _spender, uint256 _value) public returns (bool success)',
-  'function allowance(address _owner, address _spender) public view returns (uint256 remaining)',
-];
-
-// const selectedProvider = new Web3(new Web3.providers.HttpProvider("https://mainnet.infura.io/v3/8b2159b7b0944586b64f0280c927d0a8"))
-const selectedProvider = new ethers.providers.JsonRpcProvider(
-  'https://mainnet.infura.io/v3/8b2159b7b0944586b64f0280c927d0a8'
-);
-
-const makeCall = async (callName, contract, args, metadata = {}) => {
-  if (contract[callName]) {
-    let result;
-    if (args) {
-      result = await contract[callName](...args, metadata);
-    } else {
-      result = await contract[callName]();
-    }
-    return result;
-  } else {
-    console.log('no call of that name!');
-  }
-};
 export default function NukeExchange() {
   const { address } = useParams();
 
   const [TokenFrom, setTokenFrom] = useState([]);
   const [TokenTo, setTokenTo] = useState('');
-  const [TokenFromAmount, setTokenFromAmount] = useState();
   const [Slippage, setSlippage] = useState(2);
   const [AllTokens, setAllTokens] = useState([]);
   const [txSuccess, settxSuccess] = useState(false);
@@ -118,6 +93,7 @@ export default function NukeExchange() {
   useEffect(() => {
     const tokens = tokenList['4'];
     setAllTokens(tokens);
+    console.log('tokens', tokens);
     settoTokens(tokens);
     setLoggedInAccount();
   }, []);
@@ -142,6 +118,7 @@ export default function NukeExchange() {
     const web3 = window.web3;
     const accounts = await web3.eth.getAccounts();
     setAccount(accounts[0]);
+    console.log('accounts[0]', accounts[0]);
   }
 
   const fromTokenChange = (value) => {
