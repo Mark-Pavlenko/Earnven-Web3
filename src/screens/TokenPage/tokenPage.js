@@ -42,59 +42,179 @@ const TokenPage = () => {
       'similique sunt in culpa qui officia deserunt mollitia animi, id est laborum ' +
       'et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.'
   );
-  const [social, setSocial] = useState(true);
   const [tokenData, setTokenData] = useState(null);
-  const [tokenAddress, setTokenAddress] = useState(null);
+  const [tokenTransactions, setTokenTransactions] = useState(null);
+  const [usersTokenData, setUsersTokenData] = useState(null);
+  const [tokenContractAddress, setTokenContractAddress] = useState(null);
+  const [tokenHistoryData, setTokenHistoryData] = useState(null);
   const [walletData, setWalletData] = useState(null);
   const theme = useSelector((state) => state?.themeReducer.isLightTheme);
 
-  const balanceConverter = (balance) => {
-    // const balanceArr = balance ? balance.split('e+') : [];
-    // const rez =
-    //   balanceArr.length > 1
-    //     ? parseFloat(balanceArr[0]) * 10 ** (balanceArr[1] - 18).toFixed(2)
-    //     : parseFloat(balance).toFixed(2);
-    // console.log(rez);
-    return 'rez';
-  };
-
   useEffect(() => {
-    axios.get(`https://api.coingecko.com/api/v3/coins/${tokenId}`, {}).then(async (response) => {
-      console.log('response', response);
-      await setTokenData(response.data);
-    });
+    let tokenContractAddressForPath = null;
+    axios
+      .get(`https://api.coingecko.com/api/v3/coins/${tokenId}`, {})
+      .then(async (response) => {
+        console.log('response TokenData', response);
+        tokenContractAddressForPath = response?.data.contract_address || '';
+        setTokenContractAddress(await response.data.contract_address);
+        setTokenData(await response.data);
+      })
+      .then(() => {
+        axios
+          .get(
+            `https://api.etherscan.io/api?module=account&action=tokentx&contractaddress=${tokenContractAddressForPath}&address=${address}&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W`,
+            {}
+          )
+          .then(async (response) => {
+            console.log('response TokenTransactions', response);
+            if (response.data.status === '1') {
+              setTokenTransactions(response.data.result);
+            }
+          });
+      });
 
     axios
       .get(`https://api.ethplorer.io/getAddressInfo/${address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`, {})
       .then(async (response) => {
-        console.log('response2', response);
+        console.log('response UsersTokenData', response);
         await setWalletData(response.data);
-        await setTokenAddress(
+        await setUsersTokenData(
           tokenId === 'ethereum'
-            ? address
-            : response.data.tokens.find(
-                (e) => e.tokenInfo.name?.toLowerCase() === tokenId.toLowerCase()
-              ).tokenInfo.address
+            ? {
+                balance: response.data.ETH.balance,
+                rate: response.data.ETH.price.rate,
+                decimals: 0,
+                symbol: 'ETH',
+              }
+            : () => {
+                const token = response.data.tokens.find(
+                  (e) => e.tokenInfo.name?.toLowerCase() === tokenId.toLowerCase()
+                );
+                return {
+                  balance: token.balance,
+                  rate: token.tokenInfo.price.rate,
+                  decimals: token.tokenInfo.decimals,
+                  symbol: token.tokenInfo.symbol,
+                };
+              }
+        );
+      });
+
+    axios
+      .get(
+        `https://api.coingecko.com/api/v3/coins/${tokenId}/market_chart/range?vs_currency=usd&from=1200000000&to=${new Date().getTime()}`,
+        {}
+      )
+      .then(async (response) => {
+        console.log('response TokenHistoryData', response);
+        setTokenHistoryData(
+          await response.data.prices.map((el) => ({
+            date: new Date(el[0]).toISOString().split('').splice(0, 10).join(''),
+            rate: el[1],
+          }))
         );
       });
   }, [tokenId]);
 
-  const tokensHolding =
-    tokenId === 'ethereum'
-      ? // ? walletData?.ETH.balance.toFixed(2) + '$ETH' || ''
-        balanceConverter(walletData?.ETH.balance) + '$ETH' || ''
-      : balanceConverter(
-          walletData?.tokens.find((el) => el.tokenInfo.name?.toLowerCase() === tokenId)?.balance
-        ) +
-          // : parseFloat(
-          //     walletData?.tokens.find((el) => el.tokenInfo.name?.toLowerCase() === tokenId)?.balance
-          //   ).toFixed(2) +
-          `$${
-            walletData?.tokens.find((el) => el.tokenInfo.name?.toLowerCase() === tokenId)?.tokenInfo
-              .symbol
-          }` || '';
+  const tokensHolding = usersTokenData
+    ? `${numberWithCommas(
+        (parseFloat(usersTokenData.balance) / 10 ** parseInt(usersTokenData.decimals)).toFixed(2)
+      )} ${usersTokenData.symbol}`
+    : '';
 
-  // const totalHoldValue=tokensHolding ? tokensHolding*
+  const totalHoldValue = usersTokenData
+    ? `$${numberWithCommas(
+        (
+          (parseFloat(usersTokenData.balance) / 10 ** parseInt(usersTokenData.decimals)) *
+          parseFloat(usersTokenData.rate)
+        ).toFixed(2)
+      )}`
+    : '';
+
+  const accumulationCost = tokenTransactions
+    ? tokenTransactions
+        .filter((e) => e.from === address)
+        .map(
+          (el) =>
+            (parseFloat(el.value) / 10 ** parseInt(el.tokenDecimal)) *
+            tokenHistoryData.find(
+              (e) =>
+                e.date ===
+                new Date(parseInt(el.timeStamp) * 1000)
+                  .toISOString()
+                  .split('')
+                  .splice(0, 10)
+                  .join('')
+            ).rate
+        )
+        .reduce((prev, el) => prev + el, 0)
+        .toFixed(2)
+    : '';
+
+  const avgBuyingCost = tokenTransactions
+    ? `$${numberWithCommas(
+        (
+          tokenTransactions
+            .filter((e) => e.to === address)
+            .map(
+              (el) =>
+                (parseFloat(el.value) / 10 ** parseInt(el.tokenDecimal)) *
+                tokenHistoryData.find(
+                  (e) =>
+                    e.date ===
+                    new Date(parseInt(el.timeStamp) * 1000)
+                      .toISOString()
+                      .split('')
+                      .splice(0, 10)
+                      .join('')
+                ).rate
+            )
+            .reduce((prev, el) => prev + el, 0) /
+          tokenTransactions
+            .filter((e) => e.to === address)
+            .map((el) => parseFloat(el.value) / 10 ** parseInt(el.tokenDecimal))
+            .reduce((prev, el) => prev + el, 0)
+        ).toFixed(2)
+      )}`
+    : '';
+
+  const profitLoss = accumulationCost
+    ? (
+        accumulationCost -
+        tokenTransactions
+          .filter((e) => e.from === address)
+          .map(
+            (el) =>
+              (parseFloat(el.value) / 10 ** parseInt(el.tokenDecimal)) *
+              parseFloat(tokenData.market_data.current_price.usd)
+          )
+          .reduce((prev, el) => prev + el, 0)
+      ).toFixed(2)
+    : '';
+
+  const profitLossPercent = accumulationCost
+    ? ((profitLoss / accumulationCost) * 100).toFixed(2)
+    : '';
+
+  const links = [
+    {
+      nameOfLink: 'Website',
+      link: tokenData?.links.homepage[0],
+    },
+    // {
+    //   nameOfLink: 'Twitter',
+    //   link: tokenData?.links.homepage,
+    // },
+    // {
+    //   nameOfLink: 'Discord ',
+    //   link: tokenData?.links.homepage,
+    // },
+    // {
+    //   nameOfLink: 'Coingecko ',
+    //   link: tokenData?.links.homepage,
+    // },
+  ];
 
   return (
     <Main>
@@ -113,8 +233,18 @@ const TokenPage = () => {
               price_change_percentage_24h={
                 tokenData?.market_data.price_change_percentage_24h.toFixed(2) || ''
               }
+              links={links}
+              tokenContractAddress={tokenContractAddress}
             />
-            <Performance isLightTheme={theme} tokensHolding={tokensHolding} />
+            <Performance
+              isLightTheme={theme}
+              tokensHolding={tokensHolding}
+              totalHoldValue={totalHoldValue}
+              accumulationCost={accumulationCost ? `$${numberWithCommas(accumulationCost)}` : ''}
+              avgBuyingCost={avgBuyingCost}
+              profitLoss={profitLoss ? `$${numberWithCommas(profitLoss)}` : ''}
+              profitLossPercent={profitLossPercent ? `${numberWithCommas(profitLossPercent)}%` : ''}
+            />
             <Stats
               isLightTheme={theme}
               statsDay={tokenData?.market_data.price_change_percentage_24h.toFixed(2) || ''}
@@ -140,17 +270,39 @@ const TokenPage = () => {
         <GraphMob
           isLightTheme={theme}
           tokenId={tokenId}
+          tokenName={tokenData?.name || ''}
+          tokenSymbol={tokenData?.symbol || ''}
+          tokenImage={tokenData?.image.small || ''}
           current_price={
             numberWithCommas(tokenData?.market_data.current_price.usd.toFixed(2)) || ''
           }
           price_change_percentage_24h={
             tokenData?.market_data.price_change_percentage_24h.toFixed(2) || ''
           }
-          social={social}
+          links={links}
+          tokenContractAddress={tokenContractAddress}
         />
         <Exchange isLightTheme={theme} />
-        <Performance isLightTheme={theme} />
-        <Stats isLightTheme={theme} />
+        <Performance
+          isLightTheme={theme}
+          tokensHolding={tokensHolding}
+          totalHoldValue={totalHoldValue}
+          accumulationCost={accumulationCost ? `$${numberWithCommas(accumulationCost)}` : ''}
+          avgBuyingCost={avgBuyingCost}
+          profitLoss={profitLoss ? `$${numberWithCommas(profitLoss)}` : ''}
+          profitLossPercent={profitLossPercent ? `${numberWithCommas(profitLossPercent)}%` : ''}
+        />
+        <Stats
+          isLightTheme={theme}
+          statsDay={tokenData?.market_data.price_change_percentage_24h.toFixed(2) || ''}
+          statsMonth={tokenData?.market_data.price_change_percentage_30d.toFixed(2) || ''}
+          statsTwoMonths={tokenData?.market_data.price_change_percentage_60d.toFixed(2) || ''}
+          statsYear={tokenData?.market_data.price_change_percentage_1y.toFixed(2) || ''}
+          marketCap={numberWithCommas(tokenData?.market_data.market_cap.usd) || ''}
+          dayHigh={tokenData?.market_data.high_24h.usd.toFixed(2) || ''}
+          dayLow={tokenData?.market_data.low_24h.usd.toFixed(2) || ''}
+          coingeckoScore={tokenData?.coingecko_score || ''}
+        />
         <About isLightTheme={theme} textAbout={textAbout} />
         <History isLightTheme={theme} />
       </Mobile>

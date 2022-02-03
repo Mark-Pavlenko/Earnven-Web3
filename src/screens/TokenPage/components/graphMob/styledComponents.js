@@ -24,7 +24,7 @@ export const NetWrapper = styled.div`
   justify-content: space-between;
 `;
 
-export const TokenPlatformLogo = styled.div`
+export const Chain = styled.div`
   display: flex;
   width: 69px;
   height: 100%;

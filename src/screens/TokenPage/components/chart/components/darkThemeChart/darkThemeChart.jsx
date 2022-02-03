@@ -9,7 +9,6 @@ export default class DarkThemeChart extends Component {
     super(props);
     this.state = {
       account: '',
-      // hideFilter: false,
       series: [],
       options: {
         chart: {
@@ -19,9 +18,7 @@ export default class DarkThemeChart extends Component {
           zoom: {
             autoScaleYAxis: true,
           },
-          sparkline: {
-            // enabled: true,
-          },
+          sparkline: {},
           toolbar: {
             show: false,
           },
@@ -47,7 +44,6 @@ export default class DarkThemeChart extends Component {
             color: 'rgba(255,255,255, 0.03)',
           },
           labels: {
-            // show: true,
             style: {
               fontSize: '10px',
               colors: 'white',
@@ -58,7 +54,6 @@ export default class DarkThemeChart extends Component {
         },
         yaxis: {
           labels: {
-            // show: true,
             formatter: function (val) {
               if (val > 999999) {
                 return val / 1000000 + 'M';
@@ -86,17 +81,6 @@ export default class DarkThemeChart extends Component {
           },
         },
         tooltip: {
-          // enabled: false,
-          // x: {
-          //     format: 'dd MMM yyyy'
-          // },
-          // y: {
-          //     formatter: undefined,
-          //     title: {
-          //         formatter: (seriesName) => '$',
-          //     },
-          // },
-
           custom: function ({ series, seriesIndex, dataPointIndex, w }) {
             function CommaFormatted(amount) {
               amount = amount.toString();
@@ -187,7 +171,6 @@ export default class DarkThemeChart extends Component {
         title: {
           text: this.props.totalValue,
           align: 'left',
-          // margin: 20,
           offsetX: -10,
           offsetY: -15,
           floating: false,
@@ -228,7 +211,7 @@ export default class DarkThemeChart extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.getTokenChartHistory();
   }
 
@@ -260,12 +243,6 @@ export default class DarkThemeChart extends Component {
     }
   }
 
-  componentDidMount() {
-    this.setState({
-      selection: 'all',
-    });
-  }
-
   getTokenChartHistory = async () => {
     var data = [];
     let points = [];
@@ -286,7 +263,6 @@ export default class DarkThemeChart extends Component {
         }
       }
       c = { data };
-      // points
       points.push(c);
       this.setState({ series: points });
     });
@@ -302,7 +278,7 @@ export default class DarkThemeChart extends Component {
 
   updateData(timeline) {
     if (this.state.series[0].data.length === 0) {
-      // do smth.
+      // do smth
     } else {
       const { length } = this.state.series[0].data;
       const firstDay = new Date(this.state.series[0].data[0][0]);
