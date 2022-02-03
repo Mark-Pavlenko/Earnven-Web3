@@ -46,6 +46,7 @@ import {
   NewMultiSwapButton,
   SecondColumnSwapSubBlock,
   SecondColumnTitleBlock,
+  SecondColumnTitleHeaderBlock,
   SwapFirstColumn,
   SwapSecondColumn,
 } from './styled';
@@ -413,11 +414,11 @@ export default function Exchange() {
       <SwapSecondColumn>
         <SecondColumnSwapSubBlock>
           <SecondColumnTitleBlock>
-            <div>
+            <SecondColumnTitleHeaderBlock>
               <ColumnMainTitles>Multiswap</ColumnMainTitles>
-              <NewMultiSwapButton>New</NewMultiSwapButton>
-            </div>
-            <ColumnMainSubTitles>
+              <NewMultiSwapButton>New!</NewMultiSwapButton>
+            </SecondColumnTitleHeaderBlock>
+            <ColumnMainSubTitles style={{ marginTop: '15px' }}>
               Trade any token for many tokens or many tokens for a token in a single transaction
             </ColumnMainSubTitles>
           </SecondColumnTitleBlock>

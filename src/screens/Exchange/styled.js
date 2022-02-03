@@ -35,7 +35,7 @@ const ColumnSubTitles = css`
   font-family: 'Saira', sans-serif;
   font-size: 14px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 22px;
   letter-spacing: 0;
 `;
@@ -74,7 +74,7 @@ export const NewMultiSwapButton = styled(Button)`
   border-radius: 10px;
 
   :hover {
-    background: transparent;
+    background: #4453ad;
   }
 `;
 
@@ -97,10 +97,10 @@ export const SecondColumnSwapSubBlock = styled.div`
 export const SecondColumnTitleBlock = styled.div`
   ${ColumnsTitleBlocks};
   //background-color: violet;
+`;
 
-  div {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
+export const SecondColumnTitleHeaderBlock = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 `;
