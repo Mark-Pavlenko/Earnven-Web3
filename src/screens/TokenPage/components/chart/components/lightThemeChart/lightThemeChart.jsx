@@ -203,7 +203,7 @@ export default class LightThemeChart extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.getTokenChartHistory();
   }
 
@@ -235,11 +235,11 @@ export default class LightThemeChart extends Component {
     }
   }
 
-  componentDidMount() {
-    this.setState({
-      selection: 'all',
-    });
-  }
+  // componentDidMount() {
+  //   this.setState({
+  //     selection: 'all',
+  //   });
+  // }
 
   getTokenChartHistory = async () => {
     var data = [];

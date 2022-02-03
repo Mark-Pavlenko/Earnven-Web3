@@ -1,11 +1,11 @@
 import React from 'react';
 import { TokenName, Header, Links, TokenLinks, Chain } from './styledComponents';
 import { Main, TokenLink } from '../styledComponentsCommon';
-import PortfolioPerf from '../../../../components/portfolioperf/portfolioperf';
 import sendIcon from '../../../../assets/icons/send-icon.svg';
 import ethLogoBlue from '../../../../assets/icons/ethLogoBlue.png';
 import etherScan from '../../../../assets/icons/etherScan-icon.svg';
 import etherScanDark from '../../../../assets/icons/etherScanDark-icon.svg';
+import homePage from '../../../../assets/icons/homePage.png';
 import Chart from '../chart/chart';
 
 const Graph = ({
@@ -16,6 +16,8 @@ const Graph = ({
   tokenImage,
   current_price,
   price_change_percentage_24h,
+  links,
+  tokenContractAddress,
 }) => {
   return (
     <Main isLightTheme={isLightTheme}>
@@ -26,16 +28,28 @@ const Graph = ({
         </Chain>
         <Links>
           <TokenLinks>
-            <TokenLink isLightTheme={isLightTheme}>
-              <img alt={'EtherScan'} src={etherScan} />
+            {/*<TokenLink isLightTheme={isLightTheme}>*/}
+            {/*  <img alt={'EtherScan'} src={etherScan} />*/}
+            {/*</TokenLink>*/}
+            {/*<TokenLink isLightTheme={isLightTheme}>*/}
+            {/*  <img alt={'EtherScan'} src={etherScan} />*/}
+            {/*</TokenLink>*/}
+            <TokenLink
+              isLightTheme={isLightTheme}
+              href={links[0].link}
+              target="_blank"
+              rel="noopener noreferrer">
+              <img alt={'website'} src={homePage} />
             </TokenLink>
-            <TokenLink isLightTheme={isLightTheme}>
-              <img alt={'EtherScan'} src={etherScan} />
-            </TokenLink>
-            <TokenLink isLightTheme={isLightTheme}>
-              <img alt={'EtherScan'} src={etherScan} />
-            </TokenLink>
-            <TokenLink isLightTheme={isLightTheme}>
+            <TokenLink
+              href={
+                tokenContractAddress
+                  ? `https://etherscan.io/token/${tokenContractAddress}`
+                  : 'https://etherscan.io/'
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              isLightTheme={isLightTheme}>
               <img alt={'EtherScan'} src={isLightTheme ? etherScan : etherScanDark} />
             </TokenLink>
           </TokenLinks>
@@ -48,13 +62,11 @@ const Graph = ({
         <img alt={tokenSymbol} src={tokenImage} />
         <p>{tokenName}</p>
       </TokenName>
-      {/*<PortfolioPerf*/}
       <Chart
         theme={isLightTheme}
         tokenId={tokenId}
         totalValue={current_price ? `$${current_price}` : ''}
         difValue={price_change_percentage_24h ? `${price_change_percentage_24h}%` : ''}
-        // isTokenPage={true}
       />
     </Main>
   );

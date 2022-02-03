@@ -26,7 +26,7 @@ export const Title = styled.div`
   }
 `;
 
-export const TokenLink = styled.div`
+export const TokenLink = styled.a`
   display: block;
   position: relative;
   width: 41px;
