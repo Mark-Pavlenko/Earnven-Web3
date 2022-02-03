@@ -47,9 +47,12 @@ import {
   SecondColumnSwapSubBlock,
   SecondColumnTitleBlock,
   SecondColumnTitleHeaderBlock,
+  SendBlockLabels,
+  SimpleSwapBlock,
   SwapFirstColumn,
   SwapSecondColumn,
 } from './styled';
+import { useSelector } from 'react-redux';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -152,6 +155,8 @@ export default function Exchange() {
   const [currencyModal, setcurrencyModal] = useState(false);
   const [currencyToModal, setcurrencyToModal] = useState(false);
   const [toTokens, settoTokens] = useState([]);
+
+  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -404,10 +409,18 @@ export default function Exchange() {
       <SwapFirstColumn>
         <FirstColumnSwapSubBlock>
           <FirstColumnTitleBlock>
-            <ColumnMainTitles>Swap</ColumnMainTitles>
-            <ColumnMainSubTitles>
+            <ColumnMainTitles isLightTheme={isLightTheme}>Swap</ColumnMainTitles>
+            <ColumnMainSubTitles isLightTheme={isLightTheme}>
               Trade any token or LP share in a single transaction
             </ColumnMainSubTitles>
+            <SimpleSwapBlock isLightTheme={isLightTheme}>
+              <div>
+                <SendBlockLabels isLightTheme={isLightTheme}>
+                  <span>Send</span>
+                  <span>$3 510,03</span>
+                </SendBlockLabels>
+              </div>
+            </SimpleSwapBlock>
           </FirstColumnTitleBlock>
         </FirstColumnSwapSubBlock>
       </SwapFirstColumn>
@@ -415,10 +428,10 @@ export default function Exchange() {
         <SecondColumnSwapSubBlock>
           <SecondColumnTitleBlock>
             <SecondColumnTitleHeaderBlock>
-              <ColumnMainTitles>Multiswap</ColumnMainTitles>
+              <ColumnMainTitles isLightTheme={isLightTheme}>Multiswap</ColumnMainTitles>
               <NewMultiSwapButton>New!</NewMultiSwapButton>
             </SecondColumnTitleHeaderBlock>
-            <ColumnMainSubTitles style={{ marginTop: '15px' }}>
+            <ColumnMainSubTitles style={{ marginTop: '15px' }} isLightTheme={isLightTheme}>
               Trade any token for many tokens or many tokens for a token in a single transaction
             </ColumnMainSubTitles>
           </SecondColumnTitleBlock>
