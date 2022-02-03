@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components';
 import { Button } from '@material-ui/core';
 
 export const ExchangeMainLayout = styled.div`
-  background-color: red;
+  //background-color: red;
   display: grid;
   grid-template-columns: 50% 50%;
   //height: 600px;
@@ -42,18 +42,18 @@ const ColumnSubTitles = css`
 
 export const SwapFirstColumn = styled.div`
   ${ColumnsSubBlocks};
-  background-color: green;
+  //background-color: green;
 `;
 
 export const FirstColumnSwapSubBlock = styled.div`
   ${ColumnsSubBlocks};
   width: 525px;
-  background-color: orange;
+  //background-color: orange;
 `;
 
 export const FirstColumnTitleBlock = styled.div`
   ${ColumnsTitleBlocks};
-  background-color: yellow;
+  //background-color: yellow;
 `;
 
 export const ColumnMainTitles = styled.p`
@@ -85,18 +85,18 @@ export const ColumnMainSubTitles = styled.p`
 export const SwapSecondColumn = styled.div`
   ${ColumnsSubBlocks};
   width: 540px;
-  background-color: blue;
+  //background-color: blue;
 `;
 
 export const SecondColumnSwapSubBlock = styled.div`
   ${ColumnsSubBlocks};
   width: 540px;
-  background-color: gray;
+  //background-color: gray;
 `;
 
 export const SecondColumnTitleBlock = styled.div`
   ${ColumnsTitleBlocks};
-  background-color: violet;
+  //background-color: violet;
 
   div {
     display: flex;

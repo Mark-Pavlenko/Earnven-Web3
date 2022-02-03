@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import * as selectors from './selectors';
 import AccountBalance from './AccountBalance';
+4;
 
 export const mapStateToProps = (state) => {
   // console.log('state from mainStateToProps for accountBalance', state);
