@@ -40,7 +40,7 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 500,
-  bgcolor: 'background.default',
+
   // border: '2px solid #000',
   // boxShadow: 24,
   p: 4,
@@ -53,7 +53,7 @@ const CurrencySelect = styled.button`
   font-size: 18px;
   font-weight: 600;
   background-color: transparent;
-  color: '#737373'
+  color: #737373;
   border-radius: 12px;
   outline: none;
   cursor: pointer;
@@ -63,7 +63,7 @@ const CurrencySelect = styled.button`
   margin: 0 0.5rem;
   :focus,
   :hover {
-    background-color: 'blue'
+    background-color: blue;
   }
 `;
 
@@ -774,7 +774,7 @@ export default function NukeExchange() {
                           color: '#fff',
                           fontWeight: 500,
                           fontSize: '20px',
-                          background: (theme) => theme.palette.gradients.custom,
+                          // background: (theme) => theme.palette.gradients.custom,
                         }}
                         onClick={() => {
                           setcurrencyToModal(true);
@@ -808,7 +808,7 @@ export default function NukeExchange() {
                           color: '#fff',
                           fontWeight: 500,
                           fontSize: '20px',
-                          background: (theme) => theme.palette.gradients.custom,
+                          // background: (theme) => theme.palette.gradients.custom,
                         }}
                         onClick={() => {
                           setcurrencyToModal(true);
@@ -848,7 +848,7 @@ export default function NukeExchange() {
                                 color: '#fff',
                                 fontWeight: 500,
                                 fontSize: '20px',
-                                background: (theme) => theme.palette.gradients.custom,
+                                // background: (theme) => theme.palette.gradients.custom,
                               }}
                               onClick={() => {
                                 setcurrencyModal(true);
@@ -1057,7 +1057,7 @@ export default function NukeExchange() {
                   p: 1,
                   cursor: 'pointer',
                   '&:hover': {
-                    background: (theme) => theme.palette.gradients.custom,
+                    // background: (theme) => theme.palette.gradients.custom,
                   },
                 }}>
                 <Stack direction="row" spacing={2}>
@@ -1149,7 +1149,7 @@ export default function NukeExchange() {
                   p: 1,
                   cursor: 'pointer',
                   '&:hover': {
-                    background: (theme) => theme.palette.gradients.custom,
+                    // background: (theme) => theme.palette.gradients.custom,
                   },
                 }}>
                 <Stack direction="row" spacing={2}>

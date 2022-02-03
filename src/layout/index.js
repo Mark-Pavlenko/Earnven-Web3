@@ -15,8 +15,8 @@ export default function AppLayout() {
   const reduxWalletsList = useSelector((state) => state.initSidebarValuesReducer.walletsList);
   const reduxMyWallet = useSelector((state) => state.initSidebarValuesReducer.myWallet);
 
-  console.log('reduxWalletsList', reduxWalletsList);
-  console.log('reduxMyWallet', reduxMyWallet);
+  // console.log('reduxWalletsList', reduxWalletsList);
+  // console.log('reduxMyWallet', reduxMyWallet);
 
   const isFirstConnection = localStorage.getItem('firstConnection');
 
