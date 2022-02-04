@@ -19,10 +19,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from 'react-select';
 import tokenURIs from '../../../screens/Exchange/tokenURIs';
-import eth from '../../../assets/icons/ethereum.svg'
-import uni from '../../../assets/icons/uniswap-icon.svg'
-import ethLend from '../../../assets/icons/ethLend-icon.svg'
-import mkr from '../../../assets/icons/mkr.svg'
+import eth from '../../../assets/icons/ethereum.svg';
+import uni from '../../../assets/icons/uniswap-icon.svg';
+import ethLend from '../../../assets/icons/ethLend-icon.svg';
+import mkr from '../../../assets/icons/mkr.svg';
 
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
@@ -34,12 +34,12 @@ import Box from '@material-ui/core/Box';
 import { Add } from '@material-ui/icons';
 // import AmountInput from '../components/amountInput'
 
-import mockImg from '../../../assets/icons/plus-icon.svg'
+import mockImg from '../../../assets/icons/plusIconDark.svg';
 
 import { Button } from '@material-ui/core';
 import { Link, useParams } from 'react-router-dom';
-import ModalContainer from "../../common/modalContainer/modalContainer";
-import {  SelectWrapper } from '../styledComponents';
+import ModalContainer from '../../common/modalContainer/modalContainer';
+import { SelectWrapper } from '../styledComponents';
 import {
   SelectTitle,
   ChangeToken,
@@ -53,9 +53,9 @@ import {
   ModalLink,
   ModalLinkRight,
 } from './StyledComponents';
-import {SelectOptionsWithJSX} from "../HOC/selectOptionsWithJSX";
-import {TokenButtonsBlock} from "../../../screens/dashboard/styledComponents";
-import {LiquidityPoolsTable} from "../liquidityPoolsTable/liquidityPoolsTable";
+import { SelectOptionsWithJSX } from '../HOC/selectOptionsWithJSX';
+import { TokenButtonsBlock } from '../../../screens/dashboard/styledComponents';
+import { LiquidityPoolsTable } from '../liquidityPoolsTable/liquidityPoolsTable';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -141,8 +141,10 @@ export default function LiquidityPools() {
           }));
           console.log(tokens.filter((token) => token.logoURI === ''));
           setAllTokens(tokens);
-        }).catch((res) => {
-            console.log('liquidity pools Uniswap-V2 returns error', res)});
+        })
+        .catch((res) => {
+          console.log('liquidity pools Uniswap-V2 returns error', res);
+        });
     }
     getData();
   }, []);
@@ -365,8 +367,7 @@ export default function LiquidityPools() {
         >
         </input>  */}
                     {/*submit one finish------------------------------------------------->*/}
-                  {/*submit two------------------------------------------------->*/}
-
+                    {/*submit two------------------------------------------------->*/}
                     Ether Amount : &nbsp;&nbsp;
                     <AmountInput
                       onChange={(e) => {
@@ -388,7 +389,6 @@ export default function LiquidityPools() {
                 <center>
                   {' '}
                   {/*submit two finish------------------------------------------------->*/}
-
                   OR <br />
                   <br />
                   <br />
@@ -811,7 +811,7 @@ export default function LiquidityPools() {
   }
 
   //useState for mamaging open/close modal
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   //options for select inside of modal
   const options = [
@@ -838,87 +838,87 @@ export default function LiquidityPools() {
   ];
 
   //this function turns array of options to JSX for modal select
- const updatedOptions = SelectOptionsWithJSX(options)
+  const updatedOptions = SelectOptionsWithJSX(options);
 
   //select styles
   const selectStyle = {
     menu: (provided, state) => ({
       ...provided,
-      width: "100%",
+      width: '100%',
       height: 'fitContent',
-      background: "rgba(255, 255, 255, 0.16)",
-      boxSizing: "border-box",
-      boxShadow: "inset 2px 0px 0px rgba(255, 255, 255, 0.1)",
+      background: 'rgba(255, 255, 255, 0.16)',
+      boxSizing: 'border-box',
+      boxShadow: 'inset 2px 0px 0px rgba(255, 255, 255, 0.1)',
       borderTop: 'none',
-      borderRadius: "0 0 7px 7px",
+      borderRadius: '0 0 7px 7px',
       mixBlendMode: 'normal',
       backdropFilter: 'blur(35px)',
       marginTop: '0px',
       padding: '0 20px 22px 11px',
     }),
-    control: (provided, state) => { //valueLine
+    control: (provided, state) => {
+      //valueLine
       return {
         ...provided,
-        background: state.menuIsOpen ? "rgba(255, 255, 255, 0.16)" : "#FFFFFF",
-        boxShadow: state.menuIsOpen ? "inset 2px 2px 4px rgba(255, 255, 255, 0.1)" : 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
+        background: state.menuIsOpen ? 'rgba(255, 255, 255, 0.16)' : '#FFFFFF',
+        boxShadow: state.menuIsOpen
+          ? 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'
+          : 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
         backdropFilter: 'blur(35px)',
         mixBlendMode: 'normal',
         border: 'none',
-        borderRadius: state.menuIsOpen ? "7px 7px 0 0" : "7px",
-        color: "#464C52",
-        height: "60px",
-        width: "100%",
-        cursor: "pointer",
+        borderRadius: state.menuIsOpen ? '7px 7px 0 0' : '7px',
+        color: '#464C52',
+        height: '60px',
+        width: '100%',
+        cursor: 'pointer',
         marginBottom: '20px',
         paddingRight: '28px',
         paddingLeft: '12px',
-      }
+      };
     },
     placeholder: (provided, state) => ({
       ...provided,
-      color: "#464C52",
-      fontSize: "18px",
-      textAlign: "left",
+      color: '#464C52',
+      fontSize: '18px',
+      textAlign: 'left',
     }),
     dropdownIndicator: (provided, state) => ({
       // ...provided,
-      height: "20px",
-      width: "20px",
-      color: "#4453AD",
+      height: '20px',
+      width: '20px',
+      color: '#4453AD',
     }),
     indicatorsContainer: () => ({
-      color: "transparent",
+      color: 'transparent',
     }),
     singleValue: (provided, state) => ({
       ...provided,
-      color: "#464C52",
-      fontSize: "18px",
-      background: state.isSelected ? "black" : "transparent",
+      color: '#464C52',
+      fontSize: '18px',
+      background: state.isSelected ? 'black' : 'transparent',
     }),
     option: (provided, state) => {
       return {
         ...provided,
-        ":hover": {
+        ':hover': {
           background: '#FFFFFF',
           boxShadow: 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
           borderRadius: '7px',
         },
         // -------------------------------->
-        background: state.isSelected
-            ? 'rgba(255, 255, 255, 0.16)'
-            : 'transparent',
+        background: state.isSelected ? 'rgba(255, 255, 255, 0.16)' : 'transparent',
         // -------------------------------->
-        boxShadow: state.isSelected
-            && '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',
+        boxShadow: state.isSelected && '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',
         // -------------------------------->
         display: 'flex',
-        color: "#616161",
+        color: '#616161',
         mixBlendMode: 'normal',
         height: state.isSelected ? '43px' : '60px',
-        padding: "5px 10px",
-        fontSize: "18px",
+        padding: '5px 10px',
+        fontSize: '18px',
         borderRadius: '7px',
-      }
+      };
     },
   };
 
@@ -938,45 +938,45 @@ export default function LiquidityPools() {
         </AddNewGroupButton>
 
         {/*ModalContainer - this is component consists portal logic inside. Component wraps content and displays it as a children. */}
-       {/*Modal is here =====================================>*/}
-       {/* <ModalContainer title={'Add Liquidity'} isOpen={isModalOpen} onClose={() => {setIsModalOpen(false)}}>*/}
-       {/*   <SelectWrapper>*/}
-       {/*     <SelectTitle>{'Supply a token'}</SelectTitle>*/}
-       {/*     <Select*/}
-       {/*         defaultValue={'Ethereum'}*/}
-       {/*         styles={selectStyle}*/}
-       {/*       options={updatedOptions}*/}
-       {/*   />*/}
-       {/*   <InputBlock>*/}
-       {/*     <ModalInput type="number"/>*/}
-       {/*     <Balance>{`Balance: ${5}`}</Balance>*/}
-       {/*   </InputBlock>*/}
-       {/*     <ButtonsBlock>*/}
-       {/*       <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>*/}
-       {/*     </ButtonsBlock>*/}
-       {/*     <ButtonsBlock>*/}
-       {/*       <ChangeToken>{'Or'}</ChangeToken>*/}
-       {/*     </ButtonsBlock>*/}
-       {/*     <SelectTitle>{'Supply a token'}</SelectTitle>*/}
-       {/*     <InputBlock>*/}
-       {/*       <ModalInput type="number"/>*/}
-       {/*       <Balance>{`Balance: ${5}`}</Balance>*/}
-       {/*     </InputBlock>*/}
-       {/*     <InputBlock>*/}
-       {/*       <ModalInput type="number"/>*/}
-       {/*       <Balance>{`Balance: ${5}`}</Balance>*/}
-       {/*     </InputBlock>*/}
-       {/*     <LinksContainer>*/}
-       {/*       <ModalLink href={'#'}>aaa</ModalLink>*/}
-       {/*       <ModalLinkRight href={'#'}>bbb</ModalLinkRight>*/}
-       {/*       <ModalLink href={'#'}>ccc</ModalLink>*/}
-       {/*       <ModalLinkRight href={'#'}>ddd</ModalLinkRight>*/}
-       {/*     </LinksContainer>*/}
-       {/*   <ButtonsBlock>*/}
-       {/*     <SupplyTokenButton>{`Supply tokens`}</SupplyTokenButton>*/}
-       {/*   </ButtonsBlock>*/}
-       {/*   </SelectWrapper>*/}
-       {/* </ModalContainer>*/}
+        {/*Modal is here =====================================>*/}
+        {/* <ModalContainer title={'Add Liquidity'} isOpen={isModalOpen} onClose={() => {setIsModalOpen(false)}}>*/}
+        {/*   <SelectWrapper>*/}
+        {/*     <SelectTitle>{'Supply a token'}</SelectTitle>*/}
+        {/*     <Select*/}
+        {/*         defaultValue={'Ethereum'}*/}
+        {/*         styles={selectStyle}*/}
+        {/*       options={updatedOptions}*/}
+        {/*   />*/}
+        {/*   <InputBlock>*/}
+        {/*     <ModalInput type="number"/>*/}
+        {/*     <Balance>{`Balance: ${5}`}</Balance>*/}
+        {/*   </InputBlock>*/}
+        {/*     <ButtonsBlock>*/}
+        {/*       <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>*/}
+        {/*     </ButtonsBlock>*/}
+        {/*     <ButtonsBlock>*/}
+        {/*       <ChangeToken>{'Or'}</ChangeToken>*/}
+        {/*     </ButtonsBlock>*/}
+        {/*     <SelectTitle>{'Supply a token'}</SelectTitle>*/}
+        {/*     <InputBlock>*/}
+        {/*       <ModalInput type="number"/>*/}
+        {/*       <Balance>{`Balance: ${5}`}</Balance>*/}
+        {/*     </InputBlock>*/}
+        {/*     <InputBlock>*/}
+        {/*       <ModalInput type="number"/>*/}
+        {/*       <Balance>{`Balance: ${5}`}</Balance>*/}
+        {/*     </InputBlock>*/}
+        {/*     <LinksContainer>*/}
+        {/*       <ModalLink href={'#'}>aaa</ModalLink>*/}
+        {/*       <ModalLinkRight href={'#'}>bbb</ModalLinkRight>*/}
+        {/*       <ModalLink href={'#'}>ccc</ModalLink>*/}
+        {/*       <ModalLinkRight href={'#'}>ddd</ModalLinkRight>*/}
+        {/*     </LinksContainer>*/}
+        {/*   <ButtonsBlock>*/}
+        {/*     <SupplyTokenButton>{`Supply tokens`}</SupplyTokenButton>*/}
+        {/*   </ButtonsBlock>*/}
+        {/*   </SelectWrapper>*/}
+        {/* </ModalContainer>*/}
         {/*Modal is here =====================================>*/}
       </center>
     </div>

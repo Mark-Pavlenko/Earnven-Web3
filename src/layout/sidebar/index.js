@@ -209,7 +209,7 @@ export default function Sidebar({
     const result = localStorage.getItem('wallets');
     var jsonData = [];
     var jsondata = JSON.parse(result);
-    console.log('jsondata', jsondata);
+    // console.log('jsondata', jsondata);
 
     jsondata &&
       jsondata.map((option) => {

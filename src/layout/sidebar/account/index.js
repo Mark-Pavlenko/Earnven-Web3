@@ -68,7 +68,6 @@ export default function Account({ address, name, global_wallet, setTheme }) {
     if (currentWallet) {
       try {
         //   fetchData();
-        console.log('api checkethapi ioko');
         try {
           dispatch({
             type: actionTypes.SET_ETH_API,
@@ -95,7 +94,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
     const result = localStorage.getItem('wallets');
     var jsonData = [];
     var jsondata = JSON.parse(result);
-    console.log('jsondata', jsondata);
+    // console.log('jsondata', jsondata);
 
     if (flag_menu === true) {
       setaccount(false);

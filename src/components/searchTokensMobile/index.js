@@ -13,7 +13,7 @@ export default function SearchTokensMobile({ isLightTheme }) {
   const navigate = useNavigate();
   const { address } = useParams();
   const smallScreenSize = useMediaQuery('(max-width:779px)');
-  console.log('smallScreenSize', smallScreenSize);
+  // console.log('smallScreenSize', smallScreenSize);
 
   function callbackFunction(childData) {
     navigate(`/${address}/token/${childData}`);

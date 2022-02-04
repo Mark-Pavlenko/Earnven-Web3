@@ -325,7 +325,7 @@ export default function ExchangeMini() {
             );
             console.log(`response for all ${protocolsList[i]}`, response.data);
             if (protocolsList[i] === '') {
-              protocolQuote.name = '0x Exchange';
+              protocolQuote.name = '0x Index';
             } else {
               protocolQuote.name = protocolsList[i];
             }
@@ -784,7 +784,7 @@ export default function ExchangeMini() {
                               <Tooltip title={object.name}>
                                 {object.name === 'Balancer' ? (
                                   <img alt="" width="21" height="20" src={Balancer} />
-                                ) : object.name === '0x Exchange' ? (
+                                ) : object.name === '0x Index' ? (
                                   <img
                                     alt=""
                                     width="21"
@@ -820,7 +820,7 @@ export default function ExchangeMini() {
                               <Tooltip title={object.name}>
                                 {object.name === 'Balancer' ? (
                                   <img alt="" width="21" height="20" src={Balancer} />
-                                ) : object.name === '0x Exchange' ? (
+                                ) : object.name === '0x Index' ? (
                                   <img
                                     alt=""
                                     width="21"
