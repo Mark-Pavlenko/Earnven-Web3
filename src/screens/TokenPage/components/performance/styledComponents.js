@@ -48,13 +48,6 @@ export const InfoCard = styled.div`
     margin: 10px 0;
     border-radius: 20px;
   }
-
-  @media (max-width: 480px) {
-    width: 165px;
-    background-size: cover;
-    margin: 10px 0;
-    border-radius: 20px;
-  }
 `;
 
 export const Mark = styled.div`

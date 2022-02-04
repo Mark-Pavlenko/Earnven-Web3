@@ -27,6 +27,13 @@ export const RootStyle = styled('div')`
         : `#0B0E1D`};
     background-size: cover;
   }
+  @media (max-width: 480px) {
+    background: ${(props) =>
+      props.isLightTheme
+        ? `url(${require(`./../assets/images/bgMobile_375x3201.jpg`).default})`
+        : `#0B0E1D`};
+    background-size: cover;
+  }
 `;
 
 export const MainStyle = styled('div')`

@@ -24,7 +24,7 @@ import { getmStableFarmSagaWatcher, getmStablePoolsSagaWatcher } from './mStable
 import { getSushiSwapLPSagaWatcher } from './sushiSwap';
 import { getalchemixVaultsSagaWatcher } from './alchemix';
 import { getcompoundTokenSagaWatcher } from './compoundFinance';
-
+import { getCurrentTokenDataSagaWatcher } from './currentTokenData';
 export default function* watchRootSaga() {
   yield all([
     call(getAccountBalanceSagaWatcher),
@@ -51,5 +51,6 @@ export default function* watchRootSaga() {
     call(getSushiSwapLPSagaWatcher),
     call(getalchemixVaultsSagaWatcher),
     call(getcompoundTokenSagaWatcher),
+    call(getCurrentTokenDataSagaWatcher),
   ]);
 }
