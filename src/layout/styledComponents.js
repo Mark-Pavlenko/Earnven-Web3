@@ -3,7 +3,7 @@ import { experimentalStyled as styled } from '@material-ui/core/styles';
 export const RootStyle = styled('div')`
   background: ${(props) =>
     props.isLightTheme
-      ? `url(${require(`./../assets/images/lightBg2048x3448.jpg`).default})`
+      ? `url(${require(`./../assets/images/lightDashboard.jpg`).default})`
       : `#0B0E1D`};
   @media (min-width: 1921px) {
     background: ${(props) =>
@@ -60,6 +60,5 @@ export const MainStyle = styled('div')`
 
   @media (min-width: 1445px) {
     margin-left: 314px;
-    max-width: 1635px;
   }
 `;
