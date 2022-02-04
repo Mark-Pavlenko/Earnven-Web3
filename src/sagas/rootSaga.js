@@ -22,6 +22,7 @@ import { getethApiSagaWatcher } from './ethExplorerApi';
 import { getmStableSagaWatcher } from './mStable';
 import { getmStableFarmSagaWatcher, getmStablePoolsSagaWatcher } from './mStable';
 import { getSushiSwapLPSagaWatcher } from './sushiSwap';
+import { getCurrentTokenDataSagaWatcher } from './currentTokenData';
 export default function* watchRootSaga() {
   yield all([
     call(getAccountBalanceSagaWatcher),
@@ -46,5 +47,6 @@ export default function* watchRootSaga() {
     call(getmStableFarmSagaWatcher),
     call(getmStablePoolsSagaWatcher),
     call(getSushiSwapLPSagaWatcher),
+    call(getCurrentTokenDataSagaWatcher),
   ]);
 }
