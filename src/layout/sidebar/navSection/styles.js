@@ -140,7 +140,7 @@ export const NavList = styled(List)`
     margin-left: 0;
   }
 
-  @media screen and (min-width: 1445px) and (max-height: 800px) {
+  @media screen and (min-width: 1445px) and (max-height: 880px) {
     margin-top: 10px;
   }
 `;

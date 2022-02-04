@@ -42,7 +42,7 @@ export const InfoListItem = styled(List)`
     margin-bottom: 2px;
   }
 
-  @media screen and (min-width: 1445px) and (max-height: 800px) {
+  @media screen and (min-width: 1445px) and (max-height: 880px) {
     margin-bottom: 10px;
   }
 `;

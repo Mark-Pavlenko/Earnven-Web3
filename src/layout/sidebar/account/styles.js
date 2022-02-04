@@ -23,7 +23,7 @@ export const AccountStyle = styled.div`
     margin-right: 0px;
   }
 
-  @media (max-height: 800px) {
+  @media (max-height: 880px) {
     margin-top: 10px;
   }
 `;
@@ -65,7 +65,7 @@ export const WalletsListBlock = styled.div`
     margin-left: 95px;
   }
 
-  @media (max-height: 800px) {
+  @media (max-height: 880px) {
     margin-top: 0;
   }
 `;
