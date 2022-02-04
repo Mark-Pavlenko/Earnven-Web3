@@ -1,11 +1,11 @@
 import React from 'react';
 import { Net, Header, Links, TokenLinks, TokenPlatformLogo } from './styledComponents';
 import { Main, TokenLink } from '../styledComponentsCommon';
-import PortfolioPerf from '../../../../components/portfolioperf/portfolioperf';
 import sendIcon from '../../../../assets/icons/send-icon.svg';
 import ethLogoBlue from '../../../../assets/icons/ethLogoBlue.png';
 import etherScan from '../../../../assets/icons/etherScan-icon.svg';
 import etherScanDark from '../../../../assets/icons/etherScanDark-icon.svg';
+import PortfolioPerf from '../../../dashboard/portfolioperf/portfolioperf';
 // import Chart from '../chart/Chart';
 
 const Graph = ({ isLightTheme }) => {
