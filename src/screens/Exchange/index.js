@@ -83,6 +83,7 @@ import {
   MultiSwapSendValueLabel,
   MultiSwapReceiveTokensBlock,
   AddReceiveTokenMultiSwapBtn,
+  FirstColumnTitleHeaderBlock,
 } from './styled';
 import { useSelector } from 'react-redux';
 import pyramidIcon from '../../assets/icons/pyramidIcon.svg';
@@ -199,8 +200,6 @@ export default function SwapComponent() {
   const [currencyModal, setcurrencyModal] = useState(false);
   const [currencyToModal, setcurrencyToModal] = useState(false);
   const [toTokens, settoTokens] = useState([]);
-
-  const classes = useStyles();
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
@@ -456,10 +455,12 @@ export default function SwapComponent() {
       <ExchangeMainLayout>
         <SwapFirstColumn>
           <FirstColumnSwapSubBlock>
-            <ColumnMainTitles isLightTheme={isLightTheme}>Swap</ColumnMainTitles>
-            <ColumnMainSubTitles isLightTheme={isLightTheme}>
-              Trade any token or LP share in a single transaction
-            </ColumnMainSubTitles>
+            <FirstColumnTitleHeaderBlock>
+              <ColumnMainTitles isLightTheme={isLightTheme}>Swap</ColumnMainTitles>
+              <ColumnMainSubTitles isLightTheme={isLightTheme}>
+                Trade any token or LP share in a single transaction
+              </ColumnMainSubTitles>
+            </FirstColumnTitleHeaderBlock>
             <SwapTokensMainSubBlock isLightTheme={isLightTheme}>
               {/*send block */}
               <SendReceiveSubBlock>
@@ -560,7 +561,6 @@ export default function SwapComponent() {
             </SwapTokensMainSubBlock>
           </FirstColumnSwapSubBlock>
         </SwapFirstColumn>
-
         <SwapSecondColumn>
           <MultiSwapComponent />
         </SwapSecondColumn>

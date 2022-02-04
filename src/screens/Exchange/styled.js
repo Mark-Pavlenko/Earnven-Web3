@@ -2,11 +2,15 @@ import styled, { css } from 'styled-components';
 import { Button, IconButton } from '@material-ui/core';
 
 export const ExchangeMainLayout = styled.div`
-  //background-color: red;
   display: grid;
   grid-template-columns: 50% 50%;
-  //height: 600px;
-  //column-gap: 120px;
+
+  @media (max-width: 1200px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 `;
 
 const ColumnsTitleBlocks = css`
@@ -15,13 +19,15 @@ const ColumnsTitleBlocks = css`
 `;
 
 export const SwapFirstColumn = styled.div`
-  //background-color: green;
   width: 525px;
   height: 585px;
+
+  @media (max-width: 540px) {
+    width: 375px;
+  }
 `;
 
 export const FirstColumnSwapSubBlock = styled.div`
-  //background-color: orange;
   ${ColumnsTitleBlocks};
 `;
 
@@ -39,6 +45,12 @@ export const ColumnMainTitles = styled.p`
   letter-spacing: 0;
 `;
 
+export const FirstColumnTitleHeaderBlock = styled.div`
+  @media (max-width: 540px) {
+    padding-left: 15px;
+  }
+`;
+
 export const SwapTokensMainSubBlock = styled.div`
   width: 525px;
   height: 490px;
@@ -49,6 +61,11 @@ export const SwapTokensMainSubBlock = styled.div`
   box-shadow: 2px 2px 4px 0 #ffffff1a inset;
   backdrop-filter: blur(35px);
   border-radius: 10px;
+
+  @media (max-width: 540px) {
+    width: 375px;
+    padding: 37px 15px 27px 15px;
+  }
 `;
 
 export const SendReceiveSubBlock = styled.div``;
@@ -89,6 +106,10 @@ export const SendTokensChooseButton = styled.div`
   :hover {
     cursor: pointer;
   }
+
+  @media (max-width: 540px) {
+    width: 345px;
+  }
 `;
 
 export const MultiSwapSendTokensChooseButton = styled.div`
@@ -110,6 +131,10 @@ export const MultiSwapSendTokensChooseButton = styled.div`
   :hover {
     cursor: pointer;
   }
+
+  @media (max-width: 540px) {
+    width: 345px;
+  }
 `;
 
 export const MultiSwapReceiveTokensBlock = styled.div`
@@ -130,6 +155,10 @@ export const MultiSwapReceiveTokensBlock = styled.div`
 
   :hover {
     cursor: pointer;
+  }
+
+  @media (max-width: 540px) {
+    width: 345px;
   }
 `;
 
@@ -177,6 +206,10 @@ export const ChosenSendTokenValue = styled.span`
 export const SwitchTokensBtn = styled.img`
   margin: 0 auto;
   cursor: pointer;
+
+  @media (max-width: 540px) {
+    margin-bottom: -10px;
+  }
 `;
 
 export const NewMultiSwapButton = styled(Button)`
@@ -207,6 +240,10 @@ export const ColumnMainSubTitles = styled.p`
   font-weight: 500;
   line-height: 22px;
   letter-spacing: 0;
+
+  @media (max-width: 540px) {
+    margin-top: 20px;
+  }
 `;
 
 export const AddReceiveTokenMultiSwapBtn = styled(Button)`
@@ -292,24 +329,42 @@ export const SwapBlockExchangeLayout = styled.div`
     :hover {
       background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
     }
+
+    @media (max-width: 540px) {
+      width: 345px;
+    }
   }
 `;
 
 export const SwapSecondColumn = styled.div`
   width: 540px;
   height: 585px;
-  //background-color: blue;
+  @media (max-width: 1200px) {
+    margin-top: 40px;
+  }
+
+  @media (max-width: 540px) {
+    width: 375px;
+  }
 `;
 
 export const SecondColumnSwapSubBlock = styled.div`
   width: 540px;
   height: 585px;
   //background-color: gray;
+  @media (max-width: 540px) {
+    width: 375px;
+  }
 `;
 
 export const SecondColumnTitleBlock = styled.div`
   ${ColumnsTitleBlocks};
   //background-color: violet;
+  @media (max-width: 1200px) {
+    width: 340px;
+    padding-left: 15px;
+    margin-bottom: 20px;
+  }
 `;
 
 export const SecondColumnTitleHeaderBlock = styled.div`
