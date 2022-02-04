@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Main,
   Mobile,
@@ -19,6 +19,7 @@ import Performance from './components/performance/Performance';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { numberWithCommas } from '../../commonFunctions/commonFunctions';
+import { getTokenDataSaga } from '../../store/currentTokenData/actions';
 
 const TokenPage = () => {
   const { address } = useParams();
@@ -42,36 +43,35 @@ const TokenPage = () => {
       'similique sunt in culpa qui officia deserunt mollitia animi, id est laborum ' +
       'et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.'
   );
-  const [tokenData, setTokenData] = useState(null);
+  // const [tokenData, setTokenData] = useState(null);
   const [tokenTransactions, setTokenTransactions] = useState(null);
   const [usersTokenData, setUsersTokenData] = useState(null);
   const [tokenContractAddress, setTokenContractAddress] = useState(null);
   const [tokenHistoryData, setTokenHistoryData] = useState(null);
   const [walletData, setWalletData] = useState(null);
   const theme = useSelector((state) => state?.themeReducer.isLightTheme);
+  const dispatch = useDispatch();
+  const tokenData = useSelector((state) => {
+    console.log(state?.currentTokenDataReducer.currentTokenData);
+    return state?.currentTokenDataReducer.currentTokenData;
+  });
 
   useEffect(() => {
-    let tokenContractAddressForPath = null;
+    dispatch(getTokenDataSaga(tokenId));
+  }, [tokenId]);
+
+  useEffect(() => {
+    const tokenContractAddress = tokenData?.contract_address;
     axios
-      .get(`https://api.coingecko.com/api/v3/coins/${tokenId}`, {})
+      .get(
+        `https://api.etherscan.io/api?module=account&action=tokentx&contractaddress=${tokenContractAddress}&address=${address}&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W`,
+        {}
+      )
       .then(async (response) => {
-        console.log('response TokenData', response);
-        tokenContractAddressForPath = response?.data.contract_address || '';
-        setTokenContractAddress(await response.data.contract_address);
-        setTokenData(await response.data);
-      })
-      .then(() => {
-        axios
-          .get(
-            `https://api.etherscan.io/api?module=account&action=tokentx&contractaddress=${tokenContractAddressForPath}&address=${address}&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W`,
-            {}
-          )
-          .then(async (response) => {
-            console.log('response TokenTransactions', response);
-            if (response.data.status === '1') {
-              setTokenTransactions(response.data.result);
-            }
-          });
+        console.log('response TokenTransactions', response);
+        if (response.data.status === '1') {
+          setTokenTransactions(response.data.result);
+        }
       });
 
     axios
@@ -115,7 +115,7 @@ const TokenPage = () => {
           }))
         );
       });
-  }, [tokenId]);
+  }, [tokenData]);
 
   const tokensHolding = usersTokenData
     ? `${numberWithCommas(
