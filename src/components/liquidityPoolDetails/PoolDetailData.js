@@ -88,7 +88,7 @@ export default function Chart(props) {
       const epoch = getEpoch();
       //call this util function to get uniswap graph data
       const response = await getUniswapGraphData(tokenPair, epoch);
-      //console.log('uniswap data', response)
+      console.log('uniswap data', response)
 
       //main derive code
       if (response.data.data) {
@@ -958,17 +958,17 @@ export default function Chart(props) {
           {!Loading && <PoolDetailChart tokenPair={tokenPair} />}
         </Grid>
       </Grid>
-      <Grid item md={12}>
-        {!Loading && (
-          <PoolDetailsInfo
-            tokenASymbol={tokenASymbol}
-            tokenBSymbol={tokenBSymbol}
-            tokenAId={tokenAId}
-            tokenBId={tokenBId}
-            tokenPair={tokenPair}
-          />
-        )}
-      </Grid>
+      {/*<Grid item md={12}>*/}
+      {/*  {!Loading && (*/}
+      {/*    <PoolDetailsInfo*/}
+      {/*      tokenASymbol={tokenASymbol}*/}
+      {/*      tokenBSymbol={tokenBSymbol}*/}
+      {/*      tokenAId={tokenAId}*/}
+      {/*      tokenBId={tokenBId}*/}
+      {/*      tokenPair={tokenPair}*/}
+      {/*    />*/}
+      {/*  )}*/}
+      {/*</Grid>*/}
     </Fragment>
   );
 }
