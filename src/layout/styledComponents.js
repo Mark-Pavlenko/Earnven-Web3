@@ -5,13 +5,9 @@ import lightDashboard from '../assets/images/lightDashboard.jpg';
 export const RootStyle = styled('div')`
   background: ${(props) =>
     props.isLightTheme
-      ? `url(${require(`../assets/images/lightDashboard.jpg`).default})`
-      : `#10142D`};
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-
-  @media (min-width: 1281px) {
-    background-size: 100% 100%;
+      ? `url(${require(`./../assets/images/lightBg2048x3448.jpg`).default})`
+      : `#0B0E1D`};
+  @media (min-width: 1921px) {
     background: ${(props) =>
       props.isLightTheme
         ? `url(${require(`../assets/images/lightDashboardBig.jpg`).default})`
