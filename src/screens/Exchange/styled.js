@@ -188,20 +188,25 @@ export const AdditionalOptionsSwapTokensSubBlock = styled.div`
   }
 `;
 
-export const SwapBlockExchangeButton = styled(Button)`
-  width: 150px;
-  height: 40px;
-  margin-top: 10px;
-  color: ${(props) => (props.isLightTheme ? '#4453AD' : '#FFFFFF')};
-  background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
-  box-shadow: ${(props) =>
-    props.isLightTheme
-      ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
-      : '7px 21px 22px -15px rgba(51, 78, 131, 0.17)'};
-  border-radius: 10px;
+export const SwapBlockExchangeLayout = styled.div`
+  display: flex;
+  justify-content: center;
 
-  :hover {
+  Button {
+    width: 150px;
+    height: 40px;
+    margin-top: 10px;
+    color: ${(props) => (props.isLightTheme ? '#4453AD' : '#FFFFFF')};
     background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
+    box-shadow: ${(props) =>
+      props.isLightTheme
+        ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+        : '7px 21px 22px -15px rgba(51, 78, 131, 0.17)'};
+    border-radius: 10px;
+
+    :hover {
+      background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
+    }
   }
 `;
 

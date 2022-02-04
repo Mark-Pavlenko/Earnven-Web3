@@ -67,7 +67,7 @@ import {
   SwitchTokensBtn,
   LabelsBlockImportantSpan,
   LabelsBlockSubBlockSpan,
-  SwapBlockExchangeButton,
+  SwapBlockExchangeLayout,
 } from './styled';
 import { useSelector } from 'react-redux';
 import pyramidIcon from '../../assets/icons/pyramidIcon.svg';
@@ -531,11 +531,9 @@ export default function Exchange() {
                   </LabelsBlockSubBlock>
                 </DownDelimiterLabelsBlock>
 
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                  <SwapBlockExchangeButton isLightTheme={isLightTheme}>
-                    Exchange
-                  </SwapBlockExchangeButton>
-                </div>
+                <SwapBlockExchangeLayout isLightTheme={isLightTheme}>
+                  <Button>Exchange</Button>
+                </SwapBlockExchangeLayout>
 
                 {/*{object.logoURI !== null ? (*/}
                 {/*  <img*/}
