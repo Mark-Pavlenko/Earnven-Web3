@@ -51,6 +51,8 @@ export const SimpleSwapBlock = styled.div`
   border-radius: 10px;
 `;
 
+export const SendReceiveSubBlock = styled.div``;
+
 export const SendBlockLabels = styled.div`
   display: flex;
   justify-content: space-between;
@@ -59,6 +61,53 @@ export const SendBlockLabels = styled.div`
     color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#FFFFFF')};
     opacity: ${(props) => (props.isLightTheme ? 0.5 : 0.8)};
   }
+`;
+
+export const SendTokensChooseButton = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 475px;
+  height: 60px;
+  margin-top: 5px;
+  color: black;
+  background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+      : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+  backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
+  border-radius: 10px;
+
+  :hover {
+    cursor: pointer;
+  }
+`;
+
+export const ChooseBtnTokenBlock = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 12px;
+`;
+
+export const ChosenTokenLabel = styled.span`
+  font-size: 20px;
+  font-weight: 600;
+  color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#FFFFFF')};
+`;
+
+export const ChosenSendTokenValue = styled.span`
+  margin-left: auto;
+  margin-right: 20px;
+  font-size: 20px;
+  font-weight: 600;
+  color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#FFFFFF')};
+`;
+
+export const SwitchTokensBtn = styled.img`
+  margin: 0 auto;
+  cursor: pointer;
 `;
 
 export const NewMultiSwapButton = styled(Button)`
@@ -89,6 +138,12 @@ export const ColumnMainSubTitles = styled.p`
   font-weight: 500;
   line-height: 22px;
   letter-spacing: 0;
+`;
+
+export const SwapBlockDelimiter = styled.div`
+  margin-top: 20px;
+  opacity: 0.05;
+  border: ${(props) => (props.isLightTheme ? '1px solid #1E1E20' : '1px solid #ffffff')};
 `;
 
 export const SwapSecondColumn = styled.div`
