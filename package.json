@@ -12,6 +12,7 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^5.0.0-alpha.36",
     "@material-ui/styles": "^5.0.0-alpha.36",
+    "@mui/icons-material": "^5.3.1",
     "@mui/material": "^5.2.4",
     "@mui/system": "^5.2.5",
     "@nivo/core": "^0.72.0",

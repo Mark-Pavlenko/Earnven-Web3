@@ -13,6 +13,7 @@ import {
   Container,
   Divider,
   Grid,
+  IconButton,
   InputAdornment,
   Modal,
   OutlinedInput,
@@ -38,6 +39,15 @@ import switchTokensLight from '../../assets/icons/switchTokensLight.svg';
 import switchTokensDark from '../../assets/icons/switchTokensDark.svg';
 import daiICon from '../../assets/icons/daiIcon.svg';
 import paraSwapIcon from '../../assets/icons/paraSwapIcon.svg';
+import uniIcon from '../../assets/icons/uniIcon.svg';
+import AddIcon from '@mui/icons-material/Add';
+// import DeleteIcon from '@mui/icons-material/Delete';
+import { makeStyles } from '@material-ui/styles';
+import plusIconLight from '../../assets/icons/plusIconLight.svg';
+import plusIconDark from '../../assets/icons/plusIconDark.svg';
+
+//-------
+
 import NukeExchange from './nukeExchange';
 import MenuItem from '@material-ui/core/MenuItem';
 import CurrencySearchModal from '../../components/CurrencySearchModal';
@@ -71,11 +81,21 @@ import {
   MultiSwapChooseBtnTokenBlock,
   MultiSwapSendTokensChooseButton,
   MultiSwapSendValueLabel,
+  MultiSwapReceiveTokensBlock,
+  AddReceiveTokenMultiSwapBtn,
 } from './styled';
 import { useSelector } from 'react-redux';
 import pyramidIcon from '../../assets/icons/pyramidIcon.svg';
 import chevronDownBlack from '../../assets/icons/chevronDownLightTheme.svg';
 import chevronDownLight from '../../assets/icons/chevronDownLight.svg';
+
+const useStyles = makeStyles((theme) => ({
+  addIcon: {
+    '& svg': {
+      fontSize: 14,
+    },
+  },
+}));
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -178,6 +198,8 @@ export default function Exchange() {
   const [currencyModal, setcurrencyModal] = useState(false);
   const [currencyToModal, setcurrencyToModal] = useState(false);
   const [toTokens, settoTokens] = useState([]);
+
+  const classes = useStyles();
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
@@ -549,7 +571,9 @@ export default function Exchange() {
                 Trade any token for many tokens or many tokens for a token in a single transaction
               </ColumnMainSubTitles>
             </SecondColumnTitleBlock>
-            <SwapTokensMainSubBlock isLightTheme={isLightTheme} style={{ marginTop: '0' }}>
+            <SwapTokensMainSubBlock
+              isLightTheme={isLightTheme}
+              style={{ marginTop: '0', height: '600px' }}>
               {/*send block */}
               <SendReceiveSubBlock>
                 <MultiSwapSendTokensChooseButton isLightTheme={isLightTheme}>
@@ -568,7 +592,6 @@ export default function Exchange() {
                       </MultiSwapSendValueLabel>
                     </div>
                   </MultiSwapChooseBtnTokenBlock>
-
                   <ChosenSendTokenValue isLightTheme={isLightTheme}>
                     <span>1</span>
                     <MultiSwapSendValueLabel isLightTheme={isLightTheme}>
@@ -576,63 +599,122 @@ export default function Exchange() {
                     </MultiSwapSendValueLabel>
                   </ChosenSendTokenValue>
                 </MultiSwapSendTokensChooseButton>
+
                 <SwitchTokensBtn
                   src={isLightTheme ? switchTokensLight : switchTokensDark}
                   alt="switch_tokens_btn"
                 />
               </SendReceiveSubBlock>
 
-              {/*receive block*/}
-              <SendReceiveSubBlock style={{ marginTop: '-9px' }}>
-                <SendBlockLabels isLightTheme={isLightTheme}>
-                  <span>Receive</span>
-                  <span>$30,510.03</span>
-                </SendBlockLabels>
-                <SendTokensChooseButton isLightTheme={isLightTheme}>
-                  <ChooseBtnTokenBlock>
-                    <img src={daiICon} alt="daiICon" style={{ marginRight: '10px' }} />
-                    <ChosenTokenLabel isLightTheme={isLightTheme}>DAI</ChosenTokenLabel>
-                    <img
-                      src={isLightTheme ? chevronDownBlack : chevronDownLight}
-                      alt="chevron_icon"
-                    />
-                  </ChooseBtnTokenBlock>
-                  <ChosenSendTokenValue isLightTheme={isLightTheme}>22508.05</ChosenSendTokenValue>
-                </SendTokensChooseButton>
-              </SendReceiveSubBlock>
+              {/* 1st receive block */}
+              <MultiSwapReceiveTokensBlock isLightTheme={isLightTheme}>
+                <div style={{ display: 'flex', flexDirection: 'row', marginTop: '10px' }}>
+                  <MultiSwapChooseBtnTokenBlock>
+                    <div>
+                      <img src={EthIcon} alt="eth_icon" style={{ marginRight: '10px' }} />
+                      <ChosenTokenLabel isLightTheme={isLightTheme}>ETH</ChosenTokenLabel>
+                      <img
+                        src={isLightTheme ? chevronDownBlack : chevronDownLight}
+                        alt="chevron_icon"
+                      />
+                    </div>
+                    <div>
+                      <MultiSwapSendValueLabel isLightTheme={isLightTheme}>
+                        3510,03 BTC
+                      </MultiSwapSendValueLabel>
+                    </div>
+                  </MultiSwapChooseBtnTokenBlock>
+                  <ChosenSendTokenValue isLightTheme={isLightTheme}>
+                    <span>1</span>
+                    <MultiSwapSendValueLabel isLightTheme={isLightTheme}>
+                      $3 510,03
+                    </MultiSwapSendValueLabel>
+                  </ChosenSendTokenValue>
+                </div>
 
-              <SwapBlockDelimiter isLightTheme={isLightTheme} />
+                <div style={{ paddingLeft: '12px', paddingRight: '19px', marginTop: '5px' }}>
+                  <LabelsBlockSubBlock isLightTheme={isLightTheme} style={{ marginBottom: '3px' }}>
+                    <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                      Exchange rate
+                    </LabelsBlockSubBlockSpan>
+                    <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                      1 ETH = 0,82 DAI
+                    </LabelsBlockSubBlockSpan>
+                  </LabelsBlockSubBlock>
+
+                  <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+                    <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                      Offered by
+                    </LabelsBlockSubBlockSpan>
+                    <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
+                      <img src={paraSwapIcon} alt="paraSwapIcon" />
+                      <span>ParaSwap</span>
+                    </AdditionalOptionsSwapTokensSubBlock>
+                  </LabelsBlockSubBlock>
+                </div>
+              </MultiSwapReceiveTokensBlock>
+
+              {/* 2st receive block */}
+              <MultiSwapReceiveTokensBlock isLightTheme={isLightTheme}>
+                <div style={{ display: 'flex', flexDirection: 'row', marginTop: '10px' }}>
+                  <MultiSwapChooseBtnTokenBlock>
+                    <div>
+                      <img src={uniIcon} alt="eth_icon" style={{ marginRight: '10px' }} />
+                      <ChosenTokenLabel isLightTheme={isLightTheme}>UNI</ChosenTokenLabel>
+                      <img
+                        src={isLightTheme ? chevronDownBlack : chevronDownLight}
+                        alt="chevron_icon"
+                      />
+                    </div>
+                    <div>
+                      <MultiSwapSendValueLabel isLightTheme={isLightTheme}>
+                        3510,03 BTC
+                      </MultiSwapSendValueLabel>
+                    </div>
+                  </MultiSwapChooseBtnTokenBlock>
+                  <ChosenSendTokenValue isLightTheme={isLightTheme}>
+                    <span>1</span>
+                    <MultiSwapSendValueLabel isLightTheme={isLightTheme}>
+                      $3 510,03
+                    </MultiSwapSendValueLabel>
+                  </ChosenSendTokenValue>
+                </div>
+
+                <div style={{ paddingLeft: '12px', paddingRight: '19px', marginTop: '5px' }}>
+                  <LabelsBlockSubBlock isLightTheme={isLightTheme} style={{ marginBottom: '3px' }}>
+                    <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                      Exchange rate
+                    </LabelsBlockSubBlockSpan>
+                    <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                      1 ETH = 0,82 UNI
+                    </LabelsBlockSubBlockSpan>
+                  </LabelsBlockSubBlock>
+
+                  <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+                    <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                      Offered by
+                    </LabelsBlockSubBlockSpan>
+                    <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
+                      <img src={paraSwapIcon} alt="paraSwapIcon" />
+                      <span>ParaSwap</span>
+                    </AdditionalOptionsSwapTokensSubBlock>
+                  </LabelsBlockSubBlock>
+                </div>
+              </MultiSwapReceiveTokensBlock>
+
+              <div style={{ display: 'flex', marginTop: '5px' }}>
+                <AddReceiveTokenMultiSwapBtn isLightTheme={isLightTheme} style={{}}>
+                  <img
+                    src={isLightTheme ? plusIconDark : plusIconLight}
+                    alt="add_receive_multiswap_token"
+                  />
+                </AddReceiveTokenMultiSwapBtn>
+              </div>
+
+              <SwapBlockDelimiter isLightTheme={isLightTheme} style={{ marginTop: '10px' }} />
 
               {/* Labels block*/}
-              <DownDelimiterLabelsBlock isLightTheme={isLightTheme}>
-                <LabelsBlockSubBlock isLightTheme={isLightTheme}>
-                  <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                    Min.Received
-                  </LabelsBlockSubBlockSpan>
-                  <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                    2829.673262 DA
-                  </LabelsBlockSubBlockSpan>
-                </LabelsBlockSubBlock>
-
-                <LabelsBlockSubBlock isLightTheme={isLightTheme}>
-                  <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                    Rate
-                  </LabelsBlockSubBlockSpan>
-                  <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                    1 ETH = 2,858.255 DAI
-                  </LabelsBlockSubBlockSpan>
-                </LabelsBlockSubBlock>
-
-                <LabelsBlockSubBlock isLightTheme={isLightTheme}>
-                  <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                    Offered by
-                  </LabelsBlockSubBlockSpan>
-                  <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
-                    <img src={paraSwapIcon} alt="paraSwapIcon" />
-                    <span>ParaSwap</span>
-                  </AdditionalOptionsSwapTokensSubBlock>
-                </LabelsBlockSubBlock>
-
+              <DownDelimiterLabelsBlock isLightTheme={isLightTheme} style={{ marginTop: '20px' }}>
                 <LabelsBlockSubBlock isLightTheme={isLightTheme}>
                   <LabelsBlockImportantSpan isLightTheme={isLightTheme}>
                     Slippage Tolerance

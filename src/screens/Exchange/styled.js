@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { Button } from '@material-ui/core';
+import { Button, IconButton } from '@material-ui/core';
 
 export const ExchangeMainLayout = styled.div`
   //background-color: red;
@@ -112,6 +112,27 @@ export const MultiSwapSendTokensChooseButton = styled.div`
   }
 `;
 
+export const MultiSwapReceiveTokensBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 475px;
+  height: 115px;
+  margin-top: -3px;
+  margin-bottom: 23px;
+  color: black;
+  background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+      : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+  backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
+  border-radius: 10px;
+
+  :hover {
+    cursor: pointer;
+  }
+`;
+
 export const ChooseBtnTokenBlock = styled.div`
   display: flex;
   flex-direction: row;
@@ -186,6 +207,22 @@ export const ColumnMainSubTitles = styled.p`
   font-weight: 500;
   line-height: 22px;
   letter-spacing: 0;
+`;
+
+export const AddReceiveTokenMultiSwapBtn = styled(Button)`
+  max-width: 28px;
+  max-height: 28px;
+  min-width: 28px;
+  min-height: 28px;
+  margin: 0 auto;
+  font-size: 14px;
+  color: ${(props) => (props.isLightTheme ? '#4453AD' : '#ffffff')};
+  background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
+  border-radius: 10px;
+
+  :hover {
+    background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
+  }
 `;
 
 export const SwapBlockDelimiter = styled.div`
