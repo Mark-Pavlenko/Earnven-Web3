@@ -146,6 +146,65 @@ export const SwapBlockDelimiter = styled.div`
   border: ${(props) => (props.isLightTheme ? '1px solid #1E1E20' : '1px solid #ffffff')};
 `;
 
+export const DownDelimiterLabelsBlock = styled.div`
+  margin-top: 10px;
+`;
+
+export const LabelsBlockSubBlock = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+
+  span {
+    font-size: 12px;
+    line-height: 19px;
+  }
+`;
+
+export const LabelsBlockSubBlockSpan = styled.span`
+  color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#FFFFFF')};
+  font-weight: 400;
+`;
+
+export const LabelsBlockImportantSpan = styled.span`
+  color: ${(props) => (props.isLightTheme ? '#4453AD' : '#8F86FF')};
+  font-weight: 600;
+`;
+
+export const AdditionalOptionsSwapTokensSubBlock = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  img {
+    margin-right: 4px;
+  }
+
+  span {
+    color: ${(props) => (props.isLightTheme ? '#4453AD' : '#8F86FF')};
+    font-weight: 600;
+  }
+`;
+
+export const SwapBlockExchangeButton = styled(Button)`
+  width: 150px;
+  height: 40px;
+  margin-top: 10px;
+  color: ${(props) => (props.isLightTheme ? '#4453AD' : '#FFFFFF')};
+  background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+      : '7px 21px 22px -15px rgba(51, 78, 131, 0.17)'};
+  border-radius: 10px;
+
+  :hover {
+    background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
+  }
+`;
+
 export const SwapSecondColumn = styled.div`
   width: 540px;
   height: 585px;

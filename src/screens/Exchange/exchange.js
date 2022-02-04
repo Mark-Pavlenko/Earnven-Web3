@@ -37,6 +37,7 @@ import ethImage from '../../assets/icons/eth.png';
 import switchTokensLight from '../../assets/icons/switchTokensLight.svg';
 import switchTokensDark from '../../assets/icons/switchTokensDark.svg';
 import daiICon from '../../assets/icons/daiIcon.svg';
+import paraSwapIcon from '../../assets/icons/paraSwapIcon.svg';
 import NukeExchange from './nukeExchange';
 import MenuItem from '@material-ui/core/MenuItem';
 import CurrencySearchModal from '../../components/CurrencySearchModal';
@@ -46,10 +47,13 @@ import {
   ChosenTokenLabel,
   ColumnMainSubTitles,
   ColumnMainTitles,
+  DownDelimiterLabelsBlock,
   ExchangeMainLayout,
   FirstColumnSwapSubBlock,
   FirstColumnTitleBlock,
+  LabelsBlockSubBlock,
   NewMultiSwapButton,
+  AdditionalOptionsSwapTokensSubBlock,
   SecondColumnSwapSubBlock,
   SecondColumnTitleBlock,
   SecondColumnTitleHeaderBlock,
@@ -61,6 +65,9 @@ import {
   SwapFirstColumn,
   SwapSecondColumn,
   SwitchTokensBtn,
+  LabelsBlockImportantSpan,
+  LabelsBlockSubBlockSpan,
+  SwapBlockExchangeButton,
 } from './styled';
 import { useSelector } from 'react-redux';
 import pyramidIcon from '../../assets/icons/pyramidIcon.svg';
@@ -474,6 +481,62 @@ export default function Exchange() {
                 </SendReceiveSubBlock>
 
                 <SwapBlockDelimiter isLightTheme={isLightTheme} />
+
+                {/* Labels block*/}
+                <DownDelimiterLabelsBlock isLightTheme={isLightTheme}>
+                  <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+                    <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                      Min.Received
+                    </LabelsBlockSubBlockSpan>
+                    <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                      2829.673262 DA
+                    </LabelsBlockSubBlockSpan>
+                  </LabelsBlockSubBlock>
+
+                  <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+                    <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                      Rate
+                    </LabelsBlockSubBlockSpan>
+                    <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                      1 ETH = 2,858.255 DAI
+                    </LabelsBlockSubBlockSpan>
+                  </LabelsBlockSubBlock>
+
+                  <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+                    <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                      Offered by
+                    </LabelsBlockSubBlockSpan>
+                    <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
+                      <img src={paraSwapIcon} alt="paraSwapIcon" />
+                      <span>ParaSwap</span>
+                    </AdditionalOptionsSwapTokensSubBlock>
+                  </LabelsBlockSubBlock>
+
+                  <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+                    <LabelsBlockImportantSpan isLightTheme={isLightTheme}>
+                      Slippage Tolerance
+                    </LabelsBlockImportantSpan>
+                    <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
+                      <span>1%</span>
+                    </AdditionalOptionsSwapTokensSubBlock>
+                  </LabelsBlockSubBlock>
+
+                  <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+                    <LabelsBlockImportantSpan isLightTheme={isLightTheme}>
+                      Transaction speed
+                    </LabelsBlockImportantSpan>
+                    <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
+                      <span>$20 ^ Average</span>
+                    </AdditionalOptionsSwapTokensSubBlock>
+                  </LabelsBlockSubBlock>
+                </DownDelimiterLabelsBlock>
+
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <SwapBlockExchangeButton isLightTheme={isLightTheme}>
+                    Exchange
+                  </SwapBlockExchangeButton>
+                </div>
+
                 {/*{object.logoURI !== null ? (*/}
                 {/*  <img*/}
                 {/*    alt=""*/}
