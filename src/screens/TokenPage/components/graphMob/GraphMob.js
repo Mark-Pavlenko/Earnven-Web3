@@ -7,12 +7,12 @@ import {
   TokenLinks,
   NetWrapper,
   TokenPlatformLogo,
+  TokenLink,
 } from './styledComponents';
 import sendIcon from '../../../../assets/icons/send-icon.svg';
 import ethLogoBlue from '../../../../assets/icons/ethLogoBlue.png';
 import etherScan from '../../../../assets/icons/etherScan-icon.svg';
-import { TokenLink } from '../styledComponentsCommon';
-import PortfolioPerf from '../../../../components/portfolioperf/portfolioperf';
+import PortfolioPerf from '../../../dashboard/portfolioperf/portfolioperf';
 
 const GraphMob = ({ isLightTheme, social }) => {
   return (
