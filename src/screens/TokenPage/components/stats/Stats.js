@@ -3,45 +3,55 @@ import { Wrapper, InfoCard, Mark, Value } from './styledComponents';
 import { Main, Title } from '../styledComponentsCommon';
 import CoinGeckoLogo from '../../../../assets/icons/CoinGeckoLogo.png';
 
-const Stats = ({ isLightTheme }) => {
+const Stats = ({
+  isLightTheme,
+  statsDay,
+  statsMonth,
+  statsTwoMonths,
+  statsYear,
+  marketCap,
+  dayHigh,
+  dayLow,
+  coingeckoScore,
+}) => {
   return (
     <Main isLightTheme={isLightTheme}>
       <Title>{'Stats'}</Title>
       <Wrapper>
         <InfoCard>
           <Mark>{'1 day'}</Mark>
-          <Value>{'-5,85%'}</Value>
+          <Value>{`${statsDay} %`}</Value>
         </InfoCard>
         <InfoCard>
           <Mark>{'1 month'}</Mark>
-          <Value>{'-24,57%'}</Value>
+          <Value>{`${statsMonth} %`}</Value>
         </InfoCard>
         <InfoCard>
           <Mark>{'2 months'}</Mark>
-          <Value>{'-18,85%'}</Value>
+          <Value>{`${statsTwoMonths} %`}</Value>
         </InfoCard>
         <InfoCard>
           <Mark>{'1 year'}</Mark>
-          <Value>{'0,00%'}</Value>
+          <Value>{`${statsYear} %`}</Value>
         </InfoCard>
         <InfoCard>
           <Mark>{'Market Cap'}</Mark>
-          <Value>{'$296609311'}</Value>
+          <Value>{`$${marketCap}`}</Value>
         </InfoCard>
         <InfoCard>
-          <Mark>{'1 Year High'}</Mark>
-          <Value>{'67,80%'}</Value>
+          <Mark>{'24h High'}</Mark>
+          <Value>{`${dayHigh}%`}</Value>
         </InfoCard>
         <InfoCard>
-          <Mark>{'1 Year Law'}</Mark>
-          <Value>{'$29,4'}</Value>
+          <Mark>{'24h Low'}</Mark>
+          <Value>{`${dayLow}%`}</Value>
         </InfoCard>
         <InfoCard>
           <Mark>
             <img src={CoinGeckoLogo} />
             {'CoinGecko Score'}
           </Mark>
-          <Value>{'25,979'}</Value>
+          <Value>{`${coingeckoScore}`}</Value>
         </InfoCard>
       </Wrapper>
     </Main>

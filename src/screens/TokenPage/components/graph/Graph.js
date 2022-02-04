@@ -1,5 +1,5 @@
 import React from 'react';
-import { Net, Header, Links, TokenLinks, TokenPlatformLogo } from './styledComponents';
+import { TokenName, Header, Links, TokenLinks, Chain } from './styledComponents';
 import { Main, TokenLink } from '../styledComponentsCommon';
 import sendIcon from '../../../../assets/icons/send-icon.svg';
 import ethLogoBlue from '../../../../assets/icons/ethLogoBlue.png';
@@ -8,14 +8,22 @@ import etherScanDark from '../../../../assets/icons/etherScanDark-icon.svg';
 import PortfolioPerf from '../../../dashboard/portfolioperf/portfolioperf';
 // import Chart from '../chart/Chart';
 
-const Graph = ({ isLightTheme }) => {
+const Graph = ({
+  isLightTheme,
+  address,
+  tokenName,
+  tokenSymbol,
+  tokenImage,
+  current_price,
+  price_change_percentage_24h,
+}) => {
   return (
     <Main isLightTheme={isLightTheme}>
       <Header>
-        <TokenPlatformLogo>
-          <img alt={'Platform'} src={ethLogoBlue} />
+        <Chain>
+          <img alt={'eth'} src={ethLogoBlue} />
           <p>{'ETH'}</p>
-        </TokenPlatformLogo>
+        </Chain>
         <Links>
           <TokenLinks>
             <TokenLink isLightTheme={isLightTheme}>
@@ -36,15 +44,15 @@ const Graph = ({ isLightTheme }) => {
           </TokenLink>
         </Links>
       </Header>
-      <Net>
-        <img alt={'Net'} src={ethLogoBlue} />
-        <p>{'MIR Token'}</p>
-      </Net>
+      <TokenName>
+        <img alt={tokenSymbol} src={tokenImage} />
+        <p>{tokenName}</p>
+      </TokenName>
       <PortfolioPerf
         theme={isLightTheme}
-        address={'0x00057ef157d01c28da3e545487a4d93f55b70842'}
-        totalValue={'$58,888'}
-        difValue={'+13,8%'}
+        address={address}
+        totalValue={current_price ? `$${current_price}` : ''}
+        difValue={price_change_percentage_24h ? `${price_change_percentage_24h}%` : ''}
         isTokenPage={true}
       />
     </Main>
