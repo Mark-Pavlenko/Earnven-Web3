@@ -22,10 +22,10 @@ export const SwapFirstColumn = styled.div`
 
 export const FirstColumnSwapSubBlock = styled.div`
   //background-color: orange;
+  ${ColumnsTitleBlocks};
 `;
 
 export const FirstColumnTitleBlock = styled.div`
-  ${ColumnsTitleBlocks};
   //background-color: yellow;
 `;
 
@@ -39,7 +39,7 @@ export const ColumnMainTitles = styled.p`
   letter-spacing: 0;
 `;
 
-export const SimpleSwapBlock = styled.div`
+export const SwapTokensMainSubBlock = styled.div`
   width: 525px;
   height: 490px;
   margin-top: 20px;
@@ -63,6 +63,13 @@ export const SendBlockLabels = styled.div`
   }
 `;
 
+export const MultiSwapSendValueLabel = styled.span`
+  margin-left: 35px;
+  font-size: 12px;
+  color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#FFFFFF')};
+  opacity: 0.5;
+`;
+
 export const SendTokensChooseButton = styled.div`
   display: flex;
   flex-direction: row;
@@ -84,11 +91,45 @@ export const SendTokensChooseButton = styled.div`
   }
 `;
 
+export const MultiSwapSendTokensChooseButton = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 475px;
+  height: 60px;
+  margin-top: -3px;
+  color: black;
+  background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+      : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+  backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
+  border-radius: 10px;
+
+  :hover {
+    cursor: pointer;
+  }
+`;
+
 export const ChooseBtnTokenBlock = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
   margin-left: 12px;
+`;
+
+export const MultiSwapChooseBtnTokenBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 8px;
+
+  div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
 `;
 
 export const ChosenTokenLabel = styled.span`
@@ -98,11 +139,18 @@ export const ChosenTokenLabel = styled.span`
 `;
 
 export const ChosenSendTokenValue = styled.span`
+  display: flex;
+  flex-direction: column;
+
   margin-left: auto;
   margin-right: 20px;
   font-size: 20px;
   font-weight: 600;
   color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#FFFFFF')};
+
+  span {
+    margin-left: auto;
+  }
 `;
 
 export const SwitchTokensBtn = styled.img`

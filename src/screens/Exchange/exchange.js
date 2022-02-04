@@ -60,7 +60,7 @@ import {
   SendBlockLabels,
   SendReceiveSubBlock,
   SendTokensChooseButton,
-  SimpleSwapBlock,
+  SwapTokensMainSubBlock,
   SwapBlockDelimiter,
   SwapFirstColumn,
   SwapSecondColumn,
@@ -68,6 +68,9 @@ import {
   LabelsBlockImportantSpan,
   LabelsBlockSubBlockSpan,
   SwapBlockExchangeLayout,
+  MultiSwapChooseBtnTokenBlock,
+  MultiSwapSendTokensChooseButton,
+  MultiSwapSendValueLabel,
 } from './styled';
 import { useSelector } from 'react-redux';
 import pyramidIcon from '../../assets/icons/pyramidIcon.svg';
@@ -430,142 +433,111 @@ export default function Exchange() {
       <ExchangeMainLayout>
         <SwapFirstColumn>
           <FirstColumnSwapSubBlock>
-            <FirstColumnTitleBlock>
-              <ColumnMainTitles isLightTheme={isLightTheme}>Swap</ColumnMainTitles>
-              <ColumnMainSubTitles isLightTheme={isLightTheme}>
-                Trade any token or LP share in a single transaction
-              </ColumnMainSubTitles>
-              <SimpleSwapBlock isLightTheme={isLightTheme}>
-                {/*send block */}
-                <SendReceiveSubBlock>
-                  <SendBlockLabels isLightTheme={isLightTheme}>
-                    <span>Send</span>
-                    <span>$3 510,03</span>
-                  </SendBlockLabels>
-                  <SendTokensChooseButton isLightTheme={isLightTheme}>
-                    <ChooseBtnTokenBlock>
-                      <img src={EthIcon} alt="eth_icon" style={{ marginRight: '10px' }} />
-                      <ChosenTokenLabel isLightTheme={isLightTheme}>ETH</ChosenTokenLabel>
-                      <img
-                        src={isLightTheme ? chevronDownBlack : chevronDownLight}
-                        alt="chevron_icon"
-                      />
-                    </ChooseBtnTokenBlock>
-                    <ChosenSendTokenValue isLightTheme={isLightTheme}>10</ChosenSendTokenValue>
-                  </SendTokensChooseButton>
-                  <SwitchTokensBtn
-                    src={isLightTheme ? switchTokensLight : switchTokensDark}
-                    alt="switch_tokens_btn"
-                  />
-                </SendReceiveSubBlock>
+            <ColumnMainTitles isLightTheme={isLightTheme}>Swap</ColumnMainTitles>
+            <ColumnMainSubTitles isLightTheme={isLightTheme}>
+              Trade any token or LP share in a single transaction
+            </ColumnMainSubTitles>
+            <SwapTokensMainSubBlock isLightTheme={isLightTheme}>
+              {/*send block */}
+              <SendReceiveSubBlock>
+                <SendBlockLabels isLightTheme={isLightTheme}>
+                  <span>Send</span>
+                  <span>$3 510,03</span>
+                </SendBlockLabels>
+                <SendTokensChooseButton isLightTheme={isLightTheme}>
+                  <ChooseBtnTokenBlock>
+                    <img src={EthIcon} alt="eth_icon" style={{ marginRight: '10px' }} />
+                    <ChosenTokenLabel isLightTheme={isLightTheme}>ETH</ChosenTokenLabel>
+                    <img
+                      src={isLightTheme ? chevronDownBlack : chevronDownLight}
+                      alt="chevron_icon"
+                    />
+                  </ChooseBtnTokenBlock>
+                  <ChosenSendTokenValue isLightTheme={isLightTheme}>10</ChosenSendTokenValue>
+                </SendTokensChooseButton>
+                <SwitchTokensBtn
+                  src={isLightTheme ? switchTokensLight : switchTokensDark}
+                  alt="switch_tokens_btn"
+                />
+              </SendReceiveSubBlock>
 
-                {/*receive block*/}
-                <SendReceiveSubBlock style={{ marginTop: '-9px' }}>
-                  <SendBlockLabels isLightTheme={isLightTheme}>
-                    <span>Receive</span>
-                    <span>$30,510.03</span>
-                  </SendBlockLabels>
-                  <SendTokensChooseButton isLightTheme={isLightTheme}>
-                    <ChooseBtnTokenBlock>
-                      <img src={daiICon} alt="daiICon" style={{ marginRight: '10px' }} />
-                      <ChosenTokenLabel isLightTheme={isLightTheme}>DAI</ChosenTokenLabel>
-                      <img
-                        src={isLightTheme ? chevronDownBlack : chevronDownLight}
-                        alt="chevron_icon"
-                      />
-                    </ChooseBtnTokenBlock>
-                    <ChosenSendTokenValue isLightTheme={isLightTheme}>
-                      22508.05
-                    </ChosenSendTokenValue>
-                  </SendTokensChooseButton>
-                </SendReceiveSubBlock>
+              {/*receive block*/}
+              <SendReceiveSubBlock style={{ marginTop: '-9px' }}>
+                <SendBlockLabels isLightTheme={isLightTheme}>
+                  <span>Receive</span>
+                  <span>$30,510.03</span>
+                </SendBlockLabels>
+                <SendTokensChooseButton isLightTheme={isLightTheme}>
+                  <ChooseBtnTokenBlock>
+                    <img src={daiICon} alt="daiICon" style={{ marginRight: '10px' }} />
+                    <ChosenTokenLabel isLightTheme={isLightTheme}>DAI</ChosenTokenLabel>
+                    <img
+                      src={isLightTheme ? chevronDownBlack : chevronDownLight}
+                      alt="chevron_icon"
+                    />
+                  </ChooseBtnTokenBlock>
+                  <ChosenSendTokenValue isLightTheme={isLightTheme}>22508.05</ChosenSendTokenValue>
+                </SendTokensChooseButton>
+              </SendReceiveSubBlock>
 
-                <SwapBlockDelimiter isLightTheme={isLightTheme} />
+              <SwapBlockDelimiter isLightTheme={isLightTheme} />
 
-                {/* Labels block*/}
-                <DownDelimiterLabelsBlock isLightTheme={isLightTheme}>
-                  <LabelsBlockSubBlock isLightTheme={isLightTheme}>
-                    <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                      Min.Received
-                    </LabelsBlockSubBlockSpan>
-                    <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                      2829.673262 DA
-                    </LabelsBlockSubBlockSpan>
-                  </LabelsBlockSubBlock>
+              {/* Labels block*/}
+              <DownDelimiterLabelsBlock isLightTheme={isLightTheme}>
+                <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+                  <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                    Min.Received
+                  </LabelsBlockSubBlockSpan>
+                  <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                    2829.673262 DA
+                  </LabelsBlockSubBlockSpan>
+                </LabelsBlockSubBlock>
 
-                  <LabelsBlockSubBlock isLightTheme={isLightTheme}>
-                    <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                      Rate
-                    </LabelsBlockSubBlockSpan>
-                    <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                      1 ETH = 2,858.255 DAI
-                    </LabelsBlockSubBlockSpan>
-                  </LabelsBlockSubBlock>
+                <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+                  <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                    Rate
+                  </LabelsBlockSubBlockSpan>
+                  <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                    1 ETH = 2,858.255 DAI
+                  </LabelsBlockSubBlockSpan>
+                </LabelsBlockSubBlock>
 
-                  <LabelsBlockSubBlock isLightTheme={isLightTheme}>
-                    <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                      Offered by
-                    </LabelsBlockSubBlockSpan>
-                    <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
-                      <img src={paraSwapIcon} alt="paraSwapIcon" />
-                      <span>ParaSwap</span>
-                    </AdditionalOptionsSwapTokensSubBlock>
-                  </LabelsBlockSubBlock>
+                <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+                  <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                    Offered by
+                  </LabelsBlockSubBlockSpan>
+                  <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
+                    <img src={paraSwapIcon} alt="paraSwapIcon" />
+                    <span>ParaSwap</span>
+                  </AdditionalOptionsSwapTokensSubBlock>
+                </LabelsBlockSubBlock>
 
-                  <LabelsBlockSubBlock isLightTheme={isLightTheme}>
-                    <LabelsBlockImportantSpan isLightTheme={isLightTheme}>
-                      Slippage Tolerance
-                    </LabelsBlockImportantSpan>
-                    <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
-                      <span>1%</span>
-                    </AdditionalOptionsSwapTokensSubBlock>
-                  </LabelsBlockSubBlock>
+                <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+                  <LabelsBlockImportantSpan isLightTheme={isLightTheme}>
+                    Slippage Tolerance
+                  </LabelsBlockImportantSpan>
+                  <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
+                    <span>1%</span>
+                  </AdditionalOptionsSwapTokensSubBlock>
+                </LabelsBlockSubBlock>
 
-                  <LabelsBlockSubBlock isLightTheme={isLightTheme}>
-                    <LabelsBlockImportantSpan isLightTheme={isLightTheme}>
-                      Transaction speed
-                    </LabelsBlockImportantSpan>
-                    <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
-                      <span>$20 ^ Average</span>
-                    </AdditionalOptionsSwapTokensSubBlock>
-                  </LabelsBlockSubBlock>
-                </DownDelimiterLabelsBlock>
+                <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+                  <LabelsBlockImportantSpan isLightTheme={isLightTheme}>
+                    Transaction speed
+                  </LabelsBlockImportantSpan>
+                  <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
+                    <span>$20 ^ Average</span>
+                  </AdditionalOptionsSwapTokensSubBlock>
+                </LabelsBlockSubBlock>
+              </DownDelimiterLabelsBlock>
 
-                <SwapBlockExchangeLayout isLightTheme={isLightTheme}>
-                  <Button>Exchange</Button>
-                </SwapBlockExchangeLayout>
-
-                {/*{object.logoURI !== null ? (*/}
-                {/*  <img*/}
-                {/*    alt=""*/}
-                {/*    width="30"*/}
-                {/*    height="30"*/}
-                {/*    src={object.logoURI}*/}
-                {/*    style={{*/}
-                {/*      borderRadius: '50%',*/}
-                {/*      backgroundColor: '#e5e5e5',*/}
-                {/*    }}*/}
-                {/*  />*/}
-                {/*) : (*/}
-                {/*  <Avatar*/}
-                {/*    style={{*/}
-                {/*      display: 'inline',*/}
-                {/*      maxWidth: '30px',*/}
-                {/*      verticalAlign: 'top',*/}
-                {/*      height: '30px',*/}
-                {/*      // marginLeft: '11px',*/}
-                {/*    }}*/}
-                {/*    color={'#737373'}*/}
-                {/*    name={object.name}*/}
-                {/*    round={true}*/}
-                {/*    size="30"*/}
-                {/*    textSizeRatio={1}*/}
-                {/*  />*/}
-                {/*)}*/}
-              </SimpleSwapBlock>
-            </FirstColumnTitleBlock>
+              <SwapBlockExchangeLayout isLightTheme={isLightTheme}>
+                <Button>Exchange</Button>
+              </SwapBlockExchangeLayout>
+            </SwapTokensMainSubBlock>
           </FirstColumnSwapSubBlock>
         </SwapFirstColumn>
+
         <SwapSecondColumn>
           <SecondColumnSwapSubBlock>
             <SecondColumnTitleBlock>
@@ -577,9 +549,144 @@ export default function Exchange() {
                 Trade any token for many tokens or many tokens for a token in a single transaction
               </ColumnMainSubTitles>
             </SecondColumnTitleBlock>
+            <SwapTokensMainSubBlock isLightTheme={isLightTheme} style={{ marginTop: '0' }}>
+              {/*send block */}
+              <SendReceiveSubBlock>
+                <MultiSwapSendTokensChooseButton isLightTheme={isLightTheme}>
+                  <MultiSwapChooseBtnTokenBlock>
+                    <div>
+                      <img src={EthIcon} alt="eth_icon" style={{ marginRight: '10px' }} />
+                      <ChosenTokenLabel isLightTheme={isLightTheme}>ETH</ChosenTokenLabel>
+                      <img
+                        src={isLightTheme ? chevronDownBlack : chevronDownLight}
+                        alt="chevron_icon"
+                      />
+                    </div>
+                    <div>
+                      <MultiSwapSendValueLabel isLightTheme={isLightTheme}>
+                        3510,03 BTC
+                      </MultiSwapSendValueLabel>
+                    </div>
+                  </MultiSwapChooseBtnTokenBlock>
+
+                  <ChosenSendTokenValue isLightTheme={isLightTheme}>
+                    <span>1</span>
+                    <MultiSwapSendValueLabel isLightTheme={isLightTheme}>
+                      $3 510,03
+                    </MultiSwapSendValueLabel>
+                  </ChosenSendTokenValue>
+                </MultiSwapSendTokensChooseButton>
+                <SwitchTokensBtn
+                  src={isLightTheme ? switchTokensLight : switchTokensDark}
+                  alt="switch_tokens_btn"
+                />
+              </SendReceiveSubBlock>
+
+              {/*receive block*/}
+              <SendReceiveSubBlock style={{ marginTop: '-9px' }}>
+                <SendBlockLabels isLightTheme={isLightTheme}>
+                  <span>Receive</span>
+                  <span>$30,510.03</span>
+                </SendBlockLabels>
+                <SendTokensChooseButton isLightTheme={isLightTheme}>
+                  <ChooseBtnTokenBlock>
+                    <img src={daiICon} alt="daiICon" style={{ marginRight: '10px' }} />
+                    <ChosenTokenLabel isLightTheme={isLightTheme}>DAI</ChosenTokenLabel>
+                    <img
+                      src={isLightTheme ? chevronDownBlack : chevronDownLight}
+                      alt="chevron_icon"
+                    />
+                  </ChooseBtnTokenBlock>
+                  <ChosenSendTokenValue isLightTheme={isLightTheme}>22508.05</ChosenSendTokenValue>
+                </SendTokensChooseButton>
+              </SendReceiveSubBlock>
+
+              <SwapBlockDelimiter isLightTheme={isLightTheme} />
+
+              {/* Labels block*/}
+              <DownDelimiterLabelsBlock isLightTheme={isLightTheme}>
+                <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+                  <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                    Min.Received
+                  </LabelsBlockSubBlockSpan>
+                  <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                    2829.673262 DA
+                  </LabelsBlockSubBlockSpan>
+                </LabelsBlockSubBlock>
+
+                <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+                  <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                    Rate
+                  </LabelsBlockSubBlockSpan>
+                  <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                    1 ETH = 2,858.255 DAI
+                  </LabelsBlockSubBlockSpan>
+                </LabelsBlockSubBlock>
+
+                <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+                  <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                    Offered by
+                  </LabelsBlockSubBlockSpan>
+                  <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
+                    <img src={paraSwapIcon} alt="paraSwapIcon" />
+                    <span>ParaSwap</span>
+                  </AdditionalOptionsSwapTokensSubBlock>
+                </LabelsBlockSubBlock>
+
+                <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+                  <LabelsBlockImportantSpan isLightTheme={isLightTheme}>
+                    Slippage Tolerance
+                  </LabelsBlockImportantSpan>
+                  <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
+                    <span>1%</span>
+                  </AdditionalOptionsSwapTokensSubBlock>
+                </LabelsBlockSubBlock>
+
+                <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+                  <LabelsBlockImportantSpan isLightTheme={isLightTheme}>
+                    Transaction speed
+                  </LabelsBlockImportantSpan>
+                  <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
+                    <span>$20 ^ Average</span>
+                  </AdditionalOptionsSwapTokensSubBlock>
+                </LabelsBlockSubBlock>
+              </DownDelimiterLabelsBlock>
+
+              <SwapBlockExchangeLayout isLightTheme={isLightTheme}>
+                <Button>Exchange</Button>
+              </SwapBlockExchangeLayout>
+            </SwapTokensMainSubBlock>
           </SecondColumnSwapSubBlock>
         </SwapSecondColumn>
       </ExchangeMainLayout>
+
+      {/*{object.logoURI !== null ? (*/}
+      {/*  <img*/}
+      {/*    alt=""*/}
+      {/*    width="30"*/}
+      {/*    height="30"*/}
+      {/*    src={object.logoURI}*/}
+      {/*    style={{*/}
+      {/*      borderRadius: '50%',*/}
+      {/*      backgroundColor: '#e5e5e5',*/}
+      {/*    }}*/}
+      {/*  />*/}
+      {/*) : (*/}
+      {/*  <Avatar*/}
+      {/*    style={{*/}
+      {/*      display: 'inline',*/}
+      {/*      maxWidth: '30px',*/}
+      {/*      verticalAlign: 'top',*/}
+      {/*      height: '30px',*/}
+      {/*      // marginLeft: '11px',*/}
+      {/*    }}*/}
+      {/*    color={'#737373'}*/}
+      {/*    name={object.name}*/}
+      {/*    round={true}*/}
+      {/*    size="30"*/}
+      {/*    textSizeRatio={1}*/}
+      {/*  />*/}
+      {/*)}*/}
 
       {/* Old code*/}
       {/*<Box sx={{ width: '100%', mt: 3 }}>*/}
