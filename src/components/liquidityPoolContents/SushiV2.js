@@ -175,6 +175,19 @@ export default function LiquidityPools() {
                 ).toFixed(2)}{' '}
                 % (Weekly)
               </div>
+              <Link to={`/${address}/sushiswap/address/${object.token0.id}/${object.token1.id}`}>
+                <Button
+                    color="primary"
+                    sx={{
+                      height: '0.1px',
+                      color: '#fff',
+                      fontWeight: 5,
+                      fontSize: '13px',
+                      // background: (theme) => theme.palette.gradients.custom,
+                    }}>
+                  Details
+                </Button>
+              </Link>
               <div style={{ display: 'inline-block', width: '10%' }}>
                 <img
                   style={{

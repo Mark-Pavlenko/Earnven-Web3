@@ -32,7 +32,9 @@ import HomeScreen from './container/home/HomeScreen';
 import TokenCreator from './screens/TokenCreator';
 // added by Prabha on sep-14-2021
 import UniswapLiquidityPool from './components/liquidityPoolDetails/Index';
+import { PoolDetails } from './components/liquidityPoolDetails/poolDetails';
 import UniswapPoolDetail from './components/liquidityPoolDetails/DetailLoadPage';
+
 // added by Prabha on sep-18-2021
 import SushiwapLiquidityPool from './components/sushiSwapPoolDetails/Index';
 import SushiswapPoolDetail from './components/sushiSwapPoolDetails/DetailLoadPage';
@@ -59,7 +61,8 @@ export default function Router() {
       path: 'uniswap/address/:token0/:token1',
       element: <UniswapLiquidityPool />,
     },
-    { path: 'uniswap/pair/:tokenid', element: <UniswapPoolDetail /> },
+    // { path: 'uniswap/pair/:tokenid', element: <UniswapPoolDetail /> },
+    { path: 'uniswap/pair/:tokenid', element: <PoolDetails /> },
     {
       path: 'sushiswap/address/:token0/:token1',
       element: <SushiwapLiquidityPool />,

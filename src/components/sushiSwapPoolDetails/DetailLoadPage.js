@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom';
 // import { useNavigate } from 'react-router'
 import PoolDetailData from './PoolDetailData';
 // import PoolDetailsRecord from "./Index"
+import { PoolDetails } from '../liquidityPoolDetails/poolDetails';
 
 export default function DetailLoadPage(props) {
   // const navigate = useNavigate()
@@ -36,7 +37,8 @@ export default function DetailLoadPage(props) {
   return (
     <div style={{ margin: 'auto' }}>
       <h3>I am in sushiswap pool detail page {tokenid}</h3>
-      <PoolDetailData address={address} token0={token0} token1={token1} />
+      <PoolDetails address={address} token0={token0} token1={token1} />
+      {/*<PoolDetailData address={address} token0={token0} token1={token1} />*/}
     </div>
   );
 }
