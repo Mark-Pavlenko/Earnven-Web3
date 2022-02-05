@@ -1,0 +1,139 @@
+.chart {
+  width: 100%;
+  display: flex;
+  gap: 30px;
+}
+
+.chart-timeline {
+  position: relative;
+  width: 100%;
+}
+
+.apexcharts-tooltip {
+  background: #737373;
+  color: #000;
+}
+
+.hover-info {
+  padding: 5px 10px;
+  background: rgba(255, 255, 255, 0.16);
+  mix-blend-mode: normal;
+  box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(35px);
+  border-radius: 7px;
+}
+
+.hover-price {
+  font-size: 16px;
+  color: #4453AD;
+}
+
+.hover-date {
+  font-size: 10px;
+  color: #1E1E20;
+  opacity: 0.5;
+}
+
+.apexcharts-xcrosshairs {
+  stroke-width: 2px;
+  stroke: #1400FF;
+  stroke-dasharray: 0;
+}
+
+.apexcharts-yaxis {
+  transform: translate(0, 0);
+  font-size: 10px;
+  opacity: 0.8;
+}
+
+.apexcharts-svg {
+  height: auto;
+}
+svg:not(:root){
+  overflow: visible;
+}
+
+.apexcharts-text {
+  font-size: 10px;
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+.net-worth {
+  position: absolute;
+  top: 21%;
+  left: 30px;
+  font-size: 10px;
+  color: white;
+}
+
+.apexcharts-xaxistooltip {
+  display: none;
+}
+
+.switch-chart {
+  display: flex;
+  align-items: flex-end;
+}
+
+.chart-active {
+  display: flex;
+  align-items: flex-end;
+}
+
+.change-buttons {
+  border: none;
+  min-width: 34px;
+  height: 26px;
+  padding: 2px 10px;
+  font-size: 14px;
+  color: white;
+  background: none;
+  cursor: pointer;
+}
+
+.dark-active {
+  background: #4453AD;
+  color: white;
+  box-shadow: 4px 6px 20px -5px rgba(51, 78, 131, 0.17);
+  border-radius: 10px;
+  border: none;
+  height: 26px;
+  margin-bottom: 3%;
+  cursor: pointer;
+  padding: 2px 10px;
+  font-size: 14px;
+  box-sizing: border-box;
+  min-width: 34px;
+}
+
+.chart-wrapper {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  border-radius: 10px;
+  background: rgba(31, 38, 92, 0.24);
+  mix-blend-mode: normal;
+  box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(35px);
+  padding: 25px 30px 30px 30px;
+}
+
+@media (max-width: 768px) {
+  .chart-wrapper {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 30px;
+    padding: 25px 30px 30px 30px;
+  }
+  .net-worth {
+    top: 13%;
+  }
+
+
+  .apexcharts-title-text {
+    font-size: 26px;
+  }
+}

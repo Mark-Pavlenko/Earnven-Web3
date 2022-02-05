@@ -2,14 +2,13 @@ import React, { Component } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import axios from 'axios';
 import ApexCharts from 'apexcharts';
-import './lightThemeCharts.css';
+import './darkThemeChart.css';
 
-export default class LightThemeChart extends Component {
+export default class DarkThemeChart extends Component {
   constructor(props) {
     super(props);
     this.state = {
       account: '',
-      // hideFilter: false,
       series: [],
       options: {
         chart: {
@@ -19,9 +18,7 @@ export default class LightThemeChart extends Component {
           zoom: {
             autoScaleYAxis: true,
           },
-          sparkline: {
-            // enabled: true,
-          },
+          sparkline: {},
           toolbar: {
             show: false,
           },
@@ -37,19 +34,26 @@ export default class LightThemeChart extends Component {
           type: 'datetime',
           axisBorder: {
             show: true,
-            color: 'rgba(30,30,32, 0.03)',
+            color: 'rgba(255,255,255, 0.03)',
             height: 1,
             width: '100%',
           },
           axisTicks: {
             show: true,
             borderType: 'solid',
-            color: 'rgba(30,30,32, 0.03)',
+            color: 'rgba(255,255,255, 0.03)',
+          },
+          labels: {
+            style: {
+              fontSize: '10px',
+              colors: 'white',
+              fontWeight: 400,
+              opacity: 0.7,
+            },
           },
         },
         yaxis: {
           labels: {
-            // show: true,
             formatter: function (val) {
               if (val > 999999) {
                 return val / 1000000 + 'M';
@@ -61,7 +65,7 @@ export default class LightThemeChart extends Component {
             },
             style: {
               fontSize: '10px',
-              colors: '#1E1E20',
+              colors: 'white',
               fontWeight: 400,
               opacity: 0.7,
             },
@@ -69,7 +73,7 @@ export default class LightThemeChart extends Component {
         },
         grid: {
           position: 'back',
-          borderColor: 'rgba(30,30,32, 0.03)',
+          borderColor: 'rgba(255,255,255, 0.03)',
           yaxis: {
             lines: {
               show: true,
@@ -77,17 +81,6 @@ export default class LightThemeChart extends Component {
           },
         },
         tooltip: {
-          // enabled: false,
-          // x: {
-          //     format: 'dd MMM yyyy'
-          // },
-          // y: {
-          //     formatter: undefined,
-          //     title: {
-          //         formatter: (seriesName) => '$',
-          //     },
-          // },
-
           custom: function ({ series, seriesIndex, dataPointIndex, w }) {
             function CommaFormatted(amount) {
               amount = amount.toString();
@@ -178,7 +171,6 @@ export default class LightThemeChart extends Component {
         title: {
           text: this.props.totalValue,
           align: 'left',
-          // margin: 20,
           offsetX: -10,
           offsetY: -15,
           floating: false,
@@ -186,7 +178,7 @@ export default class LightThemeChart extends Component {
             fontSize: '40px',
             fontWeight: 600,
             fontFamily: 'saira',
-            color: '#4453AD',
+            color: 'white',
           },
         },
         subtitle: {
@@ -219,28 +211,14 @@ export default class LightThemeChart extends Component {
     };
   }
 
-  componentWillMount() {
-    this.getAddressChartHistory();
+  componentDidMount() {
+    this.getTokenChartHistory();
   }
 
   componentDidUpdate() {
     if (this.state.account !== this.props.address) {
-      this.getAddressChartHistory();
+      this.getTokenChartHistory();
     }
-    // if (this.state.options.title.text !== this.props.totalValue) {
-    //   this.setState(() => {
-    //     return {
-    //       ...this.state,
-    //       options: {
-    //         ...this.state.options,
-    //         title: {
-    //           ...this.state.options.title,
-    //           text: this.props.totalValue,
-    //         },
-    //       },
-    //     };
-    //   });
-    // }
     if (
       this.state.options.subtitle.text !== this.props.difValue ||
       this.state.options.title.text !== this.props.totalValue
@@ -265,36 +243,26 @@ export default class LightThemeChart extends Component {
     }
   }
 
-  componentDidMount() {
-    this.setState({
-      selection: 'all',
-    });
-  }
-
-  getAddressChartHistory = async () => {
+  getTokenChartHistory = async () => {
     var data = [];
     let points = [];
     let result = [];
     let c = {};
-    const accountAddress = this.props.address;
-    this.setState({ account: this.props.address });
-    const path =
-      'https://api2.ethplorer.io/getAddressChartHistory/' +
-      accountAddress +
-      '?apiKey=ethplorer.widget';
-    await axios.get(path, {}, {}).then(async (response) => {
-      result = response.data.history.data;
-
+    const path = `https://api.coingecko.com/api/v3/coins/${
+      this.props.tokenId
+    }/market_chart/range?vs_currency=usd&from=1200000000&to=${new Date().getTime()}`;
+    await axios.get(path, {}).then(async (response) => {
+      result = response.data.prices;
+      console.log(response, new Date());
       if (result && result.length > 0) {
         for (let i = 0; i < result.length; i++) {
           var temp = [];
-          temp.push(result[i].date);
-          temp.push(result[i].max.toFixed(2));
+          temp.push(new Date(result[i][0]));
+          temp.push(result[i][1].toFixed(2));
           data.push(temp);
         }
       }
       c = { data };
-      // points
       points.push(c);
       this.setState({ series: points });
     });
@@ -310,7 +278,7 @@ export default class LightThemeChart extends Component {
 
   updateData(timeline) {
     if (this.state.series[0].data.length === 0) {
-      // do smth.
+      // do smth
     } else {
       const { length } = this.state.series[0].data;
       const firstDay = new Date(this.state.series[0].data[0][0]);
@@ -384,57 +352,47 @@ export default class LightThemeChart extends Component {
   }
   render() {
     return (
-      <div
-        className="chart-wrapper--light"
-        style={this.props.isTokenPage ? { background: 'transparent', boxShadow: 'none' } : null}>
+      <div className="chart-wrapper" style={{ background: 'transparent', boxShadow: 'none' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <div className="net-worth--light">Net worth</div>
+          <div className="net-worth">Net worth</div>
           <div>
             <button
               id="one_hour"
               onClick={() => this.updateData('one_hour')}
-              className={
-                this.state.selection === 'one_hour' ? 'light-active' : 'change-buttons--light'
-              }>
+              className={this.state.selection === 'one_hour' ? 'dark-active' : 'change-buttons'}>
               1H
             </button>
             &nbsp;
             <button
               id="ytd"
               onClick={() => this.updateData('ytd')}
-              className={this.state.selection === 'ytd' ? 'light-active' : 'change-buttons--light'}>
+              className={this.state.selection === 'ytd' ? 'dark-active' : 'change-buttons'}>
               1D
             </button>{' '}
             <button
               id="one_week"
               onClick={() => this.updateData('one_week')}
-              className={
-                this.state.selection === 'one_week' ? 'light-active' : 'change-buttons--light'
-              }>
+              className={this.state.selection === 'one_week' ? 'dark-active' : 'change-buttons'}>
               1W
             </button>{' '}
             &nbsp;
             <button
               id="one_month"
               onClick={() => this.updateData('one_month')}
-              className={
-                this.state.selection === 'one_month' ? 'light-active' : 'change-buttons--light'
-              }>
+              className={this.state.selection === 'one_month' ? 'dark-active' : 'change-buttons'}>
               1M
             </button>
             &nbsp;
             <button
               id="one_year"
               onClick={() => this.updateData('one_year')}
-              className={
-                this.state.selection === 'one_year' ? 'light-active' : 'change-buttons--light'
-              }>
+              className={this.state.selection === 'one_year' ? 'dark-active' : 'change-buttons'}>
               1Y
             </button>
             <button
               id="all"
               onClick={() => this.updateData('all')}
-              className={this.state.selection === 'all' ? 'light-active' : 'change-buttons--light'}>
+              className={this.state.selection === 'all' ? 'dark-active' : 'change-buttons'}>
               ALL
             </button>
             &nbsp;

@@ -36,6 +36,7 @@ import UniswapPoolDetail from './components/liquidityPoolDetails/DetailLoadPage'
 // added by Prabha on sep-18-2021
 import SushiwapLiquidityPool from './components/sushiSwapPoolDetails/Index';
 import SushiswapPoolDetail from './components/sushiSwapPoolDetails/DetailLoadPage';
+import TokenPage from './screens/TokenPage/tokenPage';
 // import ExchangeTemp from './screens/ExchangeTemp/exchange'
 
 export default function Router() {
@@ -51,7 +52,8 @@ export default function Router() {
     { path: 'history', element: <History /> },
     { path: 'defimadeasy', element: <DefiMadeEasy /> },
     { path: 'assets', element: <AllAssetsPage /> },
-    { path: 'token/:tokenid', element: <TokenDetailsPage /> },
+    // { path: 'token/:tokenid', element: <TokenDetailsPage /> },
+    { path: 'token/:tokenId', element: <TokenPage /> },
     { path: 'token', element: <TokenDetailsPage /> },
     {
       path: 'uniswap/address/:token0/:token1',

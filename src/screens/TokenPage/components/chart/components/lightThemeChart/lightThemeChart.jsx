@@ -9,7 +9,6 @@ export default class LightThemeChart extends Component {
     super(props);
     this.state = {
       account: '',
-      // hideFilter: false,
       series: [],
       options: {
         chart: {
@@ -19,9 +18,7 @@ export default class LightThemeChart extends Component {
           zoom: {
             autoScaleYAxis: true,
           },
-          sparkline: {
-            // enabled: true,
-          },
+          sparkline: {},
           toolbar: {
             show: false,
           },
@@ -49,7 +46,6 @@ export default class LightThemeChart extends Component {
         },
         yaxis: {
           labels: {
-            // show: true,
             formatter: function (val) {
               if (val > 999999) {
                 return val / 1000000 + 'M';
@@ -77,17 +73,6 @@ export default class LightThemeChart extends Component {
           },
         },
         tooltip: {
-          // enabled: false,
-          // x: {
-          //     format: 'dd MMM yyyy'
-          // },
-          // y: {
-          //     formatter: undefined,
-          //     title: {
-          //         formatter: (seriesName) => '$',
-          //     },
-          // },
-
           custom: function ({ series, seriesIndex, dataPointIndex, w }) {
             function CommaFormatted(amount) {
               amount = amount.toString();
@@ -178,7 +163,6 @@ export default class LightThemeChart extends Component {
         title: {
           text: this.props.totalValue,
           align: 'left',
-          // margin: 20,
           offsetX: -10,
           offsetY: -15,
           floating: false,
@@ -219,28 +203,14 @@ export default class LightThemeChart extends Component {
     };
   }
 
-  componentWillMount() {
-    this.getAddressChartHistory();
+  componentDidMount() {
+    this.getTokenChartHistory();
   }
 
   componentDidUpdate() {
     if (this.state.account !== this.props.address) {
-      this.getAddressChartHistory();
+      this.getTokenChartHistory();
     }
-    // if (this.state.options.title.text !== this.props.totalValue) {
-    //   this.setState(() => {
-    //     return {
-    //       ...this.state,
-    //       options: {
-    //         ...this.state.options,
-    //         title: {
-    //           ...this.state.options.title,
-    //           text: this.props.totalValue,
-    //         },
-    //       },
-    //     };
-    //   });
-    // }
     if (
       this.state.options.subtitle.text !== this.props.difValue ||
       this.state.options.title.text !== this.props.totalValue
@@ -265,31 +235,28 @@ export default class LightThemeChart extends Component {
     }
   }
 
-  componentDidMount() {
-    this.setState({
-      selection: 'all',
-    });
-  }
+  // componentDidMount() {
+  //   this.setState({
+  //     selection: 'all',
+  //   });
+  // }
 
-  getAddressChartHistory = async () => {
+  getTokenChartHistory = async () => {
     var data = [];
     let points = [];
     let result = [];
     let c = {};
-    const accountAddress = this.props.address;
-    this.setState({ account: this.props.address });
-    const path =
-      'https://api2.ethplorer.io/getAddressChartHistory/' +
-      accountAddress +
-      '?apiKey=ethplorer.widget';
-    await axios.get(path, {}, {}).then(async (response) => {
-      result = response.data.history.data;
-
+    const path = `https://api.coingecko.com/api/v3/coins/${
+      this.props.tokenId
+    }/market_chart/range?vs_currency=usd&from=1200000000&to=${new Date().getTime()}`;
+    await axios.get(path, {}).then(async (response) => {
+      result = response.data.prices;
+      console.log(response, new Date());
       if (result && result.length > 0) {
         for (let i = 0; i < result.length; i++) {
           var temp = [];
-          temp.push(result[i].date);
-          temp.push(result[i].max.toFixed(2));
+          temp.push(new Date(result[i][0]));
+          temp.push(result[i][1].toFixed(2));
           data.push(temp);
         }
       }
@@ -386,7 +353,7 @@ export default class LightThemeChart extends Component {
     return (
       <div
         className="chart-wrapper--light"
-        style={this.props.isTokenPage ? { background: 'transparent', boxShadow: 'none' } : null}>
+        style={{ background: 'transparent', boxShadow: 'none' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div className="net-worth--light">Net worth</div>
           <div>
