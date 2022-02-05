@@ -5,65 +5,6 @@ import ApexCharts from 'apexcharts';
 import './darkThemeChart.css';
 
 export default class DarkThemeChart extends Component {
-  componentWillMount() {
-    this.getAddressChartHistory();
-  }
-
-  componentDidUpdate() {
-    if (this.state.account !== this.props.address) {
-      this.getAddressChartHistory();
-    }
-    if (this.state.options.title.text !== this.props.totalValue) {
-      this.setState(() => {
-        return {
-          ...this.state,
-          options: {
-            ...this.state.options,
-            title: {
-              ...this.state.options.title,
-              text: this.props.totalValue,
-            },
-          },
-        };
-      });
-    }
-  }
-
-  componentDidMount() {
-    this.setState({
-      selection: 'all',
-    });
-  }
-
-  getAddressChartHistory = async () => {
-    var data = [];
-    let points = [];
-    let result = [];
-    let c = {};
-    const accountAddress = this.props.address;
-    this.setState({ account: this.props.address });
-    const path =
-      'https://api2.ethplorer.io/getAddressChartHistory/' +
-      accountAddress +
-      '?apiKey=ethplorer.widget';
-    await axios.get(path, {}, {}).then(async (response) => {
-      result = response.data.history.data;
-
-      if (result && result.length > 0) {
-        for (let i = 0; i < result.length; i++) {
-          var temp = [];
-          temp.push(result[i].date);
-          temp.push(result[i].max.toFixed(2));
-          data.push(temp);
-        }
-      }
-      c = { data };
-      // points
-      points.push(c);
-      this.setState({ series: points });
-    });
-  };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -257,6 +198,19 @@ export default class DarkThemeChart extends Component {
             color: 'white',
           },
         },
+        subtitle: {
+          text: this.props.difValue,
+          align: 'left',
+          offsetX: this.props.totalValue.split('').length * 21 + 10,
+          offsetY: -2,
+          floating: false,
+          style: {
+            fontSize: '26px',
+            fontWeight: 600,
+            fontFamily: 'saira',
+            color: '#00DFD1',
+          },
+        },
         noData: {
           text: 'Your wallet is empty',
           align: 'center',
@@ -273,6 +227,87 @@ export default class DarkThemeChart extends Component {
       },
     };
   }
+
+  componentWillMount() {
+    this.getAddressChartHistory();
+  }
+
+  componentDidUpdate() {
+    if (this.state.account !== this.props.address) {
+      this.getAddressChartHistory();
+    }
+    // if (this.state.options.title.text !== this.props.totalValue) {
+    //   this.setState(() => {
+    //     return {
+    //       ...this.state,
+    //       options: {
+    //         ...this.state.options,
+    //         title: {
+    //           ...this.state.options.title,
+    //           text: this.props.totalValue,
+    //         },
+    //       },
+    //     };
+    //   });
+    // }
+    if (
+      this.state.options.subtitle.text !== this.props.difValue ||
+      this.state.options.title.text !== this.props.totalValue
+    ) {
+      this.setState(() => {
+        return {
+          ...this.state,
+          options: {
+            ...this.state.options,
+            title: {
+              ...this.state.options.title,
+              text: this.props.totalValue,
+            },
+            subtitle: {
+              ...this.state.options.subtitle,
+              text: this.props.difValue,
+              offsetX: this.props.totalValue.split('').length * 21 + 10,
+            },
+          },
+        };
+      });
+    }
+  }
+
+  componentDidMount() {
+    this.setState({
+      selection: 'all',
+    });
+  }
+
+  getAddressChartHistory = async () => {
+    var data = [];
+    let points = [];
+    let result = [];
+    let c = {};
+    const accountAddress = this.props.address;
+    this.setState({ account: this.props.address });
+    const path =
+      'https://api2.ethplorer.io/getAddressChartHistory/' +
+      accountAddress +
+      '?apiKey=ethplorer.widget';
+    await axios.get(path, {}, {}).then(async (response) => {
+      result = response.data.history.data;
+
+      if (result && result.length > 0) {
+        for (let i = 0; i < result.length; i++) {
+          var temp = [];
+          temp.push(result[i].date);
+          temp.push(result[i].max.toFixed(2));
+          data.push(temp);
+        }
+      }
+      c = { data };
+      // points
+      points.push(c);
+      this.setState({ series: points });
+    });
+  };
 
   monthDiff(d1, d2) {
     var months;
@@ -358,7 +393,9 @@ export default class DarkThemeChart extends Component {
   }
   render() {
     return (
-      <div className="chart-wrapper">
+      <div
+        className="chart-wrapper"
+        style={this.props.isTokenPage ? { background: 'transparent', boxShadow: 'none' } : null}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div className="net-worth">Net worth</div>
           <div>

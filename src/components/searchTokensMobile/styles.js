@@ -9,7 +9,7 @@ export const SearchTokensMobileButton = styled(IconButton)`
   span {
     :hover {
       border-radius: 10px;
-      background-color: red;
+      //background-color: red;
     }
   }
 

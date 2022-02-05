@@ -1,37 +1,27 @@
 import styled from 'styled-components';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 
-export const MainLayout = styled.div`
-  display: flex;
+export const TokensListBox = styled(Box)``;
 
-  @media (max-width: 1000px) {
-    display: none;
+export const FoundTokenBlock = styled.div`
+  :hover {
+    color: ${(props) => (props.isLightTheme ? '#4453AD' : '#8F86FF')};
+  }
+
+  span {
+    color: ${(props) => (props.isLightTheme ? `black` : `white`)};
+
+    :hover {
+      color: ${(props) => (props.isLightTheme ? '#4453AD' : '#8F86FF')};
+    }
   }
 `;
+
+export const TokensListTextField = styled(TextField)``;
 
 export const SearchIcon = styled.img`
   height: 20px;
   width: 17px;
   margin-right: 10px;
-`;
-
-export const CoinItem = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 221px;
-  padding-right: 10px;
-  border-radius: 10px;
-
-  img {
-    width: 20px;
-    height: 20px;
-  }
-
-  span {
-    margin-left: 10px;
-  }
-
-  :hover {
-    background-color: transparent !important;
-  }
 `;

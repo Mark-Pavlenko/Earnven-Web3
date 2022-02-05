@@ -42,7 +42,7 @@ export const InfoListItem = styled(List)`
     margin-bottom: 2px;
   }
 
-  @media screen and (min-width: 1445px) and (max-height: 800px) {
+  @media screen and (min-width: 1445px) and (max-height: 880px) {
     margin-bottom: 10px;
   }
 `;
@@ -65,6 +65,7 @@ export const InfoListItemLink = styled('a')(({ isLightTheme }) => ({
 export const NetworksGridList = styled.ul`
   display: inline-flex;
   flex-wrap: wrap;
+  list-style-type: none;
   gap: 20px;
   margin-top: 20px;
   margin-left: 120px;

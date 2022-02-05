@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import minusIcon from '../../assets/icons/minus.svg';
-import plusIcon from '../../assets/icons/plus-icon.svg';
+import plusIcon from '../../assets/icons/plusIconDark.svg';
 
 export const ToggleButton = styled.div`
   background: ${(props) =>

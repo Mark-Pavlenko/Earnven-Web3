@@ -11,7 +11,7 @@ module.exports = {
     {
       logoURI: 'https://assets.coingecko.com/coins/images/325/small/Tether-logo.png?1598003707',
       symbol: 'USDT',
-      name: 'Tether',
+      name: 'Tether qwerty',
       address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
       decimals: 6,
     },

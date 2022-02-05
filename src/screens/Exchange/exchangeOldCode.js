@@ -360,7 +360,7 @@ export default function Exchange() {
             console.log(`response for all ${protocolsList[i]}`, response.data);
 
             if (protocolsList[i] === '') {
-              protocolQuote.name = '0x Exchange';
+              protocolQuote.name = '0x Index';
               const { sources } = response.data;
               sources.sort((a, b) => parseFloat(b.proportion) - parseFloat(a.proportion));
               const sources2 = [];
@@ -1438,7 +1438,7 @@ export default function Exchange() {
                               <Tooltip title={object.name}>
                                 {object.name === 'Balancer' ? (
                                   <img alt="" width="21" height="20" src={Balancer} />
-                                ) : object.name === '0x Exchange' ? (
+                                ) : object.name === '0x Index' ? (
                                   <img
                                     alt=""
                                     width="21"
@@ -1474,7 +1474,7 @@ export default function Exchange() {
                               <Tooltip title={object.name}>
                                 {object.name === 'Balancer' ? (
                                   <img alt="" width="21" height="20" src={Balancer} />
-                                ) : object.name === '0x Exchange' ? (
+                                ) : object.name === '0x Index' ? (
                                   <img
                                     alt=""
                                     width="21"

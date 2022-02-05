@@ -21,7 +21,7 @@ function* getAccountBalanceSagaWorker(accountAddress) {
 
   yield put({ type: actionTypes.SET_ACCOUNT_LOADER, payload: false });
 
-  console.log('account balance saga', data);
+  // console.log('account balance saga', data);
 
   let total = 0;
 
