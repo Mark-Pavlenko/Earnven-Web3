@@ -98,32 +98,30 @@ export default function LiquidityPools() {
   const [LiquidityAmount, setLiquidityAmount] = useState('');
 
   const [AllTokens, setAllTokens] = useState([]);
-  console.log('AllTokens', AllTokens)
-  console.log('Data', Data)
 
-  useEffect(() => {
-    async function getData() {
-      let fetchedTokens;
-      await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {}).then(async (response) => {
-        setAllTokens(response.data.records);
-        fetchedTokens = response.data.records;
-      });
-      await axios
-        .get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
-        .then(async (response) => {
-          let data = response.data.tokens;
-          let tokens = fetchedTokens.map((token) => ({
-            ...token,
-            logoURI: data.find((x) => x.address == token.address)
-              ? data.find((x) => x.address == token.address).logoURI
-              : tokenURIs.find((x) => x.address == token.address).logoURI,
-          }));
-          setAllTokens(tokens);
-        }).catch((res) => {
-            console.log('liquidity pools Sushiswap-V2 returns error', res)});
-    }
-    getData();
-  }, []);
+  // useEffect(() => {
+  //   async function getData() {
+  //     let fetchedTokens;
+  //     await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {}).then(async (response) => {
+  //       setAllTokens(response.data.records);
+  //       fetchedTokens = response.data.records;
+  //     });
+  //     await axios
+  //       .get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
+  //       .then(async (response) => {
+  //         let data = response.data.tokens;
+  //         let tokens = fetchedTokens.map((token) => ({
+  //           ...token,
+  //           logoURI: data.find((x) => x.address == token.address)
+  //             ? data.find((x) => x.address == token.address).logoURI
+  //             : tokenURIs.find((x) => x.address == token.address).logoURI,
+  //         }));
+  //         setAllTokens(tokens);
+  //       }).catch((res) => {
+  //           console.log('liquidity pools Sushiswap-V2 returns error', res)});
+  //   }
+  //   getData();
+  // }, []);
 
   //worked useEffect
   useEffect(() => {
@@ -566,6 +564,7 @@ export default function LiquidityPools() {
         )
         .then(async (response) => {
           if (response.data.data) {
+            console.log('response.data.data', response.data.data)
             var res = response.data.data.pairDayDatas;
             for (var i = 0; i < res.length; i++) {
               await axios
@@ -734,7 +733,7 @@ export default function LiquidityPools() {
 
   return (
     <div>
-      <LiquidityPoolsTable data={Data} />
+      <LiquidityPoolsTable data={Data} AllTokens={AllTokens} />
       <br />
       <center>
         <button

@@ -46,17 +46,50 @@ import ROUTERABI from '../../../abi/UniRouterV2.json';
 import FACTORYABI from '../../../abi/UniFactoryV2.json';
 import Addresses from '../../../contractAddresses';
 import axios from 'axios';
-import AmountInput from '../../amountInput';
+import tokenURIs from '../../../screens/Exchange/tokenURIs';
 
 export const LiquidityTableItem = ({ item, index, theme }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedModal, setSelectedModal] = useState('');
+
   const [outValue, setOutValue] = useState('');
   const [inValue, setInValue] = useState('');
 
+  console.log('outValue', outValue);
+  console.log('outValue', inValue);
+
   const [TokenA, setTokenA] = useState('');
   const [TokenB, setTokenB] = useState('');
-  console.log('outValue', outValue);
+
+  const [allTokens, setAllTokens] = useState([]);
+  console.log('allTokens', allTokens);
+
+  useEffect(() => {
+    async function getData() {
+      let fetchedTokens;
+      await axios.get(`https://api.0x.org/swap/v1/tokens`, {}).then(async (response) => {
+        setAllTokens(response.data.records);
+        fetchedTokens = response.data.records;
+      });
+      await axios
+        .get(`https://tokens.coingecko.com/uniswap/all.json`, {})
+        .then(async (response) => {
+          let data = response.data.tokens;
+          let tokens = fetchedTokens.map((token) => ({
+            ...token,
+            logoURI: data.find((x) => x.address === token.address)
+              ? data.find((x) => x.address === token.address).logoURI
+              : tokenURIs.find((x) => x.address === token.address).logoURI,
+          }));
+          setAllTokens(tokens);
+        })
+        .catch((res) => {
+          console.log('liquidity pools Sushiswap-V2 returns error', res);
+        });
+    }
+    getData().then((r) => r);
+  }, []);
+
   const switchModal = (e) => {
     setSelectedModal(e.target.id);
     setIsModalVisible(true);
@@ -192,14 +225,11 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
       ROUTERABI,
       '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
     );
-    console.log('pairAddress', pairAddress);
     var reverses = await PairContract.methods.getReserves().call();
     // console.log('reverses', BigInt(reverses[0]), BigInt(reverses[1]));
     let out = await NewContract.methods
       .getAmountsOut(12374646465, [item.token0.id, item.token1.id])
       .call();
-    console.log('NewContract', out);
-    // console.log('NewContract', NewContract.methods.getAmountIn(1000, rserves[0], reserves[1]).call());
   }
 
   async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB) {
@@ -231,8 +261,16 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
   }
 
   const convertTokenPrice = async (inputId, value, token1, token2) => {
-    const stringValue = value.toString();
-    console.log('stringValue', stringValue);
+    console.log('tokenAddresses', item);
+    const tokenDecimal1 = allTokens.find((o) => {
+      return o.address === token1;
+    });
+    const tokenDecimal2 = allTokens.find((o) => {
+      return o.address === token2;
+    });
+
+    console.log('Decimal1', tokenDecimal1?.decimals);
+    console.log('Decimal2', tokenDecimal2?.decimals);
 
     await loadWeb3();
     const web3 = window.web3;
@@ -241,21 +279,38 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
       ROUTERABI,
       '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
     );
-    if (!isNaN(stringValue)) {
+    if (!isNaN(value)) {
       if (inputId === 'firstInput') {
         const convertedValue = await NewContract.methods
-          .getAmountsOut(web3.utils.toWei(stringValue), [token1, token2])
+          //.getAmountsOut(stringValue * 10 ** originDecimal.decimals, [token1, token2])
+          .getAmountsOut(
+            (value * 10 ** (tokenDecimal1?.decimals ? tokenDecimal1?.decimals : 18)).toString(),
+            [token1, token2]
+          )
           .call();
-        //setOutValue(convertedValue[1]);
-        setOutValue(web3.utils.toWei(convertedValue[1]));
+        // const valueWithDecimals = (
+        //   convertedValue[1] /
+        //   10 ** tokenDecimalConvertIn.decimals
+        // ).toString();
+        console.log('convertedValue', convertedValue);
+
+        setOutValue(
+          +convertedValue[1] / 10 ** (tokenDecimal2?.decimals ? tokenDecimal2?.decimals : 18)
+        );
         setInValue(value);
       }
       if (inputId === 'secondInput') {
         const convertedValue = await NewContract.methods
-          .getAmountsIn(web3.utils.toWei(stringValue), [token1, token2])
+          .getAmountsIn(
+            (value * 10 ** (tokenDecimal2?.decimals ? tokenDecimal2?.decimals : 18)).toString(),
+            [token1, token2]
+          )
           .call();
-        //setInValue(convertedValue[0]);
-        setInValue(web3.utils.toWei(convertedValue[0]));
+        console.log('convertedValue', convertedValue);
+        setInValue(
+          +convertedValue[0] / 10 ** (tokenDecimal1?.decimals ? tokenDecimal1?.decimals : 18)
+        );
+
         setOutValue(value);
       }
     } else {
@@ -268,6 +323,7 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
     <>
       {isModalVisible && (
         <ModalContainer
+          theme={theme}
           title={selectedModal + (index + 1)}
           isOpen={isModalVisible}
           onClose={() => {
@@ -307,6 +363,9 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
                   );
                 }}
                 type="number"
+                onFocus={() => {
+                  setOutValue('');
+                }}
               />
               <Balance>{`Balance: ${5}`}</Balance>
             </InputBlock>
@@ -331,6 +390,9 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
                   );
                 }}
                 type="number"
+                onFocus={() => {
+                  setInValue('');
+                }}
               />
               <Balance>{`Balance: ${5}`}</Balance>
             </InputBlock>

@@ -121,6 +121,8 @@ export default function LiquidityPools() {
 
   const [AllTokens, setAllTokens] = useState([]);
   const [allTokensSelect, setAllTokensSelect] = useState([]);
+  console.log('allTokensSelect', allTokensSelect)
+
   useEffect(() => {
     async function getData() {
       let fetchedTokens;
@@ -854,6 +856,7 @@ export default function LiquidityPools() {
 
   //this function turns array of options to JSX for modal select
  const updatedOptions = SelectOptionsWithJSX(allTokensSelect)
+  console.log('updatedOptions', updatedOptions)
 
   //select styles
   const selectStyle = {
