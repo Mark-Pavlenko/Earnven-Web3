@@ -46,11 +46,49 @@ import ROUTERABI from '../../../abi/UniRouterV2.json';
 import FACTORYABI from '../../../abi/UniFactoryV2.json';
 import Addresses from '../../../contractAddresses';
 import axios from 'axios';
+import tokenURIs from '../../../screens/Exchange/tokenURIs';
 
 export const LiquidityTableItem = ({ item, index, theme }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedModal, setSelectedModal] = useState('');
-  const [tokenReverses, setTokensReverses] = useState();
+
+  const [outValue, setOutValue] = useState('');
+  const [inValue, setInValue] = useState('');
+
+  console.log('outValue', outValue);
+  console.log('outValue', inValue);
+
+  const [TokenA, setTokenA] = useState('');
+  const [TokenB, setTokenB] = useState('');
+
+  const [allTokens, setAllTokens] = useState([]);
+  console.log('allTokens', allTokens);
+
+  useEffect(() => {
+    async function getData() {
+      let fetchedTokens;
+      await axios.get(`https://api.0x.org/swap/v1/tokens`, {}).then(async (response) => {
+        setAllTokens(response.data.records);
+        fetchedTokens = response.data.records;
+      });
+      await axios
+        .get(`https://tokens.coingecko.com/uniswap/all.json`, {})
+        .then(async (response) => {
+          let data = response.data.tokens;
+          let tokens = fetchedTokens.map((token) => ({
+            ...token,
+            logoURI: data.find((x) => x.address === token.address)
+              ? data.find((x) => x.address === token.address).logoURI
+              : tokenURIs.find((x) => x.address === token.address).logoURI,
+          }));
+          setAllTokens(tokens);
+        })
+        .catch((res) => {
+          console.log('liquidity pools Sushiswap-V2 returns error', res);
+        });
+    }
+    getData().then((r) => r);
+  }, []);
 
   const switchModal = (e) => {
     setSelectedModal(e.target.id);
@@ -160,6 +198,7 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
       value: '4',
     },
   ];
+
   const updatedOptions = SelectOptionsWithJSX(options);
 
   async function loadWeb3() {
@@ -186,20 +225,105 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
       ROUTERABI,
       '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
     );
-    console.log('pairAddress', pairAddress);
     var reverses = await PairContract.methods.getReserves().call();
     // console.log('reverses', BigInt(reverses[0]), BigInt(reverses[1]));
     let out = await NewContract.methods
       .getAmountsOut(12374646465, [item.token0.id, item.token1.id])
       .call();
-    console.log('NewContract', out);
-    // console.log('NewContract', NewContract.methods.getAmountIn(1000, rserves[0], reserves[1]).call());
   }
+
+  async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB) {
+    const start = parseInt(Date.now() / 1000) + 180;
+    await loadWeb3();
+    const web3 = window.web3;
+    const accounts = await web3.eth.getAccounts();
+    var tokenAContract = new web3.eth.Contract(ERC20ABI, tokenA);
+    var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
+    await tokenAContract.methods
+      .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenA, 'ether'))
+      .send({ from: accounts[0] });
+    await tokenBContract.methods
+      .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenB, 'ether'))
+      .send({ from: accounts[0] });
+    const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.sushiRouter);
+    await UniRouter.methods
+      .addLiquidity(
+        tokenA,
+        tokenB,
+        web3.utils.toWei(amountTokenA, 'ether'),
+        web3.utils.toWei(amountTokenB, 'ether'),
+        0,
+        0,
+        accounts[0],
+        start.toString()
+      )
+      .send({ from: accounts[0] });
+  }
+
+  const convertTokenPrice = async (inputId, value, token1, token2) => {
+    console.log('tokenAddresses', item);
+    const tokenDecimal1 = allTokens.find((o) => {
+      return o.address === token1;
+    });
+    const tokenDecimal2 = allTokens.find((o) => {
+      return o.address === token2;
+    });
+
+    console.log('Decimal1', tokenDecimal1?.decimals);
+    console.log('Decimal2', tokenDecimal2?.decimals);
+
+    await loadWeb3();
+    const web3 = window.web3;
+
+    const NewContract = new web3.eth.Contract(
+      ROUTERABI,
+      '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+    );
+    if (!isNaN(value)) {
+      if (inputId === 'firstInput') {
+        const convertedValue = await NewContract.methods
+          //.getAmountsOut(stringValue * 10 ** originDecimal.decimals, [token1, token2])
+          .getAmountsOut(
+            (value * 10 ** (tokenDecimal1?.decimals ? tokenDecimal1?.decimals : 18)).toString(),
+            [token1, token2]
+          )
+          .call();
+        // const valueWithDecimals = (
+        //   convertedValue[1] /
+        //   10 ** tokenDecimalConvertIn.decimals
+        // ).toString();
+        console.log('convertedValue', convertedValue);
+
+        setOutValue(
+          +convertedValue[1] / 10 ** (tokenDecimal2?.decimals ? tokenDecimal2?.decimals : 18)
+        );
+        setInValue(value);
+      }
+      if (inputId === 'secondInput') {
+        const convertedValue = await NewContract.methods
+          .getAmountsIn(
+            (value * 10 ** (tokenDecimal2?.decimals ? tokenDecimal2?.decimals : 18)).toString(),
+            [token1, token2]
+          )
+          .call();
+        console.log('convertedValue', convertedValue);
+        setInValue(
+          +convertedValue[0] / 10 ** (tokenDecimal1?.decimals ? tokenDecimal1?.decimals : 18)
+        );
+
+        setOutValue(value);
+      }
+    } else {
+      setInValue('');
+      setOutValue('');
+    }
+  };
 
   return (
     <>
       {isModalVisible && (
         <ModalContainer
+          theme={theme}
           title={selectedModal + (index + 1)}
           isOpen={isModalVisible}
           onClose={() => {
@@ -219,6 +343,7 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
               <ChangeToken>{'Or'}</ChangeToken>
             </ButtonsBlock>
             <SelectTitle>{'Supply a token'}</SelectTitle>
+            {/*input-------------------->*/}
             <InputBlock>
               <BlockTokens>
                 <div>
@@ -226,9 +351,26 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
                 </div>
                 <BlockTokenName>{item.token0.name}</BlockTokenName>
               </BlockTokens>
-              <ModalInput type="number" />
+              <ModalInput
+                value={inValue}
+                onChange={(e) => {
+                  setTokenA(e.target.value);
+                  convertTokenPrice(
+                    'firstInput',
+                    parseInt(e.target.value),
+                    item.token0.id,
+                    item.token1.id
+                  );
+                }}
+                type="number"
+                onFocus={() => {
+                  setOutValue('');
+                }}
+              />
               <Balance>{`Balance: ${5}`}</Balance>
             </InputBlock>
+            {/*input-------------------->*/}
+            {/*input-------------------->*/}
             <InputBlock>
               <BlockTokens>
                 <div>
@@ -236,9 +378,25 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
                 </div>
                 <BlockTokenName>{item.token1.name}</BlockTokenName>
               </BlockTokens>
-              <ModalInput type="number" />
+              <ModalInput
+                value={outValue}
+                onChange={(e) => {
+                  setTokenB(e.target.value);
+                  convertTokenPrice(
+                    'secondInput',
+                    parseInt(e.target.value),
+                    item.token0.id,
+                    item.token1.id
+                  );
+                }}
+                type="number"
+                onFocus={() => {
+                  setInValue('');
+                }}
+              />
               <Balance>{`Balance: ${5}`}</Balance>
             </InputBlock>
+            {/*input-------------------->*/}
             <LinksContainer>
               <ModalLink href={'#'}>aaa</ModalLink>
               <ModalLinkRight href={'#'}>bbb</ModalLinkRight>
@@ -246,7 +404,10 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
               <ModalLinkRight href={'#'}>ddd</ModalLinkRight>
             </LinksContainer>
             <ButtonsBlock>
-              <SupplyTokenButton>{`Supply tokens`}</SupplyTokenButton>
+              <SupplyTokenButton
+                onClick={() => {
+                  addLiquidityNormal(item.token0.id, item.token1.id, TokenA, TokenB);
+                }}>{`Supply tokens`}</SupplyTokenButton>
             </ButtonsBlock>
           </SelectWrapper>
         </ModalContainer>

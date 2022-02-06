@@ -7,7 +7,8 @@ export const ShadowBlock = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.16);
+  background: ${(props) =>
+    props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : 'rgba(68, 83, 173, 0.1)'};
   padding: 50px;
   z-index: 1200;
   mix-blend-mode: normal;
@@ -22,7 +23,8 @@ export const MainContent = styled.div`
   max-width: 830px;
   height: 867px;
   transform: translate(-50%, -50%);
-  background: rgba(255, 255, 255, 0.16);
+  background: ${(props) =>
+    props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)'};
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
   mix-blend-mode: normal;
   z-index: 1201;
@@ -30,7 +32,6 @@ export const MainContent = styled.div`
   border-radius: 10px;
   @media (max-width: 768px) {
     padding: 18px 15px 30px 15px;
-    //width: 100%;
   }
   @media (max-width: 525px) {
     width: 100%;
@@ -67,9 +68,14 @@ export const CloseButton = styled.div`
   background: url(${close}) no-repeat center center;
   margin-left: 9px;
   cursor: pointer;
-  background-color: #ffffff;
-  box-shadow: inset 0 5px 10px -6px rgba(51, 78, 131, 0.12);
+  background-color: ${(props) => (props.isLightTheme ? '#ffffff' : 'rgba(68, 83, 173, 0.1)')};
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 0 5px 10px -6px rgba(51, 78, 131, 0.12)'
+      : 'inset 1px 2px 1px 1px rgba(255, 255, 255, 0.1)'};
   border-radius: 7px;
+  mix-blend-mode: ${(props) => (props.isLightTheme ? 'none' : 'normal')};
+  backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
 `;
 
 export const Title = styled.div`
@@ -78,4 +84,5 @@ export const Title = styled.div`
   font-weight: 600;
   font-size: 26px;
   line-height: 41px;
+  color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#ffffff')};
 `;

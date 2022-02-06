@@ -11,8 +11,7 @@ import {
   HeaderLiquidity,
 } from './style';
 
-export const LiquidityPoolsTable = ({ data }) => {
-  console.log('asdasdasd', data);
+export const LiquidityPoolsTable = ({ data, AllTokens }) => {
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
 
   return (

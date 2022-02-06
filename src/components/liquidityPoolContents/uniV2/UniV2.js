@@ -120,11 +120,22 @@ export default function LiquidityPools() {
   const [LiquidityAmount, setLiquidityAmount] = useState('');
 
   const [AllTokens, setAllTokens] = useState([]);
+  const [allTokensSelect, setAllTokensSelect] = useState([]);
+  console.log('allTokensSelect', allTokensSelect)
 
   useEffect(() => {
     async function getData() {
       let fetchedTokens;
       await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {}).then(async (response) => {
+        const selectOptions = []
+        for (let i = 0; i < response.data.records.length; i++) {
+          let object = {};
+          object.name = response.data.records[i].name;
+          object.value = response.data.records[i].name;
+          object.address = response.data.records[i].address;
+          selectOptions.push(object)
+        }
+        setAllTokensSelect(selectOptions)
         setAllTokens(response.data.records);
         fetchedTokens = response.data.records;
         console.log(response.data.records);
@@ -389,9 +400,11 @@ export default function LiquidityPools() {
                 <center>
                   {' '}
                   {/*submit two finish------------------------------------------------->*/}
+
                   OR <br />
                   <br />
                   <br />
+                  {/*Input with button for swap tokens just between pair -------------------->*/}
                   {object.token0.name} Amount : &nbsp;&nbsp;
                   <AmountInput
                     onChange={(e) => {
@@ -418,6 +431,7 @@ export default function LiquidityPools() {
                     }}
                     value="Add Liquidity Classic Method"
                   />
+                  {/*Input with button for swap tokens just between pair -------------------->*/}
                 </center>
                 <br />
                 <br />
@@ -813,32 +827,33 @@ export default function LiquidityPools() {
   //useState for mamaging open/close modal
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  //options for select inside of modal
-  const options = [
-    {
-      image: eth,
-      name: 'Ethereum',
-      value: '1',
-    },
-    {
-      image: uni,
-      name: 'Uniswap',
-      value: '2',
-    },
-    {
-      image: mkr,
-      name: 'Uniswap MKR Pool (v1)',
-      value: '3',
-    },
-    {
-      image: mkr,
-      name: 'Uniswap MKR Pool (v1)',
-      value: '4',
-    },
-  ];
+  // //options for select inside of modal
+  // const options = [
+  //   {
+  //     image: eth,
+  //     name: 'Ethereum',
+  //     value: '1',
+  //   },
+  //   {
+  //     image: uni,
+  //     name: 'Uniswap',
+  //     value: '2',
+  //   },
+  //   {
+  //     image: mkr,
+  //     name: 'Uniswap MKR Pool (v1)',
+  //     value: '3',
+  //   },
+  //   {
+  //     image: mkr,
+  //     name: 'Uniswap MKR Pool (v1)',
+  //     value: '4',
+  //   },
+  // ];
 
   //this function turns array of options to JSX for modal select
-  const updatedOptions = SelectOptionsWithJSX(options);
+ const updatedOptions = SelectOptionsWithJSX(allTokensSelect)
+  console.log('updatedOptions', updatedOptions)
 
   //select styles
   const selectStyle = {
@@ -922,6 +937,10 @@ export default function LiquidityPools() {
     },
   };
 
+  const handler = (data) => {
+    console.log('vfvfvfv', data)
+  }
+
   return (
     <div>
       {/*<button onClick={() => {setIsModalOpen(true)}}>Open</button>*/}
@@ -938,45 +957,45 @@ export default function LiquidityPools() {
         </AddNewGroupButton>
 
         {/*ModalContainer - this is component consists portal logic inside. Component wraps content and displays it as a children. */}
-        {/*Modal is here =====================================>*/}
-        {/* <ModalContainer title={'Add Liquidity'} isOpen={isModalOpen} onClose={() => {setIsModalOpen(false)}}>*/}
-        {/*   <SelectWrapper>*/}
-        {/*     <SelectTitle>{'Supply a token'}</SelectTitle>*/}
-        {/*     <Select*/}
-        {/*         defaultValue={'Ethereum'}*/}
-        {/*         styles={selectStyle}*/}
-        {/*       options={updatedOptions}*/}
-        {/*   />*/}
-        {/*   <InputBlock>*/}
-        {/*     <ModalInput type="number"/>*/}
-        {/*     <Balance>{`Balance: ${5}`}</Balance>*/}
-        {/*   </InputBlock>*/}
-        {/*     <ButtonsBlock>*/}
-        {/*       <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>*/}
-        {/*     </ButtonsBlock>*/}
-        {/*     <ButtonsBlock>*/}
-        {/*       <ChangeToken>{'Or'}</ChangeToken>*/}
-        {/*     </ButtonsBlock>*/}
-        {/*     <SelectTitle>{'Supply a token'}</SelectTitle>*/}
-        {/*     <InputBlock>*/}
-        {/*       <ModalInput type="number"/>*/}
-        {/*       <Balance>{`Balance: ${5}`}</Balance>*/}
-        {/*     </InputBlock>*/}
-        {/*     <InputBlock>*/}
-        {/*       <ModalInput type="number"/>*/}
-        {/*       <Balance>{`Balance: ${5}`}</Balance>*/}
-        {/*     </InputBlock>*/}
-        {/*     <LinksContainer>*/}
-        {/*       <ModalLink href={'#'}>aaa</ModalLink>*/}
-        {/*       <ModalLinkRight href={'#'}>bbb</ModalLinkRight>*/}
-        {/*       <ModalLink href={'#'}>ccc</ModalLink>*/}
-        {/*       <ModalLinkRight href={'#'}>ddd</ModalLinkRight>*/}
-        {/*     </LinksContainer>*/}
-        {/*   <ButtonsBlock>*/}
-        {/*     <SupplyTokenButton>{`Supply tokens`}</SupplyTokenButton>*/}
-        {/*   </ButtonsBlock>*/}
-        {/*   </SelectWrapper>*/}
-        {/* </ModalContainer>*/}
+       {/*Modal is here =====================================>*/}
+       {/* <ModalContainer title={'Add Liquidity'} isOpen={isModalOpen} onClose={() => {setIsModalOpen(false)}}>*/}
+       {/*   <SelectWrapper>*/}
+       {/*     <SelectTitle>{'Supply a token'}</SelectTitle>*/}
+       {/*     <Select*/}
+       {/*         defaultValue={'Ethereum'}*/}
+       {/*         styles={selectStyle}*/}
+       {/*       options={updatedOptions}*/}
+       {/*   />*/}
+       {/*   <InputBlock>*/}
+       {/*     <ModalInput type="number"/>*/}
+       {/*     <Balance>{`Balance: ${5}`}</Balance>*/}
+       {/*   </InputBlock>*/}
+       {/*     <ButtonsBlock>*/}
+       {/*       <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>*/}
+       {/*     </ButtonsBlock>*/}
+       {/*     <ButtonsBlock>*/}
+       {/*       <ChangeToken>{'Or'}</ChangeToken>*/}
+       {/*     </ButtonsBlock>*/}
+       {/*     <SelectTitle>{'Supply a token'}</SelectTitle>*/}
+       {/*     <InputBlock>*/}
+       {/*       <ModalInput type="number"/>*/}
+       {/*       <Balance>{`Balance: ${5}`}</Balance>*/}
+       {/*     </InputBlock>*/}
+       {/*     <InputBlock>*/}
+       {/*       <ModalInput type="number"/>*/}
+       {/*       <Balance>{`Balance: ${5}`}</Balance>*/}
+       {/*     </InputBlock>*/}
+       {/*     <LinksContainer>*/}
+       {/*       <ModalLink href={'#'}>aaa</ModalLink>*/}
+       {/*       <ModalLinkRight href={'#'}>bbb</ModalLinkRight>*/}
+       {/*       <ModalLink href={'#'}>ccc</ModalLink>*/}
+       {/*       <ModalLinkRight href={'#'}>ddd</ModalLinkRight>*/}
+       {/*     </LinksContainer>*/}
+       {/*   <ButtonsBlock>*/}
+       {/*     <SupplyTokenButton>{`Supply tokens`}</SupplyTokenButton>*/}
+       {/*   </ButtonsBlock>*/}
+       {/*   </SelectWrapper>*/}
+       {/* </ModalContainer>*/}
         {/*Modal is here =====================================>*/}
       </center>
     </div>

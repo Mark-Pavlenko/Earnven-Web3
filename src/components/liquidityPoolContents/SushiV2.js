@@ -98,31 +98,32 @@ export default function LiquidityPools() {
   const [LiquidityAmount, setLiquidityAmount] = useState('');
 
   const [AllTokens, setAllTokens] = useState([]);
-  console.log('AllTokens', AllTokens);
-  useEffect(() => {
-    async function getData() {
-      let fetchedTokens;
-      await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {}).then(async (response) => {
-        setAllTokens(response.data.records);
-        fetchedTokens = response.data.records;
-      });
-      await axios
-        .get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
-        .then(async (responsef) => {
-          let data = response.data.tokens;
-          let tokens = fetchedTokens.map((token) => ({
-            ...token,
-            logoURI: data.find((x) => x.address == token.address)
-              ? data.find((x) => x.address == token.address).logoURI
-              : tokenURIs.find((x) => x.address == token.address).logoURI,
-          }));
-          setAllTokens(tokens);
-        }).catch((res) => {
-            console.log('liquidity pools Sushiswap-V2 returns error', res)});
-    }
-    getData();
-  }, []);
 
+  // useEffect(() => {
+  //   async function getData() {
+  //     let fetchedTokens;
+  //     await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {}).then(async (response) => {
+  //       setAllTokens(response.data.records);
+  //       fetchedTokens = response.data.records;
+  //     });
+  //     await axios
+  //       .get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
+  //       .then(async (response) => {
+  //         let data = response.data.tokens;
+  //         let tokens = fetchedTokens.map((token) => ({
+  //           ...token,
+  //           logoURI: data.find((x) => x.address == token.address)
+  //             ? data.find((x) => x.address == token.address).logoURI
+  //             : tokenURIs.find((x) => x.address == token.address).logoURI,
+  //         }));
+  //         setAllTokens(tokens);
+  //       }).catch((res) => {
+  //           console.log('liquidity pools Sushiswap-V2 returns error', res)});
+  //   }
+  //   getData();
+  // }, []);
+
+  //worked useEffect
   useEffect(() => {
     var content = Data.map((object) => {
       return (<>
@@ -358,6 +359,7 @@ export default function LiquidityPools() {
                   OR <br />
                   <br />
                   <br />
+                  {/*Input with button for swap tokens just between pair -------------------->*/}
                   {object.token0.name} Amount : &nbsp;&nbsp;
                   <AmountInput
                     onChange={(e) => {
@@ -374,16 +376,10 @@ export default function LiquidityPools() {
                   <br />
                   <br />
                   <TransparentButton
-                    onClick={(e) => {
-                      addLiquidityNormal(
-                        object.token0.id,
-                        object.token1.id,
-                        AmountTokenA,
-                        AmountTokenB
-                      );
-                    }}
+                    onClick={(e) => {}}
                     value="Add Liquidity Classic Method"
                   />
+                  {/*Input with button for swap tokens just between pair -------------------->*/}
                 </center>
                 <br />
                 <br />
@@ -568,6 +564,7 @@ export default function LiquidityPools() {
         )
         .then(async (response) => {
           if (response.data.data) {
+            console.log('response.data.data', response.data.data)
             var res = response.data.data.pairDayDatas;
             for (var i = 0; i < res.length; i++) {
               await axios
@@ -577,7 +574,6 @@ export default function LiquidityPools() {
                   {}
                 )
                 .then((response) => {
-                  console.log('tokens response', response.data)
                   if (response.data.image) {
                     // console.log(response.data.image)
                     res[i].token0.image = response.data.image;
@@ -735,37 +731,9 @@ export default function LiquidityPools() {
       .send({ from: accounts[0], value: web3.utils.toWei(ethAmount, 'ether') });
   }
 
-  async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB) {
-    const start = parseInt(Date.now() / 1000) + 180;
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var tokenAContract = new web3.eth.Contract(ERC20ABI, tokenA);
-    var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
-    await tokenAContract.methods
-      .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenA, 'ether'))
-      .send({ from: accounts[0] });
-    await tokenBContract.methods
-      .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenB, 'ether'))
-      .send({ from: accounts[0] });
-    const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.sushiRouter);
-    await UniRouter.methods
-      .addLiquidity(
-        tokenA,
-        tokenB,
-        web3.utils.toWei(amountTokenA, 'ether'),
-        web3.utils.toWei(amountTokenB, 'ether'),
-        0,
-        0,
-        accounts[0],
-        start.toString()
-      )
-      .send({ from: accounts[0] });
-  }
-
   return (
     <div>
-      <LiquidityPoolsTable data={Data} />
+      <LiquidityPoolsTable data={Data} AllTokens={AllTokens} />
       <br />
       <center>
         <button
@@ -774,7 +742,7 @@ export default function LiquidityPools() {
           }}
           style={{
             height: '25px',
-            width: '10f0px',
+            width: '100px',
             background: 'transparent',
             border: '1px solid #ac6afc',
             cursor: 'pointer',
