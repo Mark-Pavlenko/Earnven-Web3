@@ -63,15 +63,15 @@ export default function Router() {
       element: <UniswapLiquidityPool />,
     },
     // { path: 'uniswap/pair/:tokenid', element: <UniswapPoolDetail /> },
-    { path: 'uniswap/pair/:tokenid', element: <PoolDetails /> },
+    // { path: 'uniswap/pair/:tokenid', element: <PoolDetails /> },
     {
       path: 'sushiswap/address/:token0/:token1',
       element: <SushiwapLiquidityPool />,
     },
-    {
-      path: 'sushiswap/pair/:tokenid',
-      element: <SushiswapDetails />,
-    },
+    // {
+    //   path: 'sushiswap/pair/:tokenid',
+    //   element: <SushiswapDetails />,
+    // },
     { path: 'bridge', element: <Bridge /> },
     { path: 'multisender', element: <Multisender /> },
     { path: 'safefarm', element: <SafeFarm /> },
