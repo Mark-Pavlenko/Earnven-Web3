@@ -16,6 +16,7 @@ import Earnven from '../../assets/icons/Earnven_menu_text.svg';
 import Dark_Earnven_logo from '../../assets/icons/Dark_Earnven_logo.svg';
 import Account from './account';
 import Links from './social/Links';
+import lightTheme from '../../assets/images/lightDashboard.jpg';
 import lightThemeBig from '../../assets/images/lightDashboardBig.jpg';
 import CloseMobileSidebarLight from '../../assets/images/closeMobileSidebarLight.svg';
 import CloseMobileSidebarDark from '../../assets/images/closeMobileSidebarDark.svg';
@@ -326,7 +327,7 @@ export default function Sidebar({
       sx={{
         height: '100vh',
         // in order to get correct background for QHD & 4K Screens
-        background: () => (isLightTheme ? `url(${lightThemeBig})` : `#0F152C`),
+        background: () => (isLightTheme ? `url(${lightTheme})` : `#0F152C`),
         backdropFilter: 'blur(35px)',
         boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
         '& .simplebar-content': { display: 'flex', flexDirection: 'column' },
@@ -771,7 +772,7 @@ export default function Sidebar({
       sx={{
         height: '100vh',
         // in order to get correct background for QHD & 4K Screens
-        background: () => (isLightTheme ? `url(${lightThemeBig})` : `#0F152C`),
+        background: () => (isLightTheme ? `url(${lightTheme})` : `#0F152C`),
         backdropFilter: 'blur(35px)',
         boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
         '& .simplebar-content': { display: 'flex', flexDirection: 'column' },
