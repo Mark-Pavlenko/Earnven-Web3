@@ -8,6 +8,7 @@ import closeWalletModalBtnDark from '../../../../assets/icons/closeWalletModalBt
 
 import Mytheme from '../theme';
 import { IconButton } from '@mui/material';
+import { PopupTitle } from './styles';
 
 const useStyles = makeStyles((isLightTheme) => ({
   //background modal blur style
@@ -42,18 +43,9 @@ export default function Popup({ title, children, openPopup, setOpenPopup, isLigh
         }}>
         <DialogTitle style={{ marginTop: '3px' }}>
           <div style={{ display: 'flex' }}>
-            <Typography
-              variant="popupTitle"
-              component="div"
-              style={{
-                flexGrow: 1,
-                fontFamily: 'Saira, sans-serif',
-                color: isLightTheme ? '#1E1E20' : '#FFFFFF',
-                lineHeight: '41px',
-                fontSize: '26px',
-              }}>
+            <PopupTitle variant="popupTitle" component="div" isLightTheme={isLightTheme}>
               {title}
-            </Typography>
+            </PopupTitle>
             <img
               src={closeWalletModalBtnDark}
               onClick={() => {
