@@ -456,6 +456,7 @@ export const WalletActionsListItem = styled.li`
 
 export const WalletActionsListItemLabel = styled.p`
   margin-top: ${(props) => (props.isDisconnectLabel ? '21px' : '14px')};
+
   @media (max-width: 1280px) {
     margin-top: ${(props) => props.isDisconnectLabel && '22px'};
     font-family: 'Saira', sans-serif;
@@ -492,7 +493,7 @@ export const DisconnectWalletActionsListItem = styled.li`
     margin-top: 0;
   }
   
-  background-color: ${(props) => (props.isLightTheme ? '#E5E5E5' : '#1F265C3D')};
+  background-color: ${(props) => (props.isLightTheme ? '#D5DFF7' : '#1F265C3D')};
   box-shadow: ${(props) =>
     props.isLightTheme
       ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
