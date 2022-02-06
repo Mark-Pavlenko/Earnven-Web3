@@ -146,7 +146,9 @@ export default function Accounts(
   };
 
   const [copySuccess, setCopySuccess] = useState('');
+
   const textAreaRef = useRef(null);
+
   function copyToClipboard(e) {
     textAreaRef.current.select();
     document.execCommand('copy');
@@ -344,7 +346,12 @@ export default function Accounts(
           title="Rename Wallet"
           openPopup={openPopup_rename}
           setOpenPopup={setOpenPopup_rename}>
-          <Rename setOpenPopup={(w) => setOpenPopup_rename(w)} address={address} name={name} />
+          <Rename
+            setOpenPopup={(w) => setOpenPopup_rename(w)}
+            address={address}
+            name={name}
+            isLightTheme={isLightTheme}
+          />
         </Popup>
       </ThemeConfig>
     </>

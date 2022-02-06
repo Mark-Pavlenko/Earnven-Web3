@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import React, { useState } from 'react';
 import { Button } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
 import { experimentalStyled as styled } from '@material-ui/core/styles';
@@ -111,7 +109,7 @@ const Button_Rename_Disconnect = styled(Button)(({ theme }) => ({
   },
 }));
 
-const Rename = ({ address, name, setOpenPopup }) => {
+const Rename = ({ address, name, setOpenPopup, isLightTheme }) => {
   const [rename, setrename] = useState('');
   const navigate = useNavigate();
   const Rename_name = (address) => {
@@ -121,11 +119,11 @@ const Rename = ({ address, name, setOpenPopup }) => {
     let selected_name = localStorage.getItem('selected-name');
     result = JSON.parse(result);
     result.map((option) => {
-      if (option.address == address) {
+      if (option.address === address) {
         option.name = rename;
       }
     });
-    if (address == selected) {
+    if (address === selected) {
       selected_name = rename;
     }
     localStorage.setItem('selected-name', selected_name);
@@ -142,12 +140,13 @@ const Rename = ({ address, name, setOpenPopup }) => {
       <Address style={{ flexGrow: 1 }}>{address}</Address>
       <Input_Rename
         onChange={(event) => setrename(event.target.value)}
-        placeholder={name == 'null' ? '' : name}></Input_Rename>
+        placeholder={name === 'null' ? '' : name}
+      />
       <Button_Rename
         onClick={() => {
           setOpenPopup(false);
         }}>
-        <p> Cancel </p>
+        <p> Cancel</p>
       </Button_Rename>
       <Button_Rename_Disconnect
         onClick={() => {
