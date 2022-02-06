@@ -112,9 +112,6 @@ export default function Accounts(
   const [openPopup_rename, setOpenPopup_rename] = useState(false);
 
   const selectedAccountAddress = localStorage.getItem('selected-account');
-  // console.log('selectedAccountAddress', selectedAccountAddress);
-  // console.log('current Metamask wallet address', currentWalletAddress);
-  // console.log('globalWalletsList', JSON.parse(globalWalletsList));
 
   const showAccountPopover = () => {
     setaccount(true);

@@ -195,6 +195,6 @@ export const SubmitEthereumAddressBtn = styled(Button)`
 
   :hover {
     border: none;
-    background-color: #e5e5e5;
+    //background-color: #e5e5e5;
   }
 `;

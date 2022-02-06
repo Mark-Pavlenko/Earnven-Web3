@@ -392,6 +392,10 @@ export default function WalletPageConnection() {
                       onChange={addressUpdate}
                       InputProps={{
                         classes: { notchedOutline: classes.noBorder },
+                        sx: {
+                          color: themeType ? 'black' : 'white',
+                          paddingRight: '0px !important',
+                        },
                       }}
                       InputLabelProps={{
                         style: {
@@ -540,6 +544,10 @@ export default function WalletPageConnection() {
                       onChange={addressUpdate}
                       InputProps={{
                         classes: { notchedOutline: classes.noBorder },
+                        sx: {
+                          color: themeType ? 'black' : 'white',
+                          paddingRight: '0px !important',
+                        },
                       }}
                       InputLabelProps={{
                         style: {
@@ -712,6 +720,10 @@ export default function WalletPageConnection() {
                       onChange={addressUpdate}
                       InputProps={{
                         classes: { notchedOutline: classes.noBorder },
+                        sx: {
+                          color: themeType ? 'black' : 'white',
+                          paddingRight: '0px !important',
+                        },
                       }}
                       InputLabelProps={{
                         style: {
@@ -864,6 +876,10 @@ export default function WalletPageConnection() {
                       onChange={addressUpdate}
                       InputProps={{
                         classes: { notchedOutline: classes.noBorder },
+                        sx: {
+                          color: themeType ? 'black' : 'white',
+                          paddingRight: '0px !important',
+                        },
                       }}
                       InputLabelProps={{
                         style: {

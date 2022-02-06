@@ -58,6 +58,7 @@ export class TestTokensSelect extends Component {
 
     return (
       <Autocomplete
+        freeSolo={true}
         autoHighlight
         onFocus={() => {
           this.props.getAllTokens();
