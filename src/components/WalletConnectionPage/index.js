@@ -538,10 +538,7 @@ export default function WalletPageConnection() {
                       isLightTheme={themeType}
                       label="Track any ethereum address"
                       onChange={addressUpdate}
-                      inputProps={{
-                        style: {
-                          height: '27px',
-                        },
+                      InputProps={{
                         classes: { notchedOutline: classes.noBorder },
                       }}
                       InputLabelProps={{
@@ -549,6 +546,9 @@ export default function WalletPageConnection() {
                           fontSize: 16,
                           color: themeType ? '#8F8F8F' : '#878995',
                         },
+                      }}
+                      style={{
+                        height: '60px',
                       }}
                     />
                     <SubmitEthereumAddressBtn onClick={trackAddress} isLightTheme={themeType}>
@@ -710,10 +710,7 @@ export default function WalletPageConnection() {
                       isLightTheme={themeType}
                       label="Track any ethereum address"
                       onChange={addressUpdate}
-                      inputProps={{
-                        style: {
-                          height: '27px',
-                        },
+                      InputProps={{
                         classes: { notchedOutline: classes.noBorder },
                       }}
                       InputLabelProps={{
@@ -721,6 +718,9 @@ export default function WalletPageConnection() {
                           fontSize: 16,
                           color: themeType ? '#8F8F8F' : '#878995',
                         },
+                      }}
+                      style={{
+                        height: '60px',
                       }}
                     />
                     <SubmitEthereumAddressBtn onClick={trackAddress} isLightTheme={themeType}>
@@ -862,10 +862,7 @@ export default function WalletPageConnection() {
                       isLightTheme={themeType}
                       label="Track any ethereum address"
                       onChange={addressUpdate}
-                      inputProps={{
-                        style: {
-                          height: '27px',
-                        },
+                      InputProps={{
                         classes: { notchedOutline: classes.noBorder },
                       }}
                       InputLabelProps={{
@@ -873,6 +870,9 @@ export default function WalletPageConnection() {
                           fontSize: 16,
                           color: themeType ? '#8F8F8F' : '#878995',
                         },
+                      }}
+                      style={{
+                        height: '60px',
                       }}
                     />
                     <SubmitEthereumAddressBtn onClick={trackAddress} isLightTheme={themeType}>

@@ -15,7 +15,7 @@ export const RootStyleFirstConnection = styled.div`
     background: ${(props) =>
       props.isLightTheme && props.isFirstConnection
         ? `url(${require(`../../assets/images/lightDashboard.jpg`).default})`
-        : `#10142D`};
+        : `#1F265C3D`};
   }
 
   background-repeat: no-repeat;
@@ -26,7 +26,7 @@ export const RootStyleFirstConnection = styled.div`
     background: ${(props) =>
       props.isLightTheme && props.isFirstConnection
         ? `url(${require(`../../assets/images/lightDashboardBig.jpg`).default})`
-        : `#10142D`};
+        : `#1F265C3D`};
   }
 `;
 
@@ -186,7 +186,7 @@ export const EthereumAddressBlock = styled.div``;
 export const EthereumAddressField = styled(TextField)`
   height: 60px;
   width: 461px;
-  background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#10142D')};
+  background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
   box-shadow: ${(props) =>
     props.isLightTheme
       ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
@@ -205,7 +205,7 @@ export const EthereumAddressField = styled(TextField)`
 export const SubmitEthereumAddressBtn = styled(Button)`
   height: 60px;
   width: 79px;
-  background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#10142D')};
+  background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
   box-shadow: ${(props) =>
     props.isLightTheme
       ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
