@@ -327,7 +327,7 @@ export default function Sidebar({
       sx={{
         height: '100vh',
         // in order to get correct background for QHD & 4K Screens
-        background: () => (isLightTheme ? `url(${lightTheme})` : `#0F152C`),
+        background: () => (isLightTheme ? `url(${lightThemeBig})` : `#0F152C`),
         backdropFilter: 'blur(35px)',
         boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
         '& .simplebar-content': { display: 'flex', flexDirection: 'column' },
@@ -772,7 +772,7 @@ export default function Sidebar({
       sx={{
         height: '100vh',
         // in order to get correct background for QHD & 4K Screens
-        background: () => (isLightTheme ? `url(${lightTheme})` : `#0F152C`),
+        background: () => (isLightTheme ? `url(${lightThemeBig})` : `#0F152C`),
         backdropFilter: 'blur(35px)',
         boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
         '& .simplebar-content': { display: 'flex', flexDirection: 'column' },
