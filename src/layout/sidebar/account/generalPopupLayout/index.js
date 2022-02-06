@@ -36,7 +36,7 @@ export default function Popup({ title, children, openPopup, setOpenPopup, isLigh
             borderRadius: '10px',
             boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
             mixBlendMode: 'normal',
-            backgroundColor: isLightTheme ? '#FFFFFF29' : '#4453AD1A',
+            backgroundColor: isLightTheme ? '#FFFFFF' : '#4453AD1A',
             backdropFilter: 'blur(35px)',
           },
         }}>
@@ -55,11 +55,17 @@ export default function Popup({ title, children, openPopup, setOpenPopup, isLigh
               {title}
             </Typography>
             <img
-              src={isLightTheme ? closeWalletModalBtnDark : closeWalletModalBtnLight}
+              src={closeWalletModalBtnDark}
               onClick={() => {
                 setOpenPopup(false);
               }}
-              style={{ width: '14px', height: '14px', marginTop: '13px', cursor: 'pointer' }}
+              style={{
+                width: '14px',
+                height: '14px',
+                marginTop: '13px',
+                cursor: 'pointer',
+                opacity: 0.6,
+              }}
               alt="close_modal_btn_icon"
             />
           </div>

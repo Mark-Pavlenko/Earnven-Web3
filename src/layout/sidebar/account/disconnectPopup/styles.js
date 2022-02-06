@@ -1,49 +1,52 @@
-import styled from 'styled-components';
-
+import { experimentalStyled as styled } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 
-export const Input_Rename = styled('input')(({ isLightTheme }) => ({
-  textAlign: 'left',
-  position: 'absolute',
-  top: '153px',
-  left: '178px',
+export const DisconnectWarnLabel = styled('div')(({ isLightTheme }) => ({
+  display: 'flex',
+  justifyContent: 'center',
+  marginTop: '44px',
   fontSize: '14px',
+  color: isLightTheme ? '#1E1E20' : '#ffffff',
+  fontFamily: 'Saira, sans-serif',
   lineHeight: '22px',
   fontStyle: 'normal',
-  paddingLeft: '1rem',
-  fontFamily: 'Saira, sans-serif',
-  height: '60px',
-  width: '475px',
-  borderRadius: '10px',
-  border: '0px',
-  boxShadow: isLightTheme
-    ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
-    : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-  background: isLightTheme ? '#ffffff' : '#1F265C3D',
-  color: isLightTheme ? 'black' : 'white',
-  backdropFilter: isLightTheme ? 'none' : 'blur(35px)',
+  fontWeight: 'normal',
 }));
 
 export const Address = styled('div')(({ isLightTheme }) => ({
-  textAlign: 'left',
-  position: 'absolute',
-  top: '122px',
-  left: '178px',
+  display: 'flex',
+  justifyContent: 'center',
+  marginTop: '30px',
   fontSize: '12px',
-  lineHeight: '19px',
+  lineHeight: '22px',
+  font: 'Saira',
   fontStyle: 'normal',
-  color: isLightTheme ? '#1E1E20' : '#FFFFFF',
-  opacity: isLightTheme && 0.5,
+  color: isLightTheme ? '#1E1E20' : '#ffffff',
+  opacity: 0.5,
   fontFamily: 'Saira, sans-serif',
-  flexGrow: 1,
+}));
+
+export const ButtonsLayout = styled('div')(({ isLightTheme }) => ({}));
+
+export const CutAddressName = styled('div')(({ isLightTheme }) => ({
+  textAlign: 'center',
+  position: 'relative',
+  marginTop: '10px',
+  fontSize: '14px',
+  color: isLightTheme ? '#4453AD' : '#8F86FF',
+  lineHeight: '22px',
+  font: 'Saira, sans-serif',
+  fontStyle: 'normal',
+  fontWeight: 500,
 }));
 
 export const Button_Rename = styled(Button)(({ isLightTheme }) => ({
   width: '150px',
   height: '40px',
   position: 'absolute',
+  // top: '30px',
   left: '250px',
-  bottom: '97px',
+  bottom: '53px',
   mixBlendMode: 'normal',
   color: isLightTheme ? '#1E1E20' : '#FFFFFF',
   boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
@@ -57,11 +60,6 @@ export const Button_Rename = styled(Button)(({ isLightTheme }) => ({
   border: '0px',
   textAlign: 'center',
   '&:hover': {
-    width: '150px',
-    height: '40px',
-    position: 'absolute',
-    left: '250px',
-    bottom: '97px',
     mixBlendMode: 'normal',
     boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
     borderRadius: '10px',
@@ -80,7 +78,8 @@ export const Button_Rename_Disconnect = styled(Button)(({ isLightTheme }) => ({
   height: '40px',
   position: 'absolute',
   left: '430px',
-  bottom: '97px',
+  bottom: '53px',
+
   mixBlendMode: 'normal',
   color: isLightTheme ? '#4453AD' : '#ffffff',
   backgroundColor: isLightTheme ? '#FFFFFF' : '#8F86FF',
@@ -96,11 +95,6 @@ export const Button_Rename_Disconnect = styled(Button)(({ isLightTheme }) => ({
   overflow: 'inherit',
   border: '0px',
   '&:hover': {
-    width: '150px',
-    height: '40px',
-    position: 'absolute',
-    left: '430px',
-    bottom: '97px',
     mixBlendMode: 'normal',
     boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 5px 5px rgba(0,0,0,0.22)',
     borderRadius: '10px',

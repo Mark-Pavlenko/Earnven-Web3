@@ -23,7 +23,7 @@ import copy_link_menu_icon from '../../../../assets/icons/copy_link_menu_icon.sv
 import disconnect_menu_icon from '../../../../assets/icons/disconnect_menu_icon.svg';
 import dots_menu_icon from '../../../../assets/icons/3dots_menu_icon.svg';
 import ThemeConfig from '../../../../theme';
-import { Disconnection } from '../Disconnection';
+import { DisconnectPopup } from '../disconnectPopup';
 import RenamePopup from '../renamePopup';
 import Popup from '../generalPopupLayout';
 import green_got_menu from '../../../../assets/icons/green_got_menu.svg';
@@ -339,8 +339,17 @@ export default function Accounts(
         )}
       </Popover>
       <ThemeConfig>
-        <Popup title="Disconnect" openPopup={openPopup} setOpenPopup={setOpenPopup}>
-          <Disconnection setOpenPopup={(w) => setOpenPopup(w)} address={address} name={name} />
+        <Popup
+          title="Disconnect"
+          openPopup={openPopup}
+          setOpenPopup={setOpenPopup}
+          isLightTheme={isLightTheme}>
+          <DisconnectPopup
+            setOpenPopup={(w) => setOpenPopup(w)}
+            address={address}
+            name={name}
+            isLightTheme={isLightTheme}
+          />
         </Popup>
         <Popup
           title="Rename Wallet"
