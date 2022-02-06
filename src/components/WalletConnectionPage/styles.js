@@ -141,7 +141,7 @@ export const WalletBtnConnect = styled(Button)`
   height: 60px;
   width: 171px;
   font-size: 16px;
-  background: #ffffff;
+  background: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#FFFFFF')};
   box-shadow: inset 0 5px 10px -6px rgba(51, 78, 131, 0.12);
   border-radius: 10px;
   border: none !important;
@@ -195,7 +195,6 @@ export const EthereumAddressField = styled(TextField)`
 
   :hover {
     border: none !important;
-    background-color: #e5e5e5;
   }
 
   @media (max-width: 600px) {
