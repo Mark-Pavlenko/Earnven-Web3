@@ -1,13 +1,10 @@
 import React from 'react';
 import { Dialog, DialogTitle, DialogContent, Typography } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-// import Disconnect from './Disconnect';
 import { makeStyles } from '@material-ui/styles';
 import { ThemeProvider } from '@material-ui/styles';
-// import MuiThemeProvider from '@material-ui/styles/MuiThemeProvider';
-import { Button } from '@material-ui/core';
 
-import Mytheme from './theme';
+import Mytheme from '../theme';
 
 const useStyles = makeStyles((theme) => ({
   dialogWrapper: {
@@ -17,16 +14,15 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '10px',
     boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
     mixBlendMode: 'normal',
-    // backdropFilter: 'blur(4px)',
-    // background: 'rgba(225, 225, 255, 0.16)',
+    // backgroundColor: 'red',
   },
   dialogTitle: {
     marginTop: '3px',
   },
+
+  //background modal blur style
   outer: {
-    background: 'rgba(223, 235, 255, 0.4)',
-    // background: 'radial-gradient(#edf4ff, #ffffff)',
-    // backgroundColor: 'green',
+    // background: '#FFFFFF29',
     boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
     mixBlendMode: 'normal',
     backdropFilter: 'blur(5px)',
@@ -41,8 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Popup(props) {
-  const { title, children, openPopup, setOpenPopup } = props;
+export default function Popup({ title, children, openPopup, setOpenPopup, isLightTheme }) {
   const classes = useStyles();
 
   return (
@@ -50,12 +45,10 @@ export default function Popup(props) {
       <Dialog
         open={openPopup}
         maxWidth="md"
-        classes={{ container: classes.outer, paper: classes.dialogWrapper }}
-        style={(Mytheme.light.dialogWrapper, Mytheme.light.outer)}>
+        classes={{ container: classes.outer, paper: classes.dialogWrapper }}>
         <DialogTitle className={classes.dialogTitle}>
           <div style={{ display: 'flex' }}>
             <Typography
-              className={classes.title}
               variant="popupTitle"
               component="div"
               style={{ flexGrow: 1, fontFamily: 'Saira, sans-serif' }}>
@@ -63,7 +56,6 @@ export default function Popup(props) {
             </Typography>
             <button
               className={classes.close}
-              style={Mytheme.light.close}
               classes={{ container: classes.outer, paper: classes.close }}
               onClick={() => {
                 setOpenPopup(false);

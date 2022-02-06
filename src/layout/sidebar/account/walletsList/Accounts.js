@@ -24,8 +24,8 @@ import disconnect_menu_icon from '../../../../assets/icons/disconnect_menu_icon.
 import dots_menu_icon from '../../../../assets/icons/3dots_menu_icon.svg';
 import ThemeConfig from '../../../../theme';
 import { Disconnection } from '../Disconnection';
-import Rename from '../Rename';
-import Popup from '../popup';
+import RenamePopup from '../renamePopup';
+import Popup from '../generalPopupLayout';
 import green_got_menu from '../../../../assets/icons/green_got_menu.svg';
 import menurender_customhook from '../menurender_customhook';
 import copy_notification_menu from '../../../../assets/icons/copy_notification_menu.svg';
@@ -345,8 +345,9 @@ export default function Accounts(
         <Popup
           title="Rename Wallet"
           openPopup={openPopup_rename}
-          setOpenPopup={setOpenPopup_rename}>
-          <Rename
+          setOpenPopup={setOpenPopup_rename}
+          isLightTheme={isLightTheme}>
+          <RenamePopup
             setOpenPopup={(w) => setOpenPopup_rename(w)}
             address={address}
             name={name}
