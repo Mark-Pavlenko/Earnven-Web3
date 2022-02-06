@@ -47,6 +47,7 @@ import {
   ConnectLabel,
   WelcomeSpan,
   NotMetamaskConnectedBlock,
+  WalletListSubLayout,
 } from './styles';
 import { Button } from '@mui/material';
 
@@ -195,26 +196,28 @@ export default function Account({ address, name, global_wallet, setTheme }) {
 
       {/* all wallets */}
       <MyWalletsLabel isLightTheme={themeType} allWalletsListMobile={true}>
-        <p isLightTheme={themeType}>{accountList.length > 0 && 'Watchlist'}</p>
+        <p>{accountList.length > 0 && 'Watchlist'}</p>
       </MyWalletsLabel>
       <div>
         <WalletsList>
-          {reduxWalletsList !== undefined &&
-            accountList.map((option) => (
-              <WalletsListItem isLightTheme={themeType}>
-                <Accounts
-                  setaccount_menuclose={(w) => setaccount(w)}
-                  onClick={() => {
-                    hideAccountPopover();
-                  }}
-                  onReRender={handleReRender}
-                  address={option.address}
-                  name={option.name}
-                  globalWalletsList={global_wallet}
-                  isMetamaskWallet={false}
-                />
-              </WalletsListItem>
-            ))}
+          <WalletListSubLayout isLightTheme={themeType}>
+            {reduxWalletsList !== undefined &&
+              accountList.map((option) => (
+                <WalletsListItem isLightTheme={themeType}>
+                  <Accounts
+                    setaccount_menuclose={(w) => setaccount(w)}
+                    onClick={() => {
+                      hideAccountPopover();
+                    }}
+                    onReRender={handleReRender}
+                    address={option.address}
+                    name={option.name}
+                    globalWalletsList={global_wallet}
+                    isMetamaskWallet={false}
+                  />
+                </WalletsListItem>
+              ))}
+          </WalletListSubLayout>
           <AddNewWalletListItem isLightTheme={themeType} onClick={routeToConnectWallet}>
             <ListItemIcon sx={{ mr: 1, minWidth: '17px' }}>
               <AddWalletIcon isLightTheme={themeType} />
@@ -301,9 +304,9 @@ export default function Account({ address, name, global_wallet, setTheme }) {
               )}
               {/* all wallets */}
               <MyWalletsLabel isLightTheme={themeType} allWalletsListMobile={true}>
-                <p isLightTheme={themeType}>{accountList.length > 0 && 'Watchlist'}</p>
+                <p>{accountList.length > 0 && 'Watchlist'}</p>
               </MyWalletsLabel>
-              <div>
+              <WalletListSubLayout isLightTheme={themeType}>
                 <WalletsList>
                   {accountList &&
                     reduxWalletsList !== undefined &&
@@ -335,8 +338,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
                     </ListItemText>
                   </AddNewWalletListItem>
                 </WalletsList>
-                {/* add new item element */}
-              </div>
+              </WalletListSubLayout>
             </WalletListPopover>
           )}
 

@@ -213,6 +213,41 @@ export const WalletsList = styled(List)`
   padding-top: 8px;
 `;
 
+export const WalletListSubLayout = styled.div`
+  overflow: auto;
+  height: 180px;
+
+  // width of scrollbar
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 40px;
+  }
+
+  /* Track styles */
+  ::-webkit-scrollbar-track {
+    //box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
+    box-shadow: ${(props) =>
+      props.isLightTheme
+        ? '7px 21px 22px -15px rgba(51, 78, 131, 0.17)'
+        : 'box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+    mix-blend-mode: ${(props) => (props.isLightTheme ? 'none' : 'normal')};
+    backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
+    border-radius: 10px;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    //background: #ffffff;
+    cursor: pointer;
+  }
+`;
+
 export const WalletsListItem = styled(ListItem)`
   display: flex;
   align-items: center;

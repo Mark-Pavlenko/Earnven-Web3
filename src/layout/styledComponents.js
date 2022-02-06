@@ -9,7 +9,7 @@ export const RootStyle = styled('div')`
     background: ${(props) =>
       props.isLightTheme
         ? `url(${require(`../assets/images/lightDashboardBig.jpg`).default})`
-        : `#10142D`};
+        : `#0B0E1D`};
   }
   @media (max-width: 480px) {
     background: ${(props) =>
