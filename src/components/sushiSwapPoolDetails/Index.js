@@ -6,18 +6,18 @@ purpose : this component is used to display pool details for the selected pool o
 
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-// import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router';
 import Web3 from 'web3';
 import PoolDetailsPage from './PoolDetailData';
 import FACTORYABI from '../../abi/UniFactoryV2.json';
 import Addresses from '../../contractAddresses';
 import { PoolDetails } from '../liquidityPoolDetails/poolDetails';
+import { SushiswapDetails } from './sushiswapDetails';
 
 export default function Index(props) {
-  // const navigate = useNavigate()
-  const { address } = useParams();
-  const { token0 } = useParams();
-  const { token1 } = useParams();
+  const navigate = useNavigate();
+  const { address, token0, token1 } = useParams();
+
   console.log('Prabha pairToken0 - ', token0);
   console.log('Prabha pairToken1 - ', token1);
   const [tokenid, setTokenPair] = useState();
@@ -83,6 +83,7 @@ export default function Index(props) {
   return (
     <div style={{ margin: 'auto' }}>
       <PoolDetailsPage address={address} token0={token0} token1={token1} tokenid={tokenid} />
+      {/*<SushiswapDetails address={address} token0={token0} token1={token1} tokenid={tokenid} />*/}
       {/*<PoolDetails*/}
       {/*  address={address}*/}
       {/*  token0={token0}*/}
@@ -90,8 +91,8 @@ export default function Index(props) {
       {/*  tokenid={tokenid}*/}
       {/*  type={'sushiswap'}*/}
       {/*/>*/}
-
-      <Link to={`/${address}/sushiswap/pair/${tokenid}`} />
+      {/*{navigate(`/${address}/sushiswap/pair/${tokenid}`)}*/}
+      {/*<Link to={`/${address}/sushiswap/pair/${tokenid}`} />*/}
     </div>
   );
 }
