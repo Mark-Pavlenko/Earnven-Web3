@@ -11,7 +11,7 @@ Version           Date                         Description
 import { experimentalStyled as styled } from '@material-ui/core/styles';
 import accountLogo from '../../../../assets/icons/accountlogo.png';
 import { createStyles, makeStyles } from '@material-ui/styles';
-import { Avatar, Box, List, Stack, Typography } from '@material-ui/core';
+import { Avatar, Box, List, Popover, Stack, Typography } from '@material-ui/core';
 import React, { useRef, useState } from 'react';
 import '../styles';
 import { useNavigate } from 'react-router-dom';
@@ -52,12 +52,14 @@ import {
 const useStyles = makeStyles(() =>
   createStyles({
     menupopover: {
-      marginLeft: '132px',
-      marginTop: '-25px',
-      width: '338px',
-      ['@media (max-width:1280px)']: {
-        marginLeft: '-3px',
-      },
+      marginTop: '-13px',
+      marginLeft: '45px',
+      // marginLeft: '132px',
+      // marginTop: '-25px',
+      // width: '338px',
+      // ['@media (max-width:1280px)']: {
+      //   marginLeft: '-3px',
+      // },
     },
     icon: {
       marginLeft: '21px',
@@ -230,10 +232,23 @@ export default function Accounts(
         </WalletListItemAccountBalance>
       </WalletsListLayout>
       {/* popover menu with options for wallet*/}
-      <MenuPopover
+      <Popover
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         className={classes.menupopover}
+        PaperProps={{
+          sx: {
+            width: '336px',
+            overflow: 'inherit',
+            boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+            borderRadius: '10px',
+            background: isLightTheme ? '#FFFFFF29' : '#1F265C3D',
+            mixBlendMode: 'normal',
+            backdropFilter: 'blur(35px)',
+          },
+        }}
         sx={{
-          backgroundColor: isLightTheme ? '#FFFFFF29' : '#1F265C3D',
+          width: '336px',
         }}
         open={account}
         onClose={hideAccountPopover}
@@ -320,7 +335,7 @@ export default function Accounts(
             </WalletActionsList>
           </WalletActionsLayout>
         )}
-      </MenuPopover>
+      </Popover>
       <ThemeConfig>
         <Popup title="Disconnect" openPopup={openPopup} setOpenPopup={setOpenPopup}>
           <Disconnection setOpenPopup={(w) => setOpenPopup(w)} address={address} name={name} />
