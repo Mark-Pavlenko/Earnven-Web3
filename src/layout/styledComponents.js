@@ -1,6 +1,4 @@
 import { experimentalStyled as styled } from '@material-ui/core/styles';
-import lightDashboardBig from '../assets/images/lightDashboardBig.jpg';
-import lightDashboard from '../assets/images/lightDashboard.jpg';
 
 export const RootStyle = styled('div')`
   background: ${(props) =>
@@ -39,6 +37,7 @@ export const RootStyle = styled('div')`
 export const MainStyle = styled('div')`
   flex-grow: 1;
   background-color: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};
+  height: 100vh;
 
   @media (min-width: 1930px) {
     background-color: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};

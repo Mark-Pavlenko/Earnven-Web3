@@ -2,20 +2,12 @@
 import styled from 'styled-components';
 import { Button, TextField } from '@material-ui/core';
 
-//----------
-
-// export const RootStyleFirstConnection = styled.div`
-//
-// `;
-
-//----------
-
 export const RootStyleFirstConnection = styled.div`
   @media (max-width: 1280px) {
     background: ${(props) =>
       props.isLightTheme && props.isFirstConnection
         ? `url(${require(`../../assets/images/lightDashboard.jpg`).default})`
-        : `#1F265C3D`};
+        : `#10142D`};
   }
 
   background-repeat: no-repeat;
@@ -26,7 +18,8 @@ export const RootStyleFirstConnection = styled.div`
     background: ${(props) =>
       props.isLightTheme && props.isFirstConnection
         ? `url(${require(`../../assets/images/lightDashboardBig.jpg`).default})`
-        : `#1F265C3D`};
+        : `#10142D`};
+    height: 100vh;
   }
 `;
 
@@ -38,20 +31,8 @@ export const MainStyle = styled.div`
   height: 100vh;
 
   @media (max-width: 710px) {
-    //padding-top: 27px;
     padding-left: 15px;
     padding-right: 15px;
-  }
-
-  @media (min-width: 711px) {
-    //padding-right: 35px;
-    //padding-bottom: 20px;
-    //padding-left: 35px;
-  }
-
-  @media (min-width: 1280px) {
-    //margin-top: 72px;
-    //margin-left: 314px;
   }
 `;
 
