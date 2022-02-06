@@ -1,7 +1,8 @@
 import styled from 'styled-components';
+
 import { Button } from '@material-ui/core';
 
-export const Input_Rename = styled('input')(({ theme }) => ({
+export const Input_Rename = styled('input')(({ isLightTheme }) => ({
   textAlign: 'left',
   position: 'absolute',
   top: '153px',
@@ -10,14 +11,17 @@ export const Input_Rename = styled('input')(({ theme }) => ({
   lineHeight: '22px',
   fontStyle: 'normal',
   paddingLeft: '1rem',
-  //color: theme.palette.menu.account_font,
   fontFamily: 'Saira, sans-serif',
   height: '60px',
   width: '475px',
   borderRadius: '10px',
   border: '0px',
-  boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 5px 5px rgba(0,0,0,0.22)',
-  // background: theme.palette.menu.backgorundColor_wallet_secondary,
+  boxShadow: isLightTheme
+    ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+    : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+  background: isLightTheme ? '#ffffff' : '#1F265C3D',
+  color: isLightTheme ? 'black' : 'white',
+  backdropFilter: isLightTheme ? 'none' : 'blur(35px)',
 }));
 
 export const Address = styled('div')(({ isLightTheme }) => ({
@@ -29,20 +33,21 @@ export const Address = styled('div')(({ isLightTheme }) => ({
   lineHeight: '19px',
   fontStyle: 'normal',
   color: isLightTheme ? '#1E1E20' : '#FFFFFF',
-  //color: theme.palette.menu.account_font,
-  opacity: 0.5,
+  opacity: isLightTheme && 0.5,
   fontFamily: 'Saira, sans-serif',
   flexGrow: 1,
 }));
 
-export const Button_Rename = styled(Button)(({ theme }) => ({
+export const Button_Rename = styled(Button)(({ isLightTheme }) => ({
   width: '150px',
   height: '40px',
   position: 'absolute',
   left: '250px',
   bottom: '97px',
   mixBlendMode: 'normal',
+  color: isLightTheme ? '#1E1E20' : '#FFFFFF',
   boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+  backdropFilter: isLightTheme ? 'none' : 'blur(35px)',
   borderRadius: '10px',
   fontFamily: 'Saira, sans-serif',
   //color: theme.palette.menu.account_font,
@@ -72,7 +77,7 @@ export const Button_Rename = styled(Button)(({ theme }) => ({
   },
 }));
 
-export const Button_Rename_Disconnect = styled(Button)(({ theme }) => ({
+export const Button_Rename_Disconnect = styled(Button)(({ isLightTheme }) => ({
   // background: theme.palette.menu.backgorundColor_wallet_secondary,
   width: '150px',
   height: '40px',
@@ -80,7 +85,11 @@ export const Button_Rename_Disconnect = styled(Button)(({ theme }) => ({
   left: '430px',
   bottom: '97px',
   mixBlendMode: 'normal',
-  boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 5px 5px rgba(0,0,0,0.22)',
+  color: isLightTheme ? '#4453AD' : '#ffffff',
+  backgroundColor: isLightTheme ? '#FFFFFF' : '#8F86FF',
+  boxShadow: isLightTheme
+    ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+    : '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',
   borderRadius: '10px',
   fontFamily: 'Saira, sans-serif',
   fontSize: '14px',
@@ -90,7 +99,6 @@ export const Button_Rename_Disconnect = styled(Button)(({ theme }) => ({
   overflow: 'inherit',
   border: '0px',
   '&:hover': {
-    //background: theme.palette.menu.backgorundColor_wallet_secondary,
     width: '150px',
     height: '40px',
     position: 'absolute',
@@ -100,7 +108,7 @@ export const Button_Rename_Disconnect = styled(Button)(({ theme }) => ({
     boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 5px 5px rgba(0,0,0,0.22)',
     borderRadius: '10px',
     fontFamily: 'Saira, sans-serif',
-    // color: theme.palette.menu.account_balance,
+    backgroundColor: isLightTheme ? '#FFFFFF' : '#8F86FF',
     fontSize: '14px',
     lineHeight: '22px',
     display: 'flex',

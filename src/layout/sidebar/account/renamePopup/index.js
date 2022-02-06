@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Address, Button_Rename, Button_Rename_Disconnect, Input_Rename } from './styles';
+import { makeStyles } from '@material-ui/styles';
 
-const Index = ({ address, name, setOpenPopup, isLightTheme }) => {
+const useStyles = makeStyles((theme) => ({
+  noBorder: {
+    border: 'none !important',
+  },
+}));
+
+const renamePopup = ({ address, name, setOpenPopup, isLightTheme }) => {
+  const classes = useStyles(isLightTheme);
+
   const [rename, setrename] = useState('');
   const navigate = useNavigate();
 
@@ -34,6 +43,7 @@ const Index = ({ address, name, setOpenPopup, isLightTheme }) => {
       <Address isLightTheme={isLightTheme}>{address}</Address>
       <Input_Rename
         onChange={(event) => setrename(event.target.value)}
+        classes={{ notchedOutline: classes.noBorder }}
         placeholder={name === 'null' ? '' : name}
         isLightTheme={isLightTheme}
       />
@@ -51,10 +61,10 @@ const Index = ({ address, name, setOpenPopup, isLightTheme }) => {
           routeToDashboard();
           setOpenPopup(false);
         }}>
-        <p> Save 1 </p>
+        <p> Save </p>
       </Button_Rename_Disconnect>
     </>
   );
 };
 
-export default Index;
+export default renamePopup;
