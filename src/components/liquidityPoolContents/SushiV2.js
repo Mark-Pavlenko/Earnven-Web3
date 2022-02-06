@@ -746,7 +746,8 @@ export default function LiquidityPools() {
 
   return (
     <div>
-      <LiquidityPoolsTable data={Data} AllTokens={AllTokens} />
+      {/*{Content}*/}
+      <LiquidityPoolsTable data={Data} type={'sushiswap'} AllTokens={AllTokens} />
       <br />
       <center>
         <button

@@ -4,12 +4,21 @@ export const BackgroundStyles = styled.div`
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(35px);
   border-radius: 10px;
+
+  @media (max-width: 768px) {
+    border-radius: 30px;
+  }
 `;
 export const TokensInfo = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 45px;
   margin: 35px 0;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 10px;
+  }
 `;
 
 export const Token = styled(BackgroundStyles)`
@@ -32,6 +41,12 @@ export const PairInfo = styled(BackgroundStyles)`
 export const PairDetails = styled.div`
   display: flex;
   justify-content: space-between;
+
+  @media (max-width: 768px) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
 `;
 
 export const BlockTitle = styled.div`
@@ -66,6 +81,7 @@ export const Stats = styled(BackgroundStyles)`
   background: ${(props) =>
     props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)'};
   color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#fff')};
+  margin-bottom: 35px;
 `;
 
 export const StatsWrapper = styled.div`
@@ -75,6 +91,10 @@ export const StatsWrapper = styled.div`
 export const StatsItems = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
 `;
 
 export const SupplyTokens = styled.div`
@@ -103,4 +123,29 @@ export const CompareTokens = styled.div`
   font-weight: 500;
   font-size: 12px;
   line-height: 19px;
+`;
+export const AboutBlock = styled(BackgroundStyles)`
+  padding: 20px 25px;
+  background: ${(props) =>
+    props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)'};
+  color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#fff')};
+`;
+
+export const ShowMoreBlock = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+`;
+
+export const ShowMore = styled.button`
+  background: ${(props) => (props.isLightTheme ? '#fff' : '#8F86FF')};
+  box-shadow: inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12);
+  border-radius: 10px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 22px;
+  padding: 10px 38px;
+  border: none;
+  color: ${(props) => (props.isLightTheme ? '#4453AD' : '#fff')};
+  cursor: pointer;
 `;

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import {
+  AboutBlock,
   BlockTitle,
   CompareTokens,
   Detail,
@@ -351,6 +352,16 @@ export const PoolDetails = ({ token0, token1, type }) => {
               </StatsItems>
             </StatsWrapper>
           </Stats>
+          <AboutBlock>
+            <div>
+              UNI-V2 token represents a share in the Uniswap {tokenASymbol}/{tokenBSymbol} Pool.
+              Liquidity providers earn 0.3% fee on every trade made through the protocol. The fees
+              are then split proportionally to your share of the pool. By purchasing a share in this
+              pool, you become a liquidity provider of the Uniswap {tokenASymbol}/{tokenBSymbol}{' '}
+              Pool
+            </div>
+            <button>asd</button>
+          </AboutBlock>
         </>
       )}
     </div>
