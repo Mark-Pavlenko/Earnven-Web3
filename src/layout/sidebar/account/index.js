@@ -142,11 +142,12 @@ export default function Account({ address, name, global_wallet, setTheme }) {
   };
 
   function walletAddressCutter(address, name) {
-    if (name === 'null' && selectedAccount !== null) {
-      return address.substring(0, 7) + '..';
-    } else {
-      return name.substring(0, 8) + '..';
-    }
+    // if (name === 'null' && selectedAccount !== null) {
+    //   return address.substring(0, 7) + '..';
+    // } else {
+    //   return name.substring(0, 8) + '..';
+    // }
+    return '...' + address.substring(38, 42);
   }
 
   const mobileSize = useMediaQuery('(max-width:709px)');
