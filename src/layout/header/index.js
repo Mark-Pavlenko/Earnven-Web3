@@ -72,7 +72,7 @@ function Header({ onOpenSidebar, onOpenMobileWalletsList, finalTitle }) {
               <img src={sidebarBurgerDarkIcon} alt="burger_img" />
             )}
           </BurgerSidebarIconButton>
-          {finalTitle.length > 100 && (
+          {finalTitle.length < 100 && (
             <HeaderTitle isLightTheme={isLightTheme}>
               <p>{finalTitle}</p>
             </HeaderTitle>
