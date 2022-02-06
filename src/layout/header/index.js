@@ -73,7 +73,7 @@ function Header({ onOpenSidebar, onOpenMobileWalletsList, finalTitle }) {
             )}
           </BurgerSidebarIconButton>
           <HeaderTitle isLightTheme={isLightTheme}>
-            <p>{finalTitle}</p>
+            <p>{finalTitle.length > 100 ? '' : finalTitle}</p>
           </HeaderTitle>
         </HeaderFirstLayout>
         <HeaderItemsBlock>

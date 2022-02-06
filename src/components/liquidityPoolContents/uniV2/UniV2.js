@@ -944,8 +944,8 @@ export default function LiquidityPools() {
   return (
     <div>
       {/*<button onClick={() => {setIsModalOpen(true)}}>Open</button>*/}
-      {Content}
-      {/*<LiquidityPoolsTable data={Data}/>*/}
+      {/*{Content}*/}
+      <LiquidityPoolsTable data={Data} type={'uniswap'} />
 
       <br />
       <center>
