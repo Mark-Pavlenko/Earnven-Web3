@@ -2,14 +2,6 @@
 import styled from 'styled-components';
 import { Button, TextField } from '@material-ui/core';
 
-//----------
-
-// export const RootStyleFirstConnection = styled.div`
-//
-// `;
-
-//----------
-
 export const RootStyleFirstConnection = styled.div`
   @media (max-width: 1280px) {
     background: ${(props) =>
@@ -27,6 +19,7 @@ export const RootStyleFirstConnection = styled.div`
       props.isLightTheme && props.isFirstConnection
         ? `url(${require(`../../assets/images/lightDashboardBig.jpg`).default})`
         : `#10142D`};
+    height: 100vh;
   }
 `;
 
@@ -38,20 +31,8 @@ export const MainStyle = styled.div`
   height: 100vh;
 
   @media (max-width: 710px) {
-    //padding-top: 27px;
     padding-left: 15px;
     padding-right: 15px;
-  }
-
-  @media (min-width: 711px) {
-    //padding-right: 35px;
-    //padding-bottom: 20px;
-    //padding-left: 35px;
-  }
-
-  @media (min-width: 1280px) {
-    //margin-top: 72px;
-    //margin-left: 314px;
   }
 `;
 
@@ -141,7 +122,7 @@ export const WalletBtnConnect = styled(Button)`
   height: 60px;
   width: 171px;
   font-size: 16px;
-  background: #ffffff;
+  background: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#FFFFFF')};
   box-shadow: inset 0 5px 10px -6px rgba(51, 78, 131, 0.12);
   border-radius: 10px;
   border: none !important;
@@ -186,7 +167,7 @@ export const EthereumAddressBlock = styled.div``;
 export const EthereumAddressField = styled(TextField)`
   height: 60px;
   width: 461px;
-  background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#10142D')};
+  background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
   box-shadow: ${(props) =>
     props.isLightTheme
       ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
@@ -195,7 +176,6 @@ export const EthereumAddressField = styled(TextField)`
 
   :hover {
     border: none !important;
-    background-color: #e5e5e5;
   }
 
   @media (max-width: 600px) {
@@ -206,7 +186,7 @@ export const EthereumAddressField = styled(TextField)`
 export const SubmitEthereumAddressBtn = styled(Button)`
   height: 60px;
   width: 79px;
-  background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#10142D')};
+  background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
   box-shadow: ${(props) =>
     props.isLightTheme
       ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
@@ -215,6 +195,6 @@ export const SubmitEthereumAddressBtn = styled(Button)`
 
   :hover {
     border: none;
-    background-color: #e5e5e5;
+    //background-color: #e5e5e5;
   }
 `;

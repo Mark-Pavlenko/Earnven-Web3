@@ -278,6 +278,7 @@ export default function WalletPageConnection() {
 
                 <WalletButtonsLayout>
                   <WalletBtnConnect
+                    isLightTheme={themeType}
                     onClick={async () => await loadWalletConnect()}
                     variant="outlined"
                     disabled
@@ -289,6 +290,7 @@ export default function WalletPageConnection() {
                   </WalletBtnConnect>
 
                   <WalletBtnConnect
+                    isLightTheme={themeType}
                     onClick={loadPortis}
                     variant="outlined"
                     disabled
@@ -300,6 +302,7 @@ export default function WalletPageConnection() {
                   </WalletBtnConnect>
 
                   <WalletBtnConnect
+                    isLightTheme={themeType}
                     variant="outlined"
                     disabled
                     startIcon={<WalletBtnConnectImg src={coinbaseWalletIcon} alt="" />}>
@@ -310,6 +313,7 @@ export default function WalletPageConnection() {
                   </WalletBtnConnect>
 
                   <WalletBtnConnect
+                    isLightTheme={themeType}
                     onClick={loadFormatic}
                     variant="outlined"
                     disabled
@@ -321,6 +325,7 @@ export default function WalletPageConnection() {
                   </WalletBtnConnect>
 
                   <WalletBtnConnect
+                    isLightTheme={themeType}
                     onClick={loadTorus}
                     variant="outlined"
                     disabled
@@ -332,6 +337,7 @@ export default function WalletPageConnection() {
                   </WalletBtnConnect>
 
                   <WalletBtnConnect
+                    isLightTheme={themeType}
                     variant="outlined"
                     disabled
                     startIcon={<WalletBtnConnectImg src={exodusWalletIcon} alt="" />}>
@@ -342,6 +348,7 @@ export default function WalletPageConnection() {
                   </WalletBtnConnect>
 
                   <WalletBtnConnect
+                    isLightTheme={themeType}
                     variant="outlined"
                     disabled
                     startIcon={<WalletBtnConnectImg src={atomicWalletIcon} alt="" />}>
@@ -352,6 +359,7 @@ export default function WalletPageConnection() {
                   </WalletBtnConnect>
 
                   <WalletBtnConnect
+                    isLightTheme={themeType}
                     variant="outlined"
                     disabled
                     startIcon={<WalletBtnConnectImg src={ledgerWalletIcon} alt="" />}>
@@ -362,6 +370,7 @@ export default function WalletPageConnection() {
                   </WalletBtnConnect>
 
                   <WalletBtnConnect
+                    isLightTheme={themeType}
                     variant="outlined"
                     disabled
                     startIcon={<WalletBtnConnectImg src={trezorWalletIcon} alt="" />}>
@@ -381,11 +390,12 @@ export default function WalletPageConnection() {
                       isLightTheme={themeType}
                       label="Track any ethereum address"
                       onChange={addressUpdate}
-                      inputProps={{
-                        style: {
-                          height: '27px',
-                        },
+                      InputProps={{
                         classes: { notchedOutline: classes.noBorder },
+                        sx: {
+                          color: themeType ? 'black' : 'white',
+                          paddingRight: '0px !important',
+                        },
                       }}
                       InputLabelProps={{
                         style: {
@@ -393,13 +403,12 @@ export default function WalletPageConnection() {
                           color: themeType ? '#8F8F8F' : '#878995',
                         },
                       }}
+                      style={{
+                        height: '60px',
+                      }}
                     />
                     <SubmitEthereumAddressBtn onClick={trackAddress} isLightTheme={themeType}>
-                      {themeType ? (
-                        <img src={ArrowRight} alt="arrow" />
-                      ) : (
-                        <img src={ArrowRightDark} alt="arrow" />
-                      )}
+                      <img src={themeType ? ArrowRight : ArrowRightDark} alt="arrow" />
                     </SubmitEthereumAddressBtn>
                   </Stack>
                   <ErrorComponent isWrongAddress={errorMsg} />
@@ -421,6 +430,7 @@ export default function WalletPageConnection() {
 
                 <WalletButtonsLayout>
                   <WalletBtnConnect
+                    isLightTheme={themeType}
                     onClick={async () => await loadWalletConnect()}
                     variant="outlined"
                     disabled
@@ -432,6 +442,7 @@ export default function WalletPageConnection() {
                   </WalletBtnConnect>
 
                   <WalletBtnConnect
+                    isLightTheme={themeType}
                     onClick={loadPortis}
                     variant="outlined"
                     disabled
@@ -443,6 +454,7 @@ export default function WalletPageConnection() {
                   </WalletBtnConnect>
 
                   <WalletBtnConnect
+                    isLightTheme={themeType}
                     variant="outlined"
                     disabled
                     startIcon={<WalletBtnConnectImg src={coinbaseWalletIcon} alt="" />}>
@@ -453,6 +465,7 @@ export default function WalletPageConnection() {
                   </WalletBtnConnect>
 
                   <WalletBtnConnect
+                    isLightTheme={themeType}
                     onClick={loadFormatic}
                     variant="outlined"
                     disabled
@@ -464,6 +477,7 @@ export default function WalletPageConnection() {
                   </WalletBtnConnect>
 
                   <WalletBtnConnect
+                    isLightTheme={themeType}
                     onClick={loadTorus}
                     variant="outlined"
                     disabled
@@ -475,6 +489,7 @@ export default function WalletPageConnection() {
                   </WalletBtnConnect>
 
                   <WalletBtnConnect
+                    isLightTheme={themeType}
                     variant="outlined"
                     disabled
                     startIcon={<WalletBtnConnectImg src={exodusWalletIcon} alt="" />}>
@@ -485,6 +500,7 @@ export default function WalletPageConnection() {
                   </WalletBtnConnect>
 
                   <WalletBtnConnect
+                    isLightTheme={themeType}
                     variant="outlined"
                     disabled
                     startIcon={<WalletBtnConnectImg src={atomicWalletIcon} alt="" />}>
@@ -495,6 +511,7 @@ export default function WalletPageConnection() {
                   </WalletBtnConnect>
 
                   <WalletBtnConnect
+                    isLightTheme={themeType}
                     variant="outlined"
                     disabled
                     startIcon={<WalletBtnConnectImg src={ledgerWalletIcon} alt="" />}>
@@ -505,6 +522,7 @@ export default function WalletPageConnection() {
                   </WalletBtnConnect>
 
                   <WalletBtnConnect
+                    isLightTheme={themeType}
                     variant="outlined"
                     disabled
                     startIcon={<WalletBtnConnectImg src={trezorWalletIcon} alt="" />}>
@@ -524,17 +542,21 @@ export default function WalletPageConnection() {
                       isLightTheme={themeType}
                       label="Track any ethereum address"
                       onChange={addressUpdate}
-                      inputProps={{
-                        style: {
-                          height: '27px',
-                        },
+                      InputProps={{
                         classes: { notchedOutline: classes.noBorder },
+                        sx: {
+                          color: themeType ? 'black' : 'white',
+                          paddingRight: '0px !important',
+                        },
                       }}
                       InputLabelProps={{
                         style: {
                           fontSize: 16,
                           color: themeType ? '#8F8F8F' : '#878995',
                         },
+                      }}
+                      style={{
+                        height: '60px',
                       }}
                     />
                     <SubmitEthereumAddressBtn onClick={trackAddress} isLightTheme={themeType}>
@@ -584,6 +606,7 @@ export default function WalletPageConnection() {
 
                 <WalletButtonsLayout>
                   <WalletBtnConnect
+                    isLightTheme={themeType}
                     onClick={async () => await loadWalletConnect()}
                     variant="outlined"
                     disabled
@@ -597,6 +620,7 @@ export default function WalletPageConnection() {
                   <WalletBtnConnect
                     onClick={loadPortis}
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={portisWalletLogo} alt="" />}>
                     <div>
@@ -607,6 +631,7 @@ export default function WalletPageConnection() {
 
                   <WalletBtnConnect
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={coinbaseWalletIcon} alt="" />}>
                     <div>
@@ -618,6 +643,7 @@ export default function WalletPageConnection() {
                   <WalletBtnConnect
                     onClick={loadFormatic}
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={fortmaticLogo} alt="" />}>
                     <div>
@@ -629,6 +655,7 @@ export default function WalletPageConnection() {
                   <WalletBtnConnect
                     onClick={loadTorus}
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={torusWalletLogo} alt="" />}>
                     <div>
@@ -639,6 +666,7 @@ export default function WalletPageConnection() {
 
                   <WalletBtnConnect
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={exodusWalletIcon} alt="" />}>
                     <div>
@@ -649,6 +677,7 @@ export default function WalletPageConnection() {
 
                   <WalletBtnConnect
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={atomicWalletIcon} alt="" />}>
                     <div>
@@ -659,6 +688,7 @@ export default function WalletPageConnection() {
 
                   <WalletBtnConnect
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={ledgerWalletIcon} alt="" />}>
                     <div>
@@ -669,6 +699,7 @@ export default function WalletPageConnection() {
 
                   <WalletBtnConnect
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={trezorWalletIcon} alt="" />}>
                     <div>
@@ -687,17 +718,21 @@ export default function WalletPageConnection() {
                       isLightTheme={themeType}
                       label="Track any ethereum address"
                       onChange={addressUpdate}
-                      inputProps={{
-                        style: {
-                          height: '27px',
-                        },
+                      InputProps={{
                         classes: { notchedOutline: classes.noBorder },
+                        sx: {
+                          color: themeType ? 'black' : 'white',
+                          paddingRight: '0px !important',
+                        },
                       }}
                       InputLabelProps={{
                         style: {
                           fontSize: 16,
                           color: themeType ? '#8F8F8F' : '#878995',
                         },
+                      }}
+                      style={{
+                        height: '60px',
                       }}
                     />
                     <SubmitEthereumAddressBtn onClick={trackAddress} isLightTheme={themeType}>
@@ -729,6 +764,7 @@ export default function WalletPageConnection() {
                   <WalletBtnConnect
                     onClick={async () => await loadWalletConnect()}
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={walletConnectLogo} alt="" />}>
                     <div>
@@ -740,6 +776,7 @@ export default function WalletPageConnection() {
                   <WalletBtnConnect
                     onClick={loadPortis}
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={portisWalletLogo} alt="" />}>
                     <div>
@@ -750,6 +787,7 @@ export default function WalletPageConnection() {
 
                   <WalletBtnConnect
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={coinbaseWalletIcon} alt="" />}>
                     <div>
@@ -761,6 +799,7 @@ export default function WalletPageConnection() {
                   <WalletBtnConnect
                     onClick={loadFormatic}
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={fortmaticLogo} alt="" />}>
                     <div>
@@ -772,6 +811,7 @@ export default function WalletPageConnection() {
                   <WalletBtnConnect
                     onClick={loadTorus}
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={torusWalletLogo} alt="" />}>
                     <div>
@@ -782,6 +822,7 @@ export default function WalletPageConnection() {
 
                   <WalletBtnConnect
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={exodusWalletIcon} alt="" />}>
                     <div>
@@ -792,6 +833,7 @@ export default function WalletPageConnection() {
 
                   <WalletBtnConnect
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={atomicWalletIcon} alt="" />}>
                     <div>
@@ -802,6 +844,7 @@ export default function WalletPageConnection() {
 
                   <WalletBtnConnect
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={ledgerWalletIcon} alt="" />}>
                     <div>
@@ -812,6 +855,7 @@ export default function WalletPageConnection() {
 
                   <WalletBtnConnect
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={trezorWalletIcon} alt="" />}>
                     <div>
@@ -830,17 +874,21 @@ export default function WalletPageConnection() {
                       isLightTheme={themeType}
                       label="Track any ethereum address"
                       onChange={addressUpdate}
-                      inputProps={{
-                        style: {
-                          height: '27px',
-                        },
+                      InputProps={{
                         classes: { notchedOutline: classes.noBorder },
+                        sx: {
+                          color: themeType ? 'black' : 'white',
+                          paddingRight: '0px !important',
+                        },
                       }}
                       InputLabelProps={{
                         style: {
                           fontSize: 16,
                           color: themeType ? '#8F8F8F' : '#878995',
                         },
+                      }}
+                      style={{
+                        height: '60px',
                       }}
                     />
                     <SubmitEthereumAddressBtn onClick={trackAddress} isLightTheme={themeType}>
