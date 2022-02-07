@@ -93,6 +93,13 @@ import {
   TokensModalSubLayout,
   SearchTokensModal,
   SearchTokensModalTextField,
+  SendTokensModalList,
+  SendTokenModalListItem,
+  SendTokenImg,
+  SendTokenLabelsBlock,
+  SendTokenName,
+  SendTokenConvertedMeasures,
+  SendTokenBalance,
 } from './styled';
 import { useSelector } from 'react-redux';
 import pyramidIcon from '../../assets/icons/pyramidIcon.svg';
@@ -223,7 +230,7 @@ export default function SwapComponent() {
   const [TokenFromAmount, setTokenFromAmount] = useState();
   const [TokenToAmount, setTokenToAmount] = useState();
   const [Slippage, setSlippage] = useState(2);
-  const [AllTokens, setAllTokens] = useState([]);
+  const [allTokens, setAllTokens] = useState([]);
   const [Sources, setSources] = useState([]);
   const [open, setOpen] = useState(false);
   const [protocolsRateList, setprotocolsRateList] = useState([]);
@@ -263,6 +270,9 @@ export default function SwapComponent() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  // const ETHAddressInfoData = useSelector((state) => state.ethExplorerApi.ethExplorerApi);
+  // console.log('ETHAddressInfoData', ETHAddressInfoData);
 
   useEffect(async () => {
     await axios
@@ -566,54 +576,97 @@ export default function SwapComponent() {
                           />
                         </CloseButton>
                       </Header>
-                      <div>
-                        <SearchTokensModalTextField
-                          InputProps={{
-                            endAdornment: (
-                              <img
-                                src={
-                                  isLightTheme
-                                    ? searchTokensImportModalDark
-                                    : searchTokensImportModalLight
-                                }
-                                alt="search_icon"
-                              />
-                            ),
-                            classes: { notchedOutline: classes.noBorder },
-                            sx: {
-                              color: isLightTheme ? '#1E1E20' : '#FFFFFF',
-                              paddingRight: '20px',
-                              fontSize: 14,
-                            },
-                          }}
-                          id="filled-search"
-                          // onChange={this.searchTokens}
-                          variant="outlined"
-                          label="Search tokens..."
-                          InputLabelProps={{
-                            style: {
-                              color: isLightTheme ? 'black' : 'white',
-                              fontSize: 14,
-                              fontWeight: 400,
-                              opacity: 0.5,
-                              lineHeight: '22px',
-                            },
-                          }}
-                          style={{
-                            width: 435,
-                            height: 40,
-                            marginTop: '20px',
-                            backgroundColor: isLightTheme ? '#FFFFFF' : '#1F265C3D',
-                            boxShadow: isLightTheme
-                              ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
-                              : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-                            mixBlendMode: isLightTheme ? 'normal' : 'normal',
-                            backdropFilter: isLightTheme ? 'none' : 'blur(35px)',
-                            borderRadius: '10px',
-                          }}
-                          size="small"
-                        />
-                      </div>
+
+                      <SearchTokensModalTextField
+                        InputProps={{
+                          endAdornment: (
+                            <img
+                              src={
+                                isLightTheme
+                                  ? searchTokensImportModalDark
+                                  : searchTokensImportModalLight
+                              }
+                              alt="search_icon"
+                            />
+                          ),
+                          classes: { notchedOutline: classes.noBorder },
+                          sx: {
+                            color: isLightTheme ? '#1E1E20' : '#FFFFFF',
+                            paddingRight: '20px',
+                            fontSize: 14,
+                          },
+                        }}
+                        id="filled-search"
+                        // onChange={this.searchTokens}
+                        variant="outlined"
+                        label="Search tokens..."
+                        InputLabelProps={{
+                          style: {
+                            color: isLightTheme ? 'black' : 'white',
+                            fontSize: 14,
+                            fontWeight: 400,
+                            opacity: 0.5,
+                            lineHeight: '22px',
+                          },
+                        }}
+                        style={{
+                          width: 435,
+                          height: 40,
+                          marginTop: '20px',
+                          backgroundColor: isLightTheme ? '#FFFFFF' : '#1F265C3D',
+                          boxShadow: isLightTheme
+                            ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+                            : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+                          mixBlendMode: isLightTheme ? 'normal' : 'normal',
+                          backdropFilter: isLightTheme ? 'none' : 'blur(35px)',
+                          borderRadius: '10px',
+                        }}
+                        size="small"
+                      />
+
+                      {/* Tokens list for send*/}
+                      <SendTokensModalList isLightTheme={isLightTheme}>
+                        {allTokens.map((object) => (
+                          <SendTokenModalListItem
+                            onClick={() => {
+                              fromTokenChange(object.symbol);
+                              setcurrencyModal(false);
+                            }}>
+                            <SendTokenLabelsBlock>
+                              {object.logoURI !== null ? (
+                                <SendTokenImg alt="token_img" src={object.logoURI} />
+                              ) : (
+                                <Avatar
+                                  style={{
+                                    marginLeft: '4px',
+                                    marginRight: '12px',
+                                    marginTop: '2px',
+                                  }}
+                                  name={object.name}
+                                  round={true}
+                                  size="21"
+                                  textSizeRatio={1}
+                                />
+                              )}
+                              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                <SendTokenName isLightTheme={isLightTheme}>
+                                  {object.name}
+                                </SendTokenName>
+                                <SendTokenConvertedMeasures isLightTheme={isLightTheme}>
+                                  409,333 UNI · $19,18
+                                </SendTokenConvertedMeasures>
+                              </div>
+                            </SendTokenLabelsBlock>
+                            <SendTokenBalance isLightTheme={isLightTheme}>
+                              {object.balance === undefined ? (
+                                <Loader type="Rings" color="#BB86FC" height={30} width={30} />
+                              ) : (
+                                <span>${object.balance}</span>
+                              )}
+                            </SendTokenBalance>
+                          </SendTokenModalListItem>
+                        ))}
+                      </SendTokensModalList>
                     </TokensModalSubLayout>
                   </SelectTokensModalContainer>
                 )}
@@ -805,7 +858,7 @@ export default function SwapComponent() {
       {/*                        Token List*/}
       {/*                      </Typography>*/}
       {/*                      <Divider variant="fullWidth" sx={{ mt: 3 }} />*/}
-      {/*                      {AllTokens.map((object) => (*/}
+      {/*                      {allTokens.map((object) => (*/}
       {/*                        <Box>*/}
       {/*                          <Box*/}
       {/*                            onClick={() => {*/}

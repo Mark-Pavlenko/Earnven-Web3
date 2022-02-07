@@ -22,6 +22,7 @@ export const getTokens = async () => {
 };
 
 export const getAccountBalance = async (accountAddress) => {
+  //ETH API Address data
   return await axios.get(
     `https://api.ethplorer.io/getAddressInfo/${accountAddress}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
   );

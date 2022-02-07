@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { Button, IconButton } from '@material-ui/core';
+import { Button, IconButton, List, ListItem } from '@material-ui/core';
 import TextField from '@mui/material/TextField';
 
 export const ExchangeMainLayout = styled.div`
@@ -233,6 +233,7 @@ export const NewMultiSwapButton = styled(Button)`
 
 export const ColumnMainSubTitles = styled.p`
   margin-top: 25px;
+
   color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#FFFFFF')};
   opacity: ${(props) => (props.isLightTheme ? 0.5 : 0.8)};
   font-family: 'Saira', sans-serif;
@@ -376,10 +377,9 @@ export const SecondColumnTitleHeaderBlock = styled.div`
 
 export const TokensModalSubLayout = styled.div`
   margin-top: -80px;
-  //background-color: red;
   background-color: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#4453AD1A')};
   width: 475px;
-  height: 540px;
+  height: 570px;
   padding: 18px 20px 23px 20px;
 
   background: ${(props) =>
@@ -391,3 +391,112 @@ export const TokensModalSubLayout = styled.div`
 `;
 
 export const SearchTokensModalTextField = styled(TextField)``;
+
+export const SendTokensModalList = styled(List)`
+  //background-color: red;
+  margin-top: 20px;
+  width: 445px;
+  height: 420px;
+  overflow: auto;
+  padding: 0;
+
+  // width of scrollbar
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 40px;
+  }
+
+  /* Track styles */
+  ::-webkit-scrollbar-track {
+    //box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
+    box-shadow: ${(props) =>
+      props.isLightTheme
+        ? '7px 21px 22px -15px rgba(51, 78, 131, 0.17)'
+        : 'box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+    mix-blend-mode: ${(props) => (props.isLightTheme ? 'none' : 'normal')};
+    backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
+    border-radius: 10px;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    //background: #ffffff;
+    cursor: pointer;
+  }
+`;
+
+export const SendTokenModalListItem = styled(ListItem)`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  //background-color: blue;
+  padding: 0 !important;
+  margin-bottom: 20px;
+
+  :hover {
+    cursor: pointer;
+    background-color: green;
+    //width: 445px;
+  }
+`;
+
+export const SendTokenImg = styled.img`
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  background-color: #e5e5e5;
+  margin-right: 12px;
+`;
+
+export const SendTokenLabelsBlock = styled.div`
+  display: flex;
+  justify-content: space-between;
+  //align-items: center;
+  //width: 346px;
+
+  img {
+    margin-top: 3px;
+  }
+`;
+
+export const SendTokenName = styled.span`
+  max-width: 200px;
+  color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#FFFFFF')};
+  font-family: 'Saira', sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 25px;
+`;
+
+export const SendTokenConvertedMeasures = styled.span`
+  color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#FFFFFF')};
+  opacity: ${(props) => (props.isLightTheme ? 0.5 : 0.8)};
+  font-family: 'Saira', sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0;
+  text-align: center;
+  margin-right: auto;
+`;
+
+export const SendTokenBalance = styled.div`
+  margin-right: 15px;
+  margin-top: -20px;
+  span {
+    color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#FFFFFF')};
+    font-family: 'Saira', sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 25px;
+  }
+`;
