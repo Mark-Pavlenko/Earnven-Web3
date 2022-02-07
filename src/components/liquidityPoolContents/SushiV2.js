@@ -733,7 +733,7 @@ export default function LiquidityPools() {
 
   return (
     <div>
-      <LiquidityPoolsTable data={Data} AllTokens={AllTokens} />
+      <LiquidityPoolsTable data={Data} />
       <br />
       <center>
         <button

@@ -116,12 +116,12 @@ export default function LiquidityPools() {
   const [SupplyToken, setSupplyToken] = useState('');
   const [SupplyTokenAmount, setSupplyTokenAmount] = useState('');
   const [AccountLiquidity, setAccountLiquidity] = useState('');
+
   const [ReceiveToken, setReceiveToken] = useState('');
   const [LiquidityAmount, setLiquidityAmount] = useState('');
 
   const [AllTokens, setAllTokens] = useState([]);
   const [allTokensSelect, setAllTokensSelect] = useState([]);
-  console.log('allTokensSelect', allTokensSelect)
 
   useEffect(() => {
     async function getData() {
@@ -856,86 +856,86 @@ export default function LiquidityPools() {
   console.log('updatedOptions', updatedOptions)
 
   //select styles
-  const selectStyle = {
-    menu: (provided, state) => ({
-      ...provided,
-      width: '100%',
-      height: 'fitContent',
-      background: 'rgba(255, 255, 255, 0.16)',
-      boxSizing: 'border-box',
-      boxShadow: 'inset 2px 0px 0px rgba(255, 255, 255, 0.1)',
-      borderTop: 'none',
-      borderRadius: '0 0 7px 7px',
-      mixBlendMode: 'normal',
-      backdropFilter: 'blur(35px)',
-      marginTop: '0px',
-      padding: '0 20px 22px 11px',
-    }),
-    control: (provided, state) => {
-      //valueLine
-      return {
-        ...provided,
-        background: state.menuIsOpen ? 'rgba(255, 255, 255, 0.16)' : '#FFFFFF',
-        boxShadow: state.menuIsOpen
-          ? 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'
-          : 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
-        backdropFilter: 'blur(35px)',
-        mixBlendMode: 'normal',
-        border: 'none',
-        borderRadius: state.menuIsOpen ? '7px 7px 0 0' : '7px',
-        color: '#464C52',
-        height: '60px',
-        width: '100%',
-        cursor: 'pointer',
-        marginBottom: '20px',
-        paddingRight: '28px',
-        paddingLeft: '12px',
-      };
-    },
-    placeholder: (provided, state) => ({
-      ...provided,
-      color: '#464C52',
-      fontSize: '18px',
-      textAlign: 'left',
-    }),
-    dropdownIndicator: (provided, state) => ({
-      // ...provided,
-      height: '20px',
-      width: '20px',
-      color: '#4453AD',
-    }),
-    indicatorsContainer: () => ({
-      color: 'transparent',
-    }),
-    singleValue: (provided, state) => ({
-      ...provided,
-      color: '#464C52',
-      fontSize: '18px',
-      background: state.isSelected ? 'black' : 'transparent',
-    }),
-    option: (provided, state) => {
-      return {
-        ...provided,
-        ':hover': {
-          background: '#FFFFFF',
-          boxShadow: 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
-          borderRadius: '7px',
-        },
-        // -------------------------------->
-        background: state.isSelected ? 'rgba(255, 255, 255, 0.16)' : 'transparent',
-        // -------------------------------->
-        boxShadow: state.isSelected && '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',
-        // -------------------------------->
-        display: 'flex',
-        color: '#616161',
-        mixBlendMode: 'normal',
-        height: state.isSelected ? '43px' : '60px',
-        padding: '5px 10px',
-        fontSize: '18px',
-        borderRadius: '7px',
-      };
-    },
-  };
+  // const selectStyle = {
+  //   menu: (provided, state) => ({
+  //     ...provided,
+  //     width: '100%',
+  //     height: 'fitContent',
+  //     background: 'rgba(255, 255, 255, 0.16)',
+  //     boxSizing: 'border-box',
+  //     boxShadow: 'inset 2px 0px 0px rgba(255, 255, 255, 0.1)',
+  //     borderTop: 'none',
+  //     borderRadius: '0 0 7px 7px',
+  //     mixBlendMode: 'normal',
+  //     backdropFilter: 'blur(35px)',
+  //     marginTop: '0px',
+  //     padding: '0 20px 22px 11px',
+  //   }),
+  //   control: (provided, state) => {
+  //     //valueLine
+  //     return {
+  //       ...provided,
+  //       background: state.menuIsOpen ? 'rgba(255, 255, 255, 0.16)' : '#FFFFFF',
+  //       boxShadow: state.menuIsOpen
+  //         ? 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'
+  //         : 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
+  //       backdropFilter: 'blur(35px)',
+  //       mixBlendMode: 'normal',
+  //       border: 'none',
+  //       borderRadius: state.menuIsOpen ? '7px 7px 0 0' : '7px',
+  //       color: '#464C52',
+  //       height: '60px',
+  //       width: '100%',
+  //       cursor: 'pointer',
+  //       marginBottom: '20px',
+  //       paddingRight: '28px',
+  //       paddingLeft: '12px',
+  //     };
+  //   },
+  //   placeholder: (provided, state) => ({
+  //     ...provided,
+  //     color: '#464C52',
+  //     fontSize: '18px',
+  //     textAlign: 'left',
+  //   }),
+  //   dropdownIndicator: (provided, state) => ({
+  //     // ...provided,
+  //     height: '20px',
+  //     width: '20px',
+  //     color: '#4453AD',
+  //   }),
+  //   indicatorsContainer: () => ({
+  //     color: 'transparent',
+  //   }),
+  //   singleValue: (provided, state) => ({
+  //     ...provided,
+  //     color: '#464C52',
+  //     fontSize: '18px',
+  //     background: state.isSelected ? 'black' : 'transparent',
+  //   }),
+  //   option: (provided, state) => {
+  //     return {
+  //       ...provided,
+  //       ':hover': {
+  //         background: '#FFFFFF',
+  //         boxShadow: 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
+  //         borderRadius: '7px',
+  //       },
+  //       // -------------------------------->
+  //       background: state.isSelected ? 'rgba(255, 255, 255, 0.16)' : 'transparent',
+  //       // -------------------------------->
+  //       boxShadow: state.isSelected && '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',
+  //       // -------------------------------->
+  //       display: 'flex',
+  //       color: '#616161',
+  //       mixBlendMode: 'normal',
+  //       height: state.isSelected ? '43px' : '60px',
+  //       padding: '5px 10px',
+  //       fontSize: '18px',
+  //       borderRadius: '7px',
+  //     };
+  //   },
+  // };
 
   const handler = (data) => {
     console.log('vfvfvfv', data)
