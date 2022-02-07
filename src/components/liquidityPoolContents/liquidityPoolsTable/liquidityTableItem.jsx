@@ -40,13 +40,13 @@ import Select from 'react-select';
 
 import { SelectOptionsWithJSX } from '../HOC/selectOptionsWithJSX';
 import Web3 from 'web3';
-import TransparentButton from '../../TransparentButton';
 import ERC20ABI from '../../../abi/ERC20.json';
 import ROUTERABI from '../../../abi/UniRouterV2.json';
 import FACTORYABI from '../../../abi/UniFactoryV2.json';
 import Addresses from '../../../contractAddresses';
 import axios from 'axios';
 import tokenURIs from '../../../screens/Exchange/tokenURIs';
+import TOKENDECIMALSABI from '../../../abi/TokenDecomals.json';
 
 export const LiquidityTableItem = ({ item, index, theme }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -55,14 +55,10 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
   const [outValue, setOutValue] = useState('');
   const [inValue, setInValue] = useState('');
 
-  console.log('outValue', outValue);
-  console.log('outValue', inValue);
-
   const [TokenA, setTokenA] = useState('');
   const [TokenB, setTokenB] = useState('');
 
   const [allTokens, setAllTokens] = useState([]);
-  console.log('allTokens', allTokens);
 
   useEffect(() => {
     async function getData() {
@@ -70,17 +66,20 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
       await axios.get(`https://api.0x.org/swap/v1/tokens`, {}).then(async (response) => {
         setAllTokens(response.data.records);
         fetchedTokens = response.data.records;
+        console.log('fetchedTokens', fetchedTokens);
       });
       await axios
         .get(`https://tokens.coingecko.com/uniswap/all.json`, {})
         .then(async (response) => {
           let data = response.data.tokens;
+          console.log('imagesTOKENS', data);
           let tokens = fetchedTokens.map((token) => ({
             ...token,
             logoURI: data.find((x) => x.address === token.address)
               ? data.find((x) => x.address === token.address).logoURI
               : tokenURIs.find((x) => x.address === token.address).logoURI,
           }));
+          console.log('tokensWithImages', tokens);
           setAllTokens(tokens);
         })
         .catch((res) => {
@@ -176,30 +175,7 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
     },
   };
 
-  const options = [
-    {
-      image: eth,
-      name: 'Ethereum',
-      value: '1',
-    },
-    {
-      image: uni,
-      name: 'Uniswap',
-      value: '2',
-    },
-    {
-      image: mkr,
-      name: 'Uniswap MKR Pool (v1)',
-      value: '3',
-    },
-    {
-      image: mkr,
-      name: 'Uniswap MKR Pool (v1)',
-      value: '4',
-    },
-  ];
-
-  const updatedOptions = SelectOptionsWithJSX(options);
+  const updatedOptions = SelectOptionsWithJSX(allTokens);
 
   async function loadWeb3() {
     if (window.ethereum) {
@@ -261,20 +237,27 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
   }
 
   const convertTokenPrice = async (inputId, value, token1, token2) => {
-    console.log('tokenAddresses', item);
-    const tokenDecimal1 = allTokens.find((o) => {
-      return o.address === token1;
-    });
-    const tokenDecimal2 = allTokens.find((o) => {
-      return o.address === token2;
-    });
-
-    console.log('Decimal1', tokenDecimal1?.decimals);
-    console.log('Decimal2', tokenDecimal2?.decimals);
+    console.log('TOKENaddresses1', token1);
+    console.log('TOKENaddresses2', token2);
 
     await loadWeb3();
     const web3 = window.web3;
-
+    //------------------------------------->
+    const tokenDecimal1 = await new web3.eth.Contract(TOKENDECIMALSABI, token1).methods
+      .decimals()
+      .call()
+      .then((res) => {
+        return res;
+      });
+    const tokenDecimal2 = await new web3.eth.Contract(TOKENDECIMALSABI, token2).methods
+      .decimals()
+      .call()
+      .then((res) => {
+        return res;
+      });
+    //------------------------------------->
+    console.log('tokenDecimal1', tokenDecimal1);
+    console.log('tokenDecimal2', tokenDecimal2);
     const NewContract = new web3.eth.Contract(
       ROUTERABI,
       '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
@@ -282,34 +265,17 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
     if (!isNaN(value)) {
       if (inputId === 'firstInput') {
         const convertedValue = await NewContract.methods
-          //.getAmountsOut(stringValue * 10 ** originDecimal.decimals, [token1, token2])
-          .getAmountsOut(
-            (value * 10 ** (tokenDecimal1?.decimals ? tokenDecimal1?.decimals : 18)).toString(),
-            [token1, token2]
-          )
+          .getAmountsOut((value * 10 ** tokenDecimal1).toString(), [token1, token2])
           .call();
-        // const valueWithDecimals = (
-        //   convertedValue[1] /
-        //   10 ** tokenDecimalConvertIn.decimals
-        // ).toString();
-        console.log('convertedValue', convertedValue);
 
-        setOutValue(
-          +convertedValue[1] / 10 ** (tokenDecimal2?.decimals ? tokenDecimal2?.decimals : 18)
-        );
+        setOutValue(+convertedValue[1] / 10 ** tokenDecimal2);
         setInValue(value);
       }
       if (inputId === 'secondInput') {
         const convertedValue = await NewContract.methods
-          .getAmountsIn(
-            (value * 10 ** (tokenDecimal2?.decimals ? tokenDecimal2?.decimals : 18)).toString(),
-            [token1, token2]
-          )
+          .getAmountsIn((value * 10 ** tokenDecimal2).toString(), [token1, token2])
           .call();
-        console.log('convertedValue', convertedValue);
-        setInValue(
-          +convertedValue[0] / 10 ** (tokenDecimal1?.decimals ? tokenDecimal1?.decimals : 18)
-        );
+        setInValue(+convertedValue[0] / 10 ** tokenDecimal1);
 
         setOutValue(value);
       }
