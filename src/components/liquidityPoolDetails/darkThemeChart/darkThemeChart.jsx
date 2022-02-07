@@ -14,6 +14,8 @@ import {
   TokenImage,
   PairBlock,
   VisibleLink,
+  VisibleTokenImageBlock,
+  ChartWrapper,
 } from '../lightThemeChart/style';
 import EtherscanIcon from '../../../assets/icons/etherscan.svg';
 import { Link } from 'react-router-dom';
@@ -372,7 +374,7 @@ export default class DarkThemeChart extends Component {
   }
   render() {
     return (
-      <div className="chart-wrapper">
+      <ChartWrapper isLightTheme={this.props.isLightTheme}>
         <div
           style={{
             display: 'flex',
@@ -388,13 +390,13 @@ export default class DarkThemeChart extends Component {
             <TypeText isLightTheme={this.props.isLightTheme}>{this.props.type}</TypeText>
           </TokenImageBlock>
           <ButtonsBlock>
-            <HiddenLink href={`https://etherscan.io/address/${this.props.address}`}>
+            <HiddenLink target="_blank" href={`https://etherscan.io/address/${this.props.address}`}>
               <EtherscanButton isLightTheme={this.props.isLightTheme}>
                 <TokenImage src={EtherscanIcon} alt="" />
               </EtherscanButton>
             </HiddenLink>
             <InvestButton isLightTheme={this.props.isLightTheme} id="Add Liquidity">
-              Withrdaw
+              Withdraw
             </InvestButton>
             <InvestButton isLightTheme={this.props.isLightTheme} id="Add Liquidity">
               Invest
@@ -411,8 +413,16 @@ export default class DarkThemeChart extends Component {
               {this.props.symbol1} - {this.props.symbol2}
             </div>
           </PairInfo>
+          <VisibleTokenImageBlock>
+            <div>
+              <TokenImage src={this.props.img} alt="" />
+            </div>
+            <TypeText isLightTheme={this.props.isLightTheme}>{this.props.type}</TypeText>
+          </VisibleTokenImageBlock>
           <div>
-            <VisibleLink href={`https://etherscan.io/address/${this.props.address}`}>
+            <VisibleLink
+              target="_blank"
+              href={`https://etherscan.io/address/${this.props.address}`}>
               <EtherscanButton isLightTheme={this.props.isLightTheme}>
                 <TokenImage src={EtherscanIcon} alt="" />
               </EtherscanButton>
@@ -473,7 +483,7 @@ export default class DarkThemeChart extends Component {
             />
           </div>
         </div>
-      </div>
+      </ChartWrapper>
     );
   }
 }

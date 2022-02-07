@@ -1,12 +1,25 @@
 import styled from 'styled-components';
 
-export const Wrapper = styled.div`
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.16);
+export const ChartWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  background: ${(props) =>
+    props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)'};
   mix-blend-mode: normal;
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(35px);
+  border-radius: 10px;
   padding: 25px 30px 30px 30px;
+
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 30px;
+    padding: 125px 30px 30px 30px;
+  }
 `;
 
 export const InvestButton = styled.button`
@@ -14,7 +27,7 @@ export const InvestButton = styled.button`
   color: ${(props) => (props.isLightTheme ? '#4453AD' : ' white')};
   border-radius: 10px;
   border: none;
-  padding: 0 55px;
+  //padding: 0 55px;
   height: 40px;
   font-family: 'Saira';
   font-weight: 500;
@@ -54,10 +67,15 @@ export const VisibleLink = styled.a`
 `;
 
 export const ButtonsBlock = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: 40px 1fr 1fr;
   gap: 30px;
+  width: 25%;
+
   @media (max-width: 768px) {
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
     width: 100%;
   }
 `;
@@ -69,6 +87,18 @@ export const TokenImageBlock = styled.div`
 
   @media (max-width: 768px) {
     display: none;
+  }
+`;
+
+export const VisibleTokenImageBlock = styled.div`
+  display: none;
+  align-items: center;
+  gap: 10px;
+
+  @media (max-width: 768px) {
+    position: absolute;
+    display: flex;
+    top: 125%;
   }
 `;
 
@@ -89,7 +119,12 @@ export const PairBlock = styled.div`
   font-weight: 500;
   font-size: 20px;
   line-height: 31px;
-  margin-bottom: 15px;
+  margin: 15px 0;
+  @media (max-width: 768px) {
+    position: absolute;
+    top: 0;
+    padding: 0 30px;
+  }
 `;
 
 export const TokenImage = styled.img`

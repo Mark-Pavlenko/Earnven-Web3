@@ -129,15 +129,20 @@ export const AboutBlock = styled(BackgroundStyles)`
   background: ${(props) =>
     props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)'};
   color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#fff')};
+  font-size: 14px;
+  line-height: 22px;
+  //opacity: 0.5;
 `;
 
 export const ShowMoreBlock = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 15px;
+  opacity: 1;
 `;
 
 export const ShowMore = styled.button`
+  opacity: 1;
   background: ${(props) => (props.isLightTheme ? '#fff' : '#8F86FF')};
   box-shadow: inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12);
   border-radius: 10px;
@@ -147,5 +152,9 @@ export const ShowMore = styled.button`
   padding: 10px 38px;
   border: none;
   color: ${(props) => (props.isLightTheme ? '#4453AD' : '#fff')};
+  cursor: pointer;
+`;
+
+export const CopyBlock = styled.img`
   cursor: pointer;
 `;

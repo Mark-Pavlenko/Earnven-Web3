@@ -252,7 +252,7 @@ export const PoolDetails = ({ token0, token1, type }) => {
                       ' - ' +
                       tokens.pairDayDatas[0].token1.symbol}
                   </DetailValue>
-                  <div onClick={() => navigator.clipboard.writeText('123123123')}>
+                  <div c>
                     <img src={CopyIcon} alt="" />
                   </div>
                 </Detail>

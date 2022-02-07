@@ -140,7 +140,7 @@ svg:not(:root){
         flex-direction: column-reverse;
         align-items: center;
         gap: 30px;
-        padding: 25px 30px 30px 30px;
+        padding: 75px 30px 30px 30px;
     }
     .net-worth--light {
         top: 13%;

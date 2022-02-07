@@ -11,6 +11,7 @@ import {
   AboutBlock,
   BlockTitle,
   CompareTokens,
+  CopyBlock,
   Detail,
   DetailTitle,
   DetailValue,
@@ -1029,8 +1030,11 @@ export default function Chart(props) {
                 <DetailTitle>Pair Name</DetailTitle>
                 <Detail>
                   <DetailValue>{tokenASymbol + ' - ' + tokenBSymbol}</DetailValue>
-                  <div onClick={() => navigator.clipboard.writeText('123123123')}>
-                    <img src={CopyIcon} alt="" />
+                  <div
+                    onClick={() =>
+                      navigator.clipboard.writeText(tokenASymbol + ' - ' + tokenBSymbol)
+                    }>
+                    <CopyBlock src={CopyIcon} alt="" />
                   </div>
                 </Detail>
               </div>
@@ -1038,8 +1042,8 @@ export default function Chart(props) {
                 <DetailTitle>Pair Address</DetailTitle>
                 <Detail>
                   <DetailValue>{convertTokenAddress(tokenPairId)}</DetailValue>
-                  <div>
-                    <img src={CopyIcon} alt="" />
+                  <div onClick={() => navigator.clipboard.writeText(tokenPairId)}>
+                    <CopyBlock src={CopyIcon} alt="" />
                   </div>
                 </Detail>
               </div>
@@ -1047,8 +1051,8 @@ export default function Chart(props) {
                 <DetailTitle>{tokenASymbol} Address</DetailTitle>
                 <Detail>
                   <DetailValue>{convertTokenAddress(token0)}</DetailValue>
-                  <div>
-                    <img src={CopyIcon} alt="" />
+                  <div onClick={() => navigator.clipboard.writeText(token0)}>
+                    <CopyBlock src={CopyIcon} alt="" />
                   </div>
                 </Detail>
               </div>
@@ -1056,8 +1060,8 @@ export default function Chart(props) {
                 <DetailTitle>{tokenBSymbol} Address</DetailTitle>
                 <Detail>
                   <DetailValue>{convertTokenAddress(token1)}</DetailValue>
-                  <div>
-                    <img src={CopyIcon} alt="" />
+                  <div onClick={() => navigator.clipboard.writeText(token1)}>
+                    <CopyBlock src={CopyIcon} alt="" />
                   </div>
                 </Detail>
               </div>
