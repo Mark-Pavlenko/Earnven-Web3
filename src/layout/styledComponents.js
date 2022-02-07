@@ -1,4 +1,6 @@
 import { experimentalStyled as styled } from '@material-ui/core/styles';
+import lightDashboardBig from '../assets/images/lightDashboardBig.jpg';
+import lightDashboard from '../assets/images/lightDashboard.jpg';
 
 export const RootStyle = styled('div')`
   background: ${(props) =>
