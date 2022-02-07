@@ -52,6 +52,12 @@ function* compoundTokenSagaWorker(compTokenAttributes) {
         if (underlyingTokenDataAPI) {
           underlyingTokenData = underlyingTokenDataAPI.data.cToken[0];
         }
+        //set the Comp address if not provided by the API
+        if (underlyingTokenData.underlying_address == null) {
+          if (underlyingTokenData.symbol === 'cETH') {
+            underlyingTokenData.underlying_address = '0xc00e94cb662c3520282e6f5717214004a7f26888';
+          }
+        }
         if (underlyingTokenData) {
           compCoinData = yield call(API.getCompCoinData, underlyingTokenData.underlying_address);
         }

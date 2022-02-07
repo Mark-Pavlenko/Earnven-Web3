@@ -42,24 +42,44 @@ export const getSushiV2SubgraphData = async (accountAddress) => {
   return response;
 };
 
-//below query is used to get sushiV2 token images from coingecko API call
-export const getSushiLpTokenImage = async (tokenContractAddress) => {
+// //below query is used to get sushiV2 token images from coingecko API call
+// export const getSushiLpTokenImage = async (tokenContractAddress) => {
+//   try {
+//     const result = await axios.get(
+//       `https://api.coingecko.com/api/v3/coins/ethereum/contract/${tokenContractAddress}`,
+//       {}
+//     );
+//     const tokenImage = result.data.image.thumb;
+//     const tokenPrice = result.data.market_data.current_price.usd;
+//     //console.log('TestSushiV2 token image url', sushiTokenImageUrl);
+//     return {
+//       tokenImage: tokenImage,
+//       tokenPrice: tokenPrice,
+//     };
+//   } catch (err) {
+//     return {
+//       tokenImage: '',
+//       tokenPrice: 0,
+//     };
+//   }
+// };
+
+export const getSushiLpTokenImage = async (tokenSymbol) => {
+  let fetchedTokens = tokenSymbol.split('/');
+  let tokens;
   try {
-    const result = await axios.get(
-      `https://api.coingecko.com/api/v3/coins/ethereum/contract/${tokenContractAddress}`,
-      {}
-    );
-    const tokenImage = result.data.image.thumb;
-    const tokenPrice = result.data.market_data.current_price.usd;
-    //console.log('TestSushiV2 token image url', sushiTokenImageUrl);
-    return {
-      tokenImage: tokenImage,
-      tokenPrice: tokenPrice,
-    };
+    await axios
+      .get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
+      .then(async (response) => {
+        let data = response.data.tokens;
+        tokens = fetchedTokens.map((token) => ({
+          logoURI: data.find((x) => x.symbol.toUpperCase() === token.toUpperCase())
+            ? data.find((x) => x.symbol.toUpperCase() === token.toUpperCase()).logoURI
+            : 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png', //get ether symbol
+        }));
+      });
   } catch (err) {
-    return {
-      tokenImage: '',
-      tokenPrice: 0,
-    };
+    console.log('No image found for the given tokens');
   }
+  return tokens;
 };

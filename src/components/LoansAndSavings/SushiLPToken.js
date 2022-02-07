@@ -41,92 +41,92 @@ export default function SushiLPToken({ accountAddress }) {
     getSushiSwapLPData();
   }, [accountAddress]);
 
-  // //get the data from saga
-  const SushiPoolsData = useSelector((state) => state.sushiSwap.sushiSwapLPData);
-  const SushiV2Total = useSelector((state) => state.sushiSwap.sushiSwapLPTotal);
+  // // //get the data from saga
+  // const SushiPoolsData = useSelector((state) => state.sushiSwap.sushiSwapLPData);
+  // const SushiV2Total = useSelector((state) => state.sushiSwap.sushiSwapLPTotal);
 
-  //implementing below logic for ETH2.0 staking
-  useEffect(() => {
-    if (SushiPoolsData.length > 0) {
-      try {
-        var content = SushiPoolsData.map((object) => (
-          <Accordion
-            style={{
-              background: 'transparent',
-              marginRight: '1px',
-              color: 'black',
-              width: '100%',
-              border: '1px',
-              borderColor: 'black',
-              borderStyle: 'hidden', //solid
-            }}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header">
-              <React.Fragment
-                style={{
-                  display: 'inline-block',
-                  width: '100%',
-                  //textAlign: 'left',
-                  wordBreak: 'break-all',
-                }}>
-                <React.Fragment>
-                  <img
-                    style={{
-                      height: '20px',
-                      width: '20px',
-                      display: 'inline-block',
-                    }}
-                    src={object.token0Image}
-                    alt=""
-                  />
-                  <img
-                    style={{
-                      height: '20px',
-                      width: '20px',
-                      display: 'inline-block',
-                    }}
-                    src={object.token1Image}
-                    alt=""
-                  />
-                </React.Fragment>
-                {object.token0Symbol}-{object.token1Symbol} --- &nbsp; $
-                {parseFloat(object.value).toLocaleString()}
-              </React.Fragment>
-            </AccordionSummary>
-            <AccordionDetails>
-              <div style={{ display: 'inline-block', width: '70%', fontSize: '15px' }}>
-                LP Token &nbsp;&nbsp;&nbsp;&nbsp; {object.token0Symbol}-{object.token1Symbol}
-                <br />
-                Balance &nbsp; {parseFloat(object.balance).toFixed(4)}
-                <br />
-                Price &nbsp;&nbsp;&nbsp;&nbsp;${object.price}
-                <br />
-                Value &nbsp;&nbsp;${parseFloat(object.value).toLocaleString()}
-                <br />
-                Liquidity &nbsp;&nbsp;&nbsp;&nbsp;${parseFloat(object.liquidity).toLocaleString()}
-                <br />
-                Volume &nbsp;&nbsp;&nbsp;&nbsp;${parseFloat(object.volume).toLocaleString()}
-                <br />
-                Chain &nbsp;&nbsp;&nbsp;&nbsp; {object.chain}
-                <br />
-                Protocol &nbsp;&nbsp; {object.protocol}
-              </div>
-            </AccordionDetails>
-          </Accordion>
-        ));
-      } catch (err) {
-        console.log('No sushiSwap LP token data found');
-      }
-    }
+  // //implementing below logic for ETH2.0 staking
+  // useEffect(() => {
+  //   if (SushiPoolsData.length > 0) {
+  //     try {
+  //       var content = SushiPoolsData.map((object) => (
+  //         <Accordion
+  //           style={{
+  //             background: 'transparent',
+  //             marginRight: '1px',
+  //             color: 'black',
+  //             width: '100%',
+  //             border: '1px',
+  //             borderColor: 'black',
+  //             borderStyle: 'hidden', //solid
+  //           }}>
+  //           <AccordionSummary
+  //             expandIcon={<ExpandMoreIcon />}
+  //             aria-controls="panel1a-content"
+  //             id="panel1a-header">
+  //             <React.Fragment
+  //               style={{
+  //                 display: 'inline-block',
+  //                 width: '100%',
+  //                 //textAlign: 'left',
+  //                 wordBreak: 'break-all',
+  //               }}>
+  //               <React.Fragment>
+  //                 <img
+  //                   style={{
+  //                     height: '20px',
+  //                     width: '20px',
+  //                     display: 'inline-block',
+  //                   }}
+  //                   src={object.token0Image}
+  //                   alt=""
+  //                 />
+  //                 <img
+  //                   style={{
+  //                     height: '20px',
+  //                     width: '20px',
+  //                     display: 'inline-block',
+  //                   }}
+  //                   src={object.token1Image}
+  //                   alt=""
+  //                 />
+  //               </React.Fragment>
+  //               {object.token0Symbol}-{object.token1Symbol} --- &nbsp; $
+  //               {parseFloat(object.value).toLocaleString()}
+  //             </React.Fragment>
+  //           </AccordionSummary>
+  //           <AccordionDetails>
+  //             <div style={{ display: 'inline-block', width: '70%', fontSize: '15px' }}>
+  //               LP Token &nbsp;&nbsp;&nbsp;&nbsp; {object.token0Symbol}-{object.token1Symbol}
+  //               <br />
+  //               Balance &nbsp; {parseFloat(object.balance).toFixed(4)}
+  //               <br />
+  //               Price &nbsp;&nbsp;&nbsp;&nbsp;${object.price}
+  //               <br />
+  //               Value &nbsp;&nbsp;${parseFloat(object.value).toLocaleString()}
+  //               <br />
+  //               Liquidity &nbsp;&nbsp;&nbsp;&nbsp;${parseFloat(object.liquidity).toLocaleString()}
+  //               <br />
+  //               Volume &nbsp;&nbsp;&nbsp;&nbsp;${parseFloat(object.volume).toLocaleString()}
+  //               <br />
+  //               Chain &nbsp;&nbsp;&nbsp;&nbsp; {object.chain}
+  //               <br />
+  //               Protocol &nbsp;&nbsp; {object.protocol}
+  //             </div>
+  //           </AccordionDetails>
+  //         </Accordion>
+  //       ));
+  //     } catch (err) {
+  //       console.log('No sushiSwap LP token data found');
+  //     }
+  //   }
 
-    setSushiPoolsContent(content);
-  }, [SushiPoolsData]);
+  //   setSushiPoolsContent(content);
+  // }, [SushiPoolsData]);
 
   return (
     <React.Fragment>
-      <div
+      {/* <div
         style={{
           fontSize: '15px',
           marginRight: '15px',
@@ -145,7 +145,7 @@ export default function SushiLPToken({ accountAddress }) {
         SushiSwap -- ${SushiV2Total.toLocaleString()}
         {SushiPoolsContent}
       </div>
-      <br />
+      <br /> */}
     </React.Fragment>
   );
 }
