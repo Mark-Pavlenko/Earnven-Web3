@@ -32,6 +32,8 @@ import Box from '@material-ui/core/Box';
 import { Button } from '@material-ui/core';
 import { Link, useParams } from 'react-router-dom';
 import {LiquidityPoolsTable} from "./liquidityPoolsTable/liquidityPoolsTable";
+import {AddNewGroupButton} from "./uniV2/StyledComponents";
+import {useSelector} from "react-redux";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -77,6 +79,7 @@ export default function LiquidityPools() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [Loading, setLoading] = useState(false);
+  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -96,6 +99,8 @@ export default function LiquidityPools() {
   const [AccountLiquidity, setAccountLiquidity] = useState('');
   const [ReceiveToken, setReceiveToken] = useState('');
   const [LiquidityAmount, setLiquidityAmount] = useState('');
+
+
 
   const [AllTokens, setAllTokens] = useState([]);
 
@@ -750,21 +755,13 @@ export default function LiquidityPools() {
       <LiquidityPoolsTable data={Data} type={'sushiswap'} AllTokens={AllTokens} />
       <br />
       <center>
-        <button
-          onClick={(e) => {
+        <AddNewGroupButton
+            isLightTheme={isLightTheme}
+            onClick={(e) => {
             setPage(Page + 1);
-          }}
-          style={{
-            height: '25px',
-            width: '100px',
-            background: 'transparent',
-            border: '1px solid #ac6afc',
-            cursor: 'pointer',
-            color: 'white',
-            borderRadius: '10px',
           }}>
-          {Loading ? 'Loading...' : 'Show More'}
-        </button>
+          {Loading ? 'Loading...' : 'More Pools'}
+        </AddNewGroupButton>
       </center>
     </div>
   );
