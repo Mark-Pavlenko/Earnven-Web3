@@ -23,6 +23,11 @@ export const TableItem = styled.div`
   position: relative;
 
   @media (min-width: 375px) and (max-width: 840px) {
+    &:first-child {
+      justify-content: center;
+      grid-template-columns: 50% 50%;
+      align-items: center;
+    }
     grid-template-columns: 1fr 1fr;
     padding: 20px 15px;
     grid-template-areas:
@@ -51,8 +56,11 @@ export const ItemIndex = styled.div`
 `;
 export const HeaderApr = styled.div`
   @media (min-width: 375px) and (max-width: 840px) {
-    text-align: right;
-    margin-right: 162px;
+    //margin-right: 162px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
   }
 `;
 export const HeaderLiquidity = styled.div`
@@ -99,26 +107,37 @@ export const TokenImage = styled.img`
 
 export const TokenImages = styled.div`
   display: flex;
-  width: 50px;
+  width: 30px;
 `;
 export const TokenNames = styled.div`
   display: flex;
   gap: 5px;
+
+  @media (min-width: 375px) and (max-width: 840px) {
+    font-size: 14px;
+  }
 `;
 
 export const AprBlock = styled.div`
   display: flex;
-  gap: 20px;
+  gap: 10px;
 `;
 
 export const AprName = styled.div`
   width: 75px;
+
+  @media (min-width: 375px) and (max-width: 840px) {
+    font-size: 14px;
+    width: 50px;
+  }
 `;
 export const AprValue = styled.div`
-  width: 100px;
+  width: 75px;
   color: ${(props) => props.color};
   @media (min-width: 375px) and (max-width: 840px) {
+    width: 60px;
     text-align: right;
+    font-size: 14px;
   }
 `;
 
@@ -149,4 +168,10 @@ export const APR = styled.div`
   @media (min-width: 375px) and (max-width: 840px) {
     align-items: flex-end;
   }
+`;
+
+export const AvailableTitle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
