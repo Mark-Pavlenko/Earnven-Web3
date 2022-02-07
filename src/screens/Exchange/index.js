@@ -583,7 +583,6 @@ export default function SwapComponent() {
                             sx: {
                               color: isLightTheme ? '#1E1E20' : '#FFFFFF',
                               paddingRight: '20px',
-
                               fontSize: 14,
                             },
                           }}
