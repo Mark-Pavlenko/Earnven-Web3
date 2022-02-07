@@ -372,3 +372,19 @@ export const SecondColumnTitleHeaderBlock = styled.div`
   flex-direction: row;
   align-items: center;
 `;
+
+export const TokensModalSubLayout = styled.div`
+  margin-top: -80px;
+  //background-color: red;
+  background-color: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#4453AD1A')};
+  width: 475px;
+  height: 540px;
+  padding: 18px 20px 23px 20px;
+
+  background: ${(props) =>
+    props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)'};
+  box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(35px);
+  mix-blend-mode: normal;
+  border-radius: 10px;
+`;

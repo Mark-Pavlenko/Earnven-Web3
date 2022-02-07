@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './exchange.css';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
@@ -84,12 +84,39 @@ import {
   MultiSwapReceiveTokensBlock,
   AddReceiveTokenMultiSwapBtn,
   FirstColumnTitleHeaderBlock,
+  TokensModalSubLayout,
 } from './styled';
 import { useSelector } from 'react-redux';
 import pyramidIcon from '../../assets/icons/pyramidIcon.svg';
 import chevronDownBlack from '../../assets/icons/chevronDownLightTheme.svg';
 import chevronDownLight from '../../assets/icons/chevronDownLight.svg';
 import MultiSwapComponent from './multiSwap';
+import SelectTokensModalContainer from './selectTokensModal';
+import { SelectWrapper } from '../../components/liquidityPoolContents/styledComponents';
+import {
+  Balance,
+  BlockTokenName,
+  BlockTokens,
+  ButtonsBlock,
+  ChangeToken,
+  InputBlock,
+  LinksContainer,
+  ModalInput,
+  ModalLink,
+  ModalLinkRight,
+  SelectTitle,
+  SupplyTokenButton,
+} from '../../components/liquidityPoolContents/uniV2/StyledComponents';
+import { TokenImage } from '../../components/liquidityPoolContents/liquidityPoolsTable/style';
+import {
+  CloseButton,
+  Content,
+  Header,
+  MainContent,
+  ShadowBlock,
+  Title,
+} from '../../components/common/modalContainer/styledComponents';
+import { ModalTitle } from './selectTokensModal/styles';
 
 const useStyles = makeStyles((theme) => ({
   addIcon: {
@@ -202,6 +229,27 @@ export default function SwapComponent() {
   const [toTokens, settoTokens] = useState([]);
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedModal, setSelectedModal] = useState('');
+
+  const ref = useRef();
+  useEffect(() => {
+    const checkIfClickedOutside = (e) => {
+      // If the menu is open and the clicked target is not within the menu,
+      // then close the menu
+      if (isModalVisible && ref.current && !ref.current.contains(e.target)) {
+        setIsModalVisible(false);
+      }
+    };
+
+    document.addEventListener('mousedown', checkIfClickedOutside);
+
+    return () => {
+      // Cleanup the event listener
+      document.removeEventListener('mousedown', checkIfClickedOutside);
+    };
+  }, [isModalVisible]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -450,6 +498,11 @@ export default function SwapComponent() {
     setcurrencyToModal(false);
   };
 
+  const switchModal = (e) => {
+    setSelectedModal(e.target.id);
+    setIsModalVisible(true);
+  };
+
   return (
     <>
       <ExchangeMainLayout>
@@ -468,7 +521,10 @@ export default function SwapComponent() {
                   <span>Send</span>
                   <span>$3 510,03</span>
                 </SendBlockLabels>
-                <SendTokensChooseButton isLightTheme={isLightTheme}>
+
+                {/* Open modal with tokens list*/}
+                {/*<div >*/}
+                <SendTokensChooseButton isLightTheme={isLightTheme} onClick={switchModal}>
                   <ChooseBtnTokenBlock>
                     <img src={EthIcon} alt="eth_icon" style={{ marginRight: '10px' }} />
                     <ChosenTokenLabel isLightTheme={isLightTheme}>ETH</ChosenTokenLabel>
@@ -479,6 +535,30 @@ export default function SwapComponent() {
                   </ChooseBtnTokenBlock>
                   <ChosenSendTokenValue isLightTheme={isLightTheme}>10</ChosenSendTokenValue>
                 </SendTokensChooseButton>
+                {/* modal with tokens list*/}
+
+                {isModalVisible && (
+                  <SelectTokensModalContainer
+                    theme={isLightTheme}
+                    title="Select token"
+                    isOpen={isModalVisible}
+                    onClose={() => {
+                      setIsModalVisible(false);
+                    }}>
+                    <TokensModalSubLayout isLightTheme={isLightTheme} ref={ref}>
+                      <Header>
+                        <ModalTitle isLightTheme={isLightTheme}>Select token</ModalTitle>
+                        <CloseButton
+                          onClick={() => setIsModalVisible(false)}
+                          isLightTheme={isLightTheme}
+                        />
+                      </Header>
+                      <div>Tokens list content</div>
+                    </TokensModalSubLayout>
+                  </SelectTokensModalContainer>
+                )}
+                {/*</div>*/}
+
                 <SwitchTokensBtn
                   src={isLightTheme ? switchTokensLight : switchTokensDark}
                   alt="switch_tokens_btn"
