@@ -14,6 +14,8 @@ import {
   PairInfo,
   VisibleLink,
   TokenImage,
+  VisibleTokenImageBlock,
+  ChartWrapper,
 } from './style';
 import EtherscanIcon from '../../../assets/icons/etherscan.svg';
 import { Link } from 'react-router-dom';
@@ -363,7 +365,7 @@ export default class LightThemeChart extends Component {
   }
   render() {
     return (
-      <div className="chart-wrapper--light">
+      <ChartWrapper isLightTheme={this.props.isLightTheme}>
         <div
           style={{
             display: 'flex',
@@ -379,7 +381,7 @@ export default class LightThemeChart extends Component {
             <TypeText isLightTheme={this.props.isLightTheme}>{this.props.type}</TypeText>
           </TokenImageBlock>
           <ButtonsBlock>
-            <HiddenLink href={`https://etherscan.io/address/${this.props.address}`}>
+            <HiddenLink target="_blank" href={`https://etherscan.io/address/${this.props.address}`}>
               <EtherscanButton isLightTheme={this.props.isLightTheme}>
                 <TokenImage src={EtherscanIcon} alt="" />
               </EtherscanButton>
@@ -402,8 +404,16 @@ export default class LightThemeChart extends Component {
               {this.props.symbol1} - {this.props.symbol2}
             </div>
           </PairInfo>
+          <VisibleTokenImageBlock>
+            <div>
+              <TokenImage src={this.props.img} alt="" />
+            </div>
+            <TypeText isLightTheme={this.props.isLightTheme}>{this.props.type}</TypeText>
+          </VisibleTokenImageBlock>
           <div>
-            <VisibleLink href={`https://etherscan.io/address/${this.props.address}`}>
+            <VisibleLink
+              target="_blank"
+              href={`https://etherscan.io/address/${this.props.address}`}>
               <EtherscanButton isLightTheme={this.props.isLightTheme}>
                 <TokenImage src={EtherscanIcon} alt="" />
               </EtherscanButton>
@@ -473,7 +483,7 @@ export default class LightThemeChart extends Component {
             />
           </div>
         </div>
-      </div>
+      </ChartWrapper>
     );
   }
 }

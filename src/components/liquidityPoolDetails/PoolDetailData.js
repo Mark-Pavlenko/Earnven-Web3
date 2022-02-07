@@ -15,7 +15,7 @@ import DarkThemeChart from "./darkThemeChart/darkThemeChart";
 import {
   AboutBlock,
   BlockTitle,
-  CompareTokens, Detail, DetailTitle, DetailValue, PairDetails,
+  CompareTokens, CopyBlock, Detail, DetailTitle, DetailValue, PairDetails,
   PairInfo, ShowMore, ShowMoreBlock, Stats, StatsItems, StatsWrapper,
   Token,
   TokenImage,
@@ -1077,8 +1077,8 @@ export default function Chart(props) {
                 <DetailTitle>Pair Name</DetailTitle>
                 <Detail>
                   <DetailValue>{tokenASymbol + ' - ' + tokenBSymbol}</DetailValue>
-                  <div onClick={() => navigator.clipboard.writeText('123123123')}>
-                    <img src={CopyIcon} alt="" />
+                  <div onClick={() => navigator.clipboard.writeText(tokenASymbol + ' - ' + tokenBSymbol)}>
+                    <CopyBlock src={CopyIcon} alt="" />
                   </div>
                 </Detail>
               </div>
@@ -1086,8 +1086,8 @@ export default function Chart(props) {
                 <DetailTitle>Pair Address</DetailTitle>
                 <Detail>
                   <DetailValue>{convertTokenAddress(tokenid)}</DetailValue>
-                  <div>
-                    <img src={CopyIcon} alt="" />
+                  <div onClick={() => navigator.clipboard.writeText(tokenid)}>
+                    <CopyBlock src={CopyIcon} alt="" />
                   </div>
                 </Detail>
               </div>
@@ -1095,8 +1095,8 @@ export default function Chart(props) {
                 <DetailTitle>{tokenASymbol} Address</DetailTitle>
                 <Detail>
                   <DetailValue>{convertTokenAddress(tokenAId)}</DetailValue>
-                  <div>
-                    <img src={CopyIcon} alt="" />
+                  <div onClick={() => navigator.clipboard.writeText(tokenAId)}>
+                    <CopyBlock src={CopyIcon} alt="" />
                   </div>
                 </Detail>
               </div>
@@ -1104,8 +1104,8 @@ export default function Chart(props) {
                 <DetailTitle>{tokenBSymbol} Address</DetailTitle>
                 <Detail>
                   <DetailValue>{convertTokenAddress(tokenBId)}</DetailValue>
-                  <div>
-                    <img src={CopyIcon} alt="" />
+                  <div onClick={() => navigator.clipboard.writeText(tokenBId)}>
+                    <CopyBlock src={CopyIcon} alt="" />
                   </div>
                 </Detail>
               </div>
@@ -1167,7 +1167,7 @@ export default function Chart(props) {
             </StatsWrapper>
           </Stats>
           <AboutBlock isLightTheme={isLightTheme}>
-            <div style={{ textAlign: 'justify' }}>{isHiddenText ? cutInfo(info) : info}</div>
+            <div style={{ textAlign: 'justify', opacity: '0.5' }}>{isHiddenText ? cutInfo(info) : info}</div>
             {info.length > 300 && (
               <ShowMoreBlock>
                 <ShowMore isLightTheme={isLightTheme} onClick={hideText}>{isHiddenText ? 'Show More' : 'Hide'}</ShowMore>
