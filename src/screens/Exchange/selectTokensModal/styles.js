@@ -48,26 +48,23 @@ export const ModalTitle = styled.div`
 `;
 
 export const CloseButton = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 40px;
   height: 40px;
-  transform: ${(props) => (props.isOpen ? 'rotate(0deg)' : 'rotate(180deg)')};
-  background: url(${close}) no-repeat center center;
-  margin-left: 9px;
-  cursor: pointer;
-  background-color: ${(props) => (props.isLightTheme ? '#ffffff' : 'rgba(68, 83, 173, 0.1)')};
+  background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
   box-shadow: ${(props) =>
     props.isLightTheme
-      ? 'inset 0 5px 10px -6px rgba(51, 78, 131, 0.12)'
-      : 'inset 1px 2px 1px 1px rgba(255, 255, 255, 0.1)'};
-  border-radius: 7px;
+      ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+      : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
   mix-blend-mode: ${(props) => (props.isLightTheme ? 'none' : 'normal')};
   backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
+  border-radius: 10px;
+  cursor: pointer;
 `;
 
 export const Content = styled.div`
-  //width: 475px;
-  //height: calc(100% - 48px);
-  //margin: 34px 107px 0 107px;
   display: flex;
   justify-content: center;
   align-items: center;

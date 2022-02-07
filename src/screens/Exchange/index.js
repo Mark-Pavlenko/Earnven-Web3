@@ -7,6 +7,8 @@ import axios from 'axios';
 import TransparentButton from '../../components/TransparentButton';
 import Web3 from 'web3';
 import ERC20ABI from '../../abi/ERC20.json';
+import closeModalIcon from '../../assets/icons/close_nft.svg';
+import closeModalIconDark from '../../assets/icons/closenftdark.svg';
 import {
   Box,
   Button,
@@ -107,16 +109,7 @@ import {
   SelectTitle,
   SupplyTokenButton,
 } from '../../components/liquidityPoolContents/uniV2/StyledComponents';
-import { TokenImage } from '../../components/liquidityPoolContents/liquidityPoolsTable/style';
-import {
-  CloseButton,
-  Content,
-  Header,
-  MainContent,
-  ShadowBlock,
-  Title,
-} from '../../components/common/modalContainer/styledComponents';
-import { ModalTitle } from './selectTokensModal/styles';
+import { TokenImage, ModalTitle, CloseButton, Header } from './selectTokensModal/styles';
 
 const useStyles = makeStyles((theme) => ({
   addIcon: {
@@ -550,8 +543,12 @@ export default function SwapComponent() {
                         <ModalTitle isLightTheme={isLightTheme}>Select token</ModalTitle>
                         <CloseButton
                           onClick={() => setIsModalVisible(false)}
-                          isLightTheme={isLightTheme}
-                        />
+                          isLightTheme={isLightTheme}>
+                          <img
+                            src={isLightTheme ? closeModalIcon : closeModalIconDark}
+                            alt="close_modal_btn"
+                          />
+                        </CloseButton>
                       </Header>
                       <div>Tokens list content</div>
                     </TokensModalSubLayout>
