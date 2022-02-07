@@ -37,7 +37,7 @@ export const RootStyle = styled('div')`
 export const MainStyle = styled('div')`
   flex-grow: 1;
   background-color: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};
-  height: 100vh;
+  //height: 100vh; This makes background wrong!
 
   @media (min-width: 1930px) {
     background-color: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};

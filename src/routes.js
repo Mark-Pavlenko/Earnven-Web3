@@ -54,7 +54,7 @@ export default function Router() {
     { path: 'assets', element: <AllAssetsPage /> },
     // { path: 'token/:tokenid', element: <TokenDetailsPage /> },
     { path: 'token/:tokenId', element: <TokenPage /> },
-    { path: 'token', element: <TokenDetailsPage /> },
+    // { path: 'token', element: <TokenDetailsPage /> },
     {
       path: 'uniswap/address/:token0/:token1',
       element: <UniswapLiquidityPool />,
