@@ -16,6 +16,7 @@ import {
   Divider,
   Grid,
   IconButton,
+  Input,
   InputAdornment,
   Modal,
   OutlinedInput,
@@ -41,6 +42,9 @@ import switchTokensLight from '../../assets/icons/switchTokensLight.svg';
 import switchTokensDark from '../../assets/icons/switchTokensDark.svg';
 import daiICon from '../../assets/icons/daiIcon.svg';
 import paraSwapIcon from '../../assets/icons/paraSwapIcon.svg';
+import searchTokensImportModalLight from '../../assets/icons/searchTokensButtonMobileLight.svg';
+import searchTokensImportModalDark from '../../assets/icons/searchTokensInputModalDark.svg';
+
 import uniIcon from '../../assets/icons/uniIcon.svg';
 import AddIcon from '@mui/icons-material/Add';
 // import DeleteIcon from '@mui/icons-material/Delete';
@@ -87,6 +91,8 @@ import {
   AddReceiveTokenMultiSwapBtn,
   FirstColumnTitleHeaderBlock,
   TokensModalSubLayout,
+  SearchTokensModal,
+  SearchTokensModalTextField,
 } from './styled';
 import { useSelector } from 'react-redux';
 import pyramidIcon from '../../assets/icons/pyramidIcon.svg';
@@ -110,12 +116,20 @@ import {
   SupplyTokenButton,
 } from '../../components/liquidityPoolContents/uniV2/StyledComponents';
 import { TokenImage, ModalTitle, CloseButton, Header } from './selectTokensModal/styles';
+import Autocomplete from '@mui/material/Autocomplete';
+import searchIcon from '../../assets/icons/searchIconLight.png';
+
+import SearchIcon from '@mui/icons-material/Search';
+import { TokensListTextField } from '../../components/searchTokens/styles';
 
 const useStyles = makeStyles((theme) => ({
   addIcon: {
     '& svg': {
       fontSize: 14,
     },
+  },
+  noBorder: {
+    border: 'none !important',
   },
 }));
 
@@ -199,7 +213,9 @@ const makeCall = async (callName, contract, args, metadata = {}) => {
     console.log('no call of that name!');
   }
 };
+
 export default function SwapComponent() {
+  const classes = useStyles();
   const { address } = useParams();
   const [value, setValue] = useState(0);
   const [TokenFrom, setTokenFrom] = useState('ETH');
@@ -550,7 +566,55 @@ export default function SwapComponent() {
                           />
                         </CloseButton>
                       </Header>
-                      <div>Tokens list content</div>
+                      <div>
+                        <SearchTokensModalTextField
+                          InputProps={{
+                            endAdornment: (
+                              <img
+                                src={
+                                  isLightTheme
+                                    ? searchTokensImportModalDark
+                                    : searchTokensImportModalLight
+                                }
+                                alt="search_icon"
+                              />
+                            ),
+                            classes: { notchedOutline: classes.noBorder },
+                            sx: {
+                              color: isLightTheme ? '#1E1E20' : '#FFFFFF',
+                              paddingRight: '20px',
+
+                              fontSize: 14,
+                            },
+                          }}
+                          id="filled-search"
+                          // onChange={this.searchTokens}
+                          variant="outlined"
+                          label="Search tokens..."
+                          InputLabelProps={{
+                            style: {
+                              color: isLightTheme ? 'black' : 'white',
+                              fontSize: 14,
+                              fontWeight: 400,
+                              opacity: 0.5,
+                              lineHeight: '22px',
+                            },
+                          }}
+                          style={{
+                            width: 435,
+                            height: 40,
+                            marginTop: '20px',
+                            backgroundColor: isLightTheme ? '#FFFFFF' : '#1F265C3D',
+                            boxShadow: isLightTheme
+                              ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+                              : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+                            mixBlendMode: isLightTheme ? 'normal' : 'normal',
+                            backdropFilter: isLightTheme ? 'none' : 'blur(35px)',
+                            borderRadius: '10px',
+                          }}
+                          size="small"
+                        />
+                      </div>
                     </TokensModalSubLayout>
                   </SelectTokensModalContainer>
                 )}

@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 import { Button, IconButton } from '@material-ui/core';
+import TextField from '@mui/material/TextField';
 
 export const ExchangeMainLayout = styled.div`
   display: grid;
@@ -388,3 +389,5 @@ export const TokensModalSubLayout = styled.div`
   mix-blend-mode: normal;
   border-radius: 10px;
 `;
+
+export const SearchTokensModalTextField = styled(TextField)``;
