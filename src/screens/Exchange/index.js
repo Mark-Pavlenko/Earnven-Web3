@@ -221,8 +221,6 @@ const makeCall = async (callName, contract, args, metadata = {}) => {
   }
 };
 
-import data from './mock.json';
-
 export default function SwapComponent() {
   const classes = useStyles();
   const { address } = useParams();
