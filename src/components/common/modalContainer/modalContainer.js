@@ -11,7 +11,7 @@ const ModalContainer = ({ title, children, isOpen, onClose, theme }) => {
   } else {
     return ReactDom.createPortal(
       <>
-        <ShadowBlock isLightTheme={isLightTheme}></ShadowBlock>
+        <ShadowBlock isLightTheme={isLightTheme} />
         <MainContent isLightTheme={isLightTheme}>
           <Header>
             <Title isLightTheme={isLightTheme}>{title}</Title>

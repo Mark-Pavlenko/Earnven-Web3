@@ -103,7 +103,7 @@ import {
   SendTokenBalance,
   AbsentFoundTokensBlock,
 } from './styled';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import pyramidIcon from '../../assets/icons/pyramidIcon.svg';
 import chevronDownBlack from '../../assets/icons/chevronDownLightTheme.svg';
 import chevronDownLight from '../../assets/icons/chevronDownLight.svg';
@@ -130,6 +130,7 @@ import searchIcon from '../../assets/icons/searchIconLight.png';
 
 import SearchIcon from '@mui/icons-material/Search';
 import { TokensListTextField } from '../../components/searchTokens/styles';
+import actionTypes from '../../constants/actionTypes';
 
 const useStyles = makeStyles((theme) => ({
   addIcon: {
@@ -245,6 +246,8 @@ export default function SwapComponent() {
   const [currencyModal, setcurrencyModal] = useState(false);
   const [currencyToModal, setcurrencyToModal] = useState(false);
   const [toTokens, settoTokens] = useState([]);
+
+  //test useState
   const [zeroAPITokensList, setZeroAPITokensList] = useState([]);
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
@@ -252,38 +255,35 @@ export default function SwapComponent() {
   const [isSendTokensModalVisible, setIsSendTokensModalVisible] = useState(false);
   const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
 
-  const ref = useRef();
-  useEffect(() => {
-    const checkIfClickedOutside = (e) => {
-      // If the menu is open and the clicked target is not within the menu,
-      // then close the menu
-      if (isSendTokensModalVisible && ref.current && !ref.current.contains(e.target)) {
-        setIsSendTokensModalVisible(false);
-      }
-    };
-
-    document.addEventListener('mousedown', checkIfClickedOutside);
-
-    return () => {
-      // Cleanup the event listener
-      document.removeEventListener('mousedown', checkIfClickedOutside);
-    };
-  }, [isSendTokensModalVisible]);
+  const dispatch = useDispatch();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   //equal to raw tokens arr of objects
-  const ETHAddressInfoData = useSelector((state) => state.ethExplorerApi.ethExplorerApi);
-  console.log('Saga Init Wallet Tokens List', ETHAddressInfoData.tokens);
+  const UserAddressInfoData = useSelector(
+    (state) => state.addressInfoDataReducer.addressInfoDataObject
+  );
+
+  console.log('Saga Init Wallet Tokens List', UserAddressInfoData);
 
   useEffect(async () => {
     let zeroAPISwapTokensList = [];
     await axios.get('https://api.0x.org/swap/v1/tokens').then((res) => {
-      // console.log('0x res.data.records', res.data.records);
+      console.log('0x res.data.records', res.data.records);
       zeroAPISwapTokensList = res.data.records;
     });
+
+    //triggered saga to get address info data
+    const getAddressInfoData = async () => {
+      try {
+        dispatch({ type: actionTypes.SET_ADDRESS_INFO_DATA, payload: address });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getAddressInfoData();
 
     await axios
       .get(`https://api.ethplorer.io/getAddressInfo/${address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`)
@@ -318,14 +318,40 @@ export default function SwapComponent() {
 
           walletTokensList.push(tempObj);
         }
-        console.log('0x API tokens list', zeroAPISwapTokensList);
-        console.log('not filtered wallet`s tokens list arr', walletTokensList);
+        // console.log('0x API tokens list', zeroAPISwapTokensList);
+        // console.log('not filtered wallet`s tokens list arr', walletTokensList);
         setAllTokens(
           walletTokensList.filter((walletToken) =>
             zeroAPISwapTokensList.find((zeroToken) => walletToken.symbol === zeroToken.symbol)
           )
         );
       });
+
+    ///--0x API convertation
+    // async function getData() {
+    //   let fetchedTokens;
+    //   await axios.get(`https://api.0x.org/swap/v1/tokens`).then(async (response) => {
+    //     console.log('Oxres', response);
+    //     setAllTokens(response.data.records);
+    //     fetchedTokens = response.data.records;
+    //   });
+    //   await axios
+    //     .get(`https://tokens.coingecko.com/uniswap/all.json`)
+    //     .then(async (response) => {
+    //       let dataZeroApi = response.data.tokens;
+    //       let tokens = fetchedTokens.map((token) => ({
+    //         ...token,
+    //         logoURI: dataZeroApi.find((x) => x.address === token.address)
+    //           ? dataZeroApi.find((x) => x.address === token.address).logoURI
+    //           : tokenURIs.find((x) => x.address === token.address).logoURI,
+    //       }));
+    //       setZeroAPITokensList(tokens);
+    //     })
+    //     .catch((res) => {
+    //       console.log('liquidity pools Sushiswap-V2 returns error', res);
+    //     });
+    // }
+    // getData();
   }, []);
 
   useEffect(async () => {
@@ -356,7 +382,7 @@ export default function SwapComponent() {
 
   // console.log('allTokens', allTokens);
 
-  let inputHandler = (e) => {
+  let sendTokensInputHandler = (e) => {
     //convert input text to lower case
     let lowerCase = e.target.value.toLowerCase();
     setInputText(lowerCase);
@@ -606,116 +632,121 @@ export default function SwapComponent() {
                     onClose={() => {
                       setIsSendTokensModalVisible(false);
                     }}>
-                    <TokensModalSubLayout isLightTheme={isLightTheme} ref={ref}>
-                      <Header>
-                        <ModalTitle isLightTheme={isLightTheme}>Select token</ModalTitle>
-                        <CloseButton
-                          onClick={() => setIsSendTokensModalVisible(false)}
-                          isLightTheme={isLightTheme}>
-                          <img
-                            src={isLightTheme ? closeModalIcon : closeModalIconDark}
-                            alt="close_modal_btn"
-                          />
-                        </CloseButton>
-                      </Header>
-                      <SearchTokensModalTextField
-                        onChange={inputHandler}
-                        InputProps={{
-                          endAdornment: (
+                    <OutsideClickHandler
+                      onOutsideClick={() => {
+                        setIsSendTokensModalVisible(false);
+                      }}>
+                      <TokensModalSubLayout isLightTheme={isLightTheme}>
+                        <Header>
+                          <ModalTitle isLightTheme={isLightTheme}>Select token</ModalTitle>
+                          <CloseButton
+                            onClick={() => setIsSendTokensModalVisible(false)}
+                            isLightTheme={isLightTheme}>
                             <img
-                              src={
-                                isLightTheme
-                                  ? searchTokensImportModalDark
-                                  : searchTokensImportModalLight
-                              }
-                              alt="search_icon"
+                              src={isLightTheme ? closeModalIcon : closeModalIconDark}
+                              alt="close_modal_btn"
                             />
-                          ),
-                          classes: { notchedOutline: classes.noBorder },
-                          sx: {
-                            color: isLightTheme ? '#1E1E20' : '#FFFFFF',
-                            paddingRight: '20px',
-                            fontSize: 14,
-                          },
-                        }}
-                        id="filled-search"
-                        // onChange={this.searchTokens}
-                        variant="outlined"
-                        label="Search tokens..."
-                        InputLabelProps={{
-                          style: {
-                            color: isLightTheme ? 'black' : 'white',
-                            fontSize: 14,
-                            fontWeight: 400,
-                            opacity: 0.5,
-                            lineHeight: '22px',
-                          },
-                        }}
-                        style={{
-                          width: 435,
-                          height: 40,
-                          marginTop: '20px',
-                          backgroundColor: isLightTheme ? '#FFFFFF' : '#1F265C3D',
-                          boxShadow: isLightTheme
-                            ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
-                            : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-                          mixBlendMode: isLightTheme ? 'normal' : 'normal',
-                          backdropFilter: isLightTheme ? 'none' : 'blur(35px)',
-                          borderRadius: '10px',
-                        }}
-                        size="small"
-                      />
-                      {/* Tokens list for send*/}
-                      {filteredData.length !== 0 ? (
-                        <SendTokensModalList isLightTheme={isLightTheme}>
-                          {filteredData.map((object) => (
-                            <SendTokenModalListItem
-                              onClick={() => {
-                                fromTokenChange(object.symbol);
-                                setIsSendTokensModalVisible(false);
-                              }}
-                              isLightTheme={isLightTheme}>
-                              <SendTokenLabelsBlock>
-                                {object.logoURI !== null ? (
-                                  <SendTokenImg alt="token_img" src={object.logoURI} />
-                                ) : (
-                                  <Avatar
-                                    style={{
-                                      // marginLeft: '4px',
-                                      marginRight: '12px',
-                                      marginTop: '2px',
-                                    }}
-                                    name={object.name}
-                                    round={true}
-                                    size="21"
-                                    textSizeRatio={1}
-                                  />
-                                )}
-                                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                  <SendTokenName isLightTheme={isLightTheme}>
-                                    {object.name}
-                                  </SendTokenName>
-                                  <SendTokenConvertedMeasures isLightTheme={isLightTheme}>
-                                    409,333 UNI · $19,18
-                                  </SendTokenConvertedMeasures>
-                                </div>
-                              </SendTokenLabelsBlock>
-                              <SendTokenBalance isLightTheme={isLightTheme}>
-                                {object.balance === undefined ? (
-                                  <Loader type="Rings" color="#BB86FC" height={30} width={30} />
-                                ) : (
-                                  <span>${object.balance}</span>
-                                )}
-                              </SendTokenBalance>
-                            </SendTokenModalListItem>
-                          ))}
-                        </SendTokensModalList>
-                      ) : (
-                        <AbsentFoundTokensBlock isLightTheme={isLightTheme}>
-                          <p>No tokens were found</p>
-                        </AbsentFoundTokensBlock>
-                      )}
-                    </TokensModalSubLayout>
+                          </CloseButton>
+                        </Header>
+                        <SearchTokensModalTextField
+                          onChange={sendTokensInputHandler}
+                          InputProps={{
+                            endAdornment: (
+                              <img
+                                src={
+                                  isLightTheme
+                                    ? searchTokensImportModalDark
+                                    : searchTokensImportModalLight
+                                }
+                                alt="search_icon"
+                              />
+                            ),
+                            classes: { notchedOutline: classes.noBorder },
+                            sx: {
+                              color: isLightTheme ? '#1E1E20' : '#FFFFFF',
+                              paddingRight: '20px',
+                              fontSize: 14,
+                            },
+                          }}
+                          id="filled-search"
+                          // onChange={this.searchTokens}
+                          variant="outlined"
+                          label="Search tokens..."
+                          InputLabelProps={{
+                            style: {
+                              color: isLightTheme ? 'black' : 'white',
+                              fontSize: 14,
+                              fontWeight: 400,
+                              opacity: 0.5,
+                              lineHeight: '22px',
+                            },
+                          }}
+                          style={{
+                            width: 435,
+                            height: 40,
+                            marginTop: '20px',
+                            backgroundColor: isLightTheme ? '#FFFFFF' : '#1F265C3D',
+                            boxShadow: isLightTheme
+                              ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+                              : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+                            mixBlendMode: isLightTheme ? 'normal' : 'normal',
+                            backdropFilter: isLightTheme ? 'none' : 'blur(35px)',
+                            borderRadius: '10px',
+                          }}
+                          size="small"
+                        />
+                        {/* Tokens list for send*/}
+                        {filteredData.length !== 0 ? (
+                          <SendTokensModalList isLightTheme={isLightTheme}>
+                            {filteredData.map((object) => (
+                              <SendTokenModalListItem
+                                onClick={() => {
+                                  fromTokenChange(object.symbol);
+                                  setIsSendTokensModalVisible(false);
+                                }}
+                                isLightTheme={isLightTheme}>
+                                <SendTokenLabelsBlock>
+                                  {object.logoURI !== null ? (
+                                    <SendTokenImg alt="token_img" src={object.logoURI} />
+                                  ) : (
+                                    <Avatar
+                                      style={{
+                                        // marginLeft: '4px',
+                                        marginRight: '12px',
+                                        marginTop: '2px',
+                                      }}
+                                      name={object.name}
+                                      round={true}
+                                      size="21"
+                                      textSizeRatio={1}
+                                    />
+                                  )}
+                                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                    <SendTokenName isLightTheme={isLightTheme}>
+                                      {object.name}
+                                    </SendTokenName>
+                                    <SendTokenConvertedMeasures isLightTheme={isLightTheme}>
+                                      409,333 UNI · $19,18
+                                    </SendTokenConvertedMeasures>
+                                  </div>
+                                </SendTokenLabelsBlock>
+                                <SendTokenBalance isLightTheme={isLightTheme}>
+                                  {object.balance === undefined ? (
+                                    <Loader type="Rings" color="#BB86FC" height={30} width={30} />
+                                  ) : (
+                                    <span>${object.balance}</span>
+                                  )}
+                                </SendTokenBalance>
+                              </SendTokenModalListItem>
+                            ))}
+                          </SendTokensModalList>
+                        ) : (
+                          <AbsentFoundTokensBlock isLightTheme={isLightTheme}>
+                            <p>No tokens were found</p>
+                          </AbsentFoundTokensBlock>
+                        )}
+                      </TokensModalSubLayout>
+                    </OutsideClickHandler>
                   </SelectTokensModalContainer>
                 )}
 
@@ -764,7 +795,7 @@ export default function SwapComponent() {
                             Select token to receive UZU
                           </ModalTitle>
                           <CloseButton
-                            onClick={() => setIsReceiveTokensModalVisible(false)}
+                            onClick={() => setIsSendTokensModalVisible(false)}
                             isLightTheme={isLightTheme}>
                             <img
                               src={isLightTheme ? closeModalIcon : closeModalIconDark}
@@ -773,7 +804,7 @@ export default function SwapComponent() {
                           </CloseButton>
                         </Header>
                         <SearchTokensModalTextField
-                          onChange={inputHandler}
+                          // onChange={receiveTokensInputHandler}
                           InputProps={{
                             endAdornment: (
                               <img
@@ -819,8 +850,56 @@ export default function SwapComponent() {
                           }}
                           size="small"
                         />
-                        {/* Tokens list for receive*/}
-                        <div>List for receive tokens</div>
+                        {/* Tokens list for send*/}
+                        {filteredData.length !== 0 ? (
+                          <SendTokensModalList isLightTheme={isLightTheme}>
+                            {filteredData.map((object) => (
+                              <SendTokenModalListItem
+                                onClick={() => {
+                                  fromTokenChange(object.symbol);
+                                  setIsSendTokensModalVisible(false);
+                                }}
+                                isLightTheme={isLightTheme}>
+                                <SendTokenLabelsBlock>
+                                  {object.logoURI !== null ? (
+                                    <SendTokenImg alt="token_img" src={object.logoURI} />
+                                  ) : (
+                                    <Avatar
+                                      style={{
+                                        // marginLeft: '4px',
+                                        marginRight: '12px',
+                                        marginTop: '2px',
+                                      }}
+                                      name={object.name}
+                                      round={true}
+                                      size="21"
+                                      textSizeRatio={1}
+                                    />
+                                  )}
+                                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                    <SendTokenName isLightTheme={isLightTheme}>
+                                      {object.name}
+                                    </SendTokenName>
+                                    <SendTokenConvertedMeasures isLightTheme={isLightTheme}>
+                                      409,333 UNI · $19,18
+                                    </SendTokenConvertedMeasures>
+                                  </div>
+                                </SendTokenLabelsBlock>
+                                <SendTokenBalance isLightTheme={isLightTheme}>
+                                  {object.balance === undefined ? (
+                                    <Loader type="Rings" color="#BB86FC" height={30} width={30} />
+                                  ) : (
+                                    <span>${object.balance}</span>
+                                  )}
+                                </SendTokenBalance>
+                              </SendTokenModalListItem>
+                            ))}
+                          </SendTokensModalList>
+                        ) : (
+                          <AbsentFoundTokensBlock isLightTheme={isLightTheme}>
+                            <p>No tokens were found</p>
+                          </AbsentFoundTokensBlock>
+                        )}
                       </TokensModalSubLayout>
                     </OutsideClickHandler>
                   </SelectTokensModalContainer>

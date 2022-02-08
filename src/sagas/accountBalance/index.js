@@ -37,7 +37,7 @@ function* getAccountBalanceSagaWorker(accountAddress) {
   }
 
   const finalTotal = CommaFormatted(total.toFixed(2));
-  console.log('finalTotal ', finalTotal);
+  // console.log('finalTotal ', finalTotal);
 
   data && (yield putResolve(actions.getAccountBalance({ ...data, finalTotal })));
 }
