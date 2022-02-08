@@ -221,6 +221,8 @@ const makeCall = async (callName, contract, args, metadata = {}) => {
   }
 };
 
+import data from './mock.json';
+
 export default function SwapComponent() {
   const classes = useStyles();
   const { address } = useParams();
@@ -248,6 +250,28 @@ export default function SwapComponent() {
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedModal, setSelectedModal] = useState('');
+
+  //search tokens field functionality
+  const [inputText, setInputText] = useState('');
+
+  let inputHandler = (e) => {
+    //convert input text to lower case
+    let lowerCase = e.target.value.toLowerCase();
+    setInputText(lowerCase);
+  };
+
+  const filteredData = data.filter((el) => {
+    //if no input the return the original
+    if (inputText.input === '') {
+      return el;
+    }
+    //return the item which contains the user input
+    else {
+      return el.text.toLowerCase().includes(inputText);
+    }
+  });
+
+  //---------
 
   const ref = useRef();
   useEffect(() => {
@@ -522,6 +546,8 @@ export default function SwapComponent() {
     setIsModalVisible(true);
   };
 
+  const [query, setQuery] = useState('');
+
   return (
     <>
       <ExchangeMainLayout>
@@ -757,6 +783,21 @@ export default function SwapComponent() {
         <SwapSecondColumn>
           <MultiSwapComponent />
         </SwapSecondColumn>
+
+        <div style={{ marginTop: '200px' }}>
+          <TextField
+            id="outlined-basic"
+            onChange={inputHandler}
+            variant="outlined"
+            fullWidth
+            label="Search"
+          />
+          <ul>
+            {filteredData.map((item) => (
+              <li key={item.id}>{item.text}</li>
+            ))}
+          </ul>
+        </div>
       </ExchangeMainLayout>
 
       {/*{object.logoURI !== null ? (*/}
