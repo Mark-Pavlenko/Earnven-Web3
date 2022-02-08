@@ -99,29 +99,33 @@ export default function LiquidityPools() {
 
   const [AllTokens, setAllTokens] = useState([]);
 
-  // useEffect(() => {
-  //   async function getData() {
-  //     let fetchedTokens;
-  //     await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {}).then(async (response) => {
-  //       setAllTokens(response.data.records);
-  //       fetchedTokens = response.data.records;
-  //     });
-  //     await axios
-  //       .get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
-  //       .then(async (response) => {
-  //         let data = response.data.tokens;
-  //         let tokens = fetchedTokens.map((token) => ({
-  //           ...token,
-  //           logoURI: data.find((x) => x.address == token.address)
-  //             ? data.find((x) => x.address == token.address).logoURI
-  //             : tokenURIs.find((x) => x.address == token.address).logoURI,
-  //         }));
-  //         setAllTokens(tokens);
-  //       }).catch((res) => {
-  //           console.log('liquidity pools Sushiswap-V2 returns error', res)});
-  //   }
-  //   getData();
-  // }, []);
+  console.log('comparison1', Data)
+  console.log('comparison2', AllTokens)
+
+  useEffect(() => {
+    async function getData() {
+      let fetchedTokens;
+      await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {}).then(async (response) => {
+        console.log('Oxres', response)
+        setAllTokens(response.data.records);
+        fetchedTokens = response.data.records;
+      });
+      await axios
+        .get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
+        .then(async (response) => {
+          let data = response.data.tokens;
+          let tokens = fetchedTokens.map((token) => ({
+            ...token,
+            logoURI: data.find((x) => x.address == token.address)
+              ? data.find((x) => x.address == token.address).logoURI
+              : tokenURIs.find((x) => x.address == token.address).logoURI,
+          }));
+          setAllTokens(tokens);
+        }).catch((res) => {
+            console.log('liquidity pools Sushiswap-V2 returns error', res)});
+    }
+    getData();
+  }, []);
 
   //worked useEffect
   useEffect(() => {
@@ -519,7 +523,6 @@ export default function LiquidityPools() {
   ]);
 
   useEffect(() => {
-    // console.log('lol')
     var d = new Date();
     var day = d.getUTCDate();
     var month = d.getUTCMonth();
@@ -527,7 +530,6 @@ export default function LiquidityPools() {
     var offset = new Date(year, month, day).getTimezoneOffset() * 60;
     var epoch = new Date(year, month, day).getTime() / 1000 - offset;
 
-    // console.log(epoch)
     async function getData() {
       setLoading(true);
       await axios
@@ -537,7 +539,6 @@ export default function LiquidityPools() {
             query: `
                 {
                     pairDayDatas(first: 20,
-                      skip : ${Page * 20}
                        where:{
                         date:${epoch}
                       }
@@ -564,8 +565,8 @@ export default function LiquidityPools() {
         )
         .then(async (response) => {
           if (response.data.data) {
-            console.log('response.data.data', response.data.data)
             var res = response.data.data.pairDayDatas;
+            console.log('responseSubgraphData', response)
             for (var i = 0; i < res.length; i++) {
               await axios
                 .get(
@@ -575,7 +576,6 @@ export default function LiquidityPools() {
                 )
                 .then((response) => {
                   if (response.data.image) {
-                    // console.log(response.data.image)
                     res[i].token0.image = response.data.image;
                   }
                 });
@@ -592,12 +592,9 @@ export default function LiquidityPools() {
                 });
               var data2 = Data;
               data2.push(res[i]);
-              console.log(data2);
               setData([...data2]);
             }
-            // setData(Data.concat(res))
             setLoading(false);
-            console.log(res);
           }
         });
     }

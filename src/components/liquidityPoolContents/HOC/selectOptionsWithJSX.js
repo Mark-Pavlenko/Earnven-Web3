@@ -8,7 +8,6 @@ export const SelectOptionsWithJSX = (options) => {
         <div style={{ display: 'flex' }}>
           <div
             style={{
-              // height: '100%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',

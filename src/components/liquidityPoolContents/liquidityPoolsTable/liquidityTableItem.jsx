@@ -17,9 +17,6 @@ import {
 } from './style';
 import { SvgComponent } from '../svgComponent/svgComponent';
 import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
-import eth from '../../../assets/icons/ethereum.svg';
-import uni from '../../../assets/icons/uniswap-icon.svg';
-import mkr from '../../../assets/icons/mkr.svg';
 import ModalContainer from '../../common/modalContainer/modalContainer';
 import { SelectWrapper } from '../styledComponents';
 import {
@@ -58,8 +55,10 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
   const [TokenA, setTokenA] = useState('');
   const [TokenB, setTokenB] = useState('');
 
-  const [allTokens, setAllTokens] = useState([]);
+  const [tokenAddress, setTokenAddress] = useState('');
 
+  const [allTokens, setAllTokens] = useState([]);
+  console.log('allTokens', allTokens);
   useEffect(() => {
     async function getData() {
       let fetchedTokens;
@@ -285,6 +284,61 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
     }
   };
 
+  const handler = (value) => {
+    setTokenAddress(value.address);
+  };
+
+  const addLiquidityToPair = async (token1, token2, tokenValue) => {
+    console.log('ToPair1', token1);
+    console.log('ToPair2', token2);
+    console.log('ToPair3', tokenAddress);
+    const tokenValueHalf = tokenValue / 2;
+
+    await loadWeb3();
+    const web3 = window.web3;
+
+    //------------------------------------->
+    const tokenDecimal = await new web3.eth.Contract(TOKENDECIMALSABI, tokenAddress).methods
+      .decimals()
+      .call()
+      .then((res) => {
+        return res;
+      });
+    const tokenDecimalPair1 = await new web3.eth.Contract(TOKENDECIMALSABI, token1).methods
+      .decimals()
+      .call()
+      .then((res) => {
+        return res;
+      });
+    const tokenDecimalPair2 = await new web3.eth.Contract(TOKENDECIMALSABI, token2).methods
+      .decimals()
+      .call()
+      .then((res) => {
+        return res;
+      });
+    //------------------------------------->
+
+    const NewContract = new web3.eth.Contract(
+      ROUTERABI,
+      '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+    );
+
+    const convertedValue1 = await NewContract.methods
+      .getAmountsOut((tokenValueHalf * 10 ** tokenDecimal).toString(), [tokenAddress, token1])
+      .call();
+
+    setInValue(+convertedValue1[1] / 10 ** tokenDecimalPair1);
+
+    const convertedValue2 = await NewContract.methods
+      .getAmountsOut((tokenValueHalf * 10 ** tokenDecimal).toString(), [tokenAddress, token2])
+      .call();
+
+    setOutValue(+convertedValue2[1] / 10 ** tokenDecimalPair2);
+
+    console.log('ToPairResult1', convertedValue1);
+    console.log('ToPairResult2', convertedValue2);
+  };
+
   return (
     <>
       {isModalVisible && (
@@ -297,9 +351,19 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
           }}>
           <SelectWrapper>
             <SelectTitle>{'Supply a token'}</SelectTitle>
-            <Select defaultValue={'Ethereum'} styles={selectStyle} options={updatedOptions} />
+            <Select
+              defaultValue={'Ethereum'}
+              styles={selectStyle}
+              options={updatedOptions}
+              onChange={handler}
+            />
             <InputBlock>
-              <ModalInput type="number" />
+              <ModalInput
+                type="number"
+                onChange={(e) => {
+                  addLiquidityToPair(item.token0.id, item.token1.id, e.target.value);
+                }}
+              />
               <Balance>{`Balance: ${5}`}</Balance>
             </InputBlock>
             <ButtonsBlock>
