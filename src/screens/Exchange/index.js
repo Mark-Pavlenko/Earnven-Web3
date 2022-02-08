@@ -243,6 +243,7 @@ export default function SwapComponent() {
   const [currencyModal, setcurrencyModal] = useState(false);
   const [currencyToModal, setcurrencyToModal] = useState(false);
   const [toTokens, settoTokens] = useState([]);
+  const [zeroAPITokensList, setZeroAPITokensList] = useState([]);
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
@@ -275,6 +276,13 @@ export default function SwapComponent() {
   // console.log('ETHAddressInfoData', ETHAddressInfoData);
 
   useEffect(async () => {
+    let zeroAPISwapTokensList = [];
+    await axios.get('https://api.0x.org/swap/v1/tokens').then((res) => {
+      console.log('0x res.data.records', res.data.records);
+      zeroAPISwapTokensList = res.data.records;
+      // setZeroAPITokensList(zeroSwapTokensList);
+    });
+
     await axios
       .get(`https://api.ethplorer.io/getAddressInfo/${address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`)
       .then(async (response) => {
@@ -289,6 +297,7 @@ export default function SwapComponent() {
           walletTokensList.push(tempObj);
         }
         let tokens = response.data.tokens;
+        console.log('raw tokens arr of objects', tokens);
         for (let i = 0; i < tokens.length; i++) {
           const tempObj = {};
           tempObj.address = tokens[i].tokenInfo.address;
@@ -304,10 +313,16 @@ export default function SwapComponent() {
           } else {
             tempObj.logoURI = null;
           }
+
           walletTokensList.push(tempObj);
         }
-        console.log('final wallet`s tokens list arr', walletTokensList);
-        setAllTokens(walletTokensList);
+        console.log('0x API tokens list', zeroAPISwapTokensList);
+        console.log('not filtered wallet`s tokens list arr', walletTokensList);
+        setAllTokens(
+          walletTokensList.filter((walletToken) =>
+            zeroAPISwapTokensList.find((zeroToken) => walletToken.symbol === zeroToken.symbol)
+          )
+        );
       });
   }, []);
 
@@ -337,7 +352,7 @@ export default function SwapComponent() {
   //search tokens field functionality
   const [inputText, setInputText] = useState('');
 
-  console.log('allTokens', allTokens);
+  // console.log('allTokens', allTokens);
 
   let inputHandler = (e) => {
     //convert input text to lower case
@@ -360,8 +375,6 @@ export default function SwapComponent() {
   });
 
   console.log('filteredData', filteredData);
-
-  //---------
 
   async function loadWeb3() {
     if (window.ethereum) {
