@@ -32,6 +32,8 @@ import Box from '@material-ui/core/Box';
 import { Button } from '@material-ui/core';
 import { Link, useParams } from 'react-router-dom';
 import {LiquidityPoolsTable} from "./liquidityPoolsTable/liquidityPoolsTable";
+import {AddNewGroupButton} from "./uniV2/StyledComponents";
+import {useSelector} from "react-redux";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -77,6 +79,7 @@ export default function LiquidityPools() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [Loading, setLoading] = useState(false);
+  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -85,7 +88,7 @@ export default function LiquidityPools() {
   const { address } = useParams();
 
   const [Data, setData] = useState([]); //UNI V2 Pools
-  const [Content, setContent] = useState(''); //UNI V2 Pools
+  const [Content, setContent] = useState(''); //UNI V2 33Pools
   const [TokenA, setTokenA] = useState('');
   const [TokenB, setTokenB] = useState('');
   const [Page, setPage] = useState('');
@@ -96,6 +99,8 @@ export default function LiquidityPools() {
   const [AccountLiquidity, setAccountLiquidity] = useState('');
   const [ReceiveToken, setReceiveToken] = useState('');
   const [LiquidityAmount, setLiquidityAmount] = useState('');
+
+
 
   const [AllTokens, setAllTokens] = useState([]);
 
@@ -175,6 +180,19 @@ export default function LiquidityPools() {
                 ).toFixed(2)}{' '}
                 % (Weekly)
               </div>
+              <Link to={`/${address}/sushiswap/address/${object.token0.id}/${object.token1.id}`}>
+                <Button
+                    color="primary"
+                    sx={{
+                      height: '0.1px',
+                      color: '#fff',
+                      fontWeight: 5,
+                      fontSize: '13px',
+                      // background: (theme) => theme.palette.gradients.custom,
+                    }}>
+                  Details
+                </Button>
+              </Link>
               <div style={{ display: 'inline-block', width: '10%' }}>
                 <img
                   style={{
@@ -733,24 +751,17 @@ export default function LiquidityPools() {
 
   return (
     <div>
-      <LiquidityPoolsTable data={Data} AllTokens={AllTokens} />
+      {/*{Content}*/}
+      <LiquidityPoolsTable data={Data} type={'sushiswap'} AllTokens={AllTokens} />
       <br />
       <center>
-        <button
-          onClick={(e) => {
+        <AddNewGroupButton
+            isLightTheme={isLightTheme}
+            onClick={(e) => {
             setPage(Page + 1);
-          }}
-          style={{
-            height: '25px',
-            width: '100px',
-            background: 'transparent',
-            border: '1px solid #ac6afc',
-            cursor: 'pointer',
-            color: 'white',
-            borderRadius: '10px',
           }}>
-          {Loading ? 'Loading...' : 'Show More'}
-        </button>
+          {Loading ? 'Loading...' : 'More Pools'}
+        </AddNewGroupButton>
       </center>
     </div>
   );

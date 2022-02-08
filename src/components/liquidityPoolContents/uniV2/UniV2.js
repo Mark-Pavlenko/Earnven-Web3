@@ -56,6 +56,7 @@ import {
 import { SelectOptionsWithJSX } from '../HOC/selectOptionsWithJSX';
 import { TokenButtonsBlock } from '../../../screens/dashboard/styledComponents';
 import { LiquidityPoolsTable } from '../liquidityPoolsTable/liquidityPoolsTable';
+import {useSelector} from "react-redux";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -121,6 +122,9 @@ export default function LiquidityPools() {
 
   const [AllTokens, setAllTokens] = useState([]);
   const [allTokensSelect, setAllTokensSelect] = useState([]);
+
+  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
+
   console.log('allTokensSelect', allTokensSelect)
 
   useEffect(() => {
@@ -944,16 +948,17 @@ export default function LiquidityPools() {
   return (
     <div>
       {/*<button onClick={() => {setIsModalOpen(true)}}>Open</button>*/}
-      {Content}
-      {/*<LiquidityPoolsTable data={Data}/>*/}
+      {/*{Content}*/}
+      <LiquidityPoolsTable data={Data} type={'uniswap'} />
 
       <br />
       <center>
         <AddNewGroupButton
+          isLightTheme={isLightTheme}
           onClick={(e) => {
             setPage(Page + 1);
           }}>
-          {Loading ? 'Loading...' : 'Show More'}
+          {Loading ? 'Loading...' : 'More Pools'}
         </AddNewGroupButton>
 
         {/*ModalContainer - this is component consists portal logic inside. Component wraps content and displays it as a children. */}
