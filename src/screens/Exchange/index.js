@@ -9,6 +9,7 @@ import Web3 from 'web3';
 import ERC20ABI from '../../abi/ERC20.json';
 import closeModalIcon from '../../assets/icons/close_nft.svg';
 import closeModalIconDark from '../../assets/icons/closenftdark.svg';
+import OutsideClickHandler from './outsideClickHandler';
 import {
   Box,
   Button,
@@ -248,16 +249,16 @@ export default function SwapComponent() {
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedModal, setSelectedModal] = useState('');
+  const [isSendTokensModalVisible, setIsSendTokensModalVisible] = useState(false);
+  const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
 
   const ref = useRef();
   useEffect(() => {
     const checkIfClickedOutside = (e) => {
       // If the menu is open and the clicked target is not within the menu,
       // then close the menu
-      if (isModalVisible && ref.current && !ref.current.contains(e.target)) {
-        setIsModalVisible(false);
+      if (isSendTokensModalVisible && ref.current && !ref.current.contains(e.target)) {
+        setIsSendTokensModalVisible(false);
       }
     };
 
@@ -267,7 +268,7 @@ export default function SwapComponent() {
       // Cleanup the event listener
       document.removeEventListener('mousedown', checkIfClickedOutside);
     };
-  }, [isModalVisible]);
+  }, [isSendTokensModalVisible]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -561,11 +562,6 @@ export default function SwapComponent() {
     setcurrencyToModal(false);
   };
 
-  const switchModal = (e) => {
-    setSelectedModal(e.target.id);
-    setIsModalVisible(true);
-  };
-
   return (
     <>
       <ExchangeMainLayout>
@@ -586,8 +582,9 @@ export default function SwapComponent() {
                 </SendBlockLabels>
 
                 {/* Open modal with tokens list*/}
-                {/*<div >*/}
-                <SendTokensChooseButton isLightTheme={isLightTheme} onClick={switchModal}>
+                <SendTokensChooseButton
+                  isLightTheme={isLightTheme}
+                  onClick={() => setIsSendTokensModalVisible(true)}>
                   <ChooseBtnTokenBlock>
                     <img src={EthIcon} alt="eth_icon" style={{ marginRight: '10px' }} />
                     <ChosenTokenLabel isLightTheme={isLightTheme}>{TokenFrom}</ChosenTokenLabel>
@@ -598,21 +595,22 @@ export default function SwapComponent() {
                   </ChooseBtnTokenBlock>
                   <ChosenSendTokenValue isLightTheme={isLightTheme}> 10 </ChosenSendTokenValue>
                 </SendTokensChooseButton>
-                {/* modal with tokens list*/}
 
-                {isModalVisible && (
+                {/* modal with send tokens list*/}
+
+                {isSendTokensModalVisible && (
                   <SelectTokensModalContainer
                     theme={isLightTheme}
                     title="Select token"
-                    isOpen={isModalVisible}
+                    isOpen={isSendTokensModalVisible}
                     onClose={() => {
-                      setIsModalVisible(false);
+                      setIsSendTokensModalVisible(false);
                     }}>
                     <TokensModalSubLayout isLightTheme={isLightTheme} ref={ref}>
                       <Header>
                         <ModalTitle isLightTheme={isLightTheme}>Select token</ModalTitle>
                         <CloseButton
-                          onClick={() => setIsModalVisible(false)}
+                          onClick={() => setIsSendTokensModalVisible(false)}
                           isLightTheme={isLightTheme}>
                           <img
                             src={isLightTheme ? closeModalIcon : closeModalIconDark}
@@ -620,7 +618,6 @@ export default function SwapComponent() {
                           />
                         </CloseButton>
                       </Header>
-
                       <SearchTokensModalTextField
                         onChange={inputHandler}
                         InputProps={{
@@ -668,7 +665,6 @@ export default function SwapComponent() {
                         }}
                         size="small"
                       />
-
                       {/* Tokens list for send*/}
                       {filteredData.length !== 0 ? (
                         <SendTokensModalList isLightTheme={isLightTheme}>
@@ -676,7 +672,7 @@ export default function SwapComponent() {
                             <SendTokenModalListItem
                               onClick={() => {
                                 fromTokenChange(object.symbol);
-                                setIsModalVisible(false);
+                                setIsSendTokensModalVisible(false);
                               }}
                               isLightTheme={isLightTheme}>
                               <SendTokenLabelsBlock>
@@ -722,7 +718,6 @@ export default function SwapComponent() {
                     </TokensModalSubLayout>
                   </SelectTokensModalContainer>
                 )}
-                {/*</div>*/}
 
                 <SwitchTokensBtn
                   src={isLightTheme ? switchTokensLight : switchTokensDark}
@@ -736,10 +731,12 @@ export default function SwapComponent() {
                   <span>Receive</span>
                   <span>$30,510.03</span>
                 </SendBlockLabels>
-                <SendTokensChooseButton isLightTheme={isLightTheme}>
+                <SendTokensChooseButton
+                  isLightTheme={isLightTheme}
+                  onClick={() => setIsReceiveTokensModalVisible(true)}>
                   <ChooseBtnTokenBlock>
                     <img src={daiICon} alt="daiICon" style={{ marginRight: '10px' }} />
-                    <ChosenTokenLabel isLightTheme={isLightTheme}>DAI</ChosenTokenLabel>
+                    <ChosenTokenLabel isLightTheme={isLightTheme}>DAI qwe</ChosenTokenLabel>
                     <img
                       src={isLightTheme ? chevronDownBlack : chevronDownLight}
                       alt="chevron_icon"
@@ -747,6 +744,87 @@ export default function SwapComponent() {
                   </ChooseBtnTokenBlock>
                   <ChosenSendTokenValue isLightTheme={isLightTheme}>22508.05</ChosenSendTokenValue>
                 </SendTokensChooseButton>
+
+                {/*  Modal for receive tokens list*/}
+                {isReceiveTokensModalVisible && (
+                  <SelectTokensModalContainer
+                    theme={isLightTheme}
+                    title="Select token"
+                    isOpen={isReceiveTokensModalVisible}
+                    onClose={() => {
+                      setIsReceiveTokensModalVisible(false);
+                    }}>
+                    <OutsideClickHandler
+                      onOutsideClick={() => {
+                        setIsReceiveTokensModalVisible(false);
+                      }}>
+                      <TokensModalSubLayout isLightTheme={isLightTheme}>
+                        <Header>
+                          <ModalTitle isLightTheme={isLightTheme}>
+                            Select token to receive UZU
+                          </ModalTitle>
+                          <CloseButton
+                            onClick={() => setIsReceiveTokensModalVisible(false)}
+                            isLightTheme={isLightTheme}>
+                            <img
+                              src={isLightTheme ? closeModalIcon : closeModalIconDark}
+                              alt="close_modal_btn"
+                            />
+                          </CloseButton>
+                        </Header>
+                        <SearchTokensModalTextField
+                          onChange={inputHandler}
+                          InputProps={{
+                            endAdornment: (
+                              <img
+                                src={
+                                  isLightTheme
+                                    ? searchTokensImportModalDark
+                                    : searchTokensImportModalLight
+                                }
+                                alt="search_icon"
+                              />
+                            ),
+                            classes: { notchedOutline: classes.noBorder },
+                            sx: {
+                              color: isLightTheme ? '#1E1E20' : '#FFFFFF',
+                              paddingRight: '20px',
+                              fontSize: 14,
+                            },
+                          }}
+                          id="filled-search"
+                          // onChange={this.searchTokens}
+                          variant="outlined"
+                          label="Search tokens..."
+                          InputLabelProps={{
+                            style: {
+                              color: isLightTheme ? 'black' : 'white',
+                              fontSize: 14,
+                              fontWeight: 400,
+                              opacity: 0.5,
+                              lineHeight: '22px',
+                            },
+                          }}
+                          style={{
+                            width: 435,
+                            height: 40,
+                            marginTop: '20px',
+                            backgroundColor: isLightTheme ? '#FFFFFF' : '#1F265C3D',
+                            boxShadow: isLightTheme
+                              ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+                              : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+                            mixBlendMode: isLightTheme ? 'normal' : 'normal',
+                            backdropFilter: isLightTheme ? 'none' : 'blur(35px)',
+                            borderRadius: '10px',
+                          }}
+                          size="small"
+                        />
+                        {/* Tokens list for receive*/}
+                        <div>List for receive tokens</div>
+                      </TokensModalSubLayout>
+                    </OutsideClickHandler>
+                  </SelectTokensModalContainer>
+                )}
               </SendReceiveSubBlock>
 
               <SwapBlockDelimiter isLightTheme={isLightTheme} />

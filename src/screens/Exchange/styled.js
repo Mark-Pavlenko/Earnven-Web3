@@ -417,7 +417,7 @@ export const SendTokensModalList = styled(List)`
 
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: ${(props) => (props.isLightTheme ? '#ffffff' : '#0B0E1D')};
+    background: ${(props) => (props.isLightTheme ? '#ffffff' : '#FFFFFF')};
     box-shadow: ${(props) =>
       props.isLightTheme
         ? '7px 21px 22px -15px rgba(51, 78, 131, 0.17)'
