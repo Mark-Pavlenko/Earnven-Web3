@@ -45,6 +45,8 @@ export const ModalTitle = styled.div`
   font-size: 20px;
   line-height: 41px;
   color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#ffffff')};
+  padding-top: 18px;
+  padding-left: 20px;
 `;
 
 export const CloseButton = styled.div`
@@ -53,6 +55,8 @@ export const CloseButton = styled.div`
   align-items: center;
   width: 40px;
   height: 40px;
+  margin-top: 18px;
+  margin-right: 21px;
   background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
   box-shadow: ${(props) =>
     props.isLightTheme

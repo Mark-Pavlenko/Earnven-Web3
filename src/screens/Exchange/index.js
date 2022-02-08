@@ -536,8 +536,8 @@ export default function SwapComponent() {
   };
 
   const fromTokenChange = (value) => {
+    console.log('selected token value', value);
     setTokenFrom(value);
-    // setTokenTo('');
     setTokenFromAmount(0);
     setTokenToAmount(0);
     setprotocolsRateList([]);
@@ -678,7 +678,7 @@ export default function SwapComponent() {
                             <SendTokenModalListItem
                               onClick={() => {
                                 fromTokenChange(object.symbol);
-                                setcurrencyModal(false);
+                                setIsModalVisible(false);
                               }}
                               isLightTheme={isLightTheme}>
                               <SendTokenLabelsBlock>
@@ -687,7 +687,7 @@ export default function SwapComponent() {
                                 ) : (
                                   <Avatar
                                     style={{
-                                      marginLeft: '4px',
+                                      // marginLeft: '4px',
                                       marginRight: '12px',
                                       marginTop: '2px',
                                     }}
@@ -814,483 +814,483 @@ export default function SwapComponent() {
       </ExchangeMainLayout>
 
       {/* Old code*/}
-      {/*<Box sx={{ width: '100%', mt: 3 }}>*/}
-      {/*  <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>*/}
-      {/*    <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">*/}
-      {/*      <Tab label="Index" {...a11yProps(0)} />*/}
-      {/*      <Tab label="Nuke" {...a11yProps(1)} />*/}
-      {/*    </Tabs>*/}
-      {/*  </Box>*/}
-      {/*  <TabPanel value={value} index={0}>*/}
-      {/*    <Grid container>*/}
-      {/*      <Grid items xs={12} md={8} sx={{ mt: 5, ml: 5 }}>*/}
-      {/*        <Container>*/}
-      {/*          <Typography variant="h3" sx={{ fontStyle: 'normal' }}>*/}
-      {/*            Index*/}
-      {/*          </Typography>*/}
-      {/*          <Container*/}
-      {/*            sx={{*/}
-      {/*              border: '1px solid #737373',*/}
-      {/*              borderRadius: '7px',*/}
-      {/*              boxSizing: 'border-box',*/}
-      {/*              mt: 2.5,*/}
-      {/*            }}>*/}
-      {/*            <Box sx={{ mt: 4, mb: 3 }}>*/}
-      {/*              <Stack direction="row" spacing={2}>*/}
-      {/*                <Stack spacing={0.5}>*/}
-      {/*                  <Typography variant="caption" sx={{ color: '#f5f5f5' }}>*/}
-      {/*                    Swap*/}
-      {/*                  </Typography>*/}
-      {/*                  <FormControl variant="outlined" style={{ width: '120px' }}>*/}
-      {/*                    /!* inactual *!/*/}
+      <Box sx={{ width: '100%', mt: 3, backgroundColor: 'lightgreen' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+            <Tab label="Index" {...a11yProps(0)} />
+            <Tab label="Nuke" {...a11yProps(1)} />
+          </Tabs>
+        </Box>
+        <TabPanel value={value} index={0}>
+          <Grid container>
+            <Grid items xs={12} md={8} sx={{ mt: 5, ml: 5 }}>
+              <Container>
+                <Typography variant="h3" sx={{ fontStyle: 'normal' }}>
+                  Index
+                </Typography>
+                <Container
+                  sx={{
+                    border: '1px solid #737373',
+                    borderRadius: '7px',
+                    boxSizing: 'border-box',
+                    mt: 2.5,
+                  }}>
+                  <Box sx={{ mt: 4, mb: 3 }}>
+                    <Stack direction="row" spacing={2}>
+                      <Stack spacing={0.5}>
+                        <Typography variant="caption" sx={{ color: '#ff0000' }}>
+                          Swap qwerty
+                        </Typography>
+                        <FormControl variant="outlined" style={{ width: '120px' }}>
+                          {/* inactual */}
 
-      {/*                    <Button*/}
-      {/*                      variant="outlined"*/}
-      {/*                      color="primary"*/}
-      {/*                      sx={{*/}
-      {/*                        height: '57px',*/}
-      {/*                        color: '#fff',*/}
-      {/*                        fontWeight: 500,*/}
-      {/*                        fontSize: '20px',*/}
-      {/*                        // background: (theme) => theme.palette.gradients.custom*/}
-      {/*                      }}*/}
-      {/*                      onClick={() => {*/}
-      {/*                        setcurrencyModal(true);*/}
-      {/*                      }}>*/}
-      {/*                      {TokenFrom}*/}
-      {/*                    </Button>*/}
-      {/*                  </FormControl>*/}
+                          <Button
+                            variant="outlined"
+                            color="primary"
+                            sx={{
+                              height: '57px',
+                              color: '#fff',
+                              fontWeight: 500,
+                              fontSize: '20px',
+                              // background: (theme) => theme.palette.gradients.custom
+                            }}
+                            onClick={() => {
+                              setcurrencyModal(true);
+                            }}>
+                            {TokenFrom}
+                          </Button>
+                        </FormControl>
 
-      {/*                  <Modal*/}
-      {/*                    open={currencyModal}*/}
-      {/*                    onClose={handleDismissSearch}*/}
-      {/*                    aria-labelledby="modal-modal-title"*/}
-      {/*                    aria-describedby="modal-modal-description">*/}
-      {/*                    <Box*/}
-      {/*                      sx={{*/}
-      {/*                        marginTop: '2%',*/}
-      {/*                        maxHeight: '520px',*/}
-      {/*                        overflow: 'scroll',*/}
-      {/*                        position: 'absolute',*/}
-      {/*                        top: '45%',*/}
-      {/*                        left: '50%',*/}
-      {/*                        transform: 'translate(-50%, -50%)',*/}
-      {/*                        width: 400,*/}
-      {/*                        bgcolor: 'background.default',*/}
-      {/*                        p: 4,*/}
-      {/*                        borderRadius: '15px',*/}
-      {/*                      }}>*/}
-      {/*                      <Typography variant="h6" align="center" sx={{ color: '#f5f5f5' }}>*/}
-      {/*                        Token List*/}
-      {/*                      </Typography>*/}
-      {/*                      <Divider variant="fullWidth" sx={{ mt: 3 }} />*/}
-      {/*                      {allTokens.map((object) => (*/}
-      {/*                        <Box>*/}
-      {/*                          <Box*/}
-      {/*                            onClick={() => {*/}
-      {/*                              fromTokenChange(object.symbol);*/}
-      {/*                              setcurrencyModal(false);*/}
-      {/*                            }}*/}
-      {/*                            sx={{*/}
-      {/*                              mt: 1,*/}
-      {/*                              p: 1,*/}
-      {/*                              cursor: 'pointer',*/}
-      {/*                              '&:hover': {*/}
-      {/*                                // background: (theme) => (theme.palette.gradients.custom)*/}
-      {/*                              },*/}
-      {/*                            }}>*/}
-      {/*                            <Stack direction="row" spacing={2}>*/}
-      {/*                              <Box sx={{ marginTop: '5px' }}>*/}
-      {/*                                {object.logoURI !== null ? (*/}
-      {/*                                  <img*/}
-      {/*                                    alt=""*/}
-      {/*                                    width="30"*/}
-      {/*                                    height="30"*/}
-      {/*                                    src={object.logoURI}*/}
-      {/*                                    style={{*/}
-      {/*                                      borderRadius: '50%',*/}
-      {/*                                      backgroundColor: '#e5e5e5',*/}
-      {/*                                    }}*/}
-      {/*                                  />*/}
-      {/*                                ) : (*/}
-      {/*                                  <Avatar*/}
-      {/*                                    style={{*/}
-      {/*                                      display: 'inline',*/}
-      {/*                                      maxWidth: '30px',*/}
-      {/*                                      verticalAlign: 'top',*/}
-      {/*                                      height: '30px',*/}
-      {/*                                      // marginLeft: '11px',*/}
-      {/*                                    }}*/}
-      {/*                                    color={'#737373'}*/}
-      {/*                                    name={object.name}*/}
-      {/*                                    round={true}*/}
-      {/*                                    size="30"*/}
-      {/*                                    textSizeRatio={1}*/}
-      {/*                                  />*/}
-      {/*                                )}*/}
-      {/*                              </Box>*/}
-      {/*                              <Stack direction="column">*/}
-      {/*                                <Typography variant="body1" sx={{ color: '#e3e3e3' }}>*/}
-      {/*                                  {object.symbol}*/}
-      {/*                                </Typography>*/}
-      {/*                                <Typography*/}
-      {/*                                  variant="caption"*/}
-      {/*                                  sx={{*/}
-      {/*                                    color: '#e3e3e3',*/}
-      {/*                                    fontSize: '11px',*/}
-      {/*                                  }}>*/}
-      {/*                                  {object.name}*/}
-      {/*                                </Typography>*/}
-      {/*                              </Stack>*/}
-      {/*                              <Box sx={{ flexGrow: 1 }}></Box>*/}
-      {/*                              <Box sx={{ marginTop: '5px' }}>*/}
-      {/*                                <Typography>*/}
-      {/*                                  {object.balance === undefined ? (*/}
-      {/*                                    <Loader*/}
-      {/*                                      type="Rings"*/}
-      {/*                                      color="#BB86FC"*/}
-      {/*                                      height={30}*/}
-      {/*                                      width={30}*/}
-      {/*                                    />*/}
-      {/*                                  ) : (*/}
-      {/*                                    object.balance*/}
-      {/*                                  )}*/}
-      {/*                                </Typography>*/}
-      {/*                              </Box>*/}
-      {/*                            </Stack>*/}
-      {/*                          </Box>*/}
-      {/*                          /!* <Divider variant='fullWidth' sx={{  }}></Divider> *!/*/}
-      {/*                        </Box>*/}
-      {/*                      ))}*/}
-      {/*                    </Box>*/}
-      {/*                  </Modal>*/}
-      {/*                </Stack>*/}
-      {/*                <Stack spacing={0.5}>*/}
-      {/*                  <Typography variant="caption" sx={{ color: '#0E1214' }}>*/}
-      {/*                    0*/}
-      {/*                  </Typography>*/}
-      {/*                  <TextField*/}
-      {/*                    variant="outlined"*/}
-      {/*                    id="outlined-basic"*/}
-      {/*                    placeholder="00.00"*/}
-      {/*                    value={TokenFromAmount}*/}
-      {/*                    onChange={(e) => {*/}
-      {/*                      setTokenFromAmount(e.target.value);*/}
-      {/*                      // calculateToAmount(e.target.value);*/}
-      {/*                    }}*/}
-      {/*                  />*/}
-      {/*                </Stack>*/}
-      {/*                <Stack spacing={0.5}>*/}
-      {/*                  <Typography variant="caption" sx={{ color: '#f5f5f5' }}>*/}
-      {/*                    For*/}
-      {/*                  </Typography>*/}
-      {/*                  <FormControl variant="outlined" style={{ width: '120px' }}>*/}
-      {/*                    <Button*/}
-      {/*                      variant="outlined"*/}
-      {/*                      color="primary"*/}
-      {/*                      sx={{*/}
-      {/*                        height: '57px',*/}
-      {/*                        color: '#fff',*/}
-      {/*                        fontWeight: 500,*/}
-      {/*                        fontSize: '20px',*/}
-      {/*                        // background: (theme) => theme.palette.gradients.custom*/}
-      {/*                      }}*/}
-      {/*                      onClick={() => {*/}
-      {/*                        setcurrencyToModal(true);*/}
-      {/*                      }}>*/}
-      {/*                      {TokenTo.symbol === undefined ? 'Select' : TokenTo.symbol}*/}
-      {/*                    </Button>*/}
-      {/*                  </FormControl>*/}
-      {/*                  <Modal*/}
-      {/*                    open={currencyToModal}*/}
-      {/*                    onClose={handleCurrencyToDismissSearch}*/}
-      {/*                    aria-labelledby="modal-modal-title"*/}
-      {/*                    aria-describedby="modal-modal-description">*/}
-      {/*                    <Box*/}
-      {/*                      sx={{*/}
-      {/*                        marginTop: '2%',*/}
-      {/*                        maxHeight: '520px',*/}
-      {/*                        overflow: 'scroll',*/}
-      {/*                        position: 'absolute',*/}
-      {/*                        top: '45%',*/}
-      {/*                        left: '50%',*/}
-      {/*                        transform: 'translate(-50%, -50%)',*/}
-      {/*                        width: 400,*/}
-      {/*                        bgcolor: 'background.default',*/}
-      {/*                        // border: '2px solid #000',*/}
-      {/*                        // boxShadow: 24,*/}
-      {/*                        p: 4,*/}
-      {/*                        borderRadius: '15px',*/}
-      {/*                      }}>*/}
-      {/*                      <Typography variant="h6" align="center" sx={{ color: '#f5f5f5' }}>*/}
-      {/*                        Token List*/}
-      {/*                      </Typography>*/}
-      {/*                      <Divider variant="fullWidth" sx={{ mt: 3 }} />*/}
-      {/*                      {toTokens.map((object) => (*/}
-      {/*                        <Box>*/}
-      {/*                          <Box*/}
-      {/*                            onClick={() => {*/}
-      {/*                              ToTokenChange(object);*/}
-      {/*                              setcurrencyToModal(false);*/}
-      {/*                            }}*/}
-      {/*                            sx={{*/}
-      {/*                              mt: 1,*/}
-      {/*                              p: 1,*/}
-      {/*                              cursor: 'pointer',*/}
-      {/*                              '&:hover': {*/}
-      {/*                                // background: (theme) => (theme.palette.gradients.custom)*/}
-      {/*                              },*/}
-      {/*                            }}>*/}
-      {/*                            <Stack direction="row" spacing={2}>*/}
-      {/*                              <Box sx={{ marginTop: '5px' }}>*/}
-      {/*                                {object.logoURI !== null ? (*/}
-      {/*                                  <img*/}
-      {/*                                    alt=""*/}
-      {/*                                    width="30"*/}
-      {/*                                    height="30"*/}
-      {/*                                    src={object.logoURI}></img>*/}
-      {/*                                ) : (*/}
-      {/*                                  <Avatar*/}
-      {/*                                    style={{*/}
-      {/*                                      display: 'inline',*/}
-      {/*                                      maxWidth: '30px',*/}
-      {/*                                      verticalAlign: 'top',*/}
-      {/*                                      height: '30px',*/}
-      {/*                                      // marginLeft: '11px',*/}
-      {/*                                    }}*/}
-      {/*                                    color={'#737373'}*/}
-      {/*                                    name={object.name}*/}
-      {/*                                    round={true}*/}
-      {/*                                    size="30"*/}
-      {/*                                    textSizeRatio={1}*/}
-      {/*                                  />*/}
-      {/*                                )}*/}
-      {/*                              </Box>*/}
-      {/*                              <Stack direction="column">*/}
-      {/*                                <Typography variant="body1" sx={{ color: '#e3e3e3' }}>*/}
-      {/*                                  {object.symbol}*/}
-      {/*                                </Typography>*/}
-      {/*                                <Typography*/}
-      {/*                                  variant="caption"*/}
-      {/*                                  sx={{*/}
-      {/*                                    color: '#e3e3e3',*/}
-      {/*                                    fontSize: '11px',*/}
-      {/*                                  }}>*/}
-      {/*                                  {object.name}*/}
-      {/*                                </Typography>*/}
-      {/*                              </Stack>*/}
-      {/*                            </Stack>*/}
-      {/*                          </Box>*/}
-      {/*                        </Box>*/}
-      {/*                      ))}*/}
-      {/*                    </Box>*/}
-      {/*                  </Modal>*/}
-      {/*                </Stack>*/}
-      {/*                <Stack spacing={0.5}>*/}
-      {/*                  <Typography variant="caption" sx={{ color: '#0E1214' }}>*/}
-      {/*                    0*/}
-      {/*                  </Typography>*/}
-      {/*                  <TextField*/}
-      {/*                    variant="outlined"*/}
-      {/*                    id="outlined-basic"*/}
-      {/*                    placeholder="00.00"*/}
-      {/*                    value={*/}
-      {/*                      selectedRate !== null && protocolsRateList.length > 0*/}
-      {/*                        ? selectedRate.TokenToAmount*/}
-      {/*                        : '00.00'*/}
-      {/*                    }*/}
-      {/*                    onChange={(e) => {*/}
-      {/*                      setTokenToAmount(e.target.value);*/}
-      {/*                    }}*/}
-      {/*                    disabled></TextField>*/}
-      {/*                </Stack>*/}
-      {/*              </Stack>*/}
-      {/*              {selectedRate !== null && protocolsRateList.length === 0 ? (*/}
-      {/*                <Typography variant="caption" sx={{ color: '#FFC107' }}>*/}
-      {/*                  This Index is yet not supported*/}
-      {/*                </Typography>*/}
-      {/*              ) : (*/}
-      {/*                <></>*/}
-      {/*              )}*/}
-      {/*              /!* <Stack direction='row' sx={{ mt: 2 }}>*/}
-      {/*                          {Sources.map((object) =>*/}
-      {/*                              <div>*/}
-      {/*                                  <Button variant='contained' color='primary' disabled size='small' sx={{fontSize:'10px'}}>*/}
-      {/*                                      {(parseFloat(object.proportion) * 100).toFixed(2)}% {object.name}*/}
-      {/*                                  </Button>*/}
-      {/*                                  <FaAngleRight style={{ paddingTop: '6px', marginLeft: '1px', color: '#737373' }} />*/}
-      {/*                              </div>*/}
-      {/*                          )}*/}
-      {/*                      </Stack> *!/*/}
-      {/*              <Typography variant="body1" sx={{ color: '#737373', mt: 2.5 }}>*/}
-      {/*                Transaction Settings*/}
-      {/*              </Typography>*/}
-      {/*              <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>*/}
-      {/*                <Typography variant="body2" sx={{ color: '#f5f5f5' }}>*/}
-      {/*                  Slippage*/}
-      {/*                </Typography>*/}
-      {/*                <Divider*/}
-      {/*                  sx={{*/}
-      {/*                    flexGrow: 1,*/}
-      {/*                    border: '0.5px dashed rgba(255, 255, 255, 0.3)',*/}
-      {/*                    height: '0px',*/}
-      {/*                  }}*/}
-      {/*                  style={{ marginTop: '10px' }}*/}
-      {/*                />*/}
-      {/*                /!* <TextField variant='outlined'*/}
-      {/*                              required*/}
-      {/*                              id="outlined-basic"*/}
-      {/*                              size='small'*/}
-      {/*                              style={{ marginTop: '-7px', width: '12%' }}*/}
-      {/*                              value={Slippage} onChange={(e) => { setSlippage(e.target.value) }}*/}
-      {/*                              endAdornment={<InputAdornment position="end" sx={{color:'red'}}>%K</InputAdornment>}>*/}
-      {/*                          </TextField> *!/*/}
-      {/*                <OutlinedInput*/}
-      {/*                  id="outlined-adornment-weight"*/}
-      {/*                  value={Slippage}*/}
-      {/*                  onChange={(e) => {*/}
-      {/*                    setSlippage(e.target.value);*/}
-      {/*                  }}*/}
-      {/*                  size="small"*/}
-      {/*                  style={{ marginTop: '-7px', width: '12%' }}*/}
-      {/*                  endAdornment={<InputAdornment position="end">%</InputAdornment>}*/}
-      {/*                  aria-describedby="outlined-weight-helper-text"*/}
-      {/*                  inputProps={{*/}
-      {/*                    'aria-label': 'weight',*/}
-      {/*                  }}*/}
-      {/*                />*/}
-      {/*              </Stack>*/}
-      {/*              /!* {protocolsRateList.length > 0 &&*/}
-      {/*                          <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>*/}
-      {/*                              <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Offered By</Typography>*/}
-      {/*                              <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />*/}
-      {/*                              <Button onClick={handleOpen} sx={{ height: '20px' }}>{selectedRate.name}</Button>*/}
-      {/*                              <Modal*/}
-      {/*                                  open={open}*/}
-      {/*                                  onClose={handleClose}*/}
-      {/*                                  aria-labelledby="modal-modal-title"*/}
-      {/*                                  aria-describedby="modal-modal-description"*/}
-      {/*                              >*/}
-      {/*                                  <Box sx={style}>*/}
-      {/*                                      <Typography variant='h6' align='center' sx={{ color: '#f5f5f5' }}>Offered By</Typography>*/}
-      {/*                                      <Divider variant='fullWidth' sx={{ mt: 3 }}></Divider>*/}
-      {/*                                      <Box>*/}
-      {/*                                          <Stack direction='row' spacing={6} sx={{ mt: 2 }}>*/}
-      {/*                                              <Typography variant='caption' sx={{ color: '#737373' }}>Receive</Typography>*/}
-      {/*                                              <Typography variant='caption' sx={{ color: '#737373' }}>Network Fee</Typography>*/}
-      {/*                                          </Stack>*/}
-      {/*                                      </Box>*/}
-      {/*                                      {protocolsRateList.map((object) => (*/}
-      {/*                                          (object.name === selectedExchangeName ?*/}
-      {/*                                              <Box onClick={() => newRateSelected(object)} sx={{ border: '1px solid #BB86FC', borderRadius: '7px', mt: 1, p: 1, cursor: 'pointer' }}>*/}
-      {/*                                                  <Stack direction='row' spacing={2}>*/}
-      {/*                                                      <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.receivedValueInDollar}</Typography>*/}
-      {/*                                                      <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.gas}</Typography>*/}
-      {/*                                                      <Box sx={{ flexGrow: 1 }}></Box>*/}
+                        <Modal
+                          open={currencyModal}
+                          onClose={handleDismissSearch}
+                          aria-labelledby="modal-modal-title"
+                          aria-describedby="modal-modal-description">
+                          <Box
+                            sx={{
+                              marginTop: '2%',
+                              maxHeight: '520px',
+                              overflow: 'scroll',
+                              position: 'absolute',
+                              top: '45%',
+                              left: '50%',
+                              transform: 'translate(-50%, -50%)',
+                              width: 400,
+                              bgcolor: 'background.default',
+                              p: 4,
+                              borderRadius: '15px',
+                            }}>
+                            <Typography variant="h6" align="center" sx={{ color: 'red' }}>
+                              Token List aboba
+                            </Typography>
+                            <Divider variant="fullWidth" sx={{ mt: 3 }} />
+                            {allTokens.map((object) => (
+                              <Box>
+                                <Box
+                                  onClick={() => {
+                                    fromTokenChange(object.symbol);
+                                    setcurrencyModal(false);
+                                  }}
+                                  sx={{
+                                    mt: 1,
+                                    p: 1,
+                                    cursor: 'pointer',
+                                    '&:hover': {
+                                      // background: (theme) => (theme.palette.gradients.custom)
+                                    },
+                                  }}>
+                                  <Stack direction="row" spacing={2}>
+                                    <Box sx={{ marginTop: '5px' }}>
+                                      {object.logoURI !== null ? (
+                                        <img
+                                          alt=""
+                                          width="30"
+                                          height="30"
+                                          src={object.logoURI}
+                                          style={{
+                                            borderRadius: '50%',
+                                            backgroundColor: '#e5e5e5',
+                                          }}
+                                        />
+                                      ) : (
+                                        <Avatar
+                                          style={{
+                                            display: 'inline',
+                                            maxWidth: '30px',
+                                            verticalAlign: 'top',
+                                            height: '30px',
+                                            // marginLeft: '11px',
+                                          }}
+                                          color={'#737373'}
+                                          name={object.name}
+                                          round={true}
+                                          size="30"
+                                          textSizeRatio={1}
+                                        />
+                                      )}
+                                    </Box>
+                                    <Stack direction="column">
+                                      <Typography variant="body1" sx={{ color: '#e3e3e3' }}>
+                                        {object.symbol}
+                                      </Typography>
+                                      <Typography
+                                        variant="caption"
+                                        sx={{
+                                          color: '#e3e3e3',
+                                          fontSize: '11px',
+                                        }}>
+                                        {object.name}
+                                      </Typography>
+                                    </Stack>
+                                    <Box sx={{ flexGrow: 1 }}></Box>
+                                    <Box sx={{ marginTop: '5px' }}>
+                                      <Typography>
+                                        {object.balance === undefined ? (
+                                          <Loader
+                                            type="Rings"
+                                            color="#BB86FC"
+                                            height={30}
+                                            width={30}
+                                          />
+                                        ) : (
+                                          object.balance
+                                        )}
+                                      </Typography>
+                                    </Box>
+                                  </Stack>
+                                </Box>
+                                {/* <Divider variant='fullWidth' sx={{  }}></Divider> */}
+                              </Box>
+                            ))}
+                          </Box>
+                        </Modal>
+                      </Stack>
+                      <Stack spacing={0.5}>
+                        <Typography variant="caption" sx={{ color: '#0E1214' }}>
+                          0
+                        </Typography>
+                        <TextField
+                          variant="outlined"
+                          id="outlined-basic"
+                          placeholder="00.00"
+                          value={TokenFromAmount}
+                          onChange={(e) => {
+                            setTokenFromAmount(e.target.value);
+                            // calculateToAmount(e.target.value);
+                          }}
+                        />
+                      </Stack>
+                      <Stack spacing={0.5}>
+                        <Typography variant="caption" sx={{ color: '#f5f5f5' }}>
+                          For
+                        </Typography>
+                        <FormControl variant="outlined" style={{ width: '120px' }}>
+                          <Button
+                            variant="outlined"
+                            color="primary"
+                            sx={{
+                              height: '57px',
+                              color: '#fff',
+                              fontWeight: 500,
+                              fontSize: '20px',
+                              // background: (theme) => theme.palette.gradients.custom
+                            }}
+                            onClick={() => {
+                              setcurrencyToModal(true);
+                            }}>
+                            {TokenTo.symbol === undefined ? 'Select' : TokenTo.symbol}
+                          </Button>
+                        </FormControl>
+                        <Modal
+                          open={currencyToModal}
+                          onClose={handleCurrencyToDismissSearch}
+                          aria-labelledby="modal-modal-title"
+                          aria-describedby="modal-modal-description">
+                          <Box
+                            sx={{
+                              marginTop: '2%',
+                              maxHeight: '520px',
+                              overflow: 'scroll',
+                              position: 'absolute',
+                              top: '45%',
+                              left: '50%',
+                              transform: 'translate(-50%, -50%)',
+                              width: 400,
+                              bgcolor: 'background.default',
+                              // border: '2px solid #000',
+                              // boxShadow: 24,
+                              p: 4,
+                              borderRadius: '15px',
+                            }}>
+                            <Typography variant="h6" align="center" sx={{ color: '#f5f5f5' }}>
+                              Token List
+                            </Typography>
+                            <Divider variant="fullWidth" sx={{ mt: 3 }} />
+                            {toTokens.map((object) => (
+                              <Box>
+                                <Box
+                                  onClick={() => {
+                                    ToTokenChange(object);
+                                    setcurrencyToModal(false);
+                                  }}
+                                  sx={{
+                                    mt: 1,
+                                    p: 1,
+                                    cursor: 'pointer',
+                                    '&:hover': {
+                                      // background: (theme) => (theme.palette.gradients.custom)
+                                    },
+                                  }}>
+                                  <Stack direction="row" spacing={2}>
+                                    <Box sx={{ marginTop: '5px' }}>
+                                      {object.logoURI !== null ? (
+                                        <img
+                                          alt=""
+                                          width="30"
+                                          height="30"
+                                          src={object.logoURI}></img>
+                                      ) : (
+                                        <Avatar
+                                          style={{
+                                            display: 'inline',
+                                            maxWidth: '30px',
+                                            verticalAlign: 'top',
+                                            height: '30px',
+                                            // marginLeft: '11px',
+                                          }}
+                                          color={'#737373'}
+                                          name={object.name}
+                                          round={true}
+                                          size="30"
+                                          textSizeRatio={1}
+                                        />
+                                      )}
+                                    </Box>
+                                    <Stack direction="column">
+                                      <Typography variant="body1" sx={{ color: '#e3e3e3' }}>
+                                        {object.symbol}
+                                      </Typography>
+                                      <Typography
+                                        variant="caption"
+                                        sx={{
+                                          color: '#e3e3e3',
+                                          fontSize: '11px',
+                                        }}>
+                                        {object.name}
+                                      </Typography>
+                                    </Stack>
+                                  </Stack>
+                                </Box>
+                              </Box>
+                            ))}
+                          </Box>
+                        </Modal>
+                      </Stack>
+                      <Stack spacing={0.5}>
+                        <Typography variant="caption" sx={{ color: '#0E1214' }}>
+                          0
+                        </Typography>
+                        <TextField
+                          variant="outlined"
+                          id="outlined-basic"
+                          placeholder="00.00"
+                          value={
+                            selectedRate !== null && protocolsRateList.length > 0
+                              ? selectedRate.TokenToAmount
+                              : '00.00'
+                          }
+                          onChange={(e) => {
+                            setTokenToAmount(e.target.value);
+                          }}
+                          disabled></TextField>
+                      </Stack>
+                    </Stack>
+                    {selectedRate !== null && protocolsRateList.length === 0 ? (
+                      <Typography variant="caption" sx={{ color: '#FFC107' }}>
+                        This Index is yet not supported
+                      </Typography>
+                    ) : (
+                      <></>
+                    )}
+                    {/* <Stack direction='row' sx={{ mt: 2 }}>
+                                {Sources.map((object) =>
+                                    <div>
+                                        <Button variant='contained' color='primary' disabled size='small' sx={{fontSize:'10px'}}>
+                                            {(parseFloat(object.proportion) * 100).toFixed(2)}% {object.name}
+                                        </Button>
+                                        <FaAngleRight style={{ paddingTop: '6px', marginLeft: '1px', color: '#737373' }} />
+                                    </div>
+                                )}
+                            </Stack> */}
+                    <Typography variant="body1" sx={{ color: '#737373', mt: 2.5 }}>
+                      Transaction Settings
+                    </Typography>
+                    <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>
+                      <Typography variant="body2" sx={{ color: '#f5f5f5' }}>
+                        Slippage
+                      </Typography>
+                      <Divider
+                        sx={{
+                          flexGrow: 1,
+                          border: '0.5px dashed rgba(255, 255, 255, 0.3)',
+                          height: '0px',
+                        }}
+                        style={{ marginTop: '10px' }}
+                      />
+                      {/* <TextField variant='outlined'
+                                    required
+                                    id="outlined-basic"
+                                    size='small'
+                                    style={{ marginTop: '-7px', width: '12%' }}
+                                    value={Slippage} onChange={(e) => { setSlippage(e.target.value) }}
+                                    endAdornment={<InputAdornment position="end" sx={{color:'red'}}>%K</InputAdornment>}>
+                                </TextField> */}
+                      <OutlinedInput
+                        id="outlined-adornment-weight"
+                        value={Slippage}
+                        onChange={(e) => {
+                          setSlippage(e.target.value);
+                        }}
+                        size="small"
+                        style={{ marginTop: '-7px', width: '12%' }}
+                        endAdornment={<InputAdornment position="end">%</InputAdornment>}
+                        aria-describedby="outlined-weight-helper-text"
+                        inputProps={{
+                          'aria-label': 'weight',
+                        }}
+                      />
+                    </Stack>
+                    {/* {protocolsRateList.length > 0 &&
+                                <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
+                                    <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Offered By</Typography>
+                                    <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
+                                    <Button onClick={handleOpen} sx={{ height: '20px' }}>{selectedRate.name}</Button>
+                                    <Modal
+                                        open={open}
+                                        onClose={handleClose}
+                                        aria-labelledby="modal-modal-title"
+                                        aria-describedby="modal-modal-description"
+                                    >
+                                        <Box sx={style}>
+                                            <Typography variant='h6' align='center' sx={{ color: '#f5f5f5' }}>Offered By</Typography>
+                                            <Divider variant='fullWidth' sx={{ mt: 3 }}></Divider>
+                                            <Box>
+                                                <Stack direction='row' spacing={6} sx={{ mt: 2 }}>
+                                                    <Typography variant='caption' sx={{ color: '#737373' }}>Receive</Typography>
+                                                    <Typography variant='caption' sx={{ color: '#737373' }}>Network Fee</Typography>
+                                                </Stack>
+                                            </Box>
+                                            {protocolsRateList.map((object) => (
+                                                (object.name === selectedExchangeName ?
+                                                    <Box onClick={() => newRateSelected(object)} sx={{ border: '1px solid #BB86FC', borderRadius: '7px', mt: 1, p: 1, cursor: 'pointer' }}>
+                                                        <Stack direction='row' spacing={2}>
+                                                            <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.receivedValueInDollar}</Typography>
+                                                            <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.gas}</Typography>
+                                                            <Box sx={{ flexGrow: 1 }}></Box>
 
-      {/*                                                      <Tooltip title={object.name}>*/}
-      {/*                                                          {object.name === 'Balancer' ? <img alt="" width="21" height="20" src={Balancer} ></img> : object.name === '0x Index' ? <img alt="" width="21" height="20" src={object.image} style={{ filter: 'invert(1)' }} ></img> : <img alt="" width="21" height="20" src={object.image} ></img>}*/}
-      {/*                                                      </Tooltip>*/}
-      {/*                                                  </Stack>*/}
-      {/*                                              </Box> :*/}
-      {/*                                              <Box onClick={() => newRateSelected(object)} sx={{ border: '1px solid #737373', borderRadius: '7px', mt: 1, p: 1, cursor: 'pointer' }}>*/}
-      {/*                                                  <Stack direction='row' spacing={2}>*/}
-      {/*                                                      <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.receivedValueInDollar}</Typography>*/}
-      {/*                                                      <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.gas}</Typography>*/}
-      {/*                                                      <Box sx={{ flexGrow: 1 }}></Box>*/}
+                                                            <Tooltip title={object.name}>
+                                                                {object.name === 'Balancer' ? <img alt="" width="21" height="20" src={Balancer} ></img> : object.name === '0x Index' ? <img alt="" width="21" height="20" src={object.image} style={{ filter: 'invert(1)' }} ></img> : <img alt="" width="21" height="20" src={object.image} ></img>}
+                                                            </Tooltip>
+                                                        </Stack>
+                                                    </Box> :
+                                                    <Box onClick={() => newRateSelected(object)} sx={{ border: '1px solid #737373', borderRadius: '7px', mt: 1, p: 1, cursor: 'pointer' }}>
+                                                        <Stack direction='row' spacing={2}>
+                                                            <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.receivedValueInDollar}</Typography>
+                                                            <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.gas}</Typography>
+                                                            <Box sx={{ flexGrow: 1 }}></Box>
 
-      {/*                                                      <Tooltip title={object.name}>*/}
-      {/*                                                          {object.name === 'Balancer' ? <img alt="" width="21" height="20" src={Balancer} ></img> : object.name === '0x Index' ? <img alt="" width="21" height="20" src={object.image} style={{ filter: 'invert(1)' }} ></img> : <img alt="" width="21" height="20" src={object.image} ></img>}*/}
-      {/*                                                      </Tooltip>*/}
-      {/*                                                  </Stack>*/}
-      {/*                                              </Box>)*/}
-      {/*                                      ))}*/}
-      {/*                                      <Box sx={{ marginLeft: '30%' }}>*/}
-      {/*                                          <Button onClick={updateSelectedRate} variant='outlined' sx={{ mt: 2 }} >Save for This Trade</Button>*/}
-      {/*                                      </Box>*/}
-      {/*                                  </Box>*/}
-      {/*                              </Modal>*/}
-      {/*                                          </Stack>} *!/*/}
-      {/*              <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>*/}
-      {/*                <Typography variant="body2" sx={{ color: '#f5f5f5' }}>*/}
-      {/*                  Min. output*/}
-      {/*                </Typography>*/}
-      {/*                <Divider*/}
-      {/*                  sx={{*/}
-      {/*                    flexGrow: 1,*/}
-      {/*                    border: '0.5px dashed rgba(255, 255, 255, 0.3)',*/}
-      {/*                    height: '0px',*/}
-      {/*                  }}*/}
-      {/*                  style={{ marginTop: '10px' }}*/}
-      {/*                />*/}
-      {/*                <Typography variant="body2">*/}
-      {/*                  {selectedRate !== null && protocolsRateList.length > 0*/}
-      {/*                    ? (*/}
-      {/*                        parseFloat(TokenFromAmount) * parseFloat(selectedRate.minPrice)*/}
-      {/*                      ).toFixed(3)*/}
-      {/*                    : '00.00'}*/}
-      {/*                  {TokenTo !== '' ? TokenTo.symbol : ''}*/}
-      {/*                </Typography>*/}
-      {/*              </Stack>*/}
-      {/*              <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>*/}
-      {/*                <Typography variant="body2" sx={{ color: '#f5f5f5' }}>*/}
-      {/*                  Rate*/}
-      {/*                </Typography>*/}
-      {/*                <Divider*/}
-      {/*                  sx={{*/}
-      {/*                    flexGrow: 1,*/}
-      {/*                    border: '0.5px dashed rgba(255, 255, 255, 0.3)',*/}
-      {/*                    height: '0px',*/}
-      {/*                  }}*/}
-      {/*                  style={{ marginTop: '10px' }}*/}
-      {/*                />*/}
-      {/*                <Typography variant="body2">*/}
-      {/*                  {' '}*/}
-      {/*                  1 {TokenFrom} ={' '}*/}
-      {/*                  {selectedRate !== null && protocolsRateList.length > 0*/}
-      {/*                    ? parseFloat(selectedRate.price).toFixed(3)*/}
-      {/*                    : '00.00'}{' '}*/}
-      {/*                  {TokenTo !== '' ? TokenTo.symbol : ''}*/}
-      {/*                </Typography>*/}
-      {/*              </Stack>*/}
-      {/*            </Box>*/}
-      {/*          </Container>*/}
-      {/*          {txSuccess && (*/}
-      {/*            <Typography variant="caption" sx={{ color: '#54D62C' }}>*/}
-      {/*              Swap is done Successfully*/}
-      {/*            </Typography>*/}
-      {/*          )}*/}
-      {/*          {txFailure && (*/}
-      {/*            <Typography variant="caption" sx={{ color: '#FF4842' }}>*/}
-      {/*              Swap is Failed*/}
-      {/*            </Typography>*/}
-      {/*          )}*/}
-      {/*          <TransparentButton*/}
-      {/*            value="Submit"*/}
-      {/*            onClick={transact}*/}
-      {/*            style={{*/}
-      {/*              height: '45px',*/}
-      {/*              width: '200px',*/}
-      {/*              background: 'transparent',*/}
-      {/*              borderWidth: '2px',*/}
-      {/*              borderStyle: 'solid',*/}
-      {/*              borderColor: '#3b2959',*/}
-      {/*              borderRadius: '5px',*/}
-      {/*              color: 'white',*/}
-      {/*              cursor: 'pointer',*/}
-      {/*              float: 'right',*/}
-      {/*              marginTop: '20px',*/}
-      {/*            }}></TransparentButton>{' '}*/}
-      {/*          <br />*/}
-      {/*          <br /> &nbsp;*/}
-      {/*        </Container>*/}
-      {/*      </Grid>*/}
-      {/*    </Grid>*/}
-      {/*  </TabPanel>*/}
-      {/*  <TabPanel value={value} index={1}>*/}
-      {/*    <NukeExchange />*/}
-      {/*  </TabPanel>*/}
-      {/*</Box>*/}
+                                                            <Tooltip title={object.name}>
+                                                                {object.name === 'Balancer' ? <img alt="" width="21" height="20" src={Balancer} ></img> : object.name === '0x Index' ? <img alt="" width="21" height="20" src={object.image} style={{ filter: 'invert(1)' }} ></img> : <img alt="" width="21" height="20" src={object.image} ></img>}
+                                                            </Tooltip>
+                                                        </Stack>
+                                                    </Box>)
+                                            ))}
+                                            <Box sx={{ marginLeft: '30%' }}>
+                                                <Button onClick={updateSelectedRate} variant='outlined' sx={{ mt: 2 }} >Save for This Trade</Button>
+                                            </Box>
+                                        </Box>
+                                    </Modal>
+                                                </Stack>} */}
+                    <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>
+                      <Typography variant="body2" sx={{ color: '#f5f5f5' }}>
+                        Min. output
+                      </Typography>
+                      <Divider
+                        sx={{
+                          flexGrow: 1,
+                          border: '0.5px dashed rgba(255, 255, 255, 0.3)',
+                          height: '0px',
+                        }}
+                        style={{ marginTop: '10px' }}
+                      />
+                      <Typography variant="body2">
+                        {selectedRate !== null && protocolsRateList.length > 0
+                          ? (
+                              parseFloat(TokenFromAmount) * parseFloat(selectedRate.minPrice)
+                            ).toFixed(3)
+                          : '00.00'}
+                        {TokenTo !== '' ? TokenTo.symbol : ''}
+                      </Typography>
+                    </Stack>
+                    <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>
+                      <Typography variant="body2" sx={{ color: '#f5f5f5' }}>
+                        Rate
+                      </Typography>
+                      <Divider
+                        sx={{
+                          flexGrow: 1,
+                          border: '0.5px dashed rgba(255, 255, 255, 0.3)',
+                          height: '0px',
+                        }}
+                        style={{ marginTop: '10px' }}
+                      />
+                      <Typography variant="body2">
+                        {' '}
+                        1 {TokenFrom} ={' '}
+                        {selectedRate !== null && protocolsRateList.length > 0
+                          ? parseFloat(selectedRate.price).toFixed(3)
+                          : '00.00'}{' '}
+                        {TokenTo !== '' ? TokenTo.symbol : ''}
+                      </Typography>
+                    </Stack>
+                  </Box>
+                </Container>
+                {txSuccess && (
+                  <Typography variant="caption" sx={{ color: '#54D62C' }}>
+                    Swap is done Successfully
+                  </Typography>
+                )}
+                {txFailure && (
+                  <Typography variant="caption" sx={{ color: '#FF4842' }}>
+                    Swap is Failed
+                  </Typography>
+                )}
+                <TransparentButton
+                  value="Submit"
+                  onClick={transact}
+                  style={{
+                    height: '45px',
+                    width: '200px',
+                    background: 'transparent',
+                    borderWidth: '2px',
+                    borderStyle: 'solid',
+                    borderColor: '#3b2959',
+                    borderRadius: '5px',
+                    color: 'white',
+                    cursor: 'pointer',
+                    float: 'right',
+                    marginTop: '20px',
+                  }}></TransparentButton>{' '}
+                <br />
+                <br /> &nbsp;
+              </Container>
+            </Grid>
+          </Grid>
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <NukeExchange />
+        </TabPanel>
+      </Box>
     </>
   );
 }
