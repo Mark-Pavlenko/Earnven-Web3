@@ -566,8 +566,6 @@ export default function SwapComponent() {
     setIsModalVisible(true);
   };
 
-  const [query, setQuery] = useState('');
-
   return (
     <>
       <ExchangeMainLayout>
@@ -592,13 +590,13 @@ export default function SwapComponent() {
                 <SendTokensChooseButton isLightTheme={isLightTheme} onClick={switchModal}>
                   <ChooseBtnTokenBlock>
                     <img src={EthIcon} alt="eth_icon" style={{ marginRight: '10px' }} />
-                    <ChosenTokenLabel isLightTheme={isLightTheme}>ETH</ChosenTokenLabel>
+                    <ChosenTokenLabel isLightTheme={isLightTheme}>{TokenFrom}</ChosenTokenLabel>
                     <img
                       src={isLightTheme ? chevronDownBlack : chevronDownLight}
                       alt="chevron_icon"
                     />
                   </ChooseBtnTokenBlock>
-                  <ChosenSendTokenValue isLightTheme={isLightTheme}>10</ChosenSendTokenValue>
+                  <ChosenSendTokenValue isLightTheme={isLightTheme}> 10 </ChosenSendTokenValue>
                 </SendTokensChooseButton>
                 {/* modal with tokens list*/}
 
@@ -966,10 +964,11 @@ export default function SwapComponent() {
                         </Modal>
                       </Stack>
                       <Stack spacing={0.5}>
-                        <Typography variant="caption" sx={{ color: '#0E1214' }}>
+                        <Typography variant="caption" sx={{ color: 'blue' }}>
                           0
                         </Typography>
                         <TextField
+                          style={{ backgroundColor: 'green' }}
                           variant="outlined"
                           id="outlined-basic"
                           placeholder="00.00"
