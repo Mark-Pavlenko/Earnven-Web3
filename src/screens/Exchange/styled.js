@@ -507,3 +507,21 @@ export const SendTokenBalance = styled.div`
     line-height: 25px;
   }
 `;
+
+export const AbsentFoundTokensBlock = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  width: 435px;
+  height: 420px;
+  overflow: auto;
+  padding: 0;
+
+  p {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 41px;
+    color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#ffffff')};
+  }
+`;

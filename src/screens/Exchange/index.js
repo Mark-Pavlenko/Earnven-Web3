@@ -100,6 +100,7 @@ import {
   SendTokenName,
   SendTokenConvertedMeasures,
   SendTokenBalance,
+  AbsentFoundTokensBlock,
 } from './styled';
 import { useSelector } from 'react-redux';
 import pyramidIcon from '../../assets/icons/pyramidIcon.svg';
@@ -272,15 +273,15 @@ export default function SwapComponent() {
     setValue(newValue);
   };
 
-  // const ETHAddressInfoData = useSelector((state) => state.ethExplorerApi.ethExplorerApi);
-  // console.log('ETHAddressInfoData', ETHAddressInfoData);
+  //equal to raw tokens arr of objects
+  const ETHAddressInfoData = useSelector((state) => state.ethExplorerApi.ethExplorerApi);
+  console.log('Saga Init Wallet Tokens List', ETHAddressInfoData.tokens);
 
   useEffect(async () => {
     let zeroAPISwapTokensList = [];
     await axios.get('https://api.0x.org/swap/v1/tokens').then((res) => {
-      console.log('0x res.data.records', res.data.records);
+      // console.log('0x res.data.records', res.data.records);
       zeroAPISwapTokensList = res.data.records;
-      // setZeroAPITokensList(zeroSwapTokensList);
     });
 
     await axios
@@ -366,11 +367,12 @@ export default function SwapComponent() {
     }
     //return the item which contains the user input
     else if (el.name !== undefined) {
+      // console.log('inputText.input', inputText);
+      // console.log('el.name', el.name);
+
       return el.name.toLowerCase().includes(inputText);
-    } else if (el.name === undefined) {
-      // console.log('undef el', el);
     } else {
-      return 'No result';
+      // console.log('undef el', el);
     }
   });
 
@@ -669,54 +671,56 @@ export default function SwapComponent() {
                         size="small"
                       />
 
-                      {/*{filteredData.map((item) => (*/}
-                      {/*  <li key={item.id}>{item.text}</li>*/}
-                      {/*))}*/}
-
                       {/* Tokens list for send*/}
-                      <SendTokensModalList isLightTheme={isLightTheme}>
-                        {filteredData.map((object) => (
-                          <SendTokenModalListItem
-                            onClick={() => {
-                              fromTokenChange(object.symbol);
-                              setcurrencyModal(false);
-                            }}
-                            isLightTheme={isLightTheme}>
-                            <SendTokenLabelsBlock>
-                              {object.logoURI !== null ? (
-                                <SendTokenImg alt="token_img" src={object.logoURI} />
-                              ) : (
-                                <Avatar
-                                  style={{
-                                    marginLeft: '4px',
-                                    marginRight: '12px',
-                                    marginTop: '2px',
-                                  }}
-                                  name={object.name}
-                                  round={true}
-                                  size="21"
-                                  textSizeRatio={1}
-                                />
-                              )}
-                              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                <SendTokenName isLightTheme={isLightTheme}>
-                                  {object.name}
-                                </SendTokenName>
-                                <SendTokenConvertedMeasures isLightTheme={isLightTheme}>
-                                  409,333 UNI · $19,18
-                                </SendTokenConvertedMeasures>
-                              </div>
-                            </SendTokenLabelsBlock>
-                            <SendTokenBalance isLightTheme={isLightTheme}>
-                              {object.balance === undefined ? (
-                                <Loader type="Rings" color="#BB86FC" height={30} width={30} />
-                              ) : (
-                                <span>${object.balance}</span>
-                              )}
-                            </SendTokenBalance>
-                          </SendTokenModalListItem>
-                        ))}
-                      </SendTokensModalList>
+                      {filteredData.length !== 0 ? (
+                        <SendTokensModalList isLightTheme={isLightTheme}>
+                          {filteredData.map((object) => (
+                            <SendTokenModalListItem
+                              onClick={() => {
+                                fromTokenChange(object.symbol);
+                                setcurrencyModal(false);
+                              }}
+                              isLightTheme={isLightTheme}>
+                              <SendTokenLabelsBlock>
+                                {object.logoURI !== null ? (
+                                  <SendTokenImg alt="token_img" src={object.logoURI} />
+                                ) : (
+                                  <Avatar
+                                    style={{
+                                      marginLeft: '4px',
+                                      marginRight: '12px',
+                                      marginTop: '2px',
+                                    }}
+                                    name={object.name}
+                                    round={true}
+                                    size="21"
+                                    textSizeRatio={1}
+                                  />
+                                )}
+                                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                  <SendTokenName isLightTheme={isLightTheme}>
+                                    {object.name}
+                                  </SendTokenName>
+                                  <SendTokenConvertedMeasures isLightTheme={isLightTheme}>
+                                    409,333 UNI · $19,18
+                                  </SendTokenConvertedMeasures>
+                                </div>
+                              </SendTokenLabelsBlock>
+                              <SendTokenBalance isLightTheme={isLightTheme}>
+                                {object.balance === undefined ? (
+                                  <Loader type="Rings" color="#BB86FC" height={30} width={30} />
+                                ) : (
+                                  <span>${object.balance}</span>
+                                )}
+                              </SendTokenBalance>
+                            </SendTokenModalListItem>
+                          ))}
+                        </SendTokensModalList>
+                      ) : (
+                        <AbsentFoundTokensBlock isLightTheme={isLightTheme}>
+                          <p>No tokens were found</p>
+                        </AbsentFoundTokensBlock>
+                      )}
                     </TokensModalSubLayout>
                   </SelectTokensModalContainer>
                 )}
