@@ -12,7 +12,6 @@ import PoolDetailsPage from './PoolDetailData';
 import FACTORYABI from '../../abi/UniFactoryV2.json';
 import Addresses from '../../contractAddresses';
 import { PoolDetails } from '../liquidityPoolDetails/poolDetails';
-import { SushiswapDetails } from './sushiswapDetails';
 
 export default function Index(props) {
   const navigate = useNavigate();
@@ -83,14 +82,6 @@ export default function Index(props) {
   return (
     <div style={{ margin: 'auto' }}>
       <PoolDetailsPage address={address} token0={token0} token1={token1} tokenid={tokenid} />
-      {/*<SushiswapDetails address={address} token0={token0} token1={token1} tokenid={tokenid} />*/}
-      {/*<PoolDetails*/}
-      {/*  address={address}*/}
-      {/*  token0={token0}*/}
-      {/*  token1={token1}*/}
-      {/*  tokenid={tokenid}*/}
-      {/*  type={'sushiswap'}*/}
-      {/*/>*/}
       {/*{navigate(`/${address}/sushiswap/pair/${tokenid}`)}*/}
       {/*<Link to={`/${address}/sushiswap/pair/${tokenid}`} />*/}
     </div>
