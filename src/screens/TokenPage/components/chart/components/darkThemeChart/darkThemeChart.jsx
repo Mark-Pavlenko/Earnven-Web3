@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ReactApexChart from 'react-apexcharts';
-import axios from 'axios';
 import ApexCharts from 'apexcharts';
 import './darkThemeChart.css';
 
@@ -118,7 +117,6 @@ export default class DarkThemeChart extends Component {
               amount = minus + amount;
               return amount;
             }
-
             const currentDate = new Date(w.globals.seriesX[0][dataPointIndex]);
             return (
               '<div class="hover-info"><div class="hover-date">' +
@@ -215,8 +213,8 @@ export default class DarkThemeChart extends Component {
     this.getTokenChartHistory();
   }
 
-  componentDidUpdate() {
-    if (this.state.account !== this.props.address) {
+  componentDidUpdate(prevProps) {
+    if (this.props.tokenPriceHistory !== prevProps.tokenPriceHistory) {
       this.getTokenChartHistory();
     }
     if (
@@ -243,30 +241,26 @@ export default class DarkThemeChart extends Component {
     }
   }
 
-  getTokenChartHistory = async () => {
-    var data = [];
-    let points = [];
+  getTokenChartHistory() {
+    const data = [];
+    const points = [];
     let result = [];
     let c = {};
-    const path = `https://api.coingecko.com/api/v3/coins/${
-      this.props.tokenId
-    }/market_chart/range?vs_currency=usd&from=1200000000&to=${new Date().getTime()}`;
-    await axios.get(path, {}).then(async (response) => {
-      result = response.data.prices;
-      console.log(response, new Date());
-      if (result && result.length > 0) {
-        for (let i = 0; i < result.length; i++) {
-          var temp = [];
-          temp.push(new Date(result[i][0]));
-          temp.push(result[i][1].toFixed(2));
-          data.push(temp);
-        }
+    result = this.props.tokenPriceHistory;
+    if (result && result.length > 0) {
+      for (let i = 0; i < result.length; i++) {
+        let temp = [];
+        temp.push(new Date(result[i].date));
+        temp.push(result[i].rate);
+        data.push(temp);
       }
-      c = { data };
-      points.push(c);
-      this.setState({ series: points });
-    });
-  };
+    }
+    c = { data };
+    // points
+    points.push(c);
+    this.setState({ series: points });
+    // }
+  }
 
   monthDiff(d1, d2) {
     var months;

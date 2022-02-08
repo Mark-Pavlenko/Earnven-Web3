@@ -15,7 +15,6 @@ export const currentTokenDataReducer = (state = initialState, action) => {
     case GET_TOKEN_DATA:
       return { ...state, isLoading: true };
     case GET_TOKEN_DATA_SUCCESS:
-      console.log(action.payload);
       return { ...state, currentTokenData: action.payload.currentTokenData, isLoading: false };
 
     case GET_TOKEN_DATA_FAIL:
