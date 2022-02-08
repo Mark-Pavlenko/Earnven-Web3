@@ -1,27 +1,27 @@
 import {
-  GET_WALLET_DATA,
-  GET_WALLET_DATA_FAIL,
-  GET_WALLET_DATA_SUCCESS,
+  GET_TOKEN_PRICE_HISTORY_FAIL,
+  GET_TOKEN_PRICE_HISTORY,
+  GET_TOKEN_PRICE_HISTORY_SUCCESS,
 } from '../../constants/actionTypes';
 
 const initialState = {
-  walletData: null,
+  tokenPriceHistory: [],
   error: '',
   isLoading: false,
 };
 
-export const walletDataReducer = (state = initialState, action) => {
+export const tokenPriceHistoryReducer = (state = initialState, action) => {
   switch (action.type) {
-    case GET_WALLET_DATA:
+    case GET_TOKEN_PRICE_HISTORY:
       return { ...state, isLoading: true };
-    case GET_WALLET_DATA_SUCCESS:
+    case GET_TOKEN_PRICE_HISTORY_SUCCESS:
       return {
         ...state,
-        walletData: action.payload.walletData,
+        tokenPriceHistory: action.payload.tokenPriceHistory,
         isLoading: false,
       };
 
-    case GET_WALLET_DATA_FAIL:
+    case GET_TOKEN_PRICE_HISTORY_FAIL:
       return {
         ...state,
         error: 'Error',

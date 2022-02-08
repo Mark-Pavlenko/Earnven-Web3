@@ -17,10 +17,11 @@ import Exchange from './components/exchange/Exchange';
 import GraphMob from './components/graphMob/GraphMob';
 import Performance from './components/performance/Performance';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
 import { numberWithCommas } from '../../commonFunctions/commonFunctions';
 import { getTokenDataSaga } from '../../store/currentTokenData/actions';
 import { getTokenTransactionsSaga } from '../../store/currentTokenTransactions/actions';
+import { getWalletDataSaga } from '../../store/currentWalletData/actions';
+import { getTokenPriceHistorySaga } from '../../store/currentTokenPriceHistory/actions';
 
 const TokenPage = () => {
   const { address } = useParams();
@@ -44,71 +45,52 @@ const TokenPage = () => {
       'similique sunt in culpa qui officia deserunt mollitia animi, id est laborum ' +
       'et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.'
   );
-  const [usersTokenData, setUsersTokenData] = useState(null);
-  const [tokenHistoryData, setTokenHistoryData] = useState(null);
-  const [walletData, setWalletData] = useState(null);
   const theme = useSelector((state) => state?.themeReducer.isLightTheme);
   const dispatch = useDispatch();
   const tokenData = useSelector((state) => {
-    console.log(state?.currentTokenDataReducer.currentTokenData);
     return state?.currentTokenDataReducer.currentTokenData;
   });
   const tokenContractAddress = useSelector((state) => {
-    console.log(state?.currentTokenDataReducer.currentTokenData?.contract_address);
     return state?.currentTokenDataReducer.currentTokenData?.contract_address;
   });
   const tokenTransactions = useSelector((state) => {
-    console.log(state?.currentTokenTransactionsReducer.currentTokenTransactions);
     return state?.currentTokenTransactionsReducer.currentTokenTransactions;
+  });
+  const walletData = useSelector((state) => {
+    return state?.walletDataReducer.walletData;
+  });
+  const tokenHistoryData = useSelector((state) => {
+    return state?.tokenPriceHistoryReducer.tokenPriceHistory;
   });
 
   useEffect(() => {
     dispatch(getTokenDataSaga(tokenId));
+    dispatch(getWalletDataSaga(address));
+    dispatch(getTokenPriceHistorySaga(tokenId));
   }, [tokenId]);
 
   useEffect(() => {
     dispatch(getTokenTransactionsSaga(tokenContractAddress, address));
-
-    axios
-      .get(`https://api.ethplorer.io/getAddressInfo/${address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`, {})
-      .then(async (response) => {
-        console.log('response UsersTokenData', response);
-        await setWalletData(response.data);
-        await setUsersTokenData(
-          tokenId === 'ethereum'
-            ? {
-                balance: response.data.ETH.balance,
-                rate: response.data.ETH.price.rate,
-                decimals: 0,
-                symbol: 'ETH',
-              }
-            : () => {
-                const token = response.data.tokens.find((e) => e.tokenInfo.coingecko === tokenId);
-                return {
-                  balance: token.balance,
-                  rate: token.tokenInfo.price.rate,
-                  decimals: token.tokenInfo.decimals,
-                  symbol: token.tokenInfo.symbol,
-                };
-              }
-        );
-      });
-
-    axios
-      .get(
-        `https://api.coingecko.com/api/v3/coins/${tokenId}/market_chart/range?vs_currency=usd&from=1200000000&to=${new Date().getTime()}`,
-        {}
-      )
-      .then(async (response) => {
-        console.log('response TokenHistoryData', response);
-        setTokenHistoryData(
-          await response.data.prices.map((el) => ({
-            date: new Date(el[0]).toISOString().split('').splice(0, 10).join(''),
-            rate: el[1],
-          }))
-        );
-      });
   }, [tokenContractAddress]);
+
+  const usersTokenData = walletData
+    ? tokenId === 'ethereum'
+      ? {
+          balance: walletData.ETH.balance,
+          rate: walletData.ETH.price.rate,
+          decimals: 0,
+          symbol: 'ETH',
+        }
+      : (() => {
+          const token = walletData.tokens.find((e) => e.tokenInfo.coingecko === tokenId);
+          return {
+            balance: token.balance,
+            rate: token.tokenInfo.price.rate,
+            decimals: token.tokenInfo.decimals,
+            symbol: token.tokenInfo.symbol,
+          };
+        })()
+    : '';
 
   const tokensHolding = usersTokenData
     ? `${numberWithCommas(
@@ -124,7 +106,7 @@ const TokenPage = () => {
         ).toFixed(2)
       )}`
     : '';
-  console.log(tokenTransactions);
+
   const accumulationCost =
     Array.isArray(tokenTransactions) && tokenHistoryData
       ? tokenTransactions
@@ -188,9 +170,8 @@ const TokenPage = () => {
       ).toFixed(2)
     : '';
 
-  const profitLossPercent = accumulationCost
-    ? ((profitLoss / accumulationCost) * 100).toFixed(2)
-    : '';
+  const profitLossPercent =
+    accumulationCost && profitLoss ? ((profitLoss / accumulationCost) * 100).toFixed(2) : '';
 
   const links = [
     {

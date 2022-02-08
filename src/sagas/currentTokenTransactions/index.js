@@ -14,7 +14,6 @@ export function* getCurrentTokenTransactionsSagaWatcher() {
 function* getCurrentTokenTransactionsSagaWorker({ payload }) {
   try {
     yield put(getTokenTransactions(payload.isLoading));
-    console.log('saga', payload.tokenContractAddress, payload.walletAddress);
     const response = yield call(
       fetchTokenTransactions,
       payload.tokenContractAddress,

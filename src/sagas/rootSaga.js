@@ -26,6 +26,8 @@ import { getalchemixVaultsSagaWatcher } from './alchemix';
 import { getcompoundTokenSagaWatcher } from './compoundFinance';
 import { getCurrentTokenDataSagaWatcher } from './currentTokenData';
 import { getCurrentTokenTransactionsSagaWatcher } from './currentTokenTransactions';
+import { getWalletDataSagaWatcher } from './currentWalletData';
+import { getTokenPriceHistorySagaWatcher } from './currentTokenPriceHistory';
 export default function* watchRootSaga() {
   yield all([
     call(getAccountBalanceSagaWatcher),
@@ -54,5 +56,7 @@ export default function* watchRootSaga() {
     call(getcompoundTokenSagaWatcher),
     call(getCurrentTokenDataSagaWatcher),
     call(getCurrentTokenTransactionsSagaWatcher),
+    call(getWalletDataSagaWatcher),
+    call(getTokenPriceHistorySagaWatcher),
   ]);
 }

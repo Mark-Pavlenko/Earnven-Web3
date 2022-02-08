@@ -28,12 +28,6 @@ const GraphMob = ({
         </Chain>
         {links.length > 0 ? (
           <TokenLinks>
-            {/*<TokenLink isLightTheme={isLightTheme}>*/}
-            {/*  <img alt={'EtherScan'} src={etherScan} />*/}
-            {/*</TokenLink>*/}
-            {/*<TokenLink isLightTheme={isLightTheme}>*/}
-            {/*  <img alt={'EtherScan'} src={etherScan} />*/}
-            {/*</TokenLink>*/}
             <TokenLink
               isLightTheme={isLightTheme}
               href={links[0].link}

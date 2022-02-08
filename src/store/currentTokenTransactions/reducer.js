@@ -15,7 +15,6 @@ export const currentTokenTransactionsReducer = (state = initialState, action) =>
     case GET_TOKEN_TRANSACTIONS:
       return { ...state, isLoading: true };
     case GET_TOKEN_TRANSACTIONS_SUCCESS:
-      console.log(action.payload);
       return {
         ...state,
         currentTokenTransactions: action.payload.currentTokenTransactions,
