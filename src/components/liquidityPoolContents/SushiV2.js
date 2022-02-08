@@ -88,7 +88,7 @@ export default function LiquidityPools() {
   const { address } = useParams();
 
   const [Data, setData] = useState([]); //UNI V2 Pools
-  const [Content, setContent] = useState(''); //UNI V2 Pools
+  const [Content, setContent] = useState(''); //UNI V2 33Pools
   const [TokenA, setTokenA] = useState('');
   const [TokenB, setTokenB] = useState('');
   const [Page, setPage] = useState('');
