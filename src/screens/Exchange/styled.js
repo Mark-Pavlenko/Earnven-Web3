@@ -516,7 +516,6 @@ export const AbsentFoundTokensBlock = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 20px;
-  width: 435px;
   height: 420px;
   overflow: auto;
   padding: 0;
