@@ -34,6 +34,7 @@ import {
   BlockTokens,
 } from '../uniV2/StyledComponents';
 import Select from 'react-select';
+import { Link, useParams } from 'react-router-dom';
 
 import { SelectOptionsWithJSX } from '../HOC/selectOptionsWithJSX';
 import Web3 from 'web3';
@@ -45,9 +46,11 @@ import axios from 'axios';
 import tokenURIs from '../../../screens/Exchange/tokenURIs';
 import TOKENDECIMALSABI from '../../../abi/TokenDecomals.json';
 
-export const LiquidityTableItem = ({ item, index, theme }) => {
+export const LiquidityTableItem = ({ item, index, theme, type }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedModal, setSelectedModal] = useState('');
+  const [tokenReverses, setTokensReverses] = useState();
+  const address = useParams().address;
 
   const [outValue, setOutValue] = useState('');
   const [inValue, setInValue] = useState('');
@@ -493,9 +496,19 @@ export const LiquidityTableItem = ({ item, index, theme }) => {
           <InvestButton isLightTheme={theme} id="Add Liquidity" onClick={switchModal}>
             Invest
           </InvestButton>
-          <InfoButton isLightTheme={theme} onClick={checkLiquidity}>
-            {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
-          </InfoButton>
+          {type === 'sushiswap' ? (
+            <Link to={`/${address}/${type}/address/${item.token0.id}/${item.token1.id}`}>
+              <InfoButton isLightTheme={theme}>
+                {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
+              </InfoButton>
+            </Link>
+          ) : (
+            <Link to={`/${address}/${type}/address/${item.token0.id}/${item.token1.id}`}>
+              <InfoButton isLightTheme={theme}>
+                {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
+              </InfoButton>
+            </Link>
+          )}
         </ItemButtons>
       </TableItem>
     </>

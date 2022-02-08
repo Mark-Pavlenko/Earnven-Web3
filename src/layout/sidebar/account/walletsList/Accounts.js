@@ -11,7 +11,7 @@ Version           Date                         Description
 import { experimentalStyled as styled } from '@material-ui/core/styles';
 import accountLogo from '../../../../assets/icons/accountlogo.png';
 import { createStyles, makeStyles } from '@material-ui/styles';
-import { Avatar, Box, List, Stack, Typography } from '@material-ui/core';
+import { Avatar, Box, List, Popover, Stack, Typography } from '@material-ui/core';
 import React, { useRef, useState } from 'react';
 import '../styles';
 import { useNavigate } from 'react-router-dom';
@@ -23,9 +23,9 @@ import copy_link_menu_icon from '../../../../assets/icons/copy_link_menu_icon.sv
 import disconnect_menu_icon from '../../../../assets/icons/disconnect_menu_icon.svg';
 import dots_menu_icon from '../../../../assets/icons/3dots_menu_icon.svg';
 import ThemeConfig from '../../../../theme';
-import { Disconnection } from '../Disconnection';
-import Rename from '../Rename';
-import Popup from '../popup';
+import { DisconnectPopup } from '../disconnectPopup';
+import RenamePopup from '../renamePopup';
+import Popup from '../generalPopupLayout';
 import green_got_menu from '../../../../assets/icons/green_got_menu.svg';
 import menurender_customhook from '../menurender_customhook';
 import copy_notification_menu from '../../../../assets/icons/copy_notification_menu.svg';
@@ -52,12 +52,14 @@ import {
 const useStyles = makeStyles(() =>
   createStyles({
     menupopover: {
-      marginLeft: '132px',
-      marginTop: '-25px',
-      width: '338px',
-      ['@media (max-width:1280px)']: {
-        marginLeft: '-3px',
-      },
+      marginTop: '-13px',
+      marginLeft: '45px',
+      // marginLeft: '132px',
+      // marginTop: '-25px',
+      // width: '338px',
+      // ['@media (max-width:1280px)']: {
+      //   marginLeft: '-3px',
+      // },
     },
     icon: {
       marginLeft: '21px',
@@ -112,9 +114,6 @@ export default function Accounts(
   const [openPopup_rename, setOpenPopup_rename] = useState(false);
 
   const selectedAccountAddress = localStorage.getItem('selected-account');
-  // console.log('selectedAccountAddress', selectedAccountAddress);
-  // console.log('current Metamask wallet address', currentWalletAddress);
-  // console.log('globalWalletsList', JSON.parse(globalWalletsList));
 
   const showAccountPopover = () => {
     setaccount(true);
@@ -147,7 +146,9 @@ export default function Accounts(
   };
 
   const [copySuccess, setCopySuccess] = useState('');
+
   const textAreaRef = useRef(null);
+
   function copyToClipboard(e) {
     textAreaRef.current.select();
     document.execCommand('copy');
@@ -171,9 +172,6 @@ export default function Accounts(
     const address = localStorage.getItem('selected-account');
     navigate(`/${address}/dashboard`, { replace: true });
   };
-
-  const reduxWalletsList = useSelector((state) => state.initSidebarValuesReducer.walletsList);
-  const reduxMyWallet = useSelector((state) => state.initSidebarValuesReducer.myWallet);
 
   return (
     <>
@@ -236,10 +234,23 @@ export default function Accounts(
         </WalletListItemAccountBalance>
       </WalletsListLayout>
       {/* popover menu with options for wallet*/}
-      <MenuPopover
+      <Popover
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         className={classes.menupopover}
+        PaperProps={{
+          sx: {
+            width: '336px',
+            overflow: 'inherit',
+            boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+            borderRadius: '10px',
+            background: isLightTheme ? '#FFFFFF29' : '#1F265C3D',
+            mixBlendMode: 'normal',
+            backdropFilter: 'blur(35px)',
+          },
+        }}
         sx={{
-          backgroundColor: isLightTheme ? '#FFFFFF29' : '#1F265C3D',
+          width: '336px',
         }}
         open={account}
         onClose={hideAccountPopover}
@@ -326,16 +337,31 @@ export default function Accounts(
             </WalletActionsList>
           </WalletActionsLayout>
         )}
-      </MenuPopover>
+      </Popover>
       <ThemeConfig>
-        <Popup title="Disconnect" openPopup={openPopup} setOpenPopup={setOpenPopup}>
-          <Disconnection setOpenPopup={(w) => setOpenPopup(w)} address={address} name={name} />
+        <Popup
+          title="Disconnect"
+          openPopup={openPopup}
+          setOpenPopup={setOpenPopup}
+          isLightTheme={isLightTheme}>
+          <DisconnectPopup
+            setOpenPopup={(w) => setOpenPopup(w)}
+            address={address}
+            name={name}
+            isLightTheme={isLightTheme}
+          />
         </Popup>
         <Popup
           title="Rename Wallet"
           openPopup={openPopup_rename}
-          setOpenPopup={setOpenPopup_rename}>
-          <Rename setOpenPopup={(w) => setOpenPopup_rename(w)} address={address} name={name} />
+          setOpenPopup={setOpenPopup_rename}
+          isLightTheme={isLightTheme}>
+          <RenamePopup
+            setOpenPopup={(w) => setOpenPopup_rename(w)}
+            address={address}
+            name={name}
+            isLightTheme={isLightTheme}
+          />
         </Popup>
       </ThemeConfig>
     </>

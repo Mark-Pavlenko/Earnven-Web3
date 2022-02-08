@@ -14,13 +14,15 @@ export const SelectTitle = styled.div`
 `;
 
 export const AddNewGroupButton = styled.button`
-  height: 25px;
-  width: 100px;
-  background: transparent;
-  border: 1px solid #ac6afc;
   cursor: pointer;
-  color: white;
+  color: ${(props) => (props.isLightTheme ? '#4453AD' : '#fff')};
+  background: ${(props) => (props.isLightTheme ? '#fff' : '#8F86FF')};
+  box-shadow: inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12);
   border-radius: 10px;
+  padding: 10px 40px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 22px;
 `;
 
 export const ModalInput = styled.input`

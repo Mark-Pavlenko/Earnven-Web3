@@ -43,16 +43,15 @@ function* olympusTokenSagaWorker(olympusTokenAttributes) {
 
   //get the token market usd price from coingecko API
   if (tokenData.tokenBalance) {
-    console.log('tokenData.tokenBalance', tokenData.tokenBalance);
     object.balance = parseFloat(tokenData.tokenBalance).toFixed(4);
-    object.totalValue = parseFloat(tokenValue).toFixed(2);
-    object.tokenName = tokenData.tokenSymbol;
+    object.value = parseFloat(tokenValue).toFixed(2);
+    object.symbol = tokenData.tokenSymbol;
     object.price = tokenPrice;
     object.tokenImage = OHMtokenInfo.tokenImage;
     object.liquidity = parseFloat(tokenLiquidity).toFixed(2);
     object.chain = 'Ethereum';
     object.protocol = 'Olympus';
-    totalValue = object.totalValue;
+    totalValue = object.value;
   }
   if (Object.keys(object).length) {
     ArrayOfData.push(object);

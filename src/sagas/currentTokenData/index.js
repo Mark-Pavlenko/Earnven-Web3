@@ -1,4 +1,4 @@
-import { call, fork, put, takeEvery } from 'redux-saga/effects';
+import { call, put, takeEvery } from 'redux-saga/effects';
 import { GET_TOKEN_DATA_SAGA } from '../../constants/actionTypes';
 import {
   getTokenData,

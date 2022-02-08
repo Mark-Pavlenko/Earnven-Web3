@@ -3,8 +3,6 @@ const axios = require('axios');
 
 const getUniswapGraphData = async (tokenPair, epochDate) => {
   // console.log('uniswap - Calling from the main page')
-  // console.log('uniswap -', tokenPair)
-  // console.log('uniswap - ', epochDate)
   try {
     const result = await axios.post(`https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2`, {
       query: `{
@@ -47,6 +45,8 @@ const getUniswapGraphData = async (tokenPair, epochDate) => {
                 }`,
     });
     // console.log('uniswap result-', result.data.data)
+    // console.log('opacha123', result);
+
     return result;
   } catch (err) {
     console.log('No data found for the give paired token');

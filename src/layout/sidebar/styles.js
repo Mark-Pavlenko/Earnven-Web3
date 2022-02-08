@@ -29,14 +29,6 @@ export const SidebarMainLayout = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: column;
-
-  @media (max-width: 1280px) {
-    //height: auto;
-  }
-
-  @media screen and (max-width: 780px) and (min-width: 710px) {
-    //background-color: red;
-  }
 `;
 
 export const LogoTitleImg = styled.img`

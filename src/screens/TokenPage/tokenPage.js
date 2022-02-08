@@ -20,6 +20,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { numberWithCommas } from '../../commonFunctions/commonFunctions';
 import { getTokenDataSaga } from '../../store/currentTokenData/actions';
+import { getTokenTransactionsSaga } from '../../store/currentTokenTransactions/actions';
 
 const TokenPage = () => {
   const { address } = useParams();
@@ -43,10 +44,7 @@ const TokenPage = () => {
       'similique sunt in culpa qui officia deserunt mollitia animi, id est laborum ' +
       'et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.'
   );
-  // const [tokenData, setTokenData] = useState(null);
-  const [tokenTransactions, setTokenTransactions] = useState(null);
   const [usersTokenData, setUsersTokenData] = useState(null);
-  const [tokenContractAddress, setTokenContractAddress] = useState(null);
   const [tokenHistoryData, setTokenHistoryData] = useState(null);
   const [walletData, setWalletData] = useState(null);
   const theme = useSelector((state) => state?.themeReducer.isLightTheme);
@@ -55,24 +53,21 @@ const TokenPage = () => {
     console.log(state?.currentTokenDataReducer.currentTokenData);
     return state?.currentTokenDataReducer.currentTokenData;
   });
+  const tokenContractAddress = useSelector((state) => {
+    console.log(state?.currentTokenDataReducer.currentTokenData?.contract_address);
+    return state?.currentTokenDataReducer.currentTokenData?.contract_address;
+  });
+  const tokenTransactions = useSelector((state) => {
+    console.log(state?.currentTokenTransactionsReducer.currentTokenTransactions);
+    return state?.currentTokenTransactionsReducer.currentTokenTransactions;
+  });
 
   useEffect(() => {
     dispatch(getTokenDataSaga(tokenId));
   }, [tokenId]);
 
   useEffect(() => {
-    const tokenContractAddress = tokenData?.contract_address;
-    axios
-      .get(
-        `https://api.etherscan.io/api?module=account&action=tokentx&contractaddress=${tokenContractAddress}&address=${address}&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W`,
-        {}
-      )
-      .then(async (response) => {
-        console.log('response TokenTransactions', response);
-        if (response.data.status === '1') {
-          setTokenTransactions(response.data.result);
-        }
-      });
+    dispatch(getTokenTransactionsSaga(tokenContractAddress, address));
 
     axios
       .get(`https://api.ethplorer.io/getAddressInfo/${address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`, {})
@@ -88,9 +83,7 @@ const TokenPage = () => {
                 symbol: 'ETH',
               }
             : () => {
-                const token = response.data.tokens.find(
-                  (e) => e.tokenInfo.name?.toLowerCase() === tokenId.toLowerCase()
-                );
+                const token = response.data.tokens.find((e) => e.tokenInfo.coingecko === tokenId);
                 return {
                   balance: token.balance,
                   rate: token.tokenInfo.price.rate,
@@ -115,7 +108,7 @@ const TokenPage = () => {
           }))
         );
       });
-  }, [tokenData]);
+  }, [tokenContractAddress]);
 
   const tokensHolding = usersTokenData
     ? `${numberWithCommas(
@@ -131,53 +124,55 @@ const TokenPage = () => {
         ).toFixed(2)
       )}`
     : '';
+  console.log(tokenTransactions);
+  const accumulationCost =
+    Array.isArray(tokenTransactions) && tokenHistoryData
+      ? tokenTransactions
+          .filter((e) => e.from === address)
+          .map(
+            (el) =>
+              (parseFloat(el.value) / 10 ** parseInt(el.tokenDecimal)) *
+              tokenHistoryData.find(
+                (e) =>
+                  e.date ===
+                  new Date(parseInt(el.timeStamp) * 1000)
+                    .toISOString()
+                    .split('')
+                    .splice(0, 10)
+                    .join('')
+              ).rate
+          )
+          .reduce((prev, el) => prev + el, 0)
+          .toFixed(2)
+      : '';
 
-  const accumulationCost = tokenTransactions
-    ? tokenTransactions
-        .filter((e) => e.from === address)
-        .map(
-          (el) =>
-            (parseFloat(el.value) / 10 ** parseInt(el.tokenDecimal)) *
-            tokenHistoryData.find(
-              (e) =>
-                e.date ===
-                new Date(parseInt(el.timeStamp) * 1000)
-                  .toISOString()
-                  .split('')
-                  .splice(0, 10)
-                  .join('')
-            ).rate
-        )
-        .reduce((prev, el) => prev + el, 0)
-        .toFixed(2)
-    : '';
-
-  const avgBuyingCost = tokenTransactions
-    ? `$${numberWithCommas(
-        (
-          tokenTransactions
-            .filter((e) => e.to === address)
-            .map(
-              (el) =>
-                (parseFloat(el.value) / 10 ** parseInt(el.tokenDecimal)) *
-                tokenHistoryData.find(
-                  (e) =>
-                    e.date ===
-                    new Date(parseInt(el.timeStamp) * 1000)
-                      .toISOString()
-                      .split('')
-                      .splice(0, 10)
-                      .join('')
-                ).rate
-            )
-            .reduce((prev, el) => prev + el, 0) /
-          tokenTransactions
-            .filter((e) => e.to === address)
-            .map((el) => parseFloat(el.value) / 10 ** parseInt(el.tokenDecimal))
-            .reduce((prev, el) => prev + el, 0)
-        ).toFixed(2)
-      )}`
-    : '';
+  const avgBuyingCost =
+    Array.isArray(tokenTransactions) && tokenHistoryData
+      ? `$${numberWithCommas(
+          (
+            tokenTransactions
+              .filter((e) => e.to === address)
+              .map(
+                (el) =>
+                  (parseFloat(el.value) / 10 ** parseInt(el.tokenDecimal)) *
+                  tokenHistoryData.find(
+                    (e) =>
+                      e.date ===
+                      new Date(parseInt(el.timeStamp) * 1000)
+                        .toISOString()
+                        .split('')
+                        .splice(0, 10)
+                        .join('')
+                  ).rate
+              )
+              .reduce((prev, el) => prev + el, 0) /
+            tokenTransactions
+              .filter((e) => e.to === address)
+              .map((el) => parseFloat(el.value) / 10 ** parseInt(el.tokenDecimal))
+              .reduce((prev, el) => prev + el, 0)
+          ).toFixed(2)
+        )}`
+      : '';
 
   const profitLoss = accumulationCost
     ? (

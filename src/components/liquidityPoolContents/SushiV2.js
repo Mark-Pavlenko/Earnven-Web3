@@ -32,6 +32,8 @@ import Box from '@material-ui/core/Box';
 import { Button } from '@material-ui/core';
 import { Link, useParams } from 'react-router-dom';
 import {LiquidityPoolsTable} from "./liquidityPoolsTable/liquidityPoolsTable";
+import {AddNewGroupButton} from "./uniV2/StyledComponents";
+import {useSelector} from "react-redux";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -77,6 +79,7 @@ export default function LiquidityPools() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [Loading, setLoading] = useState(false);
+  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -85,7 +88,7 @@ export default function LiquidityPools() {
   const { address } = useParams();
 
   const [Data, setData] = useState([]); //UNI V2 Pools
-  const [Content, setContent] = useState(''); //UNI V2 Pools
+  const [Content, setContent] = useState(''); //UNI V2 33Pools
   const [TokenA, setTokenA] = useState('');
   const [TokenB, setTokenB] = useState('');
   const [Page, setPage] = useState('');
@@ -539,6 +542,7 @@ export default function LiquidityPools() {
             query: `
                 {
                     pairDayDatas(first: 20,
+                      skip : ${Page * 20}
                        where:{
                         date:${epoch}
                       }
@@ -566,7 +570,6 @@ export default function LiquidityPools() {
         .then(async (response) => {
           if (response.data.data) {
             var res = response.data.data.pairDayDatas;
-            console.log('responseSubgraphData', response)
             for (var i = 0; i < res.length; i++) {
               await axios
                 .get(
@@ -730,24 +733,16 @@ export default function LiquidityPools() {
 
   return (
     <div>
-      <LiquidityPoolsTable data={Data} />
+      <LiquidityPoolsTable data={Data} type={'sushiswap'} AllTokens={AllTokens} />
       <br />
       <center>
-        <button
-          onClick={(e) => {
+        <AddNewGroupButton
+            isLightTheme={isLightTheme}
+            onClick={(e) => {
             setPage(Page + 1);
-          }}
-          style={{
-            height: '25px',
-            width: '100px',
-            background: 'transparent',
-            border: '1px solid #ac6afc',
-            cursor: 'pointer',
-            color: 'white',
-            borderRadius: '10px',
           }}>
-          {Loading ? 'Loading...' : 'Show More'}
-        </button>
+          {Loading ? 'Loading...' : 'More Pools'}
+        </AddNewGroupButton>
       </center>
     </div>
   );
