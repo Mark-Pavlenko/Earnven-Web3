@@ -395,7 +395,7 @@ export const SearchTokensModalTextField = styled(TextField)``;
 export const SendTokensModalList = styled(List)`
   //background-color: red;
   margin-top: 20px;
-  width: 445px;
+  width: 452px;
   height: 420px;
   overflow: auto;
   padding: 0;
@@ -438,10 +438,19 @@ export const SendTokenModalListItem = styled(ListItem)`
   //background-color: blue;
   padding: 0 !important;
   margin-bottom: 20px;
+  width: 435px;
 
   :hover {
     cursor: pointer;
-    background-color: green;
+    border-radius: 10px;
+    background-color: ${(props) =>
+      props.isLightTheme ? '#ffffff !important' : '#1F265C3D !important'};
+    box-shadow: ${(props) =>
+      props.isLightTheme
+        ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+        : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+    mix-blend-mode: ${(props) => (props.isLightTheme ? 'none' : 'normal')};
+    backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
     //width: 445px;
   }
 `;
@@ -457,8 +466,7 @@ export const SendTokenImg = styled.img`
 export const SendTokenLabelsBlock = styled.div`
   display: flex;
   justify-content: space-between;
-  //align-items: center;
-  //width: 346px;
+  //margin-left:10px;
 
   img {
     margin-top: 3px;
@@ -489,7 +497,7 @@ export const SendTokenConvertedMeasures = styled.span`
 `;
 
 export const SendTokenBalance = styled.div`
-  margin-right: 15px;
+  margin-right: 20px;
   margin-top: -20px;
   span {
     color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#FFFFFF')};
