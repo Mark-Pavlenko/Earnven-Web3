@@ -251,28 +251,6 @@ export default function SwapComponent() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedModal, setSelectedModal] = useState('');
 
-  //search tokens field functionality
-  const [inputText, setInputText] = useState('');
-
-  let inputHandler = (e) => {
-    //convert input text to lower case
-    let lowerCase = e.target.value.toLowerCase();
-    setInputText(lowerCase);
-  };
-
-  const filteredData = data.filter((el) => {
-    //if no input the return the original
-    if (inputText.input === '') {
-      return el;
-    }
-    //return the item which contains the user input
-    else {
-      return el.text.toLowerCase().includes(inputText);
-    }
-  });
-
-  //---------
-
   const ref = useRef();
   useEffect(() => {
     const checkIfClickedOutside = (e) => {
@@ -302,7 +280,7 @@ export default function SwapComponent() {
     await axios
       .get(`https://api.ethplorer.io/getAddressInfo/${address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`)
       .then(async (response) => {
-        const arr1 = [];
+        const walletTokensList = [];
         if (response.data.ETH.balance !== 0) {
           const tempObj = {};
           tempObj.address = '';
@@ -310,7 +288,7 @@ export default function SwapComponent() {
           tempObj.symbol = 'ETH';
           tempObj.balance = response.data.ETH.balance.toFixed(3).toString();
           tempObj.logoURI = ethImage;
-          arr1.push(tempObj);
+          walletTokensList.push(tempObj);
         }
         let tokens = response.data.tokens;
         for (let i = 0; i < tokens.length; i++) {
@@ -328,10 +306,10 @@ export default function SwapComponent() {
           } else {
             tempObj.logoURI = null;
           }
-          arr1.push(tempObj);
+          walletTokensList.push(tempObj);
         }
-        console.log('final wallet`s tokens list arr', arr1);
-        setAllTokens(arr1);
+        console.log('final wallet`s tokens list arr', walletTokensList);
+        setAllTokens(walletTokensList);
       });
   }, []);
 
@@ -357,6 +335,35 @@ export default function SwapComponent() {
     const timeOutId = setTimeout(() => calculateToAmount(TokenFromAmount), 500);
     return () => clearTimeout(timeOutId);
   }, [TokenFromAmount]);
+
+  //search tokens field functionality
+  const [inputText, setInputText] = useState('');
+
+  console.log('allTokens', allTokens);
+
+  let inputHandler = (e) => {
+    //convert input text to lower case
+    let lowerCase = e.target.value.toLowerCase();
+    setInputText(lowerCase);
+  };
+
+  const filteredData = allTokens.filter((el) => {
+    if (inputText.input === '') {
+      return el;
+    }
+    //return the item which contains the user input
+    else if (el.name !== undefined) {
+      return el.name.toLowerCase().includes(inputText);
+    } else if (el.name === undefined) {
+      // console.log('undef el', el);
+    } else {
+      return 'No result';
+    }
+  });
+
+  console.log('filteredData', filteredData);
+
+  //---------
 
   async function loadWeb3() {
     if (window.ethereum) {
@@ -604,6 +611,7 @@ export default function SwapComponent() {
                       </Header>
 
                       <SearchTokensModalTextField
+                        onChange={inputHandler}
                         InputProps={{
                           endAdornment: (
                             <img
@@ -650,14 +658,19 @@ export default function SwapComponent() {
                         size="small"
                       />
 
+                      {/*{filteredData.map((item) => (*/}
+                      {/*  <li key={item.id}>{item.text}</li>*/}
+                      {/*))}*/}
+
                       {/* Tokens list for send*/}
                       <SendTokensModalList isLightTheme={isLightTheme}>
-                        {allTokens.map((object) => (
+                        {filteredData.map((object) => (
                           <SendTokenModalListItem
                             onClick={() => {
                               fromTokenChange(object.symbol);
                               setcurrencyModal(false);
-                            }}>
+                            }}
+                            isLightTheme={isLightTheme}>
                             <SendTokenLabelsBlock>
                               {object.logoURI !== null ? (
                                 <SendTokenImg alt="token_img" src={object.logoURI} />
@@ -783,50 +796,7 @@ export default function SwapComponent() {
         <SwapSecondColumn>
           <MultiSwapComponent />
         </SwapSecondColumn>
-
-        <div style={{ marginTop: '200px' }}>
-          <TextField
-            id="outlined-basic"
-            onChange={inputHandler}
-            variant="outlined"
-            fullWidth
-            label="Search"
-          />
-          <ul>
-            {filteredData.map((item) => (
-              <li key={item.id}>{item.text}</li>
-            ))}
-          </ul>
-        </div>
       </ExchangeMainLayout>
-
-      {/*{object.logoURI !== null ? (*/}
-      {/*  <img*/}
-      {/*    alt=""*/}
-      {/*    width="30"*/}
-      {/*    height="30"*/}
-      {/*    src={object.logoURI}*/}
-      {/*    style={{*/}
-      {/*      borderRadius: '50%',*/}
-      {/*      backgroundColor: '#e5e5e5',*/}
-      {/*    }}*/}
-      {/*  />*/}
-      {/*) : (*/}
-      {/*  <Avatar*/}
-      {/*    style={{*/}
-      {/*      display: 'inline',*/}
-      {/*      maxWidth: '30px',*/}
-      {/*      verticalAlign: 'top',*/}
-      {/*      height: '30px',*/}
-      {/*      // marginLeft: '11px',*/}
-      {/*    }}*/}
-      {/*    color={'#737373'}*/}
-      {/*    name={object.name}*/}
-      {/*    round={true}*/}
-      {/*    size="30"*/}
-      {/*    textSizeRatio={1}*/}
-      {/*  />*/}
-      {/*)}*/}
 
       {/* Old code*/}
       {/*<Box sx={{ width: '100%', mt: 3 }}>*/}

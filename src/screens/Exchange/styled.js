@@ -443,8 +443,7 @@ export const SendTokenModalListItem = styled(ListItem)`
   :hover {
     cursor: pointer;
     border-radius: 10px;
-    background-color: ${(props) =>
-      props.isLightTheme ? '#ffffff !important' : '#1F265C3D !important'};
+    background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D !important')};
     box-shadow: ${(props) =>
       props.isLightTheme
         ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
