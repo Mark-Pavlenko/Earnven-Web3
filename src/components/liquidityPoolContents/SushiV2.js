@@ -99,7 +99,7 @@ export default function LiquidityPools() {
   const [AccountLiquidity, setAccountLiquidity] = useState('');
   const [ReceiveToken, setReceiveToken] = useState('');
   const [LiquidityAmount, setLiquidityAmount] = useState('');
-
+  console.log('SupplyTokenAmount', SupplyTokenAmount)
   const [AllTokens, setAllTokens] = useState([]);
 
   console.log('comparison1', Data)
@@ -308,14 +308,14 @@ export default function LiquidityPools() {
                     <br />
                     <br />
                     <TransparentButton
-                      onClick={(e) => {
-                        addLiquidity(
-                          object.token0.id,
-                          object.token1.id,
-                          SupplyToken,
-                          (SupplyTokenAmount * 10 ** 18).toString()
-                        );
-                      }}
+                      // onClick={(e) => {
+                      //   addLiquidity(
+                      //     object.token0.id,
+                      //     object.token1.id,
+                      //     SupplyToken,
+                      //     (SupplyTokenAmount * 10 ** 18).toString()
+                      //   );
+                      // }}
                       value="Add Liquidity with Supply Token"
                     />
                   </center>
@@ -383,7 +383,9 @@ export default function LiquidityPools() {
                   <br />
                   <br />
                   <TransparentButton
-                    onClick={(e) => {}}
+                    onClick={(e) => {
+                      addLiquidityNormal(item.token0.id, item.token1.id, TokenA, TokenB);
+                    }}
                     value="Add Liquidity Classic Method"
                   />
                   {/*Input with button for swap tokens just between pair -------------------->*/}
@@ -645,6 +647,7 @@ export default function LiquidityPools() {
     setAccountLiquidity(qtty);
   }
 
+  //don't need anymore
   async function removeLiquidity(tokenA, tokenB, receiveToken, liquidityAmount) {
     // console.log(tokenA, tokenB, receiveToken, liquidityAmount)
     await loadWeb3();
@@ -665,6 +668,7 @@ export default function LiquidityPools() {
       .send({ from: accounts[0] });
   }
 
+  //don't need anymore
   async function removeLiquidityETH(tokenA, tokenB, LiquidityAmount) {
     await loadWeb3();
     const web3 = window.web3;
@@ -684,6 +688,7 @@ export default function LiquidityPools() {
       .send({ from: accounts[0] });
   }
 
+  //don't need anymore
   async function removeLiquidityNormal(tokenA, tokenB, LiquidityAmount) {
     const start = parseInt(Date.now() / 1000) + 180;
     await loadWeb3();
@@ -701,7 +706,13 @@ export default function LiquidityPools() {
       .send({ from: accounts[0] });
   }
 
+  //*********first input value sends to smartContract
   async function addLiquidity(tokenA, tokenB, supplyToken, supplyTokenQtty) {
+    console.log('addLiquiditytokenA', tokenA)
+    console.log('addLiquiditytokenB', tokenB)
+    console.log('addLiquiditysupplyToken', supplyToken)
+    console.log('addLiquiditysupplyTokenQtty', supplyTokenQtty)
+
     await loadWeb3();
     const web3 = window.web3;
     const accounts = await web3.eth.getAccounts();
@@ -718,6 +729,36 @@ export default function LiquidityPools() {
       .send({ from: accounts[0] });
   }
 
+  //********two inputs value send to smartContract
+  async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB) {
+    const start = parseInt(Date.now() / 1000) + 180;
+    await loadWeb3();
+    const web3 = window.web3;
+    const accounts = await web3.eth.getAccounts();
+    var tokenAContract = new web3.eth.Contract(ERC20ABI, tokenA);
+    var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
+    await tokenAContract.methods
+        .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenA, 'ether'))
+        .send({ from: accounts[0] });
+    await tokenBContract.methods
+        .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenB, 'ether'))
+        .send({ from: accounts[0] });
+    const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.sushiRouter);
+    await UniRouter.methods
+        .addLiquidity(
+            tokenA,
+            tokenB,
+            web3.utils.toWei(amountTokenA, 'ether'),
+            web3.utils.toWei(amountTokenB, 'ether'),
+            0,
+            0,
+            accounts[0],
+            start.toString()
+        )
+        .send({ from: accounts[0] });
+  }
+
+  //don't need anymore
   async function addLiquidityEth(tokenA, tokenB, ethAmount) {
     await loadWeb3();
     const web3 = window.web3;
@@ -733,7 +774,7 @@ export default function LiquidityPools() {
 
   return (
     <div>
-      <LiquidityPoolsTable data={Data} type={'sushiswap'} AllTokens={AllTokens} />
+      <LiquidityPoolsTable data={Data} type={'sushiswap'} AllTokens={AllTokens} addLiquidity={addLiquidity} addLiquidityNormal={addLiquidityNormal} />
       <br />
       <center>
         <AddNewGroupButton
@@ -744,6 +785,7 @@ export default function LiquidityPools() {
           {Loading ? 'Loading...' : 'More Pools'}
         </AddNewGroupButton>
       </center>
+      {Content}
     </div>
   );
 }

@@ -12,7 +12,7 @@ import {
   AvailableTitle,
 } from './style';
 
-export const LiquidityPoolsTable = ({ data, type, AllTokens }) => {
+export const LiquidityPoolsTable = ({ data, type, addLiquidity, addLiquidityNormal }) => {
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
 
   return (
@@ -28,7 +28,16 @@ export const LiquidityPoolsTable = ({ data, type, AllTokens }) => {
       </TableItem>
       {data &&
         data.map((item, index) => {
-          return <LiquidityTableItem item={item} index={index} theme={theme} type={type} />;
+          return (
+            <LiquidityTableItem
+              item={item}
+              index={index}
+              theme={theme}
+              type={type}
+              addLiquidity={addLiquidity}
+              addLiquidityNormal={addLiquidityNormal}
+            />
+          );
         })}
     </TableWrapper>
   );

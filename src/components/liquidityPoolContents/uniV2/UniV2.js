@@ -125,8 +125,6 @@ export default function LiquidityPools() {
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
-  console.log('allTokensSelect', allTokensSelect)
-
   useEffect(() => {
     async function getData() {
       let fetchedTokens;
@@ -714,6 +712,8 @@ export default function LiquidityPools() {
     setAccountLiquidity(qtty);
   }
 
+  //----->
+  //don't need anymore
   async function removeLiquidity(tokenA, tokenB, receiveToken, liquidityAmount) {
     // console.log(tokenA, tokenB, receiveToken, liquidityAmount)
     await loadWeb3();
@@ -734,6 +734,7 @@ export default function LiquidityPools() {
       .send({ from: accounts[0] });
   }
 
+  //don't need anymore
   async function removeLiquidityETH(tokenA, tokenB, LiquidityAmount) {
     await loadWeb3();
     const web3 = window.web3;
@@ -753,6 +754,7 @@ export default function LiquidityPools() {
       .send({ from: accounts[0] });
   }
 
+  //don't need anymore
   async function removeLiquidityNormal(tokenA, tokenB, LiquidityAmount) {
     const start = parseInt(Date.now() / 1000) + 180;
     await loadWeb3();
@@ -769,8 +771,15 @@ export default function LiquidityPools() {
       .removeLiquidity(tokenA, tokenB, LiquidityAmount, 0, 0, accounts[0], start.toString())
       .send({ from: accounts[0] });
   }
+  //----->
 
+  //*first input value sends to smartContract
   async function addLiquidity(tokenA, tokenB, supplyToken, supplyTokenQtty) {
+    // console.log('addLiquiditytokenA', tokenA)
+    // console.log('addLiquiditytokenB', tokenB)
+    // console.log('addLiquiditysupplyToken', supplyToken)
+    // console.log('addLiquiditysupplyTokenQtty', supplyTokenQtty)
+
     await loadWeb3();
     const web3 = window.web3;
     const accounts = await web3.eth.getAccounts();
@@ -787,6 +796,7 @@ export default function LiquidityPools() {
       .send({ from: accounts[0] });
   }
 
+  //don't need anymore
   async function addLiquidityEth(tokenA, tokenB, ethAmount) {
     await loadWeb3();
     const web3 = window.web3;
@@ -800,6 +810,7 @@ export default function LiquidityPools() {
       .send({ from: accounts[0], value: web3.utils.toWei(ethAmount, 'ether') });
   }
 
+  //*two inputs value send to smartContract
   async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB) {
     const start = parseInt(Date.now() / 1000) + 180;
     await loadWeb3();
@@ -1003,6 +1014,7 @@ export default function LiquidityPools() {
        {/* </ModalContainer>*/}
         {/*Modal is here =====================================>*/}
       </center>
+      {Content}
     </div>
   );
 }

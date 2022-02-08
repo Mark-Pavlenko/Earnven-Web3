@@ -46,11 +46,18 @@ import axios from 'axios';
 import tokenURIs from '../../../screens/Exchange/tokenURIs';
 import TOKENDECIMALSABI from '../../../abi/TokenDecomals.json';
 
-export const LiquidityTableItem = ({ item, index, theme, type }) => {
+export const LiquidityTableItem = ({
+  item,
+  index,
+  theme,
+  type,
+  addLiquidity,
+  addLiquidityNormal,
+}) => {
+  const address = useParams().address;
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedModal, setSelectedModal] = useState('');
-  const [tokenReverses, setTokensReverses] = useState();
-  const address = useParams().address;
 
   const [outValue, setOutValue] = useState('');
   const [inValue, setInValue] = useState('');
@@ -59,16 +66,17 @@ export const LiquidityTableItem = ({ item, index, theme, type }) => {
   const [TokenB, setTokenB] = useState('');
 
   const [tokenAddress, setTokenAddress] = useState('');
+  const [singleTokenValue, setSingleTokenValue] = useState();
 
   const [allTokens, setAllTokens] = useState([]);
-  console.log('allTokens', allTokens);
+  const [inputType, setInputType] = useState('single');
+
   useEffect(() => {
     async function getData() {
       let fetchedTokens;
       await axios.get(`https://api.0x.org/swap/v1/tokens`, {}).then(async (response) => {
         setAllTokens(response.data.records);
         fetchedTokens = response.data.records;
-        console.log('fetchedTokens', fetchedTokens);
       });
       await axios
         .get(`https://tokens.coingecko.com/uniswap/all.json`, {})
@@ -192,52 +200,6 @@ export const LiquidityTableItem = ({ item, index, theme, type }) => {
     }
   }
 
-  async function checkLiquidity() {
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.sushiFactory);
-    var pairAddress = await FactoryContract.methods.getPair(item.token0.id, item.token1.id).call();
-    var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
-    var NewContract = new web3.eth.Contract(
-      ROUTERABI,
-      '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
-    );
-    var reverses = await PairContract.methods.getReserves().call();
-    // console.log('reverses', BigInt(reverses[0]), BigInt(reverses[1]));
-    let out = await NewContract.methods
-      .getAmountsOut(12374646465, [item.token0.id, item.token1.id])
-      .call();
-  }
-
-  async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB) {
-    const start = parseInt(Date.now() / 1000) + 180;
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var tokenAContract = new web3.eth.Contract(ERC20ABI, tokenA);
-    var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
-    await tokenAContract.methods
-      .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenA, 'ether'))
-      .send({ from: accounts[0] });
-    await tokenBContract.methods
-      .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenB, 'ether'))
-      .send({ from: accounts[0] });
-    const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.sushiRouter);
-    await UniRouter.methods
-      .addLiquidity(
-        tokenA,
-        tokenB,
-        web3.utils.toWei(amountTokenA, 'ether'),
-        web3.utils.toWei(amountTokenB, 'ether'),
-        0,
-        0,
-        accounts[0],
-        start.toString()
-      )
-      .send({ from: accounts[0] });
-  }
-
   const convertTokenPrice = async (inputId, value, token1, token2) => {
     console.log('TOKENaddresses1', token1);
     console.log('TOKENaddresses2', token2);
@@ -325,21 +287,39 @@ export const LiquidityTableItem = ({ item, index, theme, type }) => {
       ROUTERABI,
       '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
     );
+    if (tokenAddress !== token1) {
+      const convertedValue1 = await NewContract.methods
+        .getAmountsOut((tokenValueHalf * 10 ** tokenDecimal).toString(), [tokenAddress, token1])
+        .call();
 
-    const convertedValue1 = await NewContract.methods
-      .getAmountsOut((tokenValueHalf * 10 ** tokenDecimal).toString(), [tokenAddress, token1])
-      .call();
+      setInValue(+convertedValue1[1] / 10 ** tokenDecimalPair1);
+    } else {
+      setInValue(tokenValueHalf.toString());
+    }
 
-    setInValue(+convertedValue1[1] / 10 ** tokenDecimalPair1);
+    if (tokenAddress !== token2) {
+      const convertedValue2 = await NewContract.methods
+        .getAmountsOut((tokenValueHalf * 10 ** tokenDecimal).toString(), [tokenAddress, token2])
+        .call();
 
-    const convertedValue2 = await NewContract.methods
-      .getAmountsOut((tokenValueHalf * 10 ** tokenDecimal).toString(), [tokenAddress, token2])
-      .call();
+      setOutValue(+convertedValue2[1] / 10 ** tokenDecimalPair2);
+    } else {
+      setOutValue(tokenValueHalf.toString());
+    }
+  };
 
-    setOutValue(+convertedValue2[1] / 10 ** tokenDecimalPair2);
-
-    console.log('ToPairResult1', convertedValue1);
-    console.log('ToPairResult2', convertedValue2);
+  const inputsHandler = () => {
+    switch (inputType) {
+      case 'single':
+        return addLiquidity(
+          item.token0.id,
+          item.token1.id,
+          tokenAddress,
+          (singleTokenValue * 10 ** 18).toString()
+        );
+      case 'pair':
+        console.log('PAIRtype');
+    }
   };
 
   return (
@@ -362,16 +342,19 @@ export const LiquidityTableItem = ({ item, index, theme, type }) => {
             />
             <InputBlock>
               <ModalInput
+                value={singleTokenValue}
                 type="number"
                 onChange={(e) => {
                   addLiquidityToPair(item.token0.id, item.token1.id, e.target.value);
+                  setSingleTokenValue(e.target.value);
+                  setInputType('single');
                 }}
               />
               <Balance>{`Balance: ${5}`}</Balance>
             </InputBlock>
-            <ButtonsBlock>
-              <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>
-            </ButtonsBlock>
+            {/*<ButtonsBlock>*/}
+            {/*  <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>*/}
+            {/*</ButtonsBlock>*/}
             <ButtonsBlock>
               <ChangeToken>{'Or'}</ChangeToken>
             </ButtonsBlock>
@@ -394,10 +377,12 @@ export const LiquidityTableItem = ({ item, index, theme, type }) => {
                     item.token0.id,
                     item.token1.id
                   );
+                  setInputType('pair');
                 }}
                 type="number"
                 onFocus={() => {
                   setOutValue('');
+                  setSingleTokenValue('');
                 }}
               />
               <Balance>{`Balance: ${5}`}</Balance>
@@ -421,10 +406,12 @@ export const LiquidityTableItem = ({ item, index, theme, type }) => {
                     item.token0.id,
                     item.token1.id
                   );
+                  setInputType('pair');
                 }}
                 type="number"
                 onFocus={() => {
                   setInValue('');
+                  setSingleTokenValue('');
                 }}
               />
               <Balance>{`Balance: ${5}`}</Balance>
@@ -437,10 +424,7 @@ export const LiquidityTableItem = ({ item, index, theme, type }) => {
               <ModalLinkRight href={'#'}>ddd</ModalLinkRight>
             </LinksContainer>
             <ButtonsBlock>
-              <SupplyTokenButton
-                onClick={() => {
-                  addLiquidityNormal(item.token0.id, item.token1.id, TokenA, TokenB);
-                }}>{`Supply tokens`}</SupplyTokenButton>
+              <SupplyTokenButton onClick={inputsHandler}>{`Supply tokens`}</SupplyTokenButton>
             </ButtonsBlock>
           </SelectWrapper>
         </ModalContainer>
@@ -514,3 +498,5 @@ export const LiquidityTableItem = ({ item, index, theme, type }) => {
     </>
   );
 };
+
+//(SupplyTokenAmount * 10 ** 18).toString()    --First input value. We send it as (1 * 10 ** 18).toString()
