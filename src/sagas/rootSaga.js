@@ -28,6 +28,7 @@ import { getCurrentTokenDataSagaWatcher } from './currentTokenData';
 import { getCurrentTokenTransactionsSagaWatcher } from './currentTokenTransactions';
 import { getWalletDataSagaWatcher } from './currentWalletData';
 import { getTokenPriceHistorySagaWatcher } from './currentTokenPriceHistory';
+import { getCurveLPTokenSagaWatcher } from './curveLpToken';
 export default function* watchRootSaga() {
   yield all([
     call(getAccountBalanceSagaWatcher),
@@ -58,5 +59,6 @@ export default function* watchRootSaga() {
     call(getCurrentTokenTransactionsSagaWatcher),
     call(getWalletDataSagaWatcher),
     call(getTokenPriceHistorySagaWatcher),
+    call(getCurveLPTokenSagaWatcher),
   ]);
 }

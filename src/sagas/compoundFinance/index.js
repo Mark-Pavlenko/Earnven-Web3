@@ -42,38 +42,41 @@ function* compoundTokenSagaWorker(compTokenAttributes) {
   //setcompTokenImageUrl(compTokenData.cTokenImageUrl);
   //call the below function to get the SNX collateral value
   compSavingTokenData = yield call(API.getCompTokenSavingsData, compTokenParams.accountAddress);
-  if (compSavingTokenData.data.accounts[0].tokens.length > 0) {
-    for (let i = 0; i < compSavingTokenData.data.accounts[0].tokens.length; i++) {
-      let object = {};
-      let cTokenData = compSavingTokenData.data.accounts[0].tokens[i];
-      if (parseFloat(cTokenData.supply_balance_underlying.value) > 0.0001) {
-        //get underlying data for the given cToken by calling the compound API
-        let underlyingTokenDataAPI = yield call(API.getCompUnderlyingAPIData, cTokenData.address);
-        if (underlyingTokenDataAPI) {
-          underlyingTokenData = underlyingTokenDataAPI.data.cToken[0];
-        }
-        //set the Comp address if not provided by the API
-        if (underlyingTokenData.underlying_address == null) {
-          if (underlyingTokenData.symbol === 'cETH') {
-            underlyingTokenData.underlying_address = '0xc00e94cb662c3520282e6f5717214004a7f26888';
+  console.log('TestComp savings token data', compSavingTokenData);
+  if (compSavingTokenData.data.accounts.length > 0) {
+    if (compSavingTokenData.data.accounts[0].tokens.length > 0) {
+      for (let i = 0; i < compSavingTokenData.data.accounts[0].tokens.length; i++) {
+        let object = {};
+        let cTokenData = compSavingTokenData.data.accounts[0].tokens[i];
+        if (parseFloat(cTokenData.supply_balance_underlying.value) > 0.0001) {
+          //get underlying data for the given cToken by calling the compound API
+          let underlyingTokenDataAPI = yield call(API.getCompUnderlyingAPIData, cTokenData.address);
+          if (underlyingTokenDataAPI) {
+            underlyingTokenData = underlyingTokenDataAPI.data.cToken[0];
+          }
+          //set the Comp address if not provided by the API
+          if (underlyingTokenData.underlying_address == null) {
+            if (underlyingTokenData.symbol === 'cETH') {
+              underlyingTokenData.underlying_address = '0xc00e94cb662c3520282e6f5717214004a7f26888';
+            }
+          }
+          if (underlyingTokenData) {
+            compCoinData = yield call(API.getCompCoinData, underlyingTokenData.underlying_address);
+          }
+          if (compCoinData) {
+            object.symbol = underlyingTokenData.underlying_symbol;
+            object.balance = parseFloat(cTokenData.supply_balance_underlying.value).toFixed(2);
+            object.price = compCoinData.cTokenPrice;
+            object.tokenImage = compCoinData.cTokenImageUrl;
+            object.value = parseFloat(object.balance * object.price).toFixed(2);
+            object.apy = parseFloat(underlyingTokenData.supply_rate.value * 100).toFixed(4);
+            totalValue += parseFloat(object.value);
+            compArrayOfData.push(object);
           }
         }
-        if (underlyingTokenData) {
-          compCoinData = yield call(API.getCompCoinData, underlyingTokenData.underlying_address);
-        }
-        if (compCoinData) {
-          object.symbol = underlyingTokenData.underlying_symbol;
-          object.balance = parseFloat(cTokenData.supply_balance_underlying.value).toFixed(2);
-          object.price = compCoinData.cTokenPrice;
-          object.tokenImage = compCoinData.cTokenImageUrl;
-          object.value = parseFloat(object.balance * object.price).toFixed(2);
-          object.apy = parseFloat(underlyingTokenData.supply_rate.value * 100).toFixed(4);
-          totalValue += parseFloat(object.value);
-          compArrayOfData.push(object);
-        }
-      }
-    } //end of for loop
-    yield put(actions.getCompTokenData(compArrayOfData));
-    yield put(actions.getCompTokenTotal(totalValue));
-  } //end of if condition
+      } //end of for loop
+      yield put(actions.getCompTokenData(compArrayOfData));
+      yield put(actions.getCompTokenTotal(totalValue));
+    } //end of if condition
+  }
 }
