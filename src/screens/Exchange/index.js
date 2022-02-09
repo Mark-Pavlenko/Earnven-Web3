@@ -795,6 +795,7 @@ export default function SwapComponent() {
                                     <Avatar
                                       style={{
                                         // marginLeft: '4px',
+                                        marginLeft: '12px',
                                         marginRight: '12px',
                                         marginTop: '2px',
                                       }}
