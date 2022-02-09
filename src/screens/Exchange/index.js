@@ -254,16 +254,8 @@ export default function SwapComponent() {
   const [isSendTokensModalVisible, setIsSendTokensModalVisible] = useState(false);
   const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
 
-  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
-  const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
-  const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  console.log('Redux-sagas Send Final Tokens List', finalSendTokensList);
-  console.log('Redux-sagas Receive Final Tokens List', finalReceiveTokensList);
+  // let filteredData;
+  const [filteredData, setFilteredData] = useState([]);
 
   useEffect(async () => {
     try {
@@ -280,6 +272,13 @@ export default function SwapComponent() {
       console.log(error);
     }
   }, []);
+
+  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
+  const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
+  const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
+
+  console.log('Redux-sagas Send Final Tokens List', finalSendTokensList);
+  console.log('Redux-sagas Receive Final Tokens List', finalReceiveTokensList);
 
   useEffect(async () => {
     await axios.get(`https://cdn.furucombo.app/furucombo.tokenlist.json`).then(async (response) => {
@@ -303,9 +302,6 @@ export default function SwapComponent() {
     const timeOutId = setTimeout(() => calculateToAmount(sendTokenForExchangeAmount), 500);
     return () => clearTimeout(timeOutId);
   }, [sendTokenForExchangeAmount]);
-
-  // let filteredData;
-  const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
     finalSendTokensList.length !== 0 && setFilteredData(finalSendTokensList);
@@ -518,6 +514,10 @@ export default function SwapComponent() {
   const [AllTokens, setAllTokens] = useState([]);
   const [TokenFrom, setTokenFrom] = useState('ETH');
   const [TokenFromAmount, setTokenFromAmount] = useState();
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   const fromTokenChange = (value) => {
     setTokenFrom(value);

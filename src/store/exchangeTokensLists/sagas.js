@@ -10,7 +10,7 @@ export function* getSendTokensListSagaWatcher() {
 }
 
 function* getSendTokensListSagaWorker(accountAddress) {
-  console.log('getSendTokensListSagaWorker', accountAddress);
+  // console.log('getSendTokensListSagaWorker', accountAddress);
   const addressInfoData = yield call(API.getAddressInfo, accountAddress.payload);
   // console.log('only addressInfoData', addressInfoData.data);
   const zeroAPISwapTokensList = yield call(API.getZeroAPITokensList);
@@ -52,7 +52,7 @@ function* getSendTokensListSagaWorker(accountAddress) {
     zeroAPISwapTokensList.find((zeroToken) => walletToken.symbol === zeroToken.symbol)
   );
 
-  console.log('first sagas sendTokensList', sendTokensList);
+  // console.log('first sagas sendTokensList', sendTokensList);
 
   yield put(actions.getSendTokensList(sendTokensList));
 }
@@ -63,10 +63,10 @@ export function* getReceiveTokensListSagaWatcher() {
 
 function* getReceiveTokensListSagaWorker() {
   const zeroAPISwapTokensList = yield call(API.getZeroAPITokensList);
-  console.log('sagas zeroAPITokensList', zeroAPISwapTokensList);
+  // console.log('sagas zeroAPITokensList', zeroAPISwapTokensList);
 
   const uniswapFullCoinsList = yield call(API.getUniswapFullCoinsList);
-  console.log('uniswapFullCoinsList sagas', uniswapFullCoinsList);
+  // console.log('uniswapFullCoinsList sagas', uniswapFullCoinsList);
 
   let result = zeroAPISwapTokensList.map((token) => ({
     ...token,
