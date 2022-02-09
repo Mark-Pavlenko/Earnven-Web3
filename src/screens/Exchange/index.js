@@ -131,6 +131,7 @@ import searchIcon from '../../assets/icons/searchIconLight.png';
 import SearchIcon from '@mui/icons-material/Search';
 import { TokensListTextField } from '../../components/searchTokens/styles';
 import actionTypes from '../../constants/actionTypes';
+import { tokensListReducer } from '../../store/exchangeTokensLists/reducer';
 
 const useStyles = makeStyles((theme) => ({
   addIcon: {
@@ -257,6 +258,10 @@ export default function SwapComponent() {
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
+  //equal to raw tokens arr of objects
+  const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
+  const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
+
   const [isSendTokensModalVisible, setIsSendTokensModalVisible] = useState(false);
   const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
 
@@ -266,32 +271,19 @@ export default function SwapComponent() {
     setValue(newValue);
   };
 
-  //equal to raw tokens arr of objects
-  const finalSendTokensList = useSelector(
-    (state) => state.addressInfoDataReducer.addressInfoDataObject
-  );
-
-  console.log('Redux-sagas Send Tokens List', finalSendTokensList);
+  console.log('Redux-sagas Send Final Tokens List', finalSendTokensList);
+  console.log('Redux-sagas Receive Final Tokens List', finalReceiveTokensList);
 
   useEffect(async () => {
     //triggered saga to get send tokens list from user`s wallet
-    const getSendTokensListFunction = () => {
-      try {
-        dispatch({ type: actionTypes.SET_SEND_TOKENS_LIST, payload: address });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    await getSendTokensListFunction();
-
-    const getReceiveTokensListFunction = () => {
-      try {
-        dispatch({ type: actionTypes.SET_RECEIVE_TOKENS_LIST });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    await getReceiveTokensListFunction();
+    // const getSendTokensListFunction = () => {
+    try {
+      dispatch({ type: actionTypes.SET_SEND_TOKENS_LIST, payload: address });
+    } catch (error) {
+      console.log(error);
+    }
+    // };
+    // await getSendTokensListFunction();
 
     ///--0x API convertation
     // async function getData() {
@@ -318,6 +310,14 @@ export default function SwapComponent() {
     //     });
     // }
     // getData();
+  }, []);
+
+  useEffect(() => {
+    try {
+      dispatch({ type: actionTypes.SET_RECEIVE_TOKENS_LIST });
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   useEffect(async () => {

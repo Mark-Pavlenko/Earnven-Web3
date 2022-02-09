@@ -6,10 +6,11 @@ import ethImage from '../../assets/icons/eth.png';
 import { getUniswapFullCoinsList } from '../../api/api';
 
 export function* getSendTokensListSagaWatcher() {
-  yield takeEvery(actionTypes.SET_SEND_TOKENS_LIST, getSendTokensListSagaWorker);
+  yield takeLatest(actionTypes.SET_SEND_TOKENS_LIST, getSendTokensListSagaWorker);
 }
 
 function* getSendTokensListSagaWorker(accountAddress) {
+  console.log('getSendTokensListSagaWorker', accountAddress);
   const addressInfoData = yield call(API.getAddressInfo, accountAddress.payload);
   // console.log('only addressInfoData', addressInfoData.data);
   const zeroAPISwapTokensList = yield call(API.getZeroAPITokensList);
@@ -53,11 +54,11 @@ function* getSendTokensListSagaWorker(accountAddress) {
 
   console.log('first sagas sendTokensList', sendTokensList);
 
-  yield put(actions.getAddressInfoData(sendTokensList));
+  yield put(actions.getSendTokensList(sendTokensList));
 }
 
 export function* getReceiveTokensListSagaWatcher() {
-  yield takeEvery(actionTypes.SET_RECEIVE_TOKENS_LIST, getReceiveTokensListSagaWorker);
+  yield takeLatest(actionTypes.SET_RECEIVE_TOKENS_LIST, getReceiveTokensListSagaWorker);
 }
 
 function* getReceiveTokensListSagaWorker() {
@@ -67,15 +68,14 @@ function* getReceiveTokensListSagaWorker() {
   const uniswapFullCoinsList = yield call(API.getUniswapFullCoinsList);
   console.log('uniswapFullCoinsList sagas', uniswapFullCoinsList);
 
-  let data = uniswapFullCoinsList.tokens;
   let result = zeroAPISwapTokensList.map((token) => ({
     ...token,
-    logoURI: data.find((x) => x.address === token.address)
-      ? data.find((x) => x.address === token.address).logoURI
+    logoURI: uniswapFullCoinsList.tokens.find((x) => x.address === token.address)
+      ? uniswapFullCoinsList.tokens.find((x) => x.address === token.address).logoURI
       : null,
   }));
 
-  console.log('middle receive list result sagas', result);
+  // console.log('middle receive list result sagas', result);
 
-  // yield put(actions.getAddressInfoData(sendTokensList));
+  yield put(actions.getReceiveTokensList(result));
 }

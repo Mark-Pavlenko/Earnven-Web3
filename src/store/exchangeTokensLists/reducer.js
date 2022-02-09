@@ -1,15 +1,23 @@
-import GET_SEND_TOKENS_LIST from '../../constants/actionTypes';
+import actionTypes from '../../constants/actionTypes';
 
 const initialState = {
-  addressInfoDataObject: [],
+  sendTokensList: [],
+  receiveTokensList: [],
 };
-
-export const addressInfoDataReducer = (state = initialState, action) => {
-  // console.log('exchangeTokensLists payload reducer', action?.payload);
+//takes two arguments: The current state and the action and returns the new state.
+export const tokensListReducer = (state = initialState, action) => {
+  console.log('action payload tokens list reducer', action?.payload);
   switch (action.type) {
-    case GET_SEND_TOKENS_LIST:
+    case actionTypes.GET_SEND_TOKENS_LIST:
       return {
-        addressInfoDataObject: action?.payload,
+        ...state,
+        sendTokensList: action?.payload,
+      };
+    case actionTypes.GET_RECEIVE_TOKENS_LIST:
+      return {
+        ...state,
+        receiveTokensList: action?.payload,
+        // curveLpTokenImages: [...state.curveLpTokenImages, action?.payload].flat(),
       };
     default:
       return state;
