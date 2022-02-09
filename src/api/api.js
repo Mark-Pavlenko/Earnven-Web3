@@ -35,6 +35,11 @@ export const getAddressInfo = async (accountAddress) => {
   );
 };
 
+export const getZeroAPITokensList = async () => {
+  const rawZeroAPITokensList = await axios.get(`https://api.0x.org/swap/v1/tokens`);
+  return rawZeroAPITokensList.data.records;
+};
+
 export const getTwitterPosts = async (attributes) => {
   const streamURL = `https://cmctoken-proxy.herokuapp.com/https://api.twitter.com/2/tweets/search/recent?query=from%3A${attributes.userTwitterId}&max_results=${attributes.count}&expansions=author_id,referenced_tweets.id,attachments.media_keys,entities.mentions.username,referenced_tweets.id.author_id&tweet.fields=id,created_at,text,author_id,attachments,public_metrics,source,context_annotations,entities&user.fields=id,name,username,profile_image_url,url,pinned_tweet_id,public_metrics&media.fields=preview_image_url,url,public_metrics`;
   return await axios.get(streamURL, { headers });

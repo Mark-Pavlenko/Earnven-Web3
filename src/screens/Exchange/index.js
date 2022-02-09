@@ -233,7 +233,7 @@ export default function SwapComponent() {
   const [TokenFromAmount, setTokenFromAmount] = useState();
   const [TokenToAmount, setTokenToAmount] = useState();
   const [Slippage, setSlippage] = useState(2);
-  const [allTokens, setAllTokens] = useState([]);
+  // const [allTokens, setAllTokens] = useState([]);
   const [Sources, setSources] = useState([]);
   const [open, setOpen] = useState(false);
   const [protocolsRateList, setprotocolsRateList] = useState([]);
@@ -246,6 +246,7 @@ export default function SwapComponent() {
   const [currencyModal, setcurrencyModal] = useState(false);
   const [currencyToModal, setcurrencyToModal] = useState(false);
   const [toTokens, settoTokens] = useState([]);
+  // const [filteredData, setFilteredData] = useState([]);
 
   //test useState
   const [zeroAPITokensList, setZeroAPITokensList] = useState([]);
@@ -262,70 +263,22 @@ export default function SwapComponent() {
   };
 
   //equal to raw tokens arr of objects
-  const UserAddressInfoData = useSelector(
+  const finalSendTokensList = useSelector(
     (state) => state.addressInfoDataReducer.addressInfoDataObject
   );
 
-  console.log('Saga Init Wallet Tokens List', UserAddressInfoData);
+  // console.log('Redux-Saga Send Tokens List', finalSendTokensList);
 
   useEffect(async () => {
-    let zeroAPISwapTokensList = [];
-    await axios.get('https://api.0x.org/swap/v1/tokens').then((res) => {
-      console.log('0x res.data.records', res.data.records);
-      zeroAPISwapTokensList = res.data.records;
-    });
-
-    //triggered saga to get address info data
-    const getAddressInfoData = async () => {
+    //triggered saga to get send tokens list from user`s wallet
+    const getAddressInfoData = () => {
       try {
         dispatch({ type: actionTypes.SET_ADDRESS_INFO_DATA, payload: address });
       } catch (error) {
         console.log(error);
       }
     };
-    getAddressInfoData();
-
-    await axios
-      .get(`https://api.ethplorer.io/getAddressInfo/${address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`)
-      .then(async (response) => {
-        const walletTokensList = [];
-        if (response.data.ETH.balance !== 0) {
-          const tempObj = {};
-          tempObj.address = '';
-          tempObj.name = 'Ethereum';
-          tempObj.symbol = 'ETH';
-          tempObj.balance = response.data.ETH.balance.toFixed(3).toString();
-          tempObj.logoURI = ethImage;
-          walletTokensList.push(tempObj);
-        }
-        let tokens = response.data.tokens;
-        console.log('raw tokens arr of objects', tokens);
-        for (let i = 0; i < tokens.length; i++) {
-          const tempObj = {};
-          tempObj.address = tokens[i].tokenInfo.address;
-          tempObj.name = tokens[i].tokenInfo.name;
-          tempObj.symbol = tokens[i].tokenInfo.symbol;
-          tempObj.balance = (
-            tokens[i].balance * Math.pow(10, -parseInt(tokens[i].tokenInfo.decimals))
-          )
-            .toFixed(3)
-            .toString();
-          if (tokens[i].tokenInfo.image !== undefined) {
-            tempObj.logoURI = `https://ethplorer.io${tokens[i].tokenInfo.image}`;
-          } else {
-            tempObj.logoURI = null;
-          }
-
-          walletTokensList.push(tempObj);
-        }
-        // console.log('0x API tokens list', zeroAPISwapTokensList);
-        // console.log('not filtered wallet`s tokens list arr', walletTokensList);
-        setAllTokens(
-          walletTokensList.filter((walletToken) =>
-            zeroAPISwapTokensList.find((zeroToken) => walletToken.symbol === zeroToken.symbol)
-          )
-        );
-      });
+    await getAddressInfoData();
 
     ///--0x API convertation
     // async function getData() {
@@ -380,30 +333,61 @@ export default function SwapComponent() {
   //search tokens field functionality
   const [inputText, setInputText] = useState('');
 
-  // console.log('allTokens', allTokens);
+  // let filteredData;
+  const [filteredData, setFilteredData] = useState([]);
+
+  useEffect(() => {
+    finalSendTokensList.length !== 0 && setFilteredData(finalSendTokensList);
+  }, [finalSendTokensList]);
 
   let sendTokensInputHandler = (e) => {
     //convert input text to lower case
     let lowerCase = e.target.value.toLowerCase();
-    setInputText(lowerCase);
+    // setInputText(lowerCase);
+    let filteredSearchTokensList = finalSendTokensList.filter((el) => {
+      if (lowerCase.input === '') {
+        return el;
+      }
+      //return the item which contains the user input
+      else if (el.name !== undefined) {
+        // console.log('inputText.input', inputText);
+        // console.log('el.name', el.name);
+
+        return el.name.toLowerCase().includes(lowerCase);
+      } else {
+        // console.log('undef el', el);
+      }
+    });
+    setFilteredData(filteredSearchTokensList);
   };
 
-  const filteredData = allTokens.filter((el) => {
-    if (inputText.input === '') {
-      return el;
-    }
-    //return the item which contains the user input
-    else if (el.name !== undefined) {
-      // console.log('inputText.input', inputText);
-      // console.log('el.name', el.name);
+  // useEffect(() => {
+  //   setFilteredData(finalSendTokensList);
+  // }, []);
 
-      return el.name.toLowerCase().includes(inputText);
-    } else {
-      // console.log('undef el', el);
-    }
-  });
-
+  // console.log('allTokens', allTokens);
+  console.log('finalSendTokensList', finalSendTokensList);
   console.log('filteredData', filteredData);
+  //
+
+  // useEffect(() => {
+  //   // Object.keys(finalSendTokensList).length !== 0 &&
+  //   let test = finalSendTokensList.filter((el) => {
+  //     if (inputText.input === '') {
+  //       return el;
+  //     }
+  //     //return the item which contains the user input
+  //     else if (el.name !== undefined) {
+  //       // console.log('inputText.input', inputText);
+  //       // console.log('el.name', el.name);
+  //
+  //       return el.name.toLowerCase().includes(inputText);
+  //     } else {
+  //       // console.log('undef el', el);
+  //     }
+  //   });
+  //   setFilteredData(test);
+  // }, [finalSendTokensList]);
 
   async function loadWeb3() {
     if (window.ethereum) {
@@ -635,12 +619,16 @@ export default function SwapComponent() {
                     <OutsideClickHandler
                       onOutsideClick={() => {
                         setIsSendTokensModalVisible(false);
+                        setFilteredData(finalSendTokensList);
                       }}>
                       <TokensModalSubLayout isLightTheme={isLightTheme}>
                         <Header>
                           <ModalTitle isLightTheme={isLightTheme}>Select token</ModalTitle>
                           <CloseButton
-                            onClick={() => setIsSendTokensModalVisible(false)}
+                            onClick={() => {
+                              setIsSendTokensModalVisible(false);
+                              setFilteredData(finalSendTokensList);
+                            }}
                             isLightTheme={isLightTheme}>
                             <img
                               src={isLightTheme ? closeModalIcon : closeModalIconDark}
@@ -1039,84 +1027,84 @@ export default function SwapComponent() {
                               Token List aboba
                             </Typography>
                             <Divider variant="fullWidth" sx={{ mt: 3 }} />
-                            {allTokens.map((object) => (
-                              <Box>
-                                <Box
-                                  onClick={() => {
-                                    fromTokenChange(object.symbol);
-                                    setcurrencyModal(false);
-                                  }}
-                                  sx={{
-                                    mt: 1,
-                                    p: 1,
-                                    cursor: 'pointer',
-                                    '&:hover': {
-                                      // background: (theme) => (theme.palette.gradients.custom)
-                                    },
-                                  }}>
-                                  <Stack direction="row" spacing={2}>
-                                    <Box sx={{ marginTop: '5px' }}>
-                                      {object.logoURI !== null ? (
-                                        <img
-                                          alt=""
-                                          width="30"
-                                          height="30"
-                                          src={object.logoURI}
-                                          style={{
-                                            borderRadius: '50%',
-                                            backgroundColor: '#e5e5e5',
-                                          }}
-                                        />
-                                      ) : (
-                                        <Avatar
-                                          style={{
-                                            display: 'inline',
-                                            maxWidth: '30px',
-                                            verticalAlign: 'top',
-                                            height: '30px',
-                                            // marginLeft: '11px',
-                                          }}
-                                          color={'#737373'}
-                                          name={object.name}
-                                          round={true}
-                                          size="30"
-                                          textSizeRatio={1}
-                                        />
-                                      )}
-                                    </Box>
-                                    <Stack direction="column">
-                                      <Typography variant="body1" sx={{ color: '#e3e3e3' }}>
-                                        {object.symbol}
-                                      </Typography>
-                                      <Typography
-                                        variant="caption"
-                                        sx={{
-                                          color: '#e3e3e3',
-                                          fontSize: '11px',
-                                        }}>
-                                        {object.name}
-                                      </Typography>
-                                    </Stack>
-                                    <Box sx={{ flexGrow: 1 }}></Box>
-                                    <Box sx={{ marginTop: '5px' }}>
-                                      <Typography>
-                                        {object.balance === undefined ? (
-                                          <Loader
-                                            type="Rings"
-                                            color="#BB86FC"
-                                            height={30}
-                                            width={30}
-                                          />
-                                        ) : (
-                                          object.balance
-                                        )}
-                                      </Typography>
-                                    </Box>
-                                  </Stack>
-                                </Box>
-                                {/* <Divider variant='fullWidth' sx={{  }}></Divider> */}
-                              </Box>
-                            ))}
+                            {/*{finalSendTokensList.map((object) => (*/}
+                            {/*  <Box>*/}
+                            {/*    <Box*/}
+                            {/*      onClick={() => {*/}
+                            {/*        fromTokenChange(object.symbol);*/}
+                            {/*        setcurrencyModal(false);*/}
+                            {/*      }}*/}
+                            {/*      sx={{*/}
+                            {/*        mt: 1,*/}
+                            {/*        p: 1,*/}
+                            {/*        cursor: 'pointer',*/}
+                            {/*        '&:hover': {*/}
+                            {/*          // background: (theme) => (theme.palette.gradients.custom)*/}
+                            {/*        },*/}
+                            {/*      }}>*/}
+                            {/*      <Stack direction="row" spacing={2}>*/}
+                            {/*        <Box sx={{ marginTop: '5px' }}>*/}
+                            {/*          {object.logoURI !== null ? (*/}
+                            {/*            <img*/}
+                            {/*              alt=""*/}
+                            {/*              width="30"*/}
+                            {/*              height="30"*/}
+                            {/*              src={object.logoURI}*/}
+                            {/*              style={{*/}
+                            {/*                borderRadius: '50%',*/}
+                            {/*                backgroundColor: '#e5e5e5',*/}
+                            {/*              }}*/}
+                            {/*            />*/}
+                            {/*          ) : (*/}
+                            {/*            <Avatar*/}
+                            {/*              style={{*/}
+                            {/*                display: 'inline',*/}
+                            {/*                maxWidth: '30px',*/}
+                            {/*                verticalAlign: 'top',*/}
+                            {/*                height: '30px',*/}
+                            {/*                // marginLeft: '11px',*/}
+                            {/*              }}*/}
+                            {/*              color={'#737373'}*/}
+                            {/*              name={object.name}*/}
+                            {/*              round={true}*/}
+                            {/*              size="30"*/}
+                            {/*              textSizeRatio={1}*/}
+                            {/*            />*/}
+                            {/*          )}*/}
+                            {/*        </Box>*/}
+                            {/*        <Stack direction="column">*/}
+                            {/*          <Typography variant="body1" sx={{ color: '#e3e3e3' }}>*/}
+                            {/*            {object.symbol}*/}
+                            {/*          </Typography>*/}
+                            {/*          <Typography*/}
+                            {/*            variant="caption"*/}
+                            {/*            sx={{*/}
+                            {/*              color: '#e3e3e3',*/}
+                            {/*              fontSize: '11px',*/}
+                            {/*            }}>*/}
+                            {/*            {object.name}*/}
+                            {/*          </Typography>*/}
+                            {/*        </Stack>*/}
+                            {/*        <Box sx={{ flexGrow: 1 }}></Box>*/}
+                            {/*        <Box sx={{ marginTop: '5px' }}>*/}
+                            {/*          <Typography>*/}
+                            {/*            {object.balance === undefined ? (*/}
+                            {/*              <Loader*/}
+                            {/*                type="Rings"*/}
+                            {/*                color="#BB86FC"*/}
+                            {/*                height={30}*/}
+                            {/*                width={30}*/}
+                            {/*              />*/}
+                            {/*            ) : (*/}
+                            {/*              object.balance*/}
+                            {/*            )}*/}
+                            {/*          </Typography>*/}
+                            {/*        </Box>*/}
+                            {/*      </Stack>*/}
+                            {/*    </Box>*/}
+                            {/*    /!* <Divider variant='fullWidth' sx={{  }}></Divider> *!/*/}
+                            {/*  </Box>*/}
+                            {/*))}*/}
                           </Box>
                         </Modal>
                       </Stack>

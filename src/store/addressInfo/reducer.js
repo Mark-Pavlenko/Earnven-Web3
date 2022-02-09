@@ -1,7 +1,7 @@
 import GET_ADDRESS_INFO_DATA from '../../constants/actionTypes';
 
 const initialState = {
-  addressInfoDataObject: {},
+  addressInfoDataObject: [],
 };
 
 export const addressInfoDataReducer = (state = initialState, action) => {
