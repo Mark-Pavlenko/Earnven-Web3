@@ -255,7 +255,51 @@ export default function SwapComponent() {
   const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
 
   // let filteredData;
+  // const [filteredSendTokensListData, setFilteredSendTokensListData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [filteredReceiveTokensListData, setFilteredReceiveTokensListData] = useState([]);
+
+  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
+  const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
+  const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
+
+  useEffect(() => {
+    finalSendTokensList.length !== 0 && setFilteredData(finalSendTokensList);
+    // finalReceiveTokensList.length !== 0 && setFilteredReceiveTokensListData(finalReceiveTokensList);
+  }, [finalSendTokensList]);
+
+  let sendTokensInputHandler = (e) => {
+    //convert input text to lower case
+    let lowerCase = e.target.value.toLowerCase();
+    let filteredSearchTokensList = finalSendTokensList.filter((el) => {
+      if (lowerCase.input === '') {
+        return el;
+      }
+      //return the item which contains the user input
+      else if (el.name !== undefined) {
+        return el.name.toLowerCase().includes(lowerCase);
+      } else {
+        // console.log('undef el', el);
+      }
+    });
+    setFilteredData(filteredSearchTokensList);
+  };
+
+  let receiveTokensInputHandler = (e) => {
+    //convert input text to lower case
+    let lowerCase = e.target.value.toLowerCase();
+    let filteredSearchTokensList = finalReceiveTokensList.filter((el) => {
+      if (lowerCase.input === '') {
+        return el;
+      }
+      //return the item which contains the user input
+      else if (el.name !== undefined) {
+        return el.name.toLowerCase().includes(lowerCase);
+      } else {
+      }
+    });
+    setFilteredReceiveTokensListData(filteredSearchTokensList);
+  };
 
   useEffect(async () => {
     try {
@@ -272,10 +316,6 @@ export default function SwapComponent() {
       console.log(error);
     }
   }, []);
-
-  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
-  const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
-  const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
 
   console.log('Redux-sagas Send Final Tokens List', finalSendTokensList);
   console.log('Redux-sagas Receive Final Tokens List', finalReceiveTokensList);
@@ -303,27 +343,6 @@ export default function SwapComponent() {
     return () => clearTimeout(timeOutId);
   }, [sendTokenForExchangeAmount]);
 
-  useEffect(() => {
-    finalSendTokensList.length !== 0 && setFilteredData(finalSendTokensList);
-  }, [finalSendTokensList]);
-
-  let sendTokensInputHandler = (e) => {
-    //convert input text to lower case
-    let lowerCase = e.target.value.toLowerCase();
-    let filteredSearchTokensList = finalSendTokensList.filter((el) => {
-      if (lowerCase.input === '') {
-        return el;
-      }
-      //return the item which contains the user input
-      else if (el.name !== undefined) {
-        return el.name.toLowerCase().includes(lowerCase);
-      } else {
-      }
-    });
-    setFilteredData(filteredSearchTokensList);
-  };
-
-  // console.log('finalSendTokensList', finalSendTokensList);
   // console.log('filteredData', filteredData);
 
   async function loadWeb3() {
@@ -710,7 +729,6 @@ export default function SwapComponent() {
                           }}
                           size="small"
                         />
-                        {/* Tokens list for send*/}
                         {filteredData.length !== 0 ? (
                           <SendTokensModalList isLightTheme={isLightTheme}>
                             {filteredData.map((object) => (
@@ -822,7 +840,7 @@ export default function SwapComponent() {
                             Select token to receive UZU
                           </ModalTitle>
                           <CloseButton
-                            onClick={() => setIsSendTokensModalVisible(false)}
+                            onClick={() => setIsReceiveTokensModalVisible(false)}
                             isLightTheme={isLightTheme}>
                             <img
                               src={isLightTheme ? closeModalIcon : closeModalIconDark}
@@ -831,7 +849,7 @@ export default function SwapComponent() {
                           </CloseButton>
                         </Header>
                         <SearchTokensModalTextField
-                          // onChange={receiveTokensInputHandler}
+                          onChange={receiveTokensInputHandler}
                           InputProps={{
                             endAdornment: (
                               <img
@@ -877,14 +895,19 @@ export default function SwapComponent() {
                           }}
                           size="small"
                         />
-                        {/* Tokens list for send*/}
-                        {filteredData.length !== 0 ? (
+                        {/* Tokens list for receive*/}
+                        {filteredReceiveTokensListData.length !== 0 ? (
                           <SendTokensModalList isLightTheme={isLightTheme}>
-                            {filteredData.map((object) => (
+                            {finalReceiveTokensList.map((object) => (
                               <SendTokenModalListItem
                                 onClick={() => {
-                                  selectSendTokenForExchange(object.symbol);
-                                  setIsSendTokensModalVisible(false);
+                                  selectSendTokenForExchange({
+                                    symbol: object.symbol,
+                                    logoURI: object.logoURI,
+                                    avatarIcon: object.name,
+                                    selectedForExchangeValue: 0,
+                                  });
+                                  setIsReceiveTokensModalVisible(false);
                                 }}
                                 isLightTheme={isLightTheme}>
                                 <SendTokenLabelsBlock>
@@ -893,7 +916,7 @@ export default function SwapComponent() {
                                   ) : (
                                     <Avatar
                                       style={{
-                                        // marginLeft: '4px',
+                                        marginLeft: '12px',
                                         marginRight: '12px',
                                         marginTop: '2px',
                                       }}
@@ -912,13 +935,6 @@ export default function SwapComponent() {
                                     </SendTokenConvertedMeasures>
                                   </div>
                                 </SendTokenLabelsBlock>
-                                <SendTokenBalance isLightTheme={isLightTheme}>
-                                  {object.balance === undefined ? (
-                                    <Loader type="Rings" color="#BB86FC" height={30} width={30} />
-                                  ) : (
-                                    <span>${object.balance}</span>
-                                  )}
-                                </SendTokenBalance>
                               </SendTokenModalListItem>
                             ))}
                           </SendTokensModalList>
