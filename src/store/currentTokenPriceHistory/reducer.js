@@ -5,7 +5,7 @@ import {
 } from '../../constants/actionTypes';
 
 const initialState = {
-  tokenPriceHistory: [],
+  tokenPriceHistory: null,
   error: '',
   isLoading: false,
 };

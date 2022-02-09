@@ -189,7 +189,7 @@ export default class DarkThemeChart extends Component {
             fontSize: '26px',
             fontWeight: 600,
             fontFamily: 'saira',
-            color: '#00DFD1',
+            color: parseFloat(this.props.difValue) < 0 ? '#EC3D3D' : '#00DFD1',
           },
         },
         noData: {
@@ -217,6 +217,7 @@ export default class DarkThemeChart extends Component {
     if (this.props.tokenPriceHistory !== prevProps.tokenPriceHistory) {
       this.getTokenChartHistory();
     }
+    console.log(this.props.difValue);
     if (
       this.state.options.subtitle.text !== this.props.difValue ||
       this.state.options.title.text !== this.props.totalValue
@@ -234,6 +235,10 @@ export default class DarkThemeChart extends Component {
               ...this.state.options.subtitle,
               text: this.props.difValue,
               offsetX: this.props.totalValue.split('').length * 21 + 10,
+              style: {
+                ...this.state.options.subtitle.style,
+                color: parseFloat(this.props.difValue) < 0 ? '#EC3D3D' : '#00DFD1',
+              },
             },
           },
         };
@@ -348,7 +353,7 @@ export default class DarkThemeChart extends Component {
     return (
       <div className="chart-wrapper" style={{ background: 'transparent', boxShadow: 'none' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <div className="net-worth">Net worth</div>
+          {/*<div className="net-worth">Net worth</div>*/}
           <div>
             <button
               id="one_hour"

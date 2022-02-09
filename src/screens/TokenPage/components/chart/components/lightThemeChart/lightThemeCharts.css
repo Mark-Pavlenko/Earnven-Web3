@@ -59,15 +59,6 @@ svg:not(:root){
     opacity: 0.7;
 }
 
-.net-worth--light {
-    position: absolute;
-    top: 21%;
-    left: 30px;
-    font-size: 10px;
-    color: #1E1E20;
-}
-
-
 .apexcharts-xaxistooltip {
     display: none;
 }
@@ -120,7 +111,7 @@ svg:not(:root){
     mix-blend-mode: normal;
     box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(35px);
-    padding: 25px 30px 30px 30px;
+    padding: 0 0 10px 10px;
 }
 
 @media (max-width: 768px) {
@@ -129,13 +120,15 @@ svg:not(:root){
         flex-direction: column-reverse;
         align-items: center;
         gap: 30px;
-        padding: 25px 30px 30px 30px;
-    }
-    .net-worth--light {
-        top: 13%;
+        padding: 0 0 10px 10px;
     }
 
     .apexcharts-title-text {
         font-size: 26px;
+    }
+}
+@media (max-width: 480px) {
+    .chart-wrapper--light {
+        padding: 20px 0 10px 0;
     }
 }

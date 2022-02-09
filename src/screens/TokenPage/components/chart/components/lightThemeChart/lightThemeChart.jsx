@@ -182,7 +182,7 @@ export default class LightThemeChart extends Component {
             fontSize: '26px',
             fontWeight: 600,
             fontFamily: 'saira',
-            color: '#00DFD1',
+            color: parseFloat(this.props.difValue) < 0 ? '#EC3D3D' : '#00DFD1',
           },
         },
         noData: {
@@ -227,6 +227,10 @@ export default class LightThemeChart extends Component {
               ...this.state.options.subtitle,
               text: this.props.difValue,
               offsetX: this.props.totalValue.split('').length * 21 + 10,
+              style: {
+                ...this.state.options.subtitle.style,
+                color: parseFloat(this.props.difValue) < 0 ? '#EC3D3D' : '#00DFD1',
+              },
             },
           },
         };
@@ -343,7 +347,7 @@ export default class LightThemeChart extends Component {
         className="chart-wrapper--light"
         style={{ background: 'transparent', boxShadow: 'none' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <div className="net-worth--light">Net worth</div>
+          {/*<div className="net-worth--light">Net worth</div>*/}
           <div>
             <button
               id="one_hour"

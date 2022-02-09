@@ -43,11 +43,11 @@ export const Chain = styled.div`
   }
 `;
 
-export const LeftSide = styled.div`
-  width: 404px;
-  display: flex;
-  justify-content: space-between;
-`;
+// export const LeftSide = styled.div`
+//   width: 404px;
+//   display: flex;
+//   justify-content: space-between;
+// `;
 
 export const TokenLinks = styled.div`
   display: flex;
