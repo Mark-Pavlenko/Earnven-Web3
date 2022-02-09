@@ -265,8 +265,8 @@ export default function SwapComponent() {
 
   useEffect(() => {
     finalSendTokensList.length !== 0 && setFilteredData(finalSendTokensList);
-    // finalReceiveTokensList.length !== 0 && setFilteredReceiveTokensListData(finalReceiveTokensList);
-  }, [finalSendTokensList]);
+    finalReceiveTokensList.length !== 0 && setFilteredReceiveTokensListData(finalReceiveTokensList);
+  }, [finalSendTokensList, finalReceiveTokensList]);
 
   let sendTokensInputHandler = (e) => {
     //convert input text to lower case
@@ -342,8 +342,6 @@ export default function SwapComponent() {
     const timeOutId = setTimeout(() => calculateToAmount(sendTokenForExchangeAmount), 500);
     return () => clearTimeout(timeOutId);
   }, [sendTokenForExchangeAmount]);
-
-  // console.log('filteredData', filteredData);
 
   async function loadWeb3() {
     if (window.ethereum) {
@@ -833,6 +831,7 @@ export default function SwapComponent() {
                     <OutsideClickHandler
                       onOutsideClick={() => {
                         setIsReceiveTokensModalVisible(false);
+                        setFilteredReceiveTokensListData(finalReceiveTokensList);
                       }}>
                       <TokensModalSubLayout isLightTheme={isLightTheme}>
                         <Header>
@@ -840,7 +839,10 @@ export default function SwapComponent() {
                             Select token to receive UZU
                           </ModalTitle>
                           <CloseButton
-                            onClick={() => setIsReceiveTokensModalVisible(false)}
+                            onClick={() => {
+                              setIsReceiveTokensModalVisible(false);
+                              setFilteredReceiveTokensListData(finalReceiveTokensList);
+                            }}
                             isLightTheme={isLightTheme}>
                             <img
                               src={isLightTheme ? closeModalIcon : closeModalIconDark}
@@ -898,7 +900,7 @@ export default function SwapComponent() {
                         {/* Tokens list for receive*/}
                         {filteredReceiveTokensListData.length !== 0 ? (
                           <SendTokensModalList isLightTheme={isLightTheme}>
-                            {finalReceiveTokensList.map((object) => (
+                            {filteredReceiveTokensListData.map((object) => (
                               <SendTokenModalListItem
                                 onClick={() => {
                                   selectSendTokenForExchange({
