@@ -31,7 +31,7 @@ function* getAddressInfoDataSagaWorker(accountAddress) {
     walletTokensList.push(tempObj);
   }
   let tokens = addressInfoData.data.tokens;
-  console.log('raw tokens arr of objects', tokens);
+  // console.log('raw tokens arr of objects', tokens);
   for (let i = 0; i < tokens.length; i++) {
     const tempObj = {};
     tempObj.address = tokens[i].tokenInfo.address;

@@ -228,9 +228,13 @@ export default function SwapComponent() {
   const classes = useStyles();
   const { address } = useParams();
   const [value, setValue] = useState(0);
-  const [TokenFrom, setTokenFrom] = useState('ETH');
+  const [sendTokenForExchange, setSendTokenForExchange] = useState({
+    symbol: 'ETH',
+    logoURI: EthIcon,
+    avatarIcon: 'Ethereum',
+  });
   const [TokenTo, setTokenTo] = useState('');
-  const [TokenFromAmount, setTokenFromAmount] = useState();
+  const [sendTokenForExchangeAmount, setSendTokenForExchangeAmount] = useState();
   const [TokenToAmount, setTokenToAmount] = useState();
   const [Slippage, setSlippage] = useState(2);
   // const [allTokens, setAllTokens] = useState([]);
@@ -326,9 +330,9 @@ export default function SwapComponent() {
   }, []);
 
   useEffect(() => {
-    const timeOutId = setTimeout(() => calculateToAmount(TokenFromAmount), 500);
+    const timeOutId = setTimeout(() => calculateToAmount(sendTokenForExchangeAmount), 500);
     return () => clearTimeout(timeOutId);
-  }, [TokenFromAmount]);
+  }, [sendTokenForExchangeAmount]);
 
   //search tokens field functionality
   const [inputText, setInputText] = useState('');
@@ -410,7 +414,7 @@ export default function SwapComponent() {
       let txObject = selectedRate.transactObject;
       txObject.gas = parseInt(txObject.gas) + 100000;
       txObject.from = accounts[0];
-      if (TokenFrom !== 'ETH') {
+      if (sendTokenForExchange.symbol !== 'ETH') {
         const ERC20contract = new web3.eth.Contract(ERC20ABI, txObject.sellTokenAddress);
         await ERC20contract.methods
           .approve(txObject.allowanceTarget, txObject.sellAmount)
@@ -451,12 +455,12 @@ export default function SwapComponent() {
 
   const calculateToAmount = async (tokenFromAmount) => {
     console.log('calculate method called with ammount::', tokenFromAmount);
-    console.log('value of Tokenfromamount::', TokenFromAmount);
-    console.log('value of tokenfrom::', TokenFrom);
+    console.log('value of Tokenfromamount::', sendTokenForExchangeAmount);
+    console.log('value of tokenfrom object::', sendTokenForExchange);
     console.log('value of tokenTo::', TokenTo);
     if (tokenFromAmount > 0) {
       // console.log("calculate amount is called")
-      if (TokenFrom !== '' && TokenTo !== '') {
+      if (sendTokenForExchange.symbol !== '' && TokenTo !== '') {
         let differentQuoteList = [];
         const protocolsList = ['', 'Uniswap', 'Curve', 'SushiSwap', 'Bancor', 'Balancer'];
         let amount = parseFloat(tokenFromAmount) * Math.pow(10, 18);
@@ -466,7 +470,7 @@ export default function SwapComponent() {
           try {
             let protocolQuote = {};
             const response = await axios.get(
-              `https://ropsten.api.0x.org/swap/v1/quote?buyToken=${TokenTo.symbol}&sellToken=${TokenFrom}&sellAmount=${amount}&feeRecipient=0xE609192618aD9aC825B981fFECf3Dfd5E92E3cFB&buyTokenPercentageFee=0.02&includedSources=${protocolsList[i]}`
+              `https://ropsten.api.0x.org/swap/v1/quote?buyToken=${TokenTo.symbol}&sellToken=${sendTokenForExchange.symbol}&sellAmount=${amount}&feeRecipient=0xE609192618aD9aC825B981fFECf3Dfd5E92E3cFB&buyTokenPercentageFee=0.02&includedSources=${protocolsList[i]}`
             );
             console.log(`response for all ${protocolsList[i]}`, response.data);
 
@@ -546,10 +550,10 @@ export default function SwapComponent() {
     }
   };
 
-  const fromTokenChange = (value) => {
-    console.log('selected token value', value);
-    setTokenFrom(value);
-    setTokenFromAmount(0);
+  const selectSendTokenForExchange = (selectSendToken) => {
+    console.log('selected token value object', selectSendToken);
+    setSendTokenForExchange(selectSendToken);
+    setSendTokenForExchangeAmount(0);
     setTokenToAmount(0);
     setprotocolsRateList([]);
     setselectedRate(null);
@@ -558,7 +562,7 @@ export default function SwapComponent() {
 
   const ToTokenChange = (value) => {
     setTokenTo(value);
-    setTokenFromAmount(0);
+    setSendTokenForExchangeAmount(0);
     setTokenToAmount(0);
     setprotocolsRateList([]);
     setselectedRate(null);
@@ -596,8 +600,28 @@ export default function SwapComponent() {
                   isLightTheme={isLightTheme}
                   onClick={() => setIsSendTokensModalVisible(true)}>
                   <ChooseBtnTokenBlock>
-                    <img src={EthIcon} alt="eth_icon" style={{ marginRight: '10px' }} />
-                    <ChosenTokenLabel isLightTheme={isLightTheme}>{TokenFrom}</ChosenTokenLabel>
+                    {sendTokenForExchange.logoURI !== null ? (
+                      <SendTokenImg
+                        alt="token_img"
+                        src={sendTokenForExchange.logoURI}
+                        style={{ marginRight: '10px' }}
+                      />
+                    ) : (
+                      <Avatar
+                        style={{
+                          marginRight: '12px',
+                          marginTop: '2px',
+                        }}
+                        name={sendTokenForExchange.avatarIcon}
+                        round={true}
+                        size="21"
+                        textSizeRatio={1}
+                      />
+                    )}
+
+                    <ChosenTokenLabel isLightTheme={isLightTheme}>
+                      {sendTokenForExchange.symbol}
+                    </ChosenTokenLabel>
                     <img
                       src={isLightTheme ? chevronDownBlack : chevronDownLight}
                       alt="chevron_icon"
@@ -611,7 +635,7 @@ export default function SwapComponent() {
                 {isSendTokensModalVisible && (
                   <SelectTokensModalContainer
                     theme={isLightTheme}
-                    title="Select token"
+                    title="Select token ABA"
                     isOpen={isSendTokensModalVisible}
                     onClose={() => {
                       setIsSendTokensModalVisible(false);
@@ -689,7 +713,11 @@ export default function SwapComponent() {
                             {filteredData.map((object) => (
                               <SendTokenModalListItem
                                 onClick={() => {
-                                  fromTokenChange(object.symbol);
+                                  selectSendTokenForExchange({
+                                    symbol: object.symbol,
+                                    logoURI: object.logoURI,
+                                    avatarIcon: object.name,
+                                  });
                                   setIsSendTokensModalVisible(false);
                                 }}
                                 isLightTheme={isLightTheme}>
@@ -844,7 +872,7 @@ export default function SwapComponent() {
                             {filteredData.map((object) => (
                               <SendTokenModalListItem
                                 onClick={() => {
-                                  fromTokenChange(object.symbol);
+                                  selectSendTokenForExchange(object.symbol);
                                   setIsSendTokensModalVisible(false);
                                 }}
                                 isLightTheme={isLightTheme}>
@@ -1000,7 +1028,7 @@ export default function SwapComponent() {
                             onClick={() => {
                               setcurrencyModal(true);
                             }}>
-                            {TokenFrom}
+                            {sendTokenForExchange.symbol}
                           </Button>
                         </FormControl>
 
@@ -1027,84 +1055,6 @@ export default function SwapComponent() {
                               Token List aboba
                             </Typography>
                             <Divider variant="fullWidth" sx={{ mt: 3 }} />
-                            {/*{finalSendTokensList.map((object) => (*/}
-                            {/*  <Box>*/}
-                            {/*    <Box*/}
-                            {/*      onClick={() => {*/}
-                            {/*        fromTokenChange(object.symbol);*/}
-                            {/*        setcurrencyModal(false);*/}
-                            {/*      }}*/}
-                            {/*      sx={{*/}
-                            {/*        mt: 1,*/}
-                            {/*        p: 1,*/}
-                            {/*        cursor: 'pointer',*/}
-                            {/*        '&:hover': {*/}
-                            {/*          // background: (theme) => (theme.palette.gradients.custom)*/}
-                            {/*        },*/}
-                            {/*      }}>*/}
-                            {/*      <Stack direction="row" spacing={2}>*/}
-                            {/*        <Box sx={{ marginTop: '5px' }}>*/}
-                            {/*          {object.logoURI !== null ? (*/}
-                            {/*            <img*/}
-                            {/*              alt=""*/}
-                            {/*              width="30"*/}
-                            {/*              height="30"*/}
-                            {/*              src={object.logoURI}*/}
-                            {/*              style={{*/}
-                            {/*                borderRadius: '50%',*/}
-                            {/*                backgroundColor: '#e5e5e5',*/}
-                            {/*              }}*/}
-                            {/*            />*/}
-                            {/*          ) : (*/}
-                            {/*            <Avatar*/}
-                            {/*              style={{*/}
-                            {/*                display: 'inline',*/}
-                            {/*                maxWidth: '30px',*/}
-                            {/*                verticalAlign: 'top',*/}
-                            {/*                height: '30px',*/}
-                            {/*                // marginLeft: '11px',*/}
-                            {/*              }}*/}
-                            {/*              color={'#737373'}*/}
-                            {/*              name={object.name}*/}
-                            {/*              round={true}*/}
-                            {/*              size="30"*/}
-                            {/*              textSizeRatio={1}*/}
-                            {/*            />*/}
-                            {/*          )}*/}
-                            {/*        </Box>*/}
-                            {/*        <Stack direction="column">*/}
-                            {/*          <Typography variant="body1" sx={{ color: '#e3e3e3' }}>*/}
-                            {/*            {object.symbol}*/}
-                            {/*          </Typography>*/}
-                            {/*          <Typography*/}
-                            {/*            variant="caption"*/}
-                            {/*            sx={{*/}
-                            {/*              color: '#e3e3e3',*/}
-                            {/*              fontSize: '11px',*/}
-                            {/*            }}>*/}
-                            {/*            {object.name}*/}
-                            {/*          </Typography>*/}
-                            {/*        </Stack>*/}
-                            {/*        <Box sx={{ flexGrow: 1 }}></Box>*/}
-                            {/*        <Box sx={{ marginTop: '5px' }}>*/}
-                            {/*          <Typography>*/}
-                            {/*            {object.balance === undefined ? (*/}
-                            {/*              <Loader*/}
-                            {/*                type="Rings"*/}
-                            {/*                color="#BB86FC"*/}
-                            {/*                height={30}*/}
-                            {/*                width={30}*/}
-                            {/*              />*/}
-                            {/*            ) : (*/}
-                            {/*              object.balance*/}
-                            {/*            )}*/}
-                            {/*          </Typography>*/}
-                            {/*        </Box>*/}
-                            {/*      </Stack>*/}
-                            {/*    </Box>*/}
-                            {/*    /!* <Divider variant='fullWidth' sx={{  }}></Divider> *!/*/}
-                            {/*  </Box>*/}
-                            {/*))}*/}
                           </Box>
                         </Modal>
                       </Stack>
@@ -1117,9 +1067,9 @@ export default function SwapComponent() {
                           variant="outlined"
                           id="outlined-basic"
                           placeholder="00.00"
-                          value={TokenFromAmount}
+                          value={sendTokenForExchangeAmount}
                           onChange={(e) => {
-                            setTokenFromAmount(e.target.value);
+                            setSendTokenForExchangeAmount(e.target.value);
                             // calculateToAmount(e.target.value);
                           }}
                         />
@@ -1188,11 +1138,7 @@ export default function SwapComponent() {
                                   <Stack direction="row" spacing={2}>
                                     <Box sx={{ marginTop: '5px' }}>
                                       {object.logoURI !== null ? (
-                                        <img
-                                          alt=""
-                                          width="30"
-                                          height="30"
-                                          src={object.logoURI}></img>
+                                        <img alt="" width="30" height="30" src={object.logoURI} />
                                       ) : (
                                         <Avatar
                                           style={{
@@ -1246,7 +1192,8 @@ export default function SwapComponent() {
                           onChange={(e) => {
                             setTokenToAmount(e.target.value);
                           }}
-                          disabled></TextField>
+                          disabled
+                        />
                       </Stack>
                     </Stack>
                     {selectedRate !== null && protocolsRateList.length === 0 ? (
@@ -1256,16 +1203,6 @@ export default function SwapComponent() {
                     ) : (
                       <></>
                     )}
-                    {/* <Stack direction='row' sx={{ mt: 2 }}>
-                                {Sources.map((object) =>
-                                    <div>
-                                        <Button variant='contained' color='primary' disabled size='small' sx={{fontSize:'10px'}}>
-                                            {(parseFloat(object.proportion) * 100).toFixed(2)}% {object.name}
-                                        </Button>
-                                        <FaAngleRight style={{ paddingTop: '6px', marginLeft: '1px', color: '#737373' }} />
-                                    </div>
-                                )}
-                            </Stack> */}
                     <Typography variant="body1" sx={{ color: '#737373', mt: 2.5 }}>
                       Transaction Settings
                     </Typography>
@@ -1281,14 +1218,6 @@ export default function SwapComponent() {
                         }}
                         style={{ marginTop: '10px' }}
                       />
-                      {/* <TextField variant='outlined'
-                                    required
-                                    id="outlined-basic"
-                                    size='small'
-                                    style={{ marginTop: '-7px', width: '12%' }}
-                                    value={Slippage} onChange={(e) => { setSlippage(e.target.value) }}
-                                    endAdornment={<InputAdornment position="end" sx={{color:'red'}}>%K</InputAdornment>}>
-                                </TextField> */}
                       <OutlinedInput
                         id="outlined-adornment-weight"
                         value={Slippage}
@@ -1304,57 +1233,6 @@ export default function SwapComponent() {
                         }}
                       />
                     </Stack>
-                    {/* {protocolsRateList.length > 0 &&
-                                <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
-                                    <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Offered By</Typography>
-                                    <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
-                                    <Button onClick={handleOpen} sx={{ height: '20px' }}>{selectedRate.name}</Button>
-                                    <Modal
-                                        open={open}
-                                        onClose={handleClose}
-                                        aria-labelledby="modal-modal-title"
-                                        aria-describedby="modal-modal-description"
-                                    >
-                                        <Box sx={style}>
-                                            <Typography variant='h6' align='center' sx={{ color: '#f5f5f5' }}>Offered By</Typography>
-                                            <Divider variant='fullWidth' sx={{ mt: 3 }}></Divider>
-                                            <Box>
-                                                <Stack direction='row' spacing={6} sx={{ mt: 2 }}>
-                                                    <Typography variant='caption' sx={{ color: '#737373' }}>Receive</Typography>
-                                                    <Typography variant='caption' sx={{ color: '#737373' }}>Network Fee</Typography>
-                                                </Stack>
-                                            </Box>
-                                            {protocolsRateList.map((object) => (
-                                                (object.name === selectedExchangeName ?
-                                                    <Box onClick={() => newRateSelected(object)} sx={{ border: '1px solid #BB86FC', borderRadius: '7px', mt: 1, p: 1, cursor: 'pointer' }}>
-                                                        <Stack direction='row' spacing={2}>
-                                                            <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.receivedValueInDollar}</Typography>
-                                                            <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.gas}</Typography>
-                                                            <Box sx={{ flexGrow: 1 }}></Box>
-
-                                                            <Tooltip title={object.name}>
-                                                                {object.name === 'Balancer' ? <img alt="" width="21" height="20" src={Balancer} ></img> : object.name === '0x Index' ? <img alt="" width="21" height="20" src={object.image} style={{ filter: 'invert(1)' }} ></img> : <img alt="" width="21" height="20" src={object.image} ></img>}
-                                                            </Tooltip>
-                                                        </Stack>
-                                                    </Box> :
-                                                    <Box onClick={() => newRateSelected(object)} sx={{ border: '1px solid #737373', borderRadius: '7px', mt: 1, p: 1, cursor: 'pointer' }}>
-                                                        <Stack direction='row' spacing={2}>
-                                                            <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.receivedValueInDollar}</Typography>
-                                                            <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.gas}</Typography>
-                                                            <Box sx={{ flexGrow: 1 }}></Box>
-
-                                                            <Tooltip title={object.name}>
-                                                                {object.name === 'Balancer' ? <img alt="" width="21" height="20" src={Balancer} ></img> : object.name === '0x Index' ? <img alt="" width="21" height="20" src={object.image} style={{ filter: 'invert(1)' }} ></img> : <img alt="" width="21" height="20" src={object.image} ></img>}
-                                                            </Tooltip>
-                                                        </Stack>
-                                                    </Box>)
-                                            ))}
-                                            <Box sx={{ marginLeft: '30%' }}>
-                                                <Button onClick={updateSelectedRate} variant='outlined' sx={{ mt: 2 }} >Save for This Trade</Button>
-                                            </Box>
-                                        </Box>
-                                    </Modal>
-                                                </Stack>} */}
                     <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>
                       <Typography variant="body2" sx={{ color: '#f5f5f5' }}>
                         Min. output
@@ -1370,7 +1248,8 @@ export default function SwapComponent() {
                       <Typography variant="body2">
                         {selectedRate !== null && protocolsRateList.length > 0
                           ? (
-                              parseFloat(TokenFromAmount) * parseFloat(selectedRate.minPrice)
+                              parseFloat(sendTokenForExchangeAmount) *
+                              parseFloat(selectedRate.minPrice)
                             ).toFixed(3)
                           : '00.00'}
                         {TokenTo !== '' ? TokenTo.symbol : ''}
@@ -1390,7 +1269,7 @@ export default function SwapComponent() {
                       />
                       <Typography variant="body2">
                         {' '}
-                        1 {TokenFrom} ={' '}
+                        1 {sendTokenForExchange.symbol} ={' '}
                         {selectedRate !== null && protocolsRateList.length > 0
                           ? parseFloat(selectedRate.price).toFixed(3)
                           : '00.00'}{' '}
