@@ -167,7 +167,7 @@ export const ChooseBtnTokenBlock = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin-left: 12px;
+  height: 60px;
 `;
 
 export const MultiSwapChooseBtnTokenBlock = styled.div`
@@ -189,10 +189,9 @@ export const ChosenTokenLabel = styled.span`
   color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#FFFFFF')};
 `;
 
-export const ChosenSendTokenValue = styled.span`
+export const ChosenSendReceiveTokenValueInput = styled(TextField)`
   display: flex;
   flex-direction: column;
-
   margin-left: auto;
   margin-right: 20px;
   font-size: 20px;
@@ -202,6 +201,9 @@ export const ChosenSendTokenValue = styled.span`
   span {
     margin-left: auto;
   }
+
+  //background-color: red;
+  //padding-right: 0 !important;
 `;
 
 export const SwitchTokensBtn = styled.img`
@@ -464,6 +466,7 @@ export const SendTokenImg = styled.img`
   border-radius: 50%;
   background-color: #e5e5e5;
   margin-right: 12px;
+  margin-left: 12px;
 `;
 
 export const SendTokenLabelsBlock = styled.div`

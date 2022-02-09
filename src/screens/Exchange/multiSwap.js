@@ -2,7 +2,7 @@ import React from 'react';
 import {
   AdditionalOptionsSwapTokensSubBlock,
   AddReceiveTokenMultiSwapBtn,
-  ChosenSendTokenValue,
+  ChosenSendReceiveTokenValueInput,
   ChosenTokenLabel,
   ColumnMainSubTitles,
   ColumnMainTitles,
@@ -68,12 +68,12 @@ export default function MultiSwapComponent() {
                 </MultiSwapSendValueLabel>
               </div>
             </MultiSwapChooseBtnTokenBlock>
-            <ChosenSendTokenValue isLightTheme={isLightTheme}>
+            <ChosenSendReceiveTokenValueInput isLightTheme={isLightTheme}>
               <span>1</span>
               <MultiSwapSendValueLabel isLightTheme={isLightTheme}>
                 $3 510,03
               </MultiSwapSendValueLabel>
-            </ChosenSendTokenValue>
+            </ChosenSendReceiveTokenValueInput>
           </MultiSwapSendTokensChooseButton>
 
           <SwitchTokensBtn
@@ -97,12 +97,12 @@ export default function MultiSwapComponent() {
                 </MultiSwapSendValueLabel>
               </div>
             </MultiSwapChooseBtnTokenBlock>
-            <ChosenSendTokenValue isLightTheme={isLightTheme}>
+            <ChosenSendReceiveTokenValueInput isLightTheme={isLightTheme}>
               <span>1</span>
               <MultiSwapSendValueLabel isLightTheme={isLightTheme}>
                 $3 510,03
               </MultiSwapSendValueLabel>
-            </ChosenSendTokenValue>
+            </ChosenSendReceiveTokenValueInput>
           </div>
 
           <div style={{ paddingLeft: '12px', paddingRight: '19px', marginTop: '5px' }}>
@@ -142,12 +142,12 @@ export default function MultiSwapComponent() {
                 </MultiSwapSendValueLabel>
               </div>
             </MultiSwapChooseBtnTokenBlock>
-            <ChosenSendTokenValue isLightTheme={isLightTheme}>
+            <ChosenSendReceiveTokenValueInput isLightTheme={isLightTheme}>
               <span>1</span>
               <MultiSwapSendValueLabel isLightTheme={isLightTheme}>
                 $3 510,03
               </MultiSwapSendValueLabel>
-            </ChosenSendTokenValue>
+            </ChosenSendReceiveTokenValueInput>
           </div>
 
           <div style={{ paddingLeft: '12px', paddingRight: '19px', marginTop: '5px' }}>

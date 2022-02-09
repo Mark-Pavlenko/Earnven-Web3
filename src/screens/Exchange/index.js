@@ -60,7 +60,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import CurrencySearchModal from '../../components/CurrencySearchModal';
 import {
   ChooseBtnTokenBlock,
-  ChosenSendTokenValue,
+  ChosenSendReceiveTokenValueInput,
   ChosenTokenLabel,
   ColumnMainSubTitles,
   ColumnMainTitles,
@@ -232,12 +232,12 @@ export default function SwapComponent() {
     symbol: 'ETH',
     logoURI: EthIcon,
     avatarIcon: 'Ethereum',
+    // selectedForExchangeValue: 0,
   });
   const [TokenTo, setTokenTo] = useState('');
   const [sendTokenForExchangeAmount, setSendTokenForExchangeAmount] = useState();
   const [TokenToAmount, setTokenToAmount] = useState();
   const [Slippage, setSlippage] = useState(2);
-  // const [allTokens, setAllTokens] = useState([]);
   const [Sources, setSources] = useState([]);
   const [open, setOpen] = useState(false);
   const [protocolsRateList, setprotocolsRateList] = useState([]);
@@ -576,6 +576,60 @@ export default function SwapComponent() {
     setcurrencyToModal(false);
   };
 
+  //old useEffect for swap --------------
+
+  const [AllTokens, setAllTokens] = useState([]);
+  const [TokenFrom, setTokenFrom] = useState('ETH');
+  const [TokenFromAmount, setTokenFromAmount] = useState();
+
+  const fromTokenChange = (value) => {
+    setTokenFrom(value);
+    // setTokenTo('');
+    setTokenFromAmount(0);
+    setTokenToAmount(0);
+    setprotocolsRateList([]);
+    setselectedRate(null);
+    setSources([]);
+  };
+
+  useEffect(async () => {
+    await axios
+      .get(`https://api.ethplorer.io/getAddressInfo/${address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`)
+      .then(async (response) => {
+        const arr1 = [];
+        if (response.data.ETH.balance !== 0) {
+          const tempObj = {};
+          tempObj.address = '';
+          tempObj.name = 'Ethereum';
+          tempObj.symbol = 'ETH';
+          tempObj.balance = response.data.ETH.balance.toFixed(3).toString();
+          tempObj.logoURI = ethImage;
+          arr1.push(tempObj);
+        }
+        let tokens = response.data.tokens;
+        for (let i = 0; i < tokens.length; i++) {
+          const tempObj = {};
+          tempObj.address = tokens[i].tokenInfo.address;
+          tempObj.name = tokens[i].tokenInfo.name;
+          tempObj.symbol = tokens[i].tokenInfo.symbol;
+          tempObj.balance = (
+            tokens[i].balance * Math.pow(10, -parseInt(tokens[i].tokenInfo.decimals))
+          )
+            .toFixed(3)
+            .toString();
+          if (tokens[i].tokenInfo.image !== undefined) {
+            tempObj.logoURI = `https://ethplorer.io${tokens[i].tokenInfo.image}`;
+          } else {
+            tempObj.logoURI = null;
+          }
+          arr1.push(tempObj);
+        }
+        console.log('final wallet`s tokens list arr', arr1);
+        setAllTokens(arr1);
+      });
+  }, []);
+
+  //---------------------
   return (
     <>
       <ExchangeMainLayout>
@@ -596,20 +650,15 @@ export default function SwapComponent() {
                 </SendBlockLabels>
 
                 {/* Open modal with tokens list*/}
-                <SendTokensChooseButton
-                  isLightTheme={isLightTheme}
-                  onClick={() => setIsSendTokensModalVisible(true)}>
-                  <ChooseBtnTokenBlock>
+                <SendTokensChooseButton isLightTheme={isLightTheme}>
+                  <ChooseBtnTokenBlock onClick={() => setIsSendTokensModalVisible(true)}>
                     {sendTokenForExchange.logoURI !== null ? (
-                      <SendTokenImg
-                        alt="token_img"
-                        src={sendTokenForExchange.logoURI}
-                        style={{ marginRight: '10px' }}
-                      />
+                      <SendTokenImg alt="token_img" src={sendTokenForExchange.logoURI} />
                     ) : (
                       <Avatar
                         style={{
                           marginRight: '12px',
+                          marginLeft: '12px',
                           marginTop: '2px',
                         }}
                         name={sendTokenForExchange.avatarIcon}
@@ -618,16 +667,34 @@ export default function SwapComponent() {
                         textSizeRatio={1}
                       />
                     )}
-
                     <ChosenTokenLabel isLightTheme={isLightTheme}>
-                      {sendTokenForExchange.symbol}
+                      {sendTokenForExchange.symbol} qwerty
                     </ChosenTokenLabel>
                     <img
                       src={isLightTheme ? chevronDownBlack : chevronDownLight}
                       alt="chevron_icon"
                     />
                   </ChooseBtnTokenBlock>
-                  <ChosenSendTokenValue isLightTheme={isLightTheme}> 10 </ChosenSendTokenValue>
+                  <ChosenSendReceiveTokenValueInput
+                    InputProps={{
+                      inputProps: {
+                        style: {
+                          textAlign: 'right',
+                          paddingRight: 0,
+                          width: '100px',
+                          fontWeight: 600,
+                        },
+                      },
+                      classes: { notchedOutline: classes.noBorder },
+                    }}
+                    isLightTheme={isLightTheme}
+                    placeholder="0.0"
+                    value={sendTokenForExchangeAmount}
+                    onChange={(e) => {
+                      setSendTokenForExchangeAmount(e.target.value);
+                      // calculateToAmount(e.target.value);
+                    }}
+                  />
                 </SendTokensChooseButton>
 
                 {/* modal with send tokens list*/}
@@ -635,7 +702,6 @@ export default function SwapComponent() {
                 {isSendTokensModalVisible && (
                   <SelectTokensModalContainer
                     theme={isLightTheme}
-                    title="Select token ABA"
                     isOpen={isSendTokensModalVisible}
                     onClose={() => {
                       setIsSendTokensModalVisible(false);
@@ -647,7 +713,7 @@ export default function SwapComponent() {
                       }}>
                       <TokensModalSubLayout isLightTheme={isLightTheme}>
                         <Header>
-                          <ModalTitle isLightTheme={isLightTheme}>Select token</ModalTitle>
+                          <ModalTitle isLightTheme={isLightTheme}>Select token ABA</ModalTitle>
                           <CloseButton
                             onClick={() => {
                               setIsSendTokensModalVisible(false);
@@ -717,6 +783,7 @@ export default function SwapComponent() {
                                     symbol: object.symbol,
                                     logoURI: object.logoURI,
                                     avatarIcon: object.name,
+                                    selectedForExchangeValue: 0,
                                   });
                                   setIsSendTokensModalVisible(false);
                                 }}
@@ -782,14 +849,20 @@ export default function SwapComponent() {
                   isLightTheme={isLightTheme}
                   onClick={() => setIsReceiveTokensModalVisible(true)}>
                   <ChooseBtnTokenBlock>
-                    <img src={daiICon} alt="daiICon" style={{ marginRight: '10px' }} />
+                    <img
+                      src={daiICon}
+                      alt="daiICon"
+                      style={{ marginRight: '12px', marginLeft: '12px' }}
+                    />
                     <ChosenTokenLabel isLightTheme={isLightTheme}>DAI qwe</ChosenTokenLabel>
                     <img
                       src={isLightTheme ? chevronDownBlack : chevronDownLight}
                       alt="chevron_icon"
                     />
                   </ChooseBtnTokenBlock>
-                  <ChosenSendTokenValue isLightTheme={isLightTheme}>22508.05</ChosenSendTokenValue>
+                  <ChosenSendReceiveTokenValueInput isLightTheme={isLightTheme}>
+                    22508.05
+                  </ChosenSendReceiveTokenValueInput>
                 </SendTokensChooseButton>
 
                 {/*  Modal for receive tokens list*/}
@@ -985,7 +1058,7 @@ export default function SwapComponent() {
       </ExchangeMainLayout>
 
       {/* Old code*/}
-      <Box sx={{ width: '100%', mt: 3, backgroundColor: 'lightgreen' }}>
+      <Box sx={{ width: '100%', mt: 3 }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
             <Tab label="Index" {...a11yProps(0)} />
@@ -1009,8 +1082,8 @@ export default function SwapComponent() {
                   <Box sx={{ mt: 4, mb: 3 }}>
                     <Stack direction="row" spacing={2}>
                       <Stack spacing={0.5}>
-                        <Typography variant="caption" sx={{ color: '#ff0000' }}>
-                          Swap qwerty
+                        <Typography variant="caption" sx={{ color: 'red' }}>
+                          Swap NNNNN
                         </Typography>
                         <FormControl variant="outlined" style={{ width: '120px' }}>
                           {/* inactual */}
@@ -1028,7 +1101,7 @@ export default function SwapComponent() {
                             onClick={() => {
                               setcurrencyModal(true);
                             }}>
-                            {sendTokenForExchange.symbol}
+                            {TokenFrom}
                           </Button>
                         </FormControl>
 
@@ -1051,25 +1124,103 @@ export default function SwapComponent() {
                               p: 4,
                               borderRadius: '15px',
                             }}>
-                            <Typography variant="h6" align="center" sx={{ color: 'red' }}>
-                              Token List aboba
+                            <Typography variant="h6" align="center" sx={{ color: '#f5f5f5' }}>
+                              Token List
                             </Typography>
                             <Divider variant="fullWidth" sx={{ mt: 3 }} />
+                            {AllTokens.map((object) => (
+                              <Box>
+                                <Box
+                                  onClick={() => {
+                                    fromTokenChange(object.symbol);
+                                    setcurrencyModal(false);
+                                  }}
+                                  sx={{
+                                    mt: 1,
+                                    p: 1,
+                                    cursor: 'pointer',
+                                    '&:hover': {
+                                      // background: (theme) => (theme.palette.gradients.custom)
+                                    },
+                                  }}>
+                                  <Stack direction="row" spacing={2}>
+                                    <Box sx={{ marginTop: '5px' }}>
+                                      {object.logoURI !== null ? (
+                                        <img
+                                          alt=""
+                                          width="30"
+                                          height="30"
+                                          src={object.logoURI}
+                                          style={{
+                                            borderRadius: '50%',
+                                            backgroundColor: '#e5e5e5',
+                                          }}
+                                        />
+                                      ) : (
+                                        <Avatar
+                                          style={{
+                                            display: 'inline',
+                                            maxWidth: '30px',
+                                            verticalAlign: 'top',
+                                            height: '30px',
+                                            // marginLeft: '11px',
+                                          }}
+                                          color={'#737373'}
+                                          name={object.name}
+                                          round={true}
+                                          size="30"
+                                          textSizeRatio={1}
+                                        />
+                                      )}
+                                    </Box>
+                                    <Stack direction="column">
+                                      <Typography variant="body1" sx={{ color: '#e3e3e3' }}>
+                                        {object.symbol}
+                                      </Typography>
+                                      <Typography
+                                        variant="caption"
+                                        sx={{
+                                          color: '#e3e3e3',
+                                          fontSize: '11px',
+                                        }}>
+                                        {object.name}
+                                      </Typography>
+                                    </Stack>
+                                    <Box sx={{ flexGrow: 1 }}></Box>
+                                    <Box sx={{ marginTop: '5px' }}>
+                                      <Typography>
+                                        {object.balance === undefined ? (
+                                          <Loader
+                                            type="Rings"
+                                            color="#BB86FC"
+                                            height={30}
+                                            width={30}
+                                          />
+                                        ) : (
+                                          object.balance
+                                        )}
+                                      </Typography>
+                                    </Box>
+                                  </Stack>
+                                </Box>
+                                {/* <Divider variant='fullWidth' sx={{  }}></Divider> */}
+                              </Box>
+                            ))}
                           </Box>
                         </Modal>
                       </Stack>
                       <Stack spacing={0.5}>
-                        <Typography variant="caption" sx={{ color: 'blue' }}>
+                        <Typography variant="caption" sx={{ color: '#0E1214' }}>
                           0
                         </Typography>
                         <TextField
-                          style={{ backgroundColor: 'green' }}
+                          style={{ backgroundColor: 'red' }}
                           variant="outlined"
                           id="outlined-basic"
                           placeholder="00.00"
-                          value={sendTokenForExchangeAmount}
+                          value={TokenFromAmount}
                           onChange={(e) => {
-                            setSendTokenForExchangeAmount(e.target.value);
+                            setTokenFromAmount(e.target.value);
                             // calculateToAmount(e.target.value);
                           }}
                         />
@@ -1138,7 +1289,11 @@ export default function SwapComponent() {
                                   <Stack direction="row" spacing={2}>
                                     <Box sx={{ marginTop: '5px' }}>
                                       {object.logoURI !== null ? (
-                                        <img alt="" width="30" height="30" src={object.logoURI} />
+                                        <img
+                                          alt=""
+                                          width="30"
+                                          height="30"
+                                          src={object.logoURI}></img>
                                       ) : (
                                         <Avatar
                                           style={{
@@ -1192,8 +1347,7 @@ export default function SwapComponent() {
                           onChange={(e) => {
                             setTokenToAmount(e.target.value);
                           }}
-                          disabled
-                        />
+                          disabled></TextField>
                       </Stack>
                     </Stack>
                     {selectedRate !== null && protocolsRateList.length === 0 ? (
@@ -1203,6 +1357,16 @@ export default function SwapComponent() {
                     ) : (
                       <></>
                     )}
+                    {/* <Stack direction='row' sx={{ mt: 2 }}>
+                                {Sources.map((object) =>
+                                    <div>
+                                        <Button variant='contained' color='primary' disabled size='small' sx={{fontSize:'10px'}}>
+                                            {(parseFloat(object.proportion) * 100).toFixed(2)}% {object.name}
+                                        </Button>
+                                        <FaAngleRight style={{ paddingTop: '6px', marginLeft: '1px', color: '#737373' }} />
+                                    </div>
+                                )}
+                            </Stack> */}
                     <Typography variant="body1" sx={{ color: '#737373', mt: 2.5 }}>
                       Transaction Settings
                     </Typography>
@@ -1218,6 +1382,14 @@ export default function SwapComponent() {
                         }}
                         style={{ marginTop: '10px' }}
                       />
+                      {/* <TextField variant='outlined'
+                                    required
+                                    id="outlined-basic"
+                                    size='small'
+                                    style={{ marginTop: '-7px', width: '12%' }}
+                                    value={Slippage} onChange={(e) => { setSlippage(e.target.value) }}
+                                    endAdornment={<InputAdornment position="end" sx={{color:'red'}}>%K</InputAdornment>}>
+                                </TextField> */}
                       <OutlinedInput
                         id="outlined-adornment-weight"
                         value={Slippage}
@@ -1233,6 +1405,57 @@ export default function SwapComponent() {
                         }}
                       />
                     </Stack>
+                    {/* {protocolsRateList.length > 0 &&
+                                <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>
+                                    <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Offered By</Typography>
+                                    <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />
+                                    <Button onClick={handleOpen} sx={{ height: '20px' }}>{selectedRate.name}</Button>
+                                    <Modal
+                                        open={open}
+                                        onClose={handleClose}
+                                        aria-labelledby="modal-modal-title"
+                                        aria-describedby="modal-modal-description"
+                                    >
+                                        <Box sx={style}>
+                                            <Typography variant='h6' align='center' sx={{ color: '#f5f5f5' }}>Offered By</Typography>
+                                            <Divider variant='fullWidth' sx={{ mt: 3 }}></Divider>
+                                            <Box>
+                                                <Stack direction='row' spacing={6} sx={{ mt: 2 }}>
+                                                    <Typography variant='caption' sx={{ color: '#737373' }}>Receive</Typography>
+                                                    <Typography variant='caption' sx={{ color: '#737373' }}>Network Fee</Typography>
+                                                </Stack>
+                                            </Box>
+                                            {protocolsRateList.map((object) => (
+                                                (object.name === selectedExchangeName ?
+                                                    <Box onClick={() => newRateSelected(object)} sx={{ border: '1px solid #BB86FC', borderRadius: '7px', mt: 1, p: 1, cursor: 'pointer' }}>
+                                                        <Stack direction='row' spacing={2}>
+                                                            <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.receivedValueInDollar}</Typography>
+                                                            <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.gas}</Typography>
+                                                            <Box sx={{ flexGrow: 1 }}></Box>
+
+                                                            <Tooltip title={object.name}>
+                                                                {object.name === 'Balancer' ? <img alt="" width="21" height="20" src={Balancer} ></img> : object.name === '0x Index' ? <img alt="" width="21" height="20" src={object.image} style={{ filter: 'invert(1)' }} ></img> : <img alt="" width="21" height="20" src={object.image} ></img>}
+                                                            </Tooltip>
+                                                        </Stack>
+                                                    </Box> :
+                                                    <Box onClick={() => newRateSelected(object)} sx={{ border: '1px solid #737373', borderRadius: '7px', mt: 1, p: 1, cursor: 'pointer' }}>
+                                                        <Stack direction='row' spacing={2}>
+                                                            <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.receivedValueInDollar}</Typography>
+                                                            <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.gas}</Typography>
+                                                            <Box sx={{ flexGrow: 1 }}></Box>
+
+                                                            <Tooltip title={object.name}>
+                                                                {object.name === 'Balancer' ? <img alt="" width="21" height="20" src={Balancer} ></img> : object.name === '0x Index' ? <img alt="" width="21" height="20" src={object.image} style={{ filter: 'invert(1)' }} ></img> : <img alt="" width="21" height="20" src={object.image} ></img>}
+                                                            </Tooltip>
+                                                        </Stack>
+                                                    </Box>)
+                                            ))}
+                                            <Box sx={{ marginLeft: '30%' }}>
+                                                <Button onClick={updateSelectedRate} variant='outlined' sx={{ mt: 2 }} >Save for This Trade</Button>
+                                            </Box>
+                                        </Box>
+                                    </Modal>
+                                                </Stack>} */}
                     <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>
                       <Typography variant="body2" sx={{ color: '#f5f5f5' }}>
                         Min. output
@@ -1248,8 +1471,7 @@ export default function SwapComponent() {
                       <Typography variant="body2">
                         {selectedRate !== null && protocolsRateList.length > 0
                           ? (
-                              parseFloat(sendTokenForExchangeAmount) *
-                              parseFloat(selectedRate.minPrice)
+                              parseFloat(TokenFromAmount) * parseFloat(selectedRate.minPrice)
                             ).toFixed(3)
                           : '00.00'}
                         {TokenTo !== '' ? TokenTo.symbol : ''}
@@ -1269,7 +1491,7 @@ export default function SwapComponent() {
                       />
                       <Typography variant="body2">
                         {' '}
-                        1 {sendTokenForExchange.symbol} ={' '}
+                        1 {TokenFrom} ={' '}
                         {selectedRate !== null && protocolsRateList.length > 0
                           ? parseFloat(selectedRate.price).toFixed(3)
                           : '00.00'}{' '}
