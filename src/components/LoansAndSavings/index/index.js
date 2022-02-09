@@ -14,7 +14,13 @@ import { useSelector } from 'react-redux';
 import CompoundLogo from '../../../assets/icons/Compound.svg';
 import YearnLogo from '../../../assets/icons/yearnLogo.png';
 import SushiSwapLogo from '../../../assets/icons/Sushiswap.webp';
+import ETHLogo from '../../../assets/icons/eth.png';
+import CurveLogo from '../../../assets/icons/curveLogo.png';
+import aaveLogo from '../../../assets/icons/aave-logo.svg';
 import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
+import Ethereum2Staking from '../Ethereum2Staking';
+import CurveFarming from '../CurveFarming';
+import AaveStaking from '../AaveStaking';
 //import UniswapV2 from '../LiqudityPools/UniswapV2';
 
 export default function index({ accountAddress }) {
@@ -72,6 +78,28 @@ export default function index({ accountAddress }) {
   const SushiPoolsData = useSelector((state) => state.sushiSwap.sushiSwapLPData);
   const SushiV2Total = useSelector((state) => state.sushiSwap.sushiSwapLPTotal);
 
+  //Ethereum 2.0
+  const eth2StakeData = useSelector((state) => state.eth2Stake.eth2StakeData);
+  const eth2StakeTotal = useSelector((state) => state.eth2Stake.eth2StakeTotal);
+
+  //liquity
+  const liquityTokenData = useSelector((state) => state.liquityToken.liquityTokenData); //saga
+  const liquityTokenTotal = useSelector((state) => state.liquityToken.liquityTokenTotal); //saga
+  //if need create svg file on later
+  const liquityImageUrl =
+    'https://assets.coingecko.com/coins/images/14665/thumb/200-lqty-icon.png?1617631180';
+  //Curve
+  const CrvStakingTokenData = useSelector((state) => state.curveStaking.curveStakingData);
+  const CrvStakingTokenTotal = useSelector((state) => state.curveStaking.curveStakingTotal);
+  const curveToken = useSelector((state) => state.curveToken.curveTokenData); //saga
+  const curveTokenTotal = useSelector((state) => state.curveToken.curveTokenTotal); //saga
+  const curveLpToken = useSelector((state) => state.curveLpToken.curveLpTokenData);
+  const curveLpTokenTotal = useSelector((state) => state.curveLpToken.curveLpTokenTotal);
+
+  //AAVE -- Aave protocol not moved to saga so using from useEffect for now
+  // const AaveStakingData = useSelector((state) => state.AaveStaking.AaveStakingData); //component
+  // const AaveStakingTotal = useSelector((state) => state.AaveStaking.AaveStakingTotal); //component
+
   //uniswap (need to get total value from the object and put in redux separately)
   // const uniswapV2array = useSelector((state) => state.uniswapV2stake.uniswapV2stake); //saga (incorrect data structure. Work over appropriate look)
   // const uniswapV2StakeTotal = useSelector((state) => state.uniswapV2stake.uniswapV2stakeTotal); //saga (incorrect data structure. Work over appropriate look)
@@ -97,7 +125,7 @@ export default function index({ accountAddress }) {
       <PoolsBlock //first
         isLightTheme={theme}
         style={{
-          display: SushiPoolsData.length > 0, //balancerV2tot
+          display: SushiPoolsData.length > 0 || curveLpToken.length > 0,
         }}>
         <Header>
           <Title isLightTheme={theme}>{'Liquidity pools'}</Title>
@@ -107,7 +135,7 @@ export default function index({ accountAddress }) {
           <TotalValueField isLightTheme={theme}>
             <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
             <TotalValue isLightTheme={theme}>
-              ${numberWithCommas(parseFloat(SushiV2Total).toFixed(2))}
+              ${numberWithCommas(parseFloat(SushiV2Total + curveLpTokenTotal).toFixed(2))}
             </TotalValue>
           </TotalValueField>
         </div>
@@ -144,6 +172,33 @@ export default function index({ accountAddress }) {
             ) : (
               ''
             )}
+            {/*curveLpToken/*/}
+            {curveLpToken.length > 0 ? (
+              <>
+                <img
+                  src={CurveLogo}
+                  style={{
+                    height: '20px',
+                    marginTop: '',
+                    marginLeft: '15px',
+                    display: 'inline-block',
+                  }}
+                  alt=""
+                />
+                Curve Pool
+                {curveLpToken.map((object) => {
+                  return (
+                    <Investment
+                      protocol={object}
+                      protocolName={'Curve Pool'}
+                      logoImage={CurveLogo}
+                    />
+                  );
+                })}
+              </>
+            ) : (
+              ''
+            )}
           </React.Fragment>
         )}
       </PoolsBlock>
@@ -151,7 +206,11 @@ export default function index({ accountAddress }) {
       <PoolsBlock //Savings/Loans
         isLightTheme={theme}
         style={{
-          display: compTokenDataValue.length > 0,
+          display:
+            compTokenDataValue.length > 0 ||
+            eth2StakeData.length > 0 ||
+            CrvStakingTokenData.length > 0,
+          // AaveStakingData.length > 0,
         }}>
         <Header>
           <Title isLightTheme={theme}>{'Saving/Loans'}</Title>
@@ -162,7 +221,10 @@ export default function index({ accountAddress }) {
             <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
             {/*<TotalEmptyCell></TotalEmptyCell>*/}
             <TotalValue isLightTheme={theme}>
-              ${numberWithCommas(parseFloat(compTotalValue).toFixed(2))}
+              $
+              {numberWithCommas(
+                parseFloat(compTotalValue + eth2StakeTotal + CrvStakingTokenTotal).toFixed(2)
+              )}
             </TotalValue>
           </TotalValueField>
         </div>
@@ -197,6 +259,93 @@ export default function index({ accountAddress }) {
             ) : (
               ''
             )}
+            {/*Ethereum 2.0 protocol */}
+            {eth2StakeData.length > 0 ? (
+              <React.Fragment>
+                <img
+                  src={ETHLogo}
+                  style={{
+                    height: '20px',
+                    marginTop: '',
+                    marginLeft: '15px',
+                    display: 'inline-block',
+                  }}
+                  alt=""
+                />
+                Ethereum 2.0
+                {eth2StakeData
+                  ? eth2StakeData.map((object) => {
+                      return (
+                        <Investment
+                          protocol={object}
+                          protocolName={'Eth2.0'}
+                          logoImage={object.tokenImage}
+                        />
+                      );
+                    })
+                  : ''}
+              </React.Fragment>
+            ) : (
+              ''
+            )}
+            {/*Curve Staking/Farming protocol */}
+            {CrvStakingTokenData.length > 0 ? (
+              <React.Fragment>
+                <img
+                  src={CurveLogo}
+                  style={{
+                    height: '20px',
+                    marginTop: '',
+                    marginLeft: '15px',
+                    display: 'inline-block',
+                  }}
+                  alt=""
+                />
+                Curve Staking
+                {CrvStakingTokenData
+                  ? CrvStakingTokenData.map((object) => {
+                      return (
+                        <Investment
+                          protocol={object}
+                          protocolName={'Curve Staking'}
+                          logoImage={object.tokenImage}
+                        />
+                      );
+                    })
+                  : ''}
+              </React.Fragment>
+            ) : (
+              ''
+            )}
+            {/* Aave Protocol */}
+            {/* {AaveStakingData.length > 0 ? (
+              <React.Fragment>
+                <img
+                  src={aaveLogo}
+                  style={{
+                    height: '20px',
+                    marginTop: '',
+                    marginLeft: '15px',
+                    display: 'inline-block',
+                  }}
+                  alt=""
+                />
+                Aave
+                {AaveStakingData
+                  ? AaveStakingData.map((object) => {
+                      return (
+                        <Investment
+                          protocol={object}
+                          protocolName={'Aave'}
+                          logoImage={object.tokenImage}
+                        />
+                      );
+                    })
+                  : ''}
+              </React.Fragment>
+            ) : (
+              ''
+            )} */}
           </React.Fragment>
         )}
       </PoolsBlock>
@@ -205,7 +354,10 @@ export default function index({ accountAddress }) {
         isLightTheme={theme}
         style={{
           display:
-            olympusStakingData.length > 0 || YearnData.length > 0 || YearnTokenData.length > 0,
+            olympusStakingData.length > 0 ||
+            YearnData.length > 0 ||
+            YearnTokenData.length > 0 ||
+            curveToken.length > 0,
         }}>
         <Header>
           <Title isLightTheme={theme}>{'Vaults'}</Title>
@@ -218,7 +370,9 @@ export default function index({ accountAddress }) {
             <TotalValue isLightTheme={theme}>
               $
               {numberWithCommas(
-                parseFloat(olympusTokenTotal + YearnTotalValue + YearnTokenTotalValue).toFixed(2)
+                parseFloat(
+                  YearnTotalValue + YearnTokenTotalValue + olympusTokenTotal + curveTokenTotal
+                ).toFixed(2)
               )}
             </TotalValue>
           </TotalValueField>
@@ -285,6 +439,81 @@ export default function index({ accountAddress }) {
                         <Investment
                           protocol={object}
                           protocolName={'yearnFinance'}
+                          logoImage={object.tokenImage}
+                        />
+                      );
+                    })
+                  : ''}
+              </React.Fragment>
+            ) : (
+              ''
+            )}
+            {/*curveToken/*/}
+            {curveToken.length > 0 ? (
+              <>
+                <img
+                  src={CurveLogo}
+                  style={{
+                    height: '20px',
+                    marginTop: '',
+                    marginLeft: '15px',
+                    display: 'inline-block',
+                  }}
+                  alt=""
+                />
+                Curve
+                {curveToken.map((object) => {
+                  return <Investment protocol={object} protocolName={'Curve'} />;
+                })}
+              </>
+            ) : (
+              ''
+            )}
+            <AaveStaking accountAddress={accountAddress} />
+          </React.Fragment>
+        )}
+      </PoolsBlock>
+      {/*==================================Yield Farming======================================>*/}
+      <PoolsBlock //third
+        isLightTheme={theme}
+        style={{
+          display: liquityTokenData.length > 0 ? '' : 'none',
+        }}>
+        <Header>
+          <Title isLightTheme={theme}>{'Yield Farming'}</Title>
+          <ToggleButton onClick={farmingHandler} isOpen={isFarmingOpen} />
+        </Header>
+        <div style={{ padding: '0 29px 20px 26px', marginBottom: '20px' }}>
+          <TotalValueField isLightTheme={theme}>
+            <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
+            {/*<TotalEmptyCell></TotalEmptyCell>*/}
+            <TotalValue isLightTheme={theme}>
+              ${numberWithCommas(parseFloat(liquityTokenTotal).toFixed(2))}
+            </TotalValue>
+          </TotalValueField>
+        </div>
+        {isFarmingOpen && (
+          <React.Fragment>
+            {/*liquityTokenData/*/}
+            {liquityTokenData.length > 0 ? (
+              <React.Fragment>
+                <img
+                  src={liquityImageUrl}
+                  style={{
+                    height: '20px',
+                    marginTop: '',
+                    marginLeft: '15px',
+                    display: 'inline-block',
+                  }}
+                  alt=""
+                />
+                Liquity
+                {liquityTokenData
+                  ? liquityTokenData.map((object) => {
+                      return (
+                        <Investment
+                          protocol={object}
+                          protocolName={'Liquity'}
                           logoImage={object.tokenImage}
                         />
                       );

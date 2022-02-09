@@ -47,95 +47,96 @@ export default function CurveFarming({ accountAddress }) {
     getCurveStakingData();
   }, [accountAddress]);
 
-  //Below function is used to fetch the curve staking data from the state and design to render them
-  useEffect(() => {
-    if (CrvStakingTokenData.length > 0) {
-      try {
-        var content = CrvStakingTokenData.map((object) => (
-          <Accordion
-            style={{
-              background: 'transparent',
-              marginRight: '1px',
-              color: 'black',
-              width: '100%',
-              border: '1px',
-              borderColor: 'black',
-              borderStyle: 'hidden',
-            }}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header">
-              <React.Fragment
-                style={{
-                  display: 'inline-block',
-                  width: '100%',
-                  wordBreak: 'break-all',
-                }}>
-                {/*Get the Curve lp token Name */}
-                <CurveLpImage lpToken={object.tokenName} /> {object.tokenName}
-                &nbsp; &nbsp;{parseFloat(object.totalValue.toFixed(2)).toLocaleString()} USD
-              </React.Fragment>
-            </AccordionSummary>
-            <AccordionDetails>
-              <div style={{ display: 'inline-block', width: '70%', fontSize: '13px' }}>
-                Balance &nbsp;
-                {parseFloat(object.balanceUSD.toFixed(2)).toLocaleString()}
-                <br />
-                Price &nbsp;&nbsp;&nbsp;&nbsp;${object.crvStakeTokenPrice}
-                <br />
-                Value &nbsp;&nbsp;&nbsp;&nbsp;$
-                {parseFloat(object.totalValue.toFixed(2)).toLocaleString()}
-                <br />
-                Chain &nbsp;&nbsp;Ethereum
-                <br />
-                Protocol &nbsp; Curve
-                <br />
-                Claimable &nbsp;&nbsp;{object.crvLiquidityGaugeClaimable}
-                &nbsp;&nbsp;{object.crvLiquidityGaugeClaimable > 0 ? <br /> : ''}
-                &nbsp;&nbsp;{object.crvLiquidityGaugeRewardClaimable}
-                <br />
-                &nbsp;&nbsp;{object.liquidityGaugeV2Claimable}
-                <br />
-                &nbsp;&nbsp;{object.liquidityGaugeV2RewardClaim}
-                <br />
-                &nbsp;&nbsp;{object.crvLiquidityGaugeV3Claimable}
-                <br />
-                &nbsp;&nbsp;{object.crvLiquidityGaugeV3RewardClaim}
-              </div>
-            </AccordionDetails>
-          </Accordion>
-        ));
-      } catch (err) {
-        console.log('No Curve staking token data found');
-      }
-    }
+  // //Below function is used to fetch the curve staking data from the state and design to render them
+  // useEffect(() => {
+  //   if (CrvStakingTokenData.length > 0) {
+  //     try {
+  //       var content = CrvStakingTokenData.map((object) => (
+  //         <Accordion
+  //           style={{
+  //             background: 'transparent',
+  //             marginRight: '1px',
+  //             color: 'black',
+  //             width: '100%',
+  //             border: '1px',
+  //             borderColor: 'black',
+  //             borderStyle: 'hidden',
+  //           }}>
+  //           <AccordionSummary
+  //             expandIcon={<ExpandMoreIcon />}
+  //             aria-controls="panel1a-content"
+  //             id="panel1a-header">
+  //             <React.Fragment
+  //               style={{
+  //                 display: 'inline-block',
+  //                 width: '100%',
+  //                 wordBreak: 'break-all',
+  //               }}>
+  //               {/*Get the Curve lp token Name */}
+  //               <CurveLpImage lpToken={object.tokenName} /> {object.tokenName}
+  //               &nbsp; &nbsp;{parseFloat(object.value.toFixed(2)).toLocaleString()} USD
+  //             </React.Fragment>
+  //           </AccordionSummary>
+  //           <AccordionDetails>
+  //             <div style={{ display: 'inline-block', width: '70%', fontSize: '13px' }}>
+  //               Balance &nbsp;
+  //               {parseFloat(object.balance.toFixed(2)).toLocaleString()}
+  //               <br />
+  //               Price &nbsp;&nbsp;&nbsp;&nbsp;${object.price}
+  //               <br />
+  //               Value &nbsp;&nbsp;&nbsp;&nbsp;$
+  //               {parseFloat(object.value.toFixed(2)).toLocaleString()}
+  //               <br />
+  //               Chain &nbsp;&nbsp;Ethereum
+  //               <br />
+  //               Protocol &nbsp; Curve
+  //               <br />
+  //               Claimable &nbsp;&nbsp;{object.crvLiquidityGaugeClaimable}
+  //               &nbsp;&nbsp;{object.crvLiquidityGaugeClaimable > 0 ? <br /> : ''}
+  //               &nbsp;&nbsp;{object.crvLiquidityGaugeRewardClaimable}
+  //               <br />
+  //               &nbsp;&nbsp;{object.liquidityGaugeV2Claimable}
+  //               <br />
+  //               &nbsp;&nbsp;{object.liquidityGaugeV2RewardClaim}
+  //               <br />
+  //               &nbsp;&nbsp;{object.crvLiquidityGaugeV3Claimable}
+  //               <br />
+  //               &nbsp;&nbsp;{object.crvLiquidityGaugeV3RewardClaim}
+  //             </div>
+  //           </AccordionDetails>
+  //         </Accordion>
+  //       ));
+  //     } catch (err) {
+  //       console.log('No Curve staking token data found');
+  //     }
+  //   }
 
-    setCrvStakingTokenContent(content);
-  }, [CrvStakingTokenData]);
+  //   setCrvStakingTokenContent(content);
+  // }, [CrvStakingTokenData]);
 
-  return (
-    <React.Fragment>
-      {/*<div*/}
-      {/*  style={{*/}
-      {/*    fontSize: '15px',*/}
-      {/*    marginRight: '15px',*/}
-      {/*    display: CrvStakingTokenData.length > 0 ? '' : 'none',*/}
-      {/*  }}>*/}
-      {/*  <img*/}
-      {/*    src={CurveLogo}*/}
-      {/*    style={{*/}
-      {/*      height: '30px',*/}
-      {/*      marginTop: '',*/}
-      {/*      marginLeft: '15px',*/}
-      {/*      display: 'inline-block',*/}
-      {/*    }}*/}
-      {/*    alt=""*/}
-      {/*  />*/}
-      {/*  Curve Staking-- ${CrvStakingTokenTotal} USD*/}
-      {/*  {CrvStakingTokenContent}*/}
-      {/*</div>*/}
-      {/*<br />*/}
-    </React.Fragment>
-  );
+  // return (
+  //   <React.Fragment>
+  //     <div
+  //       style={{
+  //         fontSize: '15px',
+  //         marginRight: '15px',
+  //         display: CrvStakingTokenData.length > 0 ? '' : 'none',
+  //       }}>
+  //       <img
+  //         src={CurveLogo}
+  //         style={{
+  //           height: '30px',
+  //           marginTop: '',
+  //           marginLeft: '15px',
+  //           display: 'inline-block',
+  //         }}
+  //         alt=""
+  //       />
+  //       Curve Staking-- ${CrvStakingTokenTotal} USD
+  //       {CrvStakingTokenContent}
+  //     </div>
+  //     <br />
+  //   </React.Fragment>
+  // );
+  return <></>;
 }

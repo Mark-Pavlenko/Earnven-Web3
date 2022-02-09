@@ -64,6 +64,12 @@ export default function Index({ accountAddress }) {
         <br />
         <OlympusStaking accountAddress={accountAddress} />
         <br /> */}
+      <Ethereum2Staking accountAddress={accountAddress} />
+      {/* <AaveStaking accountAddress={accountAddress} /> */}
+      <CurveLpToken accountAddress={accountAddress} />
+      <CurveToken accountAddress={accountAddress} />
+      <CurveFarming accountAddress={accountAddress} />
+      <Liquity accountAddress={accountAddress} />
       <SushiLPToken accountAddress={accountAddress} />
       <CompoundFinance accountAddress={accountAddress} />
       <OlympusStaking accountAddress={accountAddress} />
