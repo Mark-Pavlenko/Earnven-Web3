@@ -131,7 +131,6 @@ import searchIcon from '../../assets/icons/searchIconLight.png';
 import SearchIcon from '@mui/icons-material/Search';
 import { TokensListTextField } from '../../components/searchTokens/styles';
 import actionTypes from '../../constants/actionTypes';
-import { tokensListReducer } from '../../store/exchangeTokensLists/reducer';
 
 const useStyles = makeStyles((theme) => ({
   addIcon: {
