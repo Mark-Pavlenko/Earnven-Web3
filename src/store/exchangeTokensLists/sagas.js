@@ -3,22 +3,17 @@ import * as API from '../../api/api';
 import actionTypes from '../../constants/actionTypes';
 import * as actions from './actions';
 import ethImage from '../../assets/icons/eth.png';
-import { getZeroAPITokensList } from '../../api/api';
+import { getUniswapFullCoinsList } from '../../api/api';
 
-// SET_ADDRESS_INFO_DATA: 'SET_ADDRESS_INFO_DATA',
-//   GET_ADDRESS_INFO_DATA: 'GET_ADDRESS_INFO_DATA',
-
-export function* getAddressInfoDataSagaWatcher() {
-  yield takeEvery(actionTypes.SET_ADDRESS_INFO_DATA, getAddressInfoDataSagaWorker);
-  // SET_ADDRESS_INFO_DATA
+export function* getSendTokensListSagaWatcher() {
+  yield takeEvery(actionTypes.SET_SEND_TOKENS_LIST, getSendTokensListSagaWorker);
 }
 
-function* getAddressInfoDataSagaWorker(accountAddress) {
+function* getSendTokensListSagaWorker(accountAddress) {
   const addressInfoData = yield call(API.getAddressInfo, accountAddress.payload);
-  console.log('only addressInfoData', addressInfoData.data);
-
+  // console.log('only addressInfoData', addressInfoData.data);
   const zeroAPISwapTokensList = yield call(API.getZeroAPITokensList);
-  console.log('sagas zeroAPITokensList', zeroAPISwapTokensList);
+  // console.log('sagas zeroAPITokensList', zeroAPISwapTokensList);
 
   const walletTokensList = [];
   if (addressInfoData.data.ETH.balance !== 0) {
@@ -56,7 +51,31 @@ function* getAddressInfoDataSagaWorker(accountAddress) {
     zeroAPISwapTokensList.find((zeroToken) => walletToken.symbol === zeroToken.symbol)
   );
 
-  // console.log('sagas sendTokensList', sendTokensList);
+  console.log('first sagas sendTokensList', sendTokensList);
 
   yield put(actions.getAddressInfoData(sendTokensList));
+}
+
+export function* getReceiveTokensListSagaWatcher() {
+  yield takeEvery(actionTypes.SET_RECEIVE_TOKENS_LIST, getReceiveTokensListSagaWorker);
+}
+
+function* getReceiveTokensListSagaWorker() {
+  const zeroAPISwapTokensList = yield call(API.getZeroAPITokensList);
+  console.log('sagas zeroAPITokensList', zeroAPISwapTokensList);
+
+  const uniswapFullCoinsList = yield call(API.getUniswapFullCoinsList);
+  console.log('uniswapFullCoinsList sagas', uniswapFullCoinsList);
+
+  let data = uniswapFullCoinsList.tokens;
+  let result = zeroAPISwapTokensList.map((token) => ({
+    ...token,
+    logoURI: data.find((x) => x.address === token.address)
+      ? data.find((x) => x.address === token.address).logoURI
+      : null,
+  }));
+
+  console.log('middle receive list result sagas', result);
+
+  // yield put(actions.getAddressInfoData(sendTokensList));
 }

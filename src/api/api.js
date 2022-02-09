@@ -35,6 +35,11 @@ export const getAddressInfo = async (accountAddress) => {
   );
 };
 
+export const getUniswapFullCoinsList = async () => {
+  const uniswapFullCoinsList = await axios.get('https://tokens.coingecko.com/uniswap/all.json');
+  return uniswapFullCoinsList.data;
+};
+
 export const getZeroAPITokensList = async () => {
   const rawZeroAPITokensList = await axios.get(`https://api.0x.org/swap/v1/tokens`);
   return rawZeroAPITokensList.data.records;

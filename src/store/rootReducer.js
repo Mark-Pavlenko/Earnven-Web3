@@ -34,7 +34,7 @@ import { initSidebarValuesReducer } from './initSidebarValues/reducer';
 import { alchemixVaults } from './alchemix/reducer';
 import { compoundFinance } from './compoundFinance/reducer';
 import { currentTokenDataReducer } from './currentTokenData/reducer';
-import { addressInfoDataReducer } from './addressInfo/reducer';
+import { addressInfoDataReducer } from './exchangeTokensLists/reducer';
 
 export const rootReducer = combineReducers({
   web3Reducer,

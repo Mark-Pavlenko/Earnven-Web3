@@ -1,9 +1,9 @@
-import GET_ADDRESS_INFO_DATA from '../../constants/actionTypes';
+import GET_SEND_TOKENS_LIST from '../../constants/actionTypes';
 
 export const getAddressInfoData = (payload) => {
   console.log('getAddressInfoData action payload', payload);
   return {
-    type: GET_ADDRESS_INFO_DATA,
+    type: GET_SEND_TOKENS_LIST,
     payload,
   };
 };

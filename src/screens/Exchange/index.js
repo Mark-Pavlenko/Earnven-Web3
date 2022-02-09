@@ -271,18 +271,27 @@ export default function SwapComponent() {
     (state) => state.addressInfoDataReducer.addressInfoDataObject
   );
 
-  // console.log('Redux-Saga Send Tokens List', finalSendTokensList);
+  console.log('Redux-sagas Send Tokens List', finalSendTokensList);
 
   useEffect(async () => {
     //triggered saga to get send tokens list from user`s wallet
-    const getAddressInfoData = () => {
+    const getSendTokensListFunction = () => {
       try {
-        dispatch({ type: actionTypes.SET_ADDRESS_INFO_DATA, payload: address });
+        dispatch({ type: actionTypes.SET_SEND_TOKENS_LIST, payload: address });
       } catch (error) {
         console.log(error);
       }
     };
-    await getAddressInfoData();
+    await getSendTokensListFunction();
+
+    const getReceiveTokensListFunction = () => {
+      try {
+        dispatch({ type: actionTypes.SET_RECEIVE_TOKENS_LIST });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    await getReceiveTokensListFunction();
 
     ///--0x API convertation
     // async function getData() {
@@ -334,9 +343,6 @@ export default function SwapComponent() {
     return () => clearTimeout(timeOutId);
   }, [sendTokenForExchangeAmount]);
 
-  //search tokens field functionality
-  const [inputText, setInputText] = useState('');
-
   // let filteredData;
   const [filteredData, setFilteredData] = useState([]);
 
@@ -347,51 +353,21 @@ export default function SwapComponent() {
   let sendTokensInputHandler = (e) => {
     //convert input text to lower case
     let lowerCase = e.target.value.toLowerCase();
-    // setInputText(lowerCase);
     let filteredSearchTokensList = finalSendTokensList.filter((el) => {
       if (lowerCase.input === '') {
         return el;
       }
       //return the item which contains the user input
       else if (el.name !== undefined) {
-        // console.log('inputText.input', inputText);
-        // console.log('el.name', el.name);
-
         return el.name.toLowerCase().includes(lowerCase);
       } else {
-        // console.log('undef el', el);
       }
     });
     setFilteredData(filteredSearchTokensList);
   };
 
-  // useEffect(() => {
-  //   setFilteredData(finalSendTokensList);
-  // }, []);
-
-  // console.log('allTokens', allTokens);
-  console.log('finalSendTokensList', finalSendTokensList);
-  console.log('filteredData', filteredData);
-  //
-
-  // useEffect(() => {
-  //   // Object.keys(finalSendTokensList).length !== 0 &&
-  //   let test = finalSendTokensList.filter((el) => {
-  //     if (inputText.input === '') {
-  //       return el;
-  //     }
-  //     //return the item which contains the user input
-  //     else if (el.name !== undefined) {
-  //       // console.log('inputText.input', inputText);
-  //       // console.log('el.name', el.name);
-  //
-  //       return el.name.toLowerCase().includes(inputText);
-  //     } else {
-  //       // console.log('undef el', el);
-  //     }
-  //   });
-  //   setFilteredData(test);
-  // }, [finalSendTokensList]);
+  // console.log('finalSendTokensList', finalSendTokensList);
+  // console.log('filteredData', filteredData);
 
   async function loadWeb3() {
     if (window.ethereum) {
@@ -624,7 +600,7 @@ export default function SwapComponent() {
           }
           arr1.push(tempObj);
         }
-        console.log('final wallet`s tokens list arr', arr1);
+        // console.log('final wallet`s tokens list arr', arr1);
         setAllTokens(arr1);
       });
   }, []);

@@ -1,13 +1,13 @@
-import GET_ADDRESS_INFO_DATA from '../../constants/actionTypes';
+import GET_SEND_TOKENS_LIST from '../../constants/actionTypes';
 
 const initialState = {
   addressInfoDataObject: [],
 };
 
 export const addressInfoDataReducer = (state = initialState, action) => {
-  // console.log('addressInfo payload reducer', action?.payload);
+  // console.log('exchangeTokensLists payload reducer', action?.payload);
   switch (action.type) {
-    case GET_ADDRESS_INFO_DATA:
+    case GET_SEND_TOKENS_LIST:
       return {
         addressInfoDataObject: action?.payload,
       };
