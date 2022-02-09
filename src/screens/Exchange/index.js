@@ -225,6 +225,7 @@ const makeCall = async (callName, contract, args, metadata = {}) => {
 };
 
 export default function SwapComponent() {
+  const dispatch = useDispatch();
   const classes = useStyles();
   const { address } = useParams();
   const [value, setValue] = useState(0);
@@ -250,21 +251,12 @@ export default function SwapComponent() {
   const [currencyModal, setcurrencyModal] = useState(false);
   const [currencyToModal, setcurrencyToModal] = useState(false);
   const [toTokens, settoTokens] = useState([]);
-  // const [filteredData, setFilteredData] = useState([]);
-
-  //test useState
-  const [zeroAPITokensList, setZeroAPITokensList] = useState([]);
-
-  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
-
-  //equal to raw tokens arr of objects
-  const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
-  const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
-
   const [isSendTokensModalVisible, setIsSendTokensModalVisible] = useState(false);
   const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
 
-  const dispatch = useDispatch();
+  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
+  const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
+  const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -274,41 +266,11 @@ export default function SwapComponent() {
   console.log('Redux-sagas Receive Final Tokens List', finalReceiveTokensList);
 
   useEffect(async () => {
-    //triggered saga to get send tokens list from user`s wallet
-    // const getSendTokensListFunction = () => {
     try {
       dispatch({ type: actionTypes.SET_SEND_TOKENS_LIST, payload: address });
     } catch (error) {
       console.log(error);
     }
-    // };
-    // await getSendTokensListFunction();
-
-    ///--0x API convertation
-    // async function getData() {
-    //   let fetchedTokens;
-    //   await axios.get(`https://api.0x.org/swap/v1/tokens`).then(async (response) => {
-    //     console.log('Oxres', response);
-    //     setAllTokens(response.data.records);
-    //     fetchedTokens = response.data.records;
-    //   });
-    //   await axios
-    //     .get(`https://tokens.coingecko.com/uniswap/all.json`)
-    //     .then(async (response) => {
-    //       let dataZeroApi = response.data.tokens;
-    //       let tokens = fetchedTokens.map((token) => ({
-    //         ...token,
-    //         logoURI: dataZeroApi.find((x) => x.address === token.address)
-    //           ? dataZeroApi.find((x) => x.address === token.address).logoURI
-    //           : tokenURIs.find((x) => x.address === token.address).logoURI,
-    //       }));
-    //       setZeroAPITokensList(tokens);
-    //     })
-    //     .catch((res) => {
-    //       console.log('liquidity pools Sushiswap-V2 returns error', res);
-    //     });
-    // }
-    // getData();
   }, []);
 
   useEffect(() => {

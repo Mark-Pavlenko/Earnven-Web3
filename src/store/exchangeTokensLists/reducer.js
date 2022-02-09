@@ -6,7 +6,7 @@ const initialState = {
 };
 //takes two arguments: The current state and the action and returns the new state.
 export const tokensListReducer = (state = initialState, action) => {
-  console.log('action payload tokens list reducer', action?.payload);
+  // console.log('action payload tokens list reducer', action?.payload);
   switch (action.type) {
     case actionTypes.GET_SEND_TOKENS_LIST:
       return {
@@ -17,7 +17,6 @@ export const tokensListReducer = (state = initialState, action) => {
       return {
         ...state,
         receiveTokensList: action?.payload,
-        // curveLpTokenImages: [...state.curveLpTokenImages, action?.payload].flat(),
       };
     default:
       return state;
