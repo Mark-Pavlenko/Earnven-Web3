@@ -241,6 +241,7 @@ export default function SwapComponent() {
     avatarIcon: 'Ethereum',
     name: 'ethereum',
     id: 'ethereum',
+    firstTimePageLoad: true,
     // USDCurrency:
   });
   const [receiveTokenForExchange, setReceiveTokenForExchange] = useState({
@@ -249,6 +250,7 @@ export default function SwapComponent() {
     avatarIcon: 'Dai Stablecoin',
     name: 'dai',
     id: 'dai',
+    firstTimePageLoad: true,
   });
   const [TokenTo, setTokenTo] = useState('');
   const [sendTokenForExchangeAmount, setSendTokenForExchangeAmount] = useState();
@@ -279,6 +281,9 @@ export default function SwapComponent() {
 
   console.log('front finalSendTokensList', finalSendTokensList);
   console.log('front finalReceiveTokensList', finalReceiveTokensList);
+
+  const [tokenSendUSDCurrency, setTokenSendUSDCurrency] = useState();
+  const [tokenReceiveUSDCurrency, setTokensReceiveUSDCurrency] = useState();
 
   useEffect(() => {
     finalSendTokensList.length !== 0 && setFilteredData(finalSendTokensList);
@@ -320,28 +325,42 @@ export default function SwapComponent() {
 
   //function of dynamic converting of token value to USD Currency
 
+  //useEffect for init eth and dai value
+  useEffect(async () => {
+    // await convertTokenToUSDCurrency({ ...sendTokenForExchange, initTokenLoad: true });
+    // await convertTokenToUSDCurrency({ ...receiveTokenForExchange, initTokenLoad: true });
+
+    let initSendTokenUSDCurrency = await axios.get(
+      `https://api.coingecko.com/api/v3/simple/price?ids=${sendTokenForExchange.id}&vs_currencies=usd`
+    );
+
+    let initReceiveTokenUSDCurrency = await axios.get(
+      `https://api.coingecko.com/api/v3/simple/price?ids=${receiveTokenForExchange.id}&vs_currencies=usd`
+    );
+    console.log('triggered');
+    setTokenSendUSDCurrency(Object.values(initSendTokenUSDCurrency.data)[0].usd);
+    setTokensReceiveUSDCurrency(Object.values(initReceiveTokenUSDCurrency.data)[0].usd);
+  }, []);
+
   let convertTokenToUSDCurrency = async (tokenData) => {
     console.log('exchange token USD currency data', tokenData);
-
-    // const convertedTokenName = tokenData.symbol.toLowerCase().replace(/\s+/g, '');
-    // console.log('convertedTokenSymbol', convertedTokenName);
-
-    if (tokenData.initTokenLoad) {
-      const initUSD = await axios.get(
-        `https://api.coingecko.com/api/v3/simple/price?ids=${tokenData.id}&vs_currencies=usd`
-      );
-      console.log('initUSD', Object.values(initUSD.data)[0].usd);
-    }
+    // console.log('exchange token USD currency data', tokenData.USDCurrency);
 
     // try {
     let tokenUSDCurrencyValue;
-    if (tokenData.receiveTokensListItem === true) {
+    if (tokenData.USDCurrency === undefined || tokenData.receiveTokensListItem === true) {
       tokenUSDCurrencyValue = await axios.get(
         `https://api.coingecko.com/api/v3/simple/price?ids=${tokenData.id}&vs_currencies=usd`
       );
     }
 
-    console.log('exchange token USD tokenUSDCurrencyValue', tokenUSDCurrencyValue);
+    console.log(
+      'exchange token USD tokenUSDCurrencyValue',
+      Object.values(tokenUSDCurrencyValue.data)[0].usd * parseInt(tokenData.amount)
+    );
+    setTokensReceiveUSDCurrency(
+      Object.values(tokenUSDCurrencyValue.data)[0].usd * parseInt(tokenData.amount)
+    );
 
     // console.log('tokenUSDCurrencyValue', `${tokenUSDCurrencyValue.data.convertedTokenName.usd}`);
     // setethPrice(ethDollarValue.data.ethereum.usd);
@@ -349,12 +368,6 @@ export default function SwapComponent() {
     //   console.log('getEthDollarValue err', err);
     // }
   };
-
-  //useEffect for init eth and dai value
-  useEffect(async () => {
-    await convertTokenToUSDCurrency({ ...sendTokenForExchange, initTokenLoad: true });
-    await convertTokenToUSDCurrency({ ...receiveTokenForExchange, initTokenLoad: true });
-  }, []);
 
   //----------
 
@@ -679,7 +692,7 @@ export default function SwapComponent() {
               <SendReceiveSubBlock>
                 <SendBlockLabels isLightTheme={isLightTheme}>
                   <span>Send</span>
-                  <span>$3 510,03</span>
+                  <span> ${tokenSendUSDCurrency}</span>
                 </SendBlockLabels>
 
                 {/* Open modal with tokens list*/}
@@ -880,7 +893,7 @@ export default function SwapComponent() {
               <SendReceiveSubBlock style={{ marginTop: '-9px' }}>
                 <SendBlockLabels isLightTheme={isLightTheme}>
                   <span>Receive</span>
-                  <span>$30,510.03</span>
+                  <span>${tokenReceiveUSDCurrency}</span>
                 </SendBlockLabels>
                 <SendTokensChooseButton isLightTheme={isLightTheme}>
                   {toggleExchangedTokens ? (
