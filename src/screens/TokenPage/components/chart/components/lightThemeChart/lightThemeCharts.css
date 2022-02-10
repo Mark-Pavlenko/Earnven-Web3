@@ -1,4 +1,5 @@
 .chart {
+    position: relative;
     width: 100%;
     display: flex;
     gap: 30px;
@@ -73,8 +74,17 @@ svg:not(:root){
     align-items: flex-end;
 }
 
+.change-buttons-wrapper{
+    position: absolute;
+    z-index: 10;
+    top: 30px;
+    right: 0;
+    display: flex;
+    justify-content: center;
+}
 
 .change-buttons--light {
+    z-index: 10;
     border: none;
     min-width: 34px;
     height: 26px;
@@ -98,7 +108,6 @@ svg:not(:root){
     box-sizing: border-box;
     min-width: 34px;
     color: #4453AD;
-
 }
 
 .chart-wrapper--light {
@@ -111,7 +120,7 @@ svg:not(:root){
     mix-blend-mode: normal;
     box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(35px);
-    padding: 0 0 10px 10px;
+    padding: 0 0 0 10px;
 }
 
 @media (max-width: 768px) {
@@ -120,7 +129,15 @@ svg:not(:root){
         flex-direction: column-reverse;
         align-items: center;
         gap: 30px;
-        padding: 0 0 10px 10px;
+        padding: 0 0 30px 10px;
+    }
+
+    .change-buttons-wrapper{
+        width: 100%;
+        position: absolute;
+        top: 350px;
+        left: 50%;
+        transform: translateX(-50%);
     }
 
     .apexcharts-title-text {
@@ -129,6 +146,6 @@ svg:not(:root){
 }
 @media (max-width: 480px) {
     .chart-wrapper--light {
-        padding: 20px 0 10px 0;
+        padding: 0 0 35px 0;
     }
 }

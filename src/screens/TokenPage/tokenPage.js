@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Main,
@@ -6,7 +6,6 @@ import {
   Desktop,
   TopContainer,
   LeftSideWrapper,
-  BottomContainer,
   RightSideWrapper,
 } from './styledComponents';
 import Stats from './components/stats/Stats';
@@ -27,22 +26,15 @@ const TokenPage = () => {
   const { tokenId } = useParams();
   const theme = useSelector((state) => state?.themeReducer.isLightTheme);
   const dispatch = useDispatch();
-
   const currentTokenData = useSelector((state) => state?.currentTokenDataReducer.currentTokenData);
-  console.log('currentTokenData', currentTokenData);
   const tokenData = currentTokenData?.id === tokenId ? currentTokenData : null;
-  console.log('tokenData', tokenData);
   const tokenTransactions = useSelector(
     (state) => state?.currentTokenTransactionsReducer.currentTokenTransactions
   );
-
-  console.log('tokenTransactions', tokenTransactions);
   const walletData = useSelector((state) => state?.walletDataReducer.walletData);
-  console.log('walletData', walletData);
   const tokenHistoryData = useSelector(
     (state) => state?.tokenPriceHistoryReducer.tokenPriceHistory
   );
-  console.log('tokenHistoryData', tokenHistoryData);
 
   useEffect(() => {
     dispatch(getTokenDataSaga(tokenId));
@@ -168,18 +160,6 @@ const TokenPage = () => {
       nameOfLink: 'Website',
       link: tokenData?.links.homepage[0],
     },
-    // {
-    //   nameOfLink: 'Twitter',
-    //   link: tokenData?.links.homepage,
-    // },
-    // {
-    //   nameOfLink: 'Discord ',
-    //   link: tokenData?.links.homepage,
-    // },
-    // {
-    //   nameOfLink: 'Coingecko ',
-    //   link: tokenData?.links.homepage,
-    // },
   ];
 
   return (

@@ -11,6 +11,8 @@ export default class DarkThemeChart extends Component {
       series: [],
       options: {
         chart: {
+          parentHeightOffset: 0,
+          offsetY: -20,
           id: 'area-datetime',
           type: 'line',
           height: 'auto',
@@ -170,7 +172,7 @@ export default class DarkThemeChart extends Component {
           text: this.props.totalValue,
           align: 'left',
           offsetX: -10,
-          offsetY: -15,
+          offsetY: 30,
           floating: false,
           style: {
             fontSize: '40px',
@@ -183,7 +185,7 @@ export default class DarkThemeChart extends Component {
           text: this.props.difValue,
           align: 'left',
           offsetX: this.props.totalValue.split('').length * 21 + 10,
-          offsetY: -2,
+          offsetY: 45,
           floating: false,
           style: {
             fontSize: '26px',
@@ -217,7 +219,6 @@ export default class DarkThemeChart extends Component {
     if (this.props.tokenPriceHistory !== prevProps.tokenPriceHistory) {
       this.getTokenChartHistory();
     }
-    console.log(this.props.difValue);
     if (
       this.state.options.subtitle.text !== this.props.difValue ||
       this.state.options.title.text !== this.props.totalValue
@@ -261,10 +262,8 @@ export default class DarkThemeChart extends Component {
       }
     }
     c = { data };
-    // points
     points.push(c);
     this.setState({ series: points });
-    // }
   }
 
   monthDiff(d1, d2) {
@@ -352,9 +351,8 @@ export default class DarkThemeChart extends Component {
   render() {
     return (
       <div className="chart-wrapper" style={{ background: 'transparent', boxShadow: 'none' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          {/*<div className="net-worth">Net worth</div>*/}
-          <div>
+        <div id="chart" className="chart">
+          <div className={'change-buttons-wrapper'}>
             <button
               id="one_hour"
               onClick={() => this.updateData('one_hour')}
@@ -396,8 +394,6 @@ export default class DarkThemeChart extends Component {
             </button>
             &nbsp;
           </div>
-        </div>
-        <div id="chart" className="chart">
           <div className="chart-timeline" style={{ float: 'left' }}>
             <ReactApexChart
               options={this.state.options}
