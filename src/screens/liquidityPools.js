@@ -29,6 +29,7 @@ import {
   InputBlock,
   LabelIcon,
   LabelTab,
+  PanelTab,
   PoolsTitle,
   SearchImg,
   Wrapper,
@@ -39,7 +40,7 @@ function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
-    <div
+    <PanelTab
       role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
@@ -50,7 +51,7 @@ function TabPanel(props) {
           <Typography>{children}</Typography>
         </Box>
       )}
-    </div>
+    </PanelTab>
   );
 }
 
@@ -69,8 +70,12 @@ function a11yProps(index) {
 
 export default function LiquidityPools() {
   const [value, setValue] = React.useState(0);
+  const [inputValue, setInputValue] = React.useState('');
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
+  const inputChange = (e) => {
+    setInputValue(e.target.value);
+  };
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -80,11 +85,17 @@ export default function LiquidityPools() {
       <Wrapper>
         <Description isLightTheme={isLightTheme}>
           Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool.
+          <br />
           Fees are added to the pool, accrue in real-time, and can be claimed by withdrawing your
           liquidity.
         </Description>
         <InputBlock>
-          <Input isLightTheme={isLightTheme} placeholder="Search by pool or token..." type="text" />
+          <Input
+            onChange={inputChange}
+            isLightTheme={isLightTheme}
+            placeholder="Search by pool or token..."
+            type="text"
+          />
           <SearchImg src={isLightTheme ? SearchIcon : SearchIconLight} alt="" />
         </InputBlock>
         <PoolsTitle isLightTheme={isLightTheme}>Available pools</PoolsTitle>
@@ -178,28 +189,13 @@ export default function LiquidityPools() {
             {...a11yProps(5)}
             disabled
           />
-          <Tab
-            label={
-              <div>
-                <LabelTab>
-                  <div>
-                    <LabelIcon src={InchLogo} alt="" />
-                  </div>
-                  <div>1inch Network</div>
-                </LabelTab>
-                <ComingBlock isLightTheme={isLightTheme}>Coming soon</ComingBlock>
-              </div>
-            }
-            {...a11yProps(5)}
-            disabled
-          />
         </AllTabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <UniV2 />
+        <UniV2 inputValue={inputValue} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <SushiV2 />
+        <SushiV2 inputValue={inputValue} />
       </TabPanel>
       <TabPanel value={value} index={2}>
         <Balancer />

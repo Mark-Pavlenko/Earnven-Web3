@@ -109,6 +109,8 @@ svg:not(:root){
   color: white;
   background: none;
   cursor: pointer;
+  font-family: 'Saira';
+
 }
 
 .dark-active {
@@ -124,6 +126,8 @@ svg:not(:root){
   font-size: 14px;
   box-sizing: border-box;
   min-width: 34px;
+  font-family: 'Saira';
+
 
 }
 
