@@ -4,11 +4,12 @@ export const Main = styled.div`
   background: ${({ isLightTheme }) =>
     isLightTheme ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)'};
   border-radius: 10px;
-  margin-bottom: 35px;
+  margin: 35px;
   width: 100%;
 `;
 
 export const Header = styled.div`
+  padding-left: 10px;
   height: 41px;
   display: flex;
   justify-content: space-between;
@@ -34,7 +35,7 @@ export const Chain = styled.div`
 `;
 
 export const Links = styled.div`
-  margin-left: 50px;
+  margin: 0 15px 0 50px;
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -45,8 +46,12 @@ export const TokenLinks = styled.div`
 `;
 
 export const TokenName = styled.div`
+  padding-left: 10px;
+  margin: 20px 0 0 0;
   display: flex;
   height: 41px;
+  font-size: 26px;
+  font-weight: 600;
   line-height: 41px;
   align-items: center;
 

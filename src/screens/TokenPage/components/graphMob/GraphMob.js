@@ -85,7 +85,7 @@ const GraphMob = ({
         theme={isLightTheme}
         tokenId={tokenId}
         totalValue={current_price ? `$${current_price}` : ''}
-        difValue={price_change_percentage_24h ? `${price_change_percentage_24h}%` : ''}
+        difValue={price_change_percentage_24h ? `${price_change_percentage_24h.toFixed(2)}%` : ''}
       />
     </Main>
   );

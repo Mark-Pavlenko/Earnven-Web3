@@ -5,11 +5,13 @@ export const RootStyle = styled('div')`
     props.isLightTheme
       ? `url(${require(`./../assets/images/lightDashboard.jpg`).default})`
       : `#0B0E1D`};
+  background-size: cover;
   @media (min-width: 1921px) {
     background: ${(props) =>
       props.isLightTheme
         ? `url(${require(`../assets/images/lightDashboardBig.jpg`).default})`
         : `#0B0E1D`};
+    background-size: cover;
   }
   @media (max-width: 480px) {
     background: ${(props) =>

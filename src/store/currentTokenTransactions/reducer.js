@@ -5,7 +5,7 @@ import {
 } from '../../constants/actionTypes';
 
 const initialState = {
-  currentTokenTransactions: [],
+  currentTokenTransactions: null,
   error: '',
   isLoading: false,
 };

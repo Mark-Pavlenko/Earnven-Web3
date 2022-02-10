@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Main,
@@ -6,13 +6,11 @@ import {
   Desktop,
   TopContainer,
   LeftSideWrapper,
-  BottomContainer,
   RightSideWrapper,
 } from './styledComponents';
 import Stats from './components/stats/Stats';
 import About from './components/about/About';
 import Graph from './components/graph/Graph';
-import History from './components/history/History';
 import Exchange from './components/exchange/Exchange';
 import GraphMob from './components/graphMob/GraphMob';
 import Performance from './components/performance/Performance';
@@ -26,42 +24,17 @@ import { getTokenPriceHistorySaga } from '../../store/currentTokenPriceHistory/a
 const TokenPage = () => {
   const { address } = useParams();
   const { tokenId } = useParams();
-  const [textAbout, setTextAbout] = useState(
-    'At vero eos et accusamus et iusto odio dignissimos ducimus qui ' +
-      'blanditiis praesentium voluptatum deleniti atque corrupti quos dolores ' +
-      'et quas molestias excepturi sint occaecati cupiditate non provident, ' +
-      'similique sunt in culpa qui officia deserunt mollitia animi, id est laborum ' +
-      'et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.' +
-      'blanditiis praesentium voluptatum deleniti atque corrupti quos dolores ' +
-      'et quas molestias excepturi sint occaecati cupiditate non provident, ' +
-      'similique sunt in culpa qui officia deserunt mollitia animi, id est laborum ' +
-      'At vero eos et accusamus et iusto odio dignissimos ducimus qui ' +
-      'blanditiis praesentium voluptatum deleniti atque corrupti quos dolores ' +
-      'et quas molestias excepturi sint occaecati cupiditate non provident, ' +
-      'similique sunt in culpa qui officia deserunt mollitia animi, id est laborum ' +
-      'et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.' +
-      'blanditiis praesentium voluptatum deleniti atque corrupti quos dolores ' +
-      'et quas molestias excepturi sint occaecati cupiditate non provident, ' +
-      'similique sunt in culpa qui officia deserunt mollitia animi, id est laborum ' +
-      'et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.'
-  );
   const theme = useSelector((state) => state?.themeReducer.isLightTheme);
   const dispatch = useDispatch();
-  const tokenData = useSelector((state) => {
-    return state?.currentTokenDataReducer.currentTokenData;
-  });
-  const tokenContractAddress = useSelector((state) => {
-    return state?.currentTokenDataReducer.currentTokenData?.contract_address;
-  });
-  const tokenTransactions = useSelector((state) => {
-    return state?.currentTokenTransactionsReducer.currentTokenTransactions;
-  });
-  const walletData = useSelector((state) => {
-    return state?.walletDataReducer.walletData;
-  });
-  const tokenHistoryData = useSelector((state) => {
-    return state?.tokenPriceHistoryReducer.tokenPriceHistory;
-  });
+  const currentTokenData = useSelector((state) => state?.currentTokenDataReducer.currentTokenData);
+  const tokenData = currentTokenData?.id === tokenId ? currentTokenData : null;
+  const tokenTransactions = useSelector(
+    (state) => state?.currentTokenTransactionsReducer.currentTokenTransactions
+  );
+  const walletData = useSelector((state) => state?.walletDataReducer.walletData);
+  const tokenHistoryData = useSelector(
+    (state) => state?.tokenPriceHistoryReducer.tokenPriceHistory
+  );
 
   useEffect(() => {
     dispatch(getTokenDataSaga(tokenId));
@@ -69,9 +42,17 @@ const TokenPage = () => {
     dispatch(getTokenPriceHistorySaga(tokenId));
   }, [tokenId]);
 
+  const tokenContractAddress = tokenData ? tokenData.contract_address : '';
+
   useEffect(() => {
-    dispatch(getTokenTransactionsSaga(tokenContractAddress, address));
+    if (tokenContractAddress) {
+      dispatch(getTokenTransactionsSaga(tokenContractAddress, address));
+    }
   }, [tokenContractAddress]);
+
+  const textAbout = tokenData
+    ? tokenData.description.en.replace(/<a\b[^>]*>/g, '').replace(/<\/a>/g, '')
+    : '';
 
   const usersTokenData = walletData
     ? tokenId === 'ethereum'
@@ -156,19 +137,20 @@ const TokenPage = () => {
         )}`
       : '';
 
-  const profitLoss = accumulationCost
-    ? (
-        accumulationCost -
-        tokenTransactions
-          .filter((e) => e.from === address)
-          .map(
-            (el) =>
-              (parseFloat(el.value) / 10 ** parseInt(el.tokenDecimal)) *
-              parseFloat(tokenData.market_data.current_price.usd)
-          )
-          .reduce((prev, el) => prev + el, 0)
-      ).toFixed(2)
-    : '';
+  const profitLoss =
+    accumulationCost && tokenData
+      ? (
+          accumulationCost -
+          tokenTransactions
+            .filter((e) => e.from === address)
+            .map(
+              (el) =>
+                (parseFloat(el.value) / 10 ** parseInt(el.tokenDecimal)) *
+                parseFloat(tokenData.market_data.current_price.usd)
+            )
+            .reduce((prev, el) => prev + el, 0)
+        ).toFixed(2)
+      : '';
 
   const profitLossPercent =
     accumulationCost && profitLoss ? ((profitLoss / accumulationCost) * 100).toFixed(2) : '';
@@ -178,18 +160,6 @@ const TokenPage = () => {
       nameOfLink: 'Website',
       link: tokenData?.links.homepage[0],
     },
-    // {
-    //   nameOfLink: 'Twitter',
-    //   link: tokenData?.links.homepage,
-    // },
-    // {
-    //   nameOfLink: 'Discord ',
-    //   link: tokenData?.links.homepage,
-    // },
-    // {
-    //   nameOfLink: 'Coingecko ',
-    //   link: tokenData?.links.homepage,
-    // },
   ];
 
   return (
@@ -206,9 +176,7 @@ const TokenPage = () => {
               current_price={
                 numberWithCommas(tokenData?.market_data.current_price.usd.toFixed(2)) || ''
               }
-              price_change_percentage_24h={
-                tokenData?.market_data.price_change_percentage_24h.toFixed(2) || ''
-              }
+              price_change_percentage_24h={tokenData?.market_data.price_change_percentage_24h || ''}
               links={links}
               tokenContractAddress={tokenContractAddress}
             />
@@ -238,9 +206,6 @@ const TokenPage = () => {
             <Exchange isLightTheme={theme} />
           </RightSideWrapper>
         </TopContainer>
-        <BottomContainer>
-          <History isLightTheme={theme} />
-        </BottomContainer>
       </Desktop>
       <Mobile>
         <GraphMob
@@ -252,9 +217,7 @@ const TokenPage = () => {
           current_price={
             numberWithCommas(tokenData?.market_data.current_price.usd.toFixed(2)) || ''
           }
-          price_change_percentage_24h={
-            tokenData?.market_data.price_change_percentage_24h.toFixed(2) || ''
-          }
+          price_change_percentage_24h={tokenData?.market_data.price_change_percentage_24h || ''}
           links={links}
           tokenContractAddress={tokenContractAddress}
         />
@@ -280,7 +243,6 @@ const TokenPage = () => {
           coingeckoScore={tokenData?.coingecko_score || ''}
         />
         <About isLightTheme={theme} textAbout={textAbout} />
-        <History isLightTheme={theme} />
       </Mobile>
     </Main>
   );
