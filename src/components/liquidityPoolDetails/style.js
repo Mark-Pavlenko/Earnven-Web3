@@ -32,6 +32,7 @@ export const TokensInfo = styled.div`
 `;
 
 export const Token = styled(BackgroundStyles)`
+  height: 92px;
   display: grid;
   align-items: center;
   grid-template-columns: 1fr 1fr;
@@ -39,6 +40,11 @@ export const Token = styled(BackgroundStyles)`
   background: ${(props) =>
     props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)'};
   color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#fff')};
+
+  @media (max-width: 768px) {
+    padding: 0 25px;
+    gap: 10px;
+  }
 `;
 
 export const PairInfo = styled(BackgroundStyles)`
@@ -125,6 +131,11 @@ export const TokenPrice = styled.div`
   font-weight: 500;
   font-size: 20px;
   line-height: 31px;
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    font-size: 16px;
+    gap: 30px;
+  }
 `;
 
 export const CompareTokens = styled.div`
