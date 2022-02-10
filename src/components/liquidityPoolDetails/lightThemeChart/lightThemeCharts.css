@@ -109,6 +109,7 @@ svg:not(:root){
     color: #1E1E20;;
     background: none;
     cursor: pointer;
+    font-family: 'Saira';
 }
 
 .light-active {
@@ -123,6 +124,7 @@ svg:not(:root){
     font-size: 14px;
     box-sizing: border-box;
     min-width: 34px;
+    font-family: 'Saira';
     color: #4453AD;
 
 }

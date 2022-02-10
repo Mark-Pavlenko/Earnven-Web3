@@ -23,6 +23,7 @@ export const AddNewGroupButton = styled.button`
   font-weight: 500;
   font-size: 14px;
   line-height: 22px;
+  border: none;
 `;
 
 export const ModalInput = styled.input`

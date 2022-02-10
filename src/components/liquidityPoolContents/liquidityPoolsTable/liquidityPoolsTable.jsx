@@ -10,6 +10,7 @@ import {
   HeaderApr,
   HeaderLiquidity,
   AvailableTitle,
+  ItemIndexHidden,
 } from './style';
 
 export const LiquidityPoolsTable = ({ data, type, AllTokens }) => {
@@ -19,7 +20,7 @@ export const LiquidityPoolsTable = ({ data, type, AllTokens }) => {
     <TableWrapper isLightTheme={theme}>
       <TableItem isLightTheme={theme}>
         <ItemHeader>
-          <ItemIndex>№</ItemIndex>
+          <ItemIndexHidden>№</ItemIndexHidden>
           <AvailableTitle>Available pools</AvailableTitle>
         </ItemHeader>
         <HeaderLiquidity>Liquidity</HeaderLiquidity>

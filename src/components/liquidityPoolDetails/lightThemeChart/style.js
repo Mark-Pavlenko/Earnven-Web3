@@ -18,7 +18,8 @@ export const ChartWrapper = styled.div`
     flex-direction: column-reverse;
     align-items: center;
     gap: 30px;
-    padding: 125px 30px 30px 30px;
+    padding: 125px 30px 0 30px;
+    border-radius: 30px;
   }
 `;
 
@@ -33,6 +34,10 @@ export const InvestButton = styled.button`
   font-weight: 500;
   font-size: 14px;
   cursor: pointer;
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+      : ' 7px 21px 22px -15px rgba(51, 78, 131, 0.17)'};
 `;
 
 export const EtherscanButton = styled.button`
@@ -70,12 +75,12 @@ export const ButtonsBlock = styled.div`
   display: grid;
   grid-template-columns: 40px 1fr 1fr;
   gap: 30px;
-  width: 25%;
+  width: 45%;
 
   @media (max-width: 768px) {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 50px;
+    gap: 15px;
     width: 100%;
   }
 `;
@@ -104,7 +109,7 @@ export const VisibleTokenImageBlock = styled.div`
 
 export const PairInfo = styled.div`
   display: flex;
-  gap: 30px;
+  gap: 10px;
   align-items: center;
   color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#fff')};
 `;

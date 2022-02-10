@@ -21,7 +21,7 @@ import {
   TokenImage,
   TokenImageBlock,
   TokenPrice,
-  TokensInfo
+  TokensInfo, Wrapper
 } from "./style";
 import CopyIcon from "../../assets/icons/copy-address.svg";
 // const getUniswapGraphData = require('./getPoolDetailGraphData')
@@ -1006,7 +1006,7 @@ export default function Chart(props) {
       {/*    />*/}
       {/*  )}*/}
       {/*</Grid>*/}
-      <div style={{ padding: '32px 0' }}>
+      <Wrapper>
         <>
           <div>
             {tokenid && isLightTheme === true ? (
@@ -1167,6 +1167,7 @@ export default function Chart(props) {
             </StatsWrapper>
           </Stats>
           <AboutBlock isLightTheme={isLightTheme}>
+            <BlockTitle>About</BlockTitle>
             <div style={{ textAlign: 'justify', opacity: '0.5' }}>{isHiddenText ? cutInfo(info) : info}</div>
             {info.length > 300 && (
               <ShowMoreBlock>
@@ -1175,7 +1176,7 @@ export default function Chart(props) {
             )}
           </AboutBlock>
         </>
-      </div>
+      </Wrapper>
     </Fragment>
   );
 }

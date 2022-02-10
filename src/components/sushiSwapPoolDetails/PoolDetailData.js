@@ -27,6 +27,7 @@ import {
   TokenImageBlock,
   TokenPrice,
   TokensInfo,
+  Wrapper,
 } from '../liquidityPoolDetails/style';
 import CopyIcon from '../../assets/icons/copy-address.svg';
 import DarkThemeChart from '../liquidityPoolDetails/darkThemeChart/darkThemeChart';
@@ -956,7 +957,7 @@ export default function Chart(props) {
       {/*    />*/}
       {/*  )}*/}
       {/*</Grid>*/}
-      <div style={{ padding: '32px 0' }}>
+      <Wrapper>
         <>
           <div>
             {tokenPairId && isLightTheme === true ? (
@@ -1123,6 +1124,7 @@ export default function Chart(props) {
             </StatsWrapper>
           </Stats>
           <AboutBlock isLightTheme={isLightTheme}>
+            <BlockTitle>About</BlockTitle>
             <div style={{ textAlign: 'justify' }}>{isHiddenText ? cutInfo(info) : info}</div>
             {info.length > 300 && (
               <ShowMoreBlock>
@@ -1133,7 +1135,7 @@ export default function Chart(props) {
             )}
           </AboutBlock>
         </>
-      </div>
+      </Wrapper>
     </>
   );
 }

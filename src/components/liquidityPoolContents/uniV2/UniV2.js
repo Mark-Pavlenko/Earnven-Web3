@@ -98,7 +98,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function LiquidityPools() {
+export default function LiquidityPools({ inputValue }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [Loading, setLoading] = useState(false);
@@ -945,11 +945,17 @@ export default function LiquidityPools() {
     console.log('vfvfvfv', data)
   }
 
+  console.log('asijdoasdlasfoij', Data)
+
+  const filterData = (Data) => {
+    return Data.filter(d => d.id.includes(inputValue) || (d.token0.symbol + ' ' + d.token1.symbol).includes(inputValue.toUpperCase()) || d.token0.name.includes(inputValue) || d.token1.name.includes(inputValue));
+  }
+
   return (
     <div>
       {/*<button onClick={() => {setIsModalOpen(true)}}>Open</button>*/}
       {/*{Content}*/}
-      <LiquidityPoolsTable data={Data} type={'uniswap'} />
+      <LiquidityPoolsTable data={filterData(Data)} type={'uniswap'} />
 
       <br />
       <center>

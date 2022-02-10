@@ -121,6 +121,15 @@ export default class LightThemeChart extends Component {
             borderType: 'solid',
             color: 'rgba(30,30,32, 0.03)',
           },
+          labels: {
+            style: {
+              fontSize: '10px',
+              colors: '#1E1E20',
+              fontFamily: 'saira',
+              fontWeight: 400,
+              opacity: 0.7,
+            },
+          },
         },
         yaxis: {
           labels: {
@@ -137,6 +146,7 @@ export default class LightThemeChart extends Component {
             style: {
               fontSize: '10px',
               colors: '#1E1E20',
+              fontFamily: 'saira',
               fontWeight: 400,
               opacity: 0.7,
             },

@@ -2,7 +2,9 @@ import styled from 'styled-components';
 import Tabs from '@material-ui/core/Tabs';
 
 export const Wrapper = styled.div`
-  padding: 0 20px;
+  @media (min-width: 175px) and (max-width: 840px) {
+    padding: 0 15px;
+  }
   margin-top: 20px;
 `;
 
@@ -17,7 +19,7 @@ export const Description = styled.div`
   margin-bottom: 20px;
   text-align: justify;
 
-  @media (max-width: 840px) {
+  @media (min-width: 175px) and (max-width: 840px) {
     width: 100%;
   }
 `;
@@ -28,7 +30,7 @@ export const InputBlock = styled.div`
   margin-bottom: 30px;
   position: relative;
 
-  @media (max-width: 840px) {
+  @media (min-width: 175px) and (max-width: 840px) {
     width: 100%;
   }
 `;
@@ -53,6 +55,7 @@ export const Input = styled.input`
   ::placeholder,
   ::-webkit-input-placeholder {
     color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#fff')};
+    opacity: ${(props) => (props.isLightTheme ? '0.5' : '0.8')};
   }
   color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#fff')};
 `;
@@ -90,13 +93,35 @@ export const AllTabs = styled(Tabs)`
   .MuiButtonBase-root {
     color: ${(props) => (props.isLightTheme ? '#1E1E20' : 'white')};
     opacity: ${(props) => (props.isLightTheme ? '0.5' : '0.8')};
-    padding: 10px;
-    margin-left: 20px;
     background: none;
     font-weight: 500;
     font-size: 20px;
     line-height: 31px;
     border-radius: 7px;
+  }
+
+  .MuiButtonBase-root:not(:first-child) {
+    margin-left: 20px;
+  }
+
+  @media (min-width: 175px) and (max-width: 840px) {
+    .MuiButtonBase-root:not(:first-child) {
+      margin-left: 20px;
+    }
+
+    margin-left: 15px;
+  }
+
+  .css-19mnrr-MuiButtonBase-root-MuiTab-root {
+    padding: 2px 10px;
+  }
+
+  .MuiTabs-flexContainer {
+    overflow-x: scroll;
+  }
+
+  .MuiTabs-flexContainer::-webkit-scrollbar {
+    display: none;
   }
 
   .Mui-selected {
@@ -116,5 +141,11 @@ export const AllTabs = styled(Tabs)`
 
   .css-1aquho2-MuiTabs-indicator {
     display: none;
+  }
+`;
+
+export const PanelTab = styled.div`
+  .css-19kzrtu {
+    padding: 24px 0;
   }
 `;

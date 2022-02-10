@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function LiquidityPools() {
+export default function LiquidityPools({ inputValue }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [Loading, setLoading] = useState(false);
@@ -749,10 +749,15 @@ export default function LiquidityPools() {
       .send({ from: accounts[0], value: web3.utils.toWei(ethAmount, 'ether') });
   }
 
+
+  const filterData = (Data) => {
+    return Data.filter(d => d.id.includes(inputValue) || (d.token0.symbol + ' ' + d.token1.symbol).includes(inputValue.toUpperCase()) || d.token0.name.includes(inputValue) || d.token1.name.includes(inputValue));
+  }
+
   return (
     <div>
       {/*{Content}*/}
-      <LiquidityPoolsTable data={Data} type={'sushiswap'} AllTokens={AllTokens} />
+      <LiquidityPoolsTable data={filterData(Data)} type={'sushiswap'} AllTokens={AllTokens} />
       <br />
       <center>
         <AddNewGroupButton

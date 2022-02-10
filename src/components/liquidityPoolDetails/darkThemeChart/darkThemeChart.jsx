@@ -126,6 +126,7 @@ export default class DarkThemeChart extends Component {
             style: {
               fontSize: '10px',
               colors: 'white',
+              fontFamily: 'saira',
               fontWeight: 400,
               opacity: 0.7,
             },
@@ -147,6 +148,7 @@ export default class DarkThemeChart extends Component {
               fontSize: '10px',
               colors: 'white',
               fontWeight: 400,
+              fontFamily: 'saira',
               opacity: 0.7,
             },
           },
