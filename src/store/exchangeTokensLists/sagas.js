@@ -3,7 +3,12 @@ import * as API from '../../api/api';
 import actionTypes from '../../constants/actionTypes';
 import * as actions from './actions';
 import ethImage from '../../assets/icons/eth.png';
-import { getUniswapFullCoinsList } from '../../api/api';
+import CoinGeckoMockTokensList from './CoinGecko.json';
+import {
+  getCoinGeckoFullTokensList,
+  getCoinGeckoTokenUSDCurrency,
+  getUniswapFullCoinsList,
+} from '../../api/api';
 
 export function* getSendTokensListSagaWatcher() {
   yield takeLatest(actionTypes.SET_SEND_TOKENS_LIST, getSendTokensListSagaWorker);
@@ -71,14 +76,34 @@ function* getReceiveTokensListSagaWorker() {
   const uniswapFullCoinsList = yield call(API.getUniswapFullCoinsList);
   // console.log('uniswapFullCoinsList sagas', uniswapFullCoinsList);
 
-  let result = zeroAPISwapTokensList.map((token) => ({
+  // return 429
+  // const coinGeckoFullTokensList = yield call(API.getCoinGeckoFullTokensList);
+  // console.log('coinGeckoFullTokensList sagas', coinGeckoFullTokensList);
+
+  let filteredCoinGeckoTokensList = CoinGeckoMockTokensList.filter((walletToken) =>
+    zeroAPISwapTokensList.find(
+      (zeroToken) =>
+        walletToken.symbol === zeroToken.symbol.toLowerCase() &&
+        walletToken.name.indexOf('(Wormhole)') === -1
+    )
+  );
+
+  // console.log('sagas filteredCoinGeckoTokensList', filteredCoinGeckoTokensList);
+
+  let finalList = zeroAPISwapTokensList.map((token) => ({
     ...token,
     logoURI: uniswapFullCoinsList.tokens.find((x) => x.address === token.address)
       ? uniswapFullCoinsList.tokens.find((x) => x.address === token.address).logoURI
       : null,
+    id: filteredCoinGeckoTokensList.find((x) => x.symbol === token.symbol.toLowerCase())
+      ? filteredCoinGeckoTokensList.find((x) => x.symbol === token.symbol.toLowerCase()).id
+      : null,
   }));
 
-  // console.log('middle receive list result sagas', result);
+  // console.log('finalList sagas', finalList);
 
-  yield put(actions.getReceiveTokensList(result));
+  // const getCoinGeckoTokenUSDCurrency = yield call(API.getCoinGeckoTokenUSDCurrency);
+  // console.log('getCoinGeckoTokenUSDCurrency sagas', getCoinGeckoTokenUSDCurrency);
+
+  yield put(actions.getReceiveTokensList(finalList));
 }

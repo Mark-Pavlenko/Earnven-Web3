@@ -275,6 +275,7 @@ export default function SwapComponent() {
   const [filteredReceiveTokensListData, setFilteredReceiveTokensListData] = useState([]);
 
   console.log('front finalSendTokensList', finalSendTokensList);
+  console.log('front finalReceiveTokensList', finalReceiveTokensList);
 
   useEffect(() => {
     finalSendTokensList.length !== 0 && setFilteredData(finalSendTokensList);
@@ -317,20 +318,20 @@ export default function SwapComponent() {
   //function of dynamic converting of token value to USD Currency
 
   let convertTokenToUSDCurrency = async (tokenData) => {
-    console.log('raw exchange token data', tokenData);
+    console.log('raw exchange token USD currency data', tokenData);
     // console.log('tokens amount num', tokenData.symbol.toLowerCase());
-
-    const convertedTokenName = tokenData.name.toLowerCase().replace(/\s+/g, '');
-    console.log('convertedTokenSymbol', convertedTokenName);
+    //
+    // const convertedTokenName = tokenData.symbol.toLowerCase().replace(/\s+/g, '');
+    // console.log('convertedTokenSymbol', convertedTokenName);
 
     try {
       const tokenUSDCurrencyValue = await axios.get(
-        `https://api.coingecko.com/api/v3/simple/price?ids=${convertedTokenName}&vs_currencies=usd`
+        `https://api.coingecko.com/api/v3/simple/price?ids=${tokenData.id}&vs_currencies=usd`
       );
 
       console.log('tokenUSDCurrencyValue', tokenUSDCurrencyValue);
 
-      console.log('tokenUSDCurrencyValue', `${tokenUSDCurrencyValue.data.convertedTokenName.usd}`);
+      // console.log('tokenUSDCurrencyValue', `${tokenUSDCurrencyValue.data.convertedTokenName.usd}`);
       // setethPrice(ethDollarValue.data.ethereum.usd);
     } catch (err) {
       console.log('getEthDollarValue err', err);
@@ -345,6 +346,12 @@ export default function SwapComponent() {
     } catch (error) {
       console.log(error);
     }
+  }, []);
+
+  useEffect(async () => {
+    await axios
+      .get('https://api.coingecko.com/api/v3/coins/list')
+      .then((res) => console.log('res coingecko tokens', res));
   }, []);
 
   useEffect(() => {
@@ -910,6 +917,18 @@ export default function SwapComponent() {
                     value={receiveTokenForExchangeAmount}
                     onChange={(e) => {
                       setReceiveTokenForExchangeAmount(e.target.value);
+                      convertTokenToUSDCurrency({
+                        amount: e.target.value,
+                        ...receiveTokenForExchange,
+                      });
+                    }}
+                    onBlur={(e) => {
+                      console.log('focus removed');
+                      convertTokenToUSDCurrency({
+                        amount: 1,
+                        ...receiveTokenForExchange,
+                      });
+                      // setSendTokenForExchangeAmount(0);
                     }}
                   />
                 </SendTokensChooseButton>

@@ -1,0 +1,542 @@
+[
+  {
+    "id": "0x",
+    "symbol": "zrx",
+    "name": "0x"
+  },
+  {
+    "id": "1inch",
+    "symbol": "1inch",
+    "name": "1inch"
+  },
+  {
+    "id": "aave",
+    "symbol": "aave",
+    "name": "Aave"
+  },
+  {
+    "id": "aion",
+    "symbol": "aion",
+    "name": "Aion"
+  },
+  {
+    "id": "airswap",
+    "symbol": "ast",
+    "name": "AirSwap"
+  },
+  {
+    "id": "akropolis",
+    "symbol": "akro",
+    "name": "Akropolis"
+  },
+  {
+    "id": "ampleforth",
+    "symbol": "ampl",
+    "name": "Ampleforth"
+  },
+  {
+    "id": "aragon",
+    "symbol": "ant",
+    "name": "Aragon"
+  },
+  {
+    "id": "ast-finance",
+    "symbol": "ast",
+    "name": "AST.finance"
+  },
+  {
+    "id": "audius",
+    "symbol": "audio",
+    "name": "Audius"
+  },
+  {
+    "id": "augur",
+    "symbol": "rep",
+    "name": "Augur"
+  },
+  {
+    "id": "balancer",
+    "symbol": "bal",
+    "name": "Balancer"
+  },
+  {
+    "id": "bancor",
+    "symbol": "bnt",
+    "name": "Bancor Network Token"
+  },
+  {
+    "id": "band-protocol",
+    "symbol": "band",
+    "name": "Band Protocol"
+  },
+  {
+    "id": "based-finance",
+    "symbol": "based",
+    "name": "Based Finance"
+  },
+  {
+    "id": "basic-attention-token",
+    "symbol": "bat",
+    "name": "Basic Attention Token"
+  },
+  {
+    "id": "binance-usd",
+    "symbol": "busd",
+    "name": "Binance USD"
+  },
+  {
+    "id": "bzx-protocol",
+    "symbol": "bzrx",
+    "name": "bZx Protocol"
+  },
+  {
+    "id": "cdai",
+    "symbol": "cdai",
+    "name": "cDAI"
+  },
+  {
+    "id": "celer-network",
+    "symbol": "celr",
+    "name": "Celer Network"
+  },
+  {
+    "id": "chainlink",
+    "symbol": "link",
+    "name": "Chainlink"
+  },
+  {
+    "id": "compound-0x",
+    "symbol": "czrx",
+    "name": "c0x"
+  },
+  {
+    "id": "compound-basic-attention-token",
+    "symbol": "cbat",
+    "name": "cBAT"
+  },
+  {
+    "id": "compound-coin",
+    "symbol": "comp",
+    "name": "Compound Coin"
+  },
+  {
+    "id": "compound-ether",
+    "symbol": "ceth",
+    "name": "cETH"
+  },
+  {
+    "id": "compound-governance-token",
+    "symbol": "comp",
+    "name": "Compound"
+  },
+  {
+    "id": "compound-sai",
+    "symbol": "csai",
+    "name": "cSAI"
+  },
+  {
+    "id": "compound-usd-coin",
+    "symbol": "cusdc",
+    "name": "cUSDC"
+  },
+  {
+    "id": "cream-2",
+    "symbol": "cream",
+    "name": "Cream"
+  },
+  {
+    "id": "curve-dao-token",
+    "symbol": "crv",
+    "name": "Curve DAO Token"
+  },
+  {
+    "id": "dai",
+    "symbol": "dai",
+    "name": "Dai"
+  },
+  {
+    "id": "daostack",
+    "symbol": "gen",
+    "name": "DAOstack"
+  },
+  {
+    "id": "decentraland",
+    "symbol": "mana",
+    "name": "Decentraland"
+  },
+  {
+    "id": "digixdao",
+    "symbol": "dgd",
+    "name": "DigixDAO"
+  },
+  {
+    "id": "district0x",
+    "symbol": "dnt",
+    "name": "district0x"
+  },
+  {
+    "id": "donut",
+    "symbol": "donut",
+    "name": "Donut"
+  },
+  {
+    "id": "enjincoin",
+    "symbol": "enj",
+    "name": "Enjin Coin"
+  },
+  {
+    "id": "ethereum",
+    "symbol": "eth",
+    "name": "Ethereum"
+  },
+  {
+    "id": "ethlend",
+    "symbol": "lend",
+    "name": "Aave [OLD]"
+  },
+  {
+    "id": "evolution",
+    "symbol": "gen",
+    "name": "Evolution"
+  },
+  {
+    "id": "foam-protocol",
+    "symbol": "foam",
+    "name": "FOAM"
+  },
+  {
+    "id": "funfair",
+    "symbol": "fun",
+    "name": "FUNToken"
+  },
+  {
+    "id": "gastoken",
+    "symbol": "gst2",
+    "name": "GasToken"
+  },
+  {
+    "id": "gemini-dollar",
+    "symbol": "gusd",
+    "name": "Gemini Dollar"
+  },
+  {
+    "id": "genesis-mana",
+    "symbol": "mana",
+    "name": "Genesis Mana"
+  },
+  {
+    "id": "gnosis",
+    "symbol": "gno",
+    "name": "Gnosis"
+  },
+  {
+    "id": "greentrust",
+    "symbol": "gnt",
+    "name": "GreenTrust"
+  },
+  {
+    "id": "havven",
+    "symbol": "snx",
+    "name": "Synthetix Network Token"
+  },
+  {
+    "id": "hut34-entropy",
+    "symbol": "entrp",
+    "name": "Hut34 Entropy"
+  },
+  {
+    "id": "icecream-finance",
+    "symbol": "cream",
+    "name": "IceCream Finance"
+  },
+  {
+    "id": "iexec-rlc",
+    "symbol": "rlc",
+    "name": "iExec RLC"
+  },
+  {
+    "id": "keep-network",
+    "symbol": "keep",
+    "name": "Keep Network"
+  },
+  {
+    "id": "kyber-network-crystal",
+    "symbol": "knc",
+    "name": "Kyber Network Crystal"
+  },
+  {
+    "id": "livepeer",
+    "symbol": "lpt",
+    "name": "Livepeer"
+  },
+  {
+    "id": "loom-network-new",
+    "symbol": "loom",
+    "name": "Loom Network (NEW)"
+  },
+  {
+    "id": "loopring",
+    "symbol": "lrc",
+    "name": "Loopring"
+  },
+  {
+    "id": "maker",
+    "symbol": "mkr",
+    "name": "Maker"
+  },
+  {
+    "id": "matic-network",
+    "symbol": "matic",
+    "name": "Polygon"
+  },
+  {
+    "id": "melon",
+    "symbol": "mln",
+    "name": "Enzyme"
+  },
+  {
+    "id": "meta",
+    "symbol": "mta",
+    "name": "mStable Governance Token: Meta"
+  },
+  {
+    "id": "metaaxis",
+    "symbol": "mta",
+    "name": "MetaAxis"
+  },
+  {
+    "id": "musd",
+    "symbol": "musd",
+    "name": "mStable USD"
+  },
+  {
+    "id": "numeraire",
+    "symbol": "nmr",
+    "name": "Numeraire"
+  },
+  {
+    "id": "nusd",
+    "symbol": "susd",
+    "name": "sUSD"
+  },
+  {
+    "id": "omisego",
+    "symbol": "omg",
+    "name": "OMG Network"
+  },
+  {
+    "id": "oxbitcoin",
+    "symbol": "0xbtc",
+    "name": "0xBitcoin"
+  },
+  {
+    "id": "pax-gold",
+    "symbol": "paxg",
+    "name": "PAX Gold"
+  },
+  {
+    "id": "payperex",
+    "symbol": "pax",
+    "name": "PayperEx"
+  },
+  {
+    "id": "pickle-finance",
+    "symbol": "pickle",
+    "name": "Pickle Finance"
+  },
+  {
+    "id": "pirate-dice",
+    "symbol": "booty",
+    "name": "Pirate Dice"
+  },
+  {
+    "id": "power-ledger",
+    "symbol": "powr",
+    "name": "Power Ledger"
+  },
+  {
+    "id": "raiden-network",
+    "symbol": "rdn",
+    "name": "Raiden Network Token"
+  },
+  {
+    "id": "renbtc",
+    "symbol": "renbtc",
+    "name": "renBTC"
+  },
+  {
+    "id": "renzec",
+    "symbol": "renzec",
+    "name": "renZEC"
+  },
+  {
+    "id": "republic-protocol",
+    "symbol": "ren",
+    "name": "REN"
+  },
+  {
+    "id": "request-network",
+    "symbol": "req",
+    "name": "Request"
+  },
+  {
+    "id": "rinnegan",
+    "symbol": "ren",
+    "name": "Rinnegan"
+  },
+  {
+    "id": "sai",
+    "symbol": "sai",
+    "name": "Sai"
+  },
+  {
+    "id": "sbtc",
+    "symbol": "sbtc",
+    "name": "sBTC"
+  },
+  {
+    "id": "seth",
+    "symbol": "seth",
+    "name": "sETH"
+  },
+  {
+    "id": "sether",
+    "symbol": "seth",
+    "name": "Sether"
+  },
+  {
+    "id": "siambitcoin",
+    "symbol": "sbtc",
+    "name": "SiamBitcoin"
+  },
+  {
+    "id": "soft-bitcoin",
+    "symbol": "sbtc",
+    "name": "Soft Bitcoin"
+  },
+  {
+    "id": "spankchain",
+    "symbol": "spank",
+    "name": "SpankChain"
+  },
+  {
+    "id": "stabilize-usd",
+    "symbol": "susd",
+    "name": "Stabilize USD"
+  },
+  {
+    "id": "storj",
+    "symbol": "storj",
+    "name": "Storj"
+  },
+  {
+    "id": "supernova",
+    "symbol": "snt",
+    "name": "Supernova"
+  },
+  {
+    "id": "sushi",
+    "symbol": "sushi",
+    "name": "Sushi"
+  },
+  {
+    "id": "sweet-btc",
+    "symbol": "sbtc",
+    "name": "Sweet BTC"
+  },
+  {
+    "id": "swerve-dao",
+    "symbol": "swrv",
+    "name": "Swerve"
+  },
+  {
+    "id": "swusd",
+    "symbol": "swusd",
+    "name": "Swerve.fi USD"
+  },
+  {
+    "id": "t-bitcoin",
+    "symbol": "tbtc",
+    "name": "τBitcoin"
+  },
+  {
+    "id": "tbtc",
+    "symbol": "tbtc",
+    "name": "tBTC"
+  },
+  {
+    "id": "tether",
+    "symbol": "usdt",
+    "name": "Tether"
+  },
+  {
+    "id": "true-usd",
+    "symbol": "tusd",
+    "name": "TrueUSD"
+  },
+  {
+    "id": "uma",
+    "symbol": "uma",
+    "name": "UMA"
+  },
+  {
+    "id": "unibright",
+    "symbol": "ubt",
+    "name": "Unibright"
+  },
+  {
+    "id": "unicorn-token",
+    "symbol": "uni",
+    "name": "UNICORN Token"
+  },
+  {
+    "id": "uniswap",
+    "symbol": "uni",
+    "name": "Uniswap"
+  },
+  {
+    "id": "universe-token",
+    "symbol": "uni",
+    "name": "UNIVERSE Project"
+  },
+  {
+    "id": "usd-coin",
+    "symbol": "usdc",
+    "name": "USD Coin"
+  },
+  {
+    "id": "usd-coin-avalanche-bridged-usdc-e",
+    "symbol": "usdc",
+    "name": "USD Coin Avalanche Bridged (USDC.e)"
+  },
+  {
+    "id": "weth",
+    "symbol": "weth",
+    "name": "WETH"
+  },
+  {
+    "id": "wrapped-bitcoin",
+    "symbol": "wbtc",
+    "name": "Wrapped Bitcoin"
+  },
+  {
+    "id": "wrapped-fantom",
+    "symbol": "wftm",
+    "name": "Wrapped Fantom"
+  },
+  {
+    "id": "xdai-stake",
+    "symbol": "stake",
+    "name": "STAKE"
+  },
+  {
+    "id": "yearn-finance",
+    "symbol": "yfi",
+    "name": "yearn.finance"
+  },
+  {
+    "id": "zilliqa",
+    "symbol": "zil",
+    "name": "Zilliqa"
+  }
+]

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import CoinGecko from 'coingecko-api';
+
 const CoinGeckoClient = new CoinGecko();
 
 const TOKEN =
@@ -35,6 +36,11 @@ export const getAddressInfo = async (accountAddress) => {
   );
 };
 
+export const getCoinGeckoFullTokensList = async () => {
+  const coinGeckoFullTokensList = await axios.get('https://api.coingecko.com/api/v3/coins/list');
+  return coinGeckoFullTokensList.data;
+};
+
 export const getUniswapFullCoinsList = async () => {
   const uniswapFullCoinsList = await axios.get('https://tokens.coingecko.com/uniswap/all.json');
   return uniswapFullCoinsList.data;
@@ -43,6 +49,12 @@ export const getUniswapFullCoinsList = async () => {
 export const getZeroAPITokensList = async () => {
   const rawZeroAPITokensList = await axios.get(`https://api.0x.org/swap/v1/tokens`);
   return rawZeroAPITokensList.data.records;
+};
+
+export const getCoinGeckoTokenUSDCurrency = async (tokenId) => {
+  return await axios.get(
+    `https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=usd`
+  );
 };
 
 export const getTwitterPosts = async (attributes) => {
