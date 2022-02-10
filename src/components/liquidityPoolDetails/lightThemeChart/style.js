@@ -47,6 +47,7 @@ export const EtherscanButton = styled.button`
   padding: 10px;
   height: 40px;
   cursor: pointer;
+  box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
 `;
 
 export const TypeText = styled.div`

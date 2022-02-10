@@ -18,6 +18,7 @@ import {
   ChartWrapper,
 } from './style';
 import EtherscanIcon from '../../../assets/icons/etherscan.svg';
+import EtherscanIconDark from '../../../assets/icons/ethersccan-dark.svg';
 import { Link } from 'react-router-dom';
 
 export default class LightThemeChart extends Component {
