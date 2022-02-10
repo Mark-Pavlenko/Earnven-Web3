@@ -775,11 +775,6 @@ export default function LiquidityPools() {
 
   //*first input value sends to smartContract
   async function addLiquidity(tokenA, tokenB, supplyToken, supplyTokenQtty) {
-    // console.log('addLiquiditytokenA', tokenA)
-    // console.log('addLiquiditytokenB', tokenB)
-    // console.log('addLiquiditysupplyToken', supplyToken)
-    // console.log('addLiquiditysupplyTokenQtty', supplyTokenQtty)
-
     await loadWeb3();
     const web3 = window.web3;
     const accounts = await web3.eth.getAccounts();
@@ -812,31 +807,36 @@ export default function LiquidityPools() {
 
   //*two inputs value send to smartContract
   async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB) {
-    const start = parseInt(Date.now() / 1000) + 180;
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var tokenAContract = new web3.eth.Contract(ERC20ABI, tokenA);
-    var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
-    await tokenAContract.methods
-      .approve(Addresses.uniRouter, web3.utils.toWei(amountTokenA, 'ether'))
-      .send({ from: accounts[0] });
-    await tokenBContract.methods
-      .approve(Addresses.uniRouter, web3.utils.toWei(amountTokenB, 'ether'))
-      .send({ from: accounts[0] });
-    const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.uniRouter);
-    await UniRouter.methods
-      .addLiquidity(
-        tokenA,
-        tokenB,
-        web3.utils.toWei(amountTokenA, 'ether'),
-        web3.utils.toWei(amountTokenB, 'ether'),
-        0,
-        0,
-        accounts[0],
-        start.toString()
-      )
-      .send({ from: accounts[0] });
+    console.log('addLiquidityNormaltokenA', tokenA)
+    console.log('addLiquidityNormaltokenB', tokenB)
+    console.log('addLiquidityNormalsupplyToken', amountTokenA)
+    console.log('addLiquidityNormalsupplyTokenQtty', amountTokenB)
+
+    // const start = parseInt(Date.now() / 1000) + 180;
+    // await loadWeb3();
+    // const web3 = window.web3;
+    // const accounts = await web3.eth.getAccounts();
+    // var tokenAContract = new web3.eth.Contract(ERC20ABI, tokenA);
+    // var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
+    // await tokenAContract.methods
+    //   .approve(Addresses.uniRouter, web3.utils.toWei(amountTokenA, 'ether'))
+    //   .send({ from: accounts[0] });
+    // await tokenBContract.methods
+    //   .approve(Addresses.uniRouter, web3.utils.toWei(amountTokenB, 'ether'))
+    //   .send({ from: accounts[0] });
+    // const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.uniRouter);
+    // await UniRouter.methods
+    //   .addLiquidity(
+    //     tokenA,
+    //     tokenB,
+    //     web3.utils.toWei(amountTokenA, 'ether'),
+    //     web3.utils.toWei(amountTokenB, 'ether'),
+    //     0,
+    //     0,
+    //     accounts[0],
+    //     start.toString()
+    //   )
+    //   .send({ from: accounts[0] });
   }
 
   //useState for mamaging open/close modal

@@ -1,3 +1,5 @@
+import {DEFAULT_CHAIN_ID} from "./connectors";
+
 export interface Address {
   4: string;
   1: string;
@@ -7,6 +9,7 @@ export interface Token {
   key: string;
   address: Address;
   decimals: number;
+  DEFAULT_CHAIN_ID: number
 }
 
 export interface Contract {

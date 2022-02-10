@@ -55,3 +55,17 @@ export const TokenLink = styled.a`
     transition: all 0.2s;
   }
 `;
+
+export const CommonSubmitButton = styled.button`
+  width: ${(props) => (props.width ? props.width : '100%')};
+  background: ${(props) => (props.isLightTheme ? '#fff' : '#8f86ff')};
+  color: ${(props) => (props.isLightTheme ? '#4453AD' : ' white')};
+  box-shadow: inset 0 11px 21px -6px rgb(51 78 131 / 12%);
+  border-radius: 10px;
+  border: none;
+  padding: 9px 55px;
+  font-family: 'Saira', serif;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+`;

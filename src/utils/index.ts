@@ -159,5 +159,4 @@ export const formattedNum = (number: any, usd = false) => {
 export const getAddressByChainId = (address: Address, chainId: number | undefined) =>
   chainId && address[chainId as keyof Address]
     ? address[chainId as keyof Address]
-    : // @ts-ignore
-      address[DEFAULT_CHAIN_ID];
+    : address[DEFAULT_CHAIN_ID as keyof Address];

@@ -15,6 +15,7 @@ import {
   MenuPopoverBoxTitle,
   MenuPopoverBoxNote,
 } from './styles';
+import { useSelector } from 'react-redux';
 
 const gasType = [
   {
@@ -37,41 +38,39 @@ const gasType = [
 const MINUTE_MS = 10000;
 
 export default function GasDropdownMenuHeader({ isLightTheme }) {
+  const GasPrices = useSelector((state) => state.gesData.gasPriceData);
   const anchorRef = useRef(null);
   const [open, setopen] = useState(false);
   const [selected, setselected] = useState('Average');
-  const [GasPrices, setGasPrices] = useState([]);
+  // const [GasPrices, setGasPrices] = useState([]);
   const [GasPricesContent, setGasPricesContent] = useState([]);
 
-  useEffect(() => {
-    async function getData() {
-      try {
-        const response = await axios.get(
-          'https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W'
-        );
-        // console.log('gas item response', response);
-        const { result } = response.data;
-        gasType[0].value = result.FastGasPrice;
-        gasType[1].value = result.ProposeGasPrice;
-        gasType[2].value = result.SafeGasPrice;
-        data.gasSelected = result.ProposeGasPrice;
-        // setGasPrices([])
-        setGasPrices([...gasType]);
-        // console.log('gasType', gasType);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    getData();
-
-    const interval = setInterval(() => {
-      // console.log('Logs every 10 secs');
-      getData();
-    }, MINUTE_MS);
-
-    return () => clearInterval(interval);
-  }, []);
+  // useEffect(() => {
+  //   async function getData() {
+  //     try {
+  //       const response = await axios.get(
+  //         'https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W'
+  //       );
+  //       const { result } = response.data;
+  //       gasType[0].value = result.FastGasPrice;
+  //       gasType[1].value = result.ProposeGasPrice;
+  //       gasType[2].value = result.SafeGasPrice;
+  //       data.gasSelected = result.ProposeGasPrice;
+  //       setGasPrices([...gasType]);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+  //
+  //   getData();
+  //
+  //   const interval = setInterval(() => {
+  //     // console.log('Logs every 10 secs');
+  //     getData();
+  //   }, MINUTE_MS);
+  //
+  //   return () => clearInterval(interval);
+  // }, []);
 
   useEffect(() => {
     const updateGasValue = (val, label) => {

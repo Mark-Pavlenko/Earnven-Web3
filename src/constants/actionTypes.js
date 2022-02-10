@@ -133,6 +133,9 @@ export default {
   GET_COMP_TOKEN_DATA: 'GET_COMP_TOKEN_DATA',
   GET_COMP_TOKEN_TOTAL: 'GET_COMP_TOKEN_TOTAL',
   GET_COMP_CLAIM_DATA: 'GET_COMP_CLAIM_DATA',
+
+  //gas price
+  SET_GAS_DATA: 'SET_GAS_DATA',
 };
 
 //  tokenPage data

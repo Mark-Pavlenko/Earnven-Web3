@@ -19,7 +19,7 @@ export const web3Reducer = (state = initialState, action) => {
   }
 };
 
-export const getWeb3Object = (web3Object) => {
-  console.log('web3Object', web3Object);
-  return { type: 'GET_WEB3_OBJECT', web3Object: web3Object };
-};
+// export const getWeb3Object = (web3Object) => {
+//   console.log('web3Object', web3Object);
+//   return { type: 'GET_WEB3_OBJECT', web3Object: web3Object };
+// };

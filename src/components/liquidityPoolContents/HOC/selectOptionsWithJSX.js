@@ -17,7 +17,8 @@ export const SelectOptionsWithJSX = (options) => {
           <Name>{option.name}</Name>
         </div>
       ),
-      value: option.value,
+      value: option.name,
+      symbol: option.symbol,
       address: option.address,
     };
   });

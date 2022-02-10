@@ -10,7 +10,7 @@ import {
   HeaderApr,
   HeaderLiquidity,
   AvailableTitle,
-} from './style';
+} from './styledComponents';
 
 export const LiquidityPoolsTable = ({ data, type, addLiquidity, addLiquidityNormal }) => {
   const theme = useSelector((state) => state.themeReducer.isLightTheme);

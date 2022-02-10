@@ -383,9 +383,9 @@ export default function LiquidityPools() {
                   <br />
                   <br />
                   <TransparentButton
-                    onClick={(e) => {
-                      addLiquidityNormal(item.token0.id, item.token1.id, TokenA, TokenB);
-                    }}
+                    // onClick={(e) => {
+                    //   addLiquidityNormal(object.token0.id, object.token1.id, TokenA, TokenB);
+                    // }}
                     value="Add Liquidity Classic Method"
                   />
                   {/*Input with button for swap tokens just between pair -------------------->*/}
@@ -708,6 +708,7 @@ export default function LiquidityPools() {
 
   //*********first input value sends to smartContract
   async function addLiquidity(tokenA, tokenB, supplyToken, supplyTokenQtty) {
+    console.log('addLiquidity was clicked')
     console.log('addLiquiditytokenA', tokenA)
     console.log('addLiquiditytokenB', tokenB)
     console.log('addLiquiditysupplyToken', supplyToken)
@@ -731,6 +732,12 @@ export default function LiquidityPools() {
 
   //********two inputs value send to smartContract
   async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB) {
+    console.log('addLiquidityNormal was clicked')
+    // console.log('addLiquidityNormaltokenA', tokenA)
+    // console.log('addLiquidityNormaltokenB', tokenB)
+    // console.log('addLiquidityNormalsupplyToken', amountTokenA)
+    // console.log('addLiquidityNormalsupplyTokenQtty', amountTokenB)
+
     const start = parseInt(Date.now() / 1000) + 180;
     await loadWeb3();
     const web3 = window.web3;
@@ -774,7 +781,12 @@ export default function LiquidityPools() {
 
   return (
     <div>
-      <LiquidityPoolsTable data={Data} type={'sushiswap'} AllTokens={AllTokens} addLiquidity={addLiquidity} addLiquidityNormal={addLiquidityNormal} />
+      <LiquidityPoolsTable
+          data={Data} type={'sushiswap'}
+          AllTokens={AllTokens}
+          addLiquidity={addLiquidity}
+          addLiquidityNormal={addLiquidityNormal}
+      />
       <br />
       <center>
         <AddNewGroupButton

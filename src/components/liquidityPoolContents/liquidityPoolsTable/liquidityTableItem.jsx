@@ -14,7 +14,8 @@ import {
   APR,
   AprValue,
   BalanceValue,
-} from './style';
+  ResetButton,
+} from './styledComponents';
 import { SvgComponent } from '../svgComponent/svgComponent';
 import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
 import ModalContainer from '../../common/modalContainer/modalContainer';
@@ -45,6 +46,10 @@ import Addresses from '../../../contractAddresses';
 import axios from 'axios';
 import tokenURIs from '../../../screens/Exchange/tokenURIs';
 import TOKENDECIMALSABI from '../../../abi/TokenDecomals.json';
+import { CommonSubmitButton } from '../../../screens/TokenPage/components/styledComponentsCommon';
+import { GasMenuItem } from '../../gasDropDownMenu/styles';
+import { useSelector } from 'react-redux';
+import { data } from '../../../globalStore';
 
 export const LiquidityTableItem = ({
   item,
@@ -54,22 +59,32 @@ export const LiquidityTableItem = ({
   addLiquidity,
   addLiquidityNormal,
 }) => {
+  const GasPrices = useSelector((state) => state.gesData.gasPriceData);
+
   const address = useParams().address;
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState('');
+  //''
+  //addLiquidity
+  //slippageTolerance
   const [selectedModal, setSelectedModal] = useState('');
 
   const [outValue, setOutValue] = useState('');
   const [inValue, setInValue] = useState('');
 
-  const [TokenA, setTokenA] = useState('');
-  const [TokenB, setTokenB] = useState('');
+  const [addLiquidityNormalTokenA, setAddLiquidityNormalTokenA] = useState('');
+  const [addLiquidityNormalTokenB, setAddLiquidityNormalTokenB] = useState('');
 
-  const [tokenAddress, setTokenAddress] = useState('');
+  const [tokenAddress, setTokenAddress] = useState('0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
   const [singleTokenValue, setSingleTokenValue] = useState();
 
   const [allTokens, setAllTokens] = useState([]);
   const [inputType, setInputType] = useState('single');
+
+  const selectInitialValue = {
+    label: 'Ether',
+    value: 'Ether',
+  };
 
   useEffect(() => {
     async function getData() {
@@ -101,7 +116,7 @@ export const LiquidityTableItem = ({
 
   const switchModal = (e) => {
     setSelectedModal(e.target.id);
-    setIsModalVisible(true);
+    setIsModalVisible('addLiquidity');
   };
 
   const selectStyle = {
@@ -201,9 +216,6 @@ export const LiquidityTableItem = ({
   }
 
   const convertTokenPrice = async (inputId, value, token1, token2) => {
-    console.log('TOKENaddresses1', token1);
-    console.log('TOKENaddresses2', token2);
-
     await loadWeb3();
     const web3 = window.web3;
     //------------------------------------->
@@ -220,8 +232,6 @@ export const LiquidityTableItem = ({
         return res;
       });
     //------------------------------------->
-    console.log('tokenDecimal1', tokenDecimal1);
-    console.log('tokenDecimal2', tokenDecimal2);
     const NewContract = new web3.eth.Contract(
       ROUTERABI,
       '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
@@ -232,6 +242,9 @@ export const LiquidityTableItem = ({
           .getAmountsOut((value * 10 ** tokenDecimal1).toString(), [token1, token2])
           .call();
 
+        setAddLiquidityNormalTokenA((value * 10 ** tokenDecimal1).toString());
+        setAddLiquidityNormalTokenB(convertedValue[1]);
+
         setOutValue(+convertedValue[1] / 10 ** tokenDecimal2);
         setInValue(value);
       }
@@ -239,8 +252,11 @@ export const LiquidityTableItem = ({
         const convertedValue = await NewContract.methods
           .getAmountsIn((value * 10 ** tokenDecimal2).toString(), [token1, token2])
           .call();
-        setInValue(+convertedValue[0] / 10 ** tokenDecimal1);
 
+        setAddLiquidityNormalTokenA(convertedValue[0]);
+        setAddLiquidityNormalTokenB((value * 10 ** tokenDecimal2).toString());
+
+        setInValue(+convertedValue[0] / 10 ** tokenDecimal1);
         setOutValue(value);
       }
     } else {
@@ -249,14 +265,12 @@ export const LiquidityTableItem = ({
     }
   };
 
-  const handler = (value) => {
+  const supplyTokenHandler = (value) => {
+    console.log('supplyTokenHandler', value);
     setTokenAddress(value.address);
   };
 
   const addLiquidityToPair = async (token1, token2, tokenValue) => {
-    console.log('ToPair1', token1);
-    console.log('ToPair2', token2);
-    console.log('ToPair3', tokenAddress);
     const tokenValueHalf = tokenValue / 2;
 
     await loadWeb3();
@@ -318,34 +332,53 @@ export const LiquidityTableItem = ({
           (singleTokenValue * 10 ** 18).toString()
         );
       case 'pair':
-        console.log('PAIRtype');
+        return addLiquidityNormal(
+          item.token0.id,
+          item.token1.id,
+          addLiquidityNormalTokenA,
+          addLiquidityNormalTokenB
+        );
     }
+  };
+
+  const slippageHandler = () => {
+    setIsModalVisible('slippageTolerance');
+  };
+
+  const handleClose = () => {
+    // setopen(false);
+  };
+
+  const updateGasValue = (val, label) => {
+    // data.gasSelected = val;
+    // setselected(label);
   };
 
   return (
     <>
-      {isModalVisible && (
+      {/*MODAL addLiquidity====================================>*/}
+      {isModalVisible === 'addLiquidity' && (
         <ModalContainer
           theme={theme}
-          title={selectedModal + (index + 1)}
+          title={selectedModal}
           isOpen={isModalVisible}
-          onClose={() => {
-            setIsModalVisible(false);
-          }}>
+          closeModal={setIsModalVisible}>
           <SelectWrapper>
             <SelectTitle>{'Supply a token'}</SelectTitle>
             <Select
-              defaultValue={'Ethereum'}
+              defaultValue={selectInitialValue}
               styles={selectStyle}
               options={updatedOptions}
-              onChange={handler}
+              onChange={supplyTokenHandler}
             />
             <InputBlock>
               <ModalInput
                 value={singleTokenValue}
                 type="number"
                 onChange={(e) => {
-                  addLiquidityToPair(item.token0.id, item.token1.id, e.target.value);
+                  addLiquidityToPair(item.token0.id, item.token1.id, e.target.value).then(
+                    (res) => res
+                  );
                   setSingleTokenValue(e.target.value);
                   setInputType('single');
                 }}
@@ -370,7 +403,6 @@ export const LiquidityTableItem = ({
               <ModalInput
                 value={inValue}
                 onChange={(e) => {
-                  setTokenA(e.target.value);
                   convertTokenPrice(
                     'firstInput',
                     parseInt(e.target.value),
@@ -399,7 +431,6 @@ export const LiquidityTableItem = ({
               <ModalInput
                 value={outValue}
                 onChange={(e) => {
-                  setTokenB(e.target.value);
                   convertTokenPrice(
                     'secondInput',
                     parseInt(e.target.value),
@@ -418,9 +449,11 @@ export const LiquidityTableItem = ({
             </InputBlock>
             {/*input-------------------->*/}
             <LinksContainer>
-              <ModalLink href={'#'}>aaa</ModalLink>
+              <ModalLink onClick={slippageHandler} href={'#'}>
+                {'Slippage Tolerance'}
+              </ModalLink>
               <ModalLinkRight href={'#'}>bbb</ModalLinkRight>
-              <ModalLink href={'#'}>ccc</ModalLink>
+              <ModalLink href={'#'}>{'Transaction speed'}</ModalLink>
               <ModalLinkRight href={'#'}>ddd</ModalLinkRight>
             </LinksContainer>
             <ButtonsBlock>
@@ -429,6 +462,51 @@ export const LiquidityTableItem = ({
           </SelectWrapper>
         </ModalContainer>
       )}
+      {/*MODAL slippageTolerance====================================>*/}
+      {isModalVisible === 'slippageTolerance' && (
+        <ModalContainer
+          modalType={isModalVisible}
+          theme={theme}
+          isOpen={isModalVisible}
+          closeModal={setIsModalVisible}>
+          {GasPrices.map((option) => (
+            <div
+              style={{ display: 'flex', flexDirection: 'column' }}
+              // selected={option.label === selected}
+              onClick={() => {
+                handleClose();
+                updateGasValue(option.value, option.label);
+              }}
+              sx={{ py: 1, px: 2.5 }}>
+              <GasMenuItem isLightTheme={theme}>
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                  <img src={option.icon} alt="" />
+                  <span>{`${option.label} `}</span>
+                </div>
+                <div>
+                  <span>{`${option.value} Gwei`}</span>
+                </div>
+              </GasMenuItem>
+            </div>
+          ))}
+          <ResetButton
+            isLightTheme={theme}
+            onClick={() => {
+              setIsModalVisible('');
+            }}>
+            {'Reset'}
+          </ResetButton>
+          <CommonSubmitButton
+            width={'165px'}
+            isLightTheme={theme}
+            onClick={() => {
+              setIsModalVisible('');
+            }}>
+            {'Save'}
+          </CommonSubmitButton>
+        </ModalContainer>
+      )}
+      {/*MODAL slippageTolerance====================================>*/}
       <TableItem isLightTheme={theme}>
         <ItemHeader>
           <ItemIndex>{index + 1}</ItemIndex>
@@ -477,9 +555,13 @@ export const LiquidityTableItem = ({
           </AprBlock>
         </APR>
         <ItemButtons>
-          <InvestButton isLightTheme={theme} id="Add Liquidity" onClick={switchModal}>
+          <CommonSubmitButton
+            width={'165px'}
+            isLightTheme={theme}
+            id="Add Liquidity"
+            onClick={switchModal}>
             Invest
-          </InvestButton>
+          </CommonSubmitButton>
           {type === 'sushiswap' ? (
             <Link to={`/${address}/${type}/address/${item.token0.id}/${item.token1.id}`}>
               <InfoButton isLightTheme={theme}>
@@ -498,5 +580,3 @@ export const LiquidityTableItem = ({
     </>
   );
 };
-
-//(SupplyTokenAmount * 10 ** 18).toString()    --First input value. We send it as (1 * 10 ** 18).toString()

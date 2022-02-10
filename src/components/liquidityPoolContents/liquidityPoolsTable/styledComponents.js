@@ -85,11 +85,12 @@ export const InvestButton = styled.button`
   border-radius: 10px;
   border: none;
   padding: 9px 55px;
-  font-family: 'Saira';
+  font-family: 'Saira', serif;
   font-weight: 500;
   font-size: 14px;
   cursor: pointer;
 `;
+
 export const InfoButton = styled(InvestButton)`
   padding: 11px;
   display: flex;
@@ -174,4 +175,18 @@ export const AvailableTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+export const ResetButton = styled.button`
+  background: ${(props) => (props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : '#8f86ff')};
+  color: ${(props) => (props.isLightTheme ? '#4453AD' : ' white')};
+  box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(35px);
+  border-radius: 10px;
+  border: none;
+  padding: 9px 55px;
+  font-family: 'Saira', serif;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
 `;
