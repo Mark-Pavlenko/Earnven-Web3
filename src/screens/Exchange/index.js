@@ -240,12 +240,15 @@ export default function SwapComponent() {
     logoURI: EthIcon,
     avatarIcon: 'Ethereum',
     name: 'ethereum',
+    id: 'ethereum',
     // USDCurrency:
   });
   const [receiveTokenForExchange, setReceiveTokenForExchange] = useState({
     symbol: 'DAI',
     logoURI: daiICon,
     avatarIcon: 'Dai Stablecoin',
+    name: 'dai',
+    id: 'dai',
   });
   const [TokenTo, setTokenTo] = useState('');
   const [sendTokenForExchangeAmount, setSendTokenForExchangeAmount] = useState();
@@ -318,25 +321,40 @@ export default function SwapComponent() {
   //function of dynamic converting of token value to USD Currency
 
   let convertTokenToUSDCurrency = async (tokenData) => {
-    console.log('raw exchange token USD currency data', tokenData);
-    // console.log('tokens amount num', tokenData.symbol.toLowerCase());
-    //
+    console.log('exchange token USD currency data', tokenData);
+
     // const convertedTokenName = tokenData.symbol.toLowerCase().replace(/\s+/g, '');
     // console.log('convertedTokenSymbol', convertedTokenName);
 
-    try {
-      const tokenUSDCurrencyValue = await axios.get(
+    if (tokenData.initTokenLoad) {
+      const initUSD = await axios.get(
         `https://api.coingecko.com/api/v3/simple/price?ids=${tokenData.id}&vs_currencies=usd`
       );
-
-      console.log('tokenUSDCurrencyValue', tokenUSDCurrencyValue);
-
-      // console.log('tokenUSDCurrencyValue', `${tokenUSDCurrencyValue.data.convertedTokenName.usd}`);
-      // setethPrice(ethDollarValue.data.ethereum.usd);
-    } catch (err) {
-      console.log('getEthDollarValue err', err);
+      console.log('initUSD', Object.values(initUSD.data)[0].usd);
     }
+
+    // try {
+    let tokenUSDCurrencyValue;
+    if (tokenData.receiveTokensListItem === true) {
+      tokenUSDCurrencyValue = await axios.get(
+        `https://api.coingecko.com/api/v3/simple/price?ids=${tokenData.id}&vs_currencies=usd`
+      );
+    }
+
+    console.log('exchange token USD tokenUSDCurrencyValue', tokenUSDCurrencyValue);
+
+    // console.log('tokenUSDCurrencyValue', `${tokenUSDCurrencyValue.data.convertedTokenName.usd}`);
+    // setethPrice(ethDollarValue.data.ethereum.usd);
+    // } catch (err) {
+    //   console.log('getEthDollarValue err', err);
+    // }
   };
+
+  //useEffect for init eth and dai value
+  useEffect(async () => {
+    await convertTokenToUSDCurrency({ ...sendTokenForExchange, initTokenLoad: true });
+    await convertTokenToUSDCurrency({ ...receiveTokenForExchange, initTokenLoad: true });
+  }, []);
 
   //----------
 
@@ -719,10 +737,10 @@ export default function SwapComponent() {
                     // onFocus={(e) => console.log('focus added')}
                     onBlur={(e) => {
                       console.log('focus removed');
-                      convertTokenToUSDCurrency({
-                        amount: 1,
-                        ...sendTokenForExchange,
-                      });
+                      // convertTokenToUSDCurrency({
+                      //   amount: 1,
+                      //   ...sendTokenForExchange,
+                      // });
                       // setSendTokenForExchangeAmount(0);
                     }}
                   />
@@ -924,10 +942,10 @@ export default function SwapComponent() {
                     }}
                     onBlur={(e) => {
                       console.log('focus removed');
-                      convertTokenToUSDCurrency({
-                        amount: 1,
-                        ...receiveTokenForExchange,
-                      });
+                      // convertTokenToUSDCurrency({
+                      //   amount: 1,
+                      //   ...receiveTokenForExchange,
+                      // });
                       // setSendTokenForExchangeAmount(0);
                     }}
                   />
@@ -1007,6 +1025,7 @@ export default function SwapComponent() {
                                 onClick={() => {
                                   selectReceiveTokenForExchange({
                                     ...object,
+                                    receiveTokensListItem: true,
                                     selectedForExchangeValue: 0,
                                   });
                                   setIsReceiveTokensModalVisible(false);
