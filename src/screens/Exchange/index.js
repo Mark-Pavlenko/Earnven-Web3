@@ -4,6 +4,7 @@ import './exchange.css';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import axios from 'axios';
+import NumberFormat from 'react-number-format';
 import TransparentButton from '../../components/TransparentButton';
 import Web3 from 'web3';
 import ERC20ABI from '../../abi/ERC20.json';
@@ -230,7 +231,7 @@ export default function SwapComponent() {
   const { address } = useParams();
   const [value, setValue] = useState(0);
   const [sendTokenForExchange, setSendTokenForExchange] = useState({
-    symbol: 'ETH',
+    symbol: 'ethereum',
     logoURI: EthIcon,
     avatarIcon: 'Ethereum',
   });
@@ -259,6 +260,8 @@ export default function SwapComponent() {
   const [isSendTokensModalVisible, setIsSendTokensModalVisible] = useState(false);
   const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
 
+  // console.log('sendTokenForExchange', sendTokenForExchange);
+
   // let filteredData;
   // const [filteredSendTokensListData, setFilteredSendTokensListData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -267,6 +270,8 @@ export default function SwapComponent() {
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
   const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
   const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
+
+  console.log('front finalSendTokensList', finalSendTokensList);
 
   useEffect(() => {
     finalSendTokensList.length !== 0 && setFilteredData(finalSendTokensList);
@@ -305,6 +310,34 @@ export default function SwapComponent() {
     });
     setFilteredReceiveTokensListData(filteredSearchTokensList);
   };
+
+  //function of dynamic converting of token value to USD Currency
+
+  let convertTokenToUSDCurrency = async (tokenData) => {
+    console.log('raw exchange token data', tokenData);
+    // console.log('tokens amount num', tokenData.symbol.toLowerCase());
+
+    const convertedTokenSymbol = tokenData.symbol.toLowerCase();
+    console.log('convertedTokenSymbol', convertedTokenSymbol);
+
+    try {
+      const tokenUSDCurrencyValue = await axios.get(
+        `https://api.coingecko.com/api/v3/simple/price?ids=${convertedTokenSymbol}&vs_currencies=usd`
+      );
+
+      console.log('tokenUSDCurrencyValue', tokenUSDCurrencyValue);
+
+      console.log(
+        'tokenUSDCurrencyValue',
+        `${tokenUSDCurrencyValue.data.convertedTokenSymbol.usd}`
+      );
+      // setethPrice(ethDollarValue.data.ethereum.usd);
+    } catch (err) {
+      console.log('getEthDollarValue err', err);
+    }
+  };
+
+  //----------
 
   useEffect(async () => {
     try {
@@ -643,7 +676,10 @@ export default function SwapComponent() {
                       />
                     )}
                     <ChosenTokenLabel isLightTheme={isLightTheme}>
-                      {sendTokenForExchange.symbol} qwerty
+                      {sendTokenForExchange.symbol === 'ethereum'
+                        ? 'ETH'
+                        : sendTokenForExchange.symbol}{' '}
+                      qwerty
                     </ChosenTokenLabel>
                     <img
                       src={isLightTheme ? chevronDownBlack : chevronDownLight}
@@ -668,6 +704,19 @@ export default function SwapComponent() {
                     value={sendTokenForExchangeAmount}
                     onChange={(e) => {
                       setSendTokenForExchangeAmount(e.target.value);
+                      convertTokenToUSDCurrency({
+                        amount: e.target.value,
+                        symbol: sendTokenForExchange.symbol,
+                      });
+                    }}
+                    // onFocus={(e) => console.log('focus added')}
+                    onBlur={(e) => {
+                      console.log('focus removed');
+                      convertTokenToUSDCurrency({
+                        amount: 1,
+                        symbol: sendTokenForExchange.symbol,
+                      });
+                      // setSendTokenForExchangeAmount(0);
                     }}
                   />
                 </SendTokensChooseButton>

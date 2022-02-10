@@ -12,7 +12,7 @@ export function* getSendTokensListSagaWatcher() {
 function* getSendTokensListSagaWorker(accountAddress) {
   // console.log('getSendTokensListSagaWorker', accountAddress);
   const addressInfoData = yield call(API.getAddressInfo, accountAddress.payload);
-  // console.log('only addressInfoData', addressInfoData.data);
+  // console.log('only addressInfoData sagas', addressInfoData.data);
   const zeroAPISwapTokensList = yield call(API.getZeroAPITokensList);
   // console.log('sagas zeroAPITokensList', zeroAPISwapTokensList);
 
@@ -24,6 +24,8 @@ function* getSendTokensListSagaWorker(accountAddress) {
     tempObj.symbol = 'ETH';
     tempObj.balance = addressInfoData.data.ETH.balance.toFixed(3).toString();
     tempObj.logoURI = ethImage;
+    tempObj.USDCurrency = addressInfoData.data.ETH.price.rate;
+    //
     walletTokensList.push(tempObj);
   }
   let tokens = addressInfoData.data.tokens;
@@ -33,6 +35,7 @@ function* getSendTokensListSagaWorker(accountAddress) {
     tempObj.address = tokens[i].tokenInfo.address;
     tempObj.name = tokens[i].tokenInfo.name;
     tempObj.symbol = tokens[i].tokenInfo.symbol;
+    tempObj.USDCurrency = tokens[i].tokenInfo.price.rate;
     tempObj.balance = (tokens[i].balance * Math.pow(10, -parseInt(tokens[i].tokenInfo.decimals)))
       .toFixed(3)
       .toString();
