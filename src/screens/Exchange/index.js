@@ -250,7 +250,7 @@ export default function SwapComponent() {
     avatarIcon: 'Dai Stablecoin',
     name: 'dai',
     id: 'dai',
-    firstTimePageLoad: true,
+    receiveTokensListItem: true,
     address: '0x6b175474e89094c44da98b954eedeac495271d0f',
   });
   const [TokenTo, setTokenTo] = useState('');
@@ -349,52 +349,32 @@ export default function SwapComponent() {
     }
     console.log('exchange token USD currency data', tokenData);
 
-    // console.log('exchange token USD currency data', tokenData.USDCurrency);
-
-    // try {
     let tokenUSDCurrencyValue;
 
-    //change input for receive for first time connection
-    if (tokenData.firstTimePageLoad === true) {
-      tokenUSDCurrencyValue = await axios.get(
-        `https://api.coingecko.com/api/v3/simple/price?ids=${receiveTokenForExchange.id}&vs_currencies=usd`
-      );
-      setTokensReceiveUSDCurrency(`$${Object.values(tokenUSDCurrencyValue.data)[0].usd}`);
-    }
-
-    if (tokenData.receiveTokensListItem === true) {
+    if (
+      tokenData.receiveTokensListItem === true &&
+      tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+    ) {
       tokenUSDCurrencyValue = await axios.get(
         `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
       );
-    }
+      console.log('tokenUSDCurrencyValue', tokenUSDCurrencyValue);
 
-    console.log('tokenUSDCurrencyValue', tokenUSDCurrencyValue);
-    // console.log('tokenUSDCurrencyValue', tokenUSDCurrencyValue.data.price.rate);
-
-    if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
-      setTokensReceiveUSDCurrency(
-        `$ ${tokenUSDCurrencyValue.data.price.rate * parseInt(tokenData.amount)}`
+      if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
+        setTokensReceiveUSDCurrency(
+          `$ ${tokenUSDCurrencyValue.data.price.rate * parseInt(tokenData.amount)}`
+        );
+      } else {
+        setTokensReceiveUSDCurrency('Price not available');
+      }
+    } else if (tokenData.address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+      const ethDollarValue = await axios.get(
+        'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
       );
-    } else {
-      setTokensReceiveUSDCurrency('Price not available');
+      setTokensReceiveUSDCurrency(
+        `$${ethDollarValue.data.ethereum.usd * parseInt(tokenData.amount)}`
+      );
     }
-
-    // console.log(
-    //   'tokenUSDCurrencyValue.data)[0].usd',
-    //   Object.values(tokenUSDCurrencyValue.data)[0].usd
-    // );
-    //
-    // console.log(
-    //   'exchange token USD tokenUSDCurrencyValue',
-    //   Object.values(tokenUSDCurrencyValue.data)[0].usd * parseInt(tokenData.amount)
-    // );
-    // Object.values(tokenUSDCurrencyValue.data)[0].usd * parseInt(tokenData.amount
-
-    // console.log('tokenUSDCurrencyValue', `${tokenUSDCurrencyValue.data.convertedTokenName.usd}`);
-    // setethPrice(ethDollarValue.data.ethereum.usd);
-    // } catch (err) {
-    //   console.log('getEthDollarValue err', err);
-    // }
   };
 
   //----------
