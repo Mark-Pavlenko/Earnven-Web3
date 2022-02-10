@@ -229,11 +229,18 @@ export default function SwapComponent() {
   const dispatch = useDispatch();
   const classes = useStyles();
   const { address } = useParams();
+
+  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
+  const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
+  const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
+
   const [value, setValue] = useState(0);
   const [sendTokenForExchange, setSendTokenForExchange] = useState({
     symbol: 'ethereum',
     logoURI: EthIcon,
     avatarIcon: 'Ethereum',
+    name: 'ethereum',
+    // USDCurrency:
   });
   const [receiveTokenForExchange, setReceiveTokenForExchange] = useState({
     symbol: 'DAI',
@@ -266,10 +273,6 @@ export default function SwapComponent() {
   // const [filteredSendTokensListData, setFilteredSendTokensListData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [filteredReceiveTokensListData, setFilteredReceiveTokensListData] = useState([]);
-
-  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
-  const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
-  const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
 
   console.log('front finalSendTokensList', finalSendTokensList);
 
@@ -317,20 +320,17 @@ export default function SwapComponent() {
     console.log('raw exchange token data', tokenData);
     // console.log('tokens amount num', tokenData.symbol.toLowerCase());
 
-    const convertedTokenSymbol = tokenData.symbol.toLowerCase();
-    console.log('convertedTokenSymbol', convertedTokenSymbol);
+    const convertedTokenName = tokenData.name.toLowerCase().replace(/\s+/g, '');
+    console.log('convertedTokenSymbol', convertedTokenName);
 
     try {
       const tokenUSDCurrencyValue = await axios.get(
-        `https://api.coingecko.com/api/v3/simple/price?ids=${convertedTokenSymbol}&vs_currencies=usd`
+        `https://api.coingecko.com/api/v3/simple/price?ids=${convertedTokenName}&vs_currencies=usd`
       );
 
       console.log('tokenUSDCurrencyValue', tokenUSDCurrencyValue);
 
-      console.log(
-        'tokenUSDCurrencyValue',
-        `${tokenUSDCurrencyValue.data.convertedTokenSymbol.usd}`
-      );
+      console.log('tokenUSDCurrencyValue', `${tokenUSDCurrencyValue.data.convertedTokenName.usd}`);
       // setethPrice(ethDollarValue.data.ethereum.usd);
     } catch (err) {
       console.log('getEthDollarValue err', err);
@@ -368,7 +368,7 @@ export default function SwapComponent() {
   useEffect(async () => {
     try {
       const ethDollarValue = await axios.get(
-        'https://api.coingecko.com/api/v3/simple/price?ids=weth&vs_currencies=usd'
+        'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
       );
       console.log('ethDollarValue', ethDollarValue);
       setethPrice(ethDollarValue.data.ethereum.usd);
@@ -706,7 +706,7 @@ export default function SwapComponent() {
                       setSendTokenForExchangeAmount(e.target.value);
                       convertTokenToUSDCurrency({
                         amount: e.target.value,
-                        symbol: sendTokenForExchange.symbol,
+                        ...sendTokenForExchange,
                       });
                     }}
                     // onFocus={(e) => console.log('focus added')}
@@ -714,7 +714,7 @@ export default function SwapComponent() {
                       console.log('focus removed');
                       convertTokenToUSDCurrency({
                         amount: 1,
-                        symbol: sendTokenForExchange.symbol,
+                        ...sendTokenForExchange,
                       });
                       // setSendTokenForExchangeAmount(0);
                     }}
@@ -791,9 +791,7 @@ export default function SwapComponent() {
                               <SendTokenModalListItem
                                 onClick={() => {
                                   selectSendTokenForExchange({
-                                    symbol: object.symbol,
-                                    logoURI: object.logoURI,
-                                    avatarIcon: object.name,
+                                    ...object,
                                     selectedForExchangeValue: 0,
                                   });
                                   setIsSendTokensModalVisible(false);
@@ -989,9 +987,7 @@ export default function SwapComponent() {
                               <SendTokenModalListItem
                                 onClick={() => {
                                   selectReceiveTokenForExchange({
-                                    symbol: object.symbol,
-                                    logoURI: object.logoURI,
-                                    avatarIcon: object.name,
+                                    ...object,
                                     selectedForExchangeValue: 0,
                                   });
                                   setIsReceiveTokensModalVisible(false);
