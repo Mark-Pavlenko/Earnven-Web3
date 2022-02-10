@@ -395,6 +395,17 @@ export const SearchTokensModalTextField = styled(TextField)`
   display: flex;
   justify-content: center;
   margin-left: 20px;
+  width: 435px;
+  height: 40px;
+  margin-top: 20px;
+  background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#1F265C3D')};
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+      : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+  mix-blend-mode: normal;
+  backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
+  border-radius: 10px;
 `;
 
 export const SendTokensModalList = styled(List)`
@@ -444,7 +455,7 @@ export const SendTokenModalListItem = styled(ListItem)`
   padding: 0 !important;
   margin-bottom: 10px;
   width: 445px;
-  height: 57px;
+  //height: 57px;
 
   :hover {
     cursor: pointer;

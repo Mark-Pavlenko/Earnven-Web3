@@ -637,6 +637,7 @@ export default function SwapComponent() {
                           paddingRight: 0,
                           width: '100px',
                           fontWeight: 600,
+                          color: isLightTheme ? 'black' : 'white',
                         },
                       },
                       classes: { notchedOutline: classes.noBorder },
@@ -646,7 +647,6 @@ export default function SwapComponent() {
                     value={sendTokenForExchangeAmount}
                     onChange={(e) => {
                       setSendTokenForExchangeAmount(e.target.value);
-                      // calculateToAmount(e.target.value);
                     }}
                   />
                 </SendTokensChooseButton>
@@ -681,6 +681,7 @@ export default function SwapComponent() {
                           </CloseButton>
                         </Header>
                         <SearchTokensModalTextField
+                          isLightTheme={isLightTheme}
                           onChange={sendTokensInputHandler}
                           InputProps={{
                             endAdornment: (
@@ -701,7 +702,6 @@ export default function SwapComponent() {
                             },
                           }}
                           id="filled-search"
-                          // onChange={this.searchTokens}
                           variant="outlined"
                           label="Search tokens..."
                           InputLabelProps={{
@@ -712,18 +712,6 @@ export default function SwapComponent() {
                               opacity: 0.5,
                               lineHeight: '22px',
                             },
-                          }}
-                          style={{
-                            width: 435,
-                            height: 40,
-                            marginTop: '20px',
-                            backgroundColor: isLightTheme ? '#FFFFFF' : '#1F265C3D',
-                            boxShadow: isLightTheme
-                              ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
-                              : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-                            mixBlendMode: isLightTheme ? 'normal' : 'normal',
-                            backdropFilter: isLightTheme ? 'none' : 'blur(35px)',
-                            borderRadius: '10px',
                           }}
                           size="small"
                         />
@@ -799,10 +787,8 @@ export default function SwapComponent() {
                   <span>Receive</span>
                   <span>$30,510.03</span>
                 </SendBlockLabels>
-                <SendTokensChooseButton
-                  isLightTheme={isLightTheme}
-                  onClick={() => setIsReceiveTokensModalVisible(true)}>
-                  <ChooseBtnTokenBlock>
+                <SendTokensChooseButton isLightTheme={isLightTheme}>
+                  <ChooseBtnTokenBlock onClick={() => setIsReceiveTokensModalVisible(true)}>
                     <img
                       src={daiICon}
                       alt="daiICon"
@@ -814,9 +800,26 @@ export default function SwapComponent() {
                       alt="chevron_icon"
                     />
                   </ChooseBtnTokenBlock>
-                  <ChosenSendReceiveTokenValueInput isLightTheme={isLightTheme}>
-                    22508.05
-                  </ChosenSendReceiveTokenValueInput>
+                  <ChosenSendReceiveTokenValueInput
+                    InputProps={{
+                      inputProps: {
+                        style: {
+                          textAlign: 'right',
+                          paddingRight: 0,
+                          width: '100px',
+                          fontWeight: 600,
+                          color: isLightTheme ? 'black' : 'white',
+                        },
+                      },
+                      classes: { notchedOutline: classes.noBorder },
+                    }}
+                    isLightTheme={isLightTheme}
+                    placeholder="0.0"
+                    value={sendTokenForExchangeAmount}
+                    onChange={(e) => {
+                      setSendTokenForExchangeAmount(e.target.value);
+                    }}
+                  />
                 </SendTokensChooseButton>
 
                 {/*  Modal for receive tokens list*/}
@@ -882,18 +885,6 @@ export default function SwapComponent() {
                               opacity: 0.5,
                               lineHeight: '22px',
                             },
-                          }}
-                          style={{
-                            width: 435,
-                            height: 40,
-                            marginTop: '20px',
-                            backgroundColor: isLightTheme ? '#FFFFFF' : '#1F265C3D',
-                            boxShadow: isLightTheme
-                              ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
-                              : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-                            mixBlendMode: isLightTheme ? 'normal' : 'normal',
-                            backdropFilter: isLightTheme ? 'none' : 'blur(35px)',
-                            borderRadius: '10px',
                           }}
                           size="small"
                         />
