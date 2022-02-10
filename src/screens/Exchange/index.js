@@ -233,10 +233,15 @@ export default function SwapComponent() {
     symbol: 'ETH',
     logoURI: EthIcon,
     avatarIcon: 'Ethereum',
-    // selectedForExchangeValue: 0,
+  });
+  const [receiveTokenForExchange, setReceiveTokenForExchange] = useState({
+    symbol: 'DAI',
+    logoURI: daiICon,
+    avatarIcon: 'Dai Stablecoin',
   });
   const [TokenTo, setTokenTo] = useState('');
   const [sendTokenForExchangeAmount, setSendTokenForExchangeAmount] = useState();
+  const [receiveTokenForExchangeAmount, setReceiveTokenForExchangeAmount] = useState();
   const [TokenToAmount, setTokenToAmount] = useState();
   const [Slippage, setSlippage] = useState(2);
   const [Sources, setSources] = useState([]);
@@ -317,12 +322,12 @@ export default function SwapComponent() {
     }
   }, []);
 
-  console.log('Redux-sagas Send Final Tokens List', finalSendTokensList);
-  console.log('Redux-sagas Receive Final Tokens List', finalReceiveTokensList);
+  // console.log('Redux-sagas Send Final Tokens List', finalSendTokensList);
+  // console.log('Redux-sagas Receive Final Tokens List', finalReceiveTokensList);
 
   useEffect(async () => {
     await axios.get(`https://cdn.furucombo.app/furucombo.tokenlist.json`).then(async (response) => {
-      console.log('receive tokens arr ', response.data.tokens);
+      // console.log('receive tokens arr ', response.data.tokens);
       settoTokens(response.data.tokens);
     });
   }, []);
@@ -330,8 +335,9 @@ export default function SwapComponent() {
   useEffect(async () => {
     try {
       const ethDollarValue = await axios.get(
-        'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
+        'https://api.coingecko.com/api/v3/simple/price?ids=weth&vs_currencies=usd'
       );
+      console.log('ethDollarValue', ethDollarValue);
       setethPrice(ethDollarValue.data.ethereum.usd);
     } catch (err) {
       console.log('getEthDollarValue err', err);
@@ -501,9 +507,21 @@ export default function SwapComponent() {
   };
 
   const selectSendTokenForExchange = (selectSendToken) => {
-    console.log('selected token value object', selectSendToken);
+    console.log('selected send token value object 111', selectSendToken);
     setSendTokenForExchange(selectSendToken);
     setSendTokenForExchangeAmount(0);
+    //old
+    setTokenToAmount(0);
+    setprotocolsRateList([]);
+    setselectedRate(null);
+    setSources([]);
+  };
+
+  const selectReceiveTokenForExchange = (selectReceiveToken) => {
+    console.log('selected receive token value object 111', selectReceiveToken);
+    setReceiveTokenForExchange(selectReceiveToken);
+    setReceiveTokenForExchangeAmount(0);
+    //old
     setTokenToAmount(0);
     setprotocolsRateList([]);
     setselectedRate(null);
@@ -584,6 +602,9 @@ export default function SwapComponent() {
   }, []);
 
   //---------------------
+
+  const [toggleExchangedTokens, setToggleExchangedTokens] = useState(false);
+
   return (
     <>
       <ExchangeMainLayout>
@@ -776,30 +797,54 @@ export default function SwapComponent() {
                 )}
 
                 <SwitchTokensBtn
+                  onClick={() => setToggleExchangedTokens(!toggleExchangedTokens)}
                   src={isLightTheme ? switchTokensLight : switchTokensDark}
                   alt="switch_tokens_btn"
                 />
               </SendReceiveSubBlock>
 
-              {/*receive block*/}
+              {/* modal with receive tokens list*/}
+
               <SendReceiveSubBlock style={{ marginTop: '-9px' }}>
                 <SendBlockLabels isLightTheme={isLightTheme}>
                   <span>Receive</span>
                   <span>$30,510.03</span>
                 </SendBlockLabels>
                 <SendTokensChooseButton isLightTheme={isLightTheme}>
-                  <ChooseBtnTokenBlock onClick={() => setIsReceiveTokensModalVisible(true)}>
-                    <img
-                      src={daiICon}
-                      alt="daiICon"
-                      style={{ marginRight: '12px', marginLeft: '12px' }}
-                    />
-                    <ChosenTokenLabel isLightTheme={isLightTheme}>DAI qwe</ChosenTokenLabel>
-                    <img
-                      src={isLightTheme ? chevronDownBlack : chevronDownLight}
-                      alt="chevron_icon"
-                    />
-                  </ChooseBtnTokenBlock>
+                  {toggleExchangedTokens ? (
+                    <div>Toggled</div>
+                  ) : (
+                    <ChooseBtnTokenBlock onClick={() => setIsReceiveTokensModalVisible(true)}>
+                      {receiveTokenForExchange.logoURI !== null ? (
+                        <SendTokenImg alt="token_img" src={receiveTokenForExchange.logoURI} />
+                      ) : (
+                        <Avatar
+                          style={{
+                            marginRight: '12px',
+                            marginLeft: '12px',
+                            marginTop: '2px',
+                          }}
+                          name={receiveTokenForExchange.avatarIcon}
+                          round={true}
+                          size="21"
+                          textSizeRatio={1}
+                        />
+                      )}
+                      <ChosenTokenLabel isLightTheme={isLightTheme}>
+                        {receiveTokenForExchange.symbol} VIV
+                      </ChosenTokenLabel>
+                      {/*<img*/}
+                      {/*  src={daiICon}*/}
+                      {/*  alt="daiICon"*/}
+                      {/*  style={{ marginRight: '12px', marginLeft: '12px' }}*/}
+                      {/*/>*/}
+                      {/*<ChosenTokenLabel isLightTheme={isLightTheme}>DAI qwe</ChosenTokenLabel>*/}
+                      <img
+                        src={isLightTheme ? chevronDownBlack : chevronDownLight}
+                        alt="chevron_icon"
+                      />
+                    </ChooseBtnTokenBlock>
+                  )}
                   <ChosenSendReceiveTokenValueInput
                     InputProps={{
                       inputProps: {
@@ -815,9 +860,9 @@ export default function SwapComponent() {
                     }}
                     isLightTheme={isLightTheme}
                     placeholder="0.0"
-                    value={sendTokenForExchangeAmount}
+                    value={receiveTokenForExchangeAmount}
                     onChange={(e) => {
-                      setSendTokenForExchangeAmount(e.target.value);
+                      setReceiveTokenForExchangeAmount(e.target.value);
                     }}
                   />
                 </SendTokensChooseButton>
@@ -894,7 +939,7 @@ export default function SwapComponent() {
                             {filteredReceiveTokensListData.map((object) => (
                               <SendTokenModalListItem
                                 onClick={() => {
-                                  selectSendTokenForExchange({
+                                  selectReceiveTokenForExchange({
                                     symbol: object.symbol,
                                     logoURI: object.logoURI,
                                     avatarIcon: object.name,
