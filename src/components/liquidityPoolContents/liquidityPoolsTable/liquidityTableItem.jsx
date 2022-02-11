@@ -47,7 +47,11 @@ import Addresses from '../../../contractAddresses';
 import axios from 'axios';
 import tokenURIs from '../../../screens/Exchange/tokenURIs';
 import TOKENDECIMALSABI from '../../../abi/TokenDecomals.json';
-import { CommonSubmitButton } from '../../../screens/TokenPage/components/styledComponentsCommon';
+import {
+  CommonSubmitButton,
+  CommonHoverButton,
+  CommonHoverButtonTrans,
+} from '../../../screens/TokenPage/components/styledComponentsCommon';
 import { GasMenuItem } from '../../gasDropDownMenu/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { data } from '../../../globalStore';
@@ -349,7 +353,8 @@ export const LiquidityTableItem = ({
           item.token0.id,
           item.token1.id,
           addLiquidityNormalTokenA,
-          addLiquidityNormalTokenB
+          addLiquidityNormalTokenB,
+          selectedGasPrice ? selectedGasPrice : proposeGasPrice
         );
     }
   };
@@ -514,6 +519,24 @@ export const LiquidityTableItem = ({
           <CommonSubmitButton width={'189px'} isLightTheme={theme} onClick={() => {}}>
             {'Advanced settings'}
           </CommonSubmitButton>
+          <MenuPopoverBoxTitle isLightTheme={theme}>{'Slippage Tolerance'}</MenuPopoverBoxTitle>
+          <CommonHoverButtonTrans
+            height={'45px'}
+            width={'55px'}
+            isLightTheme={theme}
+            onClick={() => {}}>
+            {'1%'}
+          </CommonHoverButtonTrans>
+          <CommonHoverButton height={'45px'} width={'55px'} isLightTheme={theme} onClick={() => {}}>
+            {'3%'}
+          </CommonHoverButton>
+          <CommonHoverButtonTrans
+            height={'45px'}
+            width={'120px'}
+            isLightTheme={theme}
+            onClick={() => {}}>
+            {'%'}
+          </CommonHoverButtonTrans>
           <ResetButton isLightTheme={theme} onClick={resetButtonHandler}>
             {'Reset'}
           </ResetButton>

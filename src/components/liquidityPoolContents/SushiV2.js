@@ -727,7 +727,7 @@ export default function LiquidityPools() {
   }
 
   //********two inputs value send to smartContract
-  async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB) {
+  async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB, gasPrice) {
 
     const start = parseInt(Date.now() / 1000) + 180;
     await loadWeb3();
@@ -737,10 +737,10 @@ export default function LiquidityPools() {
     var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
     await tokenAContract.methods
         .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenA, 'ether'))
-        .send({ from: accounts[0] });
+        .send({ from: accounts[0], gasPrice:  web3.utils.toWei(gasPrice, 'gwei') });
     await tokenBContract.methods
         .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenB, 'ether'))
-        .send({ from: accounts[0] });
+        .send({ from: accounts[0], gasPrice:  web3.utils.toWei(gasPrice, 'gwei') });
     const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.sushiRouter);
     await UniRouter.methods
         .addLiquidity(
