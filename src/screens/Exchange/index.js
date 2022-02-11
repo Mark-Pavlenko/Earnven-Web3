@@ -135,11 +135,6 @@ import actionTypes from '../../constants/actionTypes';
 import testFunction from './helpers';
 
 const useStyles = makeStyles((theme) => ({
-  addIcon: {
-    '& svg': {
-      fontSize: 14,
-    },
-  },
   noBorder: {
     border: 'none !important',
   },
@@ -337,9 +332,7 @@ export default function SwapComponent() {
   let convertSendTokenToUSDCurrency = async (tokenData) => {
     if (tokenData.amount === '') tokenData.amount = '0';
 
-    console.log('exchange token send USD currency data 111', tokenData);
-
-    let tokenUSDCurrencyValue;
+    // console.log('exchange token send USD currency data 111', tokenData);
 
     if (tokenData.symbol === 'ETH') {
       console.log('type send USD eth triggered');
@@ -769,9 +762,6 @@ export default function SwapComponent() {
                         amount: e.target.value,
                         ...sendTokenForExchange,
                       });
-                    }}
-                    onBlur={(e) => {
-                      console.log('focus removed');
                     }}
                   />
                 </SendTokensChooseButton>

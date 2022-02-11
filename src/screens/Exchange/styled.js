@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
 import { Button, IconButton, List, ListItem } from '@material-ui/core';
 import TextField from '@mui/material/TextField';
+import Avatar from 'antd/es/avatar/avatar';
 
 export const ExchangeMainLayout = styled.div`
   display: grid;
@@ -83,9 +84,16 @@ export const SendBlockLabels = styled.div`
 
 export const MultiSwapSendValueLabel = styled.span`
   margin-left: 35px;
+  padding-left: 5px;
   font-size: 12px;
   color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#FFFFFF')};
-  opacity: 0.5;
+  opacity: ${(props) => (props.isLightTheme ? 0.5 : 0.8)};
+`;
+
+export const MultiSwapTokenAvatar = styled(Avatar)`
+  margin-right: 12px;
+  margin-left: 12px;
+  margin-top: 2px;
 `;
 
 export const SendTokensChooseButton = styled.div`
@@ -201,9 +209,28 @@ export const ChosenSendReceiveTokenValueInput = styled(TextField)`
   span {
     margin-left: auto;
   }
+`;
 
-  //background-color: red;
-  //padding-right: 0 !important;
+export const USDCurrencyInputBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 50px;
+  margin-left: auto;
+  gap: 3px;
+`;
+
+export const ChosenMultiSwapSendReceiveTokenValueInput = styled(TextField)`
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+  margin-right: 20px;
+  font-size: 20px;
+  font-weight: 600;
+  color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#FFFFFF')};
+
+  span {
+    margin-left: auto;
+  }
 `;
 
 export const SwitchTokensBtn = styled.img`
