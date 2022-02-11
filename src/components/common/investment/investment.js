@@ -71,6 +71,19 @@ const Investment = ({
     protocol.tokenImage = logoImage;
   }
 
+  if (protocolName === 'Aave') {
+    let symbolArray = [];
+    tokens.map((token) => {
+      symbolArray.push(token.symbol);
+    });
+    if (symbolArray.length == 2) {
+      protocol.symbol = symbolArray[0] + ' / ' + symbolArray[1];
+    }
+    if (symbolArray.length == 1) {
+      protocol.symbol = symbolArray[0];
+    }
+  }
+
   return (
     <Main isOpen={isOpen} isLightTheme={theme}>
       <TotalValue isOpen={isOpen}>
@@ -126,15 +139,23 @@ const Investment = ({
           </div> */}
         </div>
         <ContentRightWrapper isLightTheme={theme}>
-          <div>
-            ${numberWithCommas(parseFloat(protocol.value ? protocol.value : '').toFixed(2))}
-          </div>
+          {protocolName === 'Aave' ? (
+            <>
+              $
+              {numberWithCommas(
+                parseFloat(protocol.totalValue ? protocol.totalValue : '').toFixed(2)
+              )}
+            </>
+          ) : (
+            <>${numberWithCommas(parseFloat(protocol.value ? protocol.value : '').toFixed(2))}</>
+          )}
+
           <ToggleButton isLightTheme={theme} isOpen={isOpen} onClick={toggleHandler} />
         </ContentRightWrapper>
       </TotalValue>
       {isOpen && (
         <>
-          {/* {tokens &&
+          {tokens &&
             tokens.map((token) => {
               return (
                 <>
@@ -194,7 +215,7 @@ const Investment = ({
                   )}
                 </>
               );
-            })} */}
+            })}
           {/*{stakedToken && (*/}
           {/*  <ContentWrapper isLightTheme={theme}>*/}
           {/*    <div>Staked Token</div>*/}
@@ -265,7 +286,8 @@ const Investment = ({
                 item !== 'yTokenDecimals' &&
                 item !== 'image' &&
                 item != 'token0Image' &&
-                item != 'token1Image'
+                item != 'token1Image' &&
+                item != 'totalValue'
             )
             .map((el) => {
               return (

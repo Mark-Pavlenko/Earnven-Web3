@@ -97,8 +97,14 @@ export default function index({ accountAddress }) {
   const curveLpTokenTotal = useSelector((state) => state.curveLpToken.curveLpTokenTotal);
 
   //AAVE -- Aave protocol not moved to saga so using from useEffect for now
-  // const AaveStakingData = useSelector((state) => state.AaveStaking.AaveStakingData); //component
-  // const AaveStakingTotal = useSelector((state) => state.AaveStaking.AaveStakingTotal); //component
+  const AaveStakingData = useSelector((state) => state.AaveStaking.AaveStakingData); //saga
+  const AaveStakingTotal = useSelector((state) => state.AaveStaking.AaveStakingTotal); //saga
+
+  //pickle
+  // const pickeStake = useSelector((state) => state.pickeStake.pickeStake); //saga
+  // const pickleStakeTotal = useSelector((state) => state.pickeStake.pickleStakeTotal); //saga
+  // const pickeDill = useSelector((state) => state.pickeDill.pickeDill); //saga
+  // const pickeDillTotal = useSelector((state) => state.pickeDill.pickeDillTotal); //saga
 
   //uniswap (need to get total value from the object and put in redux separately)
   // const uniswapV2array = useSelector((state) => state.uniswapV2stake.uniswapV2stake); //saga (incorrect data structure. Work over appropriate look)
@@ -135,7 +141,10 @@ export default function index({ accountAddress }) {
           <TotalValueField isLightTheme={theme}>
             <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
             <TotalValue isLightTheme={theme}>
-              ${numberWithCommas(parseFloat(SushiV2Total + curveLpTokenTotal).toFixed(2))}
+              $
+              {numberWithCommas(
+                parseFloat(parseFloat(SushiV2Total) + parseFloat(curveLpTokenTotal)).toFixed(2)
+              )}
             </TotalValue>
           </TotalValueField>
         </div>
@@ -209,8 +218,8 @@ export default function index({ accountAddress }) {
           display:
             compTokenDataValue.length > 0 ||
             eth2StakeData.length > 0 ||
-            CrvStakingTokenData.length > 0,
-          // AaveStakingData.length > 0,
+            CrvStakingTokenData.length > 0 ||
+            AaveStakingData.length > 0,
         }}>
         <Header>
           <Title isLightTheme={theme}>{'Saving/Loans'}</Title>
@@ -223,7 +232,12 @@ export default function index({ accountAddress }) {
             <TotalValue isLightTheme={theme}>
               $
               {numberWithCommas(
-                parseFloat(compTotalValue + eth2StakeTotal + CrvStakingTokenTotal).toFixed(2)
+                parseFloat(
+                  parseFloat(AaveStakingTotal) +
+                    parseFloat(CrvStakingTokenTotal) +
+                    parseFloat(eth2StakeTotal) +
+                    parseFloat(compTotalValue)
+                ).toFixed(2)
               )}
             </TotalValue>
           </TotalValueField>
@@ -318,7 +332,7 @@ export default function index({ accountAddress }) {
               ''
             )}
             {/* Aave Protocol */}
-            {/* {AaveStakingData.length > 0 ? (
+            {AaveStakingData.length > 0 ? (
               <React.Fragment>
                 <img
                   src={aaveLogo}
@@ -345,7 +359,21 @@ export default function index({ accountAddress }) {
               </React.Fragment>
             ) : (
               ''
-            )} */}
+            )}
+            {/*pickeStake/*/}
+            {/* Pickle Staking
+            {pickeStake.map((object) => {
+              return (
+                <Investment protocol={object} logoImage={pickle} protocolName={'Pickle Finance'} />
+              );
+            })} */}
+            {/*pickeDill/*/}
+            {/* Pickle Dill
+            {pickeDill.map((object) => {
+              return (
+                <Investment protocol={object} logoImage={pickle} protocolName={'Pickle Dill'} />
+              );
+            })} */}
           </React.Fragment>
         )}
       </PoolsBlock>
@@ -371,7 +399,10 @@ export default function index({ accountAddress }) {
               $
               {numberWithCommas(
                 parseFloat(
-                  YearnTotalValue + YearnTokenTotalValue + olympusTokenTotal + curveTokenTotal
+                  parseFloat(YearnTotalValue) +
+                    parseFloat(YearnTokenTotalValue) +
+                    parseFloat(olympusTokenTotal) +
+                    parseFloat(curveTokenTotal)
                 ).toFixed(2)
               )}
             </TotalValue>
@@ -469,7 +500,7 @@ export default function index({ accountAddress }) {
             ) : (
               ''
             )}
-            <AaveStaking accountAddress={accountAddress} />
+            {/* <AaveStaking accountAddress={accountAddress} /> */}
           </React.Fragment>
         )}
       </PoolsBlock>
