@@ -49,7 +49,7 @@ function* yearnFinanceSagaWorker(yearnAccountAddress) {
             object.tokenDecimal = res[i].vault.shareToken.decimals;
             object.balance =
               parseFloat(res[i].balanceShares).toFixed(2) / 10 ** object.tokenDecimal;
-            object.price = parseFloat(result.data[j].tvl.price).toFixed(2);
+            object.price = parseFloat(result.data[j].tvl.price).toFixed(4);
             object.value = parseFloat(object.balance * object.price).toFixed(2);
             object.liquidity = parseFloat(result.data[j].tvl.tvl).toFixed(2);
             object.apy = result.data[j].apy.net_apy * 100;

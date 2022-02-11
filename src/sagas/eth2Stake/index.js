@@ -12,7 +12,7 @@ function* eth2StakeSagaWorker(userAccountAddress) {
   const response = yield call(API.getEth2StakeData, stakeUserAccount);
 
   if (response) {
-    if (response.data.data.depositors) {
+    if (response.data.data.depositors.length > 0) {
       try {
         const res = response.data.data.depositors[0];
         let tot = 0;

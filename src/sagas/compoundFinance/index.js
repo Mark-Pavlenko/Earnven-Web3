@@ -42,7 +42,6 @@ function* compoundTokenSagaWorker(compTokenAttributes) {
   //setcompTokenImageUrl(compTokenData.cTokenImageUrl);
   //call the below function to get the SNX collateral value
   compSavingTokenData = yield call(API.getCompTokenSavingsData, compTokenParams.accountAddress);
-  console.log('TestComp savings token data', compSavingTokenData);
   if (compSavingTokenData.data.accounts.length > 0) {
     if (compSavingTokenData.data.accounts[0].tokens.length > 0) {
       for (let i = 0; i < compSavingTokenData.data.accounts[0].tokens.length; i++) {
@@ -75,8 +74,10 @@ function* compoundTokenSagaWorker(compTokenAttributes) {
           }
         }
       } //end of for loop
-      yield put(actions.getCompTokenData(compArrayOfData));
-      yield put(actions.getCompTokenTotal(totalValue));
+      if (totalValue > 0) {
+        yield put(actions.getCompTokenData(compArrayOfData));
+        yield put(actions.getCompTokenTotal(totalValue));
+      }
     } //end of if condition
   }
 }
