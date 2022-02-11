@@ -13,7 +13,7 @@ import {
   LabelsBlockSubBlockSpan,
   MultiSwapChooseBtnTokenBlock,
   MultiSwapReceiveTokensBlock,
-  MultiSwapSendTokensChooseButton,
+  MultiSwapSendTokensChooseBlock,
   MultiSwapSendValueLabel,
   MultiSwapTokenAvatar,
   NewMultiSwapButton,
@@ -98,11 +98,12 @@ export default function MultiSwapComponent() {
       <SwapTokensMainSubBlock
         isLightTheme={isLightTheme}
         style={{ marginTop: '0', height: '600px' }}>
+        {/*Choose send tokens block*/}
+
         <SendReceiveSubBlock>
-          <MultiSwapSendTokensChooseButton isLightTheme={isLightTheme}>
-            <MultiSwapChooseBtnTokenBlock
-              // style={{ backgroundColor: 'red' }}
-              onClick={() => setIsSendTokensModalVisible(true)}>
+          <MultiSwapSendTokensChooseBlock isLightTheme={isLightTheme}>
+            {/* 1st receive block */}
+            <MultiSwapChooseBtnTokenBlock onClick={() => setIsSendTokensModalVisible(true)}>
               <div>
                 {sendTokenForExchange.logoURI !== null ? (
                   <SendTokenImg
@@ -129,7 +130,6 @@ export default function MultiSwapComponent() {
                 </MultiSwapSendValueLabel>
               </div>
             </MultiSwapChooseBtnTokenBlock>
-
             <USDCurrencyInputBlock>
               <ChosenMultiSwapSendReceiveTokenValueInput
                 InputProps={{
@@ -160,7 +160,7 @@ export default function MultiSwapComponent() {
                 $3 510,03
               </MultiSwapSendValueLabel>
             </USDCurrencyInputBlock>
-          </MultiSwapSendTokensChooseButton>
+          </MultiSwapSendTokensChooseBlock>
 
           <SwitchTokensBtn
             src={isLightTheme ? switchTokensLight : switchTokensDark}
@@ -168,13 +168,30 @@ export default function MultiSwapComponent() {
           />
         </SendReceiveSubBlock>
 
-        {/* 1st receive block */}
+        {/* 2nd receive block */}
         <MultiSwapReceiveTokensBlock isLightTheme={isLightTheme}>
           <div style={{ display: 'flex', flexDirection: 'row', marginTop: '10px' }}>
             <MultiSwapChooseBtnTokenBlock>
               <div>
-                <img src={EthIcon} alt="eth_icon" style={{ marginRight: '10px' }} />
-                <ChosenTokenLabel isLightTheme={isLightTheme}>ETH</ChosenTokenLabel>
+                {receiveFirstTokenForExchange.logoURI !== null ? (
+                  <SendTokenImg
+                    alt="token_img"
+                    src={receiveFirstTokenForExchange.logoURI}
+                    style={{ marginLeft: '4px' }}
+                  />
+                ) : (
+                  <MultiSwapTokenAvatar
+                    name={receiveFirstTokenForExchange.avatarIcon}
+                    round={true}
+                    size="21"
+                    textSizeRatio={1}
+                  />
+                )}
+                <ChosenTokenLabel isLightTheme={isLightTheme}>
+                  {receiveFirstTokenForExchange.symbol === 'ethereum'
+                    ? 'ETH'
+                    : receiveFirstTokenForExchange.symbol}
+                </ChosenTokenLabel>
                 <img src={isLightTheme ? chevronDownBlack : chevronDownLight} alt="chevron_icon" />
               </div>
               <div>
@@ -214,7 +231,6 @@ export default function MultiSwapComponent() {
               </MultiSwapSendValueLabel>
             </USDCurrencyInputBlock>
           </div>
-
           <div style={{ paddingLeft: '12px', paddingRight: '19px', marginTop: '5px' }}>
             <LabelsBlockSubBlock isLightTheme={isLightTheme} style={{ marginBottom: '3px' }}>
               <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
@@ -237,13 +253,30 @@ export default function MultiSwapComponent() {
           </div>
         </MultiSwapReceiveTokensBlock>
 
-        {/* 2st receive block */}
+        {/* 2nd receive block */}
         <MultiSwapReceiveTokensBlock isLightTheme={isLightTheme}>
           <div style={{ display: 'flex', flexDirection: 'row', marginTop: '10px' }}>
             <MultiSwapChooseBtnTokenBlock>
               <div>
-                <img src={uniIcon} alt="eth_icon" style={{ marginRight: '10px' }} />
-                <ChosenTokenLabel isLightTheme={isLightTheme}>UNI</ChosenTokenLabel>
+                {receiveSecondTokenForExchange.logoURI !== null ? (
+                  <SendTokenImg
+                    alt="token_img"
+                    src={receiveSecondTokenForExchange.logoURI}
+                    style={{ marginLeft: '4px' }}
+                  />
+                ) : (
+                  <MultiSwapTokenAvatar
+                    name={receiveSecondTokenForExchange.avatarIcon}
+                    round={true}
+                    size="21"
+                    textSizeRatio={1}
+                  />
+                )}
+                <ChosenTokenLabel isLightTheme={isLightTheme}>
+                  {receiveSecondTokenForExchange.symbol === 'ethereum'
+                    ? 'ETH'
+                    : receiveSecondTokenForExchange.symbol}
+                </ChosenTokenLabel>
                 <img src={isLightTheme ? chevronDownBlack : chevronDownLight} alt="chevron_icon" />
               </div>
               <div>

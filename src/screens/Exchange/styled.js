@@ -121,7 +121,7 @@ export const SendTokensChooseButton = styled.div`
   }
 `;
 
-export const MultiSwapSendTokensChooseButton = styled.div`
+export const MultiSwapSendTokensChooseBlock = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;

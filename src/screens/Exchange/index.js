@@ -87,7 +87,7 @@ import {
   LabelsBlockSubBlockSpan,
   SwapBlockExchangeLayout,
   MultiSwapChooseBtnTokenBlock,
-  MultiSwapSendTokensChooseButton,
+  MultiSwapSendTokensChooseBlock,
   MultiSwapSendValueLabel,
   MultiSwapReceiveTokensBlock,
   AddReceiveTokenMultiSwapBtn,
