@@ -21,6 +21,7 @@ import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
 import Ethereum2Staking from '../Ethereum2Staking';
 import CurveFarming from '../CurveFarming';
 import AaveStaking from '../AaveStaking';
+import Synthetix from '../Synthetix';
 //import UniswapV2 from '../LiqudityPools/UniswapV2';
 
 export default function index({ accountAddress }) {
@@ -99,6 +100,14 @@ export default function index({ accountAddress }) {
   //AAVE -- Aave protocol not moved to saga so using from useEffect for now
   const AaveStakingData = useSelector((state) => state.AaveStaking.AaveStakingData); //saga
   const AaveStakingTotal = useSelector((state) => state.AaveStaking.AaveStakingTotal); //saga
+
+  //Synthetix
+  const snxTokenData = useSelector((state) => state.Synthetix.snxTokenData); //saga
+  const snxTokenTotal = useSelector((state) => state.Synthetix.snxTokenTotal); //saga
+  const snxCollateralData = useSelector((state) => state.Synthetix.snxCollateralData); //saga
+  const snxCollateralTotal = useSelector((state) => state.Synthetix.snxCollateralTotal); //saga
+  //can create SVG file later if needed.
+  const snxImageUrl = 'https://assets.coingecko.com/coins/images/3406/thumb/SNX.png?1598631139';
 
   //pickle
   // const pickeStake = useSelector((state) => state.pickeStake.pickeStake); //saga
@@ -385,7 +394,9 @@ export default function index({ accountAddress }) {
             olympusStakingData.length > 0 ||
             YearnData.length > 0 ||
             YearnTokenData.length > 0 ||
-            curveToken.length > 0,
+            curveToken.length > 0 ||
+            snxTokenData.length > 0 ||
+            snxCollateralData.length > 0,
         }}>
         <Header>
           <Title isLightTheme={theme}>{'Vaults'}</Title>
@@ -402,7 +413,9 @@ export default function index({ accountAddress }) {
                   parseFloat(YearnTotalValue) +
                     parseFloat(YearnTokenTotalValue) +
                     parseFloat(olympusTokenTotal) +
-                    parseFloat(curveTokenTotal)
+                    parseFloat(curveTokenTotal) +
+                    parseFloat(snxTokenTotal) +
+                    parseFloat(snxCollateralTotal)
                 ).toFixed(2)
               )}
             </TotalValue>
@@ -500,7 +513,37 @@ export default function index({ accountAddress }) {
             ) : (
               ''
             )}
-            {/* <AaveStaking accountAddress={accountAddress} /> */}
+            {/* Sythetix protocol */}
+            {snxTokenData.length > 0 || snxCollateralData.length > 0 ? (
+              <>
+                <img
+                  src={snxImageUrl}
+                  style={{
+                    height: '20px',
+                    marginTop: '',
+                    marginLeft: '15px',
+                    display: 'inline-block',
+                  }}
+                  alt=""
+                />
+                Synthetix
+                {snxTokenData.map((object) => {
+                  return <Investment protocol={object} protocolName={'Synthetix'} />;
+                })}
+                {snxCollateralData.length > 0 ? (
+                  <>
+                    &nbsp;Collateral
+                    {snxCollateralData.map((object) => {
+                      return <Investment protocol={object} protocolName={'Synthetix'} />;
+                    })}
+                  </>
+                ) : (
+                  ''
+                )}
+              </>
+            ) : (
+              ''
+            )}
           </React.Fragment>
         )}
       </PoolsBlock>

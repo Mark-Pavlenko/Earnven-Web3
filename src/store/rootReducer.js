@@ -14,7 +14,7 @@ import { uniswapV2lp } from './UniswapV2/reducer';
 import { uniswapV2stake } from './UniswapV2/reducerStake';
 import { curveToken } from './curveToken/reducer';
 import { LiquityStakeReducer } from './LiquityStakeReducer/LiquityStakeReducer';
-import { SynthetixProtocol } from './synthetixProtocol/synthetixProtocol';
+//import { SynthetixProtocol } from './synthetixProtocol/synthetixProtocol';
 import { pickeStake } from './pickle/reducer';
 import { pickeDill } from './pickle/reducer';
 import { curveStaking } from './curveStaking/reducer';
@@ -38,6 +38,7 @@ import { currentTokenTransactionsReducer } from './currentTokenTransactions/redu
 import { gesData } from './gesData/reducer';
 import { walletDataReducer } from './currentWalletData/reducer';
 import { tokenPriceHistoryReducer } from './currentTokenPriceHistory/reducer';
+import { Synthetix } from './Synthetix/reducer';
 
 export const rootReducer = combineReducers({
   web3Reducer,
@@ -56,7 +57,7 @@ export const rootReducer = combineReducers({
   uniswapV2stake,
   curveToken,
   LiquityStakeReducer,
-  SynthetixProtocol,
+  //SynthetixProtocol,
   pickeStake,
   pickeDill,
   curveStaking,
@@ -81,4 +82,5 @@ export const rootReducer = combineReducers({
   gesData,
   walletDataReducer,
   tokenPriceHistoryReducer,
+  Synthetix,
 });
