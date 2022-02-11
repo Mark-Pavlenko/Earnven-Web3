@@ -58,9 +58,30 @@ const Investment = ({
   //setup value based on the protocols
   let protocolLogo;
 
-  if (protocolName.trim() === 'Sushiswap') {
+  if (protocolName === 'Sushiswap') {
     protocol.symbol = protocol.token0Symbol + '-' + protocol.token1Symbol;
     protocolLogo = SushiSwapLogo;
+  }
+
+  if (protocolName === 'Curve Staking') {
+    protocol.symbol = protocol.tokenName;
+  }
+
+  if (protocolName === 'Curve Pool') {
+    protocol.tokenImage = logoImage;
+  }
+
+  if (protocolName === 'Aave') {
+    let symbolArray = [];
+    tokens.map((token) => {
+      symbolArray.push(token.symbol);
+    });
+    if (symbolArray.length == 2) {
+      protocol.symbol = symbolArray[0] + ' / ' + symbolArray[1];
+    }
+    if (symbolArray.length == 1) {
+      protocol.symbol = symbolArray[0];
+    }
   }
 
   return (
@@ -79,7 +100,15 @@ const Investment = ({
                       <MockTokenImage src={protocol.token1Image} />
                     </React.Fragment>
                   ) : (
-                    <MockTokenImage src={protocol.tokenImage} />
+                    <>
+                      {protocolName === 'Curve Staking' ? (
+                        <>
+                          <CurveLpImage lpToken={protocol.tokenName} />
+                        </>
+                      ) : (
+                        <MockTokenImage src={protocol.tokenImage} />
+                      )}
+                    </>
                   )}
                 </React.Fragment>
               )}
@@ -110,15 +139,23 @@ const Investment = ({
           </div> */}
         </div>
         <ContentRightWrapper isLightTheme={theme}>
-          <div>
-            ${numberWithCommas(parseFloat(protocol.value ? protocol.value : '').toFixed(2))}
-          </div>
+          {protocolName === 'Aave' ? (
+            <>
+              $
+              {numberWithCommas(
+                parseFloat(protocol.totalValue ? protocol.totalValue : '').toFixed(2)
+              )}
+            </>
+          ) : (
+            <>${numberWithCommas(parseFloat(protocol.value ? protocol.value : '').toFixed(2))}</>
+          )}
+
           <ToggleButton isLightTheme={theme} isOpen={isOpen} onClick={toggleHandler} />
         </ContentRightWrapper>
       </TotalValue>
       {isOpen && (
         <>
-          {/* {tokens &&
+          {tokens &&
             tokens.map((token) => {
               return (
                 <>
@@ -178,7 +215,7 @@ const Investment = ({
                   )}
                 </>
               );
-            })} */}
+            })}
           {/*{stakedToken && (*/}
           {/*  <ContentWrapper isLightTheme={theme}>*/}
           {/*    <div>Staked Token</div>*/}
@@ -249,7 +286,8 @@ const Investment = ({
                 item !== 'yTokenDecimals' &&
                 item !== 'image' &&
                 item != 'token0Image' &&
-                item != 'token1Image'
+                item != 'token1Image' &&
+                item != 'totalValue'
             )
             .map((el) => {
               return (

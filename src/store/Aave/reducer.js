@@ -7,10 +7,15 @@ const initialState = {
 
 export const AaveStaking = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.SET_AAVE_STAKING_DATA:
+    case actionTypes.GET_AAVE_TOKEN_DATA:
       return {
+        ...state,
         AaveStakingData: action?.payload,
-        AaveStakingTotal: action?.payload[0].totalValue,
+      };
+    case actionTypes.GET_AAVE_TOKEN_TOTAL:
+      return {
+        ...state,
+        AaveStakingTotal: action?.payload,
       };
     default:
       return state;

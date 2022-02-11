@@ -9,6 +9,11 @@ import crvLiquidityGaugeV2TokenList from '../../../../contractAddress/CRVLiquidi
 import crvLiquidityGaugeV3TokenList from '../../../../contractAddress/CRVLiquidityGuageV3AddList';
 import crvLiquidityGaugeRewards from '../../../../contractAddress/CRVLiquidityGaugeRewardAddList';
 import crvLiquidityGauge from '../../../../contractAddress/CRVLiquidityGaugeAddList';
+//curveLpToken data
+import Curve3CrvPoolABI from '../../../../abi/CurveLpContracts/Curve3CrvPool.json';
+import CurvePoolRegistryABI from '../../../../abi/CurveLpContracts/CurveRegistry.json';
+//import CurvePoolRegAddress from '../../contractAddresses';
+import getCoingeckoData from '../../../../utils/getCoingeckoAPIData.js';
 
 //get yearn finance token price
 export const getCurveTokenPriceData = async (contractAddress) => {
@@ -181,3 +186,103 @@ export const getLiquidityGaugeV3 = async (accountAddress, gaugeTokenAddress, web
   };
 };
 //end of curve staking and claimable process
+
+//-----------------------CurveLpToken process------------------------------
+//to get virtual price of the pool
+export const fetchCurveLpTokenVirtualPrice = async (contractAddress, web3) => {
+  const CurvePoolRegistryContract = new web3.eth.Contract(
+    CurvePoolRegistryABI,
+    addresses.CuvePoolRegistry
+  );
+  let poolVirtualPrice = await CurvePoolRegistryContract.methods
+    .get_virtual_price_from_lp_token(contractAddress.toLowerCase())
+    .call();
+  return poolVirtualPrice;
+};
+//call the below function to get connect with smart contract and get curve token balance
+export const getCurveLpData = async (accountAddress, contractAddress, web3) => {
+  const Curve3CrvPoolContract = new web3.eth.Contract(Curve3CrvPoolABI, contractAddress);
+  let Curve3CrvBalance = await Curve3CrvPoolContract.methods.balanceOf(accountAddress).call();
+  let Curve3CrvName = await Curve3CrvPoolContract.methods.name().call();
+  let CurveLpTokenVirtualPrice = await fetchCurveLpTokenVirtualPrice(contractAddress, web3);
+  let curveLpTokenTotal = await Curve3CrvPoolContract.methods.totalSupply().call();
+  let curveTokenSymbol = await Curve3CrvPoolContract.methods.symbol().call();
+
+  return {
+    curveLpTokenPrice: CurveLpTokenVirtualPrice, // pool virtual price
+    curveLpTokenBalance: Curve3CrvBalance, //token balance of Lp for the given user
+    curveLpTokenName: Curve3CrvName, // token name
+    curveLpTokenSymbol: curveTokenSymbol, //token symbol
+    curveLpTokenLiquidity: curveLpTokenTotal, //pool Liquidity
+  };
+};
+//call the below url to get the user releated information that holds the curveLp tokens
+export const getAddressInfo = async (accountAddress) => {
+  const response = await axios.get(
+    `https://api.ethplorer.io/getAddressInfo/${accountAddress}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
+  );
+  return response.data;
+};
+
+//this function is to get given token/coin details from coinGecko API
+export const getCoingeckoAPIData = async (contractAddress, tokenAddress) => {
+  console.log('I am inside to get the price of the token for token name', tokenAddress);
+  let curveLpTokenMarketPrice = 0;
+  //this API should run based on the lp token address but for some of the data should fetched from its
+  //underlying token rather than lp token address so we need to split on this fetching process
+
+  //list of tokens having usd price for given lp tokens from coingecko API
+  let tokenListforCoingecko = new Array(
+    'DAI/USDC/USDT',
+    //'yDAI/yUSDC/yUSDT/yBUSD',
+    'cDAI/cUSDC',
+    'DAI/USDC/USDT/PAX',
+    'renBTC/wBTC',
+    'renBTC/wBTC/sBTC',
+    'DAI/USDC/USDT/sUSD',
+    'yDAI/yUSDC/yUSDT/yTUSD'
+  );
+  if (tokenListforCoingecko.indexOf(tokenAddress) != -1) {
+    try {
+      //get the current market price of the token 'Curve'
+      let result = await axios.get(
+        `https://api.coingecko.com/api/v3/coins/ethereum/contract/${contractAddress}`,
+        {},
+        {}
+      );
+      //return the coingecko fetched result to the calling function
+      return result;
+    } catch (err) {
+      console.log(`Coingecko API : No data found for the given token ${contractAddress}`);
+      return 0;
+    }
+  } //end of if find
+  //Below is the list of tokens need to fetch USD price for underlying tokens
+  let contractCoinAddress;
+  let tokenListforEth = new Array('ETH/aETH', 'ETH/rETH', 'ETH/sETH', 'ETH/stETH');
+  if (tokenListforEth.indexOf(tokenAddress) != -1) {
+    contractCoinAddress = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'; //WETH address
+  }
+  // //look for DAI/USD pair
+  // let tokenListforDAI = new Array('aDAI/aSUSD')
+  // if(tokenListforDAI.indexOf(tokenAddress) !=-1) {
+  //   contractCoinAddress = '0x028171bca77440897b824ca71d1c56cac55b68a3' //aDAI address
+  //  }
+  if (contractCoinAddress) {
+    try {
+      //get the current market price of the token 'Curve'
+      let result = await axios.get(
+        `https://api.coingecko.com/api/v3/coins/ethereum/contract/${contractCoinAddress}`,
+        {},
+        {}
+      );
+      //return the coingecko fetched result to the calling function
+      return result;
+    } catch (err) {
+      console.log(`Coingecko API : No data found for the given token ${contractAddress}`);
+      return 0;
+    }
+  } //end of if find
+};
+
+//end of CurveLpTokenProcess

@@ -18,6 +18,7 @@ import {
   ChartWrapper,
 } from './style';
 import EtherscanIcon from '../../../assets/icons/etherscan.svg';
+import EtherscanIconDark from '../../../assets/icons/ethersccan-dark.svg';
 import { Link } from 'react-router-dom';
 
 export default class LightThemeChart extends Component {
@@ -121,6 +122,15 @@ export default class LightThemeChart extends Component {
             borderType: 'solid',
             color: 'rgba(30,30,32, 0.03)',
           },
+          labels: {
+            style: {
+              fontSize: '10px',
+              colors: '#1E1E20',
+              fontFamily: 'saira',
+              fontWeight: 400,
+              opacity: 0.7,
+            },
+          },
         },
         yaxis: {
           labels: {
@@ -137,6 +147,7 @@ export default class LightThemeChart extends Component {
             style: {
               fontSize: '10px',
               colors: '#1E1E20',
+              fontFamily: 'saira',
               fontWeight: 400,
               opacity: 0.7,
             },

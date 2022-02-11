@@ -10,6 +10,7 @@ import {
   HeaderApr,
   HeaderLiquidity,
   AvailableTitle,
+  ItemIndexHidden,
 } from './styledComponents';
 
 export const LiquidityPoolsTable = ({ data, type, addLiquidity, addLiquidityNormal }) => {
@@ -19,7 +20,7 @@ export const LiquidityPoolsTable = ({ data, type, addLiquidity, addLiquidityNorm
     <TableWrapper isLightTheme={theme}>
       <TableItem isLightTheme={theme}>
         <ItemHeader>
-          <ItemIndex>№</ItemIndex>
+          <ItemIndexHidden>№</ItemIndexHidden>
           <AvailableTitle>Available pools</AvailableTitle>
         </ItemHeader>
         <HeaderLiquidity>Liquidity</HeaderLiquidity>

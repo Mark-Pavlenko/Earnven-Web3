@@ -93,7 +93,6 @@ export const PoolDetails = ({ token0, token1, type }) => {
       const priorVolume = parseFloat(oneDayPriorReserverdUSD) / parseFloat(oneDayPrirorTotalSupply);
 
       const currentVolume = parseFloat(currentReserverUsd) / parseFloat(currentTotalSupply);
-      console.log('yathebest', currentTotalSupply, oneDayPrirorTotalSupply, response.data.data);
       let oneDayState = '';
 
       if (!isNaN(((currentVolume - priorVolume) / priorVolume) * 100)) {

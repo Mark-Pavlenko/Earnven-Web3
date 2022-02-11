@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function LiquidityPools() {
+export default function LiquidityPools({ inputValue }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [Loading, setLoading] = useState(false);
@@ -100,17 +100,15 @@ export default function LiquidityPools() {
   const [AccountLiquidity, setAccountLiquidity] = useState('');
   const [ReceiveToken, setReceiveToken] = useState('');
   const [LiquidityAmount, setLiquidityAmount] = useState('');
-  console.log('SupplyTokenAmount', SupplyTokenAmount)
-  const [AllTokens, setAllTokens] = useState([]);
 
-  console.log('comparison1', Data)
-  console.log('comparison2', AllTokens)
+
+
+  const [AllTokens, setAllTokens] = useState([]);
 
   useEffect(() => {
     async function getData() {
       let fetchedTokens;
       await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {}).then(async (response) => {
-        console.log('Oxres', response)
         setAllTokens(response.data.records);
         fetchedTokens = response.data.records;
       });
@@ -120,9 +118,9 @@ export default function LiquidityPools() {
           let data = response.data.tokens;
           let tokens = fetchedTokens.map((token) => ({
             ...token,
-            logoURI: data.find((x) => x.address == token.address)
-              ? data.find((x) => x.address == token.address).logoURI
-              : tokenURIs.find((x) => x.address == token.address).logoURI,
+            logoURI: data.find((x) => x.address === token.address)
+              ? data.find((x) => x.address === token.address).logoURI
+              : tokenURIs.find((x) => x.address === token.address).logoURI,
           }));
           setAllTokens(tokens);
         }).catch((res) => {
@@ -183,6 +181,19 @@ export default function LiquidityPools() {
                 ).toFixed(2)}{' '}
                 % (Weekly)
               </div>
+              <Link to={`/${address}/sushiswap/address/${object.token0.id}/${object.token1.id}`}>
+                <Button
+                    color="primary"
+                    sx={{
+                      height: '0.1px',
+                      color: '#fff',
+                      fontWeight: 5,
+                      fontSize: '13px',
+                      // background: (theme) => theme.palette.gradients.custom,
+                    }}>
+                  Details
+                </Button>
+              </Link>
               <div style={{ display: 'inline-block', width: '10%' }}>
                 <img
                   style={{
@@ -648,7 +659,6 @@ export default function LiquidityPools() {
     setAccountLiquidity(qtty);
   }
 
-  //don't need anymore
   async function removeLiquidity(tokenA, tokenB, receiveToken, liquidityAmount) {
     // console.log(tokenA, tokenB, receiveToken, liquidityAmount)
     await loadWeb3();
@@ -669,7 +679,6 @@ export default function LiquidityPools() {
       .send({ from: accounts[0] });
   }
 
-  //don't need anymore
   async function removeLiquidityETH(tokenA, tokenB, LiquidityAmount) {
     await loadWeb3();
     const web3 = window.web3;
@@ -689,7 +698,6 @@ export default function LiquidityPools() {
       .send({ from: accounts[0] });
   }
 
-  //don't need anymore
   async function removeLiquidityNormal(tokenA, tokenB, LiquidityAmount) {
     const start = parseInt(Date.now() / 1000) + 180;
     await loadWeb3();
@@ -756,7 +764,6 @@ export default function LiquidityPools() {
         .send({ from: accounts[0] });
   }
 
-  //don't need anymore
   async function addLiquidityEth(tokenA, tokenB, ethAmount) {
     await loadWeb3();
     const web3 = window.web3;
@@ -768,6 +775,11 @@ export default function LiquidityPools() {
     await oneClickContract.methods
       .addLiquidityOneClickETH(tokenA, tokenB)
       .send({ from: accounts[0], value: web3.utils.toWei(ethAmount, 'ether') });
+  }
+
+
+  const filterData = (Data) => {
+    return Data.filter(d => d.id.includes(inputValue) || (d.token0.symbol + ' ' + d.token1.symbol).includes(inputValue.toUpperCase()) || d.token0.name.includes(inputValue) || d.token1.name.includes(inputValue));
   }
 
   return (

@@ -9,7 +9,7 @@ export const Main = styled.div`
   border-radius: 10px;
   margin-bottom: 35px;
   width: 100%;
-  padding: 20px 10px 20px 18px;
+  padding: 20px 10px 20px 15px;
 
   @media (max-width: 480px) {
     border-radius: 30px;
@@ -19,7 +19,7 @@ export const Main = styled.div`
 export const Title = styled.div`
   font-size: 20px;
   font-weight: 500;
-  margin: 0 0 15px 7px;
+  margin: 0 0 15px 13px;
 
   @media (max-width: 480px) {
     margin: 0 0 5px -5px;

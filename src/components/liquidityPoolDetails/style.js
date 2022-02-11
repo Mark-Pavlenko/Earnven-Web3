@@ -9,6 +9,16 @@ export const BackgroundStyles = styled.div`
     border-radius: 30px;
   }
 `;
+
+export const Wrapper = styled.div`
+  padding: 32px 0;
+  width: 1025px;
+
+  @media (max-width: 1050px) {
+    width: 100%;
+  }
+`;
+
 export const TokensInfo = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -22,13 +32,19 @@ export const TokensInfo = styled.div`
 `;
 
 export const Token = styled(BackgroundStyles)`
-  display: flex;
+  height: 92px;
+  display: grid;
   align-items: center;
-  justify-content: space-between;
+  grid-template-columns: 1fr 1fr;
   padding: 30px 25px;
   background: ${(props) =>
     props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)'};
   color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#fff')};
+
+  @media (max-width: 768px) {
+    padding: 0 25px;
+    gap: 10px;
+  }
 `;
 
 export const PairInfo = styled(BackgroundStyles)`
@@ -84,9 +100,7 @@ export const Stats = styled(BackgroundStyles)`
   margin-bottom: 35px;
 `;
 
-export const StatsWrapper = styled.div`
-  padding: 0 30px;
-`;
+export const StatsWrapper = styled.div``;
 
 export const StatsItems = styled.div`
   display: grid;
@@ -117,6 +131,11 @@ export const TokenPrice = styled.div`
   font-weight: 500;
   font-size: 20px;
   line-height: 31px;
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    font-size: 16px;
+    gap: 30px;
+  }
 `;
 
 export const CompareTokens = styled.div`
@@ -153,6 +172,10 @@ export const ShowMore = styled.button`
   border: none;
   color: ${(props) => (props.isLightTheme ? '#4453AD' : '#fff')};
   cursor: pointer;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 export const CopyBlock = styled.img`

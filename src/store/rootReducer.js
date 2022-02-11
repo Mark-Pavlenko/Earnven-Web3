@@ -36,6 +36,8 @@ import { compoundFinance } from './compoundFinance/reducer';
 import { currentTokenDataReducer } from './currentTokenData/reducer';
 import { currentTokenTransactionsReducer } from './currentTokenTransactions/reducer';
 import { gesData } from './gesData/reducer';
+import { walletDataReducer } from './currentWalletData/reducer';
+import { tokenPriceHistoryReducer } from './currentTokenPriceHistory/reducer';
 
 export const rootReducer = combineReducers({
   web3Reducer,
@@ -77,4 +79,6 @@ export const rootReducer = combineReducers({
   currentTokenDataReducer,
   currentTokenTransactionsReducer,
   gesData,
+  walletDataReducer,
+  tokenPriceHistoryReducer,
 });

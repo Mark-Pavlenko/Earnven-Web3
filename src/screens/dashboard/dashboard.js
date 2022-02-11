@@ -139,12 +139,13 @@ export default function Dashboard({ test, changeTheme }) {
               <LeftSideWrapper>
                 <PortfolioPerf address={address} totalValue={`$${totalValue}`} theme={theme} />
                 <Mobile>
-                  <AllAssets isLightTheme={theme} address={address} />
+                  {/* commented AllAssets component causing more noise */}
+                  {/* <AllAssets isLightTheme={theme} address={address} />{' '} */}
                 </Mobile>
                 <LoansAndSavings accountAddress={address} />
               </LeftSideWrapper>
               <RightSideWrapper>
-                <AllAssets isLightTheme={theme} address={address} />
+                {/* <AllAssets isLightTheme={theme} address={address} /> */}
               </RightSideWrapper>
             </MainBlocks>
           </Container>

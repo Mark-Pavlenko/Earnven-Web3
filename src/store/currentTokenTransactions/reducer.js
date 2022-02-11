@@ -5,7 +5,7 @@ import {
 } from '../../constants/actionTypes';
 
 const initialState = {
-  currentTokenTransactions: [],
+  currentTokenTransactions: null,
   error: '',
   isLoading: false,
 };
@@ -15,7 +15,6 @@ export const currentTokenTransactionsReducer = (state = initialState, action) =>
     case GET_TOKEN_TRANSACTIONS:
       return { ...state, isLoading: true };
     case GET_TOKEN_TRANSACTIONS_SUCCESS:
-      console.log(action.payload);
       return {
         ...state,
         currentTokenTransactions: action.payload.currentTokenTransactions,

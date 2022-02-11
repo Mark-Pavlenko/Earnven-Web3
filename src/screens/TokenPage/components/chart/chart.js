@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import DarkThemeChart from './components/darkThemeChart/darkThemeChart';
 import LightThemeChart from './components/lightThemeChart/lightThemeChart';
+import { connect } from 'react-redux';
 
-export default class Chart extends Component {
+class Chart extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -11,15 +12,29 @@ export default class Chart extends Component {
   }
 
   render() {
-    const { theme, totalValue, tokenId, difValue } = this.props;
+    const { theme, totalValue, difValue } = this.props;
     return (
       <>
         {theme ? (
-          <LightThemeChart tokenId={tokenId} totalValue={totalValue} difValue={difValue} />
+          <LightThemeChart
+            tokenPriceHistory={this.props.tokenPriceHistory}
+            totalValue={totalValue}
+            difValue={difValue}
+          />
         ) : (
-          <DarkThemeChart tokenId={tokenId} totalValue={totalValue} difValue={difValue} />
+          <DarkThemeChart
+            tokenPriceHistory={this.props.tokenPriceHistory}
+            totalValue={totalValue}
+            difValue={difValue}
+          />
         )}
       </>
     );
   }
 }
+
+function mapStateToProps(state) {
+  return { tokenPriceHistory: state.tokenPriceHistoryReducer.tokenPriceHistory };
+}
+
+export default connect(mapStateToProps)(Chart);

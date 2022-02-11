@@ -19,6 +19,7 @@ import {
 } from '../lightThemeChart/style';
 import EtherscanIcon from '../../../assets/icons/etherscan.svg';
 import { Link } from 'react-router-dom';
+import EtherscanIconDark from '../../../assets/icons/ethersccan-dark.svg';
 
 export default class DarkThemeChart extends Component {
   componentWillMount() {
@@ -126,6 +127,7 @@ export default class DarkThemeChart extends Component {
             style: {
               fontSize: '10px',
               colors: 'white',
+              fontFamily: 'saira',
               fontWeight: 400,
               opacity: 0.7,
             },
@@ -147,6 +149,7 @@ export default class DarkThemeChart extends Component {
               fontSize: '10px',
               colors: 'white',
               fontWeight: 400,
+              fontFamily: 'saira',
               opacity: 0.7,
             },
           },
@@ -392,7 +395,7 @@ export default class DarkThemeChart extends Component {
           <ButtonsBlock>
             <HiddenLink target="_blank" href={`https://etherscan.io/address/${this.props.address}`}>
               <EtherscanButton isLightTheme={this.props.isLightTheme}>
-                <TokenImage src={EtherscanIcon} alt="" />
+                <TokenImage src={EtherscanIconDark} alt="" />
               </EtherscanButton>
             </HiddenLink>
             <InvestButton isLightTheme={this.props.isLightTheme} id="Add Liquidity">
@@ -424,7 +427,7 @@ export default class DarkThemeChart extends Component {
               target="_blank"
               href={`https://etherscan.io/address/${this.props.address}`}>
               <EtherscanButton isLightTheme={this.props.isLightTheme}>
-                <TokenImage src={EtherscanIcon} alt="" />
+                <TokenImage src={EtherscanIconDark} alt="" />
               </EtherscanButton>
             </VisibleLink>
           </div>
