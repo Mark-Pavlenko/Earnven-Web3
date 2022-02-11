@@ -242,7 +242,7 @@ export default function SwapComponent() {
     name: 'ethereum',
     id: 'ethereum',
     firstTimePageLoad: true,
-    // USDCurrency:
+    address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
   });
   const [receiveTokenForExchange, setReceiveTokenForExchange] = useState({
     symbol: 'DAI',
@@ -273,8 +273,8 @@ export default function SwapComponent() {
   const [isSendTokensModalVisible, setIsSendTokensModalVisible] = useState(false);
   const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
 
-  // console.log('sendTokenForExchange', sendTokenForExchange);
-  console.log('receiveTokenForExchange', receiveTokenForExchange);
+  console.log('sendTokenForExchange', sendTokenForExchange);
+  // console.log('receiveTokenForExchange', receiveTokenForExchange);
 
   // let filteredData;
   // const [filteredSendTokensListData, setFilteredSendTokensListData] = useState([]);
@@ -339,8 +339,10 @@ export default function SwapComponent() {
       `https://api.coingecko.com/api/v3/simple/price?ids=${receiveTokenForExchange.id}&vs_currencies=usd`
     );
     console.log('triggered');
-    setTokenSendUSDCurrency(`$${Object.values(initSendTokenUSDCurrency.data)[0].usd}`);
-    setTokensReceiveUSDCurrency(`$${Object.values(initReceiveTokenUSDCurrency.data)[0].usd}`);
+    setTokenSendUSDCurrency(`$${Object.values(initSendTokenUSDCurrency.data)[0].usd.toFixed(2)}`);
+    setTokensReceiveUSDCurrency(
+      `$${Object.values(initReceiveTokenUSDCurrency.data)[0].usd.toFixed(2)}`
+    );
   }, []);
 
   let convertTokenToUSDCurrency = async (tokenData) => {
@@ -353,8 +355,10 @@ export default function SwapComponent() {
 
     if (
       tokenData.receiveTokensListItem === true &&
-      tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+      tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' &&
+      tokenData.USDCurrency === undefined
     ) {
+      console.log('triggered 1');
       tokenUSDCurrencyValue = await axios.get(
         `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
       );
@@ -362,41 +366,59 @@ export default function SwapComponent() {
 
       if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
         setTokensReceiveUSDCurrency(
-          `$ ${tokenUSDCurrencyValue.data.price.rate * parseInt(tokenData.amount)}`
+          `$ ${(tokenUSDCurrencyValue.data.price.rate * parseInt(tokenData.amount)).toFixed(2)}`
         );
       } else {
         setTokensReceiveUSDCurrency('Price not available');
       }
-    } else if (tokenData.address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+    } else if (
+      tokenData.address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' &&
+      tokenData.receiveTokensListItem === true
+    ) {
+      console.log('triggered 2');
       const ethDollarValue = await axios.get(
         'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
       );
       setTokensReceiveUSDCurrency(
-        `$${ethDollarValue.data.ethereum.usd * parseInt(tokenData.amount)}`
+        `$${(ethDollarValue.data.ethereum.usd * parseInt(tokenData.amount)).toFixed(2)}`
       );
+    } else if (tokenData.sendTokensListItem === true) {
+      if (tokenData.USDCurrency !== undefined) {
+        // console.log('triggered undefined');
+        setTokenSendUSDCurrency(
+          `$ ${(tokenData.USDCurrency * parseInt(tokenData.amount)).toFixed(2)}`
+        );
+      } else {
+        setTokenSendUSDCurrency('Price not available');
+      }
     }
   };
 
+  let convertSendTokenToUSDCurrency = async (tokenData) => {
+    if (tokenData.amount === '') tokenData.amount = '0';
+
+    console.log('exchange token send USD currency data', tokenData);
+
+    let tokenUSDCurrencyValue;
+
+    if (tokenData.firstTimePageLoad === true || tokenData.name === 'Ethereum') {
+      console.log('send USD eth triggered');
+    } else if (tokenData.USDCurrency === undefined) {
+      console.log('send USD no USDCurrency triggered');
+    } else {
+      console.log('send USD tokenData.USDCurrency', tokenData.USDCurrency);
+    }
+  };
   //----------
 
   useEffect(async () => {
     try {
       dispatch({ type: actionTypes.SET_SEND_TOKENS_LIST, payload: address });
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-
-  useEffect(() => {
-    try {
       dispatch({ type: actionTypes.SET_RECEIVE_TOKENS_LIST });
     } catch (error) {
       console.log(error);
     }
   }, []);
-
-  // console.log('Redux-sagas Send Final Tokens List', finalSendTokensList);
-  // console.log('Redux-sagas Receive Final Tokens List', finalReceiveTokensList);
 
   useEffect(async () => {
     await axios.get(`https://cdn.furucombo.app/furucombo.tokenlist.json`).then(async (response) => {
@@ -522,20 +544,20 @@ export default function SwapComponent() {
             protocolQuote.TokenToAmount = (
               parseInt(response.data.buyAmount) * Math.pow(10, -TokenTo.decimals)
             )
-              .toFixed(3)
+              .toFixed(2)
               .toString();
             protocolQuote.gas = (
               parseInt(response.data.gas) *
               parseInt(response.data.gasPrice) *
               Math.pow(10, -18) *
               ethPrice
-            ).toFixed(3);
+            ).toFixed(2);
             console.log('dollar value of token', tokenToDollarValue);
             protocolQuote.receivedValueInDollar = (
               parseInt(response.data.buyAmount) *
               Math.pow(10, -TokenTo.decimals) *
               tokenToDollarValue
-            ).toFixed(3);
+            ).toFixed(2);
             protocolQuote.netReceived =
               parseFloat(protocolQuote.receivedValueInDollar) - parseFloat(protocolQuote.gas);
             protocolQuote.transactObject = response.data;
@@ -647,7 +669,7 @@ export default function SwapComponent() {
           tempObj.address = '';
           tempObj.name = 'Ethereum';
           tempObj.symbol = 'ETH';
-          tempObj.balance = response.data.ETH.balance.toFixed(3).toString();
+          tempObj.balance = response.data.ETH.balance.toFixed(2).toString();
           tempObj.logoURI = ethImage;
           arr1.push(tempObj);
         }
@@ -660,7 +682,7 @@ export default function SwapComponent() {
           tempObj.balance = (
             tokens[i].balance * Math.pow(10, -parseInt(tokens[i].tokenInfo.decimals))
           )
-            .toFixed(3)
+            .toFixed(2)
             .toString();
           if (tokens[i].tokenInfo.image !== undefined) {
             tempObj.logoURI = `https://ethplorer.io${tokens[i].tokenInfo.image}`;
@@ -744,19 +766,13 @@ export default function SwapComponent() {
                     value={sendTokenForExchangeAmount}
                     onChange={(e) => {
                       setSendTokenForExchangeAmount(e.target.value);
-                      convertTokenToUSDCurrency({
+                      convertSendTokenToUSDCurrency({
                         amount: e.target.value,
                         ...sendTokenForExchange,
                       });
                     }}
-                    // onFocus={(e) => console.log('focus added')}
                     onBlur={(e) => {
                       console.log('focus removed');
-                      // convertTokenToUSDCurrency({
-                      //   amount: 1,
-                      //   ...sendTokenForExchange,
-                      // });
-                      // setSendTokenForExchangeAmount(0);
                     }}
                   />
                 </SendTokensChooseButton>
@@ -790,6 +806,7 @@ export default function SwapComponent() {
                             />
                           </CloseButton>
                         </Header>
+
                         <SearchTokensModalTextField
                           isLightTheme={isLightTheme}
                           onChange={sendTokensInputHandler}
@@ -825,16 +842,25 @@ export default function SwapComponent() {
                           }}
                           size="small"
                         />
+
                         {filteredData.length !== 0 ? (
                           <SendTokensModalList isLightTheme={isLightTheme}>
                             {filteredData.map((object) => (
                               <SendTokenModalListItem
                                 onClick={() => {
+                                  setIsSendTokensModalVisible(false);
+                                  setFilteredData(finalSendTokensList);
                                   selectSendTokenForExchange({
                                     ...object,
+                                    sendTokensListItem: true,
                                     selectedForExchangeValue: 0,
                                   });
-                                  setIsSendTokensModalVisible(false);
+                                  convertSendTokenToUSDCurrency({
+                                    amount: 1,
+                                    sendTokensListItem: true,
+                                    ...sendTokenForExchange,
+                                    address: object.address,
+                                  });
                                 }}
                                 isLightTheme={isLightTheme}>
                                 <SendTokenLabelsBlock>
@@ -920,12 +946,7 @@ export default function SwapComponent() {
                       <ChosenTokenLabel isLightTheme={isLightTheme}>
                         {receiveTokenForExchange.symbol} VIV
                       </ChosenTokenLabel>
-                      {/*<img*/}
-                      {/*  src={daiICon}*/}
-                      {/*  alt="daiICon"*/}
-                      {/*  style={{ marginRight: '12px', marginLeft: '12px' }}*/}
-                      {/*/>*/}
-                      {/*<ChosenTokenLabel isLightTheme={isLightTheme}>DAI qwe</ChosenTokenLabel>*/}
+
                       <img
                         src={isLightTheme ? chevronDownBlack : chevronDownLight}
                         alt="chevron_icon"
@@ -957,11 +978,6 @@ export default function SwapComponent() {
                     }}
                     onBlur={(e) => {
                       console.log('focus removed');
-                      // convertTokenToUSDCurrency({
-                      //   amount: 1,
-                      //   ...receiveTokenForExchange,
-                      // });
-                      // setSendTokenForExchangeAmount(0);
                     }}
                   />
                 </SendTokensChooseButton>
@@ -1569,7 +1585,7 @@ export default function SwapComponent() {
                         {selectedRate !== null && protocolsRateList.length > 0
                           ? (
                               parseFloat(TokenFromAmount) * parseFloat(selectedRate.minPrice)
-                            ).toFixed(3)
+                            ).toFixed(2)
                           : '00.00'}
                         {TokenTo !== '' ? TokenTo.symbol : ''}
                       </Typography>
@@ -1590,7 +1606,7 @@ export default function SwapComponent() {
                         {' '}
                         1 {TokenFrom} ={' '}
                         {selectedRate !== null && protocolsRateList.length > 0
-                          ? parseFloat(selectedRate.price).toFixed(3)
+                          ? parseFloat(selectedRate.price).toFixed(2)
                           : '00.00'}{' '}
                         {TokenTo !== '' ? TokenTo.symbol : ''}
                       </Typography>
