@@ -55,3 +55,50 @@ export const TokenLink = styled.a`
     transition: all 0.2s;
   }
 `;
+
+export const CommonSubmitButton = styled.button`
+  height: 40px;
+  width: ${(props) => (props.width ? props.width : '100%')};
+  background: ${(props) => (props.isLightTheme ? '#fff' : '#8f86ff')};
+  color: ${(props) => (props.isLightTheme ? '#4453AD' : ' white')};
+  box-shadow: inset 0 11px 21px -6px rgb(51 78 131 / 12%);
+  border-radius: 10px;
+  border: none;
+  //padding: 9px 55px;
+  font-family: 'Saira', serif;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+`;
+
+export const CommonHoverButton = styled.button`
+  height: ${(props) => (props.height ? props.height : '40px')};
+  width: ${(props) => (props.width ? props.width : '100%')};
+  background: ${(props) => (props.isLightTheme ? '#fff' : '#8f86ff')};
+  color: ${(props) => (props.isLightTheme ? '#4453AD' : ' white')};
+  box-shadow: 4px 6px 20px -5px rgba(51, 78, 131, 0.17);
+  border-radius: 10px;
+  border: none;
+  //padding: 9px 55px;
+  font-family: 'Saira', serif;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+`;
+
+export const CommonHoverButtonTrans = styled.button`
+  height: ${(props) => (props.height ? props.height : '40px')};
+  width: ${(props) => (props.width ? props.width : '100%')};
+  background: ${(props) => (props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : '#8f86ff')};
+  color: ${(props) => (props.isLightTheme ? '#4453AD' : ' white')};
+  box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  border: none;
+  //padding: 9px 55px;
+  font-family: 'Saira', serif;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  backdrop-filter: blur(35px);
+  mix-blend-mode: normal;
+`;

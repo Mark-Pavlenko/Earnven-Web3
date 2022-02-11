@@ -60,6 +60,8 @@ function* curveLPTokenSagaWorker(curveLpTokenAttributes) {
   } //end of for loop
   // setCurveLpTokenTotal(parseFloat(curveLpTokenTotalValue).toFixed(2));
   // setCurveLpTokenData(staking);
-  yield put(actions.getCurveLPTokenData(staking));
-  yield put(actions.getCurveLPTokenTotal(parseFloat(curveLpTokenTotalValue).toFixed(2)));
+  if (curveLpTokenTotalValue > 0) {
+    yield put(actions.getCurveLPTokenData(staking));
+    yield put(actions.getCurveLPTokenTotal(parseFloat(curveLpTokenTotalValue).toFixed(2)));
+  }
 }

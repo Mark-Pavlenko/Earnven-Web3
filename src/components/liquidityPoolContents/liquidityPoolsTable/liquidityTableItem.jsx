@@ -14,12 +14,11 @@ import {
   APR,
   AprValue,
   BalanceValue,
-} from './style';
+  ResetButton,
+  MenuPopoverBoxTitle,
+} from './styledComponents';
 import { SvgComponent } from '../svgComponent/svgComponent';
-import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
-import eth from '../../../assets/icons/ethereum.svg';
-import uni from '../../../assets/icons/uniswap-icon.svg';
-import mkr from '../../../assets/icons/mkr.svg';
+import { addIconsGasPrices, numberWithCommas } from '../../../commonFunctions/commonFunctions';
 import ModalContainer from '../../common/modalContainer/modalContainer';
 import { SelectWrapper } from '../styledComponents';
 import {
@@ -41,31 +40,68 @@ import { Link, useParams } from 'react-router-dom';
 
 import { SelectOptionsWithJSX } from '../HOC/selectOptionsWithJSX';
 import Web3 from 'web3';
-import TransparentButton from '../../TransparentButton';
 import ERC20ABI from '../../../abi/ERC20.json';
 import ROUTERABI from '../../../abi/UniRouterV2.json';
 import FACTORYABI from '../../../abi/UniFactoryV2.json';
 import Addresses from '../../../contractAddresses';
 import axios from 'axios';
 import tokenURIs from '../../../screens/Exchange/tokenURIs';
+import TOKENDECIMALSABI from '../../../abi/TokenDecomals.json';
+import {
+  CommonSubmitButton,
+  CommonHoverButton,
+  CommonHoverButtonTrans,
+} from '../../../screens/TokenPage/components/styledComponentsCommon';
+import { GasMenuItem } from '../../gasDropDownMenu/styles';
+import { useDispatch, useSelector } from 'react-redux';
+import { data } from '../../../globalStore';
+import fastDice from '../../../assets/icons/fastDice-icon.svg';
+import middleDice from '../../../assets/icons/middleDice-icon.svg';
+import slowDice from '../../../assets/icons/slowDice-icon.svg';
+import actionTypes from '../../../constants/actionTypes';
 
-export const LiquidityTableItem = ({ item, index, theme, type }) => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedModal, setSelectedModal] = useState('');
-  const [tokenReverses, setTokensReverses] = useState();
+export const LiquidityTableItem = ({
+  item,
+  index,
+  theme,
+  type,
+  addLiquidity,
+  addLiquidityNormal,
+}) => {
+  const GasPrices = useSelector((state) => state.gesData.gasPriceData);
+  const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
+  const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
+  const addIconsGasPricesWithIcons = addIconsGasPrices(GasPrices, fastDice, middleDice, slowDice);
+  const dispatch = useDispatch();
   const address = useParams().address;
+
+  const [isModalVisible, setIsModalVisible] = useState('');
+  //''
+  //addLiquidity
+  //slippageTolerance
+  const [selectedModal, setSelectedModal] = useState('');
 
   const [outValue, setOutValue] = useState('');
   const [inValue, setInValue] = useState('');
 
-  console.log('outValue', outValue);
-  console.log('outValue', inValue);
+  const [addLiquidityNormalTokenA, setAddLiquidityNormalTokenA] = useState('');
+  const [addLiquidityNormalTokenB, setAddLiquidityNormalTokenB] = useState('');
 
-  const [TokenA, setTokenA] = useState('');
-  const [TokenB, setTokenB] = useState('');
+  const [tokenAddress, setTokenAddress] = useState('0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+  const [singleTokenValue, setSingleTokenValue] = useState();
 
   const [allTokens, setAllTokens] = useState([]);
-  console.log('allTokens', allTokens);
+  const [inputType, setInputType] = useState('single');
+
+  const [selected, setSelected] = useState('');
+
+  // const [selectedGasValue, setSelectedGasValue] = useState(proposeGasPrice);
+  // setSelectedGasValue(selectedGasPrice);
+
+  const selectInitialValue = {
+    label: 'Ether',
+    value: 'Ether',
+  };
 
   useEffect(() => {
     async function getData() {
@@ -78,12 +114,14 @@ export const LiquidityTableItem = ({ item, index, theme, type }) => {
         .get(`https://tokens.coingecko.com/uniswap/all.json`, {})
         .then(async (response) => {
           let data = response.data.tokens;
+          console.log('imagesTOKENS', data);
           let tokens = fetchedTokens.map((token) => ({
             ...token,
             logoURI: data.find((x) => x.address === token.address)
               ? data.find((x) => x.address === token.address).logoURI
               : tokenURIs.find((x) => x.address === token.address).logoURI,
           }));
+          console.log('tokensWithImages', tokens);
           setAllTokens(tokens);
         })
         .catch((res) => {
@@ -95,7 +133,7 @@ export const LiquidityTableItem = ({ item, index, theme, type }) => {
 
   const switchModal = (e) => {
     setSelectedModal(e.target.id);
-    setIsModalVisible(true);
+    setIsModalVisible('addLiquidity');
   };
 
   const selectStyle = {
@@ -179,30 +217,7 @@ export const LiquidityTableItem = ({ item, index, theme, type }) => {
     },
   };
 
-  const options = [
-    {
-      image: eth,
-      name: 'Ethereum',
-      value: '1',
-    },
-    {
-      image: uni,
-      name: 'Uniswap',
-      value: '2',
-    },
-    {
-      image: mkr,
-      name: 'Uniswap MKR Pool (v1)',
-      value: '3',
-    },
-    {
-      image: mkr,
-      name: 'Uniswap MKR Pool (v1)',
-      value: '4',
-    },
-  ];
-
-  const updatedOptions = SelectOptionsWithJSX(options);
+  const updatedOptions = SelectOptionsWithJSX(allTokens);
 
   async function loadWeb3() {
     if (window.ethereum) {
@@ -217,67 +232,23 @@ export const LiquidityTableItem = ({ item, index, theme, type }) => {
     }
   }
 
-  async function checkLiquidity() {
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.sushiFactory);
-    var pairAddress = await FactoryContract.methods.getPair(item.token0.id, item.token1.id).call();
-    var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
-    var NewContract = new web3.eth.Contract(
-      ROUTERABI,
-      '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
-    );
-    var reverses = await PairContract.methods.getReserves().call();
-    // console.log('reverses', BigInt(reverses[0]), BigInt(reverses[1]));
-    let out = await NewContract.methods
-      .getAmountsOut(12374646465, [item.token0.id, item.token1.id])
-      .call();
-  }
-
-  async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB) {
-    const start = parseInt(Date.now() / 1000) + 180;
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var tokenAContract = new web3.eth.Contract(ERC20ABI, tokenA);
-    var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
-    await tokenAContract.methods
-      .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenA, 'ether'))
-      .send({ from: accounts[0] });
-    await tokenBContract.methods
-      .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenB, 'ether'))
-      .send({ from: accounts[0] });
-    const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.sushiRouter);
-    await UniRouter.methods
-      .addLiquidity(
-        tokenA,
-        tokenB,
-        web3.utils.toWei(amountTokenA, 'ether'),
-        web3.utils.toWei(amountTokenB, 'ether'),
-        0,
-        0,
-        accounts[0],
-        start.toString()
-      )
-      .send({ from: accounts[0] });
-  }
-
   const convertTokenPrice = async (inputId, value, token1, token2) => {
-    console.log('tokenAddresses', item);
-    const tokenDecimal1 = allTokens.find((o) => {
-      return o.address === token1;
-    });
-    const tokenDecimal2 = allTokens.find((o) => {
-      return o.address === token2;
-    });
-
-    console.log('Decimal1', tokenDecimal1?.decimals);
-    console.log('Decimal2', tokenDecimal2?.decimals);
-
     await loadWeb3();
     const web3 = window.web3;
-
+    //------------------------------------->
+    const tokenDecimal1 = await new web3.eth.Contract(TOKENDECIMALSABI, token1).methods
+      .decimals()
+      .call()
+      .then((res) => {
+        return res;
+      });
+    const tokenDecimal2 = await new web3.eth.Contract(TOKENDECIMALSABI, token2).methods
+      .decimals()
+      .call()
+      .then((res) => {
+        return res;
+      });
+    //------------------------------------->
     const NewContract = new web3.eth.Contract(
       ROUTERABI,
       '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
@@ -285,35 +256,24 @@ export const LiquidityTableItem = ({ item, index, theme, type }) => {
     if (!isNaN(value)) {
       if (inputId === 'firstInput') {
         const convertedValue = await NewContract.methods
-          //.getAmountsOut(stringValue * 10 ** originDecimal.decimals, [token1, token2])
-          .getAmountsOut(
-            (value * 10 ** (tokenDecimal1?.decimals ? tokenDecimal1?.decimals : 18)).toString(),
-            [token1, token2]
-          )
+          .getAmountsOut((value * 10 ** tokenDecimal1).toString(), [token1, token2])
           .call();
-        // const valueWithDecimals = (
-        //   convertedValue[1] /
-        //   10 ** tokenDecimalConvertIn.decimals
-        // ).toString();
-        console.log('convertedValue', convertedValue);
 
-        setOutValue(
-          +convertedValue[1] / 10 ** (tokenDecimal2?.decimals ? tokenDecimal2?.decimals : 18)
-        );
+        setAddLiquidityNormalTokenA((value * 10 ** tokenDecimal1).toString());
+        setAddLiquidityNormalTokenB(convertedValue[1]);
+
+        setOutValue(+convertedValue[1] / 10 ** tokenDecimal2);
         setInValue(value);
       }
       if (inputId === 'secondInput') {
         const convertedValue = await NewContract.methods
-          .getAmountsIn(
-            (value * 10 ** (tokenDecimal2?.decimals ? tokenDecimal2?.decimals : 18)).toString(),
-            [token1, token2]
-          )
+          .getAmountsIn((value * 10 ** tokenDecimal2).toString(), [token1, token2])
           .call();
-        console.log('convertedValue', convertedValue);
-        setInValue(
-          +convertedValue[0] / 10 ** (tokenDecimal1?.decimals ? tokenDecimal1?.decimals : 18)
-        );
 
+        setAddLiquidityNormalTokenA(convertedValue[0]);
+        setAddLiquidityNormalTokenB((value * 10 ** tokenDecimal2).toString());
+
+        setInValue(+convertedValue[0] / 10 ** tokenDecimal1);
         setOutValue(value);
       }
     } else {
@@ -322,26 +282,137 @@ export const LiquidityTableItem = ({ item, index, theme, type }) => {
     }
   };
 
+  const supplyTokenHandler = (value) => {
+    setTokenAddress(value.address);
+  };
+
+  const addLiquidityToPair = async (token1, token2, tokenValue) => {
+    const tokenValueHalf = tokenValue / 2;
+
+    await loadWeb3();
+    const web3 = window.web3;
+
+    //------------------------------------->
+    const tokenDecimal = await new web3.eth.Contract(TOKENDECIMALSABI, tokenAddress).methods
+      .decimals()
+      .call()
+      .then((res) => {
+        return res;
+      });
+    const tokenDecimalPair1 = await new web3.eth.Contract(TOKENDECIMALSABI, token1).methods
+      .decimals()
+      .call()
+      .then((res) => {
+        return res;
+      });
+    const tokenDecimalPair2 = await new web3.eth.Contract(TOKENDECIMALSABI, token2).methods
+      .decimals()
+      .call()
+      .then((res) => {
+        return res;
+      });
+    //------------------------------------->
+
+    const NewContract = new web3.eth.Contract(
+      ROUTERABI,
+      '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+    );
+    if (tokenAddress !== token1) {
+      const convertedValue1 = await NewContract.methods
+        .getAmountsOut((tokenValueHalf * 10 ** tokenDecimal).toString(), [tokenAddress, token1])
+        .call();
+
+      setInValue(+convertedValue1[1] / 10 ** tokenDecimalPair1);
+    } else {
+      setInValue(tokenValueHalf.toString());
+    }
+
+    if (tokenAddress !== token2) {
+      const convertedValue2 = await NewContract.methods
+        .getAmountsOut((tokenValueHalf * 10 ** tokenDecimal).toString(), [tokenAddress, token2])
+        .call();
+
+      setOutValue(+convertedValue2[1] / 10 ** tokenDecimalPair2);
+    } else {
+      setOutValue(tokenValueHalf.toString());
+    }
+  };
+
+  const inputsHandler = () => {
+    switch (inputType) {
+      case 'single':
+        return addLiquidity(
+          item.token0.id,
+          item.token1.id,
+          tokenAddress,
+          (singleTokenValue * 10 ** 18).toString(),
+          selectedGasPrice ? selectedGasPrice : proposeGasPrice
+        );
+      case 'pair':
+        return addLiquidityNormal(
+          item.token0.id,
+          item.token1.id,
+          addLiquidityNormalTokenA,
+          addLiquidityNormalTokenB,
+          selectedGasPrice ? selectedGasPrice : proposeGasPrice
+        );
+    }
+  };
+
+  const slippageHandler = () => {
+    setIsModalVisible('slippageTolerance');
+  };
+
+  const updateGasValue = (val, label) => {
+    data.gasSelected = val;
+    setSelected(label);
+    dispatch({ type: actionTypes.SET_SELECTED_GAS_PRICE, payload: val });
+  };
+
+  const resetButtonHandler = () => {
+    setIsModalVisible('addLiquidity');
+    data.gasSelected = 0;
+    dispatch({ type: actionTypes.SET_SELECTED_GAS_PRICE, payload: '' });
+  };
+
+  const saveButtonHandler = () => {
+    setIsModalVisible('addLiquidity');
+  };
+
   return (
     <>
-      {isModalVisible && (
+      {/*MODAL addLiquidity====================================>*/}
+      {isModalVisible === 'addLiquidity' && (
         <ModalContainer
           theme={theme}
-          title={selectedModal + (index + 1)}
+          title={selectedModal}
           isOpen={isModalVisible}
-          onClose={() => {
-            setIsModalVisible(false);
-          }}>
+          closeModal={setIsModalVisible}>
           <SelectWrapper>
             <SelectTitle>{'Supply a token'}</SelectTitle>
-            <Select defaultValue={'Ethereum'} styles={selectStyle} options={updatedOptions} />
+            <Select
+              defaultValue={selectInitialValue}
+              styles={selectStyle}
+              options={updatedOptions}
+              onChange={supplyTokenHandler}
+            />
             <InputBlock>
-              <ModalInput type="number" />
+              <ModalInput
+                value={singleTokenValue}
+                type="number"
+                onChange={(e) => {
+                  addLiquidityToPair(item.token0.id, item.token1.id, e.target.value).then(
+                    (res) => res
+                  );
+                  setSingleTokenValue(e.target.value);
+                  setInputType('single');
+                }}
+              />
               <Balance>{`Balance: ${5}`}</Balance>
             </InputBlock>
-            <ButtonsBlock>
-              <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>
-            </ButtonsBlock>
+            {/*<ButtonsBlock>*/}
+            {/*  <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>*/}
+            {/*</ButtonsBlock>*/}
             <ButtonsBlock>
               <ChangeToken>{'Or'}</ChangeToken>
             </ButtonsBlock>
@@ -357,17 +428,18 @@ export const LiquidityTableItem = ({ item, index, theme, type }) => {
               <ModalInput
                 value={inValue}
                 onChange={(e) => {
-                  setTokenA(e.target.value);
                   convertTokenPrice(
                     'firstInput',
                     parseInt(e.target.value),
                     item.token0.id,
                     item.token1.id
                   );
+                  setInputType('pair');
                 }}
                 type="number"
                 onFocus={() => {
                   setOutValue('');
+                  setSingleTokenValue('');
                 }}
               />
               <Balance>{`Balance: ${5}`}</Balance>
@@ -384,37 +456,96 @@ export const LiquidityTableItem = ({ item, index, theme, type }) => {
               <ModalInput
                 value={outValue}
                 onChange={(e) => {
-                  setTokenB(e.target.value);
                   convertTokenPrice(
                     'secondInput',
                     parseInt(e.target.value),
                     item.token0.id,
                     item.token1.id
                   );
+                  setInputType('pair');
                 }}
                 type="number"
                 onFocus={() => {
                   setInValue('');
+                  setSingleTokenValue('');
                 }}
               />
               <Balance>{`Balance: ${5}`}</Balance>
             </InputBlock>
             {/*input-------------------->*/}
             <LinksContainer>
-              <ModalLink href={'#'}>aaa</ModalLink>
+              <ModalLink onClick={slippageHandler} href={'#'}>
+                {'Slippage Tolerance'}
+              </ModalLink>
               <ModalLinkRight href={'#'}>bbb</ModalLinkRight>
-              <ModalLink href={'#'}>ccc</ModalLink>
+              <ModalLink href={'#'}>{'Transaction speed'}</ModalLink>
               <ModalLinkRight href={'#'}>ddd</ModalLinkRight>
             </LinksContainer>
             <ButtonsBlock>
-              <SupplyTokenButton
-                onClick={() => {
-                  addLiquidityNormal(item.token0.id, item.token1.id, TokenA, TokenB);
-                }}>{`Supply tokens`}</SupplyTokenButton>
+              <SupplyTokenButton onClick={inputsHandler}>{`Supply tokens`}</SupplyTokenButton>
             </ButtonsBlock>
           </SelectWrapper>
         </ModalContainer>
       )}
+      {/*MODAL slippageTolerance====================================>*/}
+      {isModalVisible === 'slippageTolerance' && (
+        <ModalContainer
+          modalType={isModalVisible}
+          theme={theme}
+          isOpen={isModalVisible}
+          closeModal={setIsModalVisible}>
+          <MenuPopoverBoxTitle isLightTheme={theme}>{'Realtime Gas Prices'}</MenuPopoverBoxTitle>
+          <div>
+            {addIconsGasPricesWithIcons.map((option) => (
+              <div
+                style={{ display: 'flex', flexDirection: 'column' }}
+                selected={option.label === selected}
+                onClick={() => {
+                  updateGasValue(option.value, option.label);
+                }}
+                sx={{ py: 1, px: 2.5 }}>
+                <GasMenuItem isLightTheme={theme}>
+                  <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    <img src={option.icon} alt="" />
+                    <span>{`${option.label} `}</span>
+                  </div>
+                  <div>
+                    <span>{`${option.value} Gwei`}</span>
+                  </div>
+                </GasMenuItem>
+              </div>
+            ))}
+          </div>
+          <CommonSubmitButton width={'189px'} isLightTheme={theme} onClick={() => {}}>
+            {'Advanced settings'}
+          </CommonSubmitButton>
+          <MenuPopoverBoxTitle isLightTheme={theme}>{'Slippage Tolerance'}</MenuPopoverBoxTitle>
+          <CommonHoverButtonTrans
+            height={'45px'}
+            width={'55px'}
+            isLightTheme={theme}
+            onClick={() => {}}>
+            {'1%'}
+          </CommonHoverButtonTrans>
+          <CommonHoverButton height={'45px'} width={'55px'} isLightTheme={theme} onClick={() => {}}>
+            {'3%'}
+          </CommonHoverButton>
+          <CommonHoverButtonTrans
+            height={'45px'}
+            width={'120px'}
+            isLightTheme={theme}
+            onClick={() => {}}>
+            {'%'}
+          </CommonHoverButtonTrans>
+          <ResetButton isLightTheme={theme} onClick={resetButtonHandler}>
+            {'Reset'}
+          </ResetButton>
+          <CommonSubmitButton width={'165px'} isLightTheme={theme} onClick={saveButtonHandler}>
+            {'Save'}
+          </CommonSubmitButton>
+        </ModalContainer>
+      )}
+      {/*MODAL slippageTolerance====================================>*/}
       <TableItem isLightTheme={theme}>
         <ItemHeader>
           <ItemIndex>{index + 1}</ItemIndex>
@@ -463,9 +594,13 @@ export const LiquidityTableItem = ({ item, index, theme, type }) => {
           </AprBlock>
         </APR>
         <ItemButtons>
-          <InvestButton isLightTheme={theme} id="Add Liquidity" onClick={switchModal}>
+          <CommonSubmitButton
+            width={'165px'}
+            isLightTheme={theme}
+            id="Add Liquidity"
+            onClick={switchModal}>
             Invest
-          </InvestButton>
+          </CommonSubmitButton>
           {type === 'sushiswap' ? (
             <Link to={`/${address}/${type}/address/${item.token0.id}/${item.token1.id}`}>
               <InfoButton isLightTheme={theme}>

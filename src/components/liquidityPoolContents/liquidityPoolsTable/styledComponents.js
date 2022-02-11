@@ -116,11 +116,12 @@ export const InvestButton = styled.button`
   border-radius: 10px;
   border: none;
   padding: 9px 55px;
-  font-family: 'Saira';
+  font-family: 'Saira', serif;
   font-weight: 500;
   font-size: 14px;
   cursor: pointer;
 `;
+
 export const InfoButton = styled(InvestButton)`
   padding: 11px;
   display: flex;
@@ -228,5 +229,35 @@ export const AvailableTitle = styled.div`
   justify-content: center;
   @media (min-width: 175px) and (max-width: 840px) {
     font-width: 600;
+  }
+`;
+
+export const ResetButton = styled.button`
+  background: ${(props) => (props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : '#8f86ff')};
+  color: ${(props) => (props.isLightTheme ? '#4453AD' : ' white')};
+  box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(35px);
+  border-radius: 10px;
+  border: none;
+  padding: 9px 55px;
+  font-family: 'Saira', serif;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+`;
+
+export const MenuPopoverBoxTitle = styled.p`
+  margin-top: 20px;
+  margin-left: 13px;
+  margin-bottom: 17px;
+  font-family: 'Saira', sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 25px;
+  color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
+
+  @media (max-width: 910px) {
+    margin-left: 7px;
   }
 `;
