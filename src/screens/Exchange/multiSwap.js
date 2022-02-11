@@ -183,12 +183,36 @@ export default function MultiSwapComponent() {
                 </MultiSwapSendValueLabel>
               </div>
             </MultiSwapChooseBtnTokenBlock>
-            <ChosenSendReceiveTokenValueInput isLightTheme={isLightTheme}>
-              <span>1</span>
-              <MultiSwapSendValueLabel isLightTheme={isLightTheme}>
+            <USDCurrencyInputBlock>
+              <ChosenMultiSwapSendReceiveTokenValueInput
+                InputProps={{
+                  inputProps: {
+                    style: {
+                      marginTop: '4px',
+                      textAlign: 'right',
+                      padding: 0,
+                      width: '100px',
+                      fontWeight: 600,
+                      color: isLightTheme ? 'black' : 'white',
+                    },
+                  },
+                  classes: { notchedOutline: classes.noBorder },
+                }}
+                isLightTheme={isLightTheme}
+                placeholder="0.0"
+                value={sendTokenForExchangeAmount}
+                onChange={(e) => {
+                  setSendTokenForExchangeAmount(e.target.value);
+                  convertSendTokenToUSDCurrency({
+                    amount: e.target.value,
+                    ...sendTokenForExchange,
+                  });
+                }}
+              />
+              <MultiSwapSendValueLabel isLightTheme={isLightTheme} style={{ marginLeft: '40px' }}>
                 $3 510,03
               </MultiSwapSendValueLabel>
-            </ChosenSendReceiveTokenValueInput>
+            </USDCurrencyInputBlock>
           </div>
 
           <div style={{ paddingLeft: '12px', paddingRight: '19px', marginTop: '5px' }}>
@@ -228,12 +252,36 @@ export default function MultiSwapComponent() {
                 </MultiSwapSendValueLabel>
               </div>
             </MultiSwapChooseBtnTokenBlock>
-            <ChosenSendReceiveTokenValueInput isLightTheme={isLightTheme}>
-              <span>1</span>
-              <MultiSwapSendValueLabel isLightTheme={isLightTheme}>
+            <USDCurrencyInputBlock>
+              <ChosenMultiSwapSendReceiveTokenValueInput
+                InputProps={{
+                  inputProps: {
+                    style: {
+                      marginTop: '4px',
+                      textAlign: 'right',
+                      padding: 0,
+                      width: '100px',
+                      fontWeight: 600,
+                      color: isLightTheme ? 'black' : 'white',
+                    },
+                  },
+                  classes: { notchedOutline: classes.noBorder },
+                }}
+                isLightTheme={isLightTheme}
+                placeholder="0.0"
+                value={sendTokenForExchangeAmount}
+                onChange={(e) => {
+                  setSendTokenForExchangeAmount(e.target.value);
+                  convertSendTokenToUSDCurrency({
+                    amount: e.target.value,
+                    ...sendTokenForExchange,
+                  });
+                }}
+              />
+              <MultiSwapSendValueLabel isLightTheme={isLightTheme} style={{ marginLeft: '40px' }}>
                 $3 510,03
               </MultiSwapSendValueLabel>
-            </ChosenSendReceiveTokenValueInput>
+            </USDCurrencyInputBlock>
           </div>
 
           <div style={{ paddingLeft: '12px', paddingRight: '19px', marginTop: '5px' }}>
