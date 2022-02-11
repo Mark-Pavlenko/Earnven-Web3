@@ -132,6 +132,7 @@ import searchIcon from '../../assets/icons/searchIconLight.png';
 import SearchIcon from '@mui/icons-material/Search';
 import { TokensListTextField } from '../../components/searchTokens/styles';
 import actionTypes from '../../constants/actionTypes';
+import testFunction from './helpers';
 
 const useStyles = makeStyles((theme) => ({
   addIcon: {
@@ -282,7 +283,6 @@ export default function SwapComponent() {
 
   console.log('sendTokenForExchange states', sendTokenForExchange);
   console.log('receiveTokenForExchange states', receiveTokenForExchange);
-
   console.log('front finalSendTokensList', finalSendTokensList);
   console.log('front finalReceiveTokensList', finalReceiveTokensList);
 
@@ -291,10 +291,11 @@ export default function SwapComponent() {
     finalReceiveTokensList.length !== 0 && setFilteredReceiveTokensListData(finalReceiveTokensList);
   }, [finalSendTokensList, finalReceiveTokensList]);
 
-  let sendTokensInputHandler = (e) => {
-    //convert input text to lower case
+  let filteredTokensByName = (e, searchTokensData) => {
+    // console.log('searched tokens Data', searchTokensData);
+
     let lowerCase = e.target.value.toLowerCase();
-    let filteredSearchTokensList = finalSendTokensList.filter((el) => {
+    let filteredSearchTokensList = searchTokensData.tokensList.filter((el) => {
       if (lowerCase.input === '') {
         return el;
       }
@@ -305,23 +306,11 @@ export default function SwapComponent() {
         // console.log('undef el', el);
       }
     });
-    setFilteredData(filteredSearchTokensList);
-  };
-
-  let receiveTokensInputHandler = (e) => {
-    //convert input text to lower case
-    let lowerCase = e.target.value.toLowerCase();
-    let filteredSearchTokensList = finalReceiveTokensList.filter((el) => {
-      if (lowerCase.input === '') {
-        return el;
-      }
-      //return the item which contains the user input
-      else if (el.name !== undefined) {
-        return el.name.toLowerCase().includes(lowerCase);
-      } else {
-      }
-    });
-    setFilteredReceiveTokensListData(filteredSearchTokensList);
+    if (searchTokensData.searchSendTokensList === true) {
+      setFilteredData(filteredSearchTokensList);
+    } else if (searchTokensData.searchReceiveTokensList === true) {
+      setFilteredReceiveTokensListData(filteredSearchTokensList);
+    }
   };
 
   //function of dynamic converting of token value to USD Currency
@@ -809,7 +798,12 @@ export default function SwapComponent() {
 
                         <SearchTokensModalTextField
                           isLightTheme={isLightTheme}
-                          onChange={sendTokensInputHandler}
+                          onChange={(e) => {
+                            filteredTokensByName(e, {
+                              tokensList: finalSendTokensList,
+                              searchSendTokensList: true,
+                            });
+                          }}
                           InputProps={{
                             endAdornment: (
                               <img
@@ -847,6 +841,7 @@ export default function SwapComponent() {
                           <SendTokensModalList isLightTheme={isLightTheme}>
                             {filteredData.map((object) => (
                               <SendTokenModalListItem
+                                key={object.name}
                                 onClick={() => {
                                   setIsSendTokensModalVisible(false);
                                   setFilteredData(finalSendTokensList);
@@ -1013,7 +1008,12 @@ export default function SwapComponent() {
                           </CloseButton>
                         </Header>
                         <SearchTokensModalTextField
-                          onChange={receiveTokensInputHandler}
+                          onChange={(e) => {
+                            filteredTokensByName(e, {
+                              tokensList: finalReceiveTokensList,
+                              searchReceiveTokensList: true,
+                            });
+                          }}
                           InputProps={{
                             endAdornment: (
                               <img
@@ -1052,6 +1052,7 @@ export default function SwapComponent() {
                           <SendTokensModalList isLightTheme={isLightTheme}>
                             {filteredReceiveTokensListData.map((object) => (
                               <SendTokenModalListItem
+                                key={object.name}
                                 onClick={() => {
                                   setIsReceiveTokensModalVisible(false);
                                   setFilteredReceiveTokensListData(finalReceiveTokensList);
