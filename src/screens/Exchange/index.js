@@ -338,7 +338,7 @@ export default function SwapComponent() {
     let initReceiveTokenUSDCurrency = await axios.get(
       `https://api.coingecko.com/api/v3/simple/price?ids=${receiveTokenForExchange.id}&vs_currencies=usd`
     );
-    console.log('triggered');
+    // console.log('triggered');
     setTokenSendUSDCurrency(`$${Object.values(initSendTokenUSDCurrency.data)[0].usd.toFixed(2)}`);
     setTokensReceiveUSDCurrency(
       `$${Object.values(initReceiveTokenUSDCurrency.data)[0].usd.toFixed(2)}`
@@ -400,7 +400,6 @@ export default function SwapComponent() {
     console.log('exchange token send USD currency data 111', tokenData);
 
     let tokenUSDCurrencyValue;
-    console.log('typeof tokenData.USDCurrency', typeof tokenData.USDCurrency);
 
     if (tokenData.symbol === 'ETH') {
       console.log('type send USD eth triggered');
@@ -410,10 +409,16 @@ export default function SwapComponent() {
       setTokenSendUSDCurrency(
         `$${(ethDollarValue.data.ethereum.usd * parseInt(tokenData.amount)).toFixed(2)}`
       );
-    } else if (typeof tokenData.USDCurrency === undefined) {
-      console.log('indef USD currency triggered');
     } else {
-      console.log('send USD tokenData.USDCurrency', tokenData.USDCurrency);
+      console.log('send USD tokenData.USDCurrency triggered', tokenData.USDCurrency);
+
+      if (tokenData.USDCurrency !== undefined) {
+        setTokenSendUSDCurrency(
+          `$${(tokenData.USDCurrency * parseInt(tokenData.amount)).toFixed(2)}`
+        );
+      } else {
+        setTokenSendUSDCurrency('Price not available');
+      }
     }
   };
   //----------
