@@ -853,7 +853,6 @@ export default function SwapComponent() {
                                   selectSendTokenForExchange({
                                     ...object,
                                     sendTokensListItem: true,
-                                    selectedForExchangeValue: 0,
                                   });
                                   convertSendTokenToUSDCurrency({
                                     amount: 1,
@@ -1059,7 +1058,6 @@ export default function SwapComponent() {
                                   selectReceiveTokenForExchange({
                                     ...object,
                                     receiveTokensListItem: true,
-                                    selectedForExchangeValue: 0,
                                   });
                                   convertReceiveTokenToUSDCurrency({
                                     amount: 1,
