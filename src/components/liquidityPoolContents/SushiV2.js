@@ -34,6 +34,7 @@ import { Link, useParams } from 'react-router-dom';
 import {LiquidityPoolsTable} from "./liquidityPoolsTable/liquidityPoolsTable";
 import {AddNewGroupButton} from "./uniV2/StyledComponents";
 import {useSelector} from "react-redux";
+import {data} from "../../globalStore";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -707,36 +708,26 @@ export default function LiquidityPools() {
   }
 
   //*********first input value sends to smartContract
-  async function addLiquidity(tokenA, tokenB, supplyToken, supplyTokenQtty) {
-    console.log('addLiquidity was clicked')
-    console.log('addLiquiditytokenA', tokenA)
-    console.log('addLiquiditytokenB', tokenB)
-    console.log('addLiquiditysupplyToken', supplyToken)
-    console.log('addLiquiditysupplyTokenQtty', supplyTokenQtty)
+  async function addLiquidity(tokenA, tokenB, supplyToken, supplyTokenQtty, gasPrice) {
 
     await loadWeb3();
     const web3 = window.web3;
     const accounts = await web3.eth.getAccounts();
-    var tokenContract = new web3.eth.Contract(ERC20ABI, supplyToken);
+    var tokenContract = new web3.eth.Contract(ERC20ABI, supplyToken); //maby web3.utils.toWei(gasPrice, 'gwei') should be here
     const oneClickContract = new web3.eth.Contract(
       OneClickLiquidity,
       Addresses.oneClickSushiV2Contract
     );
     await tokenContract.methods
       .approve(Addresses.oneClickSushiV2Contract, supplyTokenQtty)
-      .send({ from: accounts[0] });
+      .send({ from: accounts[0], gasPrice:  web3.utils.toWei(gasPrice, 'gwei')}); //not sure
     await oneClickContract.methods
       .addLiquidityOneClick(tokenA, tokenB, supplyToken, supplyTokenQtty)
-      .send({ from: accounts[0] });
+      .send({ from: accounts[0], gasPrice:  web3.utils.toWei(gasPrice, 'gwei') });  //not sure
   }
 
   //********two inputs value send to smartContract
   async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB) {
-    console.log('addLiquidityNormal was clicked')
-    // console.log('addLiquidityNormaltokenA', tokenA)
-    // console.log('addLiquidityNormaltokenB', tokenB)
-    // console.log('addLiquidityNormalsupplyToken', amountTokenA)
-    // console.log('addLiquidityNormalsupplyTokenQtty', amountTokenB)
 
     const start = parseInt(Date.now() / 1000) + 180;
     await loadWeb3();

@@ -15,9 +15,10 @@ import {
   AprValue,
   BalanceValue,
   ResetButton,
+  MenuPopoverBoxTitle,
 } from './styledComponents';
 import { SvgComponent } from '../svgComponent/svgComponent';
-import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
+import { addIconsGasPrices, numberWithCommas } from '../../../commonFunctions/commonFunctions';
 import ModalContainer from '../../common/modalContainer/modalContainer';
 import { SelectWrapper } from '../styledComponents';
 import {
@@ -48,8 +49,12 @@ import tokenURIs from '../../../screens/Exchange/tokenURIs';
 import TOKENDECIMALSABI from '../../../abi/TokenDecomals.json';
 import { CommonSubmitButton } from '../../../screens/TokenPage/components/styledComponentsCommon';
 import { GasMenuItem } from '../../gasDropDownMenu/styles';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { data } from '../../../globalStore';
+import fastDice from '../../../assets/icons/fastDice-icon.svg';
+import middleDice from '../../../assets/icons/middleDice-icon.svg';
+import slowDice from '../../../assets/icons/slowDice-icon.svg';
+import actionTypes from '../../../constants/actionTypes';
 
 export const LiquidityTableItem = ({
   item,
@@ -60,7 +65,10 @@ export const LiquidityTableItem = ({
   addLiquidityNormal,
 }) => {
   const GasPrices = useSelector((state) => state.gesData.gasPriceData);
-
+  const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
+  const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
+  const addIconsGasPricesWithIcons = addIconsGasPrices(GasPrices, fastDice, middleDice, slowDice);
+  const dispatch = useDispatch();
   const address = useParams().address;
 
   const [isModalVisible, setIsModalVisible] = useState('');
@@ -80,6 +88,11 @@ export const LiquidityTableItem = ({
 
   const [allTokens, setAllTokens] = useState([]);
   const [inputType, setInputType] = useState('single');
+
+  const [selected, setSelected] = useState('');
+
+  // const [selectedGasValue, setSelectedGasValue] = useState(proposeGasPrice);
+  // setSelectedGasValue(selectedGasPrice);
 
   const selectInitialValue = {
     label: 'Ether',
@@ -266,7 +279,6 @@ export const LiquidityTableItem = ({
   };
 
   const supplyTokenHandler = (value) => {
-    console.log('supplyTokenHandler', value);
     setTokenAddress(value.address);
   };
 
@@ -329,7 +341,8 @@ export const LiquidityTableItem = ({
           item.token0.id,
           item.token1.id,
           tokenAddress,
-          (singleTokenValue * 10 ** 18).toString()
+          (singleTokenValue * 10 ** 18).toString(),
+          selectedGasPrice ? selectedGasPrice : proposeGasPrice
         );
       case 'pair':
         return addLiquidityNormal(
@@ -345,13 +358,20 @@ export const LiquidityTableItem = ({
     setIsModalVisible('slippageTolerance');
   };
 
-  const handleClose = () => {
-    // setopen(false);
+  const updateGasValue = (val, label) => {
+    data.gasSelected = val;
+    setSelected(label);
+    dispatch({ type: actionTypes.SET_SELECTED_GAS_PRICE, payload: val });
   };
 
-  const updateGasValue = (val, label) => {
-    // data.gasSelected = val;
-    // setselected(label);
+  const resetButtonHandler = () => {
+    setIsModalVisible('addLiquidity');
+    data.gasSelected = 0;
+    dispatch({ type: actionTypes.SET_SELECTED_GAS_PRICE, payload: '' });
+  };
+
+  const saveButtonHandler = () => {
+    setIsModalVisible('addLiquidity');
   };
 
   return (
@@ -469,39 +489,35 @@ export const LiquidityTableItem = ({
           theme={theme}
           isOpen={isModalVisible}
           closeModal={setIsModalVisible}>
-          {GasPrices.map((option) => (
-            <div
-              style={{ display: 'flex', flexDirection: 'column' }}
-              // selected={option.label === selected}
-              onClick={() => {
-                handleClose();
-                updateGasValue(option.value, option.label);
-              }}
-              sx={{ py: 1, px: 2.5 }}>
-              <GasMenuItem isLightTheme={theme}>
-                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                  <img src={option.icon} alt="" />
-                  <span>{`${option.label} `}</span>
-                </div>
-                <div>
-                  <span>{`${option.value} Gwei`}</span>
-                </div>
-              </GasMenuItem>
-            </div>
-          ))}
-          <ResetButton
-            isLightTheme={theme}
-            onClick={() => {
-              setIsModalVisible('');
-            }}>
+          <MenuPopoverBoxTitle isLightTheme={theme}>{'Realtime Gas Prices'}</MenuPopoverBoxTitle>
+          <div>
+            {addIconsGasPricesWithIcons.map((option) => (
+              <div
+                style={{ display: 'flex', flexDirection: 'column' }}
+                selected={option.label === selected}
+                onClick={() => {
+                  updateGasValue(option.value, option.label);
+                }}
+                sx={{ py: 1, px: 2.5 }}>
+                <GasMenuItem isLightTheme={theme}>
+                  <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    <img src={option.icon} alt="" />
+                    <span>{`${option.label} `}</span>
+                  </div>
+                  <div>
+                    <span>{`${option.value} Gwei`}</span>
+                  </div>
+                </GasMenuItem>
+              </div>
+            ))}
+          </div>
+          <CommonSubmitButton width={'189px'} isLightTheme={theme} onClick={() => {}}>
+            {'Advanced settings'}
+          </CommonSubmitButton>
+          <ResetButton isLightTheme={theme} onClick={resetButtonHandler}>
             {'Reset'}
           </ResetButton>
-          <CommonSubmitButton
-            width={'165px'}
-            isLightTheme={theme}
-            onClick={() => {
-              setIsModalVisible('');
-            }}>
+          <CommonSubmitButton width={'165px'} isLightTheme={theme} onClick={saveButtonHandler}>
             {'Save'}
           </CommonSubmitButton>
         </ModalContainer>

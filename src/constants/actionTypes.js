@@ -136,6 +136,8 @@ export default {
 
   //gas price
   SET_GAS_DATA: 'SET_GAS_DATA',
+  SET_SELECTED_GAS_PRICE: 'SET_SELECTED_GAS_PRICE',
+  SET_PROPOSE_GAS_PRICE: 'SET_PROPOSE_GAS_PRICE',
 };
 
 //  tokenPage data

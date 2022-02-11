@@ -16,29 +16,16 @@ import {
   MenuPopoverBoxNote,
 } from './styles';
 import { useSelector } from 'react-redux';
-
-const gasType = [
-  {
-    value: '',
-    label: 'Fast',
-    icon: FastGweiGasIcon,
-  },
-  {
-    value: '',
-    label: 'Average',
-    icon: MiddleGweiGasIcon,
-  },
-  {
-    value: '',
-    label: 'Slow',
-    icon: SlowGweiGasIcon,
-  },
-];
-
-const MINUTE_MS = 10000;
+import { addIconsGasPrices } from '../../commonFunctions/commonFunctions';
 
 export default function GasDropdownMenuHeader({ isLightTheme }) {
   const GasPrices = useSelector((state) => state.gesData.gasPriceData);
+  const addIconsGasPricesWithIcons = addIconsGasPrices(
+    GasPrices,
+    FastGweiGasIcon,
+    MiddleGweiGasIcon,
+    SlowGweiGasIcon
+  );
   const anchorRef = useRef(null);
   const [open, setopen] = useState(false);
   const [selected, setselected] = useState('Average');
@@ -79,7 +66,7 @@ export default function GasDropdownMenuHeader({ isLightTheme }) {
     };
 
     // console.log('Updating Layout....')
-    const content = GasPrices.map((option) => (
+    const content = addIconsGasPricesWithIcons.map((option) => (
       <div
         // key={option.value}
         selected={option.label === selected}

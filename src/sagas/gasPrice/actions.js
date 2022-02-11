@@ -6,3 +6,10 @@ export const setGasData = (payload) => {
     payload,
   };
 };
+
+export const setProposeGasPrice = (payload) => {
+  return {
+    type: actionTypes.SET_PROPOSE_GAS_PRICE,
+    payload,
+  };
+};

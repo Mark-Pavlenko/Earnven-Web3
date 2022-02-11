@@ -21,7 +21,7 @@ const ModalContainer = ({ title, children, closeModal, modalType }) => {
             />
           )}
         </Header>
-        <Content modalType={modalType}>{children}</Content>
+        {modalType !== 'slippageTolerance' ? <Content>{children}</Content> : <div>{children}</div>}
       </MainContent>
     </>,
     document.getElementById('modal')

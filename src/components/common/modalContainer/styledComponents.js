@@ -39,10 +39,11 @@ export const MainContent = styled.div`
 `;
 
 export const Content = styled.div`
-  width: ${(props) => (props.modalType === 'slippageTolerance' ? 'auto' : '475px')};
+  width: 475px;
+  // width: ${(props) => (props.modalType === 'slippageTolerance' ? 'auto' : '475px')};
   height: calc(100% - 48px);
   margin: 34px 107px 0 107px;
-  //display: flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   @media (max-width: 768px) {

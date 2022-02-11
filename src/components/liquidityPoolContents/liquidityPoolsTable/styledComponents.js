@@ -190,3 +190,19 @@ export const ResetButton = styled.button`
   font-size: 14px;
   cursor: pointer;
 `;
+
+export const MenuPopoverBoxTitle = styled.p`
+  margin-top: 20px;
+  margin-left: 13px;
+  margin-bottom: 17px;
+  font-family: 'Saira', sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 25px;
+  color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
+
+  @media (max-width: 910px) {
+    margin-left: 7px;
+  }
+`;
