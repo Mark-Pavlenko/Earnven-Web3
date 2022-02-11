@@ -53,7 +53,6 @@ export default function MultiSwapComponent() {
       <SwapTokensMainSubBlock
         isLightTheme={isLightTheme}
         style={{ marginTop: '0', height: '600px' }}>
-        {/*send block */}
         <SendReceiveSubBlock>
           <MultiSwapSendTokensChooseButton isLightTheme={isLightTheme}>
             <MultiSwapChooseBtnTokenBlock>

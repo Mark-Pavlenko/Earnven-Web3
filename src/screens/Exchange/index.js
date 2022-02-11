@@ -689,6 +689,16 @@ export default function SwapComponent() {
 
   const [toggleExchangedTokens, setToggleExchangedTokens] = useState(false);
 
+  const toggleSwappedTokens = () => {
+    setToggleExchangedTokens(!toggleExchangedTokens);
+    setSendTokenForExchange(receiveTokenForExchange);
+    setReceiveTokenForExchange(sendTokenForExchange);
+    setTokenSendUSDCurrency(tokenReceiveUSDCurrency);
+    setTokensReceiveUSDCurrency(tokenSendUSDCurrency);
+    setSendTokenForExchangeAmount(receiveTokenForExchangeAmount);
+    setReceiveTokenForExchangeAmount(sendTokenForExchangeAmount);
+  };
+
   return (
     <>
       <ExchangeMainLayout>
@@ -904,7 +914,7 @@ export default function SwapComponent() {
                 )}
 
                 <SwitchTokensBtn
-                  onClick={() => setToggleExchangedTokens(!toggleExchangedTokens)}
+                  onClick={toggleSwappedTokens}
                   src={isLightTheme ? switchTokensLight : switchTokensDark}
                   alt="switch_tokens_btn"
                 />
@@ -918,35 +928,35 @@ export default function SwapComponent() {
                   <span>{tokenReceiveUSDCurrency}</span>
                 </SendBlockLabels>
                 <SendTokensChooseButton isLightTheme={isLightTheme}>
-                  {toggleExchangedTokens ? (
-                    <div>Toggled</div>
-                  ) : (
-                    <ChooseBtnTokenBlock onClick={() => setIsReceiveTokensModalVisible(true)}>
-                      {receiveTokenForExchange.logoURI !== null ? (
-                        <SendTokenImg alt="token_img" src={receiveTokenForExchange.logoURI} />
-                      ) : (
-                        <Avatar
-                          style={{
-                            marginRight: '12px',
-                            marginLeft: '12px',
-                            marginTop: '2px',
-                          }}
-                          name={receiveTokenForExchange.avatarIcon}
-                          round={true}
-                          size="21"
-                          textSizeRatio={1}
-                        />
-                      )}
-                      <ChosenTokenLabel isLightTheme={isLightTheme}>
-                        {receiveTokenForExchange.symbol} VIV
-                      </ChosenTokenLabel>
-
-                      <img
-                        src={isLightTheme ? chevronDownBlack : chevronDownLight}
-                        alt="chevron_icon"
+                  {/*{toggleExchangedTokens ? (*/}
+                  {/*  <div>Toggled</div>*/}
+                  {/*) : (*/}
+                  <ChooseBtnTokenBlock onClick={() => setIsReceiveTokensModalVisible(true)}>
+                    {receiveTokenForExchange.logoURI !== null ? (
+                      <SendTokenImg alt="token_img" src={receiveTokenForExchange.logoURI} />
+                    ) : (
+                      <Avatar
+                        style={{
+                          marginRight: '12px',
+                          marginLeft: '12px',
+                          marginTop: '2px',
+                        }}
+                        name={receiveTokenForExchange.avatarIcon}
+                        round={true}
+                        size="21"
+                        textSizeRatio={1}
                       />
-                    </ChooseBtnTokenBlock>
-                  )}
+                    )}
+                    <ChosenTokenLabel isLightTheme={isLightTheme}>
+                      {receiveTokenForExchange.symbol} VIV
+                    </ChosenTokenLabel>
+
+                    <img
+                      src={isLightTheme ? chevronDownBlack : chevronDownLight}
+                      alt="chevron_icon"
+                    />
+                  </ChooseBtnTokenBlock>
+                  {/*)}*/}
                   <ChosenSendReceiveTokenValueInput
                     InputProps={{
                       inputProps: {
