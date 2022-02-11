@@ -329,27 +329,28 @@ export default function SwapComponent() {
 
   //useEffect for init eth and dai value
   useEffect(async () => {
-    // WORKS CORRECT
+    // WORKS CORRECT - INITIAL COUNT OF ONE TOKEN
+    // let initSendTokenUSDCurrency = await axios.get(
+    //   `https://api.coingecko.com/api/v3/simple/price?ids=${sendTokenForExchange.id}&vs_currencies=usd`
+    // );
+    //
+    // let initReceiveTokenUSDCurrency = await axios.get(
+    //   `https://api.coingecko.com/api/v3/simple/price?ids=${receiveTokenForExchange.id}&vs_currencies=usd`
+    // );
+    // // console.log('triggered');
+    // setTokenSendUSDCurrency(`$${Object.values(initSendTokenUSDCurrency.data)[0].usd.toFixed(2)}`);
+    // setTokensReceiveUSDCurrency(
+    //   `$${Object.values(initReceiveTokenUSDCurrency.data)[0].usd.toFixed(2)}`
+    // );
 
-    let initSendTokenUSDCurrency = await axios.get(
-      `https://api.coingecko.com/api/v3/simple/price?ids=${sendTokenForExchange.id}&vs_currencies=usd`
-    );
-
-    let initReceiveTokenUSDCurrency = await axios.get(
-      `https://api.coingecko.com/api/v3/simple/price?ids=${receiveTokenForExchange.id}&vs_currencies=usd`
-    );
-    // console.log('triggered');
-    setTokenSendUSDCurrency(`$${Object.values(initSendTokenUSDCurrency.data)[0].usd.toFixed(2)}`);
-    setTokensReceiveUSDCurrency(
-      `$${Object.values(initReceiveTokenUSDCurrency.data)[0].usd.toFixed(2)}`
-    );
+    setTokenSendUSDCurrency(`$0.00`);
+    setTokensReceiveUSDCurrency(`$0.00`);
   }, []);
 
-  let convertTokenToUSDCurrency = async (tokenData) => {
+  let convertReceiveTokenToUSDCurrency = async (tokenData) => {
     if (tokenData.amount === '') {
       tokenData.amount = '0';
     }
-    // console.log('exchange token USD currency data', tokenData);
 
     let tokenUSDCurrencyValue;
 
@@ -358,11 +359,9 @@ export default function SwapComponent() {
       tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' &&
       tokenData.USDCurrency === undefined
     ) {
-      // console.log('triggered 1');
       tokenUSDCurrencyValue = await axios.get(
         `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
       );
-      // console.log('tokenUSDCurrencyValue', tokenUSDCurrencyValue);
 
       if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
         setTokensReceiveUSDCurrency(
@@ -375,22 +374,12 @@ export default function SwapComponent() {
       tokenData.address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' &&
       tokenData.receiveTokensListItem === true
     ) {
-      // console.log('triggered 2');
       const ethDollarValue = await axios.get(
         'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
       );
       setTokensReceiveUSDCurrency(
         `$${(ethDollarValue.data.ethereum.usd * parseInt(tokenData.amount)).toFixed(2)}`
       );
-    } else if (tokenData.sendTokensListItem === true) {
-      if (tokenData.USDCurrency !== undefined) {
-        // console.log('triggered undefined');
-        setTokenSendUSDCurrency(
-          `$ ${(tokenData.USDCurrency * parseInt(tokenData.amount)).toFixed(2)}`
-        );
-      } else {
-        setTokenSendUSDCurrency('Price not available');
-      }
     }
   };
 
@@ -983,7 +972,7 @@ export default function SwapComponent() {
                     value={receiveTokenForExchangeAmount}
                     onChange={(e) => {
                       setReceiveTokenForExchangeAmount(e.target.value);
-                      convertTokenToUSDCurrency({
+                      convertReceiveTokenToUSDCurrency({
                         amount: e.target.value,
                         ...receiveTokenForExchange,
                       });
@@ -1073,7 +1062,7 @@ export default function SwapComponent() {
                                     receiveTokensListItem: true,
                                     selectedForExchangeValue: 0,
                                   });
-                                  convertTokenToUSDCurrency({
+                                  convertReceiveTokenToUSDCurrency({
                                     amount: 1,
                                     receiveTokensListItem: true,
                                     ...receiveTokenForExchange,
