@@ -253,6 +253,13 @@ export default function SwapComponent() {
     receiveTokensListItem: true,
     address: '0x6b175474e89094c44da98b954eedeac495271d0f',
   });
+  const [filteredData, setFilteredData] = useState([]);
+  const [filteredReceiveTokensListData, setFilteredReceiveTokensListData] = useState([]);
+  const [tokenSendUSDCurrency, setTokenSendUSDCurrency] = useState('$0.00');
+  const [tokenReceiveUSDCurrency, setTokensReceiveUSDCurrency] = useState('$0.00');
+
+  //---OLD states
+
   const [TokenTo, setTokenTo] = useState('');
   const [sendTokenForExchangeAmount, setSendTokenForExchangeAmount] = useState();
   const [receiveTokenForExchangeAmount, setReceiveTokenForExchangeAmount] = useState();
@@ -273,19 +280,11 @@ export default function SwapComponent() {
   const [isSendTokensModalVisible, setIsSendTokensModalVisible] = useState(false);
   const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
 
-  console.log('sendTokenForExchange', sendTokenForExchange);
-  // console.log('receiveTokenForExchange', receiveTokenForExchange);
-
-  // let filteredData;
-  // const [filteredSendTokensListData, setFilteredSendTokensListData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
-  const [filteredReceiveTokensListData, setFilteredReceiveTokensListData] = useState([]);
+  console.log('sendTokenForExchange states', sendTokenForExchange);
+  console.log('receiveTokenForExchange states', receiveTokenForExchange);
 
   console.log('front finalSendTokensList', finalSendTokensList);
   console.log('front finalReceiveTokensList', finalReceiveTokensList);
-
-  const [tokenSendUSDCurrency, setTokenSendUSDCurrency] = useState();
-  const [tokenReceiveUSDCurrency, setTokensReceiveUSDCurrency] = useState('');
 
   useEffect(() => {
     finalSendTokensList.length !== 0 && setFilteredData(finalSendTokensList);
@@ -342,10 +341,37 @@ export default function SwapComponent() {
     // setTokensReceiveUSDCurrency(
     //   `$${Object.values(initReceiveTokenUSDCurrency.data)[0].usd.toFixed(2)}`
     // );
-
-    setTokenSendUSDCurrency(`$0.00`);
-    setTokensReceiveUSDCurrency(`$0.00`);
+    // setTokenSendUSDCurrency(`$0.00`);
+    // setTokensReceiveUSDCurrency(`$0.00`);
   }, []);
+
+  let convertSendTokenToUSDCurrency = async (tokenData) => {
+    if (tokenData.amount === '') tokenData.amount = '0';
+
+    console.log('exchange token send USD currency data 111', tokenData);
+
+    let tokenUSDCurrencyValue;
+
+    if (tokenData.symbol === 'ETH') {
+      console.log('type send USD eth triggered');
+      const ethDollarValue = await axios.get(
+        'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
+      );
+      setTokenSendUSDCurrency(
+        `$${(ethDollarValue.data.ethereum.usd * parseInt(tokenData.amount)).toFixed(2)}`
+      );
+    } else {
+      console.log('send USD tokenData.USDCurrency triggered', tokenData.USDCurrency);
+
+      if (tokenData.USDCurrency !== undefined) {
+        setTokenSendUSDCurrency(
+          `$${(tokenData.USDCurrency * parseInt(tokenData.amount)).toFixed(2)}`
+        );
+      } else {
+        setTokenSendUSDCurrency('Price not available');
+      }
+    }
+  };
 
   let convertReceiveTokenToUSDCurrency = async (tokenData) => {
     if (tokenData.amount === '') {
@@ -383,33 +409,6 @@ export default function SwapComponent() {
     }
   };
 
-  let convertSendTokenToUSDCurrency = async (tokenData) => {
-    if (tokenData.amount === '') tokenData.amount = '0';
-
-    console.log('exchange token send USD currency data 111', tokenData);
-
-    let tokenUSDCurrencyValue;
-
-    if (tokenData.symbol === 'ETH') {
-      console.log('type send USD eth triggered');
-      const ethDollarValue = await axios.get(
-        'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
-      );
-      setTokenSendUSDCurrency(
-        `$${(ethDollarValue.data.ethereum.usd * parseInt(tokenData.amount)).toFixed(2)}`
-      );
-    } else {
-      console.log('send USD tokenData.USDCurrency triggered', tokenData.USDCurrency);
-
-      if (tokenData.USDCurrency !== undefined) {
-        setTokenSendUSDCurrency(
-          `$${(tokenData.USDCurrency * parseInt(tokenData.amount)).toFixed(2)}`
-        );
-      } else {
-        setTokenSendUSDCurrency('Price not available');
-      }
-    }
-  };
   //----------
 
   useEffect(async () => {
