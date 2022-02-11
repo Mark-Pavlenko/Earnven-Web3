@@ -706,6 +706,8 @@ export default function LiquidityPools({ inputValue }) {
     setAccountLiquidity(qtty);
   }
 
+  //----->
+  //don't need anymore
   async function removeLiquidity(tokenA, tokenB, receiveToken, liquidityAmount) {
     await loadWeb3();
     const web3 = window.web3;
@@ -725,6 +727,7 @@ export default function LiquidityPools({ inputValue }) {
       .send({ from: accounts[0] });
   }
 
+  //don't need anymore
   async function removeLiquidityETH(tokenA, tokenB, LiquidityAmount) {
     await loadWeb3();
     const web3 = window.web3;
@@ -744,6 +747,7 @@ export default function LiquidityPools({ inputValue }) {
       .send({ from: accounts[0] });
   }
 
+  //don't need anymore
   async function removeLiquidityNormal(tokenA, tokenB, LiquidityAmount) {
     const start = parseInt(Date.now() / 1000) + 180;
     await loadWeb3();
@@ -760,7 +764,9 @@ export default function LiquidityPools({ inputValue }) {
       .removeLiquidity(tokenA, tokenB, LiquidityAmount, 0, 0, accounts[0], start.toString())
       .send({ from: accounts[0] });
   }
+  //----->
 
+  //*first input value sends to smartContract
   async function addLiquidity(tokenA, tokenB, supplyToken, supplyTokenQtty) {
     await loadWeb3();
     const web3 = window.web3;
@@ -778,6 +784,7 @@ export default function LiquidityPools({ inputValue }) {
       .send({ from: accounts[0] });
   }
 
+  //don't need anymore
   async function addLiquidityEth(tokenA, tokenB, ethAmount) {
     await loadWeb3();
     const web3 = window.web3;
@@ -791,32 +798,38 @@ export default function LiquidityPools({ inputValue }) {
       .send({ from: accounts[0], value: web3.utils.toWei(ethAmount, 'ether') });
   }
 
+  //*two inputs value send to smartContract
   async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB) {
-    const start = parseInt(Date.now() / 1000) + 180;
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var tokenAContract = new web3.eth.Contract(ERC20ABI, tokenA);
-    var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
-    await tokenAContract.methods
-      .approve(Addresses.uniRouter, web3.utils.toWei(amountTokenA, 'ether'))
-      .send({ from: accounts[0] });
-    await tokenBContract.methods
-      .approve(Addresses.uniRouter, web3.utils.toWei(amountTokenB, 'ether'))
-      .send({ from: accounts[0] });
-    const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.uniRouter);
-    await UniRouter.methods
-      .addLiquidity(
-        tokenA,
-        tokenB,
-        web3.utils.toWei(amountTokenA, 'ether'),
-        web3.utils.toWei(amountTokenB, 'ether'),
-        0,
-        0,
-        accounts[0],
-        start.toString()
-      )
-      .send({ from: accounts[0] });
+    console.log('addLiquidityNormaltokenA', tokenA)
+    console.log('addLiquidityNormaltokenB', tokenB)
+    console.log('addLiquidityNormalsupplyToken', amountTokenA)
+    console.log('addLiquidityNormalsupplyTokenQtty', amountTokenB)
+
+    // const start = parseInt(Date.now() / 1000) + 180;
+    // await loadWeb3();
+    // const web3 = window.web3;
+    // const accounts = await web3.eth.getAccounts();
+    // var tokenAContract = new web3.eth.Contract(ERC20ABI, tokenA);
+    // var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
+    // await tokenAContract.methods
+    //   .approve(Addresses.uniRouter, web3.utils.toWei(amountTokenA, 'ether'))
+    //   .send({ from: accounts[0] });
+    // await tokenBContract.methods
+    //   .approve(Addresses.uniRouter, web3.utils.toWei(amountTokenB, 'ether'))
+    //   .send({ from: accounts[0] });
+    // const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.uniRouter);
+    // await UniRouter.methods
+    //   .addLiquidity(
+    //     tokenA,
+    //     tokenB,
+    //     web3.utils.toWei(amountTokenA, 'ether'),
+    //     web3.utils.toWei(amountTokenB, 'ether'),
+    //     0,
+    //     0,
+    //     accounts[0],
+    //     start.toString()
+    //   )
+    //   .send({ from: accounts[0] });
   }
 
   //useState for mamaging open/close modal
@@ -850,86 +863,86 @@ export default function LiquidityPools({ inputValue }) {
  const updatedOptions = SelectOptionsWithJSX(allTokensSelect)
 
   //select styles
-  const selectStyle = {
-    menu: (provided, state) => ({
-      ...provided,
-      width: '100%',
-      height: 'fitContent',
-      background: 'rgba(255, 255, 255, 0.16)',
-      boxSizing: 'border-box',
-      boxShadow: 'inset 2px 0px 0px rgba(255, 255, 255, 0.1)',
-      borderTop: 'none',
-      borderRadius: '0 0 7px 7px',
-      mixBlendMode: 'normal',
-      backdropFilter: 'blur(35px)',
-      marginTop: '0px',
-      padding: '0 20px 22px 11px',
-    }),
-    control: (provided, state) => {
-      //valueLine
-      return {
-        ...provided,
-        background: state.menuIsOpen ? 'rgba(255, 255, 255, 0.16)' : '#FFFFFF',
-        boxShadow: state.menuIsOpen
-          ? 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'
-          : 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
-        backdropFilter: 'blur(35px)',
-        mixBlendMode: 'normal',
-        border: 'none',
-        borderRadius: state.menuIsOpen ? '7px 7px 0 0' : '7px',
-        color: '#464C52',
-        height: '60px',
-        width: '100%',
-        cursor: 'pointer',
-        marginBottom: '20px',
-        paddingRight: '28px',
-        paddingLeft: '12px',
-      };
-    },
-    placeholder: (provided, state) => ({
-      ...provided,
-      color: '#464C52',
-      fontSize: '18px',
-      textAlign: 'left',
-    }),
-    dropdownIndicator: (provided, state) => ({
-      // ...provided,
-      height: '20px',
-      width: '20px',
-      color: '#4453AD',
-    }),
-    indicatorsContainer: () => ({
-      color: 'transparent',
-    }),
-    singleValue: (provided, state) => ({
-      ...provided,
-      color: '#464C52',
-      fontSize: '18px',
-      background: state.isSelected ? 'black' : 'transparent',
-    }),
-    option: (provided, state) => {
-      return {
-        ...provided,
-        ':hover': {
-          background: '#FFFFFF',
-          boxShadow: 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
-          borderRadius: '7px',
-        },
-        // -------------------------------->
-        background: state.isSelected ? 'rgba(255, 255, 255, 0.16)' : 'transparent',
-        // -------------------------------->
-        boxShadow: state.isSelected && '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',
-        // -------------------------------->
-        display: 'flex',
-        color: '#616161',
-        mixBlendMode: 'normal',
-        height: state.isSelected ? '43px' : '60px',
-        padding: '5px 10px',
-        fontSize: '18px',
-        borderRadius: '7px',
-      };
-    },
-  };
+  // const selectStyle = {
+  //   menu: (provided, state) => ({
+  //     ...provided,
+  //     width: '100%',
+  //     height: 'fitContent',
+  //     background: 'rgba(255, 255, 255, 0.16)',
+  //     boxSizing: 'border-box',
+  //     boxShadow: 'inset 2px 0px 0px rgba(255, 255, 255, 0.1)',
+  //     borderTop: 'none',
+  //     borderRadius: '0 0 7px 7px',
+  //     mixBlendMode: 'normal',
+  //     backdropFilter: 'blur(35px)',
+  //     marginTop: '0px',
+  //     padding: '0 20px 22px 11px',
+  //   }),
+  //   control: (provided, state) => {
+  //     //valueLine
+  //     return {
+  //       ...provided,
+  //       background: state.menuIsOpen ? 'rgba(255, 255, 255, 0.16)' : '#FFFFFF',
+  //       boxShadow: state.menuIsOpen
+  //         ? 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'
+  //         : 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
+  //       backdropFilter: 'blur(35px)',
+  //       mixBlendMode: 'normal',
+  //       border: 'none',
+  //       borderRadius: state.menuIsOpen ? '7px 7px 0 0' : '7px',
+  //       color: '#464C52',
+  //       height: '60px',
+  //       width: '100%',
+  //       cursor: 'pointer',
+  //       marginBottom: '20px',
+  //       paddingRight: '28px',
+  //       paddingLeft: '12px',
+  //     };
+  //   },
+  //   placeholder: (provided, state) => ({
+  //     ...provided,
+  //     color: '#464C52',
+  //     fontSize: '18px',
+  //     textAlign: 'left',
+  //   }),
+  //   dropdownIndicator: (provided, state) => ({
+  //     // ...provided,
+  //     height: '20px',
+  //     width: '20px',
+  //     color: '#4453AD',
+  //   }),
+  //   indicatorsContainer: () => ({
+  //     color: 'transparent',
+  //   }),
+  //   singleValue: (provided, state) => ({
+  //     ...provided,
+  //     color: '#464C52',
+  //     fontSize: '18px',
+  //     background: state.isSelected ? 'black' : 'transparent',
+  //   }),
+  //   option: (provided, state) => {
+  //     return {
+  //       ...provided,
+  //       ':hover': {
+  //         background: '#FFFFFF',
+  //         boxShadow: 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
+  //         borderRadius: '7px',
+  //       },
+  //       // -------------------------------->
+  //       background: state.isSelected ? 'rgba(255, 255, 255, 0.16)' : 'transparent',
+  //       // -------------------------------->
+  //       boxShadow: state.isSelected && '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',
+  //       // -------------------------------->
+  //       display: 'flex',
+  //       color: '#616161',
+  //       mixBlendMode: 'normal',
+  //       height: state.isSelected ? '43px' : '60px',
+  //       padding: '5px 10px',
+  //       fontSize: '18px',
+  //       borderRadius: '7px',
+  //     };
+  //   },
+  // };
 
   const handler = (data) => {
     console.log('vfvfvfv', data)
@@ -998,6 +1011,7 @@ export default function LiquidityPools({ inputValue }) {
        {/* </ModalContainer>*/}
         {/*Modal is here =====================================>*/}
       </center>
+      {Content}
     </div>
   );
 }

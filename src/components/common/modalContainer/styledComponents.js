@@ -20,8 +20,8 @@ export const MainContent = styled.div`
   top: 50%;
   left: 50%;
   padding: 18px 30px 30px 30px;
-  max-width: 830px;
-  height: 867px;
+  max-width: ${(props) => (props.modalType === 'slippageTolerance' ? '375px' : '830px')};
+  height: ${(props) => (props.modalType === 'slippageTolerance' ? '491px' : '867px')};
   transform: translate(-50%, -50%);
   background: ${(props) =>
     props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)'};
@@ -40,6 +40,7 @@ export const MainContent = styled.div`
 
 export const Content = styled.div`
   width: 475px;
+  // width: ${(props) => (props.modalType === 'slippageTolerance' ? 'auto' : '475px')};
   height: calc(100% - 48px);
   margin: 34px 107px 0 107px;
   display: flex;

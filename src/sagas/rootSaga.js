@@ -24,6 +24,7 @@ import { getmStableFarmSagaWatcher, getmStablePoolsSagaWatcher } from './mStable
 import { getSushiSwapLPSagaWatcher } from './sushiSwap';
 import { getalchemixVaultsSagaWatcher } from './alchemix';
 import { getcompoundTokenSagaWatcher } from './compoundFinance';
+import { getGasPriceWatcher } from './gasPrice/gasPrice';
 import { getCurrentTokenDataSagaWatcher } from './currentTokenData';
 import { getCurrentTokenTransactionsSagaWatcher } from './currentTokenTransactions';
 import { getWalletDataSagaWatcher } from './currentWalletData';
@@ -63,6 +64,7 @@ export default function* watchRootSaga() {
     call(getTokenPriceHistorySagaWatcher),
     call(getCurveLPTokenSagaWatcher),
     call(getAaveStakeSagaWatcher),
+    call(getGasPriceWatcher),
     call(getSynthetixSagaWatcher),
   ]);
 }

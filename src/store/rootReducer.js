@@ -35,6 +35,7 @@ import { alchemixVaults } from './alchemix/reducer';
 import { compoundFinance } from './compoundFinance/reducer';
 import { currentTokenDataReducer } from './currentTokenData/reducer';
 import { currentTokenTransactionsReducer } from './currentTokenTransactions/reducer';
+import { gesData } from './gesData/reducer';
 import { walletDataReducer } from './currentWalletData/reducer';
 import { tokenPriceHistoryReducer } from './currentTokenPriceHistory/reducer';
 import { Synthetix } from './Synthetix/reducer';
@@ -78,6 +79,7 @@ export const rootReducer = combineReducers({
   compoundFinance,
   currentTokenDataReducer,
   currentTokenTransactionsReducer,
+  gesData,
   walletDataReducer,
   tokenPriceHistoryReducer,
   Synthetix,

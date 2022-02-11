@@ -8,7 +8,6 @@ export const SelectOptionsWithJSX = (options) => {
         <div style={{ display: 'flex' }}>
           <div
             style={{
-              // height: '100%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -18,7 +17,8 @@ export const SelectOptionsWithJSX = (options) => {
           <Name>{option.name}</Name>
         </div>
       ),
-      value: option.value,
+      value: option.name,
+      symbol: option.symbol,
       address: option.address,
     };
   });
