@@ -28,12 +28,6 @@ const Graph = ({
         </Chain>
         <Links>
           <TokenLinks>
-            {/*<TokenLink isLightTheme={isLightTheme}>*/}
-            {/*  <img alt={'EtherScan'} src={etherScan} />*/}
-            {/*</TokenLink>*/}
-            {/*<TokenLink isLightTheme={isLightTheme}>*/}
-            {/*  <img alt={'EtherScan'} src={etherScan} />*/}
-            {/*</TokenLink>*/}
             <TokenLink
               isLightTheme={isLightTheme}
               href={links[0].link}
@@ -66,7 +60,7 @@ const Graph = ({
         theme={isLightTheme}
         tokenId={tokenId}
         totalValue={current_price ? `$${current_price}` : ''}
-        difValue={price_change_percentage_24h ? `${price_change_percentage_24h}%` : ''}
+        difValue={price_change_percentage_24h ? `${price_change_percentage_24h.toFixed(2)}%` : ''}
       />
     </Main>
   );

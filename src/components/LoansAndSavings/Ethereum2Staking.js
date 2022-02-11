@@ -14,11 +14,11 @@ export default function Ethereum2Staking({ accountAddress }) {
   //useSelector is a function that takes currentState as an argument
   //and returns data from it and store the return values inside a variable within the scope
   //of the functional component
-  const BeaconData = useSelector((state) => state.eth2Stake.eth2StakeData);
-  console.log('BeaconData', BeaconData);
-  const BeaconTotal = useSelector((state) => state.eth2Stake.eth2StakeTotal);
-  console.log('TestABC ETH receveid data', BeaconData);
-  console.log('TestABC ETH Total Value data', BeaconTotal);
+  //const BeaconData = useSelector((state) => state.eth2Stake.eth2StakeData); //to get statking value
+  ////console.log('BeaconData', BeaconData);
+  //const BeaconTotal = useSelector((state) => state.eth2Stake.eth2StakeTotal); //to get total value
+  ////console.log('TestABC ETH receveid data', BeaconData);
+  ////console.log('TestABC ETH Total Value data', BeaconTotal);
   //dispatch/send an action to store by simply adding an action as an argument
   //pass payload to pass arguments
   const dispatch = useDispatch();
@@ -28,7 +28,6 @@ export default function Ethereum2Staking({ accountAddress }) {
   //below function is used to get eth2.0 staking balance from the subgraph
   const userAccountAddress = { accountAddress: accountAddress };
   useEffect(() => {
-    console.log('TestABC ETH for accounts', userAccountAddress.accountAddress);
     const getEth2StakeData = async () => {
       try {
         dispatch({
@@ -42,84 +41,84 @@ export default function Ethereum2Staking({ accountAddress }) {
     getEth2StakeData();
   }, [accountAddress]);
 
-  //implementing below logic for ETH2.0 staking
-  useEffect(() => {
-    if (Array.isArray(BeaconData) || BeaconData.length > 0) {
-      console.log('TestABC inside eth 2 implmentation', BeaconData);
-      try {
-        var content = BeaconData.map((object) => {
-          return (
-            <>
-              <Investment
-                protocol={object}
-                logoImage={ETHLogo}
-                stakedToken={'ETH'}
-                protocolName={'Ethereum'}
-                chain={'Ethereum'}
-                isStaked={true}
-              />
-              {/*<Accordion*/}
-              {/*  style={{*/}
-              {/*    background: 'transparent',*/}
-              {/*    marginRight: '1px',*/}
-              {/*    color: 'black',*/}
-              {/*    width: '100%',*/}
-              {/*    border: '1px',*/}
-              {/*    borderColor: 'black',*/}
-              {/*    borderStyle: 'hidden', //solid*/}
-              {/*  }}>*/}
-              {/*  <AccordionSummary*/}
-              {/*    expandIcon={<ExpandMoreIcon />}*/}
-              {/*    aria-controls="panel1a-content"*/}
-              {/*    id="panel1a-header">*/}
-              {/*    <React.Fragment*/}
-              {/*      style={{*/}
-              {/*        display: 'inline-block',*/}
-              {/*        width: '100%',*/}
-              {/*        //textAlign: 'left',*/}
-              {/*        wordBreak: 'break-all',*/}
-              {/*      }}>*/}
-              {/*      <React.Fragment>*/}
-              {/*        <img*/}
-              {/*          style={{*/}
-              {/*            height: '20px',*/}
-              {/*            width: '20px',*/}
-              {/*            display: 'inline-block',*/}
-              {/*          }}*/}
-              {/*          src={ETHLogo}*/}
-              {/*          alt=""*/}
-              {/*        />*/}
-              {/*      </React.Fragment>*/}
-              {/*      ETH 2.0 &nbsp; ${parseFloat(object.totalInvestment).toLocaleString()}*/}
-              {/*    </React.Fragment>*/}
-              {/*  </AccordionSummary>*/}
-              {/*  <AccordionDetails>*/}
-              {/*    <div style={{ display: 'inline-block', width: '70%', fontSize: '15px' }}>*/}
-              {/*      Staked Token &nbsp;&nbsp;&nbsp;&nbsp; ETH*/}
-              {/*      <br />*/}
-              {/*      Balance &nbsp; {parseFloat(object.totalDeposit).toLocaleString()}*/}
-              {/*      <br />*/}
-              {/*      Price &nbsp;&nbsp;&nbsp;&nbsp;${parseFloat(object.ethPrice).toFixed(2)}*/}
-              {/*      <br />*/}
-              {/*      Value &nbsp;&nbsp;$*/}
-              {/*      {parseFloat(object.totalInvestment).toFixed(2).toLocaleString()}*/}
-              {/*      <br />*/}
-              {/*      Chain &nbsp;&nbsp;&nbsp;&nbsp; Ethereum*/}
-              {/*      <br />*/}
-              {/*      Protocol &nbsp;&nbsp; Ethereum*/}
-              {/*    </div>*/}
-              {/*  </AccordionDetails>*/}
-              {/*</Accordion>*/}
-            </>
-          );
-        });
-      } catch (err) {
-        console.log('No Curve LP token data found');
-      }
-    }
+  // //implementing below logic for ETH2.0 staking
+  // useEffect(() => {
+  //   if (Array.isArray(BeaconData) || BeaconData.length > 0) {
+  //     console.log('TestABC inside eth 2 implmentation', BeaconData);
+  //     try {
+  //       var content = BeaconData.map((object) => {
+  //         return (
+  //           <>
+  //             <Investment
+  //               protocol={object}
+  //               logoImage={ETHLogo}
+  //               stakedToken={'ETH'}
+  //               protocolName={'Ethereum'}
+  //               chain={'Ethereum'}
+  //               isStaked={true}
+  //             />
+  // {/*<Accordion*/}
+  // {/*  style={{*/}
+  // {/*    background: 'transparent',*/}
+  // {/*    marginRight: '1px',*/}
+  // {/*    color: 'black',*/}
+  // {/*    width: '100%',*/}
+  // {/*    border: '1px',*/}
+  // {/*    borderColor: 'black',*/}
+  // {/*    borderStyle: 'hidden', //solid*/}
+  // {/*  }}>*/}
+  // {/*  <AccordionSummary*/}
+  // {/*    expandIcon={<ExpandMoreIcon />}*/}
+  // {/*    aria-controls="panel1a-content"*/}
+  // {/*    id="panel1a-header">*/}
+  // {/*    <React.Fragment*/}
+  // {/*      style={{*/}
+  // {/*        display: 'inline-block',*/}
+  // {/*        width: '100%',*/}
+  // {/*        //textAlign: 'left',*/}
+  // {/*        wordBreak: 'break-all',*/}
+  // {/*      }}>*/}
+  // {/*      <React.Fragment>*/}
+  // {/*        <img*/}
+  // {/*          style={{*/}
+  // {/*            height: '20px',*/}
+  // {/*            width: '20px',*/}
+  // {/*            display: 'inline-block',*/}
+  // {/*          }}*/}
+  // {/*          src={ETHLogo}*/}
+  // {/*          alt=""*/}
+  // {/*        />*/}
+  // {/*      </React.Fragment>*/}
+  // {/*      ETH 2.0 &nbsp; ${parseFloat(object.totalInvestment).toLocaleString()}*/}
+  // {/*    </React.Fragment>*/}
+  // {/*  </AccordionSummary>*/}
+  // {/*  <AccordionDetails>*/}
+  // {/*    <div style={{ display: 'inline-block', width: '70%', fontSize: '15px' }}>*/}
+  // {/*      Staked Token &nbsp;&nbsp;&nbsp;&nbsp; ETH*/}
+  // {/*      <br />*/}
+  // {/*      Balance &nbsp; {parseFloat(object.totalDeposit).toLocaleString()}*/}
+  // {/*      <br />*/}
+  // {/*      Price &nbsp;&nbsp;&nbsp;&nbsp;${parseFloat(object.ethPrice).toFixed(2)}*/}
+  // {/*      <br />*/}
+  // {/*      Value &nbsp;&nbsp;$*/}
+  // {/*      {parseFloat(object.totalInvestment).toFixed(2).toLocaleString()}*/}
+  // {/*      <br />*/}
+  // {/*      Chain &nbsp;&nbsp;&nbsp;&nbsp; Ethereum*/}
+  // {/*      <br />*/}
+  // {/*      Protocol &nbsp;&nbsp; Ethereum*/}
+  // {/*    </div>*/}
+  // {/*  </AccordionDetails>*/}
+  // {/*</Accordion>*/}
+  //         </>
+  //       );
+  //     });
+  //   } catch (err) {
+  //     console.log('No Curve LP token data found');
+  //   }
+  // }
 
-    setBeaconContent(content);
-  }, [BeaconData]);
+  //   setBeaconContent(content);
+  // }, [BeaconData]);
 
   return (
     <React.Fragment>

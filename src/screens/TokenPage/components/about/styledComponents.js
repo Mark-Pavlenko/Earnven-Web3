@@ -33,4 +33,9 @@ export const Button = styled.div`
     line-height: 40px;
     font-weight: 500;
   }
+
+  @media (max-width: 480px) {
+    width: 335px;
+    padding: 0;
+  }
 `;

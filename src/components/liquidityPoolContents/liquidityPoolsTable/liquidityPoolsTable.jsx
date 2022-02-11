@@ -9,17 +9,19 @@ import {
   ItemIndex,
   HeaderApr,
   HeaderLiquidity,
+  AvailableTitle,
+  ItemIndexHidden,
 } from './style';
 
-export const LiquidityPoolsTable = ({ data, AllTokens }) => {
+export const LiquidityPoolsTable = ({ data, type, AllTokens }) => {
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
 
   return (
     <TableWrapper isLightTheme={theme}>
       <TableItem isLightTheme={theme}>
         <ItemHeader>
-          <ItemIndex>№</ItemIndex>
-          <div>Available pools</div>
+          <ItemIndexHidden>№</ItemIndexHidden>
+          <AvailableTitle>Available pools</AvailableTitle>
         </ItemHeader>
         <HeaderLiquidity>Liquidity</HeaderLiquidity>
         <HeaderApr>APR</HeaderApr>
@@ -27,7 +29,7 @@ export const LiquidityPoolsTable = ({ data, AllTokens }) => {
       </TableItem>
       {data &&
         data.map((item, index) => {
-          return <LiquidityTableItem item={item} index={index} theme={theme} />;
+          return <LiquidityTableItem item={item} index={index} theme={theme} type={type} />;
         })}
     </TableWrapper>
   );

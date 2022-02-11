@@ -2,13 +2,13 @@ import styled from 'styled-components';
 
 export const Main = styled.div`
   max-width: 1535px;
-  margin-left: 35px;
 
   @media (max-width: 1024px) {
     margin-left: 0;
   }
 
   @media (max-width: 480px) {
+    margin: 0 auto;
     width: 375px;
   }
 `;

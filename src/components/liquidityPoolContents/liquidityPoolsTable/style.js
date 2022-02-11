@@ -10,6 +10,10 @@ export const TableWrapper = styled.div`
   backdrop-filter: blur(35px);
   border-radius: 10px;
   user-select: none;
+  @media (min-width: 175px) and (max-width: 840px) {
+    padding: 20px 0 20px 0;
+    border-radius: 30px;
+  }
 `;
 
 export const TableItem = styled.div`
@@ -19,16 +23,34 @@ export const TableItem = styled.div`
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-areas: 'head balance apr buttons';
   align-items: center;
-  padding: 15px 25px;
+  padding: 11px 25px;
   position: relative;
+  font-size: 14px;
 
-  @media (min-width: 375px) and (max-width: 840px) {
-    grid-template-columns: 1fr 1fr;
-    padding: 20px 15px;
+  &:first-child {
+    font-size: 10px;
+    color: #1e1e20;
+    opacity: 0.5;
+  }
+
+  @media (min-width: 175px) and (max-width: 840px) {
+    &:first-child {
+      //justify-content: center;
+      grid-template-columns: 50% 50%;
+      grid-template-areas: 'head apr';
+      //align-items: center;
+      padding: 5px 15px 0;
+      font-weight: 600;
+      opacity: 1;
+      color: #1e1e20;
+    }
+
+    grid-template-columns: 20px 1fr 1fr;
+    padding: 16px 15px;
     grid-template-areas:
-      'head apr'
-      'balance balance'
-      'buttons buttons';
+      'head head apr'
+      'balance balance balance'
+      'buttons buttons buttons';
   }
 
   &:before {
@@ -37,26 +59,41 @@ export const TableItem = styled.div`
     left: 25px;
     bottom: 0;
     height: 1px;
-    width: 95%; /* or 100px */
+    width: 90%; /* or 100px */
     opacity: 0.05;
     border: ${(props) => (props.isLightTheme ? '1px solid #1E1E20' : '1px solid #ffffff')};
   }
 `;
 
 export const ItemIndex = styled.div`
-  width: 25px;
-  @media (min-width: 375px) and (max-width: 840px) {
+  width: 15px;
+  grid-area: index;
+  font-size: 14px;
+  @media (min-width: 175px) and (max-width: 840px) {
+  }
+`;
+
+export const ItemIndexHidden = styled.div`
+  width: 15px;
+  grid-area: index;
+  font-size: 14px;
+  @media (min-width: 175px) and (max-width: 840px) {
     display: none;
   }
 `;
+
 export const HeaderApr = styled.div`
-  @media (min-width: 375px) and (max-width: 840px) {
-    text-align: right;
-    margin-right: 162px;
+  @media (min-width: 175px) and (max-width: 840px) {
+    //margin-right: 162px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 100px;
+    margin-bottom: 20px;
   }
 `;
 export const HeaderLiquidity = styled.div`
-  @media (min-width: 375px) and (max-width: 840px) {
+  @media (min-width: 175px) and (max-width: 840px) {
     display: none;
   }
 `;
@@ -65,8 +102,9 @@ export const ItemHeader = styled.div`
   display: flex;
   gap: 18px;
   grid-area: head;
-  @media (min-width: 375px) and (max-width: 840px) {
-    gap: 10px;
+
+  @media (min-width: 175px) and (max-width: 840px) {
+    gap: 5px;
     margin-bottom: 20px;
   }
 `;
@@ -74,6 +112,7 @@ export const ItemHeader = styled.div`
 export const InvestButton = styled.button`
   background: ${(props) => (props.isLightTheme ? '#fff' : '#8f86ff')};
   color: ${(props) => (props.isLightTheme ? '#4453AD' : ' white')};
+  box-shadow: inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12);
   border-radius: 10px;
   border: none;
   padding: 9px 55px;
@@ -86,6 +125,7 @@ export const InfoButton = styled(InvestButton)`
   padding: 11px;
   display: flex;
   align-items: center;
+  box-shadow: 4px 6px 20px -5px rgba(51, 78, 131, 0.17);
 `;
 
 export const TokenImage = styled.img`
@@ -99,26 +139,57 @@ export const TokenImage = styled.img`
 
 export const TokenImages = styled.div`
   display: flex;
-  width: 50px;
+  width: 30px;
+
+  @media (max-width: 300px) {
+    display: none;
+  }
 `;
 export const TokenNames = styled.div`
   display: flex;
   gap: 5px;
+
+  @media (max-width: 300px) {
+    font-size: 12px;
+  }
+
+  @media (min-width: 300px) and (max-width: 840px) {
+    font-size: 14px;
+  }
 `;
 
 export const AprBlock = styled.div`
   display: flex;
-  gap: 20px;
 `;
 
 export const AprName = styled.div`
+  display: flex;
+  align-items: center;
   width: 75px;
+  font-size: 10px;
+  font-weight: 600;
+  font-size: 10px;
+  line-height: 16px;
+  color: #1e1e20;
+  opacity: 0.5;
+
+  @media (min-width: 175px) and (max-width: 840px) {
+    width: 50px;
+  }
 `;
 export const AprValue = styled.div`
-  width: 100px;
+  width: 75px;
   color: ${(props) => props.color};
-  @media (min-width: 375px) and (max-width: 840px) {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+
+  @media (min-width: 175px) and (max-width: 840px) {
+    width: 100px;
     text-align: right;
+    font-size: 14px;
+    display: flex;
+    justify-content: flex-end;
   }
 `;
 
@@ -126,18 +197,18 @@ export const ItemButtons = styled.div`
   display: flex;
   gap: 30px;
   grid-area: buttons;
-  @media (min-width: 375px) and (max-width: 840px) {
+  @media (min-width: 175px) and (max-width: 840px) {
     display: grid;
     grid-template-columns: 3fr 40px;
-    gap: 50px;
     justify-content: space-between;
   }
 `;
 
 export const BalanceValue = styled.div`
   grid-area: balance;
-  @media (min-width: 375px) and (max-width: 840px) {
+  @media (min-width: 175px) and (max-width: 840px) {
     margin-bottom: 10px;
+    padding-left: 20px;
   }
 `;
 export const APR = styled.div`
@@ -146,7 +217,16 @@ export const APR = styled.div`
   flex-direction: column;
   align-items: flex-start;
 
-  @media (min-width: 375px) and (max-width: 840px) {
+  @media (min-width: 175px) and (max-width: 840px) {
     align-items: flex-end;
+  }
+`;
+
+export const AvailableTitle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @media (min-width: 175px) and (max-width: 840px) {
+    font-width: 600;
   }
 `;

@@ -15,30 +15,42 @@ const Performance = ({
     <Main isLightTheme={isLightTheme}>
       <Title>{'Performance'}</Title>
       <Wrapper>
-        <InfoCard>
-          <Mark>{'Tokens Holding'}</Mark>
-          <Value>{tokensHolding}</Value>
-        </InfoCard>
-        <InfoCard>
-          <Mark>{'Total HODL Value'}</Mark>
-          <Value>{totalHoldValue}</Value>
-        </InfoCard>
-        <InfoCard>
-          <Mark>{'Accumulation Cost'}</Mark>
-          <Value>{accumulationCost}</Value>
-        </InfoCard>
-        <InfoCard>
-          <Mark>{'Avg. Buying Cost'}</Mark>
-          <Value>{avgBuyingCost}</Value>
-        </InfoCard>
-        <InfoCard>
-          <Mark>{'Profit/Loss'}</Mark>
-          <Value>{profitLoss}</Value>
-        </InfoCard>
-        <InfoCard>
-          <Mark>{'Profit/Loss Percent'}</Mark>
-          <Value>{profitLossPercent}</Value>
-        </InfoCard>
+        {tokensHolding ? (
+          <InfoCard>
+            <Mark>{'Tokens Holding'}</Mark>
+            <Value>{tokensHolding}</Value>
+          </InfoCard>
+        ) : null}
+        {totalHoldValue ? (
+          <InfoCard>
+            <Mark>{'Total HODL Value'}</Mark>
+            <Value>{totalHoldValue}</Value>
+          </InfoCard>
+        ) : null}
+        {accumulationCost ? (
+          <InfoCard>
+            <Mark>{'Accumulation Cost'}</Mark>
+            <Value>{accumulationCost}</Value>
+          </InfoCard>
+        ) : null}
+        {avgBuyingCost ? (
+          <InfoCard>
+            <Mark>{'Avg. Buying Cost'}</Mark>
+            <Value>{avgBuyingCost}</Value>
+          </InfoCard>
+        ) : null}
+        {profitLoss ? (
+          <InfoCard>
+            <Mark>{'Profit/Loss'}</Mark>
+            <Value>{profitLoss}</Value>
+          </InfoCard>
+        ) : null}
+        {profitLossPercent ? (
+          <InfoCard>
+            <Mark>{'Profit/Loss Percent'}</Mark>
+            <Value>{profitLossPercent}</Value>
+          </InfoCard>
+        ) : null}
       </Wrapper>
     </Main>
   );

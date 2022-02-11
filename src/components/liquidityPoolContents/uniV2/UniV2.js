@@ -56,6 +56,7 @@ import {
 import { SelectOptionsWithJSX } from '../HOC/selectOptionsWithJSX';
 import { TokenButtonsBlock } from '../../../screens/dashboard/styledComponents';
 import { LiquidityPoolsTable } from '../liquidityPoolsTable/liquidityPoolsTable';
+import {useSelector} from "react-redux";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -97,7 +98,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function LiquidityPools() {
+export default function LiquidityPools({ inputValue }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [Loading, setLoading] = useState(false);
@@ -121,7 +122,8 @@ export default function LiquidityPools() {
 
   const [AllTokens, setAllTokens] = useState([]);
   const [allTokensSelect, setAllTokensSelect] = useState([]);
-  console.log('allTokensSelect', allTokensSelect)
+
+  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
   useEffect(() => {
     async function getData() {
@@ -138,7 +140,6 @@ export default function LiquidityPools() {
         setAllTokensSelect(selectOptions)
         setAllTokens(response.data.records);
         fetchedTokens = response.data.records;
-        console.log(response.data.records);
       });
       await axios
         .get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
@@ -150,7 +151,6 @@ export default function LiquidityPools() {
               ? data.find((x) => x.address === token.address).logoURI
               : tokenURIs.find((x) => x.address === token.address).logoURI,
           }));
-          console.log(tokens.filter((token) => token.logoURI === ''));
           setAllTokens(tokens);
         })
         .catch((res) => {
@@ -571,7 +571,6 @@ export default function LiquidityPools() {
   ]);
 
   useEffect(() => {
-    // console.log('lol')
     var d = new Date();
     var day = d.getUTCDate();
     var month = d.getUTCMonth();
@@ -579,7 +578,6 @@ export default function LiquidityPools() {
     var offset = new Date(year, month, day).getTimezoneOffset() * 60;
     var epoch = new Date(year, month, day).getTime() / 1000 - offset;
 
-    // console.log(epoch)
     async function getData() {
       setLoading(true);
       await axios
@@ -623,7 +621,6 @@ export default function LiquidityPools() {
                 )
                 .then((response) => {
                   if (response.data.image) {
-                    // console.log(response.data.image)
                     res[i].token0.image = response.data.image;
                   }
                 });
@@ -647,7 +644,6 @@ export default function LiquidityPools() {
                 token0: res[i].token0,
                 token1: res[i].token1,
               });
-              console.log(data2);
               setData([...data2]);
             }
             // setData(Data.concat(res))
@@ -711,7 +707,6 @@ export default function LiquidityPools() {
   }
 
   async function removeLiquidity(tokenA, tokenB, receiveToken, liquidityAmount) {
-    // console.log(tokenA, tokenB, receiveToken, liquidityAmount)
     await loadWeb3();
     const web3 = window.web3;
     const accounts = await web3.eth.getAccounts();
@@ -853,7 +848,6 @@ export default function LiquidityPools() {
 
   //this function turns array of options to JSX for modal select
  const updatedOptions = SelectOptionsWithJSX(allTokensSelect)
-  console.log('updatedOptions', updatedOptions)
 
   //select styles
   const selectStyle = {
@@ -941,19 +935,25 @@ export default function LiquidityPools() {
     console.log('vfvfvfv', data)
   }
 
+
+  const filterData = (Data) => {
+    return Data.filter(d => d.id.includes(inputValue) || (d.token0.symbol + ' ' + d.token1.symbol).includes(inputValue.toUpperCase()) || d.token0.name.includes(inputValue) || d.token1.name.includes(inputValue));
+  }
+
   return (
     <div>
       {/*<button onClick={() => {setIsModalOpen(true)}}>Open</button>*/}
-      {Content}
-      {/*<LiquidityPoolsTable data={Data}/>*/}
+      {/*{Content}*/}
+      <LiquidityPoolsTable data={filterData(Data)} type={'uniswap'} />
 
       <br />
       <center>
         <AddNewGroupButton
+          isLightTheme={isLightTheme}
           onClick={(e) => {
             setPage(Page + 1);
           }}>
-          {Loading ? 'Loading...' : 'Show More'}
+          {Loading ? 'Loading...' : 'More Pools'}
         </AddNewGroupButton>
 
         {/*ModalContainer - this is component consists portal logic inside. Component wraps content and displays it as a children. */}

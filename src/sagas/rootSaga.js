@@ -29,6 +29,11 @@ import {
   getReceiveTokensListSagaWatcher,
   getSendTokensListSagaWatcher,
 } from '../store/exchangeTokensLists/sagas';
+import { getCurrentTokenTransactionsSagaWatcher } from './currentTokenTransactions';
+import { getWalletDataSagaWatcher } from './currentWalletData';
+import { getTokenPriceHistorySagaWatcher } from './currentTokenPriceHistory';
+import { getCurveLPTokenSagaWatcher } from './curveLpToken';
+import { getAaveStakeSagaWatcher } from './Aave';
 export default function* watchRootSaga() {
   yield all([
     call(getAccountBalanceSagaWatcher),
@@ -58,5 +63,10 @@ export default function* watchRootSaga() {
     call(getalchemixVaultsSagaWatcher),
     call(getcompoundTokenSagaWatcher),
     call(getCurrentTokenDataSagaWatcher),
+    call(getCurrentTokenTransactionsSagaWatcher),
+    call(getWalletDataSagaWatcher),
+    call(getTokenPriceHistorySagaWatcher),
+    call(getCurveLPTokenSagaWatcher),
+    call(getAaveStakeSagaWatcher),
   ]);
 }

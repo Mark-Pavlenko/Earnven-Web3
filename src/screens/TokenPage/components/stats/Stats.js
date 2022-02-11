@@ -18,41 +18,57 @@ const Stats = ({
     <Main isLightTheme={isLightTheme}>
       <Title>{'Stats'}</Title>
       <Wrapper>
-        <InfoCard>
-          <Mark>{'1 day'}</Mark>
-          <Value>{`${statsDay} %`}</Value>
-        </InfoCard>
-        <InfoCard>
-          <Mark>{'1 month'}</Mark>
-          <Value>{`${statsMonth} %`}</Value>
-        </InfoCard>
-        <InfoCard>
-          <Mark>{'2 months'}</Mark>
-          <Value>{`${statsTwoMonths} %`}</Value>
-        </InfoCard>
-        <InfoCard>
-          <Mark>{'1 year'}</Mark>
-          <Value>{`${statsYear} %`}</Value>
-        </InfoCard>
-        <InfoCard>
-          <Mark>{'Market Cap'}</Mark>
-          <Value>{`$${marketCap}`}</Value>
-        </InfoCard>
-        <InfoCard>
-          <Mark>{'24h High'}</Mark>
-          <Value>{`${dayHigh}%`}</Value>
-        </InfoCard>
-        <InfoCard>
-          <Mark>{'24h Low'}</Mark>
-          <Value>{`${dayLow}%`}</Value>
-        </InfoCard>
-        <InfoCard>
-          <Mark>
-            <img src={CoinGeckoLogo} />
-            {'CoinGecko Score'}
-          </Mark>
-          <Value>{`${coingeckoScore}`}</Value>
-        </InfoCard>
+        {statsDay ? (
+          <InfoCard>
+            <Mark>{'1 day'}</Mark>
+            <Value>{`${statsDay} %`}</Value>
+          </InfoCard>
+        ) : null}
+        {statsMonth ? (
+          <InfoCard>
+            <Mark>{'1 month'}</Mark>
+            <Value>{`${statsMonth} %`}</Value>
+          </InfoCard>
+        ) : null}
+        {statsTwoMonths ? (
+          <InfoCard>
+            <Mark>{'2 months'}</Mark>
+            <Value>{`${statsTwoMonths} %`}</Value>
+          </InfoCard>
+        ) : null}
+        {statsYear ? (
+          <InfoCard>
+            <Mark>{'1 year'}</Mark>
+            <Value>{`${statsYear} %`}</Value>
+          </InfoCard>
+        ) : null}
+        {marketCap ? (
+          <InfoCard>
+            <Mark>{'Market Cap'}</Mark>
+            <Value>{`$${marketCap}`}</Value>
+          </InfoCard>
+        ) : null}
+        {dayHigh ? (
+          <InfoCard>
+            <Mark>{'24h High'}</Mark>
+            <Value>{`${dayHigh}%`}</Value>
+          </InfoCard>
+        ) : null}
+        {dayLow ? (
+          <InfoCard>
+            <Mark>{'24h Low'}</Mark>
+            <Value>{`${dayLow}%`}</Value>
+          </InfoCard>
+        ) : null}
+        {coingeckoScore ? (
+          <InfoCard>
+            <Mark>
+              <img src={CoinGeckoLogo} />
+              {'CoinGecko Score'}
+            </Mark>
+            <Value>{`${coingeckoScore}`}</Value>
+          </InfoCard>
+        ) : null}
       </Wrapper>
     </Main>
   );

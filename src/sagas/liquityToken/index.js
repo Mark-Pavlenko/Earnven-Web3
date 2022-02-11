@@ -41,6 +41,7 @@ function* liquityTokenSagaWorker(liquityTokenAttributes) {
   object.LQTYPrice = lqtyTokenPriceData.lqtytokenPrice;
   object.LUSDPrice = lusdTokenPriceData.lusdtokenPrice;
   object.imageData = [lqtyTokenPriceData.lqtyImageUrl, lusdTokenPriceData.lusdImageUrl];
+  object.symbol = 'LQTY';
   object.protocol = 'Liquity';
   object.chain = 'Ethereum';
   object.tokenName = 'Liquity';
@@ -126,10 +127,11 @@ function* liquityTokenSagaWorker(liquityTokenAttributes) {
     if (parseFloat(object.lqtyDebtLusdValue) > 0) {
       LqtyTokenTotalValue -= parseFloat(object.lqtyDebtLusdValue);
     }
-
-    object.totalValue = LqtyTokenTotalValue;
-
-    LqtyArrayOfData.push(object);
+    if (LqtyTokenTotalValue > 0) {
+      object.totalValue = LqtyTokenTotalValue;
+      object.value = LqtyTokenTotalValue;
+      LqtyArrayOfData.push(object);
+    }
   }
   yield put(actions.getLiquityTokenData(LqtyArrayOfData));
   yield put(actions.getLiquityTokenTotal(parseFloat(LqtyTokenTotalValue.toFixed(2))));

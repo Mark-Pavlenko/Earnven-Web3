@@ -17,19 +17,23 @@ function* sushiSwapLPSagaWorker(sushiSwapObjects) {
     if (response.data.data.users[0]) {
       let totalValue = 0;
       const pools = [];
-      let token0Data;
-      let token1Data;
+      // let token0Data;
+      // let token1Data;
+      let tokenData;
       try {
         const res = response.data.data.users[0].liquidityPositions;
         for (let i = 0; i < res.length; i++) {
           const object = {};
           //call the below function to get the sushi token image url
-          token0Data = yield call(API.getSushiLpTokenImage, res[i].pair.token0.id);
-          token1Data = yield call(API.getSushiLpTokenImage, res[i].pair.token1.id);
+          //token0Data = yield call(API.getSushiLpTokenImage, res[i].pair.token0.id);
+          // token1Data = yield call(API.getSushiLpTokenImage, res[i].pair.token1.id);
           //get list of data attributes into the object
-          object.token0Image = token0Data.tokenImage;
+
+          let tokenSymbolPair = res[i].pair.token0.symbol + '/' + res[i].pair.token1.symbol;
+          tokenData = yield call(API.getSushiLpTokenImage, tokenSymbolPair);
+          object.token0Image = tokenData[0].logoURI; //token0Data.tokenImage;
           object.token0Symbol = res[i].pair.token0.symbol;
-          object.token1Image = token1Data.tokenImage;
+          object.token1Image = tokenData[1].logoURI; //token1Data.tokenImage;
           object.token1Symbol = res[i].pair.token1.symbol;
           //other attributes
           object.volume = parseFloat(res[i].pair.volumeUSD).toFixed(2);

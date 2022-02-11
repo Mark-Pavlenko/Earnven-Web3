@@ -34,6 +34,9 @@ import { initSidebarValuesReducer } from './initSidebarValues/reducer';
 import { alchemixVaults } from './alchemix/reducer';
 import { compoundFinance } from './compoundFinance/reducer';
 import { currentTokenDataReducer } from './currentTokenData/reducer';
+import { currentTokenTransactionsReducer } from './currentTokenTransactions/reducer';
+import { walletDataReducer } from './currentWalletData/reducer';
+import { tokenPriceHistoryReducer } from './currentTokenPriceHistory/reducer';
 import { tokensListReducer } from './exchangeTokensLists/reducer';
 
 export const rootReducer = combineReducers({
@@ -75,4 +78,7 @@ export const rootReducer = combineReducers({
   compoundFinance,
   currentTokenDataReducer,
   tokensListReducer,
+  currentTokenTransactionsReducer,
+  walletDataReducer,
+  tokenPriceHistoryReducer,
 });

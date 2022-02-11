@@ -72,9 +72,11 @@ function Header({ onOpenSidebar, onOpenMobileWalletsList, finalTitle }) {
               <img src={sidebarBurgerDarkIcon} alt="burger_img" />
             )}
           </BurgerSidebarIconButton>
-          <HeaderTitle isLightTheme={isLightTheme}>
-            <p>{finalTitle}</p>
-          </HeaderTitle>
+          {finalTitle.length < 100 && (
+            <HeaderTitle isLightTheme={isLightTheme}>
+              <p>{finalTitle}</p>
+            </HeaderTitle>
+          )}
         </HeaderFirstLayout>
         <HeaderItemsBlock>
           {/*<SearchTokens />*/}
@@ -126,9 +128,11 @@ function Header({ onOpenSidebar, onOpenMobileWalletsList, finalTitle }) {
             )}
           </BurgerSidebarIconButton>
         </MobileSubLayout>
-        <HeaderTitle isLightTheme={isLightTheme}>
-          <p>{finalTitle}</p>
-        </HeaderTitle>
+        {finalTitle.length < 100 && (
+          <HeaderTitle isLightTheme={isLightTheme}>
+            <p>{finalTitle}</p>
+          </HeaderTitle>
+        )}
       </HeaderLayoutMobile>
     </>
   );

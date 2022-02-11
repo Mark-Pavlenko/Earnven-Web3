@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ReactApexChart from 'react-apexcharts';
-import axios from 'axios';
 import ApexCharts from 'apexcharts';
 import './lightThemeCharts.css';
 
@@ -12,6 +11,8 @@ export default class LightThemeChart extends Component {
       series: [],
       options: {
         chart: {
+          parentHeightOffset: 0,
+          offsetY: -20,
           id: 'area-datetime',
           type: 'line',
           height: 'auto',
@@ -164,7 +165,7 @@ export default class LightThemeChart extends Component {
           text: this.props.totalValue,
           align: 'left',
           offsetX: -10,
-          offsetY: -15,
+          offsetY: 30,
           floating: false,
           style: {
             fontSize: '40px',
@@ -177,13 +178,13 @@ export default class LightThemeChart extends Component {
           text: this.props.difValue,
           align: 'left',
           offsetX: this.props.totalValue.split('').length * 21 + 10,
-          offsetY: -2,
+          offsetY: 45,
           floating: false,
           style: {
             fontSize: '26px',
             fontWeight: 600,
             fontFamily: 'saira',
-            color: '#00DFD1',
+            color: parseFloat(this.props.difValue) < 0 ? '#EC3D3D' : '#00DFD1',
           },
         },
         noData: {
@@ -207,8 +208,8 @@ export default class LightThemeChart extends Component {
     this.getTokenChartHistory();
   }
 
-  componentDidUpdate() {
-    if (this.state.account !== this.props.address) {
+  componentDidUpdate(prevProps) {
+    if (this.props.tokenPriceHistory !== prevProps.tokenPriceHistory) {
       this.getTokenChartHistory();
     }
     if (
@@ -228,6 +229,10 @@ export default class LightThemeChart extends Component {
               ...this.state.options.subtitle,
               text: this.props.difValue,
               offsetX: this.props.totalValue.split('').length * 21 + 10,
+              style: {
+                ...this.state.options.subtitle.style,
+                color: parseFloat(this.props.difValue) < 0 ? '#EC3D3D' : '#00DFD1',
+              },
             },
           },
         };
@@ -235,37 +240,24 @@ export default class LightThemeChart extends Component {
     }
   }
 
-  // componentDidMount() {
-  //   this.setState({
-  //     selection: 'all',
-  //   });
-  // }
-
-  getTokenChartHistory = async () => {
-    var data = [];
-    let points = [];
+  getTokenChartHistory() {
+    const data = [];
+    const points = [];
     let result = [];
     let c = {};
-    const path = `https://api.coingecko.com/api/v3/coins/${
-      this.props.tokenId
-    }/market_chart/range?vs_currency=usd&from=1200000000&to=${new Date().getTime()}`;
-    await axios.get(path, {}).then(async (response) => {
-      result = response.data.prices;
-      console.log(response, new Date());
-      if (result && result.length > 0) {
-        for (let i = 0; i < result.length; i++) {
-          var temp = [];
-          temp.push(new Date(result[i][0]));
-          temp.push(result[i][1].toFixed(2));
-          data.push(temp);
-        }
+    result = this.props.tokenPriceHistory;
+    if (result && result.length > 0) {
+      for (let i = 0; i < result.length; i++) {
+        let temp = [];
+        temp.push(new Date(result[i].date));
+        temp.push(result[i].rate);
+        data.push(temp);
       }
-      c = { data };
-      // points
-      points.push(c);
-      this.setState({ series: points });
-    });
-  };
+    }
+    c = { data };
+    points.push(c);
+    this.setState({ series: points });
+  }
 
   monthDiff(d1, d2) {
     var months;
@@ -354,9 +346,8 @@ export default class LightThemeChart extends Component {
       <div
         className="chart-wrapper--light"
         style={{ background: 'transparent', boxShadow: 'none' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <div className="net-worth--light">Net worth</div>
-          <div>
+        <div id="chart" className="chart">
+          <div className={'change-buttons-wrapper'}>
             <button
               id="one_hour"
               onClick={() => this.updateData('one_hour')}
@@ -406,8 +397,6 @@ export default class LightThemeChart extends Component {
             </button>
             &nbsp;
           </div>
-        </div>
-        <div id="chart" className="chart">
           <div className="chart-timeline" style={{ float: 'left' }}>
             <ReactApexChart
               options={this.state.options}

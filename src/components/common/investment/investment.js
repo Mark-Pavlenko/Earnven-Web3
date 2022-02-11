@@ -13,6 +13,7 @@ import {
 import { useSelector } from 'react-redux';
 import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
 import CurveLpImage from '../../LoansAndSavings/CurveLpImage';
+import SushiSwapLogo from '../../../assets/icons/Sushiswap.webp';
 
 const Investment = ({
   protocol,
@@ -39,6 +40,8 @@ const Investment = ({
     totalStaked,
     claimable,
     apy,
+    token0Image,
+    token1Image,
   } = protocol;
 
   function isNumber(char) {
@@ -50,25 +53,72 @@ const Investment = ({
   };
   const gap = '-';
 
+  //variable declaration
+  let _symbol;
+  //setup value based on the protocols
+  let protocolLogo;
+
+  if (protocolName === 'Sushiswap') {
+    protocol.symbol = protocol.token0Symbol + '-' + protocol.token1Symbol;
+    protocolLogo = SushiSwapLogo;
+  }
+
+  if (protocolName === 'Curve Staking') {
+    protocol.symbol = protocol.tokenName;
+  }
+
+  if (protocolName === 'Curve Pool') {
+    protocol.tokenImage = logoImage;
+  }
+
+  if (protocolName === 'Aave') {
+    let symbolArray = [];
+    tokens.map((token) => {
+      symbolArray.push(token.symbol);
+    });
+    if (symbolArray.length == 2) {
+      protocol.symbol = symbolArray[0] + ' / ' + symbolArray[1];
+    }
+    if (symbolArray.length == 1) {
+      protocol.symbol = symbolArray[0];
+    }
+  }
+
   return (
     <Main isOpen={isOpen} isLightTheme={theme}>
       <TotalValue isOpen={isOpen}>
         <div style={{ display: 'flex' }}>
-          {isCurveStaking ? (
-            <div>
-              <CurveLpImage lpToken={protocol.tokenName} />
-            </div>
-          ) : (
+          <div style={{ display: 'flex' }}>
             <ImagesWrapper>
               {imageData ? (
-                imageData?.map((name, index) => <TokenImage firstElement={index} src={name} />)
+                imageData.map((name, index) => <TokenImage firstElement={index} src={name} />)
               ) : (
-                <MockTokenImage src={logoImage} isBorder={!logoImage} />
+                <React.Fragment>
+                  {protocolName === 'Sushiswap' ? (
+                    <React.Fragment>
+                      <MockTokenImage src={protocol.token0Image} />
+                      <MockTokenImage src={protocol.token1Image} />
+                    </React.Fragment>
+                  ) : (
+                    <>
+                      {protocolName === 'Curve Staking' ? (
+                        <>
+                          <CurveLpImage lpToken={protocol.tokenName} />
+                        </>
+                      ) : (
+                        <MockTokenImage src={protocol.tokenImage} />
+                      )}
+                    </>
+                  )}
+                </React.Fragment>
               )}
             </ImagesWrapper>
-          )}
+            <React.Fragment style={{ display: 'flex' }}>
+              <TokenName isLightTheme={theme}>{`${protocol.symbol}`}</TokenName>
+            </React.Fragment>
+          </div>
 
-          <div
+          {/* <div
             style={{
               display: 'flex',
               flexWrap: 'wrap',
@@ -86,15 +136,20 @@ const Investment = ({
             ) : (
               <TokenName isLightTheme={theme}>{`${tokenName}`}</TokenName>
             )}
-          </div>
+          </div> */}
         </div>
         <ContentRightWrapper isLightTheme={theme}>
-          <div>
-            $
-            {numberWithCommas(
-              parseFloat(totalTokensBalance ? totalTokensBalance : totalValue).toFixed(2)
-            )}
-          </div>
+          {protocolName === 'Aave' ? (
+            <>
+              $
+              {numberWithCommas(
+                parseFloat(protocol.totalValue ? protocol.totalValue : '').toFixed(2)
+              )}
+            </>
+          ) : (
+            <>${numberWithCommas(parseFloat(protocol.value ? protocol.value : '').toFixed(2))}</>
+          )}
+
           <ToggleButton isLightTheme={theme} isOpen={isOpen} onClick={toggleHandler} />
         </ContentRightWrapper>
       </TotalValue>
@@ -229,7 +284,10 @@ const Investment = ({
                 item !== 'tokenDecimal' &&
                 item !== 'protocol' &&
                 item !== 'yTokenDecimals' &&
-                item !== 'image'
+                item !== 'image' &&
+                item != 'token0Image' &&
+                item != 'token1Image' &&
+                item != 'totalValue'
             )
             .map((el) => {
               return (
