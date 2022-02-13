@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import SearchTokens from '../searchTokens/searchTokensLight';
 import { Chart } from '../Chart/chartCubicle';
 
 export default function Index() {
@@ -12,9 +11,7 @@ export default function Index() {
 
   return (
     <>
-      <div>
-        <SearchTokens parentCallback={callbackFunction} />{' '}
-      </div>
+      <div>{/*<SearchTokens parentCallback={callbackFunction} />{' '}*/}</div>
       <br />
       <br />
       <div>

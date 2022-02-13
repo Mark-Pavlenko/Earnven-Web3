@@ -10,8 +10,9 @@ export function* getETH2StakeSagaWatcher() {
 function* eth2StakeSagaWorker(userAccountAddress) {
   const stakeUserAccount = userAccountAddress.payload;
   const response = yield call(API.getEth2StakeData, stakeUserAccount);
+
   if (response) {
-    if (response.data.data.depositors) {
+    if (response.data.data.depositors.length > 0) {
       try {
         const res = response.data.data.depositors[0];
         let tot = 0;
@@ -22,17 +23,18 @@ function* eth2StakeSagaWorker(userAccountAddress) {
         const response2 = yield call(API.getEthPriceData);
 
         if (response2.data) {
-          object.ethPrice = response2.data.ethereum.usd;
+          object.price = response2.data.ethereum.usd;
         }
 
-        object.totalValue = parseFloat(object.ethPrice * object.totalDeposit).toFixed(2);
-        object.tokenName = 'ETH';
+        object.totalInvestment = parseFloat(object.price * object.totalDeposit).toFixed(2);
+        object.value = object.totalInvestment;
+        object.symbol = 'ETH';
         object.chain = 'Ethereum';
         object.protocol = 'Ethereum';
-        tot += parseFloat(object.totalValue);
+        tot += parseFloat(object.totalInvestment);
         ethStaking.push(object);
         //setBeaconTotal(tot);
-        console.log('TestABC ETH2 staking data', object);
+
         yield put(actions.getEth2StakeData(ethStaking));
         //setBeaconData(ethStaking);
         yield put(actions.getEth2StakeTotalValue(tot));

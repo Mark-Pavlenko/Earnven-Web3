@@ -148,7 +148,7 @@ const PoolDetailChart = (props) => {
             const priorMonth = epoch - 2678400 //take one month prior to the current date
             //call this util function to get uniswap graph data
             const response = await getUniswapGraphData(tokenPair, priorMonth)
-            //console.log('uniswap data', response)
+            console.log('uniswap data', tokenPair, priorMonth)
 
             //main derive code
             if (response.data.data) {

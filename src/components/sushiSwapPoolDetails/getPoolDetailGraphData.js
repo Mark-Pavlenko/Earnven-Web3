@@ -2,8 +2,8 @@ const axios = require('axios');
 // this function is to get graph data for uniswap
 const getUniswapGraphData = async (token0, token1, epochDate) => {
   // console.log('sushiswap - Calling for the graph query page')
-  // console.log('sushiswap token0 -', token0)
-  // console.log('sushiswap token1 - ', token1)
+  console.log('sushiswap token0 -', token0);
+  console.log('sushiswap token1 - ', token1);
   // console.log('sushiswap epoc time - ', epochDate)
 
   try {

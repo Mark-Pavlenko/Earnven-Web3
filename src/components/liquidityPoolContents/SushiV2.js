@@ -31,6 +31,10 @@ import Box from '@material-ui/core/Box';
 
 import { Button } from '@material-ui/core';
 import { Link, useParams } from 'react-router-dom';
+import {LiquidityPoolsTable} from "./liquidityPoolsTable/liquidityPoolsTable";
+import {AddNewGroupButton} from "./uniV2/StyledComponents";
+import {useSelector} from "react-redux";
+import {data} from "../../globalStore";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -72,10 +76,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function LiquidityPools() {
+export default function LiquidityPools({ inputValue }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [Loading, setLoading] = useState(false);
+  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -84,7 +89,7 @@ export default function LiquidityPools() {
   const { address } = useParams();
 
   const [Data, setData] = useState([]); //UNI V2 Pools
-  const [Content, setContent] = useState(''); //UNI V2 Pools
+  const [Content, setContent] = useState(''); //UNI V2 33Pools
   const [TokenA, setTokenA] = useState('');
   const [TokenB, setTokenB] = useState('');
   const [Page, setPage] = useState('');
@@ -96,6 +101,8 @@ export default function LiquidityPools() {
   const [ReceiveToken, setReceiveToken] = useState('');
   const [LiquidityAmount, setLiquidityAmount] = useState('');
 
+
+
   const [AllTokens, setAllTokens] = useState([]);
 
   useEffect(() => {
@@ -104,7 +111,6 @@ export default function LiquidityPools() {
       await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {}).then(async (response) => {
         setAllTokens(response.data.records);
         fetchedTokens = response.data.records;
-        console.log(response.data.records);
       });
       await axios
         .get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
@@ -112,11 +118,10 @@ export default function LiquidityPools() {
           let data = response.data.tokens;
           let tokens = fetchedTokens.map((token) => ({
             ...token,
-            logoURI: data.find((x) => x.address == token.address)
-              ? data.find((x) => x.address == token.address).logoURI
-              : tokenURIs.find((x) => x.address == token.address).logoURI,
+            logoURI: data.find((x) => x.address === token.address)
+              ? data.find((x) => x.address === token.address).logoURI
+              : tokenURIs.find((x) => x.address === token.address).logoURI,
           }));
-          console.log(tokens.filter((token) => token.logoURI === ''));
           setAllTokens(tokens);
         }).catch((res) => {
             console.log('liquidity pools Sushiswap-V2 returns error', res)});
@@ -124,9 +129,10 @@ export default function LiquidityPools() {
     getData();
   }, []);
 
+  //worked useEffect
   useEffect(() => {
-    var content = Data.map((object) => (
-      <>
+    var content = Data.map((object) => {
+      return (<>
         <br />
         <Accordion
           style={{
@@ -175,6 +181,19 @@ export default function LiquidityPools() {
                 ).toFixed(2)}{' '}
                 % (Weekly)
               </div>
+              <Link to={`/${address}/sushiswap/address/${object.token0.id}/${object.token1.id}`}>
+                <Button
+                    color="primary"
+                    sx={{
+                      height: '0.1px',
+                      color: '#fff',
+                      fontWeight: 5,
+                      fontSize: '13px',
+                      // background: (theme) => theme.palette.gradients.custom,
+                    }}>
+                  Details
+                </Button>
+              </Link>
               <div style={{ display: 'inline-block', width: '10%' }}>
                 <img
                   style={{
@@ -301,14 +320,14 @@ export default function LiquidityPools() {
                     <br />
                     <br />
                     <TransparentButton
-                      onClick={(e) => {
-                        addLiquidity(
-                          object.token0.id,
-                          object.token1.id,
-                          SupplyToken,
-                          (SupplyTokenAmount * 10 ** 18).toString()
-                        );
-                      }}
+                      // onClick={(e) => {
+                      //   addLiquidity(
+                      //     object.token0.id,
+                      //     object.token1.id,
+                      //     SupplyToken,
+                      //     (SupplyTokenAmount * 10 ** 18).toString()
+                      //   );
+                      // }}
                       value="Add Liquidity with Supply Token"
                     />
                   </center>
@@ -359,6 +378,7 @@ export default function LiquidityPools() {
                   OR <br />
                   <br />
                   <br />
+                  {/*Input with button for swap tokens just between pair -------------------->*/}
                   {object.token0.name} Amount : &nbsp;&nbsp;
                   <AmountInput
                     onChange={(e) => {
@@ -375,16 +395,12 @@ export default function LiquidityPools() {
                   <br />
                   <br />
                   <TransparentButton
-                    onClick={(e) => {
-                      addLiquidityNormal(
-                        object.token0.id,
-                        object.token1.id,
-                        AmountTokenA,
-                        AmountTokenB
-                      );
-                    }}
+                    // onClick={(e) => {
+                    //   addLiquidityNormal(object.token0.id, object.token1.id, TokenA, TokenB);
+                    // }}
                     value="Add Liquidity Classic Method"
                   />
+                  {/*Input with button for swap tokens just between pair -------------------->*/}
                 </center>
                 <br />
                 <br />
@@ -508,8 +524,8 @@ export default function LiquidityPools() {
             </div>
           </AccordionDetails>
         </Accordion>
-      </>
-    ));
+      </>)
+  });
     setContent(content);
   }, [
     Data,
@@ -524,7 +540,6 @@ export default function LiquidityPools() {
   ]);
 
   useEffect(() => {
-    // console.log('lol')
     var d = new Date();
     var day = d.getUTCDate();
     var month = d.getUTCMonth();
@@ -532,7 +547,6 @@ export default function LiquidityPools() {
     var offset = new Date(year, month, day).getTimezoneOffset() * 60;
     var epoch = new Date(year, month, day).getTime() / 1000 - offset;
 
-    // console.log(epoch)
     async function getData() {
       setLoading(true);
       await axios
@@ -568,7 +582,6 @@ export default function LiquidityPools() {
           }
         )
         .then(async (response) => {
-          console.log(response);
           if (response.data.data) {
             var res = response.data.data.pairDayDatas;
             for (var i = 0; i < res.length; i++) {
@@ -580,7 +593,6 @@ export default function LiquidityPools() {
                 )
                 .then((response) => {
                   if (response.data.image) {
-                    // console.log(response.data.image)
                     res[i].token0.image = response.data.image;
                   }
                 });
@@ -597,12 +609,9 @@ export default function LiquidityPools() {
                 });
               var data2 = Data;
               data2.push(res[i]);
-              console.log(data2);
               setData([...data2]);
             }
-            // setData(Data.concat(res))
             setLoading(false);
-            console.log(res);
           }
         });
     }
@@ -706,21 +715,53 @@ export default function LiquidityPools() {
       .send({ from: accounts[0] });
   }
 
-  async function addLiquidity(tokenA, tokenB, supplyToken, supplyTokenQtty) {
+  //*********first input value sends to smartContract
+  async function addLiquidity(tokenA, tokenB, supplyToken, supplyTokenQtty, gasPrice) {
+
     await loadWeb3();
     const web3 = window.web3;
     const accounts = await web3.eth.getAccounts();
-    var tokenContract = new web3.eth.Contract(ERC20ABI, supplyToken);
+    var tokenContract = new web3.eth.Contract(ERC20ABI, supplyToken); //maby web3.utils.toWei(gasPrice, 'gwei') should be here
     const oneClickContract = new web3.eth.Contract(
       OneClickLiquidity,
       Addresses.oneClickSushiV2Contract
     );
     await tokenContract.methods
       .approve(Addresses.oneClickSushiV2Contract, supplyTokenQtty)
-      .send({ from: accounts[0] });
+      .send({ from: accounts[0], gasPrice:  web3.utils.toWei(gasPrice, 'gwei')}); //not sure
     await oneClickContract.methods
       .addLiquidityOneClick(tokenA, tokenB, supplyToken, supplyTokenQtty)
-      .send({ from: accounts[0] });
+      .send({ from: accounts[0], gasPrice:  web3.utils.toWei(gasPrice, 'gwei') });  //not sure
+  }
+
+  //********two inputs value send to smartContract
+  async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB, gasPrice) {
+
+    const start = parseInt(Date.now() / 1000) + 180;
+    await loadWeb3();
+    const web3 = window.web3;
+    const accounts = await web3.eth.getAccounts();
+    var tokenAContract = new web3.eth.Contract(ERC20ABI, tokenA);
+    var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
+    await tokenAContract.methods
+        .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenA, 'ether'))
+        .send({ from: accounts[0], gasPrice:  web3.utils.toWei(gasPrice, 'gwei') });
+    await tokenBContract.methods
+        .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenB, 'ether'))
+        .send({ from: accounts[0], gasPrice:  web3.utils.toWei(gasPrice, 'gwei') });
+    const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.sushiRouter);
+    await UniRouter.methods
+        .addLiquidity(
+            tokenA,
+            tokenB,
+            web3.utils.toWei(amountTokenA, 'ether'),
+            web3.utils.toWei(amountTokenB, 'ether'),
+            0,
+            0,
+            accounts[0],
+            start.toString()
+        )
+        .send({ from: accounts[0] });
   }
 
   async function addLiquidityEth(tokenA, tokenB, ethAmount) {
@@ -736,55 +777,30 @@ export default function LiquidityPools() {
       .send({ from: accounts[0], value: web3.utils.toWei(ethAmount, 'ether') });
   }
 
-  async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB) {
-    const start = parseInt(Date.now() / 1000) + 180;
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var tokenAContract = new web3.eth.Contract(ERC20ABI, tokenA);
-    var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
-    await tokenAContract.methods
-      .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenA, 'ether'))
-      .send({ from: accounts[0] });
-    await tokenBContract.methods
-      .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenB, 'ether'))
-      .send({ from: accounts[0] });
-    const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.sushiRouter);
-    await UniRouter.methods
-      .addLiquidity(
-        tokenA,
-        tokenB,
-        web3.utils.toWei(amountTokenA, 'ether'),
-        web3.utils.toWei(amountTokenB, 'ether'),
-        0,
-        0,
-        accounts[0],
-        start.toString()
-      )
-      .send({ from: accounts[0] });
+
+  const filterData = (Data) => {
+    return Data.filter(d => d.id.includes(inputValue) || (d.token0.symbol + ' ' + d.token1.symbol).includes(inputValue.toUpperCase()) || d.token0.name.includes(inputValue) || d.token1.name.includes(inputValue));
   }
 
   return (
     <div>
-      {Content}
+      <LiquidityPoolsTable
+          data={Data} type={'sushiswap'}
+          AllTokens={AllTokens}
+          addLiquidity={addLiquidity}
+          addLiquidityNormal={addLiquidityNormal}
+      />
       <br />
       <center>
-        <button
-          onClick={(e) => {
+        <AddNewGroupButton
+            isLightTheme={isLightTheme}
+            onClick={(e) => {
             setPage(Page + 1);
-          }}
-          style={{
-            height: '25px',
-            width: '100px',
-            background: 'transparent',
-            border: '1px solid #ac6afc',
-            cursor: 'pointer',
-            color: 'white',
-            borderRadius: '10px',
           }}>
-          {Loading ? 'Loading...' : 'Show More'}
-        </button>
+          {Loading ? 'Loading...' : 'More Pools'}
+        </AddNewGroupButton>
       </center>
+      {Content}
     </div>
   );
 }

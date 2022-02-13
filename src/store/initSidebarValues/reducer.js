@@ -34,7 +34,7 @@ if (localStorage.getItem('mywallet') === null) {
   myWallet = [];
 } else {
   myWallet = JSON.parse(localStorage.getItem('mywallet'))[0];
-  console.log('myWallet', myWallet);
+  // console.log('myWallet', myWallet);
 }
 
 // if (localStorage.getItem('firstConnection') === null) {

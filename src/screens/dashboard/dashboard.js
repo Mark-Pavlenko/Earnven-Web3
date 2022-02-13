@@ -62,6 +62,7 @@ import { numberWithCommas } from '../../commonFunctions/commonFunctions';
 import { BrowserView, MobileView } from 'react-device-detect';
 import ethImage from '../../assets/icons/eth.png';
 import Avatar from 'react-avatar';
+import Protocols from '../../components/LoansAndSavings/Protocols/index';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -154,6 +155,7 @@ export default function Dashboard({ test, changeTheme }) {
 
   return (
     <Box sx={{ width: '100%', mt: 3 }}>
+      <Protocols accountAddress={address} />
       <DashboardTabsLayout>
         <DashboardTabs isLightTheme={theme} toggleTabsHandler={handleChange} />
         <TokenButtonsBlock>

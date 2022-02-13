@@ -41,6 +41,16 @@ const allHash = [];
 let distinctHash = [];
 
 export default class index extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      account: '',
+      contents: '',
+      page: 1,
+    };
+  }
+
   async componentWillMount() {
     // await this.loadWeb3();
     this.setState({ contents: '' });
@@ -946,16 +956,6 @@ export default class index extends Component {
     //     this.setState({page:this.state.page-1})
     // }
   };
-
-  constructor() {
-    super();
-
-    this.state = {
-      account: '',
-      contents: '',
-      page: 1,
-    };
-  }
 
   render() {
     return (

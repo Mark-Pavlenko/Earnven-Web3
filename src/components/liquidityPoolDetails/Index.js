@@ -63,14 +63,14 @@ export default function Index() {
     return () => {};
   }, [tokenid]);
 
-  useEffect(() => {
-    setTokenPair();
-  }, []);
-
+  // useEffect(() => {
+  //   setTokenPair();
+  // }, []);
+  console.log('asdjioqwnqk', tokenid);
   return (
     <div style={{ margin: 'auto' }}>
-      <PoolDetailsPage address={address} tokenid={tokenid} />
-      {navigate(`/${address}/uniswap/pair/${tokenid}`)}
+      {tokenid && <PoolDetailsPage address={address} tokenid={tokenid} />}
+      {/*{navigate(`/${address}/uniswap/pair/${tokenid}`)}*/}
     </div>
   );
 }

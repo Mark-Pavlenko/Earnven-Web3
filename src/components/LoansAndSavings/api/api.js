@@ -242,3 +242,10 @@ export const getYearnTokenData = async (accountAddress, tokenAddress, web3) => {
     yTokenTotalSupply: yTokenTotalSupply, //yToken Total supply
   };
 };
+
+export const getGasPriceData = async () => {
+  const gasPriceData = await axios.get(
+    'https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W'
+  );
+  return gasPriceData;
+};

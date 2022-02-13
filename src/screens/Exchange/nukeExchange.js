@@ -40,7 +40,7 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 500,
-  bgcolor: 'background.default',
+
   // border: '2px solid #000',
   // boxShadow: 24,
   p: 4,
@@ -53,7 +53,7 @@ const CurrencySelect = styled.button`
   font-size: 18px;
   font-weight: 600;
   background-color: transparent;
-  color: '#737373'
+  color: #737373;
   border-radius: 12px;
   outline: none;
   cursor: pointer;
@@ -63,40 +63,15 @@ const CurrencySelect = styled.button`
   margin: 0 0.5rem;
   :focus,
   :hover {
-    background-color: 'blue'
+    background-color: blue;
   }
 `;
 
-const erc20Abi = [
-  'function balanceOf(address owner) view returns (uint256)',
-  'function approve(address _spender, uint256 _value) public returns (bool success)',
-  'function allowance(address _owner, address _spender) public view returns (uint256 remaining)',
-];
-
-// const selectedProvider = new Web3(new Web3.providers.HttpProvider("https://mainnet.infura.io/v3/8b2159b7b0944586b64f0280c927d0a8"))
-const selectedProvider = new ethers.providers.JsonRpcProvider(
-  'https://mainnet.infura.io/v3/8b2159b7b0944586b64f0280c927d0a8'
-);
-
-const makeCall = async (callName, contract, args, metadata = {}) => {
-  if (contract[callName]) {
-    let result;
-    if (args) {
-      result = await contract[callName](...args, metadata);
-    } else {
-      result = await contract[callName]();
-    }
-    return result;
-  } else {
-    console.log('no call of that name!');
-  }
-};
 export default function NukeExchange() {
   const { address } = useParams();
 
   const [TokenFrom, setTokenFrom] = useState([]);
   const [TokenTo, setTokenTo] = useState('');
-  const [TokenFromAmount, setTokenFromAmount] = useState();
   const [Slippage, setSlippage] = useState(2);
   const [AllTokens, setAllTokens] = useState([]);
   const [txSuccess, settxSuccess] = useState(false);
@@ -118,6 +93,7 @@ export default function NukeExchange() {
   useEffect(() => {
     const tokens = tokenList['4'];
     setAllTokens(tokens);
+    console.log('tokens', tokens);
     settoTokens(tokens);
     setLoggedInAccount();
   }, []);
@@ -142,6 +118,7 @@ export default function NukeExchange() {
     const web3 = window.web3;
     const accounts = await web3.eth.getAccounts();
     setAccount(accounts[0]);
+    console.log('accounts[0]', accounts[0]);
   }
 
   const fromTokenChange = (value) => {
@@ -774,7 +751,7 @@ export default function NukeExchange() {
                           color: '#fff',
                           fontWeight: 500,
                           fontSize: '20px',
-                          background: (theme) => theme.palette.gradients.custom,
+                          // background: (theme) => theme.palette.gradients.custom,
                         }}
                         onClick={() => {
                           setcurrencyToModal(true);
@@ -808,7 +785,7 @@ export default function NukeExchange() {
                           color: '#fff',
                           fontWeight: 500,
                           fontSize: '20px',
-                          background: (theme) => theme.palette.gradients.custom,
+                          // background: (theme) => theme.palette.gradients.custom,
                         }}
                         onClick={() => {
                           setcurrencyToModal(true);
@@ -848,7 +825,7 @@ export default function NukeExchange() {
                                 color: '#fff',
                                 fontWeight: 500,
                                 fontSize: '20px',
-                                background: (theme) => theme.palette.gradients.custom,
+                                // background: (theme) => theme.palette.gradients.custom,
                               }}
                               onClick={() => {
                                 setcurrencyModal(true);
@@ -1057,7 +1034,7 @@ export default function NukeExchange() {
                   p: 1,
                   cursor: 'pointer',
                   '&:hover': {
-                    background: (theme) => theme.palette.gradients.custom,
+                    // background: (theme) => theme.palette.gradients.custom,
                   },
                 }}>
                 <Stack direction="row" spacing={2}>
@@ -1149,7 +1126,7 @@ export default function NukeExchange() {
                   p: 1,
                   cursor: 'pointer',
                   '&:hover': {
-                    background: (theme) => theme.palette.gradients.custom,
+                    // background: (theme) => theme.palette.gradients.custom,
                   },
                 }}>
                 <Stack direction="row" spacing={2}>

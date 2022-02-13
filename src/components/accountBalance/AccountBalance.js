@@ -25,7 +25,7 @@ function AccountBalance({ address, accountBalance }) {
     totalAccountValue();
   }, [totalValue, address]);
 
-  console.log('accountBalance', accountBalance);
+  // console.log('accountBalance', accountBalance);
 
   return (
     <>

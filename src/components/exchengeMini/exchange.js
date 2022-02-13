@@ -40,7 +40,7 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 500,
-  bgcolor: 'background.default',
+  // bgColor: background.default,
   // border: '2px solid #000',
   // boxShadow: 24,
   p: 4,
@@ -53,7 +53,7 @@ const CurrencySelect = styled.button`
   font-size: 18px;
   font-weight: 600;
   background-color: transparent;
-  color: '#737373'
+  color: #737373;
   border-radius: 12px;
   outline: none;
   cursor: pointer;
@@ -63,7 +63,7 @@ const CurrencySelect = styled.button`
   margin: 0 0.5rem;
   :focus,
   :hover {
-    background-color: 'blue'
+    background-color: blue;
   }
 `;
 
@@ -135,9 +135,10 @@ export default function ExchangeMini() {
           const data = response.data.tokens;
           tokens = fetchedTokens.map((token) => ({
             ...token,
-            logoURI: data.find((x) => x.address == token.address)
-              ? data.find((x) => x.address == token.address).logoURI
-              : tokenURIs.find((x) => x.address == token.address).logoURI,
+            logoURI: null,
+            //   data.find((x) => x.address === token.address)
+            // ? data.find((x) => x.address === token.address).logoURI
+            // : tokenURIs.find((x) => x.address === token.address).logoURI,
           }));
           console.log(tokens.filter((token) => token.logoURI === ''));
           // console.log("all tokens data", tokens)
@@ -325,7 +326,7 @@ export default function ExchangeMini() {
             );
             console.log(`response for all ${protocolsList[i]}`, response.data);
             if (protocolsList[i] === '') {
-              protocolQuote.name = '0x Exchange';
+              protocolQuote.name = '0x Index';
             } else {
               protocolQuote.name = protocolsList[i];
             }
@@ -784,7 +785,7 @@ export default function ExchangeMini() {
                               <Tooltip title={object.name}>
                                 {object.name === 'Balancer' ? (
                                   <img alt="" width="21" height="20" src={Balancer} />
-                                ) : object.name === '0x Exchange' ? (
+                                ) : object.name === '0x Index' ? (
                                   <img
                                     alt=""
                                     width="21"
@@ -820,7 +821,7 @@ export default function ExchangeMini() {
                               <Tooltip title={object.name}>
                                 {object.name === 'Balancer' ? (
                                   <img alt="" width="21" height="20" src={Balancer} />
-                                ) : object.name === '0x Exchange' ? (
+                                ) : object.name === '0x Index' ? (
                                   <img
                                     alt=""
                                     width="21"

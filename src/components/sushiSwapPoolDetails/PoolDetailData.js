@@ -1,38 +1,56 @@
 // import { ResponsiveLine } from '@nivo/line'
 // eslint-disable-next-line
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import parse from 'html-react-parser';
-import { useParams } from 'react-router-dom';
-import ShowMoreText from 'react-show-more-text';
-import { MobileView, BrowserView } from 'react-device-detect';
-import { Typography, Stack, Grid, Box, Container, TextField } from '@material-ui/core';
-import { LoadingButton } from '@material-ui/lab';
-import { fontStyle } from '@material-ui/system';
-import TransparentButton from '../TransparentButton/index';
-import Apexchart from '../Chart/Apexchart';
-import {
-  // ChartDataTwentyFour,
-  // ChartDataOneWeek,
-  // ChartDataOneMonth,
-  ChartAllData,
-} from '../Chart/ChartDataFetch/ChartDataFetch';
-
-import ExchangeMini from '../exchengeMini/exchange';
 import SushiSwapLogo from '../../assets/icons/Sushiswap.webp';
-import PoolDetailChart from './PoolDetailsChart';
 import getUniswapGraphData from './getPoolDetailGraphData';
 import getPoolTokenImage from './getPoolTokenImage';
-import PoolDetailsInfo from '../../utils/PoolDetailsInfo';
+import LightThemeChart from '../liquidityPoolDetails/lightThemeChart/lightThemeChart';
+
+import {
+  AboutBlock,
+  BlockTitle,
+  CompareTokens,
+  CopyBlock,
+  Detail,
+  DetailTitle,
+  DetailValue,
+  PairDetails,
+  PairInfo,
+  ShowMore,
+  ShowMoreBlock,
+  Stats,
+  StatsItems,
+  StatsWrapper,
+  Token,
+  TokenImage,
+  TokenImageBlock,
+  TokenPrice,
+  TokensInfo,
+  Wrapper,
+} from '../liquidityPoolDetails/style';
+import CopyIcon from '../../assets/icons/copy-address.svg';
+import DarkThemeChart from '../liquidityPoolDetails/darkThemeChart/darkThemeChart';
+import { useSelector } from 'react-redux';
+
+const info =
+  'SushiSwap enables the buying and selling of different cryptocurrencies between users. 0.3% in fees is charged for facilitating each swap, with 0.25% going to liquidity providers and 0.05% being converted to SUSHI and distributed to users holding the SUSHI token. SUSHI tokens also entitle their holders to continue earning a portion of fees, even after they’ve stopped actively providing liquidity. SushiSwap enables the buying and selling of different cryptocurrencies between users. 0.3% in fees is charged for facilitating each swap, with 0.25% going to liquidity providers and 0.05% being converted to SUSHI and distributed to users holding the SUSHI token. SUSHI tokens also entitle their holders to continue earning a portion of fees, even after they’ve stopped actively providing liquidity.';
 
 export default function Chart(props) {
-  console.log('I am inside the sushi pool details page');
   const [Data, setData] = useState([]); // UNI V2 Pools
   const [Loading, setLoading] = useState(false);
   const [Page, setPage] = useState('');
+  const { token0, token1 } = props;
+  const [isHiddenText, setIsHiddenText] = useState(true);
 
-  const { token0 } = useParams();
-  const { token1 } = useParams();
+  const hideText = () => {
+    setIsHiddenText(!isHiddenText);
+  };
+  const cutInfo = (info) => {
+    return info.slice(0, 500) + '...';
+  };
+  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
+
   // const { tokenid } = useParams()
   // const [tokenPair0, setTokenPair0] = useState()
   // const [tokenPair1, setTokenPair1] = useState()
@@ -67,20 +85,23 @@ export default function Chart(props) {
   const [token0USDRate, setToken0USDRate] = useState();
   const [token1USDRate, setToken1USDRate] = useState();
 
+  const convertTokenAddress = (address) => {
+    if (address) {
+      return `${address.slice(0, 6)}...${address.slice(address.length - 4, address.length)}`;
+    }
+  };
+
+  const convertNumber = (value) => {
+    return parseInt(value).toLocaleString('ja-JP');
+  };
+
   // const [tokenPairId, setTokenPairId] = useState(tokenid)
 
   // var tokenA = tokenid //getting from useParams()
-  // console.log('From sushi pool detail page token0-', token0)
-  // console.log('From sushi pool detail page token1-', token1)
-  // console.log('sushi lp pair token -', tokenid)
-  console.log('sushi lp pair address -', accounts);
 
   // const { tokenid } = useParams()
 
   const currentReserve = 0;
-  // console.log('Prabha Accounts -', accounts)
-  // console.log(' Prabha tokenPair from main page-', tokenPair)
-  // console.log('Prabha tokenPair from main detail page-', tokenid)
 
   function executeOnClick(isExpanded) {
     console.log(isExpanded);
@@ -110,13 +131,9 @@ export default function Chart(props) {
       // call this util function to get uniswap graph data
       try {
         const response = await getUniswapGraphData(token0, token1, epoch);
-        // console.log('uniswap data', response)
 
         // main derive code
         if (response.data.data) {
-          console.log('I am inside the sushi data deriven section');
-          console.log('Sushi data from detail page', response.data.data.pairDayDatas);
-
           const res = response.data.data.pairDayDatas;
           const token0 = res[0].token0.symbol;
           const token1 = res[0].token1.symbol;
@@ -229,7 +246,6 @@ export default function Chart(props) {
     }
     getStateData();
   }, []);
-
   // 3monthState
   // this query will fetch the three month data and based on that will calcuate the state
   useEffect(() => {
@@ -297,10 +313,6 @@ export default function Chart(props) {
           // below formula to get onday stats in percentage
           const oneYearState = ((currentVolume - oneYearVolume) / oneYearVolume) * 100;
 
-          // console.log('Infinity Logic to currentVolume', currentVolume)
-          // console.log('Infinity Logic to oneYearVolume', oneYearVolume)
-          // console.log('Infinity one year state', oneYearState)
-
           // setSelection(Data)
           // setLoading(false)
           setOneYearState(parseFloat(oneYearState).toFixed(2));
@@ -322,15 +334,11 @@ export default function Chart(props) {
       // call this util function to get uniswap graph data
       try {
         const response = await getUniswapGraphData(token0, token1, epoch);
-        // console.log('One day prior-', oneDayPrior)
         // main derive code
         if (response.data.data) {
           const pairDayData = response.data.data.pairDayDatas;
           const volume24Hrs = pairDayData[0].volumeUSD;
           const fees24Hrs = (volume24Hrs * 0.3) / 100;
-
-          console.log('volume24Hrs', volume24Hrs);
-          console.log('fees24Hrs', fees24Hrs);
 
           // setSelection(Data)
           // setLoading(false)
@@ -349,8 +357,6 @@ export default function Chart(props) {
       try {
         const response = await getPoolTokenImage(token0, token1);
         // setToken1Image(response[0])
-        // console.log('Token A image data', response.token0Image)
-        // console.log('Token B image data', response.token1Image)
         setToken0Image(response.token0Image);
         setToken1Image(response.token1Image);
       } catch (err) {
@@ -369,7 +375,6 @@ export default function Chart(props) {
       // call this util function to get uniswap graph data
       try {
         const response = await getUniswapGraphData(token0, token1, epoch);
-        console.log('for current day epoch-', epoch);
         // main derive code
         if (response.data.data) {
           const pairData = response.data.data.pairs;
@@ -380,12 +385,10 @@ export default function Chart(props) {
           const token1Reserve = pairData[0].reserve1;
           const { token0Price } = pairData[0];
 
-          console.log('token0Reserve', token0Reserve);
-          console.log('token1Price', token1Price);
           setToken0Reserve(parseInt(token0Reserve).toLocaleString());
-          setToken1Price(parseFloat(token1Price).toFixed(7));
+          setToken1Price(token1Price);
           setToken1Reserve(parseInt(token1Reserve).toLocaleString());
-          setToken0Price(parseFloat(token0Price).toFixed(2));
+          setToken0Price(token0Price);
         }
       } catch (err) {
         console.log('No record found for the paired token');
@@ -405,14 +408,8 @@ export default function Chart(props) {
           {}
         )
         .then(async (response) => {
-          // console.log(response)
-
           const tokens = response.data.tokenInfo;
-          // console.log('ethplorer data', tokens)
-          console.log('Token0 sumbol', tokenASymbol);
-          console.log(`token price for ${tokens.symbol.toUpperCase()}`, tokens.price.rate);
           if (tokens.symbol.toUpperCase() === tokenASymbol) {
-            console.log(`token price for ${tokenASymbol}`, tokens.price.rate);
             setToken0USDRate(parseFloat(tokens.price.rate).toFixed(2));
           }
         });
@@ -424,15 +421,9 @@ export default function Chart(props) {
           {}
         )
         .then(async (response) => {
-          // console.log(response)
-
           const tokens = response.data.tokenInfo;
-          // console.log('ethplorer data', tokens)
-          console.log('Token0 sumbol', tokenBSymbol);
-          console.log(`token price for ${tokens.symbol.toUpperCase()}`, tokens.price.rate);
 
           if (tokens.symbol.toUpperCase() === tokenBSymbol) {
-            console.log(`token price for ${tokenBSymbol}`, tokens.price.rate);
             setToken1USDRate(parseFloat(tokens.price.rate).toFixed(2));
           }
         });
@@ -442,511 +433,185 @@ export default function Chart(props) {
 
   return (
     <>
-      <Grid container>
-        <Grid item md={8}>
-          <Container>
-            <Box sx={{ mt: 4, mb: 3 }}>
+      <Wrapper>
+        <>
+          <div>
+            {tokenPairId && isLightTheme === true ? (
+              <LightThemeChart
+                isLightTheme={true}
+                img={SushiSwapLogo}
+                type={'Sushiswap'}
+                logo1={token0Image}
+                logo2={token1Image}
+                symbol1={tokenASymbol}
+                symbol2={tokenBSymbol}
+                address={tokenPairId}
+                totalValue={'$' + currentMarketCap}
+              />
+            ) : (
+              <DarkThemeChart
+                isLightTheme={false}
+                img={SushiSwapLogo}
+                type={'Sushiswap'}
+                logo1={token0Image}
+                logo2={token1Image}
+                symbol1={tokenASymbol}
+                symbol2={tokenBSymbol}
+                address={tokenPairId}
+                totalValue={'$' + currentMarketCap}
+              />
+            )}
+          </div>
+          <TokensInfo>
+            <Token isLightTheme={isLightTheme}>
+              <TokenImageBlock>
+                <div>
+                  <TokenImage src={`https://ethplorer.io${token0Image}`} alt="" />
+                </div>
+                <TokenPrice>{token0Reserve + ' ' + tokenASymbol}</TokenPrice>
+              </TokenImageBlock>
+              <CompareTokens>
+                {'1 ' +
+                  tokenASymbol +
+                  ' = ' +
+                  parseFloat(token1Price).toFixed(token1Price > 1 ? 2 : 7) +
+                  ' ' +
+                  tokenBSymbol +
+                  ` ($${!isNaN(token0USDRate) ? token0USDRate : '0'})`}
+              </CompareTokens>
+            </Token>
+            <Token isLightTheme={isLightTheme}>
+              <TokenImageBlock>
+                <div>
+                  <TokenImage src={`https://ethplorer.io${token1Image}`} alt="" />
+                </div>
+                <TokenPrice>
+                  {token1Reserve} {tokenBSymbol}
+                </TokenPrice>
+              </TokenImageBlock>
+              <CompareTokens>
+                {'1 ' +
+                  tokenBSymbol +
+                  ' = ' +
+                  parseFloat(token0Price).toFixed(token0Price > 1 ? 2 : 7) +
+                  ' ' +
+                  tokenASymbol +
+                  ` ($${!isNaN(token1USDRate) ? token1USDRate : '0'})`}
+              </CompareTokens>
+            </Token>
+          </TokensInfo>
+          <PairInfo isLightTheme={isLightTheme}>
+            <BlockTitle>Pair Information</BlockTitle>
+            <PairDetails>
               <div>
-                {Loading ? (
-                  <center> Loading...</center>
-                ) : (
-                  <div>
-                    <Box sx={{ width: '100%' }}>
-                      <center>
-                        <h2 style={{ fontSize: '40px', color: 'white' }}>Liquidity Pool Details</h2>
-                      </center>
-                    </Box>
-                    <center>
-                      <h2>
-                        <img
-                          style={{
-                            height: '30px',
-                            width: '30px',
-                            display: 'inline-block',
-                          }}
-                          title="Sushiswap"
-                          src={SushiSwapLogo}
-                          alt=""
-                        />
-                        &nbsp; Sushiswap
-                      </h2>
-                    </center>
-                    <br />
-                    <div>
-                      <img
-                        style={{
-                          height: '30px',
-                          width: '30px',
-                          display: 'inline-block',
-                        }}
-                        src={`https://ethplorer.io${token0Image}`}
-                      />
-                      <img
-                        style={{
-                          height: '30px',
-                          width: '30px',
-                          display: 'inline-block',
-                        }}
-                        src={`https://ethplorer.io${token1Image}`}
-                      />
-                      &nbsp;
-                      <h3
-                        style={{
-                          marginBottom: '2rem 0',
-                          display: 'inline-block',
-                        }}>
-                        {tokenASymbol}-{tokenBSymbol}
-                      </h3>
-                    </div>
-
-                    <div
-                      style={{
-                        width: '100%',
-                        margin: 'auto',
-                        marginLeft: '10px',
-                      }}>
-                      {/* Blow logic is to implement pair's individual token detials  */}
-                      <div
-                        style={{
-                          // marginLeft:'25px',
-                          width: '49%',
-                          marginTop: '15px',
-                          minWidth: '30px',
-                          border: '1px solid rgb(115, 115, 115)',
-                          height: '80px',
-                          minHeight: '50px',
-                          borderRadius: '20px',
-                          display: 'inline-block',
-                          margin: '1rem 0',
-                        }}>
-                        <div style={{ marginTop: '10px', padding: '0 1rem' }}>
-                          <img
-                            style={{
-                              height: '20px',
-                              width: '25px',
-                              display: 'inline-block',
-                            }}
-                            src={`https://ethplorer.io${token0Image}`}
-                          />
-                          &nbsp; &nbsp;{token0Reserve}&nbsp;{tokenASymbol}
-                        </div>
-
-                        <div style={{ display: 'inline-block' }}>
-                          &nbsp; &nbsp;1&nbsp;{tokenASymbol}={token1Price}&nbsp;
-                          {tokenBSymbol}(${token0USDRate})
-                        </div>
-                      </div>
-                      {/* End of logic to implement pair's individual token detials  */}
-                      &nbsp;
-                      {/* Logic of second token */}
-                      <div
-                        style={{
-                          // marginLeft:'25px',
-                          width: '49%',
-                          marginTop: '15px',
-
-                          minWidth: '30px',
-                          border: '1px solid rgb(115, 115, 115)',
-                          height: '80px',
-                          minHeight: '50px',
-                          borderRadius: '20px',
-                          display: 'inline-block',
-                          margin: '1rem 0',
-                        }}>
-                        <div style={{ marginTop: '10px', padding: '0 1rem' }}>
-                          <img
-                            style={{
-                              height: '20px',
-                              width: '25px',
-                              display: 'inline-block',
-                            }}
-                            src={`https://ethplorer.io${token1Image}`}
-                          />
-                          &nbsp; &nbsp;{token1Reserve}&nbsp;{tokenBSymbol}
-                        </div>
-
-                        <div style={{ display: 'inline-block' }}>
-                          &nbsp; &nbsp;1&nbsp;{tokenBSymbol}={token0Price}&nbsp;
-                          {tokenASymbol}(${token1USDRate})
-                        </div>
-                      </div>
-                      {/* End of the Logic for secound token */}
-                      <br />
-                      <Typography variant="h4" sx={{ mt: 2, ml: 1, color: 'turquoise' }}>
-                        ${totalVolume}
-                      </Typography>
-                      <hr
-                        style={{
-                          marginTop: '0.01px',
-                          borderTop: '0px ',
-                          borderBottom: '1px solid #737373',
-                        }}
-                      />
-                      <div
-                        style={{
-                          color: 'darkviolet',
-                          textAlign: 'left',
-                          marginTop: '15px',
-                          fontStyle: 'unset',
-                        }}>
-                        STATS
-                      </div>
-                      <div>
-                        <BrowserView>
-                          <div
-                            style={{
-                              width: '25%',
-                              height: '125px',
-                              display: 'inline-block',
-                              color: 'blanchedalmond',
-                              marginTop: '8px',
-                            }}>
-                            1 Day
-                            <br />
-                            <br />
-                            <font color={parseInt(oneDayReserverUSD) >= 0 ? '#00FFE7' : 'red'}>
-                              {oneDayReserverUSD}
-                            </font>
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                          </div>
-
-                          <div
-                            style={{
-                              width: '25%',
-                              height: '125px',
-                              display: 'inline-block',
-                              color: 'blanchedalmond',
-                            }}>
-                            1 Month
-                            <br />
-                            <br />
-                            <font color={parseInt(oneMonthState) >= 0 ? '#00FFE7' : 'red'}>
-                              {oneMonthState}
-                            </font>
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                          </div>
-
-                          <div
-                            style={{
-                              width: '25%',
-                              height: '125px',
-                              display: 'inline-block',
-                              color: 'blanchedalmond',
-                            }}>
-                            3 Months
-                            <br />
-                            <br />
-                            <font color={parseInt(threeMonthState) >= 0 ? '#00FFE7' : 'red'}>
-                              {threeMonthState}
-                            </font>
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                          </div>
-
-                          <div
-                            style={{
-                              width: '25%',
-                              height: '125px',
-                              display: 'inline-block',
-                              color: 'blanchedalmond',
-                            }}>
-                            1 Year
-                            <br />
-                            <br />
-                            <font color={parseInt(oneYearState) >= 0 ? '#00FFE7' : 'red'}>
-                              {oneYearState}%
-                            </font>
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                          </div>
-
-                          <div
-                            style={{
-                              width: '25%',
-                              height: '100px',
-                              display: 'inline-block',
-                              color: 'blanchedalmond',
-                            }}>
-                            Market Cap
-                            <br />
-                            <br />
-                            <font color="#00FFE7">{currentMarketCap}</font>
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                          </div>
-
-                          <div
-                            style={{
-                              width: '25%',
-                              height: '125px',
-                              display: 'inline-block',
-                              color: 'blanchedalmond',
-                            }}>
-                            Fully Diluted
-                            <br />
-                            <br />
-                            <font color="#00FFE7">{fullyDiluted}</font>
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                          </div>
-
-                          <div
-                            style={{
-                              width: '25%',
-                              height: '125px',
-                              display: 'inline-block',
-                              color: 'blanchedalmond',
-                            }}>
-                            Volume(24hrs)
-                            <br />
-                            <br />
-                            <font color="#00FFE7">{volume24Hrs}</font>
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                          </div>
-
-                          <div
-                            style={{
-                              width: '25%',
-                              height: '125px',
-                              display: 'inline-block',
-                              color: 'blanchedalmond',
-                            }}>
-                            Fees(24hrs)
-                            <br />
-                            <br />
-                            <font color="#00FFE7">{fees24Hrs}</font>
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                          </div>
-                        </BrowserView>
-                        <MobileView>
-                          <div
-                            style={{
-                              width: '50%',
-                              height: '125px',
-                              display: 'inline-block',
-                              color: 'blanchedalmond',
-                            }}>
-                            1 DAY
-                            <br />
-                            <br />
-                            <font color={parseInt(oneDayReserverUSD) > 0 ? '#00FFE7' : 'red'}>
-                              {oneDayReserverUSD}
-                            </font>
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                          </div>
-
-                          <div
-                            style={{
-                              width: '50%',
-                              height: '125px',
-                              display: 'inline-block',
-                              color: 'blanchedalmond',
-                            }}>
-                            1 Month
-                            <br />
-                            <br />
-                            <font color={parseInt(oneMonthState) > 0 ? '#00FFE7' : 'red'}>
-                              {oneMonthState}
-                            </font>
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                          </div>
-                          <br />
-
-                          <div
-                            style={{
-                              width: '50%',
-                              height: '125px',
-                              display: 'inline-block',
-                              color: 'blanchedalmond',
-                            }}>
-                            3 Months
-                            <br />
-                            <br />
-                            <font color={parseInt(threeMonthState) > 0 ? '#00FFE7' : 'red'}>
-                              {threeMonthState}
-                            </font>
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                          </div>
-
-                          <div
-                            style={{
-                              width: '50%',
-                              height: '125px',
-                              display: 'inline-block',
-                              color: 'blanchedalmond',
-                            }}>
-                            1 Year
-                            <br />
-                            <br />
-                            <font color={parseInt(oneYearState) > 0 ? '#00FFE7' : 'red'}>
-                              {oneYearState}
-                            </font>
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                          </div>
-
-                          <br />
-
-                          <div
-                            style={{
-                              width: '50%',
-                              height: '125px',
-                              display: 'inline-block',
-                              color: 'blanchedalmond',
-                            }}>
-                            Market Cap
-                            <br />
-                            <br />
-                            <font color="#00FFE7">{currentMarketCap}</font>
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                          </div>
-
-                          <div
-                            style={{
-                              width: '50%',
-                              height: '125px',
-                              display: 'inline-block',
-                              color: 'blanchedalmond',
-                            }}>
-                            Fully Diluted
-                            <br />
-                            <br />
-                            <font color="#00FFE7">{fullyDiluted}</font>
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                          </div>
-
-                          <br />
-
-                          <div
-                            style={{
-                              width: '50%',
-                              height: '125px',
-                              display: 'inline-block',
-                              color: 'blanchedalmond',
-                            }}>
-                            Volume(24hrs)
-                            <br />
-                            <br />
-                            <font color="#00FFE7">{volume24Hrs}</font>
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                          </div>
-
-                          <div
-                            style={{
-                              width: '50%',
-                              height: '125px',
-                              display: 'inline-block',
-                              color: 'blanchedalmond',
-                            }}>
-                            Fees(24hrs)
-                            <br />
-                            <br />
-                            <font color="#00FFE7">{fees24Hrs}</font>
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                          </div>
-                        </MobileView>
-                      </div>
-                      <hr
-                        style={{
-                          marginTop: '1px',
-                          borderTop: '0px ',
-                          borderBottom: '1px solid #737373',
-                        }}
-                      />
-                      <br />
-                      <div
-                        style={{
-                          color: 'darkviolet',
-                          textAlign: 'left',
-                          fontStyle: 'unset',
-                        }}>
-                        ABOUT
-                      </div>
-                      <br />
-                      <div style={{ color: 'white' }}>
-                        <h4>
-                          &nbsp;&nbsp;&nbsp;&nbsp; SushiSwap enables the buying and selling of
-                          different cryptocurrencies between users. 0.3% in fees is charged for
-                          facilitating each swap, with 0.25% going to liquidity providers and 0.05%
-                          being converted to SUSHI and distributed to users holding the SUSHI token.
-                          SUSHI tokens also entitle their holders to continue earning a portion of
-                          fees, even after they’ve stopped actively providing liquidity.
-                        </h4>
-                      </div>
-                      <br />
-                      <br />
-                      <hr
-                        style={{
-                          marginTop: '8px',
-                          borderTop: '0px ',
-                          borderBottom: '1px solid #737373',
-                        }}
-                      />
-                    </div>
+                <DetailTitle>Pair Name</DetailTitle>
+                <Detail>
+                  <DetailValue>{tokenASymbol + ' - ' + tokenBSymbol}</DetailValue>
+                  <div
+                    onClick={() =>
+                      navigator.clipboard.writeText(tokenASymbol + ' - ' + tokenBSymbol)
+                    }>
+                    <CopyBlock src={CopyIcon} alt="" />
                   </div>
-                )}
+                </Detail>
               </div>
-            </Box>
-          </Container>
-        </Grid>
-        <Grid item md={4} style={{ display: 'inline-block' }}>
-          {!Loading && <PoolDetailChart token0={token0} token1={token1} />}
-        </Grid>
-      </Grid>
-      <Grid item md={12}>
-        {!Loading && (
-          <PoolDetailsInfo
-            tokenASymbol={tokenASymbol}
-            tokenBSymbol={tokenBSymbol}
-            tokenAId={token0}
-            tokenBId={token1}
-            tokenPair={tokenPairId}
-          />
-        )}
-      </Grid>
+              <div>
+                <DetailTitle>Pair Address</DetailTitle>
+                <Detail>
+                  <DetailValue>{convertTokenAddress(tokenPairId)}</DetailValue>
+                  <div onClick={() => navigator.clipboard.writeText(tokenPairId)}>
+                    <CopyBlock src={CopyIcon} alt="" />
+                  </div>
+                </Detail>
+              </div>
+              <div>
+                <DetailTitle>{tokenASymbol} Address</DetailTitle>
+                <Detail>
+                  <DetailValue>{convertTokenAddress(token0)}</DetailValue>
+                  <div onClick={() => navigator.clipboard.writeText(token0)}>
+                    <CopyBlock src={CopyIcon} alt="" />
+                  </div>
+                </Detail>
+              </div>
+              <div>
+                <DetailTitle>{tokenBSymbol} Address</DetailTitle>
+                <Detail>
+                  <DetailValue>{convertTokenAddress(token1)}</DetailValue>
+                  <div onClick={() => navigator.clipboard.writeText(token1)}>
+                    <CopyBlock src={CopyIcon} alt="" />
+                  </div>
+                </Detail>
+              </div>
+            </PairDetails>
+          </PairInfo>
+          <Stats isLightTheme={isLightTheme}>
+            <BlockTitle>Stats</BlockTitle>
+            <StatsWrapper>
+              <StatsItems>
+                <div>
+                  <DetailValue>1 day</DetailValue>
+                  <Detail>
+                    <DetailTitle>{oneDayReserverUSD}</DetailTitle>
+                  </Detail>
+                </div>
+                <div>
+                  <DetailValue>1 month</DetailValue>
+                  <Detail>
+                    <DetailTitle>{oneMonthState}</DetailTitle>
+                  </Detail>
+                </div>
+                <div>
+                  <DetailValue>3 months</DetailValue>
+                  <Detail>
+                    <DetailTitle>{threeMonthState}</DetailTitle>
+                  </Detail>
+                </div>
+                <div>
+                  <DetailValue>1 year</DetailValue>
+                  <Detail>
+                    <DetailTitle>{oneYearState}%</DetailTitle>
+                  </Detail>
+                </div>
+                <div>
+                  <DetailValue>Market Cap</DetailValue>
+                  <Detail>
+                    <DetailTitle>{currentMarketCap}</DetailTitle>
+                  </Detail>
+                </div>
+                <div>
+                  <DetailValue>Fully Diluted</DetailValue>
+                  <Detail>
+                    <DetailTitle>{fullyDiluted}</DetailTitle>
+                  </Detail>
+                </div>
+                <div>
+                  <DetailValue>Volume (24hrs)</DetailValue>
+                  <Detail>
+                    <DetailTitle>{volume24Hrs}</DetailTitle>
+                  </Detail>
+                </div>
+                <div>
+                  <DetailValue>Fees (24hrs)</DetailValue>
+                  <Detail>
+                    <DetailTitle>{fees24Hrs}</DetailTitle>
+                  </Detail>
+                </div>
+              </StatsItems>
+            </StatsWrapper>
+          </Stats>
+          <AboutBlock isLightTheme={isLightTheme}>
+            <BlockTitle>About</BlockTitle>
+            <div style={{ textAlign: 'justify' }}>{isHiddenText ? cutInfo(info) : info}</div>
+            {info.length > 300 && (
+              <ShowMoreBlock>
+                <ShowMore isLightTheme={isLightTheme} onClick={hideText}>
+                  {isHiddenText ? 'Show More' : 'Hide'}
+                </ShowMore>
+              </ShowMoreBlock>
+            )}
+          </AboutBlock>
+        </>
+      </Wrapper>
     </>
   );
 }
