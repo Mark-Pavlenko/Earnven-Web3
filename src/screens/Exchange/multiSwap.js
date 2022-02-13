@@ -80,6 +80,8 @@ export default function MultiSwapComponent() {
     address: '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984',
   });
 
+  const [tokenSendUSDCurrency, setTokenSendUSDCurrency] = useState('$0.00');
+
   const [isSendTokensModalVisible, setIsSendTokensModalVisible] = useState(false);
   const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
   // const [exchangeTokenAmount, setExchangeTokenAmount] = useState();
@@ -92,9 +94,33 @@ export default function MultiSwapComponent() {
 
   let convertTokenToUSDCurrency = async (tokenData) => {
     console.log('multiswap tokenData', tokenData);
+
+    if (tokenData.amount === '') tokenData.amount = '0';
+
+    if (tokenData.symbol === 'ETH') {
+      // console.log('type send USD eth triggered');
+      const ethDollarValue = await axios.get(
+        'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
+      );
+      setTokenSendUSDCurrency(
+        `$${(ethDollarValue.data.ethereum.usd * parseInt(tokenData.amount)).toFixed(2)}`
+      );
+    } else {
+      // console.log('send USD tokenData.USDCurrency triggered', tokenData.USDCurrency);
+
+      if (tokenData.USDCurrency !== undefined) {
+        setTokenSendUSDCurrency(
+          `$${(tokenData.USDCurrency * parseInt(tokenData.amount)).toFixed(2)}`
+        );
+      } else {
+        setTokenSendUSDCurrency('Price not available');
+      }
+    }
+
     let tokenUSDCurrencyValue = await axios.get(
       `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
     );
+    console.log('tokenUSDCurrencyValue', tokenUSDCurrencyValue);
   };
 
   return (
@@ -168,9 +194,11 @@ export default function MultiSwapComponent() {
                   });
                 }}
               />
-              <MultiSwapSendValueLabel isLightTheme={isLightTheme} style={{ marginLeft: '40px' }}>
-                $3 510,03
-              </MultiSwapSendValueLabel>
+              <div style={{ display: 'flex', marginRight: '20px' }}>
+                <MultiSwapSendValueLabel isLightTheme={isLightTheme} style={{ marginLeft: 'auto' }}>
+                  {tokenSendUSDCurrency}
+                </MultiSwapSendValueLabel>
+              </div>
             </USDCurrencyInputBlock>
           </MultiSwapSendTokensChooseBlock>
 

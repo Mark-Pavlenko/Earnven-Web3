@@ -258,7 +258,7 @@ export default function LiquidityPools({ inputValue }) {
                     height:'35px',
                     borderRadius:'10px',
                     color:'white',
-                    paddingLeft:'15px', 
+                    paddingLeft:'15px',
                     paddingRight:'15px',
                 }}
                 placeholder='Supply Token Address'
@@ -350,7 +350,7 @@ export default function LiquidityPools({ inputValue }) {
                     height:'35px',
                     borderRadius:'10px',
                     color:'white',
-                    paddingLeft:'15px', 
+                    paddingLeft:'15px',
                     paddingRight:'15px',
                 }}
                 placeholder='Supply Token Address'
@@ -434,7 +434,7 @@ export default function LiquidityPools({ inputValue }) {
                         height:'35px',
                         borderRadius:'10px',
                         color:'white',
-                        paddingLeft:'15px', 
+                        paddingLeft:'15px',
                         paddingRight:'15px',
                     }}
                     placeholder='Receive Token Address'/>  */}
@@ -729,10 +729,10 @@ export default function LiquidityPools({ inputValue }) {
     );
     await tokenContract.methods
       .approve(Addresses.oneClickSushiV2Contract, supplyTokenQtty)
-      .send({ from: accounts[0] }); //not sure gasPrice:  web3.utils.toWei(gasPrice, 'gwei') }
+      .send({ from: accounts[0], gasPrice: web3.utils.toWei(gasPrice, 'gwei') }); //not sure
     await oneClickContract.methods
       .addLiquidityOneClick(tokenA, tokenB, supplyToken, supplyTokenQtty)
-      .send({ from: accounts[0] }); //not sure gasPrice:  web3.utils.toWei(gasPrice, 'gwei') }
+      .send({ from: accounts[0], gasPrice: web3.utils.toWei(gasPrice, 'gwei') }); //not sure
   }
 
   //********two inputs value send to smartContract
@@ -745,10 +745,10 @@ export default function LiquidityPools({ inputValue }) {
     var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
     await tokenAContract.methods
       .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenA, 'ether'))
-      .send({ from: accounts[0] }); // gasPrice: web3.utils.toWei(gasPrice, 'gwei')
+      .send({ from: accounts[0], gasPrice: web3.utils.toWei(gasPrice, 'gwei') });
     await tokenBContract.methods
       .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenB, 'ether'))
-      .send({ from: accounts[0] }); //gasPrice: web3.utils.toWei(gasPrice, 'gwei')
+      .send({ from: accounts[0], gasPrice: web3.utils.toWei(gasPrice, 'gwei') });
     const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.sushiRouter);
     await UniRouter.methods
       .addLiquidity(
