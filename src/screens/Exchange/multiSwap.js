@@ -43,6 +43,7 @@ import { Button } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import daiICon from '../../assets/icons/daiIcon.svg';
 import { makeStyles } from '@material-ui/styles';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   noBorder: {
@@ -81,13 +82,20 @@ export default function MultiSwapComponent() {
 
   const [isSendTokensModalVisible, setIsSendTokensModalVisible] = useState(false);
   const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
-  const [sendTokenForExchangeAmount, setSendTokenForExchangeAmount] = useState();
+  // const [exchangeTokenAmount, setExchangeTokenAmount] = useState();
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
   const classes = useStyles();
 
   const receiveTokensFullList = [receiveFirstTokenForExchange, receiveSecondTokenForExchange];
-  console.log('receiveTokensList', receiveTokensFullList);
+  console.log('receiveTokensList multiswap', receiveTokensFullList);
+
+  let convertTokenToUSDCurrency = async (tokenData) => {
+    console.log('multiswap tokenData', tokenData);
+    let tokenUSDCurrencyValue = await axios.get(
+      `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
+    );
+  };
 
   return (
     <SecondColumnSwapSubBlock>
@@ -151,10 +159,10 @@ export default function MultiSwapComponent() {
                 }}
                 isLightTheme={isLightTheme}
                 placeholder="0.0"
-                value={sendTokenForExchangeAmount}
+                // value={sendTokenForExchangeAmount}
                 onChange={(e) => {
-                  setSendTokenForExchangeAmount(e.target.value);
-                  convertSendTokenToUSDCurrency({
+                  // setSendTokenForExchangeAmount(e.target.value);
+                  convertTokenToUSDCurrency({
                     amount: e.target.value,
                     ...sendTokenForExchange,
                   });
@@ -222,12 +230,12 @@ export default function MultiSwapComponent() {
                   }}
                   isLightTheme={isLightTheme}
                   placeholder="0.0"
-                  value={sendTokenForExchangeAmount}
+                  // value={sendTokenForExchangeAmount}
                   onChange={(e) => {
-                    setSendTokenForExchangeAmount(e.target.value);
-                    convertSendTokenToUSDCurrency({
+                    // setSendTokenForExchangeAmount(e.target.value);
+                    convertTokenToUSDCurrency({
                       amount: e.target.value,
-                      ...sendTokenForExchange,
+                      ...receiveToken,
                     });
                   }}
                 />
