@@ -647,111 +647,117 @@ export default class Assets extends Component {
             )}`}</TotalValue>
           </TotalValueField>
           {this.state.isOpen && (
-            <BrowserView>
-              <table style={{ width: '100%' }}>
-                <tr>
-                  <td colSpan="2">
-                    <AssetName isLight={this.props.isLightTheme}>{'Assets'}</AssetName>
-                  </td>
-                  <td>
-                    <Percentage isLight={this.props.isLightTheme}>{'APY'}</Percentage>
-                  </td>
-                  <td>
-                    <Value isLight={this.props.isLightTheme}>{'Value'}</Value>
-                  </td>
-                </tr>
-                {arr2.map((object) => (
-                  <RowStyle isLight={this.props.isLightTheme}>
+            <div>
+              <BrowserView>
+                <table style={{ width: '100%' }}>
+                  <tr>
+                    <td colSpan="2">
+                      <AssetName isLight={this.props.isLightTheme}>{'Assets'}</AssetName>
+                    </td>
                     <td>
-                      <Link to={`/${this.state.account}/token/${object.coingecko}`}>
-                        <div>
-                          {object.image ? (
-                            object.name === 'Ethereum' ? (
-                              <EthereumTokenImage alt="" src={ethImage} />
+                      <Percentage isLight={this.props.isLightTheme}>{'APY'}</Percentage>
+                    </td>
+                    <td>
+                      <Value isLight={this.props.isLightTheme}>{'Value'}</Value>
+                    </td>
+                  </tr>
+                  {arr2.map((object) => (
+                    <RowStyle isLight={this.props.isLightTheme}>
+                      <td>
+                        <Link to={`/${this.state.account}/token/${object.coingecko}`}>
+                          <div>
+                            {object.image ? (
+                              object.name === 'Ethereum' ? (
+                                <EthereumTokenImage alt="" src={ethImage} />
+                              ) : (
+                                <TokenImage
+                                  alt=""
+                                  src={
+                                    object.image
+                                      ? object.image[0] === '/'
+                                        ? `https://ethplorer.io${object.image}`
+                                        : `${object.image}`
+                                      : ''
+                                  }
+                                />
+                              )
                             ) : (
-                              <TokenImage
-                                alt=""
-                                src={
-                                  object.image
-                                    ? object.image[0] === '/'
-                                      ? `https://ethplorer.io${object.image}`
-                                      : `${object.image}`
-                                    : ''
-                                }
-                              />
-                            )
-                          ) : (
-                            <div>
-                              <Avatar
-                                style={{
-                                  display: 'inline',
-                                  maxWidth: '20px',
-                                  verticalAlign: 'top',
-                                  height: '20px',
-                                }}
-                                color="#737373"
-                                name={object.name}
-                                round
-                                size="25"
-                                textSizeRatio={1}
-                              />
-                            </div>
-                          )}
-                        </div>
-                      </Link>
-                    </td>
-                    <td>
-                      <Link to={`/${this.state.account}/token/${object.coingecko}`}>
-                        <div>
-                          <NameWrapper>
-                            <div style={{ display: 'flex' }}>
-                              <TokenName isLight={this.props.isLightTheme}>{object.name}</TokenName>
-                              <Part isLight={this.props.isLightTheme}>{`${object.rate}%`}</Part>
-                            </div>
-                            <TokenBalance isLight={this.props.isLightTheme}>
-                              {object.balance}
-                            </TokenBalance>
-                          </NameWrapper>
-                        </div>
-                      </Link>
-                    </td>
-                    <td>
-                      <Link to={`/${this.state.account}/token/${object.coingecko}`}>
-                        <div>
-                          <APYWrapper>
-                            <APYPercent isLight={this.props.isLightTheme}>
-                              {((object.totalInvestment / this.state.totalValue) * 100).toFixed(2)}{' '}
-                              %
-                            </APYPercent>
-                          </APYWrapper>
-                        </div>
-                      </Link>
-                    </td>
-                    <td>
-                      <Link to={`/${this.state.account}/token/${object.coingecko}`}>
-                        <div>
-                          <AssetValueWrapper>
-                            <AssetValue>
-                              <font
-                                color={this.props.isLightTheme ? 'black' : '#ffffff'}
-                                style={{ fontSize: '14px' }}>
-                                <br /> ${object.totalInvestment}{' '}
-                              </font>
-                              <font
-                                color={parseFloat(object.profit) > 0 ? '#03DAC6' : '#ff1f1f'}
-                                style={{ fontSize: '10px' }}>
-                                <br />
-                                {object.profit} %
-                              </font>
-                            </AssetValue>
-                          </AssetValueWrapper>
-                        </div>
-                      </Link>
-                    </td>
-                  </RowStyle>
-                ))}
-              </table>
-            </BrowserView>
+                              <div>
+                                <Avatar
+                                  style={{
+                                    display: 'inline',
+                                    maxWidth: '20px',
+                                    verticalAlign: 'top',
+                                    height: '20px',
+                                  }}
+                                  color="#737373"
+                                  name={object.name}
+                                  round
+                                  size="25"
+                                  textSizeRatio={1}
+                                />
+                              </div>
+                            )}
+                          </div>
+                        </Link>
+                      </td>
+                      <td>
+                        <Link to={`/${this.state.account}/token/${object.coingecko}`}>
+                          <div>
+                            <NameWrapper>
+                              <div style={{ display: 'flex' }}>
+                                <TokenName isLight={this.props.isLightTheme}>
+                                  {object.name}
+                                </TokenName>
+                                <Part isLight={this.props.isLightTheme}>{`${object.rate}%`}</Part>
+                              </div>
+                              <TokenBalance isLight={this.props.isLightTheme}>
+                                {object.balance}
+                              </TokenBalance>
+                            </NameWrapper>
+                          </div>
+                        </Link>
+                      </td>
+                      <td>
+                        <Link to={`/${this.state.account}/token/${object.coingecko}`}>
+                          <div>
+                            <APYWrapper>
+                              <APYPercent isLight={this.props.isLightTheme}>
+                                {((object.totalInvestment / this.state.totalValue) * 100).toFixed(
+                                  2
+                                )}{' '}
+                                %
+                              </APYPercent>
+                            </APYWrapper>
+                          </div>
+                        </Link>
+                      </td>
+                      <td>
+                        <Link to={`/${this.state.account}/token/${object.coingecko}`}>
+                          <div>
+                            <AssetValueWrapper>
+                              <AssetValue>
+                                <font
+                                  color={this.props.isLightTheme ? 'black' : '#ffffff'}
+                                  style={{ fontSize: '14px' }}>
+                                  <br /> ${object.totalInvestment}{' '}
+                                </font>
+                                <font
+                                  color={parseFloat(object.profit) > 0 ? '#03DAC6' : '#ff1f1f'}
+                                  style={{ fontSize: '10px' }}>
+                                  <br />
+                                  {object.profit} %
+                                </font>
+                              </AssetValue>
+                            </AssetValueWrapper>
+                          </div>
+                        </Link>
+                      </td>
+                    </RowStyle>
+                  ))}
+                </table>
+              </BrowserView>
+            </div>
           )}
 
           {this.state.isOpen && <div></div>}
