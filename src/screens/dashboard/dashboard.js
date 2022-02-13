@@ -84,7 +84,6 @@ export default function Dashboard({ test, changeTheme }) {
   const [value, setValue] = useState(0);
 
   const [totalValue, settotalValue] = useState('00.00');
-  console.log('totalValue', totalValue);
 
   function CommaFormatted(amount) {
     const delimiter = ','; // replace comma if desired

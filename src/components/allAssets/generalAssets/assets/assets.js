@@ -34,6 +34,7 @@ import {
   EthereumTokenImage,
   GridTable,
   FirstEl,
+  RowStyle,
 } from './styledComponents';
 import { ToggleButton } from '../../../styled/styledComponents';
 import { BrowserView, MobileView } from 'react-device-detect';
@@ -638,13 +639,13 @@ export default class Assets extends Component {
               isOpen={this.state.isOpen}
             />
           </Header>
-          {/*<TotalValueField isLight={this.props.isLightTheme}>*/}
-          {/*  <TotalTitle isLight={this.props.isLightTheme}>{'Total Value'}</TotalTitle>*/}
-          {/*  <TotalEmptyCell></TotalEmptyCell>*/}
-          {/*  <TotalValue isLight={this.props.isLightTheme}>{`$${numberWithCommas(*/}
-          {/*    this.state.totalValue*/}
-          {/*  )}`}</TotalValue>*/}
-          {/*</TotalValueField>*/}
+          <TotalValueField isLight={this.props.isLightTheme}>
+            <TotalTitle isLight={this.props.isLightTheme}>{'Total Value'}</TotalTitle>
+            <TotalEmptyCell></TotalEmptyCell>
+            <TotalValue isLight={this.props.isLightTheme}>{`$${numberWithCommas(
+              this.state.totalValue
+            )}`}</TotalValue>
+          </TotalValueField>
           {this.state.isOpen && (
             <BrowserView>
               <table style={{ width: '100%' }}>
@@ -660,20 +661,94 @@ export default class Assets extends Component {
                   </td>
                 </tr>
                 {arr2.map((object) => (
-                  <tr>
+                  <RowStyle isLight={this.props.isLightTheme}>
                     <td>
                       <Link to={`/${this.state.account}/token/${object.coingecko}`}>
-                        <div>sdasd</div>
+                        <div>
+                          {object.image ? (
+                            object.name === 'Ethereum' ? (
+                              <EthereumTokenImage alt="" src={ethImage} />
+                            ) : (
+                              <TokenImage
+                                alt=""
+                                src={
+                                  object.image
+                                    ? object.image[0] === '/'
+                                      ? `https://ethplorer.io${object.image}`
+                                      : `${object.image}`
+                                    : ''
+                                }
+                              />
+                            )
+                          ) : (
+                            <div>
+                              <Avatar
+                                style={{
+                                  display: 'inline',
+                                  maxWidth: '20px',
+                                  verticalAlign: 'top',
+                                  height: '20px',
+                                }}
+                                color="#737373"
+                                name={object.name}
+                                round
+                                size="25"
+                                textSizeRatio={1}
+                              />
+                            </div>
+                          )}
+                        </div>
                       </Link>
                     </td>
                     <td>
                       <Link to={`/${this.state.account}/token/${object.coingecko}`}>
-                        <div>dasds</div>
+                        <div>
+                          <NameWrapper>
+                            <div style={{ display: 'flex' }}>
+                              <TokenName isLight={this.props.isLightTheme}>{object.name}</TokenName>
+                              <Part isLight={this.props.isLightTheme}>{`${object.rate}%`}</Part>
+                            </div>
+                            <TokenBalance isLight={this.props.isLightTheme}>
+                              {object.balance}
+                            </TokenBalance>
+                          </NameWrapper>
+                        </div>
                       </Link>
                     </td>
-                    <td>ada</td>
-                    <td>sdsda</td>
-                  </tr>
+                    <td>
+                      <Link to={`/${this.state.account}/token/${object.coingecko}`}>
+                        <div>
+                          <APYWrapper>
+                            <APYPercent isLight={this.props.isLightTheme}>
+                              {((object.totalInvestment / this.state.totalValue) * 100).toFixed(2)}{' '}
+                              %
+                            </APYPercent>
+                          </APYWrapper>
+                        </div>
+                      </Link>
+                    </td>
+                    <td>
+                      <Link to={`/${this.state.account}/token/${object.coingecko}`}>
+                        <div>
+                          <AssetValueWrapper>
+                            <AssetValue>
+                              <font
+                                color={this.props.isLightTheme ? 'black' : '#ffffff'}
+                                style={{ fontSize: '14px' }}>
+                                <br /> ${object.totalInvestment}{' '}
+                              </font>
+                              <font
+                                color={parseFloat(object.profit) > 0 ? '#03DAC6' : '#ff1f1f'}
+                                style={{ fontSize: '10px' }}>
+                                <br />
+                                {object.profit} %
+                              </font>
+                            </AssetValue>
+                          </AssetValueWrapper>
+                        </div>
+                      </Link>
+                    </td>
+                  </RowStyle>
                 ))}
               </table>
             </BrowserView>

@@ -277,3 +277,14 @@ export const GridTable = styled.div`
 export const FirstEl = styled.div`
   grid-column: span 2;
 `;
+
+export const RowStyle = styled.tr`
+  &:hover {
+    background: ${(props) => (props.isLight ? '#ffffff' : 'rgba(31, 38, 92, 0.24)')};
+    box-shadow: ${(props) =>
+      props.isLight
+        ? 'inset 0 5px 10px -6px rgba(51, 78, 131, 0.12)'
+        : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+    border-radius: 10px;
+  }
+`;
