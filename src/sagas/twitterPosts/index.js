@@ -27,7 +27,7 @@ function* twitterPostsWorker(mockTwitterObject) {
             try {
               entitiesUrl = tweeterTweets.entities.urls[0].url;
             } catch (err) {
-              //console.log('');
+              console.log('twitter SAGA/API err', err);
             }
           }
           object.username = tweetData.username ? tweetData.username : '';

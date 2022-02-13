@@ -18,7 +18,6 @@ function* getAccountBalanceSagaWorker(accountAddress) {
 
   yield put({ type: actionTypes.SET_ACCOUNT_LOADER, payload: true });
   const { data } = yield call(API.getAccountBalance, accountAddress.payload);
-
   yield put({ type: actionTypes.SET_ACCOUNT_LOADER, payload: false });
 
   // console.log('account balance saga', data);
@@ -37,7 +36,7 @@ function* getAccountBalanceSagaWorker(accountAddress) {
   }
 
   const finalTotal = CommaFormatted(total.toFixed(2));
-  console.log('finalTotal ', finalTotal);
+  // console.log('finalTotal ', finalTotal);
 
   data && (yield putResolve(actions.getAccountBalance({ ...data, finalTotal })));
 }
