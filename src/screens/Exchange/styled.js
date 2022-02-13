@@ -171,6 +171,18 @@ export const MultiSwapReceiveTokensBlock = styled.div`
   }
 `;
 
+export const FirstSubLayoutMultiSwapReceiveTokensBlock = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+`;
+
+export const SecondSubLayoutMultiSwapReceiveTokensBlock = styled.div`
+  padding-left: 12px;
+  padding-right: 19px;
+  margin-top: 5px;
+`;
+
 export const ChooseBtnTokenBlock = styled.div`
   display: flex;
   flex-direction: row;
@@ -278,6 +290,8 @@ export const ColumnMainSubTitles = styled.p`
 `;
 
 export const AddReceiveTokenMultiSwapBtn = styled(Button)`
+  display: flex;
+  margin-top: 5px;
   max-width: 28px;
   max-height: 28px;
   min-width: 28px;

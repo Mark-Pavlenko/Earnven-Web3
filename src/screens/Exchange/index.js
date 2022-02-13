@@ -266,7 +266,7 @@ export default function SwapComponent() {
     (state) => state?.currentTokenDataReducer.currentTokenData
   );
 
-  console.log('sendExchangeCurrency', exchangeTokenRateReceiveToken);
+  // console.log('sendExchangeCurrency', exchangeTokenRateReceiveToken);
 
   //---OLD states
 
@@ -356,7 +356,7 @@ export default function SwapComponent() {
     // console.log('exchange token send USD currency data 111', tokenData);
 
     if (tokenData.symbol === 'ETH') {
-      console.log('type send USD eth triggered');
+      // console.log('type send USD eth triggered');
       const ethDollarValue = await axios.get(
         'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
       );
@@ -364,7 +364,7 @@ export default function SwapComponent() {
         `$${(ethDollarValue.data.ethereum.usd * parseInt(tokenData.amount)).toFixed(2)}`
       );
     } else {
-      console.log('send USD tokenData.USDCurrency triggered', tokenData.USDCurrency);
+      // console.log('send USD tokenData.USDCurrency triggered', tokenData.USDCurrency);
 
       if (tokenData.USDCurrency !== undefined) {
         setTokenSendUSDCurrency(
@@ -426,7 +426,7 @@ export default function SwapComponent() {
       const ethDollarValue = await axios.get(
         'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
       );
-      console.log('ethDollarValue', ethDollarValue);
+      // console.log('ethDollarValue', ethDollarValue);
       setethPrice(ethDollarValue.data.ethereum.usd);
     } catch (err) {
       console.log('getEthDollarValue err', err);
