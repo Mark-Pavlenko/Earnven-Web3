@@ -52,8 +52,8 @@ import chevronDownBlack from '../../assets/icons/chevronDownLightTheme.svg';
 import chevronDownLight from '../../assets/icons/chevronDownLight.svg';
 import switchTokensLight from '../../assets/icons/switchTokensLight.svg';
 import switchTokensDark from '../../assets/icons/switchTokensDark.svg';
-import paraSwapIcon from '../../assets/icons/paraSwapIcon.svg';
-import uniIcon from '../../assets/icons/uniIcon.svg';
+import paraSwapIcon from '../../assets/icons/exchangers/paraSwapExchangerIcon.svg';
+import uniIcon from '../../assets/icons/exchangers/uniswapExchangerIcon.svg';
 import plusIconDark from '../../assets/icons/plusIconDark.svg';
 import plusIconLight from '../../assets/icons/plusIconLight.svg';
 import { Button } from '@material-ui/core';
@@ -127,6 +127,7 @@ export default function MultiSwapComponent() {
       address: '0x6b175474e89094c44da98b954eedeac495271d0f',
       // USDCurrency: '$0.00',
     },
+
     {
       symbol: 'UNI',
       logoURI: uniIcon,

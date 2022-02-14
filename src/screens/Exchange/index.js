@@ -43,11 +43,11 @@ import ethImage from '../../assets/icons/eth.png';
 import switchTokensLight from '../../assets/icons/switchTokensLight.svg';
 import switchTokensDark from '../../assets/icons/switchTokensDark.svg';
 import daiICon from '../../assets/icons/daiIcon.svg';
-import paraSwapIcon from '../../assets/icons/paraSwapIcon.svg';
+import paraSwapIcon from '../../assets/icons/exchangers/paraSwapExchangerIcon.svg';
 import searchTokensImportModalLight from '../../assets/icons/searchTokensButtonMobileLight.svg';
 import searchTokensImportModalDark from '../../assets/icons/searchTokensInputModalDark.svg';
 
-import uniIcon from '../../assets/icons/uniIcon.svg';
+import uniIcon from '../../assets/icons/exchangers/uniswapExchangerIcon.svg';
 import AddIcon from '@mui/icons-material/Add';
 // import DeleteIcon from '@mui/icons-material/Delete';
 import { makeStyles } from '@material-ui/styles';
