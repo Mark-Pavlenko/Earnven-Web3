@@ -263,8 +263,15 @@ export default function MultiSwapComponent() {
       receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
       gasFee: '$10.03',
       isBestRate: true,
-      exchangerLogoIcon: paraSwapIcon,
+      logoIcon: paraSwapIcon,
       greenDotIcon: true,
+    },
+    {
+      receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
+      gasFee: '$10.03',
+      isBestRate: false,
+      logoIcon: uniIcon,
+      greenDotIcon: false,
     },
   ];
 
@@ -442,7 +449,6 @@ export default function MultiSwapComponent() {
                     <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
                       <img src={paraSwapIcon} alt="paraSwapIcon" />
                       <span {...bindTrigger(popupState)}>ParaSwap</span>
-
                       <Popover
                         {...bindPopover(popupState)}
                         anchorOrigin={{
@@ -482,102 +488,33 @@ export default function MultiSwapComponent() {
                               </ExchangersLayoutTitlesBlock>
 
                               <ExchangerMainList>
-                                <ExchangerElementListItem isLightTheme={isLightTheme}>
-                                  <ExchangerElementSpan
-                                    isLightTheme={isLightTheme}
-                                    style={{ marginRight: '36px' }}>
-                                    3510 DAI ($3510.03)
-                                  </ExchangerElementSpan>
-                                  <ExchangerElementSpan isLightTheme={isLightTheme}>
-                                    $10.03
-                                  </ExchangerElementSpan>
-                                  <ExchangerBestRateSpan isLightTheme={isLightTheme}>
-                                    Best rate
-                                  </ExchangerBestRateSpan>
-                                  <ExchangerIcon src={uniIcon} alt="icon" />
-                                  <GreenDotIcon src={greenDot} alt="green_dot" />
-                                </ExchangerElementListItem>
-
-                                {/*  Test */}
-                                <ExchangerElementListItem isLightTheme={isLightTheme}>
-                                  <ExchangerElementSpan
-                                    isLightTheme={isLightTheme}
-                                    style={{ marginRight: '36px' }}>
-                                    3510 DAI ($3510.03)
-                                  </ExchangerElementSpan>
-                                  <ExchangerElementSpan isLightTheme={isLightTheme}>
-                                    $10.03
-                                  </ExchangerElementSpan>
-                                  <ExchangerBestRateSpan isLightTheme={isLightTheme}>
-                                    Best rate
-                                  </ExchangerBestRateSpan>
-                                  <ExchangerIcon src={uniIcon} alt="icon" />
-                                  <GreenDotIcon src={greenDot} alt="green_dot" />
-                                </ExchangerElementListItem>
-
-                                <ExchangerElementListItem isLightTheme={isLightTheme}>
-                                  <ExchangerElementSpan
-                                    isLightTheme={isLightTheme}
-                                    style={{ marginRight: '36px' }}>
-                                    3510 DAI ($3510.03)
-                                  </ExchangerElementSpan>
-                                  <ExchangerElementSpan isLightTheme={isLightTheme}>
-                                    $10.03
-                                  </ExchangerElementSpan>
-                                  <ExchangerBestRateSpan isLightTheme={isLightTheme}>
-                                    Best rate
-                                  </ExchangerBestRateSpan>
-                                  <ExchangerIcon src={uniIcon} alt="icon" />
-                                  <GreenDotIcon src={greenDot} alt="green_dot" />
-                                </ExchangerElementListItem>
-
-                                <ExchangerElementListItem isLightTheme={isLightTheme}>
-                                  <ExchangerElementSpan
-                                    isLightTheme={isLightTheme}
-                                    style={{ marginRight: '36px' }}>
-                                    3510 DAI ($3510.03)
-                                  </ExchangerElementSpan>
-                                  <ExchangerElementSpan isLightTheme={isLightTheme}>
-                                    $10.03
-                                  </ExchangerElementSpan>
-                                  <ExchangerBestRateSpan isLightTheme={isLightTheme}>
-                                    Best rate
-                                  </ExchangerBestRateSpan>
-                                  <ExchangerIcon src={uniIcon} alt="icon" />
-                                  <GreenDotIcon src={greenDot} alt="green_dot" />
-                                </ExchangerElementListItem>
-
-                                <ExchangerElementListItem isLightTheme={isLightTheme}>
-                                  <ExchangerElementSpan
-                                    isLightTheme={isLightTheme}
-                                    style={{ marginRight: '36px' }}>
-                                    3510 DAI ($3510.03)
-                                  </ExchangerElementSpan>
-                                  <ExchangerElementSpan isLightTheme={isLightTheme}>
-                                    $10.03
-                                  </ExchangerElementSpan>
-                                  <ExchangerBestRateSpan isLightTheme={isLightTheme}>
-                                    Best rate
-                                  </ExchangerBestRateSpan>
-                                  <ExchangerIcon src={uniIcon} alt="icon" />
-                                  <GreenDotIcon src={greenDot} alt="green_dot" />
-                                </ExchangerElementListItem>
-
-                                <ExchangerElementListItem isLightTheme={isLightTheme}>
-                                  <ExchangerElementSpan
-                                    isLightTheme={isLightTheme}
-                                    style={{ marginRight: '36px' }}>
-                                    3510 DAI ($3510.03)
-                                  </ExchangerElementSpan>
-                                  <ExchangerElementSpan isLightTheme={isLightTheme}>
-                                    $10.03
-                                  </ExchangerElementSpan>
-                                  <ExchangerBestRateSpan isLightTheme={isLightTheme}>
-                                    Best rate
-                                  </ExchangerBestRateSpan>
-                                  <ExchangerIcon src={uniIcon} alt="icon" />
-                                  <GreenDotIcon src={greenDot} alt="green_dot" />
-                                </ExchangerElementListItem>
+                                {exchangersOfferedList.map((exchanger) => (
+                                  <ExchangerElementListItem isLightTheme={isLightTheme}>
+                                    <ExchangerElementSpan
+                                      isLightTheme={isLightTheme}
+                                      style={{ marginRight: '36px' }}>
+                                      {exchanger.receiveTokenUSDCurrencyCourse}
+                                    </ExchangerElementSpan>
+                                    <ExchangerElementSpan isLightTheme={isLightTheme}>
+                                      {exchanger.gasFee}
+                                    </ExchangerElementSpan>
+                                    <ExchangerBestRateSpan
+                                      isLightTheme={isLightTheme}
+                                      style={{
+                                        visibility: exchanger.isBestRate === false && 'hidden',
+                                      }}>
+                                      Best rate
+                                    </ExchangerBestRateSpan>
+                                    <ExchangerIcon src={exchanger.logoIcon} alt="icon" />
+                                    <GreenDotIcon
+                                      src={greenDot}
+                                      alt="green_dot"
+                                      style={{
+                                        visibility: exchanger.greenDotIcon === false && 'hidden',
+                                      }}
+                                    />
+                                  </ExchangerElementListItem>
+                                ))}
                               </ExchangerMainList>
                             </ExchangersLayout>
                           </ExchangersMainSubLayout>
