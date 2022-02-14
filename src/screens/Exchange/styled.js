@@ -355,6 +355,120 @@ export const AdditionalOptionsSwapTokensSubBlock = styled.div`
   }
 `;
 
+export const SwapTokensOfferedBySubBlock = styled.div`
+  width: 525px;
+  height: 490px;
+  background-color: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#4453AD1A')};
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'
+      : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+  backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
+  border-radius: 10px;
+`;
+
+export const ExchangersMainSubLayout = styled.div``;
+
+export const OfferedByLayoutLabelBlock = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-top: 20px;
+  padding-left: 20px;
+
+  img {
+    transform: rotate(90deg);
+  }
+
+  span {
+    color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#FFFFFF')};
+    font-size: 20px;
+    font-weight: 600;
+    margin-left: 8px;
+  }
+`;
+
+export const ExchangersLayout = styled.div``;
+
+export const ExchangersLayoutTitlesBlock = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  //background-color: green;
+  width: 209px;
+  margin-top: 20px;
+  margin-left: 30px;
+
+  span {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 19px;
+    color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#FFFFFF')};
+    opacity: ${(props) => (props.isLightTheme ? 0.5 : 0.8)};
+  }
+`;
+
+export const ExchangerMainList = styled(List)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 488px;
+  margin-left: 16px;
+  padding: 0;
+  margin-top: 15px;
+  //background: green;
+`;
+
+export const ExchangerElementListItem = styled(ListItem)`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 488px;
+  height: 40px;
+  padding: 0;
+  padding-left: 14px;
+  margin-bottom: 10px;
+
+  :hover {
+    background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
+    box-shadow: ${(props) =>
+      props.isLightTheme
+        ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+        : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+    backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
+    border-radius: 10px;
+    cursor: pointer;
+  }
+`;
+
+export const ExchangerElementSpan = styled.span`
+  font-size: 14px;
+  color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#FFFFFF')};
+`;
+
+export const ExchangerBestRateSpan = styled.span`
+  margin-left: 84px;
+  font-size: 10px;
+  color: ${(props) => (props.isLightTheme ? '#4453AD' : '#8F86FF')};
+  font-weight: ${(props) => (props.isLightTheme ? '500' : '800')};
+`;
+
+export const ExchangerIcon = styled.img`
+  width: 20px;
+  height: 20px;
+  margin-left: 44px;
+`;
+
+export const GreenDotIcon = styled.img`
+  width: 10px;
+  height: 10px;
+  margin-left: 35px;
+`;
+
+//-------
+
 export const SwapBlockExchangeLayout = styled.div`
   display: flex;
   justify-content: center;

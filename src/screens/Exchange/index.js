@@ -134,6 +134,8 @@ import { TokensListTextField } from '../../components/searchTokens/styles';
 import actionTypes from '../../constants/actionTypes';
 import testFunction from './helpers';
 import { getTokenDataSaga } from '../../store/currentTokenData/actions';
+import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
+import Popover from '@mui/material/Popover';
 
 const useStyles = makeStyles((theme) => ({
   noBorder: {
@@ -1158,10 +1160,45 @@ export default function SwapComponent() {
                   <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
                     Offered by
                   </LabelsBlockSubBlockSpan>
-                  <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
-                    <img src={paraSwapIcon} alt="paraSwapIcon" />
-                    <span>ParaSwap</span>
-                  </AdditionalOptionsSwapTokensSubBlock>
+                  <PopupState variant="popover" popupId="demo-popup-popover">
+                    {(popupState) => (
+                      <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
+                        <img src={paraSwapIcon} alt="paraSwapIcon" />
+                        <span {...bindTrigger(popupState)} style={{ cursor: 'pointer' }}>
+                          ParaSwap
+                        </span>
+
+                        <Popover
+                          {...bindPopover(popupState)}
+                          anchorOrigin={{
+                            vertical: 'center',
+                            horizontal: 'right',
+                          }}
+                          transformOrigin={{
+                            vertical: 'center',
+                            horizontal: 'right',
+                          }}
+                          PaperProps={{
+                            sx: {
+                              marginTop: '-102px',
+                              marginLeft: '27px',
+                              width: '525px',
+                              height: '490px',
+                              backgroundColor: isLightTheme ? '#ffffff29' : '#10142D',
+                              boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+                              backdropFilter: 'blur(35px)',
+                              mixBlendMode: 'normal',
+                              borderRadius: '10px',
+                            },
+                          }}>
+                          <div
+                            style={{ width: '525px', height: '490px', backgroundColor: 'green' }}>
+                            Content
+                          </div>
+                        </Popover>
+                      </AdditionalOptionsSwapTokensSubBlock>
+                    )}
+                  </PopupState>
                 </LabelsBlockSubBlock>
 
                 <LabelsBlockSubBlock isLightTheme={isLightTheme}>
