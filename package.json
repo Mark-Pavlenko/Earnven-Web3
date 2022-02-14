@@ -68,6 +68,7 @@
     "react-infinite-scroller": "^1.2.4",
     "react-loader-spinner": "^4.0.0",
     "react-media": "^1.10.0",
+    "react-number-format": "^4.9.1",
     "react-player": "^2.9.0",
     "react-query": "^3.34.0",
     "react-router": "^6.0.0-beta.0",

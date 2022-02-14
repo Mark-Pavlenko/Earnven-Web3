@@ -26,15 +26,22 @@ import { getalchemixVaultsSagaWatcher } from './alchemix';
 import { getcompoundTokenSagaWatcher } from './compoundFinance';
 import { getGasPriceWatcher } from './gasPrice/gasPrice';
 import { getCurrentTokenDataSagaWatcher } from './currentTokenData';
+import {
+  getReceiveTokensListSagaWatcher,
+  getSendTokensListSagaWatcher,
+} from '../store/exchangeTokensLists/sagas';
 import { getCurrentTokenTransactionsSagaWatcher } from './currentTokenTransactions';
 import { getWalletDataSagaWatcher } from './currentWalletData';
 import { getTokenPriceHistorySagaWatcher } from './currentTokenPriceHistory';
 import { getCurveLPTokenSagaWatcher } from './curveLpToken';
 import { getAaveStakeSagaWatcher } from './Aave';
 import { getSynthetixSagaWatcher } from './Synthetix';
+import { getConvexStakingSagaWatcher } from './convexStaking';
 export default function* watchRootSaga() {
   yield all([
     call(getAccountBalanceSagaWatcher),
+    call(getSendTokensListSagaWatcher),
+    call(getReceiveTokensListSagaWatcher),
     call(getTwitterPostsSagaWatcher),
     call(getALlTokensSagaWatcher),
     call(getSearchedTokensSagaWatcher),
@@ -66,5 +73,6 @@ export default function* watchRootSaga() {
     call(getAaveStakeSagaWatcher),
     call(getGasPriceWatcher),
     call(getSynthetixSagaWatcher),
+    call(getConvexStakingSagaWatcher),
   ]);
 }

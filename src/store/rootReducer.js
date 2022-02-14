@@ -39,6 +39,7 @@ import { gesData } from './gesData/reducer';
 import { walletDataReducer } from './currentWalletData/reducer';
 import { tokenPriceHistoryReducer } from './currentTokenPriceHistory/reducer';
 import { Synthetix } from './Synthetix/reducer';
+import { tokensListReducer } from './exchangeTokensLists/reducer';
 
 export const rootReducer = combineReducers({
   web3Reducer,
@@ -78,6 +79,7 @@ export const rootReducer = combineReducers({
   alchemixVaults,
   compoundFinance,
   currentTokenDataReducer,
+  tokensListReducer,
   currentTokenTransactionsReducer,
   gesData,
   walletDataReducer,

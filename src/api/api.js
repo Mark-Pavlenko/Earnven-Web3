@@ -1,5 +1,6 @@
 import axios from 'axios';
 import CoinGecko from 'coingecko-api';
+
 const CoinGeckoClient = new CoinGecko();
 
 const TOKEN =
@@ -22,8 +23,37 @@ export const getTokens = async () => {
 };
 
 export const getAccountBalance = async (accountAddress) => {
+  //ETH API Address data
   return await axios.get(
     `https://api.ethplorer.io/getAddressInfo/${accountAddress}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
+  );
+};
+
+export const getAddressInfo = async (accountAddress) => {
+  //ETH API Address data
+  return await axios.get(
+    `https://api.ethplorer.io/getAddressInfo/${accountAddress}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
+  );
+};
+
+export const getCoinGeckoFullTokensList = async () => {
+  const coinGeckoFullTokensList = await axios.get('https://api.coingecko.com/api/v3/coins/list');
+  return coinGeckoFullTokensList.data;
+};
+
+export const getUniswapFullCoinsList = async () => {
+  const uniswapFullCoinsList = await axios.get('https://tokens.coingecko.com/uniswap/all.json');
+  return uniswapFullCoinsList.data;
+};
+
+export const getZeroAPITokensList = async () => {
+  const rawZeroAPITokensList = await axios.get(`https://api.0x.org/swap/v1/tokens`);
+  return rawZeroAPITokensList.data.records;
+};
+
+export const getCoinGeckoTokenUSDCurrency = async (tokenId) => {
+  return await axios.get(
+    `https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=usd`
   );
 };
 
