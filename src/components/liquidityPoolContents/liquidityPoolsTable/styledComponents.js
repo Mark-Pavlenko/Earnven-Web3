@@ -244,6 +244,7 @@ export const ResetButton = styled.button`
   font-weight: 500;
   font-size: 14px;
   cursor: pointer;
+  margin-right: 7.5px;
 `;
 
 export const MenuPopoverBoxTitle = styled.p`

@@ -834,60 +834,64 @@ export default function LiquidityPools({ inputValue }) {
       {Content}
 
 
-      {/*<ModalContainer*/}
-      {/*    modalType={'slippageTolerance'}*/}
-      {/*    theme={isLightTheme}*/}
-      {/*    closeModal={() => {}}>*/}
-      {/*  <MenuPopoverBoxTitle isLightTheme={isLightTheme}>{'Realtime Gas Prices'}</MenuPopoverBoxTitle>*/}
-      {/*  <div>*/}
-      {/*    {addIconsGasPricesWithIcons.map((option) => (*/}
-      {/*        <div*/}
-      {/*            style={{ display: 'flex', flexDirection: 'column' }}*/}
-      {/*            selected={option.label === selected}*/}
-      {/*            onClick={() => {*/}
-      {/*              // updateGasValue(option.value, option.label);*/}
-      {/*            }}*/}
-      {/*            sx={{ py: 1, px: 2.5 }}>*/}
-      {/*          <GasMenuItem isLightTheme={isLightTheme}>*/}
-      {/*            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>*/}
-      {/*              <img src={option.icon} alt="" />*/}
-      {/*              <span>{`${option.label} `}</span>*/}
-      {/*            </div>*/}
-      {/*            <div>*/}
-      {/*              <span>{`${option.value} Gwei`}</span>*/}
-      {/*            </div>*/}
-      {/*          </GasMenuItem>*/}
-      {/*        </div>*/}
-      {/*    ))}*/}
-      {/*  </div>*/}
-      {/*  <CommonSubmitButton width={'189px'} isLightTheme={isLightTheme} onClick={() => {}}>*/}
-      {/*    {'Advanced settings'}*/}
-      {/*  </CommonSubmitButton>*/}
-      {/*  <MenuPopoverBoxTitle isLightTheme={isLightTheme}>{'Slippage Tolerance'}</MenuPopoverBoxTitle>*/}
-      {/*  /!*<CommonHoverButtonTrans*!/*/}
-      {/*  /!*    height={'45px'}*!/*/}
-      {/*  /!*    width={'55px'}*!/*/}
-      {/*  /!*    isLightTheme={isLightTheme}*!/*/}
-      {/*  /!*    onClick={() => {}}>*!/*/}
-      {/*  /!*  {'1%'}*!/*/}
-      {/*  /!*</CommonHoverButtonTrans>*!/*/}
-      {/*  /!*<CommonHoverButton height={'45px'} width={'55px'} isLightTheme={isLightTheme} onClick={() => {}}>*!/*/}
-      {/*  /!*  {'3%'}*!/*/}
-      {/*  /!*</CommonHoverButton>*!/*/}
-      {/*  /!*<CommonHoverButtonTrans*!/*/}
-      {/*  /!*    height={'45px'}*!/*/}
-      {/*  /!*    width={'120px'}*!/*/}
-      {/*  /!*    isLightTheme={isLightTheme}*!/*/}
-      {/*  /!*    onClick={() => {}}>*!/*/}
-      {/*  /!*  {'%'}*!/*/}
-      {/*  /!*</CommonHoverButtonTrans>*!/*/}
-      {/*  <ResetButton isLightTheme={isLightTheme} onClick={() => {}}>*/}
-      {/*    {'Reset'}*/}
-      {/*  </ResetButton>*/}
-      {/*  <CommonSubmitButton width={'165px'} isLightTheme={isLightTheme} onClick={() => {}}>*/}
-      {/*    {'Save'}*/}
-      {/*  </CommonSubmitButton>*/}
-      {/*</ModalContainer>*/}
+      <ModalContainer
+          modalType={'slippageTolerance'}
+          theme={isLightTheme}
+          closeModal={() => {}}>
+        <MenuPopoverBoxTitle isLightTheme={isLightTheme}>{'Realtime Gas Prices'}</MenuPopoverBoxTitle>
+        <div style={{marginBottom: '22px'}}>
+          {addIconsGasPricesWithIcons.map((option) => (
+              <div
+                  style={{ display: 'flex', flexDirection: 'column' }}
+                  selected={option.label === selected}
+                  onClick={() => {
+                    // updateGasValue(option.value, option.label);
+                  }}
+                  sx={{ py: 1, px: 2.5 }}>
+                <GasMenuItem isLightTheme={isLightTheme}>
+                  <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    <img src={option.icon} alt="" />
+                    <span>{`${option.label} `}</span>
+                  </div>
+                  <div>
+                    <span>{`${option.value} Gwei`}</span>
+                  </div>
+                </GasMenuItem>
+              </div>
+          ))}
+        </div>
+        <div style={{display: 'flex', justifyContent: 'center'}}>
+          <CommonSubmitButton width={'189px'} isLightTheme={isLightTheme} onClick={() => {}}>
+            {'Advanced settings'}
+          </CommonSubmitButton>
+        </div>
+        {/*<MenuPopoverBoxTitle isLightTheme={isLightTheme}>{'Slippage Tolerance'}</MenuPopoverBoxTitle>*/}
+        {/*<CommonHoverButtonTrans*/}
+        {/*    height={'45px'}*/}
+        {/*    width={'55px'}*/}
+        {/*    isLightTheme={isLightTheme}*/}
+        {/*    onClick={() => {}}>*/}
+        {/*  {'1%'}*/}
+        {/*</CommonHoverButtonTrans>*/}
+        {/*<CommonHoverButton height={'45px'} width={'55px'} isLightTheme={isLightTheme} onClick={() => {}}>*/}
+        {/*  {'3%'}*/}
+        {/*</CommonHoverButton>*/}
+        {/*<CommonHoverButtonTrans*/}
+        {/*    height={'45px'}*/}
+        {/*    width={'120px'}*/}
+        {/*    isLightTheme={isLightTheme}*/}
+        {/*    onClick={() => {}}>*/}
+        {/*  {'%'}*/}
+        {/*</CommonHoverButtonTrans>*/}
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '45%'}}>
+        <ResetButton isLightTheme={isLightTheme} onClick={() => {}}>
+          {'Reset'}
+        </ResetButton>
+        <CommonSubmitButton style={{marginLeft: '7.5px'}} width={'165px'} isLightTheme={isLightTheme} onClick={() => {}}>
+          {'Save'}
+        </CommonSubmitButton>
+        </div>
+      </ModalContainer>
 
 
     </div>
