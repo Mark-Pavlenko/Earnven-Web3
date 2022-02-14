@@ -375,6 +375,8 @@ export const OfferedByLayoutLabelBlock = styled.div`
   align-items: center;
   padding-top: 20px;
   padding-left: 20px;
+  cursor: pointer;
+  width: 180px;
 
   img {
     transform: rotate(90deg);
