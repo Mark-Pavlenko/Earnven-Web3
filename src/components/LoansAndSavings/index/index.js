@@ -23,6 +23,7 @@ import CurveFarming from '../CurveFarming';
 import AaveStaking from '../AaveStaking';
 import Synthetix from '../Synthetix';
 //import UniswapV2 from '../LiqudityPools/UniswapV2';
+//import ConvexStaking from '../ConvexStaking';
 
 export default function index({ accountAddress }) {
   //save conditions of open/close investment blocks
@@ -108,6 +109,13 @@ export default function index({ accountAddress }) {
   const snxCollateralTotal = useSelector((state) => state.Synthetix.snxCollateralTotal); //saga
   //can create SVG file later if needed.
   const snxImageUrl = 'https://assets.coingecko.com/coins/images/3406/thumb/SNX.png?1598631139';
+
+  //Convex Staking
+  const convexStakeData = useSelector((state) => state.convexStake.convexStakeData);
+  const convexStakeTotal = useSelector((state) => state.convexStake.convexStakeTotal);
+  //can create SVX file at later if needed.
+  const convexImageUrl =
+    'https://assets.coingecko.com/coins/images/15585/thumb/convex.png?1621256328';
 
   //pickle
   // const pickeStake = useSelector((state) => state.pickeStake.pickeStake); //saga
@@ -228,7 +236,8 @@ export default function index({ accountAddress }) {
             compTokenDataValue.length > 0 ||
             eth2StakeData.length > 0 ||
             CrvStakingTokenData.length > 0 ||
-            AaveStakingData.length > 0,
+            AaveStakingData.length > 0 ||
+            convexStakeData.length > 0,
         }}>
         <Header>
           <Title isLightTheme={theme}>{'Saving/Loans'}</Title>
@@ -245,7 +254,8 @@ export default function index({ accountAddress }) {
                   parseFloat(AaveStakingTotal) +
                     parseFloat(CrvStakingTokenTotal) +
                     parseFloat(eth2StakeTotal) +
-                    parseFloat(compTotalValue)
+                    parseFloat(compTotalValue) +
+                    parseFloat(convexStakeTotal)
                 ).toFixed(2)
               )}
             </TotalValue>
@@ -384,6 +394,35 @@ export default function index({ accountAddress }) {
               );
             })} */}
           </React.Fragment>
+        )}
+        {/* Convex Staking */}
+        {convexStakeData.length > 0 ? (
+          <React.Fragment>
+            <img
+              src={convexImageUrl}
+              style={{
+                height: '20px',
+                marginTop: '',
+                marginLeft: '15px',
+                display: 'inline-block',
+              }}
+              alt=""
+            />
+            Convex Staking
+            {convexStakeData
+              ? convexStakeData.map((object) => {
+                  return (
+                    <Investment
+                      protocol={object}
+                      protocolName={'Convex Staking'}
+                      logoImage={object.tokenImage}
+                    />
+                  );
+                })
+              : ''}
+          </React.Fragment>
+        ) : (
+          ''
         )}
       </PoolsBlock>
       {/*==============================Vaults==============================>*/}
