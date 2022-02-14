@@ -43,11 +43,11 @@ import ethImage from '../../assets/icons/eth.png';
 import switchTokensLight from '../../assets/icons/switchTokensLight.svg';
 import switchTokensDark from '../../assets/icons/switchTokensDark.svg';
 import daiICon from '../../assets/icons/daiIcon.svg';
-import paraSwapIcon from '../../assets/icons/paraSwapIcon.svg';
+import paraSwapIcon from '../../assets/icons/exchangers/paraSwapExchangerIcon.svg';
 import searchTokensImportModalLight from '../../assets/icons/searchTokensButtonMobileLight.svg';
 import searchTokensImportModalDark from '../../assets/icons/searchTokensInputModalDark.svg';
 
-import uniIcon from '../../assets/icons/uniIcon.svg';
+import uniIcon from '../../assets/icons/exchangers/uniswapExchangerIcon.svg';
 import AddIcon from '@mui/icons-material/Add';
 // import DeleteIcon from '@mui/icons-material/Delete';
 import { makeStyles } from '@material-ui/styles';
@@ -134,6 +134,8 @@ import { TokensListTextField } from '../../components/searchTokens/styles';
 import actionTypes from '../../constants/actionTypes';
 import testFunction from './helpers';
 import { getTokenDataSaga } from '../../store/currentTokenData/actions';
+import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
+import Popover from '@mui/material/Popover';
 
 const useStyles = makeStyles((theme) => ({
   noBorder: {
@@ -1158,10 +1160,45 @@ export default function SwapComponent() {
                   <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
                     Offered by
                   </LabelsBlockSubBlockSpan>
-                  <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
-                    <img src={paraSwapIcon} alt="paraSwapIcon" />
-                    <span>ParaSwap</span>
-                  </AdditionalOptionsSwapTokensSubBlock>
+                  <PopupState variant="popover" popupId="demo-popup-popover">
+                    {(popupState) => (
+                      <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
+                        <img src={paraSwapIcon} alt="paraSwapIcon" />
+                        <span {...bindTrigger(popupState)} style={{ cursor: 'pointer' }}>
+                          ParaSwap
+                        </span>
+
+                        <Popover
+                          {...bindPopover(popupState)}
+                          anchorOrigin={{
+                            vertical: 'center',
+                            horizontal: 'right',
+                          }}
+                          transformOrigin={{
+                            vertical: 'center',
+                            horizontal: 'right',
+                          }}
+                          PaperProps={{
+                            sx: {
+                              marginTop: '-102px',
+                              marginLeft: '27px',
+                              width: '525px',
+                              height: '490px',
+                              backgroundColor: isLightTheme ? '#ffffff29' : '#10142D',
+                              boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+                              backdropFilter: 'blur(35px)',
+                              mixBlendMode: 'normal',
+                              borderRadius: '10px',
+                            },
+                          }}>
+                          <div
+                            style={{ width: '525px', height: '490px', backgroundColor: 'green' }}>
+                            Content
+                          </div>
+                        </Popover>
+                      </AdditionalOptionsSwapTokensSubBlock>
+                    )}
+                  </PopupState>
                 </LabelsBlockSubBlock>
 
                 <LabelsBlockSubBlock isLightTheme={isLightTheme}>

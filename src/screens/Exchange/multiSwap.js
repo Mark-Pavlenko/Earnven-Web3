@@ -8,6 +8,17 @@ import {
   ColumnMainSubTitles,
   ColumnMainTitles,
   DownDelimiterLabelsBlock,
+  ExchangerElementListItem,
+  ExchangersBestRateColumns,
+  ExchangersGasFeeColumn,
+  ExchangersGreenDotsColumn,
+  ExchangersIconsColumn,
+  ExchangersLayout,
+  ExchangersLayoutTitlesBlock,
+  ExchangersMainSubLayout,
+  ExchangersReceiveUSDCurrency,
+  ExchangerMainList,
+  ExchangersTitlesBlock,
   FirstSubLayoutMultiSwapReceiveTokensBlock,
   LabelsBlockImportantSpan,
   LabelsBlockSubBlock,
@@ -18,6 +29,7 @@ import {
   MultiSwapSendValueLabel,
   MultiSwapTokenAvatar,
   NewMultiSwapButton,
+  OfferedByLayoutLabelBlock,
   SecondColumnSwapSubBlock,
   SecondColumnTitleBlock,
   SecondColumnTitleHeaderBlock,
@@ -27,16 +39,22 @@ import {
   SwapBlockDelimiter,
   SwapBlockExchangeLayout,
   SwapTokensMainSubBlock,
+  SwapTokensOfferedBySubBlock,
   SwitchTokensBtn,
   USDCurrencyInputBlock,
+  ExchangerElementSpan,
+  ExchangerBestRateSpan,
+  ExchangerIcon,
+  GreenDotIcon,
+  ExchangersMainListLayout,
+  SaveSelectedExchangerButton,
 } from './styled';
 import EthIcon from '../../assets/icons/ethereum.svg';
 import chevronDownBlack from '../../assets/icons/chevronDownLightTheme.svg';
 import chevronDownLight from '../../assets/icons/chevronDownLight.svg';
 import switchTokensLight from '../../assets/icons/switchTokensLight.svg';
 import switchTokensDark from '../../assets/icons/switchTokensDark.svg';
-import paraSwapIcon from '../../assets/icons/paraSwapIcon.svg';
-import uniIcon from '../../assets/icons/uniIcon.svg';
+
 import plusIconDark from '../../assets/icons/plusIconDark.svg';
 import plusIconLight from '../../assets/icons/plusIconLight.svg';
 import { Button } from '@material-ui/core';
@@ -47,6 +65,14 @@ import axios from 'axios';
 import actionTypes from '../../constants/actionTypes';
 import { getTokenDataSaga } from '../../store/currentTokenData/actions';
 import { useParams } from 'react-router-dom';
+import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
+import Popover from '@mui/material/Popover';
+import greenDot from '../../assets/icons/greenDot.svg';
+
+import paraSwapIcon from '../../assets/icons/exchangers/paraSwapExchangerIcon.svg';
+import uniswapExchangerIcon from '../../assets/icons/exchangers/uniswapExchangerIcon.svg';
+
+import exchangersOfferedList from './exchangersOfferedList';
 
 const useStyles = makeStyles((theme) => ({
   noBorder: {
@@ -79,7 +105,7 @@ export default function MultiSwapComponent() {
   });
   const [receiveSecondTokenForExchange, setReceiveSecondTokenForExchange] = useState({
     symbol: 'UNI',
-    logoURI: uniIcon,
+    logoURI: uniswapExchangerIcon,
     avatarIcon: 'Uniswap Protocol Governance Token',
     name: 'unicorn-token',
     id: 'unicorn-token',
@@ -94,8 +120,6 @@ export default function MultiSwapComponent() {
     receiveSecondTokenForExchange,
   ]);
 
-  const [testState, setTestState] = useState([]);
-
   const initialState = [
     {
       symbol: 'DAI',
@@ -107,9 +131,10 @@ export default function MultiSwapComponent() {
       address: '0x6b175474e89094c44da98b954eedeac495271d0f',
       // USDCurrency: '$0.00',
     },
+
     {
       symbol: 'UNI',
-      logoURI: uniIcon,
+      logoURI: uniswapExchangerIcon,
       avatarIcon: 'Uniswap Protocol Governance Token',
       name: 'unicorn-token',
       id: 'unicorn-token',
@@ -118,6 +143,7 @@ export default function MultiSwapComponent() {
       // USDCurrency: '$0.00',
     },
   ];
+
   const [state, setState] = useState(initialState);
 
   console.log('init receive multiswap state', state);
@@ -236,7 +262,18 @@ export default function MultiSwapComponent() {
     setState(temp_state);
   };
 
-  console.log('testState receive', testState);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
   return (
     <SecondColumnSwapSubBlock>
@@ -389,7 +426,7 @@ export default function MultiSwapComponent() {
                   <MultiSwapSendValueLabel
                     isLightTheme={isLightTheme}
                     style={{ marginLeft: 'auto' }}>
-                    {receiveToken.USDCurrency}
+                    {receiveToken.USDCurrency !== undefined ? receiveToken.USDCurrency : '$0.00'}
                   </MultiSwapSendValueLabel>
                 </div>
               </USDCurrencyInputBlock>
@@ -407,10 +444,92 @@ export default function MultiSwapComponent() {
                 <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
                   Offered by
                 </LabelsBlockSubBlockSpan>
+                {/*<PopupState variant="popover" popupId="demo-popup-popover">*/}
+                {/*{(popupState) => (*/}
                 <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
                   <img src={paraSwapIcon} alt="paraSwapIcon" />
-                  <span>ParaSwap</span>
+                  <span onClick={handleClick}>ParaSwap</span>
+                  <Popover
+                    open={open}
+                    anchorEl={anchorEl}
+                    onClose={handleClose}
+                    anchorOrigin={{
+                      vertical: 'center',
+                      horizontal: 'right',
+                    }}
+                    transformOrigin={{
+                      vertical: 'center',
+                      horizontal: 'right',
+                    }}
+                    PaperProps={{
+                      sx: {
+                        marginLeft: '49px',
+                        width: '525px',
+                        height: '480px',
+                        backgroundColor: isLightTheme ? '#FFFFFF29' : '#4453AD1A',
+                        boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+                        backdropFilter: 'blur(35px)',
+                        mixBlendMode: 'normal',
+                        borderRadius: '10px',
+                      },
+                    }}>
+                    <SwapTokensOfferedBySubBlock isLightTheme={isLightTheme}>
+                      <ExchangersMainSubLayout>
+                        <OfferedByLayoutLabelBlock isLightTheme={isLightTheme}>
+                          <img
+                            src={isLightTheme ? chevronDownBlack : chevronDownLight}
+                            alt="chevron_icon"
+                          />
+                          <span onClick={handleClose}>Offered by</span>
+                        </OfferedByLayoutLabelBlock>
+                        <ExchangersLayout isLightTheme={isLightTheme}>
+                          <ExchangersLayoutTitlesBlock isLightTheme={isLightTheme}>
+                            <span>Receive</span>
+                            <span>Gas fee</span>
+                          </ExchangersLayoutTitlesBlock>
+                          <ExchangersMainListLayout isLightTheme={isLightTheme}>
+                            <ExchangerMainList>
+                              {exchangersOfferedList.map((exchanger) => (
+                                <ExchangerElementListItem isLightTheme={isLightTheme}>
+                                  <ExchangerElementSpan
+                                    isLightTheme={isLightTheme}
+                                    style={{ marginRight: '36px' }}>
+                                    {exchanger.receiveTokenUSDCurrencyCourse}
+                                  </ExchangerElementSpan>
+                                  <ExchangerElementSpan isLightTheme={isLightTheme}>
+                                    {exchanger.gasFee}
+                                  </ExchangerElementSpan>
+                                  <ExchangerBestRateSpan
+                                    isLightTheme={isLightTheme}
+                                    style={{
+                                      visibility: exchanger.isBestRate === false && 'hidden',
+                                    }}>
+                                    Best rate
+                                  </ExchangerBestRateSpan>
+                                  <ExchangerIcon src={exchanger.logoIcon} alt="icon" />
+                                  <GreenDotIcon
+                                    src={greenDot}
+                                    alt="green_dot"
+                                    style={{
+                                      visibility: exchanger.greenDotIcon === false && 'hidden',
+                                    }}
+                                  />
+                                </ExchangerElementListItem>
+                              ))}
+                            </ExchangerMainList>
+                          </ExchangersMainListLayout>
+                          <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            <SaveSelectedExchangerButton isLightTheme={isLightTheme}>
+                              Save
+                            </SaveSelectedExchangerButton>
+                          </div>
+                        </ExchangersLayout>
+                      </ExchangersMainSubLayout>
+                    </SwapTokensOfferedBySubBlock>
+                  </Popover>
                 </AdditionalOptionsSwapTokensSubBlock>
+                {/*)}*/}
+                {/*</PopupState>*/}
               </LabelsBlockSubBlock>
             </SecondSubLayoutMultiSwapReceiveTokensBlock>
           </MultiSwapReceiveTokensBlock>

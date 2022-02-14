@@ -55,7 +55,7 @@ export const FirstColumnTitleHeaderBlock = styled.div`
 
 export const SwapTokensMainSubBlock = styled.div`
   width: 525px;
-  height: 490px;
+  height: 480px;
   margin-top: 20px;
   padding: 32px 27px 16px 20px;
   background: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#1F265C3D')};
@@ -354,6 +354,179 @@ export const AdditionalOptionsSwapTokensSubBlock = styled.div`
     font-weight: 600;
   }
 `;
+
+export const SwapTokensOfferedBySubBlock = styled.div`
+  width: 525px;
+  height: 480px;
+  background-color: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#4453AD1A')};
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'
+      : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+  backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
+  border-radius: 10px;
+`;
+
+export const ExchangersMainSubLayout = styled.div``;
+
+export const OfferedByLayoutLabelBlock = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-top: 20px;
+  padding-left: 20px;
+  cursor: pointer;
+  width: 180px;
+
+  img {
+    transform: rotate(90deg);
+  }
+
+  span {
+    color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#FFFFFF')};
+    font-size: 20px;
+    font-weight: 600;
+    margin-left: 8px;
+  }
+`;
+
+export const ExchangersLayout = styled.div``;
+
+export const ExchangersMainListLayout = styled.div`
+  height: 310px;
+  overflow: auto;
+
+  // width of scrollbar
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 40px;
+  }
+
+  /* Track styles */
+  ::-webkit-scrollbar-track {
+    //box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: ${(props) => (props.isLightTheme ? '#ffffff' : '#ffffff')};
+    opacity: ${(props) => (props.isLightTheme ? 0 : 0.8)};
+    box-shadow: ${(props) =>
+      props.isLightTheme
+        ? '7px 21px 22px -15px rgba(51, 78, 131, 0.17)'
+        : 'box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+    mix-blend-mode: ${(props) => (props.isLightTheme ? 'none' : 'normal')};
+    backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
+    border-radius: 10px;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    //background: #ffffff;
+    cursor: pointer;
+  }
+`;
+
+export const SaveSelectedExchangerButton = styled(Button)`
+  width: 150px;
+  height: 40px;
+  margin-top: 24px;
+  color: ${(props) => (props.isLightTheme ? '#4453AD' : '#FFFFFF')};
+  background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+      : '7px 21px 22px -15px rgba(51, 78, 131, 0.17)'};
+  border-radius: 10px;
+
+  :hover {
+    background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
+  }
+
+  @media (max-width: 540px) {
+    width: 345px;
+  }
+`;
+
+export const ExchangersLayoutTitlesBlock = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  //background-color: green;
+  width: 209px;
+  margin-top: 20px;
+  margin-left: 30px;
+
+  span {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 19px;
+    color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#FFFFFF')};
+    opacity: ${(props) => (props.isLightTheme ? 0.5 : 0.8)};
+  }
+`;
+
+export const ExchangerMainList = styled(List)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 488px;
+  margin-left: 16px;
+  padding: 0;
+  margin-top: 15px;
+  //background: green;
+`;
+
+export const ExchangerElementListItem = styled(ListItem)`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 488px;
+  height: 40px;
+  padding: 0;
+  padding-left: 14px;
+  margin-bottom: 10px;
+
+  :hover {
+    background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
+    box-shadow: ${(props) =>
+      props.isLightTheme
+        ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+        : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+    backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
+    border-radius: 10px;
+    cursor: pointer;
+  }
+`;
+
+export const ExchangerElementSpan = styled.span`
+  font-size: 14px;
+  color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#FFFFFF')};
+`;
+
+export const ExchangerBestRateSpan = styled.span`
+  margin-left: 84px;
+  font-size: 10px;
+  color: ${(props) => (props.isLightTheme ? '#4453AD' : '#8F86FF')};
+  font-weight: ${(props) => (props.isLightTheme ? '500' : '800')};
+`;
+
+export const ExchangerIcon = styled.img`
+  width: 20px;
+  height: 20px;
+  margin-left: 44px;
+`;
+
+export const GreenDotIcon = styled.img`
+  width: 10px;
+  height: 10px;
+  margin-left: 35px;
+`;
+
+//-------
 
 export const SwapBlockExchangeLayout = styled.div`
   display: flex;
