@@ -94,7 +94,9 @@ export default function MultiSwapComponent() {
     receiveSecondTokenForExchange,
   ]);
 
-  const [testState, setTestState] = useState([
+  const [testState, setTestState] = useState([]);
+
+  const initialState = [
     {
       symbol: 'DAI',
       logoURI: daiICon,
@@ -115,9 +117,10 @@ export default function MultiSwapComponent() {
       address: '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984',
       // USDCurrency: '$0.00',
     },
-  ]);
+  ];
+  const [state, setState] = useState(initialState);
 
-  console.log('testState receive', testState);
+  console.log('init receive multiswap state', state);
 
   const [isSendTokensModalVisible, setIsSendTokensModalVisible] = useState(false);
   const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
@@ -206,21 +209,34 @@ export default function MultiSwapComponent() {
       ).toFixed(2)}`;
     }
 
-    const needIndex = receiveTokensFullList.findIndex(
-      (token) => token.address === tokenData.address
-    );
+    console.log('receive finalUSDCurrencyValue', finalUSDCurrencyValue);
 
-    // console.log('need index receive', needIndex);
+    // found necessary index of element, which currency is updated
+    const needIndex = initialState.findIndex((token) => token.address === tokenData.address);
+
+    console.log('need index receive', needIndex);
 
     if (needIndex !== -1) {
       receiveTokensFullList[needIndex] = {
         ...receiveTokensFullList.filter((token) => token.address === tokenData.address)[0],
         USDCurrency: finalUSDCurrencyValue,
       };
-      setTestState(receiveTokensFullList);
     }
-    console.log('receiveTokensFullList total', receiveTokensFullList);
+    // setTestState(receiveTokensFullList);
+    console.log('receive TokensFullList total', receiveTokensFullList);
+
+    let temp_state = [...state];
+
+    let temp_element = { ...temp_state[needIndex] };
+
+    temp_element.USDCurrency = finalUSDCurrencyValue;
+
+    temp_state[needIndex] = temp_element;
+
+    setState(temp_state);
   };
+
+  console.log('testState receive', testState);
 
   return (
     <SecondColumnSwapSubBlock>
@@ -307,7 +323,7 @@ export default function MultiSwapComponent() {
           />
         </SendReceiveSubBlock>
         {/* 1st receive block */}
-        {testState.map((receiveToken) => (
+        {state.map((receiveToken) => (
           <MultiSwapReceiveTokensBlock isLightTheme={isLightTheme}>
             <FirstSubLayoutMultiSwapReceiveTokensBlock>
               <MultiSwapChooseBtnTokenBlock>
@@ -362,13 +378,20 @@ export default function MultiSwapComponent() {
                     // setSendTokenForExchangeAmount(e.target.value);
                     convertReceiveTokenToUSDCurrency({
                       amount: e.target.value,
-                      ...receiveToken,
+                      // ...receiveToken,
+                      address: receiveToken.address,
+                      receiveTokensListItem: receiveToken.receiveTokensListItem,
                     });
                   }}
                 />
-                <MultiSwapSendValueLabel isLightTheme={isLightTheme} style={{ marginLeft: '40px' }}>
-                  {receiveToken.USDCurrency}
-                </MultiSwapSendValueLabel>
+
+                <div style={{ display: 'flex', marginRight: '20px' }}>
+                  <MultiSwapSendValueLabel
+                    isLightTheme={isLightTheme}
+                    style={{ marginLeft: 'auto' }}>
+                    {receiveToken.USDCurrency}
+                  </MultiSwapSendValueLabel>
+                </div>
               </USDCurrencyInputBlock>
             </FirstSubLayoutMultiSwapReceiveTokensBlock>
             <SecondSubLayoutMultiSwapReceiveTokensBlock>

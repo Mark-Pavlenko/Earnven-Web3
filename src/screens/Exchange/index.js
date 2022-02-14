@@ -658,6 +658,8 @@ export default function SwapComponent() {
     setSources([]);
   };
 
+  console.log('token receive swap tokenReceiveUSDCurrency', tokenReceiveUSDCurrency);
+
   useEffect(async () => {
     await axios
       .get(`https://api.ethplorer.io/getAddressInfo/${address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`)
