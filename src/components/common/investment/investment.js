@@ -71,6 +71,10 @@ const Investment = ({
     protocol.tokenImage = logoImage;
   }
 
+  if (protocolName === 'Convex Staking') {
+    protocol.tokenImage = logoImage;
+  }
+
   if (protocolName === 'Aave') {
     let symbolArray = [];
     tokens.map((token) => {
