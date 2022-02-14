@@ -31,10 +31,23 @@ import Box from '@material-ui/core/Box';
 
 import { Button } from '@material-ui/core';
 import { Link, useParams } from 'react-router-dom';
-import { LiquidityPoolsTable } from './liquidityPoolsTable/liquidityPoolsTable';
-import { AddNewGroupButton } from './uniV2/StyledComponents';
-import { useSelector } from 'react-redux';
-import { data } from '../../globalStore';
+import {LiquidityPoolsTable} from "./liquidityPoolsTable/liquidityPoolsTable";
+import {AddNewGroupButton} from "./uniV2/StyledComponents";
+import {useSelector} from "react-redux";
+import {data} from "../../globalStore";
+import ModalContainer from "../common/modalContainer/modalContainer";
+import {MenuPopoverBoxTitle, ResetButton} from "./liquidityPoolsTable/styledComponents";
+import {GasMenuItem} from "../gasDropDownMenu/styles";
+import {
+  CommonHoverButton,
+  CommonHoverButtonTrans,
+  CommonSubmitButton
+} from "../../screens/TokenPage/components/styledComponentsCommon";
+import {addIconsGasPrices} from "../../commonFunctions/commonFunctions";
+import fastDice from "../../assets/icons/fastDice-icon.svg";
+import middleDice from "../../assets/icons/middleDice-icon.svg";
+import slowDice from "../../assets/icons/slowDice-icon.svg";
+import Paper from "@material-ui/core/Paper";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -82,6 +95,13 @@ export default function LiquidityPools({ inputValue }) {
   const [Loading, setLoading] = useState(false);
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
+  //testData
+  const GasPrices = useSelector((state) => state.gesData.gasPriceData);
+  const addIconsGasPricesWithIcons = addIconsGasPrices(GasPrices, fastDice, middleDice, slowDice);
+  console.log('addIconsGasPricesWithIcons', addIconsGasPricesWithIcons)
+  const [selected, setSelected] = useState("Average");
+  //testData
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -121,10 +141,8 @@ export default function LiquidityPools({ inputValue }) {
               : tokenURIs.find((x) => x.address === token.address).logoURI,
           }));
           setAllTokens(tokens);
-        })
-        .catch((res) => {
-          console.log('liquidity pools Sushiswap-V2 returns error', res);
-        });
+        }).catch((res) => {
+            console.log('liquidity pools Sushiswap-V2 returns error', res)});
     }
     getData();
   }, []);
@@ -718,21 +736,27 @@ export default function LiquidityPools({ inputValue }) {
   }
 
   //*********first input value sends to smartContract
-  async function addLiquidity(tokenA, tokenB, supplyToken, supplyTokenQtty, gasPrice) {
+  async function addLiquidity(tokenA, tokenB, supplyToken, supplyTokenQtty, gasPrice, slippage) {
+    //we need to get as a parameter 'slippage'. It will be percent. We takes supplyTokenQtty and subtract slippage
+    //(ExpectedAmountTokens - slippage) then we have amount below for this percent. This is protection from exchange rate
+    // fluctuations. Then we put this value to contract like this:
+    // const minAmountOut = ExpectedAmountTokens - slippage.
+    // minAmountOut we will send to contract.
     await loadWeb3();
     const web3 = window.web3;
     const accounts = await web3.eth.getAccounts();
-    var tokenContract = new web3.eth.Contract(ERC20ABI, supplyToken); //maby web3.utils.toWei(gasPrice, 'gwei') should be here
+    var tokenContract = new web3.eth.Contract(ERC20ABI, supplyToken);
     const oneClickContract = new web3.eth.Contract(
       OneClickLiquidity,
       Addresses.oneClickSushiV2Contract
     );
     await tokenContract.methods
       .approve(Addresses.oneClickSushiV2Contract, supplyTokenQtty)
-      .send({ from: accounts[0], gasPrice: web3.utils.toWei(gasPrice, 'gwei') }); //not sure
+      .send({ from: accounts[0], gasPrice:  web3.utils.toWei(gasPrice, 'gwei')});
     await oneClickContract.methods
+      //.addLiquidityOneClick(tokenA, tokenB, supplyToken, supplyTokenQtty, minAmountOut) //examle of sending minAmountOut to contract
       .addLiquidityOneClick(tokenA, tokenB, supplyToken, supplyTokenQtty)
-      .send({ from: accounts[0], gasPrice: web3.utils.toWei(gasPrice, 'gwei') }); //not sure
+      .send({ from: accounts[0], gasPrice:  web3.utils.toWei(gasPrice, 'gwei') });
   }
 
   //********two inputs value send to smartContract
@@ -787,6 +811,12 @@ export default function LiquidityPools({ inputValue }) {
     );
   };
 
+  const [tabValue, setTabValue] = React.useState(2);
+
+  const tubsHandler = (event, newValue) => {
+    setTabValue(newValue);
+  };
+
   return (
     <div>
       <LiquidityPoolsTable
@@ -807,6 +837,68 @@ export default function LiquidityPools({ inputValue }) {
         </AddNewGroupButton>
       </center>
       {Content}
+
+
+      <ModalContainer
+          modalType={'slippageTolerance'}
+          theme={isLightTheme}
+          closeModal={() => {}}>
+        <MenuPopoverBoxTitle isLightTheme={isLightTheme}>{'Realtime Gas Prices'}</MenuPopoverBoxTitle>
+        <div style={{marginBottom: '22px'}}>
+          {addIconsGasPricesWithIcons.map((option) => (
+              <div
+                  style={{ display: 'flex', flexDirection: 'column' }}
+                  selected={option.label === selected}
+                  onClick={() => {
+                    // updateGasValue(option.value, option.label);
+                  }}
+                  sx={{ py: 1, px: 2.5 }}>
+                <GasMenuItem isLightTheme={isLightTheme}>
+                  <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    <img src={option.icon} alt="" />
+                    <span>{`${option.label} `}</span>
+                  </div>
+                  <div>
+                    <span>{`${option.value} Gwei`}</span>
+                  </div>
+                </GasMenuItem>
+              </div>
+          ))}
+        </div>
+        <div style={{display: 'flex', justifyContent: 'center'}}>
+          <CommonSubmitButton width={'189px'} isLightTheme={isLightTheme} onClick={() => {}}>
+            {'Advanced settings'}
+          </CommonSubmitButton>
+        </div>
+        {/*<MenuPopoverBoxTitle isLightTheme={isLightTheme}>{'Slippage Tolerance'}</MenuPopoverBoxTitle>*/}
+        {/*<CommonHoverButtonTrans*/}
+        {/*    height={'45px'}*/}
+        {/*    width={'55px'}*/}
+        {/*    isLightTheme={isLightTheme}*/}
+        {/*    onClick={() => {}}>*/}
+        {/*  {'1%'}*/}
+        {/*</CommonHoverButtonTrans>*/}
+        {/*<CommonHoverButton height={'45px'} width={'55px'} isLightTheme={isLightTheme} onClick={() => {}}>*/}
+        {/*  {'3%'}*/}
+        {/*</CommonHoverButton>*/}
+        {/*<CommonHoverButtonTrans*/}
+        {/*    height={'45px'}*/}
+        {/*    width={'120px'}*/}
+        {/*    isLightTheme={isLightTheme}*/}
+        {/*    onClick={() => {}}>*/}
+        {/*  {'%'}*/}
+        {/*</CommonHoverButtonTrans>*/}
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '45%'}}>
+        <ResetButton isLightTheme={isLightTheme} onClick={() => {}}>
+          {'Reset'}
+        </ResetButton>
+        <CommonSubmitButton style={{marginLeft: '7.5px'}} width={'165px'} isLightTheme={isLightTheme} onClick={() => {}}>
+          {'Save'}
+        </CommonSubmitButton>
+        </div>
+      </ModalContainer>
+
+
     </div>
   );
 }
