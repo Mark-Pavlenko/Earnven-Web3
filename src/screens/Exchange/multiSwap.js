@@ -47,6 +47,7 @@ import {
   ExchangerIcon,
   GreenDotIcon,
   ExchangersMainListLayout,
+  SaveSelectedExchangerButton,
 } from './styled';
 import EthIcon from '../../assets/icons/ethereum.svg';
 import chevronDownBlack from '../../assets/icons/chevronDownLightTheme.svg';
@@ -563,10 +564,10 @@ export default function MultiSwapComponent() {
                         }}
                         PaperProps={{
                           sx: {
-                            marginTop: '4px',
+                            // marginTop: '4px',
                             marginLeft: '49px',
                             width: '525px',
-                            height: '490px',
+                            height: '480px',
                             backgroundColor: isLightTheme ? '#FFFFFF29' : '#4453AD1A',
                             boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
                             backdropFilter: 'blur(35px)',
@@ -619,6 +620,11 @@ export default function MultiSwapComponent() {
                                   ))}
                                 </ExchangerMainList>
                               </ExchangersMainListLayout>
+                              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                <SaveSelectedExchangerButton isLightTheme={isLightTheme}>
+                                  Save
+                                </SaveSelectedExchangerButton>
+                              </div>
                             </ExchangersLayout>
                           </ExchangersMainSubLayout>
                         </SwapTokensOfferedBySubBlock>

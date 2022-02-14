@@ -55,7 +55,7 @@ export const FirstColumnTitleHeaderBlock = styled.div`
 
 export const SwapTokensMainSubBlock = styled.div`
   width: 525px;
-  height: 490px;
+  height: 480px;
   margin-top: 20px;
   padding: 32px 27px 16px 20px;
   background: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#1F265C3D')};
@@ -357,7 +357,7 @@ export const AdditionalOptionsSwapTokensSubBlock = styled.div`
 
 export const SwapTokensOfferedBySubBlock = styled.div`
   width: 525px;
-  height: 490px;
+  height: 480px;
   background-color: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#4453AD1A')};
   box-shadow: ${(props) =>
     props.isLightTheme
@@ -423,6 +423,27 @@ export const ExchangersMainListLayout = styled.div`
   ::-webkit-scrollbar-thumb:hover {
     //background: #ffffff;
     cursor: pointer;
+  }
+`;
+
+export const SaveSelectedExchangerButton = styled(Button)`
+  width: 150px;
+  height: 40px;
+  margin-top: 24px;
+  color: ${(props) => (props.isLightTheme ? '#4453AD' : '#FFFFFF')};
+  background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+      : '7px 21px 22px -15px rgba(51, 78, 131, 0.17)'};
+  border-radius: 10px;
+
+  :hover {
+    background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
+  }
+
+  @media (max-width: 540px) {
+    width: 345px;
   }
 `;
 
