@@ -351,9 +351,12 @@ export default function SwapComponent() {
   }, []);
 
   let convertSendTokenToUSDCurrency = async (tokenData) => {
-    if (tokenData.amount === '') tokenData.amount = '0';
+    console.log('main send tokenData', tokenData);
+    // console.log('typeof', !(typeof tokenData.amount === 'string'));
 
-    // console.log('exchange token send USD currency data 111', tokenData);
+    // console.log('typeof', typeof tokenData.amount);
+
+    if (tokenData.amount === '') tokenData.amount = '0';
 
     if (tokenData.symbol === 'ETH') {
       // console.log('type send USD eth triggered');
@@ -377,9 +380,11 @@ export default function SwapComponent() {
   };
 
   let convertReceiveTokenToUSDCurrency = async (tokenData) => {
-    if (tokenData.amount === '') {
+    if (tokenData.amount === '' || typeof tokenData.amount === 'symbol') {
       tokenData.amount = '0';
     }
+
+    console.log('main receive tokenData', tokenData);
 
     let tokenUSDCurrencyValue;
 
@@ -652,6 +657,8 @@ export default function SwapComponent() {
     setselectedRate(null);
     setSources([]);
   };
+
+  console.log('token receive swap tokenReceiveUSDCurrency', tokenReceiveUSDCurrency);
 
   useEffect(async () => {
     await axios

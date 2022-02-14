@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   AdditionalOptionsSwapTokensSubBlock,
   AddReceiveTokenMultiSwapBtn,
@@ -40,9 +40,13 @@ import uniIcon from '../../assets/icons/uniIcon.svg';
 import plusIconDark from '../../assets/icons/plusIconDark.svg';
 import plusIconLight from '../../assets/icons/plusIconLight.svg';
 import { Button } from '@material-ui/core';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import daiICon from '../../assets/icons/daiIcon.svg';
 import { makeStyles } from '@material-ui/styles';
+import axios from 'axios';
+import actionTypes from '../../constants/actionTypes';
+import { getTokenDataSaga } from '../../store/currentTokenData/actions';
+import { useParams } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   noBorder: {
@@ -51,6 +55,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function MultiSwapComponent() {
+  const { address } = useParams();
+  const dispatch = useDispatch();
+  const classes = useStyles();
   const [sendTokenForExchange, setSendTokenForExchange] = useState({
     symbol: 'ETH',
     logoURI: EthIcon,
@@ -68,6 +75,7 @@ export default function MultiSwapComponent() {
     id: 'dai',
     receiveTokensListItem: true,
     address: '0x6b175474e89094c44da98b954eedeac495271d0f',
+    // USDCurrency: '$0.00',
   });
   const [receiveSecondTokenForExchange, setReceiveSecondTokenForExchange] = useState({
     symbol: 'UNI',
@@ -77,17 +85,158 @@ export default function MultiSwapComponent() {
     id: 'unicorn-token',
     receiveTokensListItem: true,
     address: '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984',
+    // USDCurrency: '$0.00',
   });
+  const [tokenSendUSDCurrency, setTokenSendUSDCurrency] = useState('$0.00');
+  const [tokenReceiveUSDCurrency, setTokenReceiveUSDCurrency] = useState('$0.00');
+  const [receiveTokensFullList, setReceiveTokensFullList] = useState([
+    receiveFirstTokenForExchange,
+    receiveSecondTokenForExchange,
+  ]);
+
+  const [testState, setTestState] = useState([]);
+
+  const initialState = [
+    {
+      symbol: 'DAI',
+      logoURI: daiICon,
+      avatarIcon: 'Dai Stablecoin',
+      name: 'dai',
+      id: 'dai',
+      receiveTokensListItem: true,
+      address: '0x6b175474e89094c44da98b954eedeac495271d0f',
+      // USDCurrency: '$0.00',
+    },
+    {
+      symbol: 'UNI',
+      logoURI: uniIcon,
+      avatarIcon: 'Uniswap Protocol Governance Token',
+      name: 'unicorn-token',
+      id: 'unicorn-token',
+      receiveTokensListItem: true,
+      address: '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984',
+      // USDCurrency: '$0.00',
+    },
+  ];
+  const [state, setState] = useState(initialState);
+
+  console.log('init receive multiswap state', state);
 
   const [isSendTokensModalVisible, setIsSendTokensModalVisible] = useState(false);
   const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
-  const [sendTokenForExchangeAmount, setSendTokenForExchangeAmount] = useState();
+  // const [exchangeTokenAmount, setExchangeTokenAmount] = useState();
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
-  const classes = useStyles();
 
-  const receiveTokensFullList = [receiveFirstTokenForExchange, receiveSecondTokenForExchange];
-  console.log('receiveTokensList', receiveTokensFullList);
+  // console.log('receiveTokensList multiswap', receiveTokensFullList);
+
+  const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
+  const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
+
+  console.log('finalSendTokensList multiswap', finalSendTokensList);
+  console.log('finalReceiveTokensList multiswap', finalReceiveTokensList);
+
+  const [filteredSendTokensListData, setFilteredSendTokensListData] = useState([]);
+  const [filteredReceiveTokensListData, setFilteredReceiveTokensListData] = useState([]);
+
+  useEffect(() => {
+    finalSendTokensList.length !== 0 && setFilteredSendTokensListData(finalSendTokensList);
+    finalReceiveTokensList.length !== 0 && setFilteredReceiveTokensListData(finalReceiveTokensList);
+  }, [finalSendTokensList, finalReceiveTokensList]);
+
+  let convertSendTokenToUSDCurrency = async (tokenData) => {
+    console.log('multiswap tokenData', tokenData);
+
+    if (tokenData.amount === '') {
+      tokenData.amount = '0';
+    }
+
+    if (tokenData.symbol === 'ETH') {
+      const ethDollarValue = await axios.get(
+        'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
+      );
+      setTokenSendUSDCurrency(
+        `$${(ethDollarValue.data.ethereum.usd * parseInt(tokenData.amount)).toFixed(2)}`
+      );
+    } else {
+      if (tokenData.USDCurrency !== undefined) {
+        setTokenSendUSDCurrency(
+          `$${(tokenData.USDCurrency * parseInt(tokenData.amount)).toFixed(2)}`
+        );
+      } else {
+        setTokenSendUSDCurrency('Price not available');
+      }
+    }
+  };
+
+  let convertReceiveTokenToUSDCurrency = async (tokenData) => {
+    console.log('receive tokenData multiswap', tokenData);
+
+    if (tokenData.amount === '' || typeof tokenData.amount === 'symbol') {
+      tokenData.amount = '0';
+    }
+
+    let tokenUSDCurrencyValue;
+    let finalUSDCurrencyValue;
+
+    // receiveTokensFullList
+
+    if (
+      tokenData.receiveTokensListItem === true &&
+      tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' &&
+      tokenData.USDCurrency === undefined
+    ) {
+      tokenUSDCurrencyValue = await axios.get(
+        `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
+      );
+
+      if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
+        finalUSDCurrencyValue = `$ ${(
+          tokenUSDCurrencyValue.data.price.rate * parseInt(tokenData.amount)
+        ).toFixed(2)}`;
+      } else {
+        console.log('Price not available');
+      }
+    } else if (
+      tokenData.address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' &&
+      tokenData.receiveTokensListItem === true
+    ) {
+      const ethDollarValue = await axios.get(
+        'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
+      );
+      finalUSDCurrencyValue = `$${(
+        ethDollarValue.data.ethereum.usd * parseInt(tokenData.amount)
+      ).toFixed(2)}`;
+    }
+
+    console.log('receive finalUSDCurrencyValue', finalUSDCurrencyValue);
+
+    // found necessary index of element, which currency is updated
+    const needIndex = initialState.findIndex((token) => token.address === tokenData.address);
+
+    console.log('need index receive', needIndex);
+
+    if (needIndex !== -1) {
+      receiveTokensFullList[needIndex] = {
+        ...receiveTokensFullList.filter((token) => token.address === tokenData.address)[0],
+        USDCurrency: finalUSDCurrencyValue,
+      };
+    }
+    // setTestState(receiveTokensFullList);
+    console.log('receive TokensFullList total', receiveTokensFullList);
+
+    let temp_state = [...state];
+
+    let temp_element = { ...temp_state[needIndex] };
+
+    temp_element.USDCurrency = finalUSDCurrencyValue;
+
+    temp_state[needIndex] = temp_element;
+
+    setState(temp_state);
+  };
+
+  console.log('testState receive', testState);
 
   return (
     <SecondColumnSwapSubBlock>
@@ -151,18 +300,20 @@ export default function MultiSwapComponent() {
                 }}
                 isLightTheme={isLightTheme}
                 placeholder="0.0"
-                value={sendTokenForExchangeAmount}
+                // value={sendTokenForExchangeAmount}
                 onChange={(e) => {
-                  setSendTokenForExchangeAmount(e.target.value);
+                  // setSendTokenForExchangeAmount(e.target.value);
                   convertSendTokenToUSDCurrency({
                     amount: e.target.value,
                     ...sendTokenForExchange,
                   });
                 }}
               />
-              <MultiSwapSendValueLabel isLightTheme={isLightTheme} style={{ marginLeft: '40px' }}>
-                $3 510,03
-              </MultiSwapSendValueLabel>
+              <div style={{ display: 'flex', marginRight: '20px' }}>
+                <MultiSwapSendValueLabel isLightTheme={isLightTheme} style={{ marginLeft: 'auto' }}>
+                  {tokenSendUSDCurrency}
+                </MultiSwapSendValueLabel>
+              </div>
             </USDCurrencyInputBlock>
           </MultiSwapSendTokensChooseBlock>
 
@@ -172,7 +323,7 @@ export default function MultiSwapComponent() {
           />
         </SendReceiveSubBlock>
         {/* 1st receive block */}
-        {receiveTokensFullList.map((receiveToken) => (
+        {state.map((receiveToken) => (
           <MultiSwapReceiveTokensBlock isLightTheme={isLightTheme}>
             <FirstSubLayoutMultiSwapReceiveTokensBlock>
               <MultiSwapChooseBtnTokenBlock>
@@ -222,18 +373,25 @@ export default function MultiSwapComponent() {
                   }}
                   isLightTheme={isLightTheme}
                   placeholder="0.0"
-                  value={sendTokenForExchangeAmount}
+                  // value={sendTokenForExchangeAmount}
                   onChange={(e) => {
-                    setSendTokenForExchangeAmount(e.target.value);
-                    convertSendTokenToUSDCurrency({
+                    // setSendTokenForExchangeAmount(e.target.value);
+                    convertReceiveTokenToUSDCurrency({
                       amount: e.target.value,
-                      ...sendTokenForExchange,
+                      // ...receiveToken,
+                      address: receiveToken.address,
+                      receiveTokensListItem: receiveToken.receiveTokensListItem,
                     });
                   }}
                 />
-                <MultiSwapSendValueLabel isLightTheme={isLightTheme} style={{ marginLeft: '40px' }}>
-                  $3 510,03
-                </MultiSwapSendValueLabel>
+
+                <div style={{ display: 'flex', marginRight: '20px' }}>
+                  <MultiSwapSendValueLabel
+                    isLightTheme={isLightTheme}
+                    style={{ marginLeft: 'auto' }}>
+                    {receiveToken.USDCurrency}
+                  </MultiSwapSendValueLabel>
+                </div>
               </USDCurrencyInputBlock>
             </FirstSubLayoutMultiSwapReceiveTokensBlock>
             <SecondSubLayoutMultiSwapReceiveTokensBlock>
