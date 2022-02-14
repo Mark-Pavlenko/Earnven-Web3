@@ -390,6 +390,42 @@ export const OfferedByLayoutLabelBlock = styled.div`
 
 export const ExchangersLayout = styled.div``;
 
+export const ExchangersMainListLayout = styled.div`
+  height: 310px;
+  overflow: auto;
+
+  // width of scrollbar
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 40px;
+  }
+
+  /* Track styles */
+  ::-webkit-scrollbar-track {
+    //box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: ${(props) => (props.isLightTheme ? '#ffffff' : '#ffffff')};
+    opacity: ${(props) => (props.isLightTheme ? 0 : 0.8)};
+    box-shadow: ${(props) =>
+      props.isLightTheme
+        ? '7px 21px 22px -15px rgba(51, 78, 131, 0.17)'
+        : 'box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+    mix-blend-mode: ${(props) => (props.isLightTheme ? 'none' : 'normal')};
+    backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
+    border-radius: 10px;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    //background: #ffffff;
+    cursor: pointer;
+  }
+`;
+
 export const ExchangersLayoutTitlesBlock = styled.div`
   display: flex;
   flex-direction: row;

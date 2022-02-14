@@ -46,6 +46,7 @@ import {
   ExchangerBestRateSpan,
   ExchangerIcon,
   GreenDotIcon,
+  ExchangersMainListLayout,
 } from './styled';
 import EthIcon from '../../assets/icons/ethereum.svg';
 import chevronDownBlack from '../../assets/icons/chevronDownLightTheme.svg';
@@ -587,36 +588,37 @@ export default function MultiSwapComponent() {
                                 <span>Receive</span>
                                 <span>Gas fee</span>
                               </ExchangersLayoutTitlesBlock>
-
-                              <ExchangerMainList>
-                                {exchangersOfferedList.map((exchanger) => (
-                                  <ExchangerElementListItem isLightTheme={isLightTheme}>
-                                    <ExchangerElementSpan
-                                      isLightTheme={isLightTheme}
-                                      style={{ marginRight: '36px' }}>
-                                      {exchanger.receiveTokenUSDCurrencyCourse}
-                                    </ExchangerElementSpan>
-                                    <ExchangerElementSpan isLightTheme={isLightTheme}>
-                                      {exchanger.gasFee}
-                                    </ExchangerElementSpan>
-                                    <ExchangerBestRateSpan
-                                      isLightTheme={isLightTheme}
-                                      style={{
-                                        visibility: exchanger.isBestRate === false && 'hidden',
-                                      }}>
-                                      Best rate
-                                    </ExchangerBestRateSpan>
-                                    <ExchangerIcon src={exchanger.logoIcon} alt="icon" />
-                                    <GreenDotIcon
-                                      src={greenDot}
-                                      alt="green_dot"
-                                      style={{
-                                        visibility: exchanger.greenDotIcon === false && 'hidden',
-                                      }}
-                                    />
-                                  </ExchangerElementListItem>
-                                ))}
-                              </ExchangerMainList>
+                              <ExchangersMainListLayout isLightTheme={isLightTheme}>
+                                <ExchangerMainList>
+                                  {exchangersOfferedList.map((exchanger) => (
+                                    <ExchangerElementListItem isLightTheme={isLightTheme}>
+                                      <ExchangerElementSpan
+                                        isLightTheme={isLightTheme}
+                                        style={{ marginRight: '36px' }}>
+                                        {exchanger.receiveTokenUSDCurrencyCourse}
+                                      </ExchangerElementSpan>
+                                      <ExchangerElementSpan isLightTheme={isLightTheme}>
+                                        {exchanger.gasFee}
+                                      </ExchangerElementSpan>
+                                      <ExchangerBestRateSpan
+                                        isLightTheme={isLightTheme}
+                                        style={{
+                                          visibility: exchanger.isBestRate === false && 'hidden',
+                                        }}>
+                                        Best rate
+                                      </ExchangerBestRateSpan>
+                                      <ExchangerIcon src={exchanger.logoIcon} alt="icon" />
+                                      <GreenDotIcon
+                                        src={greenDot}
+                                        alt="green_dot"
+                                        style={{
+                                          visibility: exchanger.greenDotIcon === false && 'hidden',
+                                        }}
+                                      />
+                                    </ExchangerElementListItem>
+                                  ))}
+                                </ExchangerMainList>
+                              </ExchangersMainListLayout>
                             </ExchangersLayout>
                           </ExchangersMainSubLayout>
                         </SwapTokensOfferedBySubBlock>
