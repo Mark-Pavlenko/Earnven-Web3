@@ -113,34 +113,11 @@ export default function MultiSwapComponent() {
     sendTokensListItem: true,
     address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
   });
-  const [receiveFirstTokenForExchange, setReceiveFirstTokenForExchange] = useState({
-    symbol: 'DAI',
-    logoURI: daiICon,
-    avatarIcon: 'Dai Stablecoin',
-    name: 'dai',
-    id: 'dai',
-    receiveTokensListItem: true,
-    address: '0x6b175474e89094c44da98b954eedeac495271d0f',
-    // USDCurrency: '$0.00',
-  });
-  const [receiveSecondTokenForExchange, setReceiveSecondTokenForExchange] = useState({
-    symbol: 'UNI',
-    logoURI: uniswapExchangerIcon,
-    avatarIcon: 'Uniswap Protocol Governance Token',
-    name: 'unicorn-token',
-    id: 'unicorn-token',
-    receiveTokensListItem: true,
-    address: '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984',
-    // USDCurrency: '$0.00',
-  });
+
   const [tokenSendUSDCurrency, setTokenSendUSDCurrency] = useState('$0.00');
   const [tokenReceiveUSDCurrency, setTokenReceiveUSDCurrency] = useState('$0.00');
-  const [receiveTokensFullList, setReceiveTokensFullList] = useState([
-    receiveFirstTokenForExchange,
-    receiveSecondTokenForExchange,
-  ]);
 
-  const initialState = [
+  const receiveTokensList = [
     {
       symbol: 'DAI',
       logoURI: daiICon,
@@ -164,24 +141,20 @@ export default function MultiSwapComponent() {
     },
   ];
 
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useState(receiveTokensList);
 
   console.log('init receive multiswap state', state);
 
   const [openTokensModal, setOpenTokensModal] = useState(false);
-  const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
-  // const [exchangeTokenAmount, setExchangeTokenAmount] = useState();
-
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
   const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
 
   //working saga
-
   // const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
   const finalSendTokensList = sendTokensMockList;
 
-  console.log('finalSendTokensList multiswap', finalSendTokensList);
-  console.log('finalReceiveTokensList multiswap', finalReceiveTokensList);
+  // console.log('finalSendTokensList multiswap', finalSendTokensList);
+  // console.log('finalReceiveTokensList multiswap', finalReceiveTokensList);
 
   const [filteredSendTokensListData, setFilteredSendTokensListData] = useState([]);
   const [filteredReceiveTokensListData, setFilteredReceiveTokensListData] = useState([]);
@@ -226,8 +199,6 @@ export default function MultiSwapComponent() {
     let tokenUSDCurrencyValue;
     let finalUSDCurrencyValue;
 
-    // receiveTokensFullList
-
     if (
       tokenData.receiveTokensListItem === true &&
       tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' &&
@@ -259,18 +230,16 @@ export default function MultiSwapComponent() {
     console.log('receive finalUSDCurrencyValue', finalUSDCurrencyValue);
 
     // found necessary index of element, which currency is updated
-    const needIndex = initialState.findIndex((token) => token.address === tokenData.address);
+    const needIndex = receiveTokensList.findIndex((token) => token.address === tokenData.address);
 
     console.log('need index receive', needIndex);
 
-    if (needIndex !== -1) {
-      receiveTokensFullList[needIndex] = {
-        ...receiveTokensFullList.filter((token) => token.address === tokenData.address)[0],
-        USDCurrency: finalUSDCurrencyValue,
-      };
-    }
-    // setTestState(receiveTokensFullList);
-    console.log('receive TokensFullList total', receiveTokensFullList);
+    // if (needIndex !== -1) {
+    //   receiveTokensFullList[needIndex] = {
+    //     ...receiveTokensFullList.filter((token) => token.address === tokenData.address)[0],
+    //     USDCurrency: finalUSDCurrencyValue,
+    //   };
+    // }
 
     let temp_state = [...state];
 
@@ -296,11 +265,15 @@ export default function MultiSwapComponent() {
   const open = Boolean(anchorEl);
 
   let [tokensListModal, setTokensListModal] = useState([]);
+  let [isSendTokenSelectedSwapped, setIsSendTokenSelectedSwapped] = useState(false);
 
-  const openModalHelper = (tokensList) => {
+  const [sendTokenForExchangeAmount, setSendTokenForExchangeAmount] = useState();
+
+  const openModalHelper = (payload) => {
     setOpenTokensModal(true);
-    console.log('universal tokensList multiswap openModal', tokensList);
-    setTokensListModal(tokensList);
+    console.log('tokensList multiswap payload', payload);
+    setTokensListModal(payload.tokensList);
+    setIsSendTokenSelectedSwapped(payload.isSendModalOpen);
   };
 
   const searchTokensHandler = (event, searchTokensData) => {
@@ -309,6 +282,28 @@ export default function MultiSwapComponent() {
     console.log('result multiswap', result);
     setTokensListModal(result);
   };
+
+  console.log('useState tokensListModal multiswap', tokensListModal);
+  console.log('useState isSendTokenSelectedSwappedTokenType', isSendTokenSelectedSwapped);
+
+  const selectTokenForSwap = (selectedSwapToken, isSendTokenSelectedSwapped) => {
+    console.log('selectedSwapToken multiswap', selectedSwapToken);
+    console.log('isSendTokenSelectedSwapped multiswap', isSendTokenSelectedSwapped);
+
+    if (isSendTokenSelectedSwapped === true) {
+      setSendTokenForExchange(selectedSwapToken);
+      setTokenSendUSDCurrency('$0.00');
+      setSendTokenForExchangeAmount(1);
+      convertSendTokenToUSDCurrency({
+        amount: 1,
+        ...selectedSwapToken,
+        address: selectedSwapToken.address,
+      });
+    }
+  };
+
+  console.log('setSendTokenForExchange multiswap', sendTokenForExchange);
+  console.log('setSendTokenForExchangeAmount multiswap', sendTokenForExchangeAmount);
 
   return (
     <SecondColumnSwapSubBlock>
@@ -328,7 +323,10 @@ export default function MultiSwapComponent() {
         <SendReceiveSubBlock>
           <MultiSwapSendTokensChooseBlock isLightTheme={isLightTheme}>
             {/* SEND block */}
-            <MultiSwapChooseBtnTokenBlock onClick={() => openModalHelper(finalSendTokensList)}>
+            <MultiSwapChooseBtnTokenBlock
+              onClick={() =>
+                openModalHelper({ tokensList: finalSendTokensList, isSendModalOpen: true })
+              }>
               <div>
                 {sendTokenForExchange.logoURI !== null ? (
                   <SendTokenImg
@@ -373,9 +371,9 @@ export default function MultiSwapComponent() {
                 }}
                 isLightTheme={isLightTheme}
                 placeholder="0.0"
-                // value={sendTokenForExchangeAmount}
+                value={sendTokenForExchangeAmount}
                 onChange={(e) => {
-                  // setSendTokenForExchangeAmount(e.target.value);
+                  setSendTokenForExchangeAmount(e.target.value);
                   convertSendTokenToUSDCurrency({
                     amount: e.target.value,
                     ...sendTokenForExchange,
@@ -399,7 +397,10 @@ export default function MultiSwapComponent() {
         {state.map((receiveToken) => (
           <MultiSwapReceiveTokensBlock isLightTheme={isLightTheme}>
             <FirstSubLayoutMultiSwapReceiveTokensBlock>
-              <MultiSwapChooseBtnTokenBlock onClick={() => openModalHelper(finalReceiveTokensList)}>
+              <MultiSwapChooseBtnTokenBlock
+                onClick={() =>
+                  openModalHelper({ tokensList: finalReceiveTokensList, isSendModalOpen: false })
+                }>
                 <div>
                   {receiveToken.logoURI !== null ? (
                     <SendTokenImg
@@ -480,8 +481,6 @@ export default function MultiSwapComponent() {
                 <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
                   Offered by
                 </LabelsBlockSubBlockSpan>
-                {/*<PopupState variant="popover" popupId="demo-popup-popover">*/}
-                {/*{(popupState) => (*/}
                 <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
                   <img src={paraSwapIcon} alt="paraSwapIcon" />
                   <span onClick={handleClick}>ParaSwap</span>
@@ -564,8 +563,6 @@ export default function MultiSwapComponent() {
                     </SwapTokensOfferedBySubBlock>
                   </Popover>
                 </AdditionalOptionsSwapTokensSubBlock>
-                {/*)}*/}
-                {/*</PopupState>*/}
               </LabelsBlockSubBlock>
             </SecondSubLayoutMultiSwapReceiveTokensBlock>
           </MultiSwapReceiveTokensBlock>
@@ -605,7 +602,6 @@ export default function MultiSwapComponent() {
                   onChange={(event) => {
                     searchTokensHandler(event, {
                       tokensList: tokensListModal,
-                      //     tokensList: finalSendTokensList,
                     });
                   }}
                   InputProps={{
@@ -644,6 +640,10 @@ export default function MultiSwapComponent() {
                     {tokensListModal.map((object) => (
                       <SendTokenModalListItem
                         key={object.id}
+                        onClick={() => {
+                          setOpenTokensModal(false);
+                          selectTokenForSwap(object, isSendTokenSelectedSwapped);
+                        }}
                         // onClick={() => {
                         //   setOpenTokensModal(false);
                         //   setFilteredData(finalSendTokensList);
