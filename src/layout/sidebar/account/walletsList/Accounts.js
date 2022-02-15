@@ -26,7 +26,7 @@ import ThemeConfig from '../../../../theme';
 import { DisconnectPopup } from '../disconnectPopup';
 import RenamePopup from '../renamePopup';
 import Popup from '../generalPopupLayout';
-import green_got_menu from '../../../../assets/icons/green_got_menu.svg';
+import green_got_menu from '../../../../assets/icons/greenDot.svg';
 import menurender_customhook from '../menurender_customhook';
 import copy_notification_menu from '../../../../assets/icons/copy_notification_menu.svg';
 import userMockAvatar from '../../../../assets/icons/userMockAvatar.png';
