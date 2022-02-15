@@ -304,31 +304,7 @@ export default function SwapComponent() {
   useEffect(() => {
     finalSendTokensList.length !== 0 && setFilteredData(finalSendTokensList);
     finalReceiveTokensList.length !== 0 && setFilteredReceiveTokensListData(finalReceiveTokensList);
-    // console.log('front finalSendTokensList', finalSendTokensList);
-    // console.log('front finalReceiveTokensList', finalReceiveTokensList);
   }, [finalSendTokensList, finalReceiveTokensList]);
-
-  // let filteredTokensByName = (event, searchTokensData) => {
-  //   // console.log('searched tokens Data', searchTokensData);
-  //
-  //   let lowerCase = event.target.value.toLowerCase();
-  //   let filteredSearchTokensList = searchTokensData.tokensList.filter((el) => {
-  //     if (lowerCase.input === '') {
-  //       return el;
-  //     }
-  //     //return the item which contains the user input
-  //     else if (el.name !== undefined) {
-  //       return el.name.toLowerCase().includes(lowerCase);
-  //     } else {
-  //       // console.log('undef el', el);
-  //     }
-  //   });
-  //   if (searchTokensData.searchSendTokensList === true) {
-  //     setFilteredData(filteredSearchTokensList);
-  //   } else if (searchTokensData.searchReceiveTokensList === true) {
-  //     setFilteredReceiveTokensListData(filteredSearchTokensList);
-  //   }
-  // };
 
   //function of dynamic converting of token value to USD Currency
 
@@ -403,30 +379,6 @@ export default function SwapComponent() {
 
   //----------
 
-  useEffect(async () => {
-    await axios.get(`https://cdn.furucombo.app/furucombo.tokenlist.json`).then(async (response) => {
-      // console.log('receive tokens arr ', response.data.tokens);
-      settoTokens(response.data.tokens);
-    });
-  }, []);
-
-  useEffect(async () => {
-    try {
-      const ethDollarValue = await axios.get(
-        'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
-      );
-      // console.log('ethDollarValue', ethDollarValue);
-      setethPrice(ethDollarValue.data.ethereum.usd);
-    } catch (err) {
-      console.log('getEthDollarValue err', err);
-    }
-  }, []);
-
-  useEffect(() => {
-    const timeOutId = setTimeout(() => calculateToAmount(sendTokenForExchangeAmount), 500);
-    return () => clearTimeout(timeOutId);
-  }, [sendTokenForExchangeAmount]);
-
   async function loadWeb3() {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
@@ -465,27 +417,6 @@ export default function SwapComponent() {
       alert('Please Fill All fields');
     }
   }
-
-  const dollarValueOfToken = async (tokenAddress) => {
-    try {
-      if (tokenAddress === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
-        return ethPrice;
-      } else {
-        const response = await axios.get(
-          `https://api.ethplorer.io/getTokenInfo/${tokenAddress}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
-        );
-        let data = response.data;
-        console.log('response of ethplorere api::', data);
-        if (data.price !== undefined) {
-          console.log('enter inside method');
-          // settokenToDollarValue(data.price.rate);
-          return data.price.rate;
-        } else {
-          console.log('dollar value of this token is undefined');
-        }
-      }
-    } catch {}
-  };
 
   const calculateToAmount = async (tokenFromAmount) => {
     console.log('calculate method called with ammount::', tokenFromAmount);
@@ -1023,11 +954,6 @@ export default function SwapComponent() {
                         <SearchTokensModalTextField
                           isLightTheme={isLightTheme}
                           onChange={(event) => {
-                            // filteredTokensByName(e, {
-                            //   tokensList: finalReceiveTokensList,
-                            //   searchReceiveTokensList: true,
-                            // });
-
                             searchTokensHandler(event, {
                               tokensList: finalReceiveTokensList,
                               searchReceiveTokensList: true,

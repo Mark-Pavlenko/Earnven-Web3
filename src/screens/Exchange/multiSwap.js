@@ -92,6 +92,7 @@ import searchTokensImportModalDark from '../../assets/icons/searchTokensInputMod
 import searchTokensImportModalLight from '../../assets/icons/searchTokensButtonMobileLight.svg';
 import Avatar from 'react-avatar';
 import Loader from 'react-loader-spinner';
+import { filteredTokensByName } from './helpers';
 
 const useStyles = makeStyles((theme) => ({
   noBorder: {
@@ -167,7 +168,7 @@ export default function MultiSwapComponent() {
 
   console.log('init receive multiswap state', state);
 
-  const [isSendTokensModalVisible, setIsSendTokensModalVisible] = useState(false);
+  const [openTokensModal, setOpenTokensModal] = useState(false);
   const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
   // const [exchangeTokenAmount, setExchangeTokenAmount] = useState();
 
@@ -294,6 +295,21 @@ export default function MultiSwapComponent() {
 
   const open = Boolean(anchorEl);
 
+  let [tokensListModal, setTokensListModal] = useState([]);
+
+  const openModalHelper = (tokensList) => {
+    setOpenTokensModal(true);
+    console.log('universal tokensList multiswap openModal', tokensList);
+    setTokensListModal(tokensList);
+  };
+
+  const searchTokensHandler = (event, searchTokensData) => {
+    console.log('event multiswap', event);
+    const result = filteredTokensByName(event, searchTokensData);
+    console.log('result multiswap', result);
+    setTokensListModal(result);
+  };
+
   return (
     <SecondColumnSwapSubBlock>
       <SecondColumnTitleBlock>
@@ -312,7 +328,7 @@ export default function MultiSwapComponent() {
         <SendReceiveSubBlock>
           <MultiSwapSendTokensChooseBlock isLightTheme={isLightTheme}>
             {/* SEND block */}
-            <MultiSwapChooseBtnTokenBlock onClick={() => setIsSendTokensModalVisible(true)}>
+            <MultiSwapChooseBtnTokenBlock onClick={() => openModalHelper(finalSendTokensList)}>
               <div>
                 {sendTokenForExchange.logoURI !== null ? (
                   <SendTokenImg
@@ -339,41 +355,6 @@ export default function MultiSwapComponent() {
                 </MultiSwapSendValueLabel>
               </div>
             </MultiSwapChooseBtnTokenBlock>
-
-            {/* choose send token modal*/}
-            {isSendTokensModalVisible && (
-              <SelectTokensModalContainer
-                theme={isLightTheme}
-                isOpen={isSendTokensModalVisible}
-                onClose={() => {
-                  setIsSendTokensModalVisible(false);
-                }}>
-                <OutsideClickHandler
-                  onOutsideClick={() => {
-                    setIsSendTokensModalVisible(false);
-                    // setFilteredData(finalSendTokensList);
-                  }}>
-                  <TokensModalSubLayout isLightTheme={isLightTheme}>
-                    <Header>
-                      <ModalTitle isLightTheme={isLightTheme}>
-                        Select token for send multiswap
-                      </ModalTitle>
-                      <CloseButton
-                        onClick={() => {
-                          setIsSendTokensModalVisible(false);
-                          //          setFilteredData(finalSendTokensList);
-                        }}
-                        isLightTheme={isLightTheme}>
-                        <img
-                          src={isLightTheme ? closeModalIcon : closeModalIconDark}
-                          alt="close_modal_btn"
-                        />
-                      </CloseButton>
-                    </Header>
-                  </TokensModalSubLayout>
-                </OutsideClickHandler>
-              </SelectTokensModalContainer>
-            )}
 
             <USDCurrencyInputBlock>
               <ChosenMultiSwapSendReceiveTokenValueInput
@@ -414,11 +395,11 @@ export default function MultiSwapComponent() {
             alt="switch_tokens_btn"
           />
         </SendReceiveSubBlock>
-        {/* 1st receive block */}
+        {/* mapped received block */}
         {state.map((receiveToken) => (
           <MultiSwapReceiveTokensBlock isLightTheme={isLightTheme}>
             <FirstSubLayoutMultiSwapReceiveTokensBlock>
-              <MultiSwapChooseBtnTokenBlock>
+              <MultiSwapChooseBtnTokenBlock onClick={() => openModalHelper(finalReceiveTokensList)}>
                 <div>
                   {receiveToken.logoURI !== null ? (
                     <SendTokenImg
@@ -589,6 +570,137 @@ export default function MultiSwapComponent() {
             </SecondSubLayoutMultiSwapReceiveTokensBlock>
           </MultiSwapReceiveTokensBlock>
         ))}
+
+        {/* choose send/receive tokens modal*/}
+        {openTokensModal && (
+          <SelectTokensModalContainer
+            theme={isLightTheme}
+            isOpen={openTokensModal}
+            onClose={() => {
+              setOpenTokensModal(false);
+            }}>
+            <OutsideClickHandler
+              onOutsideClick={() => {
+                setOpenTokensModal(false);
+              }}>
+              <TokensModalSubLayout isLightTheme={isLightTheme}>
+                <Header>
+                  <ModalTitle isLightTheme={isLightTheme}>
+                    Select token for send multiswap
+                  </ModalTitle>
+                  <CloseButton
+                    onClick={() => {
+                      setOpenTokensModal(false);
+                    }}
+                    isLightTheme={isLightTheme}>
+                    <img
+                      src={isLightTheme ? closeModalIcon : closeModalIconDark}
+                      alt="close_modal_btn"
+                    />
+                  </CloseButton>
+                </Header>
+
+                <SearchTokensModalTextField
+                  isLightTheme={isLightTheme}
+                  onChange={(event) => {
+                    searchTokensHandler(event, {
+                      tokensList: tokensListModal,
+                      //     tokensList: finalSendTokensList,
+                    });
+                  }}
+                  InputProps={{
+                    endAdornment: (
+                      <img
+                        src={
+                          isLightTheme ? searchTokensImportModalDark : searchTokensImportModalLight
+                        }
+                        alt="search_icon"
+                      />
+                    ),
+                    classes: { notchedOutline: classes.noBorder },
+                    sx: {
+                      color: isLightTheme ? '#1E1E20' : '#FFFFFF',
+                      paddingRight: '20px',
+                      fontSize: 14,
+                    },
+                  }}
+                  id="filled-search"
+                  variant="outlined"
+                  label="Search tokens..."
+                  InputLabelProps={{
+                    style: {
+                      color: isLightTheme ? 'black' : 'white',
+                      fontSize: 14,
+                      fontWeight: 400,
+                      opacity: 0.5,
+                      lineHeight: '22px',
+                    },
+                  }}
+                  size="small"
+                />
+
+                {tokensListModal.length !== 0 ? (
+                  <SendTokensModalList isLightTheme={isLightTheme}>
+                    {tokensListModal.map((object) => (
+                      <SendTokenModalListItem
+                        key={object.id}
+                        // onClick={() => {
+                        //   setOpenTokensModal(false);
+                        //   setFilteredData(finalSendTokensList);
+                        //   selectSendTokenForExchange({
+                        //     ...object,
+                        //     sendTokensListItem: true,
+                        //   });
+                        //   convertSendTokenToUSDCurrency({
+                        //     amount: 1,
+                        //     sendTokensListItem: true,
+                        //     ...object,
+                        //     address: object.address,
+                        //   });
+                        // }}
+                        isLightTheme={isLightTheme}>
+                        <SendTokenLabelsBlock>
+                          {object.logoURI !== null ? (
+                            <SendTokenImg alt="token_img" src={object.logoURI} />
+                          ) : (
+                            <Avatar
+                              style={{
+                                marginLeft: '12px',
+                                marginRight: '12px',
+                                marginTop: '2px',
+                              }}
+                              name={object.name}
+                              round={true}
+                              size="21"
+                              textSizeRatio={1}
+                            />
+                          )}
+                          <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <SendTokenName isLightTheme={isLightTheme}>{object.name}</SendTokenName>
+                            <SendTokenConvertedMeasures isLightTheme={isLightTheme}>
+                              409,333 UNI · $19,18
+                            </SendTokenConvertedMeasures>
+                          </div>
+                        </SendTokenLabelsBlock>
+                        <SendTokenBalance isLightTheme={isLightTheme}>
+                          {object.balance === undefined ? (
+                            <Loader type="Rings" color="#BB86FC" height={30} width={30} />
+                          ) : (
+                            <span>${object.balance}</span>
+                          )}
+                        </SendTokenBalance>
+                      </SendTokenModalListItem>
+                    ))}
+                  </SendTokensModalList>
+                ) : (
+                  <AbsentFoundTokensBlock isLightTheme={isLightTheme}>
+                    <p>No tokens were found</p>
+                  </AbsentFoundTokensBlock>
+                )}
+              </TokensModalSubLayout>
+            </OutsideClickHandler>
+          </SelectTokensModalContainer>
+        )}
 
         <AddReceiveTokenMultiSwapBtn isLightTheme={isLightTheme}>
           <img

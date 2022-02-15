@@ -2,7 +2,7 @@ export const filteredTokensByName = (event, searchTokensData) => {
   console.log('searched tokens Data', searchTokensData);
 
   let lowerCase = event.target.value.toLowerCase();
-  let filteredSearchTokensList = searchTokensData.tokensList.filter((el) => {
+  return searchTokensData.tokensList.filter((el) => {
     if (lowerCase.input === '') {
       return el;
     }
@@ -13,9 +13,4 @@ export const filteredTokensByName = (event, searchTokensData) => {
       // console.log('undef el', el);
     }
   });
-  if (searchTokensData.searchSendTokensList === true) {
-    return filteredSearchTokensList;
-  } else if (searchTokensData.searchReceiveTokensList === true) {
-    return filteredSearchTokensList;
-  }
 };
