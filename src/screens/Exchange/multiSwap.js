@@ -73,6 +73,7 @@ import paraSwapIcon from '../../assets/icons/exchangers/paraSwapExchangerIcon.sv
 import uniswapExchangerIcon from '../../assets/icons/exchangers/uniswapExchangerIcon.svg';
 
 import exchangersOfferedList from './exchangersOfferedList';
+import sendTokensMockList from './sendTokensMockList.json';
 
 const useStyles = makeStyles((theme) => ({
   noBorder: {
@@ -153,11 +154,11 @@ export default function MultiSwapComponent() {
   // const [exchangeTokenAmount, setExchangeTokenAmount] = useState();
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
-
-  // console.log('receiveTokensList multiswap', receiveTokensFullList);
-
-  const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
   const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
+
+  //working saga
+  // const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
+  const finalSendTokensList = sendTokensMockList;
 
   console.log('finalSendTokensList multiswap', finalSendTokensList);
   console.log('finalReceiveTokensList multiswap', finalReceiveTokensList);
