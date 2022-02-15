@@ -382,6 +382,7 @@ export default function MultiSwapComponent() {
 
             <USDCurrencyInputBlock>
               <ChosenMultiSwapSendReceiveTokenValueInput
+                disabled={true}
                 InputProps={{
                   inputProps: {
                     style: {
