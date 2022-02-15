@@ -233,8 +233,8 @@ export default function MultiSwapComponent() {
     console.log('need index receive', needIndex);
 
     // if (needIndex !== -1) {
-    //   receiveTokensFullList[needIndex] = {
-    //     ...receiveTokensFullList.filter((token) => token.address === tokenData.address)[0],
+    //   receiveTokensList[needIndex] = {
+    //     ...receiveTokensList.filter((token) => token.address === tokenData.address)[0],
     //     USDCurrency: finalUSDCurrencyValue,
     //   };
     // }
@@ -266,6 +266,7 @@ export default function MultiSwapComponent() {
   let [isSendTokenSelectedSwapped, setIsSendTokenSelectedSwapped] = useState(false);
 
   const [sendTokenForExchangeAmount, setSendTokenForExchangeAmount] = useState();
+  let [oldTokenSwappedAddress, setOldTokenSwappedAddress] = useState();
 
   const openModalHelper = (payload) => {
     setOpenTokensModal(true);
@@ -285,8 +286,9 @@ export default function MultiSwapComponent() {
   // console.log('useState isSendTokenSelectedSwappedTokenType', isSendTokenSelectedSwapped);
 
   const selectTokenForSwap = (selectedSwapToken, isSendTokenSelectedSwapped) => {
-    console.log('selectedSwapToken multiswap', selectedSwapToken);
-    console.log('isSendTokenSelectedSwapped multiswap', isSendTokenSelectedSwapped);
+    console.log('selectedSwapToken multiswap 123', selectedSwapToken);
+    console.log('objIDAddress multiswap 123', oldTokenSwappedAddress);
+    console.log('isSendTokenSelectedSwapped multiswap 123', isSendTokenSelectedSwapped);
 
     if (isSendTokenSelectedSwapped === true) {
       setSendTokenForExchange(selectedSwapToken);
@@ -296,11 +298,22 @@ export default function MultiSwapComponent() {
         ...selectedSwapToken,
         address: selectedSwapToken.address,
       });
+    } else {
+      console.log('123 typeof', typeof oldTokenSwappedAddress);
+
+      const needIndex = receiveTokensList.findIndex(
+        (token) => token.address === oldTokenSwappedAddress
+      );
+
+      console.log('need index receive multiswap 123', needIndex);
+      console.log('multiswap 123 need elem', receiveTokensList[needIndex]);
+
+      receiveTokensList[needIndex] = selectedSwapToken;
     }
   };
 
   console.log('state sendTokenForExchange multiswap', sendTokenForExchange);
-  console.log('state receiveTokenForExchange array multiswap', receiveTokensList);
+  console.log('state receiveTokenForExchange array multiswap 123', receiveTokensList);
   console.log('state setSendTokenForExchangeAmount multiswap', sendTokenForExchangeAmount);
 
   return (
@@ -391,14 +404,16 @@ export default function MultiSwapComponent() {
             alt="switch_tokens_btn"
           />
         </SendReceiveSubBlock>
+
         {/* mapped received block */}
         {receiveTokensList.map((receiveToken) => (
           <MultiSwapReceiveTokensBlock isLightTheme={isLightTheme}>
             <FirstSubLayoutMultiSwapReceiveTokensBlock>
               <MultiSwapChooseBtnTokenBlock
-                onClick={() =>
-                  openModalHelper({ tokensList: finalReceiveTokensList, isSendModalOpen: false })
-                }>
+                onClick={() => {
+                  setOldTokenSwappedAddress(receiveToken.address);
+                  openModalHelper({ tokensList: finalReceiveTokensList, isSendModalOpen: false });
+                }}>
                 <div>
                   {receiveToken.logoURI !== null ? (
                     <SendTokenImg
