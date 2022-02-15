@@ -76,6 +76,7 @@ export const LiquidityTableItem = ({
   const address = useParams().address;
 
   const [isModalVisible, setIsModalVisible] = useState('');
+  const [modalType, setModalType] = useState('');
   //''
   //addLiquidity
   //slippageTolerance
@@ -489,13 +490,9 @@ export const LiquidityTableItem = ({
       )}
       {/*MODAL slippageTolerance====================================>*/}
       {isModalVisible === 'slippageTolerance' && (
-        <ModalContainer
-          modalType={isModalVisible}
-          theme={theme}
-          isOpen={isModalVisible}
-          closeModal={setIsModalVisible}>
+        <ModalContainer modalType={isModalVisible} theme={theme} closeModal={setIsModalVisible}>
           <MenuPopoverBoxTitle isLightTheme={theme}>{'Realtime Gas Prices'}</MenuPopoverBoxTitle>
-          <div>
+          <div style={{ marginBottom: '22px' }}>
             {addIconsGasPricesWithIcons.map((option) => (
               <div
                 style={{ display: 'flex', flexDirection: 'column' }}
@@ -516,36 +513,53 @@ export const LiquidityTableItem = ({
               </div>
             ))}
           </div>
-          <CommonSubmitButton width={'189px'} isLightTheme={theme} onClick={() => {}}>
-            {'Advanced settings'}
-          </CommonSubmitButton>
-          <MenuPopoverBoxTitle isLightTheme={theme}>{'Slippage Tolerance'}</MenuPopoverBoxTitle>
-          <CommonHoverButtonTrans
-            height={'45px'}
-            width={'55px'}
-            isLightTheme={theme}
-            onClick={() => {}}>
-            {'1%'}
-          </CommonHoverButtonTrans>
-          <CommonHoverButton height={'45px'} width={'55px'} isLightTheme={theme} onClick={() => {}}>
-            {'3%'}
-          </CommonHoverButton>
-          <CommonHoverButtonTrans
-            height={'45px'}
-            width={'120px'}
-            isLightTheme={theme}
-            onClick={() => {}}>
-            {'%'}
-          </CommonHoverButtonTrans>
-          <ResetButton isLightTheme={theme} onClick={resetButtonHandler}>
-            {'Reset'}
-          </ResetButton>
-          <CommonSubmitButton width={'165px'} isLightTheme={theme} onClick={saveButtonHandler}>
-            {'Save'}
-          </CommonSubmitButton>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <CommonSubmitButton
+              width={'189px'}
+              isLightTheme={theme}
+              onClick={() => {
+                setIsModalVisible('advancedSettings');
+              }}>
+              {'Advanced settings'}
+            </CommonSubmitButton>
+          </div>
+          {/*<MenuPopoverBoxTitle isLightTheme={theme}>{'Slippage Tolerance'}</MenuPopoverBoxTitle>*/}
+          {/*<CommonHoverButtonTrans*/}
+          {/*  height={'45px'}*/}
+          {/*  width={'55px'}*/}
+          {/*  isLightTheme={theme}*/}
+          {/*  onClick={() => {}}>*/}
+          {/*  {'1%'}*/}
+          {/*</CommonHoverButtonTrans>*/}
+          {/*<CommonHoverButton height={'45px'} width={'55px'} isLightTheme={theme} onClick={() => {}}>*/}
+          {/*  {'3%'}*/}
+          {/*</CommonHoverButton>*/}
+          {/*<CommonHoverButtonTrans*/}
+          {/*  height={'45px'}*/}
+          {/*  width={'120px'}*/}
+          {/*  isLightTheme={theme}*/}
+          {/*  onClick={() => {}}>*/}
+          {/*  {'%'}*/}
+          {/*</CommonHoverButtonTrans>*/}
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '45%' }}>
+            <ResetButton isLightTheme={theme} onClick={resetButtonHandler}>
+              {'Reset'}
+            </ResetButton>
+            <CommonSubmitButton width={'165px'} isLightTheme={theme} onClick={saveButtonHandler}>
+              {'Save'}
+            </CommonSubmitButton>
+          </div>
         </ModalContainer>
       )}
       {/*MODAL slippageTolerance====================================>*/}
+      {/*MODAL advanced settings====================================>*/}
+      {isModalVisible === 'advancedSettings' && (
+        <ModalContainer
+          modalType={isModalVisible}
+          theme={theme}
+          closeModal={setIsModalVisible}></ModalContainer>
+      )}
+      {/*MODAL advanced settings====================================>*/}
       <TableItem isLightTheme={theme}>
         <ItemHeader>
           <ItemIndex>{index + 1}</ItemIndex>
@@ -555,7 +569,8 @@ export const LiquidityTableItem = ({
               .map((name) => (
                 <>
                   {item[name].image && (
-                    <TokenImage src={`https://ethplorer.io${item[name].image}`} />
+                    //<TokenImage src={`https://ethplorer.io${item[name].image}`} />
+                    <TokenImage src={`${item[name].image}`} />
                   )}
                 </>
               ))}

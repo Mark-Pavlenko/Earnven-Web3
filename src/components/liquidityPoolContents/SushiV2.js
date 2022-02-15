@@ -27,27 +27,13 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-// import AmountInput from '../components/amountInput'
 
 import { Button } from '@material-ui/core';
 import { Link, useParams } from 'react-router-dom';
 import {LiquidityPoolsTable} from "./liquidityPoolsTable/liquidityPoolsTable";
 import {AddNewGroupButton} from "./uniV2/StyledComponents";
 import {useSelector} from "react-redux";
-import {data} from "../../globalStore";
-import ModalContainer from "../common/modalContainer/modalContainer";
-import {MenuPopoverBoxTitle, ResetButton} from "./liquidityPoolsTable/styledComponents";
-import {GasMenuItem} from "../gasDropDownMenu/styles";
-import {
-  CommonHoverButton,
-  CommonHoverButtonTrans,
-  CommonSubmitButton
-} from "../../screens/TokenPage/components/styledComponentsCommon";
-import {addIconsGasPrices} from "../../commonFunctions/commonFunctions";
-import fastDice from "../../assets/icons/fastDice-icon.svg";
-import middleDice from "../../assets/icons/middleDice-icon.svg";
-import slowDice from "../../assets/icons/slowDice-icon.svg";
-import Paper from "@material-ui/core/Paper";
+import mockTokenImage from '../../assets/icons/ethereum.svg'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -94,13 +80,6 @@ export default function LiquidityPools({ inputValue }) {
   const [value, setValue] = React.useState(0);
   const [Loading, setLoading] = useState(false);
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
-
-  //testData
-  const GasPrices = useSelector((state) => state.gesData.gasPriceData);
-  const addIconsGasPricesWithIcons = addIconsGasPrices(GasPrices, fastDice, middleDice, slowDice);
-  console.log('addIconsGasPricesWithIcons', addIconsGasPricesWithIcons)
-  const [selected, setSelected] = useState("Average");
-  //testData
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -638,6 +617,57 @@ export default function LiquidityPools({ inputValue }) {
     getData();
   }, [Page]);
 
+  const mockData = [
+    {
+      volumeUSD: '534543',
+      reserveUSD: '432434',
+      token0: {
+        id: '32432454223432csxczx',
+        image: mockTokenImage,
+        name: 'ETH',
+        symbol:'ETH',
+      },
+      token1: {
+        id: '32432454223432csxcdsaasdszx',
+        image: mockTokenImage,
+        name: 'WETH',
+        symbol: 'WETH',
+      },
+    },
+    {
+      volumeUSD: '534543',
+      reserveUSD: '432434',
+      token0: {
+        id: '32432454223432csxczx',
+        image: mockTokenImage,
+        name: 'USDC',
+        symbol:'USDC',
+      },
+      token1: {
+        id: '32432454223432csxcdsaasdszx',
+        image: mockTokenImage,
+        name: 'WETH',
+        symbol: 'WETH',
+      },
+    },
+    {
+      volumeUSD: '534543',
+      reserveUSD: '432434',
+      token0: {
+        id: '32432454223432csxczx',
+        image: mockTokenImage,
+        name: 'ETH',
+        symbol:'ETH',
+      },
+      token1: {
+        id: '32432454223432csxcdsaasdszx',
+        image: mockTokenImage,
+        name: 'SNX',
+        symbol: 'SNX',
+      },
+    }
+  ]
+
   useEffect(() => {
     setData([]);
   }, []);
@@ -811,16 +841,11 @@ export default function LiquidityPools({ inputValue }) {
     );
   };
 
-  const [tabValue, setTabValue] = React.useState(2);
-
-  const tubsHandler = (event, newValue) => {
-    setTabValue(newValue);
-  };
-
   return (
     <div>
       <LiquidityPoolsTable
-        data={Data}
+        //data={Data}
+        data={mockData}
         type={'sushiswap'}
         AllTokens={AllTokens}
         addLiquidity={addLiquidity}
@@ -837,68 +862,6 @@ export default function LiquidityPools({ inputValue }) {
         </AddNewGroupButton>
       </center>
       {Content}
-
-
-      <ModalContainer
-          modalType={'slippageTolerance'}
-          theme={isLightTheme}
-          closeModal={() => {}}>
-        <MenuPopoverBoxTitle isLightTheme={isLightTheme}>{'Realtime Gas Prices'}</MenuPopoverBoxTitle>
-        <div style={{marginBottom: '22px'}}>
-          {addIconsGasPricesWithIcons.map((option) => (
-              <div
-                  style={{ display: 'flex', flexDirection: 'column' }}
-                  selected={option.label === selected}
-                  onClick={() => {
-                    // updateGasValue(option.value, option.label);
-                  }}
-                  sx={{ py: 1, px: 2.5 }}>
-                <GasMenuItem isLightTheme={isLightTheme}>
-                  <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <img src={option.icon} alt="" />
-                    <span>{`${option.label} `}</span>
-                  </div>
-                  <div>
-                    <span>{`${option.value} Gwei`}</span>
-                  </div>
-                </GasMenuItem>
-              </div>
-          ))}
-        </div>
-        <div style={{display: 'flex', justifyContent: 'center'}}>
-          <CommonSubmitButton width={'189px'} isLightTheme={isLightTheme} onClick={() => {}}>
-            {'Advanced settings'}
-          </CommonSubmitButton>
-        </div>
-        {/*<MenuPopoverBoxTitle isLightTheme={isLightTheme}>{'Slippage Tolerance'}</MenuPopoverBoxTitle>*/}
-        {/*<CommonHoverButtonTrans*/}
-        {/*    height={'45px'}*/}
-        {/*    width={'55px'}*/}
-        {/*    isLightTheme={isLightTheme}*/}
-        {/*    onClick={() => {}}>*/}
-        {/*  {'1%'}*/}
-        {/*</CommonHoverButtonTrans>*/}
-        {/*<CommonHoverButton height={'45px'} width={'55px'} isLightTheme={isLightTheme} onClick={() => {}}>*/}
-        {/*  {'3%'}*/}
-        {/*</CommonHoverButton>*/}
-        {/*<CommonHoverButtonTrans*/}
-        {/*    height={'45px'}*/}
-        {/*    width={'120px'}*/}
-        {/*    isLightTheme={isLightTheme}*/}
-        {/*    onClick={() => {}}>*/}
-        {/*  {'%'}*/}
-        {/*</CommonHoverButtonTrans>*/}
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '45%'}}>
-        <ResetButton isLightTheme={isLightTheme} onClick={() => {}}>
-          {'Reset'}
-        </ResetButton>
-        <CommonSubmitButton style={{marginLeft: '7.5px'}} width={'165px'} isLightTheme={isLightTheme} onClick={() => {}}>
-          {'Save'}
-        </CommonSubmitButton>
-        </div>
-      </ModalContainer>
-
-
     </div>
   );
 }
