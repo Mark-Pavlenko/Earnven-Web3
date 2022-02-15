@@ -188,7 +188,7 @@ export default function MultiSwapComponent() {
   };
 
   let convertReceiveTokenToUSDCurrency = async (tokenData) => {
-    console.log('receive tokenData multiswap', tokenData);
+    console.log('receive USD tokenData multiswap', tokenData);
 
     if (tokenData.amount === '' || typeof tokenData.amount === 'symbol') {
       tokenData.amount = '0';
@@ -225,19 +225,20 @@ export default function MultiSwapComponent() {
       ).toFixed(2)}`;
     }
 
-    console.log('receive finalUSDCurrencyValue', finalUSDCurrencyValue);
+    console.log('receive USD finalUSDCurrencyValue', finalUSDCurrencyValue);
 
     // found necessary index of element, which currency is updated
     const needIndex = receiveTokensList.findIndex((token) => token.address === tokenData.address);
 
-    console.log('need index receive', needIndex);
+    console.log('receive USD index', needIndex);
 
-    // if (needIndex !== -1) {
-    //   receiveTokensList[needIndex] = {
-    //     ...receiveTokensList.filter((token) => token.address === tokenData.address)[0],
-    //     USDCurrency: finalUSDCurrencyValue,
-    //   };
-    // }
+    if (needIndex !== -1) {
+      receiveTokensList[needIndex] = {
+        ...receiveTokensList.filter((token) => token.address === tokenData.address)[0],
+        USDCurrency: finalUSDCurrencyValue,
+        amount: parseInt(tokenData.amount),
+      };
+    }
 
     let temp_state = [...receiveTokensList];
 
@@ -306,9 +307,17 @@ export default function MultiSwapComponent() {
       );
 
       console.log('need index receive multiswap 123', needIndex);
+      console.log('obj multiswap 123', { ...selectedSwapToken, receiveTokensListItem: true });
       console.log('multiswap 123 need elem', receiveTokensList[needIndex]);
 
-      receiveTokensList[needIndex] = selectedSwapToken;
+      receiveTokensList[needIndex] = { ...selectedSwapToken, receiveTokensListItem: true };
+
+      // if (needIndex !== -1) {
+      //   receiveTokensList[needIndex] = {
+      //     ...receiveTokensList.filter((token) => token.address === tokenData.address)[0],
+      //     USDCurrency: finalUSDCurrencyValue,
+      //   };
+      // }
     }
   };
 
@@ -465,7 +474,7 @@ export default function MultiSwapComponent() {
                     // setSendTokenForExchangeAmount(e.target.value);
                     convertReceiveTokenToUSDCurrency({
                       amount: e.target.value,
-                      // ...receiveToken,
+                      receiveTokenIndex: receiveTokensList.indexOf(receiveToken),
                       address: receiveToken.address,
                       receiveTokensListItem: receiveToken.receiveTokensListItem,
                     });
