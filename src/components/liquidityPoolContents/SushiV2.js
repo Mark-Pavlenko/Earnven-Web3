@@ -30,10 +30,15 @@ import Box from '@material-ui/core/Box';
 
 import { Button } from '@material-ui/core';
 import { Link, useParams } from 'react-router-dom';
-import {LiquidityPoolsTable} from "./liquidityPoolsTable/liquidityPoolsTable";
+import {LiquidityPoolsTable} from "./liquidityPoolsTable/liquidityPoolsTable/liquidityPoolsTable";
 import {AddNewGroupButton} from "./uniV2/StyledComponents";
 import {useSelector} from "react-redux";
 import mockTokenImage from '../../assets/icons/ethereum.svg'
+import mkrImage from '../../assets/icons/mkr.svg'
+import aaveImage from '../../assets/icons/aave-logo.svg'
+import balancerImage from '../../assets/icons/balancer-icon.svg'
+import {InvestPoolsTable} from "./liquidityPoolsTable/investPoolsTable/investPoolsTable";
+import {addLiquidityNormalSushiV2, addLiquiditySushiV2} from "../../screens/liquidityPools/helpers";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -75,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function LiquidityPools({ inputValue }) {
+export default function LiquidityPools({ inputValue, AllTokens }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [Loading, setLoading] = useState(false);
@@ -100,31 +105,126 @@ export default function LiquidityPools({ inputValue }) {
   const [ReceiveToken, setReceiveToken] = useState('');
   const [LiquidityAmount, setLiquidityAmount] = useState('');
 
-  const [AllTokens, setAllTokens] = useState([]);
+  // const [AllTokens, setAllTokens] = useState([]);
 
-  useEffect(() => {
-    async function getData() {
-      let fetchedTokens;
-      await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {}).then(async (response) => {
-        setAllTokens(response.data.records);
-        fetchedTokens = response.data.records;
-      });
-      await axios
-        .get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
-        .then(async (response) => {
-          let data = response.data.tokens;
-          let tokens = fetchedTokens.map((token) => ({
-            ...token,
-            logoURI: data.find((x) => x.address === token.address)
-              ? data.find((x) => x.address === token.address).logoURI
-              : tokenURIs.find((x) => x.address === token.address).logoURI,
-          }));
-          setAllTokens(tokens);
-        }).catch((res) => {
-            console.log('liquidity pools Sushiswap-V2 returns error', res)});
+  const mockData = [
+    {
+      volumeUSD: '534543',
+      reserveUSD: '432434',
+      token0: {
+        id: '32432454223432csxczx',
+        image: mockTokenImage,
+        name: 'ETH',
+        symbol:'ETH',
+      },
+      token1: {
+        id: '32432454223432csxcdsaasdszx',
+        image: mockTokenImage,
+        name: 'WETH',
+        symbol: 'WETH',
+      },
+    },
+    {
+      volumeUSD: '534543',
+      reserveUSD: '432434',
+      token0: {
+        id: '32432454223432csxczx',
+        image: mockTokenImage,
+        name: 'USDC',
+        symbol:'USDC',
+      },
+      token1: {
+        id: '32432454223432csxcdsaasdszx',
+        image: mockTokenImage,
+        name: 'WETH',
+        symbol: 'WETH',
+      },
+    },
+    {
+      volumeUSD: '534543',
+      reserveUSD: '432434',
+      token0: {
+        id: '32432454223432csxczx',
+        image: mockTokenImage,
+        name: 'ETH',
+        symbol:'ETH',
+      },
+      token1: {
+        id: '32432454223432csxcdsaasdszx',
+        image: mockTokenImage,
+        name: 'SNX',
+        symbol: 'SNX',
+      },
     }
-    getData();
-  }, []);
+  ]
+  const myPoolsMockData = [
+    {
+      imageData: [
+        mkrImage,
+        aaveImage,
+        balancerImage,
+      ],
+      liquidity: '432234432223434,32',
+      volumeUSD: '423432423',
+      reserveUSD: '454423',
+      balance: '3425432',
+      value: '44234123',
+      tokens: ['WETH', 'USDC', 'SNX'],
+      protocol: 'Curve'
+    },
+    {
+      imageData: [
+        mkrImage,
+        aaveImage,
+        balancerImage,
+      ],
+      liquidity: '432234432223434,32',
+      volumeUSD: '423432423',
+      reserveUSD: '454423',
+      balance: '3425432',
+      value: '44234123',
+      tokens: ['WETH', 'USDC', 'SNX'],
+      protocol: 'Curve'
+    },
+    {
+      imageData: [
+        mkrImage,
+        aaveImage,
+        balancerImage,
+      ],
+      liquidity: '432234432223434,32',
+      volumeUSD: '423432423',
+      reserveUSD: '454423',
+      balance: '3425432',
+      value: '44234123',
+      tokens: ['WETH', 'USDC', 'SNX'],
+      protocol: 'Curve'
+    }
+  ]
+
+  // useEffect(() => {
+  //   async function getData() {
+  //     let fetchedTokens;
+  //     await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {}).then(async (response) => {
+  //       setAllTokens(response.data.records);
+  //       fetchedTokens = response.data.records;
+  //     });
+  //     await axios
+  //       .get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
+  //       .then(async (response) => {
+  //         let data = response.data.tokens;
+  //         let tokens = fetchedTokens.map((token) => ({
+  //           ...token,
+  //           logoURI: data.find((x) => x.address === token.address)
+  //             ? data.find((x) => x.address === token.address).logoURI
+  //             : tokenURIs.find((x) => x.address === token.address).logoURI,
+  //         }));
+  //         setAllTokens(tokens);
+  //       }).catch((res) => {
+  //           console.log('liquidity pools Sushiswap-V2 returns error', res)});
+  //   }
+  //   getData();
+  // }, []);
 
   //worked useEffect
   useEffect(() => {
@@ -617,57 +717,6 @@ export default function LiquidityPools({ inputValue }) {
     getData();
   }, [Page]);
 
-  const mockData = [
-    {
-      volumeUSD: '534543',
-      reserveUSD: '432434',
-      token0: {
-        id: '32432454223432csxczx',
-        image: mockTokenImage,
-        name: 'ETH',
-        symbol:'ETH',
-      },
-      token1: {
-        id: '32432454223432csxcdsaasdszx',
-        image: mockTokenImage,
-        name: 'WETH',
-        symbol: 'WETH',
-      },
-    },
-    {
-      volumeUSD: '534543',
-      reserveUSD: '432434',
-      token0: {
-        id: '32432454223432csxczx',
-        image: mockTokenImage,
-        name: 'USDC',
-        symbol:'USDC',
-      },
-      token1: {
-        id: '32432454223432csxcdsaasdszx',
-        image: mockTokenImage,
-        name: 'WETH',
-        symbol: 'WETH',
-      },
-    },
-    {
-      volumeUSD: '534543',
-      reserveUSD: '432434',
-      token0: {
-        id: '32432454223432csxczx',
-        image: mockTokenImage,
-        name: 'ETH',
-        symbol:'ETH',
-      },
-      token1: {
-        id: '32432454223432csxcdsaasdszx',
-        image: mockTokenImage,
-        name: 'SNX',
-        symbol: 'SNX',
-      },
-    }
-  ]
-
   useEffect(() => {
     setData([]);
   }, []);
@@ -848,10 +897,9 @@ export default function LiquidityPools({ inputValue }) {
         data={mockData}
         type={'sushiswap'}
         AllTokens={AllTokens}
-        addLiquidity={addLiquidity}
-        addLiquidityNormal={addLiquidityNormal}
+        addLiquidity={addLiquiditySushiV2}
+        addLiquidityNormal={addLiquidityNormalSushiV2}
       />
-      <br />
       <center>
         <AddNewGroupButton
           isLightTheme={isLightTheme}
@@ -861,7 +909,7 @@ export default function LiquidityPools({ inputValue }) {
           {Loading ? 'Loading...' : 'More Pools'}
         </AddNewGroupButton>
       </center>
-      {Content}
+      {/*{Content}*/}
     </div>
   );
 }

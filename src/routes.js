@@ -21,7 +21,7 @@ import Index from './components/WalletConnectionPage';
 import AllTokensApprovals from './screens/allTokensApprovals';
 import TokenApproval from './screens/tokenApproval';
 import CubicleGraphs from './screens/chartsCubicle';
-import LiquidityPools from './screens/liquidityPools';
+import LiquidityPools from './screens/liquidityPools/liquidityPools';
 import NFT from './screens/NFT';
 import NftDetails from './screens/NftDetail';
 import Home from './screens/Home';
