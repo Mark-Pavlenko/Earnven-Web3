@@ -202,17 +202,21 @@ export default function MultiSwapComponent() {
       tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' &&
       tokenData.USDCurrency === undefined
     ) {
-      tokenUSDCurrencyValue = await axios.get(
-        `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
-      );
+      // tokenUSDCurrencyValue = await axios.get(
+      //   `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
+      // );
 
-      if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
-        finalUSDCurrencyValue = `$ ${(
-          tokenUSDCurrencyValue.data.price.rate * parseInt(tokenData.amount)
-        ).toFixed(2)}`;
-      } else {
-        console.log('Price not available');
-      }
+      // if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
+      // finalUSDCurrencyValue = `$ ${(
+      //   tokenUSDCurrencyValue.data.price.rate * parseInt(tokenData.amount)
+      // ).toFixed(2)}`;
+
+      //not permanent solution
+      finalUSDCurrencyValue = `$${1.0 * parseInt(tokenData.amount)}`;
+
+      // } else {
+      //   console.log('Price not available');
+      // }
     } else if (
       tokenData.address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' &&
       tokenData.receiveTokensListItem === true
@@ -232,8 +236,10 @@ export default function MultiSwapComponent() {
 
     console.log('receive USD index', needIndex);
 
+    // && needIndex === tokenData.receiveTokenIndex
+
     if (needIndex !== -1) {
-      receiveTokensList[needIndex] = {
+      receiveTokensList[tokenData.receiveTokenIndex] = {
         ...receiveTokensList.filter((token) => token.address === tokenData.address)[0],
         USDCurrency: finalUSDCurrencyValue,
         amount: parseInt(tokenData.amount),
