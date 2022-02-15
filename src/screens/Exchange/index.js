@@ -225,6 +225,8 @@ const makeCall = async (callName, contract, args, metadata = {}) => {
   }
 };
 
+import { filteredTokensByName } from './helpers';
+
 export default function SwapComponent() {
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -306,27 +308,27 @@ export default function SwapComponent() {
     // console.log('front finalReceiveTokensList', finalReceiveTokensList);
   }, [finalSendTokensList, finalReceiveTokensList]);
 
-  let filteredTokensByName = (e, searchTokensData) => {
-    // console.log('searched tokens Data', searchTokensData);
-
-    let lowerCase = e.target.value.toLowerCase();
-    let filteredSearchTokensList = searchTokensData.tokensList.filter((el) => {
-      if (lowerCase.input === '') {
-        return el;
-      }
-      //return the item which contains the user input
-      else if (el.name !== undefined) {
-        return el.name.toLowerCase().includes(lowerCase);
-      } else {
-        // console.log('undef el', el);
-      }
-    });
-    if (searchTokensData.searchSendTokensList === true) {
-      setFilteredData(filteredSearchTokensList);
-    } else if (searchTokensData.searchReceiveTokensList === true) {
-      setFilteredReceiveTokensListData(filteredSearchTokensList);
-    }
-  };
+  // let filteredTokensByName = (event, searchTokensData) => {
+  //   // console.log('searched tokens Data', searchTokensData);
+  //
+  //   let lowerCase = event.target.value.toLowerCase();
+  //   let filteredSearchTokensList = searchTokensData.tokensList.filter((el) => {
+  //     if (lowerCase.input === '') {
+  //       return el;
+  //     }
+  //     //return the item which contains the user input
+  //     else if (el.name !== undefined) {
+  //       return el.name.toLowerCase().includes(lowerCase);
+  //     } else {
+  //       // console.log('undef el', el);
+  //     }
+  //   });
+  //   if (searchTokensData.searchSendTokensList === true) {
+  //     setFilteredData(filteredSearchTokensList);
+  //   } else if (searchTokensData.searchReceiveTokensList === true) {
+  //     setFilteredReceiveTokensListData(filteredSearchTokensList);
+  //   }
+  // };
 
   //function of dynamic converting of token value to USD Currency
 
@@ -365,10 +367,6 @@ export default function SwapComponent() {
 
     if (tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
       console.log('first triggered');
-
-      // tokenUSDCurrencyValue = await axios.get(
-      //   `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
-      // );
 
       await axios
         .get(
@@ -697,6 +695,16 @@ export default function SwapComponent() {
     setReceiveTokenForExchangeAmount(sendTokenForExchangeAmount);
   };
 
+  const searchTokensHandler = (event, searchTokensData) => {
+    const result = filteredTokensByName(event, searchTokensData);
+    console.log('result', result);
+    if (searchTokensData.searchSendTokensList === true) {
+      setFilteredData(result);
+    } else {
+      setFilteredReceiveTokensListData(result);
+    }
+  };
+
   return (
     <>
       <ExchangeMainLayout>
@@ -804,8 +812,8 @@ export default function SwapComponent() {
 
                         <SearchTokensModalTextField
                           isLightTheme={isLightTheme}
-                          onChange={(e) => {
-                            filteredTokensByName(e, {
+                          onChange={(event) => {
+                            searchTokensHandler(event, {
                               tokensList: finalSendTokensList,
                               searchSendTokensList: true,
                             });
@@ -1014,8 +1022,13 @@ export default function SwapComponent() {
                         </Header>
                         <SearchTokensModalTextField
                           isLightTheme={isLightTheme}
-                          onChange={(e) => {
-                            filteredTokensByName(e, {
+                          onChange={(event) => {
+                            // filteredTokensByName(e, {
+                            //   tokensList: finalReceiveTokensList,
+                            //   searchReceiveTokensList: true,
+                            // });
+
+                            searchTokensHandler(event, {
                               tokensList: finalReceiveTokensList,
                               searchReceiveTokensList: true,
                             });

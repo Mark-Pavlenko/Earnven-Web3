@@ -48,6 +48,15 @@ import {
   GreenDotIcon,
   ExchangersMainListLayout,
   SaveSelectedExchangerButton,
+  TokensModalSubLayout,
+  SearchTokensModalTextField,
+  SendTokensModalList,
+  SendTokenModalListItem,
+  SendTokenLabelsBlock,
+  SendTokenName,
+  SendTokenConvertedMeasures,
+  SendTokenBalance,
+  AbsentFoundTokensBlock,
 } from './styled';
 import EthIcon from '../../assets/icons/ethereum.svg';
 import chevronDownBlack from '../../assets/icons/chevronDownLightTheme.svg';
@@ -74,6 +83,15 @@ import uniswapExchangerIcon from '../../assets/icons/exchangers/uniswapExchanger
 
 import exchangersOfferedList from './exchangersOfferedList';
 import sendTokensMockList from './sendTokensMockList.json';
+import SelectTokensModalContainer from './selectTokensModal';
+import OutsideClickHandler from './outsideClickHandler';
+import { CloseButton, Header, ModalTitle } from './selectTokensModal/styles';
+import closeModalIcon from '../../assets/icons/close_nft.svg';
+import closeModalIconDark from '../../assets/icons/closenftdark.svg';
+import searchTokensImportModalDark from '../../assets/icons/searchTokensInputModalDark.svg';
+import searchTokensImportModalLight from '../../assets/icons/searchTokensButtonMobileLight.svg';
+import Avatar from 'react-avatar';
+import Loader from 'react-loader-spinner';
 
 const useStyles = makeStyles((theme) => ({
   noBorder: {
@@ -275,7 +293,6 @@ export default function MultiSwapComponent() {
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
 
   return (
     <SecondColumnSwapSubBlock>
@@ -322,6 +339,42 @@ export default function MultiSwapComponent() {
                 </MultiSwapSendValueLabel>
               </div>
             </MultiSwapChooseBtnTokenBlock>
+
+            {/* choose send token modal*/}
+            {isSendTokensModalVisible && (
+              <SelectTokensModalContainer
+                theme={isLightTheme}
+                isOpen={isSendTokensModalVisible}
+                onClose={() => {
+                  setIsSendTokensModalVisible(false);
+                }}>
+                <OutsideClickHandler
+                  onOutsideClick={() => {
+                    setIsSendTokensModalVisible(false);
+                    // setFilteredData(finalSendTokensList);
+                  }}>
+                  <TokensModalSubLayout isLightTheme={isLightTheme}>
+                    <Header>
+                      <ModalTitle isLightTheme={isLightTheme}>
+                        Select token for send multiswap
+                      </ModalTitle>
+                      <CloseButton
+                        onClick={() => {
+                          setIsSendTokensModalVisible(false);
+                          //          setFilteredData(finalSendTokensList);
+                        }}
+                        isLightTheme={isLightTheme}>
+                        <img
+                          src={isLightTheme ? closeModalIcon : closeModalIconDark}
+                          alt="close_modal_btn"
+                        />
+                      </CloseButton>
+                    </Header>
+                  </TokensModalSubLayout>
+                </OutsideClickHandler>
+              </SelectTokensModalContainer>
+            )}
+
             <USDCurrencyInputBlock>
               <ChosenMultiSwapSendReceiveTokenValueInput
                 InputProps={{
