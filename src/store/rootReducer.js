@@ -40,6 +40,7 @@ import { walletDataReducer } from './currentWalletData/reducer';
 import { tokenPriceHistoryReducer } from './currentTokenPriceHistory/reducer';
 import { Synthetix } from './Synthetix/reducer';
 import { tokensListReducer } from './exchangeTokensLists/reducer';
+import { snowSwap } from './SnowSwap/reducer';
 
 export const rootReducer = combineReducers({
   web3Reducer,
@@ -85,4 +86,5 @@ export const rootReducer = combineReducers({
   walletDataReducer,
   tokenPriceHistoryReducer,
   Synthetix,
+  snowSwap,
 });

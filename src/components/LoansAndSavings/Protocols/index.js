@@ -76,6 +76,7 @@ export default function Index({ accountAddress }) {
       <YearnFinance accountAddress={accountAddress} />
       <Synthetix accountAddress={accountAddress} />
       <ConvexStaking accountAddress={accountAddress} />
+      <SnowSwapStaking accountAddress={accountAddress} />
     </React.Fragment>
   );
 }

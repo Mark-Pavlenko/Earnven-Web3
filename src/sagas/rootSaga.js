@@ -37,6 +37,7 @@ import { getCurveLPTokenSagaWatcher } from './curveLpToken';
 import { getAaveStakeSagaWatcher } from './Aave';
 import { getSynthetixSagaWatcher } from './Synthetix';
 import { getConvexStakingSagaWatcher } from './convexStaking';
+import { getSnowSwapSagaWatcher } from './SnowSwap';
 export default function* watchRootSaga() {
   yield all([
     call(getAccountBalanceSagaWatcher),
@@ -74,5 +75,6 @@ export default function* watchRootSaga() {
     call(getGasPriceWatcher),
     call(getSynthetixSagaWatcher),
     call(getConvexStakingSagaWatcher),
+    call(getSnowSwapSagaWatcher),
   ]);
 }

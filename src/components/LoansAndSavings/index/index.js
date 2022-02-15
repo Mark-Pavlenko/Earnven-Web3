@@ -17,13 +17,15 @@ import SushiSwapLogo from '../../../assets/icons/Sushiswap.webp';
 import ETHLogo from '../../../assets/icons/eth.png';
 import CurveLogo from '../../../assets/icons/curveLogo.png';
 import aaveLogo from '../../../assets/icons/aave-logo.svg';
+import SnowSwapLogo from '../../../assets/icons/snowswap-snow-logo.svg';
 import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
-import Ethereum2Staking from '../Ethereum2Staking';
-import CurveFarming from '../CurveFarming';
-import AaveStaking from '../AaveStaking';
-import Synthetix from '../Synthetix';
+// import Ethereum2Staking from '../Ethereum2Staking';
+// import CurveFarming from '../CurveFarming';
+// import AaveStaking from '../AaveStaking';
+// import Synthetix from '../Synthetix';
 //import UniswapV2 from '../LiqudityPools/UniswapV2';
 //import ConvexStaking from '../ConvexStaking';
+//import { SnowSwapStaking } from '../SnowSwapStaking';
 
 export default function index({ accountAddress }) {
   //save conditions of open/close investment blocks
@@ -117,6 +119,9 @@ export default function index({ accountAddress }) {
   const convexImageUrl =
     'https://assets.coingecko.com/coins/images/15585/thumb/convex.png?1621256328';
 
+  //SnowSwap token
+  const snowSwapData = useSelector((state) => state.snowSwap.snowSwanData);
+  const snowSwapTotal = useSelector((state) => state.snowSwap.snowSwapTotal);
   //pickle
   // const pickeStake = useSelector((state) => state.pickeStake.pickeStake); //saga
   // const pickleStakeTotal = useSelector((state) => state.pickeStake.pickleStakeTotal); //saga
@@ -590,7 +595,7 @@ export default function index({ accountAddress }) {
       <PoolsBlock //third
         isLightTheme={theme}
         style={{
-          display: liquityTokenData.length > 0 ? '' : 'none',
+          display: liquityTokenData.length > 0 || snowSwapData.length > 0,
         }}>
         <Header>
           <Title isLightTheme={theme}>{'Yield Farming'}</Title>
@@ -601,7 +606,10 @@ export default function index({ accountAddress }) {
             <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
             {/*<TotalEmptyCell></TotalEmptyCell>*/}
             <TotalValue isLightTheme={theme}>
-              ${numberWithCommas(parseFloat(liquityTokenTotal).toFixed(2))}
+              $
+              {numberWithCommas(
+                parseFloat(parseFloat(liquityTokenTotal) + parseFloat(snowSwapTotal)).toFixed(2)
+              )}
             </TotalValue>
           </TotalValueField>
         </div>
@@ -628,6 +636,36 @@ export default function index({ accountAddress }) {
                           protocol={object}
                           protocolName={'Liquity'}
                           logoImage={object.tokenImage}
+                        />
+                      );
+                    })
+                  : ''}
+              </React.Fragment>
+            ) : (
+              ''
+            )}
+
+            {/* SnowSwap protocol */}
+            {snowSwapData.length > 0 ? (
+              <React.Fragment>
+                <img
+                  src={SnowSwapLogo}
+                  style={{
+                    height: '20px',
+                    marginTop: '',
+                    marginLeft: '15px',
+                    display: 'inline-block',
+                  }}
+                  alt=""
+                />
+                SnowSwap
+                {snowSwapData
+                  ? snowSwapData.map((object) => {
+                      return (
+                        <Investment
+                          protocol={object}
+                          protocolName={'SnowSwap'}
+                          logoImage={SnowSwapLogo}
                         />
                       );
                     })
