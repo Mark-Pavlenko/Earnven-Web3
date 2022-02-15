@@ -117,7 +117,7 @@ export default function MultiSwapComponent() {
   const [tokenSendUSDCurrency, setTokenSendUSDCurrency] = useState('$0.00');
   const [tokenReceiveUSDCurrency, setTokenReceiveUSDCurrency] = useState('$0.00');
 
-  const receiveTokensList = [
+  const initReceiveTokensList = [
     {
       symbol: 'DAI',
       logoURI: daiICon,
@@ -126,7 +126,6 @@ export default function MultiSwapComponent() {
       id: 'dai',
       receiveTokensListItem: true,
       address: '0x6b175474e89094c44da98b954eedeac495271d0f',
-      // USDCurrency: '$0.00',
     },
 
     {
@@ -137,13 +136,12 @@ export default function MultiSwapComponent() {
       id: 'unicorn-token',
       receiveTokensListItem: true,
       address: '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984',
-      // USDCurrency: '$0.00',
     },
   ];
 
-  const [state, setState] = useState(receiveTokensList);
+  const [receiveTokensList, setReceiveTokensList] = useState(initReceiveTokensList);
 
-  console.log('init receive multiswap state', state);
+  console.log('init receive multiswap state', receiveTokensList);
 
   const [openTokensModal, setOpenTokensModal] = useState(false);
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
@@ -241,7 +239,7 @@ export default function MultiSwapComponent() {
     //   };
     // }
 
-    let temp_state = [...state];
+    let temp_state = [...receiveTokensList];
 
     let temp_element = { ...temp_state[needIndex] };
 
@@ -249,7 +247,7 @@ export default function MultiSwapComponent() {
 
     temp_state[needIndex] = temp_element;
 
-    setState(temp_state);
+    setReceiveTokensList(temp_state);
   };
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -283,8 +281,8 @@ export default function MultiSwapComponent() {
     setTokensListModal(result);
   };
 
-  console.log('useState tokensListModal multiswap', tokensListModal);
-  console.log('useState isSendTokenSelectedSwappedTokenType', isSendTokenSelectedSwapped);
+  // console.log('useState tokensListModal multiswap', tokensListModal);
+  // console.log('useState isSendTokenSelectedSwappedTokenType', isSendTokenSelectedSwapped);
 
   const selectTokenForSwap = (selectedSwapToken, isSendTokenSelectedSwapped) => {
     console.log('selectedSwapToken multiswap', selectedSwapToken);
@@ -292,7 +290,6 @@ export default function MultiSwapComponent() {
 
     if (isSendTokenSelectedSwapped === true) {
       setSendTokenForExchange(selectedSwapToken);
-      setTokenSendUSDCurrency('$0.00');
       setSendTokenForExchangeAmount(1);
       convertSendTokenToUSDCurrency({
         amount: 1,
@@ -302,8 +299,9 @@ export default function MultiSwapComponent() {
     }
   };
 
-  console.log('setSendTokenForExchange multiswap', sendTokenForExchange);
-  console.log('setSendTokenForExchangeAmount multiswap', sendTokenForExchangeAmount);
+  console.log('state sendTokenForExchange multiswap', sendTokenForExchange);
+  console.log('state receiveTokenForExchange array multiswap', receiveTokensList);
+  console.log('state setSendTokenForExchangeAmount multiswap', sendTokenForExchangeAmount);
 
   return (
     <SecondColumnSwapSubBlock>
@@ -394,7 +392,7 @@ export default function MultiSwapComponent() {
           />
         </SendReceiveSubBlock>
         {/* mapped received block */}
-        {state.map((receiveToken) => (
+        {receiveTokensList.map((receiveToken) => (
           <MultiSwapReceiveTokensBlock isLightTheme={isLightTheme}>
             <FirstSubLayoutMultiSwapReceiveTokensBlock>
               <MultiSwapChooseBtnTokenBlock
