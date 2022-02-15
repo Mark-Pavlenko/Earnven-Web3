@@ -5,7 +5,7 @@
     "decimals": 18,
     "tokenType": "ERC20",
     "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-    "logoURI": "https://assets.coingecko.com/coins/images/2518/thumb/weth.png?1628852295"
+    "logoURI": "https://assets.coingecko.com/coins/images/1010/thumb/ethereumcash.png?1510040235"
   },
   {
     "symbol": "WETH",
@@ -31,7 +31,8 @@
     "address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
     "logoURI": "https://assets.coingecko.com/coins/images/6319/thumb/USD_Coin_icon.png?1547042389"
   },
-  { "symbol": "DAI",
+  {
+    "symbol": "DAI",
     "name": "Dai Stablecoin",
     "decimals": 18,
     "tokenType": "ERC20",

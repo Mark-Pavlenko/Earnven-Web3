@@ -3,22 +3,15 @@ import {
   AdditionalOptionsSwapTokensSubBlock,
   AddReceiveTokenMultiSwapBtn,
   ChosenMultiSwapSendReceiveTokenValueInput,
-  ChosenSendReceiveTokenValueInput,
   ChosenTokenLabel,
   ColumnMainSubTitles,
   ColumnMainTitles,
   DownDelimiterLabelsBlock,
   ExchangerElementListItem,
-  ExchangersBestRateColumns,
-  ExchangersGasFeeColumn,
-  ExchangersGreenDotsColumn,
-  ExchangersIconsColumn,
   ExchangersLayout,
   ExchangersLayoutTitlesBlock,
   ExchangersMainSubLayout,
-  ExchangersReceiveUSDCurrency,
   ExchangerMainList,
-  ExchangersTitlesBlock,
   FirstSubLayoutMultiSwapReceiveTokensBlock,
   LabelsBlockImportantSpan,
   LabelsBlockSubBlock,
@@ -115,27 +108,25 @@ export default function MultiSwapComponent() {
   });
 
   const [tokenSendUSDCurrency, setTokenSendUSDCurrency] = useState('$0.00');
-  const [tokenReceiveUSDCurrency, setTokenReceiveUSDCurrency] = useState('$0.00');
 
   const initReceiveTokensList = [
     {
+      symbol: 'WETH',
+      logoURI: 'https://assets.coingecko.com/coins/images/2518/thumb/weth.png?1628852295',
+      avatarIcon: 'Weth',
+      name: 'Wrapped Ether',
+      id: 'weth',
+      receiveTokensListItem: true,
+      address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+    },
+    {
       symbol: 'DAI',
-      logoURI: daiICon,
+      logoURI: 'https://assets.coingecko.com/coins/images/9956/thumb/4943.png?1636636734',
       avatarIcon: 'Dai Stablecoin',
-      name: 'dai',
+      name: 'Dai Stablecoin',
       id: 'dai',
       receiveTokensListItem: true,
       address: '0x6b175474e89094c44da98b954eedeac495271d0f',
-    },
-
-    {
-      symbol: 'UNI',
-      logoURI: uniswapExchangerIcon,
-      avatarIcon: 'Uniswap Protocol Governance Token',
-      name: 'unicorn-token',
-      id: 'unicorn-token',
-      receiveTokensListItem: true,
-      address: '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984',
     },
   ];
 
@@ -145,14 +136,12 @@ export default function MultiSwapComponent() {
 
   const [openTokensModal, setOpenTokensModal] = useState(false);
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
-  const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
 
   //working saga
   // const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
+  // const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
   const finalSendTokensList = sendTokensMockList;
-
-  // console.log('finalSendTokensList multiswap', finalSendTokensList);
-  // console.log('finalReceiveTokensList multiswap', finalReceiveTokensList);
+  const finalReceiveTokensList = sendTokensMockList;
 
   const [filteredSendTokensListData, setFilteredSendTokensListData] = useState([]);
   const [filteredReceiveTokensListData, setFilteredReceiveTokensListData] = useState([]);
@@ -273,6 +262,7 @@ export default function MultiSwapComponent() {
   let [isSendTokenSelectedSwapped, setIsSendTokenSelectedSwapped] = useState(false);
 
   const [sendTokenForExchangeAmount, setSendTokenForExchangeAmount] = useState();
+  const [receiveTokenForExchangeAmount, setReceiveTokenForExchangeAmount] = useState();
   let [oldTokenSwappedAddress, setOldTokenSwappedAddress] = useState();
 
   const openModalHelper = (payload) => {
@@ -316,7 +306,12 @@ export default function MultiSwapComponent() {
       console.log('obj multiswap 123', { ...selectedSwapToken, receiveTokensListItem: true });
       console.log('multiswap 123 need elem', receiveTokensList[needIndex]);
 
-      receiveTokensList[needIndex] = { ...selectedSwapToken, receiveTokensListItem: true };
+      receiveTokensList[needIndex] = {
+        ...selectedSwapToken,
+        receiveTokensListItem: true,
+      };
+
+      // setReceiveTokenForExchangeAmount(1)
 
       // if (needIndex !== -1) {
       //   receiveTokensList[needIndex] = {
@@ -476,7 +471,7 @@ export default function MultiSwapComponent() {
                   }}
                   isLightTheme={isLightTheme}
                   placeholder="0.0"
-                  // value={sendTokenForExchangeAmount}
+                  // value={receiveTokensList.amount}
                   onChange={(e) => {
                     // setSendTokenForExchangeAmount(e.target.value);
                     convertReceiveTokenToUSDCurrency({
