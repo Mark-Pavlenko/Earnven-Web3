@@ -37,13 +37,15 @@ function* getSendTokensListSagaWorker(accountAddress) {
   for (let i = 0; i < tokens.length; i++) {
     const tempObj = {};
 
-    // console.log('tokens sagas', tokens[i]);
+    if (tokens[i].tokenInfo.price !== false && tokens[i].balance !== 0) {
+      // console.log('tokens sagas', tokens[i]);
 
-    if (tokens[i].tokenInfo.price !== false) {
       tempObj.address = tokens[i].tokenInfo.address;
       tempObj.name = tokens[i].tokenInfo.name;
       tempObj.symbol = tokens[i].tokenInfo.symbol;
       tempObj.USDCurrency = tokens[i].tokenInfo.price.rate;
+
+      // tempObj.balance = parseFloat(tokens[i].balance.toFixed(3));
       tempObj.balance = parseFloat(
         (tokens[i].balance * Math.pow(10, -parseInt(tokens[i].tokenInfo.decimals))).toFixed(3)
       );
@@ -57,7 +59,7 @@ function* getSendTokensListSagaWorker(accountAddress) {
     }
   }
 
-  console.log('sagas walletTokensList', walletTokensList);
+  // console.log('sagas walletTokensList', walletTokensList);
 
   // const sendTokensList = walletTokensList.filter((walletToken) =>
   //   zeroAPISwapTokensList.find((zeroToken) => walletToken.symbol === zeroToken.symbol)

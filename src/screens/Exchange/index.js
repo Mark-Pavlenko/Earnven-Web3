@@ -283,10 +283,10 @@ export default function SwapComponent() {
   const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
   const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
 
-  console.log('single finalSendTokensList', finalSendTokensList);
-  console.log('single finalReceiveTokensList', finalReceiveTokensList);
-  // console.log('sendTokenForExchange singleSwap state', sendTokenForExchange);
-  // console.log('receiveTokenForExchange singleSwap state', receiveTokenForExchange);
+  // console.log('single finalSendTokensList', finalSendTokensList);
+  // console.log('single finalReceiveTokensList', finalReceiveTokensList);
+  console.log('sendTokenForExchange singleSwap state', sendTokenForExchange);
+  console.log('receiveTokenForExchange singleSwap state', receiveTokenForExchange);
 
   //---OLD states
 
@@ -862,7 +862,7 @@ export default function SwapComponent() {
                                     <SendTokenConvertedMeasures isLightTheme={isLightTheme}>
                                       {object.balance} ·{' '}
                                       {object.USDCurrency !== undefined
-                                        ? `$${object.USDCurrency.toFixed(5)}`
+                                        ? `$${object.USDCurrency.toFixed(3)}`
                                         : 'Price is not available'}
                                     </SendTokenConvertedMeasures>
                                   </div>
@@ -871,9 +871,15 @@ export default function SwapComponent() {
                                   {object.balance !== undefined &&
                                     object.USDCurrency !== undefined && (
                                       // (
-                                      <span>{`$${(
-                                        object.balance * object.USDCurrency.toFixed(2)
-                                      ).toFixed(5)}`}</span>
+                                      <span>{`$${
+                                        object.balance > 0
+                                          ? (
+                                              object.balance * object.USDCurrency.toFixed(2)
+                                            ).toFixed(3)
+                                          : (
+                                              object.balance * object.USDCurrency.toFixed(2)
+                                            ).toFixed(2)
+                                      }`}</span>
                                     )}
                                   {/*) : ( */}
                                   {/*<Loader type="Rings" color="#BB86FC" height={30} width={30} />*/}
