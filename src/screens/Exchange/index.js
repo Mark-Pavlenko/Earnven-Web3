@@ -283,8 +283,8 @@ export default function SwapComponent() {
   const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
   const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
 
-  // console.log('single finalSendTokensList', finalSendTokensList);
-  // console.log('single finalReceiveTokensList', finalReceiveTokensList);
+  console.log('single finalSendTokensList', finalSendTokensList);
+  console.log('single finalReceiveTokensList', finalReceiveTokensList);
   console.log('sendTokenForExchange singleSwap state', sendTokenForExchange);
   console.log('receiveTokenForExchange singleSwap state', receiveTokenForExchange);
 
@@ -320,8 +320,25 @@ export default function SwapComponent() {
   }, []);
 
   useEffect(() => {
-    finalSendTokensList.length !== 0 && setFilteredData(finalSendTokensList);
-    finalReceiveTokensList.length !== 0 && setFilteredReceiveTokensListData(finalReceiveTokensList);
+    let filteredSendTokensList = finalSendTokensList.filter(
+      (token) => token.symbol !== sendTokenForExchange.symbol
+    );
+    let filteredReceiveTokensList = finalReceiveTokensList.filter(
+      (token) => token.symbol !== receiveTokenForExchange.symbol
+    );
+
+    console.log('single filteredSendTokensList', filteredSendTokensList);
+    console.log('single filteredReceiveTokensList', filteredReceiveTokensList);
+
+    finalSendTokensList.length !== 0 && setFilteredData(filteredSendTokensList);
+    finalReceiveTokensList.length !== 0 &&
+      setFilteredReceiveTokensListData(filteredReceiveTokensList);
+
+    //filter arr of tokens on existing values
+    // const test = finalSendTokensList.filter(
+    //   (token) => token.symbol !== sendTokenForExchange.symbol
+    // );
+    // console.log('test single', test);
   }, [finalSendTokensList, finalReceiveTokensList]);
 
   //function of dynamic converting of token value to USD Currency
@@ -573,11 +590,14 @@ export default function SwapComponent() {
 
   const searchTokensHandler = (event, searchTokensData) => {
     const result = filteredTokensByName(event, searchTokensData);
-    console.log('result', result);
+    console.log('result single 111', result);
     if (searchTokensData.searchSendTokensList === true) {
-      setFilteredData(result);
+      let middle = result.filter((token) => token.symbol !== sendTokenForExchange.symbol);
+      setFilteredData(middle);
     } else {
-      setFilteredReceiveTokensListData(result);
+      let middle = result.filter((token) => token.symbol !== receiveTokenForExchange.symbol);
+      console.log('middle receive 111', middle);
+      setFilteredReceiveTokensListData(middle);
     }
   };
 
@@ -758,7 +778,11 @@ export default function SwapComponent() {
                     <OutsideClickHandler
                       onOutsideClick={() => {
                         setIsSendTokensModalVisible(false);
-                        setFilteredData(finalSendTokensList);
+                        setFilteredData(
+                          finalSendTokensList.filter(
+                            (token) => token.symbol !== sendTokenForExchange.symbol
+                          )
+                        );
                       }}>
                       <TokensModalSubLayout isLightTheme={isLightTheme}>
                         <Header>
@@ -768,7 +792,11 @@ export default function SwapComponent() {
                           <CloseButton
                             onClick={() => {
                               setIsSendTokensModalVisible(false);
-                              setFilteredData(finalSendTokensList);
+                              setFilteredData(
+                                finalSendTokensList.filter(
+                                  (token) => token.symbol !== sendTokenForExchange.symbol
+                                )
+                              );
                             }}
                             isLightTheme={isLightTheme}>
                             <img
@@ -826,7 +854,11 @@ export default function SwapComponent() {
                                 key={object.name}
                                 onClick={() => {
                                   setIsSendTokensModalVisible(false);
-                                  setFilteredData(finalSendTokensList);
+                                  setFilteredData(
+                                    finalSendTokensList.filter(
+                                      (token) => token.symbol !== object.symbol
+                                    )
+                                  );
                                   selectSendTokenForExchange({
                                     ...object,
                                     sendTokensListItem: true,
@@ -983,7 +1015,11 @@ export default function SwapComponent() {
                     <OutsideClickHandler
                       onOutsideClick={() => {
                         setIsReceiveTokensModalVisible(false);
-                        setFilteredReceiveTokensListData(finalReceiveTokensList);
+                        setFilteredReceiveTokensListData(
+                          finalReceiveTokensList.filter(
+                            (token) => token.symbol !== receiveTokenForExchange.symbol
+                          )
+                        );
                       }}>
                       <TokensModalSubLayout isLightTheme={isLightTheme}>
                         <Header>
@@ -993,7 +1029,11 @@ export default function SwapComponent() {
                           <CloseButton
                             onClick={() => {
                               setIsReceiveTokensModalVisible(false);
-                              setFilteredReceiveTokensListData(finalReceiveTokensList);
+                              setFilteredReceiveTokensListData(
+                                finalReceiveTokensList.filter(
+                                  (token) => token.symbol !== receiveTokenForExchange.symbol
+                                )
+                              );
                             }}
                             isLightTheme={isLightTheme}>
                             <img
@@ -1051,7 +1091,11 @@ export default function SwapComponent() {
                                 key={object.name}
                                 onClick={() => {
                                   setIsReceiveTokensModalVisible(false);
-                                  setFilteredReceiveTokensListData(finalReceiveTokensList);
+                                  setFilteredReceiveTokensListData(
+                                    finalReceiveTokensList.filter(
+                                      (token) => token.symbol !== object.symbol
+                                    )
+                                  );
                                   selectReceiveTokenForExchange({
                                     ...object,
                                     receiveTokensListItem: true,
