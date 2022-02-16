@@ -30,10 +30,10 @@ import Box from '@material-ui/core/Box';
 
 import { Button } from '@material-ui/core';
 import { Link, useParams } from 'react-router-dom';
-import {LiquidityPoolsTable} from "./liquidityPoolsTable/liquidityPoolsTable";
-import {AddNewGroupButton} from "./uniV2/StyledComponents";
-import {useSelector} from "react-redux";
-import mockTokenImage from '../../assets/icons/ethereum.svg'
+import { LiquidityPoolsTable } from './liquidityPoolsTable/liquidityPoolsTable';
+import { AddNewGroupButton } from './uniV2/StyledComponents';
+import { useSelector } from 'react-redux';
+import mockTokenImage from '../../assets/icons/ethereum.svg';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -120,8 +120,10 @@ export default function LiquidityPools({ inputValue }) {
               : tokenURIs.find((x) => x.address === token.address).logoURI,
           }));
           setAllTokens(tokens);
-        }).catch((res) => {
-            console.log('liquidity pools Sushiswap-V2 returns error', res)});
+        })
+        .catch((res) => {
+          console.log('liquidity pools Sushiswap-V2 returns error', res);
+        });
     }
     getData();
   }, []);
@@ -625,7 +627,7 @@ export default function LiquidityPools({ inputValue }) {
         id: '32432454223432csxczx',
         image: mockTokenImage,
         name: 'ETH',
-        symbol:'ETH',
+        symbol: 'ETH',
       },
       token1: {
         id: '32432454223432csxcdsaasdszx',
@@ -641,7 +643,7 @@ export default function LiquidityPools({ inputValue }) {
         id: '32432454223432csxczx',
         image: mockTokenImage,
         name: 'USDC',
-        symbol:'USDC',
+        symbol: 'USDC',
       },
       token1: {
         id: '32432454223432csxcdsaasdszx',
@@ -657,7 +659,7 @@ export default function LiquidityPools({ inputValue }) {
         id: '32432454223432csxczx',
         image: mockTokenImage,
         name: 'ETH',
-        symbol:'ETH',
+        symbol: 'ETH',
       },
       token1: {
         id: '32432454223432csxcdsaasdszx',
@@ -665,8 +667,8 @@ export default function LiquidityPools({ inputValue }) {
         name: 'SNX',
         symbol: 'SNX',
       },
-    }
-  ]
+    },
+  ];
 
   useEffect(() => {
     setData([]);
@@ -782,11 +784,11 @@ export default function LiquidityPools({ inputValue }) {
     );
     await tokenContract.methods
       .approve(Addresses.oneClickSushiV2Contract, supplyTokenQtty)
-      .send({ from: accounts[0], gasPrice:  web3.utils.toWei(gasPrice, 'gwei')});
+      .send({ from: accounts[0], gasPrice: web3.utils.toWei(gasPrice, 'gwei') });
     await oneClickContract.methods
       //.addLiquidityOneClick(tokenA, tokenB, supplyToken, supplyTokenQtty, minAmountOut) //examle of sending minAmountOut to contract
       .addLiquidityOneClick(tokenA, tokenB, supplyToken, supplyTokenQtty)
-      .send({ from: accounts[0], gasPrice:  web3.utils.toWei(gasPrice, 'gwei') });
+      .send({ from: accounts[0], gasPrice: web3.utils.toWei(gasPrice, 'gwei') });
   }
 
   //********two inputs value send to smartContract
@@ -844,8 +846,8 @@ export default function LiquidityPools({ inputValue }) {
   return (
     <div>
       <LiquidityPoolsTable
-        //data={Data}
-        data={mockData}
+        data={Data}
+        // data={mockData}
         type={'sushiswap'}
         AllTokens={AllTokens}
         addLiquidity={addLiquidity}

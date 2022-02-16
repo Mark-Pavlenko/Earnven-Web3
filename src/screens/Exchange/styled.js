@@ -355,6 +355,18 @@ export const AdditionalOptionsSwapTokensSubBlock = styled.div`
   }
 `;
 
+export const SingleSwapTokensOfferedBySubBlock = styled.div`
+  width: 525px;
+  height: 490px;
+  background-color: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#4453AD1A')};
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'
+      : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+  backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
+  border-radius: 10px;
+`;
+
 export const SwapTokensOfferedBySubBlock = styled.div`
   width: 525px;
   height: 480px;

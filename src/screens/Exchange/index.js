@@ -103,6 +103,20 @@ import {
   SendTokenConvertedMeasures,
   SendTokenBalance,
   AbsentFoundTokensBlock,
+  SwapTokensOfferedBySubBlock,
+  ExchangersMainSubLayout,
+  OfferedByLayoutLabelBlock,
+  ExchangersLayout,
+  ExchangersLayoutTitlesBlock,
+  ExchangersMainListLayout,
+  ExchangerMainList,
+  ExchangerElementListItem,
+  ExchangerElementSpan,
+  ExchangerBestRateSpan,
+  ExchangerIcon,
+  GreenDotIcon,
+  SaveSelectedExchangerButton,
+  SingleSwapTokensOfferedBySubBlock,
 } from './styled';
 import { useDispatch, useSelector } from 'react-redux';
 import pyramidIcon from '../../assets/icons/pyramidIcon.svg';
@@ -226,6 +240,10 @@ const makeCall = async (callName, contract, args, metadata = {}) => {
 };
 
 import { filteredTokensByName } from './helpers';
+import TOKENDECIMALSABI from '../../abi/TokenDecomals.json';
+import ROUTERABI from '../../abi/UniRouterV2.json';
+import exchangersOfferedList from './exchangersOfferedList';
+import greenDot from '../../assets/icons/greenDot.svg';
 
 export default function SwapComponent() {
   const dispatch = useDispatch();
@@ -278,7 +296,6 @@ export default function SwapComponent() {
   const [TokenToAmount, setTokenToAmount] = useState();
   const [Slippage, setSlippage] = useState(2);
   const [Sources, setSources] = useState([]);
-  const [open, setOpen] = useState(false);
   const [protocolsRateList, setprotocolsRateList] = useState([]);
   const [ethPrice, setethPrice] = useState(0);
   const [selectedRate, setselectedRate] = useState(null);
@@ -538,80 +555,7 @@ export default function SwapComponent() {
     setSources([]);
   };
 
-  const ToTokenChange = (value) => {
-    setTokenTo(value);
-    setSendTokenForExchangeAmount(0);
-    setTokenToAmount(0);
-    setprotocolsRateList([]);
-    setselectedRate(null);
-    setSources([]);
-  };
-
-  const handleDismissSearch = () => {
-    setcurrencyModal(false);
-  };
-  const handleCurrencyToDismissSearch = () => {
-    setcurrencyToModal(false);
-  };
-
-  //old useEffect for swap --------------
-
-  const [AllTokens, setAllTokens] = useState([]);
-  const [TokenFrom, setTokenFrom] = useState('ETH');
-  const [TokenFromAmount, setTokenFromAmount] = useState();
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  const fromTokenChange = (value) => {
-    setTokenFrom(value);
-    // setTokenTo('');
-    setTokenFromAmount(0);
-    setTokenToAmount(0);
-    setprotocolsRateList([]);
-    setselectedRate(null);
-    setSources([]);
-  };
-
   console.log('token receive swap tokenReceiveUSDCurrency', tokenReceiveUSDCurrency);
-
-  useEffect(async () => {
-    await axios
-      .get(`https://api.ethplorer.io/getAddressInfo/${address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`)
-      .then(async (response) => {
-        const arr1 = [];
-        if (response.data.ETH.balance !== 0) {
-          const tempObj = {};
-          tempObj.address = '';
-          tempObj.name = 'Ethereum';
-          tempObj.symbol = 'ETH';
-          tempObj.balance = response.data.ETH.balance.toFixed(2).toString();
-          tempObj.logoURI = ethImage;
-          arr1.push(tempObj);
-        }
-        let tokens = response.data.tokens;
-        for (let i = 0; i < tokens.length; i++) {
-          const tempObj = {};
-          tempObj.address = tokens[i].tokenInfo.address;
-          tempObj.name = tokens[i].tokenInfo.name;
-          tempObj.symbol = tokens[i].tokenInfo.symbol;
-          tempObj.balance = (
-            tokens[i].balance * Math.pow(10, -parseInt(tokens[i].tokenInfo.decimals))
-          )
-            .toFixed(2)
-            .toString();
-          if (tokens[i].tokenInfo.image !== undefined) {
-            tempObj.logoURI = `https://ethplorer.io${tokens[i].tokenInfo.image}`;
-          } else {
-            tempObj.logoURI = null;
-          }
-          arr1.push(tempObj);
-        }
-        // console.log('final wallet`s tokens list arr', arr1);
-        setAllTokens(arr1);
-      });
-  }, []);
 
   //---------------------
 
@@ -636,6 +580,92 @@ export default function SwapComponent() {
       setFilteredReceiveTokensListData(result);
     }
   };
+
+  //convert one token to another
+  //now - mock Uniswap V2 Contract address
+
+  const convertExchangeTokensCourse = async (convertTokensData) => {
+    console.log('convertTokensData single swap', convertTokensData);
+    console.log('single swap tokenDecimal token1', convertTokensData.sendTokenForExchangeAddress);
+    console.log(
+      'single swap tokenDecimal token2',
+      convertTokensData.receiveTokenForExchangeAddress
+    );
+
+    await loadWeb3();
+    const web3 = window.web3;
+
+    const tokenDecimal1 = await new web3.eth.Contract(
+      TOKENDECIMALSABI,
+      convertTokensData.sendTokenForExchangeAddress
+    ).methods
+      .decimals()
+      .call()
+      .then((res) => {
+        return res;
+      });
+    const tokenDecimal2 = await new web3.eth.Contract(
+      TOKENDECIMALSABI,
+      convertTokensData.receiveTokenForExchangeAddress
+    ).methods
+      .decimals()
+      .call()
+      .then((res) => {
+        return res;
+      });
+
+    console.log('single swap tokenDecimal 1', tokenDecimal1);
+    console.log('single swap tokenDecimal 2', tokenDecimal2);
+
+    // const NewContract = new web3.eth.Contract(
+    //   ROUTERABI,
+    //   //UNISWAP V2 contract address
+    //   '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+    // );
+    // if (!isNaN(value)) {
+    //   if (inputId === 'firstInput') {
+    //     const convertedValue = await NewContract.methods
+    //       .getAmountsOut((value * 10 ** tokenDecimal1).toString(), [token1, token2])
+    //       .call();
+    //
+    //     setAddLiquidityNormalTokenA((value * 10 ** tokenDecimal1).toString());
+    //     setAddLiquidityNormalTokenB(convertedValue[1]);
+    //
+    //     setOutValue(+convertedValue[1] / 10 ** tokenDecimal2);
+    //     setInValue(value);
+    //   }
+    //   if (inputId === 'secondInput') {
+    //     const convertedValue = await NewContract.methods
+    //       .getAmountsIn((value * 10 ** tokenDecimal2).toString(), [token1, token2])
+    //       .call();
+    //
+    //     setAddLiquidityNormalTokenA(convertedValue[0]);
+    //     setAddLiquidityNormalTokenB((value * 10 ** tokenDecimal2).toString());
+    //
+    //     setInValue(+convertedValue[0] / 10 ** tokenDecimal1);
+    //     setOutValue(value);
+    //   }
+    // } else {
+    //   setInValue('');
+    //   setOutValue('');
+    // }
+  };
+
+  //popover
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+
+  //-----
 
   return (
     <>
@@ -705,6 +735,12 @@ export default function SwapComponent() {
                       convertSendTokenToUSDCurrency({
                         amount: e.target.value,
                         ...sendTokenForExchange,
+                      });
+                      convertExchangeTokensCourse({
+                        inputId: 'firstInput',
+                        tokenAmount: parseInt(e.target.value),
+                        sendTokenForExchangeAddress: sendTokenForExchange.address,
+                        receiveTokenForExchangeAddress: receiveTokenForExchange.address,
                       });
                     }}
                   />
@@ -1086,45 +1122,94 @@ export default function SwapComponent() {
                   <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
                     Offered by
                   </LabelsBlockSubBlockSpan>
-                  <PopupState variant="popover" popupId="demo-popup-popover">
-                    {(popupState) => (
-                      <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
-                        <img src={paraSwapIcon} alt="paraSwapIcon" />
-                        <span {...bindTrigger(popupState)} style={{ cursor: 'pointer' }}>
-                          ParaSwap
-                        </span>
 
-                        <Popover
-                          {...bindPopover(popupState)}
-                          anchorOrigin={{
-                            vertical: 'center',
-                            horizontal: 'right',
-                          }}
-                          transformOrigin={{
-                            vertical: 'center',
-                            horizontal: 'right',
-                          }}
-                          PaperProps={{
-                            sx: {
-                              marginTop: '-102px',
-                              marginLeft: '27px',
-                              width: '525px',
-                              height: '490px',
-                              backgroundColor: isLightTheme ? '#ffffff29' : '#10142D',
-                              boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-                              backdropFilter: 'blur(35px)',
-                              mixBlendMode: 'normal',
-                              borderRadius: '10px',
-                            },
-                          }}>
-                          <div
-                            style={{ width: '525px', height: '490px', backgroundColor: 'green' }}>
-                            Content
-                          </div>
-                        </Popover>
-                      </AdditionalOptionsSwapTokensSubBlock>
-                    )}
-                  </PopupState>
+                  <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
+                    <img src={paraSwapIcon} alt="paraSwapIcon" />
+                    <span onClick={handleClick} style={{ cursor: 'pointer' }}>
+                      ParaSwap
+                    </span>
+                    <Popover
+                      open={open}
+                      anchorEl={anchorEl}
+                      onClose={handleClose}
+                      anchorOrigin={{
+                        vertical: 'center',
+                        horizontal: 'right',
+                      }}
+                      transformOrigin={{
+                        vertical: 'center',
+                        horizontal: 'right',
+                      }}
+                      PaperProps={{
+                        sx: {
+                          marginTop: '-103px',
+                          marginLeft: '27px',
+                          width: '525px',
+                          height: '490px',
+                          backgroundColor: isLightTheme ? '#FFFFFF29' : '#4453AD1A',
+                          boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+                          backdropFilter: 'blur(35px)',
+                          mixBlendMode: 'normal',
+                          borderRadius: '10px',
+                        },
+                      }}>
+                      <SingleSwapTokensOfferedBySubBlock isLightTheme={isLightTheme}>
+                        <ExchangersMainSubLayout>
+                          <OfferedByLayoutLabelBlock
+                            isLightTheme={isLightTheme}
+                            onClick={handleClose}>
+                            <img
+                              src={isLightTheme ? chevronDownBlack : chevronDownLight}
+                              alt="chevron_icon"
+                            />
+                            <span>Offered by</span>
+                          </OfferedByLayoutLabelBlock>
+                          <ExchangersLayout isLightTheme={isLightTheme}>
+                            <ExchangersLayoutTitlesBlock isLightTheme={isLightTheme}>
+                              <span>Receive</span>
+                              <span>Gas fee</span>
+                            </ExchangersLayoutTitlesBlock>
+                            <ExchangersMainListLayout isLightTheme={isLightTheme}>
+                              <ExchangerMainList>
+                                {exchangersOfferedList.map((exchanger) => (
+                                  <ExchangerElementListItem isLightTheme={isLightTheme}>
+                                    <ExchangerElementSpan
+                                      isLightTheme={isLightTheme}
+                                      style={{ marginRight: '36px' }}>
+                                      {exchanger.receiveTokenUSDCurrencyCourse}
+                                    </ExchangerElementSpan>
+                                    <ExchangerElementSpan isLightTheme={isLightTheme}>
+                                      {exchanger.gasFee}
+                                    </ExchangerElementSpan>
+                                    <ExchangerBestRateSpan
+                                      isLightTheme={isLightTheme}
+                                      style={{
+                                        visibility: exchanger.isBestRate === false && 'hidden',
+                                      }}>
+                                      Best rate
+                                    </ExchangerBestRateSpan>
+                                    <ExchangerIcon src={exchanger.logoIcon} alt="icon" />
+                                    <GreenDotIcon
+                                      src={greenDot}
+                                      alt="green_dot"
+                                      style={{
+                                        visibility: exchanger.greenDotIcon === false && 'hidden',
+                                      }}
+                                    />
+                                  </ExchangerElementListItem>
+                                ))}
+                              </ExchangerMainList>
+                            </ExchangersMainListLayout>
+                            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                              <SaveSelectedExchangerButton isLightTheme={isLightTheme}>
+                                Save
+                              </SaveSelectedExchangerButton>
+                            </div>
+                          </ExchangersLayout>
+                        </ExchangersMainSubLayout>
+                      </SingleSwapTokensOfferedBySubBlock>
+                    </Popover>
+                  </AdditionalOptionsSwapTokensSubBlock>
                 </LabelsBlockSubBlock>
 
                 <LabelsBlockSubBlock isLightTheme={isLightTheme}>
@@ -1147,7 +1232,7 @@ export default function SwapComponent() {
               </DownDelimiterLabelsBlock>
 
               <SwapBlockExchangeLayout isLightTheme={isLightTheme}>
-                <Button>Exchange</Button>
+                <Button onClick={() => calculateToAmount(sendTokenForExchange)}>Exchange</Button>
               </SwapBlockExchangeLayout>
             </SwapTokensMainSubBlock>
           </FirstColumnSwapSubBlock>

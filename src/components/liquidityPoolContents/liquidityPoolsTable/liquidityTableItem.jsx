@@ -249,9 +249,15 @@ export const LiquidityTableItem = ({
       .then((res) => {
         return res;
       });
+
+    console.log('tokenDecimal token1', token1);
+    console.log('tokenDecimal token2', token2);
+    console.log('tokenDecimal 1', tokenDecimal1);
+    console.log('tokenDecimal 2', tokenDecimal2);
     //------------------------------------->
     const NewContract = new web3.eth.Contract(
       ROUTERABI,
+      //UNISWAP V2 contract address
       '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
     );
     if (!isNaN(value)) {

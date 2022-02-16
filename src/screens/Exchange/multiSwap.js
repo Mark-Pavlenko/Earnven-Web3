@@ -544,12 +544,14 @@ export default function MultiSwapComponent() {
                     }}>
                     <SwapTokensOfferedBySubBlock isLightTheme={isLightTheme}>
                       <ExchangersMainSubLayout>
-                        <OfferedByLayoutLabelBlock isLightTheme={isLightTheme}>
+                        <OfferedByLayoutLabelBlock
+                          isLightTheme={isLightTheme}
+                          onClick={handleClose}>
                           <img
                             src={isLightTheme ? chevronDownBlack : chevronDownLight}
                             alt="chevron_icon"
                           />
-                          <span onClick={handleClose}>Offered by</span>
+                          <span>Offered by</span>
                         </OfferedByLayoutLabelBlock>
                         <ExchangersLayout isLightTheme={isLightTheme}>
                           <ExchangersLayoutTitlesBlock isLightTheme={isLightTheme}>
