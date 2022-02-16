@@ -77,6 +77,7 @@ export default function Index({ accountAddress }) {
       <Synthetix accountAddress={accountAddress} />
       <ConvexStaking accountAddress={accountAddress} />
       <SnowSwapStaking accountAddress={accountAddress} />
+      <CreamIronBank accountAddress={accountAddress} getTotal={() => {}} />
     </React.Fragment>
   );
 }

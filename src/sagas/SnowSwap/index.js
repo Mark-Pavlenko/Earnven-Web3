@@ -28,7 +28,7 @@ function* snowSwapWorker(snowSwapAttributes) {
   const protocolData = [];
   let claimable;
   let balance;
-  let totalValue;
+  let totalValue = 0;
   //call API to get snowSwap price value
   const data = yield call(API.getSnowTokenData);
   const object = {};
@@ -52,9 +52,4 @@ function* snowSwapWorker(snowSwapAttributes) {
     yield put(actions.getSnowSwapData(protocolData));
     yield put(actions.getSnowSwapTotal(totalValue));
   }
-
-  //   console.log('TestSnow saga data', protocolData);
-
-  //   yield put(actions.getSnowSwapData('testing snowswap'));
-  //   yield put(actions.getSnowSwapTotal(0));
 }

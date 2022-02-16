@@ -26,6 +26,8 @@ import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
 //import UniswapV2 from '../LiqudityPools/UniswapV2';
 //import ConvexStaking from '../ConvexStaking';
 //import { SnowSwapStaking } from '../SnowSwapStaking';
+import Cream from '../Cream';
+import CreamIronBank from '../CreamIronBankSavings';
 
 export default function index({ accountAddress }) {
   //save conditions of open/close investment blocks
@@ -122,6 +124,12 @@ export default function index({ accountAddress }) {
   //SnowSwap token
   const snowSwapData = useSelector((state) => state.snowSwap.snowSwanData);
   const snowSwapTotal = useSelector((state) => state.snowSwap.snowSwapTotal);
+
+  //CreamIronBank
+  const creamIronBankData = useSelector((state) => state.creamIronBank.creamIronBankData);
+  const creamIronBankTotal = useSelector((state) => state.creamIronBank.creamIronBankTotal);
+  const creamImageUrl =
+    'https://assets.coingecko.com/coins/images/11976/thumb/Cream.png?1596593418';
   //pickle
   // const pickeStake = useSelector((state) => state.pickeStake.pickeStake); //saga
   // const pickleStakeTotal = useSelector((state) => state.pickeStake.pickleStakeTotal); //saga
@@ -242,7 +250,8 @@ export default function index({ accountAddress }) {
             eth2StakeData.length > 0 ||
             CrvStakingTokenData.length > 0 ||
             AaveStakingData.length > 0 ||
-            convexStakeData.length > 0,
+            convexStakeData.length > 0 ||
+            creamIronBankData.length > 0,
         }}>
         <Header>
           <Title isLightTheme={theme}>{'Saving/Loans'}</Title>
@@ -260,7 +269,8 @@ export default function index({ accountAddress }) {
                     parseFloat(CrvStakingTokenTotal) +
                     parseFloat(eth2StakeTotal) +
                     parseFloat(compTotalValue) +
-                    parseFloat(convexStakeTotal)
+                    parseFloat(convexStakeTotal) +
+                    parseFloat(creamIronBankTotal)
                 ).toFixed(2)
               )}
             </TotalValue>
@@ -420,6 +430,35 @@ export default function index({ accountAddress }) {
                     <Investment
                       protocol={object}
                       protocolName={'Convex Staking'}
+                      logoImage={object.tokenImage}
+                    />
+                  );
+                })
+              : ''}
+          </React.Fragment>
+        ) : (
+          ''
+        )}
+        {/* CreamIronBank Protocol */}
+        {creamIronBankData.length > 0 ? (
+          <React.Fragment>
+            <img
+              src={creamImageUrl}
+              style={{
+                height: '20px',
+                marginTop: '',
+                marginLeft: '15px',
+                display: 'inline-block',
+              }}
+              alt=""
+            />
+            CreamIronBank
+            {creamIronBankData
+              ? creamIronBankData.map((object) => {
+                  return (
+                    <Investment
+                      protocol={object}
+                      protocolName={'Cream Iron Bank'}
                       logoImage={object.tokenImage}
                     />
                   );
@@ -676,6 +715,7 @@ export default function index({ accountAddress }) {
             )}
           </React.Fragment>
         )}
+        {/* <CreamIronBank accountAddress={accountAddress} getTotal={() => {}} /> */}
       </PoolsBlock>
     </InvestmentWrapper>
   );

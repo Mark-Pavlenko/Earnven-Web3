@@ -38,6 +38,7 @@ import { getAaveStakeSagaWatcher } from './Aave';
 import { getSynthetixSagaWatcher } from './Synthetix';
 import { getConvexStakingSagaWatcher } from './convexStaking';
 import { getSnowSwapSagaWatcher } from './SnowSwap';
+import { getCreamIronTokenSagaWatcher } from './CreamIronBank';
 export default function* watchRootSaga() {
   yield all([
     call(getAccountBalanceSagaWatcher),
@@ -76,5 +77,6 @@ export default function* watchRootSaga() {
     call(getSynthetixSagaWatcher),
     call(getConvexStakingSagaWatcher),
     call(getSnowSwapSagaWatcher),
+    call(getCreamIronTokenSagaWatcher),
   ]);
 }
