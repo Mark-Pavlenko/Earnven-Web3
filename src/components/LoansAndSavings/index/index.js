@@ -18,6 +18,7 @@ import ETHLogo from '../../../assets/icons/eth.png';
 import CurveLogo from '../../../assets/icons/curveLogo.png';
 import aaveLogo from '../../../assets/icons/aave-logo.svg';
 import SnowSwapLogo from '../../../assets/icons/snowswap-snow-logo.svg';
+import BalancerLogo from '../../../assets/icons/balancer.png';
 import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
 // import Ethereum2Staking from '../Ethereum2Staking';
 // import CurveFarming from '../CurveFarming';
@@ -28,6 +29,7 @@ import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
 //import { SnowSwapStaking } from '../SnowSwapStaking';
 import Cream from '../Cream';
 import CreamIronBank from '../CreamIronBankSavings';
+//import BalancerV2 from '../LiqudityPools/BalancerV2';
 
 export default function index({ accountAddress }) {
   //save conditions of open/close investment blocks
@@ -130,6 +132,11 @@ export default function index({ accountAddress }) {
   const creamIronBankTotal = useSelector((state) => state.creamIronBank.creamIronBankTotal);
   const creamImageUrl =
     'https://assets.coingecko.com/coins/images/11976/thumb/Cream.png?1596593418';
+
+  //balancer V2
+  //balancerV2
+  const balancerV2lp = useSelector((state) => state.balancerV2lp.balancerV2lp); //saga
+  const balancerV2tot = useSelector((state) => state.balancerV2lp.balancerV2tot); //don't put to redux separately. Needs to take from object
   //pickle
   // const pickeStake = useSelector((state) => state.pickeStake.pickeStake); //saga
   // const pickleStakeTotal = useSelector((state) => state.pickeStake.pickleStakeTotal); //saga
@@ -161,7 +168,7 @@ export default function index({ accountAddress }) {
       <PoolsBlock //first
         isLightTheme={theme}
         style={{
-          display: SushiPoolsData.length > 0 || curveLpToken.length > 0,
+          display: SushiPoolsData.length > 0 || curveLpToken.length > 0 || balancerV2lp.length > 0,
         }}>
         <Header>
           <Title isLightTheme={theme}>{'Liquidity pools'}</Title>
@@ -173,7 +180,11 @@ export default function index({ accountAddress }) {
             <TotalValue isLightTheme={theme}>
               $
               {numberWithCommas(
-                parseFloat(parseFloat(SushiV2Total) + parseFloat(curveLpTokenTotal)).toFixed(2)
+                parseFloat(
+                  parseFloat(SushiV2Total) +
+                    parseFloat(curveLpTokenTotal) +
+                    parseFloat(balancerV2tot)
+                ).toFixed(2)
               )}
             </TotalValue>
           </TotalValueField>
@@ -231,6 +242,34 @@ export default function index({ accountAddress }) {
                       protocol={object}
                       protocolName={'Curve Pool'}
                       logoImage={CurveLogo}
+                    />
+                  );
+                })}
+              </>
+            ) : (
+              ''
+            )}
+            {/* BalancerV2  */}
+
+            {balancerV2lp.length > 0 ? (
+              <>
+                <img
+                  src={BalancerLogo}
+                  style={{
+                    height: '20px',
+                    marginTop: '',
+                    marginLeft: '15px',
+                    display: 'inline-block',
+                  }}
+                  alt=""
+                />
+                Balancer V2
+                {balancerV2lp.map((object) => {
+                  return (
+                    <Investment
+                      protocol={object}
+                      protocolName={'BalancerV2'}
+                      logoImage={object.imageData}
                     />
                   );
                 })}
@@ -715,7 +754,6 @@ export default function index({ accountAddress }) {
             )}
           </React.Fragment>
         )}
-        {/* <CreamIronBank accountAddress={accountAddress} getTotal={() => {}} /> */}
       </PoolsBlock>
     </InvestmentWrapper>
   );

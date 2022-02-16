@@ -6,3 +6,10 @@ export const getbalancerV2 = (payload) => {
     payload,
   };
 };
+
+export const getBalancerV2Total = (payload) => {
+  return {
+    type: actionTypes.GET_BALANCER_LP_TOT,
+    payload,
+  };
+};
