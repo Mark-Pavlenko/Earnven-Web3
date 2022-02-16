@@ -48,7 +48,6 @@ function* snowSwapWorker(snowSwapAttributes) {
     object.symbol = 'SNOW';
     totalValue += object.value;
     protocolData.push(object);
-
     yield put(actions.getSnowSwapData(protocolData));
     yield put(actions.getSnowSwapTotal(totalValue));
   }

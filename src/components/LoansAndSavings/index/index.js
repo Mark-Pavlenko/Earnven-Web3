@@ -91,6 +91,9 @@ export default function index({ accountAddress }) {
   //liquity
   const liquityTokenData = useSelector((state) => state.liquityToken.liquityTokenData); //saga
   const liquityTokenTotal = useSelector((state) => state.liquityToken.liquityTokenTotal); //saga
+
+  console.log('liquityTokenData', liquityTokenData);
+
   //if need create svg file on later
   const liquityImageUrl =
     'https://assets.coingecko.com/coins/images/14665/thumb/200-lqty-icon.png?1617631180';
@@ -124,7 +127,7 @@ export default function index({ accountAddress }) {
   //SnowSwap token
   const snowSwapData = useSelector((state) => state.snowSwap.snowSwanData);
   const snowSwapTotal = useSelector((state) => state.snowSwap.snowSwapTotal);
-
+  // console.log('snowSwapData', snowSwapData);
   //CreamIronBank
   const creamIronBankData = useSelector((state) => state.creamIronBank.creamIronBankData);
   const creamIronBankTotal = useSelector((state) => state.creamIronBank.creamIronBankTotal);
@@ -161,7 +164,11 @@ export default function index({ accountAddress }) {
       <PoolsBlock //first
         isLightTheme={theme}
         style={{
-          display: SushiPoolsData.length > 0 || curveLpToken.length > 0,
+          display:
+            SushiPoolsData.length > 0 ||
+            curveLpToken.length > 0 ||
+            snowSwapData.length > 0 ||
+            liquityTokenData.length > 0,
         }}>
         <Header>
           <Title isLightTheme={theme}>{'Liquidity pools'}</Title>
@@ -235,6 +242,64 @@ export default function index({ accountAddress }) {
                   );
                 })}
               </>
+            ) : (
+              ''
+            )}{' '}
+            {/* SnowSwap protocol */}
+            {snowSwapData.length > 0 ? (
+              <React.Fragment>
+                <img
+                  src={SnowSwapLogo}
+                  style={{
+                    height: '20px',
+                    marginTop: '',
+                    marginLeft: '15px',
+                    display: 'inline-block',
+                  }}
+                  alt=""
+                />
+                SnowSwap
+                {snowSwapData
+                  ? snowSwapData.map((object) => {
+                      return (
+                        <Investment
+                          protocol={object}
+                          protocolName={'SnowSwap'}
+                          logoImage={SnowSwapLogo}
+                        />
+                      );
+                    })
+                  : ''}
+              </React.Fragment>
+            ) : (
+              ''
+            )}
+            {/*liquityTokenData/*/}
+            {liquityTokenData.length > 0 ? (
+              <React.Fragment>
+                <img
+                  src={liquityImageUrl}
+                  style={{
+                    height: '20px',
+                    marginTop: '',
+                    marginLeft: '15px',
+                    display: 'inline-block',
+                  }}
+                  alt=""
+                />
+                Liquity
+                {liquityTokenData
+                  ? liquityTokenData.map((object) => {
+                      return (
+                        <Investment
+                          protocol={object}
+                          protocolName={'Liquity'}
+                          logoImage={object.tokenImage}
+                        />
+                      );
+                    })
+                  : ''}
+              </React.Fragment>
             ) : (
               ''
             )}
@@ -634,7 +699,7 @@ export default function index({ accountAddress }) {
       <PoolsBlock //third
         isLightTheme={theme}
         style={{
-          display: liquityTokenData.length > 0 || snowSwapData.length > 0,
+          display: snowSwapData.length > 0,
         }}>
         <Header>
           <Title isLightTheme={theme}>{'Yield Farming'}</Title>
@@ -654,65 +719,65 @@ export default function index({ accountAddress }) {
         </div>
         {isFarmingOpen && (
           <React.Fragment>
-            {/*liquityTokenData/*/}
-            {liquityTokenData.length > 0 ? (
-              <React.Fragment>
-                <img
-                  src={liquityImageUrl}
-                  style={{
-                    height: '20px',
-                    marginTop: '',
-                    marginLeft: '15px',
-                    display: 'inline-block',
-                  }}
-                  alt=""
-                />
-                Liquity
-                {liquityTokenData
-                  ? liquityTokenData.map((object) => {
-                      return (
-                        <Investment
-                          protocol={object}
-                          protocolName={'Liquity'}
-                          logoImage={object.tokenImage}
-                        />
-                      );
-                    })
-                  : ''}
-              </React.Fragment>
-            ) : (
-              ''
-            )}
+            {/*/!*liquityTokenData/*!/*/}
+            {/*{liquityTokenData.length > 0 ? (*/}
+            {/*  <React.Fragment>*/}
+            {/*    <img*/}
+            {/*      src={liquityImageUrl}*/}
+            {/*      style={{*/}
+            {/*        height: '20px',*/}
+            {/*        marginTop: '',*/}
+            {/*        marginLeft: '15px',*/}
+            {/*        display: 'inline-block',*/}
+            {/*      }}*/}
+            {/*      alt=""*/}
+            {/*    />*/}
+            {/*    Liquity*/}
+            {/*    {liquityTokenData*/}
+            {/*      ? liquityTokenData.map((object) => {*/}
+            {/*          return (*/}
+            {/*            <Investment*/}
+            {/*              protocol={object}*/}
+            {/*              protocolName={'Liquity'}*/}
+            {/*              logoImage={object.tokenImage}*/}
+            {/*            />*/}
+            {/*          );*/}
+            {/*        })*/}
+            {/*      : ''}*/}
+            {/*  </React.Fragment>*/}
+            {/*) : (*/}
+            {/*  ''*/}
+            {/*)}*/}
 
             {/* SnowSwap protocol */}
-            {snowSwapData.length > 0 ? (
-              <React.Fragment>
-                <img
-                  src={SnowSwapLogo}
-                  style={{
-                    height: '20px',
-                    marginTop: '',
-                    marginLeft: '15px',
-                    display: 'inline-block',
-                  }}
-                  alt=""
-                />
-                SnowSwap
-                {snowSwapData
-                  ? snowSwapData.map((object) => {
-                      return (
-                        <Investment
-                          protocol={object}
-                          protocolName={'SnowSwap'}
-                          logoImage={SnowSwapLogo}
-                        />
-                      );
-                    })
-                  : ''}
-              </React.Fragment>
-            ) : (
-              ''
-            )}
+            {/*{snowSwapData.length > 0 ? (*/}
+            {/*  <React.Fragment>*/}
+            {/*    <img*/}
+            {/*      src={SnowSwapLogo}*/}
+            {/*      style={{*/}
+            {/*        height: '20px',*/}
+            {/*        marginTop: '',*/}
+            {/*        marginLeft: '15px',*/}
+            {/*        display: 'inline-block',*/}
+            {/*      }}*/}
+            {/*      alt=""*/}
+            {/*    />*/}
+            {/*    SnowSwap*/}
+            {/*    {snowSwapData*/}
+            {/*      ? snowSwapData.map((object) => {*/}
+            {/*          return (*/}
+            {/*            <Investment*/}
+            {/*              protocol={object}*/}
+            {/*              protocolName={'SnowSwap'}*/}
+            {/*              logoImage={SnowSwapLogo}*/}
+            {/*            />*/}
+            {/*          );*/}
+            {/*        })*/}
+            {/*      : ''}*/}
+            {/*  </React.Fragment>*/}
+            {/*) : (*/}
+            {/*  ''*/}
+            {/*)}*/}
           </React.Fragment>
         )}
         {/* <CreamIronBank accountAddress={accountAddress} getTotal={() => {}} /> */}
