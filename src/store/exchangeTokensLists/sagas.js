@@ -80,7 +80,7 @@ function* getReceiveTokensListSagaWorker() {
   // console.log('sagas zeroAPITokensList', zeroAPISwapTokensList);
 
   const uniswapFullCoinsList = yield call(API.getUniswapFullCoinsList);
-  console.log('uniswapFullCoinsList sagas', uniswapFullCoinsList);
+  // console.log('uniswapFullCoinsList sagas', uniswapFullCoinsList);
 
   // return 429
   // const coinGeckoFullTokensList = yield call(API.getCoinGeckoFullTokensList);
