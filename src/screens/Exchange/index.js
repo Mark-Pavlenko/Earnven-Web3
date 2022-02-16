@@ -288,6 +288,9 @@ export default function SwapComponent() {
   console.log('sendTokenForExchange singleSwap state', sendTokenForExchange);
   console.log('receiveTokenForExchange singleSwap state', receiveTokenForExchange);
 
+  console.log('1112 filteredSend', filteredData);
+  console.log('1112 filteredReceive', filteredReceiveTokensListData);
+
   //---OLD states
 
   const [TokenTo, setTokenTo] = useState('');
@@ -590,14 +593,12 @@ export default function SwapComponent() {
 
   const searchTokensHandler = (event, searchTokensData) => {
     const result = filteredTokensByName(event, searchTokensData);
-    console.log('result single 111', result);
+    console.log('result single 111', result, searchTokensData);
     if (searchTokensData.searchSendTokensList === true) {
       let middle = result.filter((token) => token.symbol !== sendTokenForExchange.symbol);
       setFilteredData(middle);
     } else {
-      let middle = result.filter((token) => token.symbol !== receiveTokenForExchange.symbol);
-      console.log('middle receive 111', middle);
-      setFilteredReceiveTokensListData(middle);
+      setFilteredReceiveTokensListData(result);
     }
   };
 
@@ -1016,9 +1017,10 @@ export default function SwapComponent() {
                       onOutsideClick={() => {
                         setIsReceiveTokensModalVisible(false);
                         setFilteredReceiveTokensListData(
-                          finalReceiveTokensList.filter(
-                            (token) => token.symbol !== receiveTokenForExchange.symbol
-                          )
+                          // finalReceiveTokensList.filter(
+                          //   (token) => token.symbol !== receiveTokenForExchange.symbol
+                          // )
+                          finalReceiveTokensList
                         );
                       }}>
                       <TokensModalSubLayout isLightTheme={isLightTheme}>
@@ -1030,9 +1032,10 @@ export default function SwapComponent() {
                             onClick={() => {
                               setIsReceiveTokensModalVisible(false);
                               setFilteredReceiveTokensListData(
-                                finalReceiveTokensList.filter(
-                                  (token) => token.symbol !== receiveTokenForExchange.symbol
-                                )
+                                finalReceiveTokensList
+                                // finalReceiveTokensList.filter(
+                                //   (token) => token.symbol !== receiveTokenForExchange.symbol
+                                // )
                               );
                             }}
                             isLightTheme={isLightTheme}>
@@ -1091,11 +1094,12 @@ export default function SwapComponent() {
                                 key={object.name}
                                 onClick={() => {
                                   setIsReceiveTokensModalVisible(false);
-                                  setFilteredReceiveTokensListData(
-                                    finalReceiveTokensList.filter(
-                                      (token) => token.symbol !== object.symbol
-                                    )
-                                  );
+                                  setFilteredReceiveTokensListData(finalReceiveTokensList);
+                                  // setFilteredReceiveTokensListData(
+                                  //   finalReceiveTokensList.filter(
+                                  //     (token) => token.symbol !== object.symbol
+                                  //   )
+                                  // );
                                   selectReceiveTokenForExchange({
                                     ...object,
                                     receiveTokensListItem: true,
