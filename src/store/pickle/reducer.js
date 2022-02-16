@@ -29,11 +29,11 @@ export const pickeStake = (state = initialState, action) => {
 
 export const pickeDill = (state = initialStateDill, action) => {
   switch (action.type) {
-    case actionTypes.SET_PICKLE_DILL:
+    case actionTypes.GET_PICKLE_DILL:
       return {
         ...state,
         pickeDill: action?.payload,
-        pickeDillTotal: action?.payload[0].totalValue,
+        pickeDillTotal: action?.payload[0].total,
       };
     default:
       return state;

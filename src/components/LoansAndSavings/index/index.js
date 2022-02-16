@@ -19,6 +19,7 @@ import CurveLogo from '../../../assets/icons/curveLogo.png';
 import aaveLogo from '../../../assets/icons/aave-logo.svg';
 import SnowSwapLogo from '../../../assets/icons/snowswap-snow-logo.svg';
 import BalancerLogo from '../../../assets/icons/balancer.png';
+import pickleLogo from '../../../assets/icons/pickle_finance_logo.webp';
 import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
 // import Ethereum2Staking from '../Ethereum2Staking';
 // import CurveFarming from '../CurveFarming';
@@ -140,8 +141,8 @@ export default function index({ accountAddress }) {
   //pickle
   // const pickeStake = useSelector((state) => state.pickeStake.pickeStake); //saga
   // const pickleStakeTotal = useSelector((state) => state.pickeStake.pickleStakeTotal); //saga
-  // const pickeDill = useSelector((state) => state.pickeDill.pickeDill); //saga
-  // const pickeDillTotal = useSelector((state) => state.pickeDill.pickeDillTotal); //saga
+  const pickeDill = useSelector((state) => state.pickeDill.pickeDill); //saga
+  const pickeDillTotal = useSelector((state) => state.pickeDill.pickeDillTotal); //saga
 
   //uniswap (need to get total value from the object and put in redux separately)
   // const uniswapV2array = useSelector((state) => state.uniswapV2stake.uniswapV2stake); //saga (incorrect data structure. Work over appropriate look)
@@ -518,7 +519,8 @@ export default function index({ accountAddress }) {
             YearnTokenData.length > 0 ||
             curveToken.length > 0 ||
             snxTokenData.length > 0 ||
-            snxCollateralData.length > 0,
+            snxCollateralData.length > 0 ||
+            pickeDill.length > 0,
         }}>
         <Header>
           <Title isLightTheme={theme}>{'Vaults'}</Title>
@@ -537,7 +539,8 @@ export default function index({ accountAddress }) {
                     parseFloat(olympusTokenTotal) +
                     parseFloat(curveTokenTotal) +
                     parseFloat(snxTokenTotal) +
-                    parseFloat(snxCollateralTotal)
+                    parseFloat(snxCollateralTotal) +
+                    parseFloat(pickeDillTotal > 0 ? pickeDillTotal : 0)
                 ).toFixed(2)
               )}
             </TotalValue>
@@ -666,6 +669,42 @@ export default function index({ accountAddress }) {
             ) : (
               ''
             )}
+            {/*Pickle Dill */}
+            {pickeDill.length > 0 ? (
+              <React.Fragment>
+                <img
+                  src={pickleLogo}
+                  style={{
+                    height: '20px',
+                    marginTop: '',
+                    marginLeft: '15px',
+                    display: 'inline-block',
+                  }}
+                  alt=""
+                />
+                Pickle Dill
+                {pickeDill
+                  ? pickeDill.map((object) => {
+                      return (
+                        <Investment
+                          protocol={object}
+                          protocolName={'Pickle Dill'}
+                          logoImage={pickleLogo}
+                        />
+                      );
+                    })
+                  : ''}
+              </React.Fragment>
+            ) : (
+              ''
+            )}
+            {/*pickeDill/*/}
+            {/* Pickle Dill
+            {pickeDill.map((object) => {
+              return (
+                <Investment protocol={object} logoImage={pickleLogo} protocolName={'Pickle Dill'} />
+              );
+            })} */}
           </React.Fragment>
         )}
       </PoolsBlock>

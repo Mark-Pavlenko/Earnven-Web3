@@ -25,6 +25,7 @@ import OlympusStaking from '../OlympusStaking';
 import SushiLPToken from '../SushiLPToken';
 import CompoundFinance from '../CompoundFinance';
 import BalancerV2 from '../LiqudityPools/BalancerV2';
+import PickleDill from '../Vaults/PickleDill';
 //import UniswapV2 from '../LiqudityPools/UniswapV2';
 
 export default function Index({ accountAddress }) {
@@ -80,6 +81,7 @@ export default function Index({ accountAddress }) {
       <SnowSwapStaking accountAddress={accountAddress} />
       <CreamIronBank accountAddress={accountAddress} getTotal={() => {}} />
       <BalancerV2 accountAddress={accountAddress} />
+      <PickleDill accountAddress={accountAddress} />
     </React.Fragment>
   );
 }

@@ -26,14 +26,15 @@ const PickleDill = ({ accountAddress }) => {
     const web3 = await getWeb3();
     const contract = new web3.eth.Contract(abi, '0xbBCf169eE191A1Ba7371F30A1C344bFC498b29Cf');
     const balance = (await contract.methods.balanceOf(accountAddress).call()) / 10 ** 18;
+
     setaccountbalance(balance);
-    console.log('balance  pickle', balance);
+
     let dataSend = [];
     dataSend.push(accountAddress);
     dataSend.push(balance);
     try {
       dispatch({
-        type: actionTypes.GET_PICKLE_DILL,
+        type: actionTypes.SET_PICKLE_DILL,
         payload: dataSend,
       });
     } catch (err) {
@@ -50,12 +51,9 @@ const PickleDill = ({ accountAddress }) => {
     }
   }, [accountAddress]);
 
-  const pickleDillArray = useSelector((state) => state.pickeDill?.pickeDill);
+  // const pickleDillArray = useSelector((state) => state.pickeDill.pickeDill);
+  // //console.log('TestPicke from main saga test dill', pickleDillArray);
 
-  useEffect(() => {
-    console.log('saga test dill', pickleDillArray);
-    // setimgdata(pickleDillArray[0].icon);
-  }, [pickleDillArray]);
   return <div></div>;
 };
 

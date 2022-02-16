@@ -67,7 +67,11 @@ const Investment = ({
     protocol.symbol = protocol.tokenName;
   }
 
-  if (protocolName === 'Curve Pool' || protocolName === 'SnowSwap') {
+  if (
+    protocolName === 'Curve Pool' ||
+    protocolName === 'SnowSwap' ||
+    protocolName === 'Pickle Dill'
+  ) {
     protocol.tokenImage = logoImage;
   }
 
