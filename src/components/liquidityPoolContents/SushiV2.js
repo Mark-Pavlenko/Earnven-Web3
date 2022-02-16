@@ -893,8 +893,7 @@ export default function LiquidityPools({ inputValue, AllTokens }) {
   return (
     <div>
       <LiquidityPoolsTable
-        //data={Data}
-        data={mockData}
+        data={filterData(Data)}
         type={'sushiswap'}
         AllTokens={AllTokens}
         addLiquidity={addLiquiditySushiV2}

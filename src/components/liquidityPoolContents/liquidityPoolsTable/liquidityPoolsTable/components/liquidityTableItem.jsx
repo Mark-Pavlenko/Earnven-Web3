@@ -573,8 +573,8 @@ export const LiquidityTableItem = ({
               .map((name) => (
                 <>
                   {item[name].image && (
-                    //<TokenImage src={`https://ethplorer.io${item[name].image}`} />
-                    <TokenImage src={`${item[name].image}`} />
+                    <TokenImage src={`https://ethplorer.io${item[name].image}`} />
+                    // <TokenImage src={`${item[name].image}`} />
                   )}
                 </>
               ))}

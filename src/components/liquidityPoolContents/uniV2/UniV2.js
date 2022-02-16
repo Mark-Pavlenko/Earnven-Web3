@@ -953,7 +953,7 @@ export default function LiquidityPools({ inputValue, AllTokens }) {
       {/*<button onClick={() => {setIsModalOpen(true)}}>Open</button>*/}
       {/*{Content}*/}
       <LiquidityPoolsTable
-          data={filterData(Data)}
+          data={Data}
           type={'uniswap'}
           AllTokens={AllTokens}
           addLiquidity={addLiquidityUniV2}
