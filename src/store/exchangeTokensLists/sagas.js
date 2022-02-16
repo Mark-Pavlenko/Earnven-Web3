@@ -32,36 +32,40 @@ function* getSendTokensListSagaWorker(accountAddress) {
     walletTokensList.push(tempObj);
   }
   let tokens = addressInfoData.data.tokens;
-  // console.log('raw tokens arr of objects', tokens);
+  // console.log('raw tokens arr of objects sagas', tokens);
+
   for (let i = 0; i < tokens.length; i++) {
     const tempObj = {};
-    tempObj.address = tokens[i].tokenInfo.address;
-    tempObj.name = tokens[i].tokenInfo.name;
-    tempObj.symbol = tokens[i].tokenInfo.symbol;
-    tempObj.USDCurrency = tokens[i].tokenInfo.price.rate;
-    tempObj.balance = parseFloat(
-      (tokens[i].balance * Math.pow(10, -parseInt(tokens[i].tokenInfo.decimals))).toFixed(3)
-    );
-    // .toString();
 
-    if (tokens[i].tokenInfo.image !== undefined) {
-      tempObj.logoURI = `https://ethplorer.io${tokens[i].tokenInfo.image}`;
-    } else {
-      tempObj.logoURI = null;
+    // console.log('tokens sagas', tokens[i]);
+
+    if (tokens[i].tokenInfo.price !== false) {
+      tempObj.address = tokens[i].tokenInfo.address;
+      tempObj.name = tokens[i].tokenInfo.name;
+      tempObj.symbol = tokens[i].tokenInfo.symbol;
+      tempObj.USDCurrency = tokens[i].tokenInfo.price.rate;
+      tempObj.balance = parseFloat(
+        (tokens[i].balance * Math.pow(10, -parseInt(tokens[i].tokenInfo.decimals))).toFixed(3)
+      );
+
+      if (tokens[i].tokenInfo.image !== undefined) {
+        tempObj.logoURI = `https://ethplorer.io${tokens[i].tokenInfo.image}`;
+      } else {
+        tempObj.logoURI = null;
+      }
+      walletTokensList.push(tempObj);
     }
-
-    walletTokensList.push(tempObj);
   }
 
-  //filtered user tokens with 0x tokens list
-  const sendTokensList = walletTokensList.filter((walletToken) =>
-    zeroAPISwapTokensList.find((zeroToken) => walletToken.symbol === zeroToken.symbol)
-  );
+  console.log('sagas walletTokensList', walletTokensList);
 
-  console.log('first sagas sendTokensList', sendTokensList);
-  // console.log('first sagas sendTokensList', walletTokensList);
+  // const sendTokensList = walletTokensList.filter((walletToken) =>
+  //   zeroAPISwapTokensList.find((zeroToken) => walletToken.symbol === zeroToken.symbol)
+  // );
+  //
+  // console.log('sagas sendTokensList', sendTokensList);
 
-  yield put(actions.getSendTokensList(sendTokensList));
+  yield put(actions.getSendTokensList(walletTokensList));
   // yield put(actions.getSendTokensList(walletTokensList));
 }
 

@@ -862,7 +862,7 @@ export default function SwapComponent() {
                                     <SendTokenConvertedMeasures isLightTheme={isLightTheme}>
                                       {object.balance} ·{' '}
                                       {object.USDCurrency !== undefined
-                                        ? `$${object.USDCurrency.toFixed(2)}`
+                                        ? `$${object.USDCurrency.toFixed(5)}`
                                         : 'Price is not available'}
                                     </SendTokenConvertedMeasures>
                                   </div>
@@ -873,7 +873,7 @@ export default function SwapComponent() {
                                       // (
                                       <span>{`$${(
                                         object.balance * object.USDCurrency.toFixed(2)
-                                      ).toFixed(3)}`}</span>
+                                      ).toFixed(5)}`}</span>
                                     )}
                                   {/*) : ( */}
                                   {/*<Loader type="Rings" color="#BB86FC" height={30} width={30} />*/}
