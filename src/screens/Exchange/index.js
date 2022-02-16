@@ -258,13 +258,17 @@ export default function SwapComponent() {
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
-  //work saga
-  // const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
-
   //mock data
-  const finalSendTokensList = sendTokensMockList;
+  // const finalSendTokensList = sendTokensMockList;
 
+  //work saga
+  const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
   const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
+
+  console.log('single finalSendTokensList', finalSendTokensList);
+  console.log('single finalReceiveTokensList', finalReceiveTokensList);
+  // console.log('sendTokenForExchange singleSwap state', sendTokenForExchange);
+  // console.log('receiveTokenForExchange singleSwap state', receiveTokenForExchange);
 
   //---OLD states
 
@@ -287,9 +291,6 @@ export default function SwapComponent() {
   const [toTokens, settoTokens] = useState([]);
   const [isSendTokensModalVisible, setIsSendTokensModalVisible] = useState(false);
   const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
-
-  console.log('sendTokenForExchange singleSwap state', sendTokenForExchange);
-  console.log('receiveTokenForExchange singleSwap state', receiveTokenForExchange);
 
   useEffect(async () => {
     try {

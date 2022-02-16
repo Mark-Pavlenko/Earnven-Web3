@@ -128,6 +128,16 @@ export default function MultiSwapComponent() {
       receiveTokensListItem: true,
       address: '0x6b175474e89094c44da98b954eedeac495271d0f',
     },
+    // {
+    //   id: 'usdt',
+    //   symbol: 'USDT',
+    //   name: 'Tether USD',
+    //   decimals: 6,
+    //   tokenType: 'ERC20',
+    //   address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+    //   logoURI: 'https://assets.coingecko.com/coins/images/325/thumb/Tether-logo.png?1598003707',
+    //   receiveTokensListItem: true,
+    // },
   ];
 
   const [receiveTokensList, setReceiveTokensList] = useState(initReceiveTokensList);
