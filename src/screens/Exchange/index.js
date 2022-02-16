@@ -860,16 +860,24 @@ export default function SwapComponent() {
                                       {object.name}
                                     </SendTokenName>
                                     <SendTokenConvertedMeasures isLightTheme={isLightTheme}>
-                                      409,333 UNI · $19,18
+                                      {object.balance} ·{' '}
+                                      {object.USDCurrency !== undefined
+                                        ? `$${object.USDCurrency.toFixed(2)}`
+                                        : 'Price is not available'}
                                     </SendTokenConvertedMeasures>
                                   </div>
                                 </SendTokenLabelsBlock>
                                 <SendTokenBalance isLightTheme={isLightTheme}>
-                                  {object.balance === undefined ? (
-                                    <Loader type="Rings" color="#BB86FC" height={30} width={30} />
-                                  ) : (
-                                    <span>${object.balance}</span>
-                                  )}
+                                  {object.balance !== undefined &&
+                                    object.USDCurrency !== undefined && (
+                                      // (
+                                      <span>{`$${(
+                                        object.balance * object.USDCurrency.toFixed(2)
+                                      ).toFixed(3)}`}</span>
+                                    )}
+                                  {/*) : ( */}
+                                  {/*<Loader type="Rings" color="#BB86FC" height={30} width={30} />*/}
+                                  {/* )}*/}
                                 </SendTokenBalance>
                               </SendTokenModalListItem>
                             ))}

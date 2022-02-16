@@ -23,10 +23,12 @@ function* getSendTokensListSagaWorker(accountAddress) {
     tempObj.address = '';
     tempObj.name = 'Ethereum';
     tempObj.symbol = 'ETH';
-    tempObj.balance = addressInfoData.data.ETH.balance.toFixed(3).toString();
+    tempObj.balance = parseFloat(addressInfoData.data.ETH.balance.toFixed(3));
     tempObj.logoURI = ethImage;
     tempObj.USDCurrency = addressInfoData.data.ETH.price.rate;
-    //
+
+    console.log('sagas tempObj', tempObj);
+
     walletTokensList.push(tempObj);
   }
   let tokens = addressInfoData.data.tokens;
@@ -37,9 +39,11 @@ function* getSendTokensListSagaWorker(accountAddress) {
     tempObj.name = tokens[i].tokenInfo.name;
     tempObj.symbol = tokens[i].tokenInfo.symbol;
     tempObj.USDCurrency = tokens[i].tokenInfo.price.rate;
-    tempObj.balance = (tokens[i].balance * Math.pow(10, -parseInt(tokens[i].tokenInfo.decimals)))
-      .toFixed(3)
-      .toString();
+    tempObj.balance = parseFloat(
+      (tokens[i].balance * Math.pow(10, -parseInt(tokens[i].tokenInfo.decimals))).toFixed(3)
+    );
+    // .toString();
+
     if (tokens[i].tokenInfo.image !== undefined) {
       tempObj.logoURI = `https://ethplorer.io${tokens[i].tokenInfo.image}`;
     } else {
@@ -49,16 +53,16 @@ function* getSendTokensListSagaWorker(accountAddress) {
     walletTokensList.push(tempObj);
   }
 
-  // console.log('0x API tokens list', zeroAPISwapTokensList);
-  // console.log('not filtered wallet`s tokens list arr from sagas', walletTokensList);
-
+  //filtered user tokens with 0x tokens list
   const sendTokensList = walletTokensList.filter((walletToken) =>
     zeroAPISwapTokensList.find((zeroToken) => walletToken.symbol === zeroToken.symbol)
   );
 
-  // console.log('first sagas sendTokensList', sendTokensList);
+  console.log('first sagas sendTokensList', sendTokensList);
+  // console.log('first sagas sendTokensList', walletTokensList);
 
   yield put(actions.getSendTokensList(sendTokensList));
+  // yield put(actions.getSendTokensList(walletTokensList));
 }
 
 export function* getReceiveTokensListSagaWatcher() {
