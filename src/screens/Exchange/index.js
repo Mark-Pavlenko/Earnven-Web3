@@ -554,9 +554,14 @@ export default function SwapComponent() {
   };
 
   const selectSendTokenForExchange = (selectSendToken) => {
-    console.log('selected send token value object 111', selectSendToken);
+    console.log('selected send token value object 222', selectSendToken);
+    const initSendTokenAmount = 1;
+
+    checkIfExchangedTokenLimitIsExceeded(initSendTokenAmount, selectSendToken.balance);
+
     setSendTokenForExchange(selectSendToken);
-    setSendTokenForExchangeAmount(1);
+    setSendTokenForExchangeAmount(initSendTokenAmount);
+
     //old
     setTokenToAmount(0);
     setprotocolsRateList([]);
@@ -564,8 +569,22 @@ export default function SwapComponent() {
     setSources([]);
   };
 
+  const [isTokensLimitExceeded, setIsTokensLimitExceeded] = useState(false);
+
+  const checkIfExchangedTokenLimitIsExceeded = (chosenTokenAmount, totalTokensBalance) => {
+    if (chosenTokenAmount > totalTokensBalance) {
+      console.log('limit is exceeded');
+      setIsTokensLimitExceeded(true);
+    } else {
+      console.log('limit is not exceeded');
+      setIsTokensLimitExceeded(false);
+    }
+  };
+
+  // console.log('sendTokenForExchangeAmount 222', sendTokenForExchangeAmount);
+
   const selectReceiveTokenForExchange = (selectReceiveToken) => {
-    console.log('selected receive token value object 111', selectReceiveToken);
+    console.log('selected receive token value object 222', selectReceiveToken);
     setReceiveTokenForExchange(selectReceiveToken);
     setReceiveTokenForExchangeAmount(1);
     //old
@@ -735,36 +754,75 @@ export default function SwapComponent() {
                       alt="chevron_icon"
                     />
                   </ChooseBtnTokenBlock>
-                  <ChosenSendReceiveTokenValueInput
-                    InputProps={{
-                      inputProps: {
-                        style: {
-                          textAlign: 'right',
-                          paddingRight: 0,
-                          width: '100px',
-                          fontWeight: 600,
-                          color: isLightTheme ? 'black' : 'white',
+
+                  {!isTokensLimitExceeded ? (
+                    <ChosenSendReceiveTokenValueInput
+                      //------
+                      InputProps={{
+                        inputProps: {
+                          style: {
+                            textAlign: 'right',
+                            paddingRight: 0,
+                            width: '100px',
+                            fontWeight: 600,
+                            color: isLightTheme ? 'black' : 'white',
+                          },
                         },
-                      },
-                      classes: { notchedOutline: classes.noBorder },
-                    }}
-                    isLightTheme={isLightTheme}
-                    placeholder="0.0"
-                    value={sendTokenForExchangeAmount}
-                    onChange={(e) => {
-                      setSendTokenForExchangeAmount(e.target.value);
-                      convertSendTokenToUSDCurrency({
-                        amount: e.target.value,
-                        ...sendTokenForExchange,
-                      });
-                      convertExchangeTokensCourse({
-                        inputId: 'firstInput',
-                        tokenAmount: parseInt(e.target.value),
-                        sendTokenForExchangeAddress: sendTokenForExchange.address,
-                        receiveTokenForExchangeAddress: receiveTokenForExchange.address,
-                      });
-                    }}
-                  />
+                        classes: { notchedOutline: classes.noBorder },
+                      }}
+                      isLightTheme={isLightTheme}
+                      placeholder="0.0"
+                      value={sendTokenForExchangeAmount}
+                      onChange={(e) => {
+                        setSendTokenForExchangeAmount(e.target.value);
+                        convertSendTokenToUSDCurrency({
+                          amount: e.target.value,
+                          ...sendTokenForExchange,
+                        });
+                        convertExchangeTokensCourse({
+                          inputId: 'firstInput',
+                          tokenAmount: parseInt(e.target.value),
+                          sendTokenForExchangeAddress: sendTokenForExchange.address,
+                          receiveTokenForExchangeAddress: receiveTokenForExchange.address,
+                        });
+                      }}
+                    />
+                  ) : (
+                    <ChosenSendReceiveTokenValueInput
+                      error
+                      id="standard-error-helper-text"
+                      helperText="Insufficient funds"
+                      //------
+                      InputProps={{
+                        inputProps: {
+                          style: {
+                            textAlign: 'right',
+                            paddingRight: 0,
+                            width: '100px',
+                            fontWeight: 600,
+                            color: isLightTheme ? 'black' : 'white',
+                          },
+                        },
+                        classes: { notchedOutline: classes.noBorder },
+                      }}
+                      isLightTheme={isLightTheme}
+                      placeholder="0.0"
+                      value={sendTokenForExchangeAmount}
+                      onChange={(e) => {
+                        setSendTokenForExchangeAmount(e.target.value);
+                        convertSendTokenToUSDCurrency({
+                          amount: e.target.value,
+                          ...sendTokenForExchange,
+                        });
+                        convertExchangeTokensCourse({
+                          inputId: 'firstInput',
+                          tokenAmount: parseInt(e.target.value),
+                          sendTokenForExchangeAddress: sendTokenForExchange.address,
+                          receiveTokenForExchangeAddress: receiveTokenForExchange.address,
+                        });
+                      }}
+                    />
+                  )}
                 </SendTokensChooseButton>
 
                 {/* modal with send tokens list*/}
@@ -976,6 +1034,10 @@ export default function SwapComponent() {
                   </ChooseBtnTokenBlock>
                   {/*)}*/}
                   <ChosenSendReceiveTokenValueInput
+                    error={true}
+                    id="standard-error-helper-text"
+                    helperText="Insufficient funds"
+                    //--------
                     InputProps={{
                       inputProps: {
                         style: {
@@ -1294,7 +1356,11 @@ export default function SwapComponent() {
               </DownDelimiterLabelsBlock>
 
               <SwapBlockExchangeLayout isLightTheme={isLightTheme}>
-                <Button onClick={() => calculateToAmount(sendTokenForExchange)}>Exchange</Button>
+                <Button
+                  disabled={isTokensLimitExceeded}
+                  onClick={() => calculateToAmount(sendTokenForExchange)}>
+                  Exchange
+                </Button>
               </SwapBlockExchangeLayout>
             </SwapTokensMainSubBlock>
           </FirstColumnSwapSubBlock>
