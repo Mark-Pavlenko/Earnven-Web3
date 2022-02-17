@@ -190,19 +190,6 @@ export default function SwapComponent() {
   console.log('initSendTokenSwap', initSendTokenSwap);
   console.log('initReceiveFirstTokenSwap', initReceiveFirstTokenSwap);
 
-  const [sendTokenForExchange, setSendTokenForExchange] = useState();
-
-  const [receiveTokenForExchange, setReceiveTokenForExchange] = useState({
-    symbol: 'DAI',
-    logoURI: daiICon,
-    avatarIcon: 'Dai Stablecoin',
-    name: 'dai',
-    id: 'dai',
-    receiveTokensListItem: true,
-    address: '0x6b175474e89094c44da98b954eedeac495271d0f',
-  });
-  // finalReceiveTokensList[1]
-
   const [filteredData, setFilteredData] = useState([]);
   const [filteredReceiveTokensListData, setFilteredReceiveTokensListData] = useState([]);
   const [tokenSendUSDCurrency, setTokenSendUSDCurrency] = useState('$0.00');
@@ -212,6 +199,7 @@ export default function SwapComponent() {
   const [receiveTokenForExchangeAmount, setReceiveTokenForExchangeAmount] = useState();
   const [isSendTokensModalVisible, setIsSendTokensModalVisible] = useState(false);
   const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
+  const [toggleExchangedTokens, setToggleExchangedTokens] = useState(false);
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
@@ -220,8 +208,6 @@ export default function SwapComponent() {
 
   console.log('single finalSendTokensList', finalSendTokensList);
   console.log('single finalReceiveTokensList', finalReceiveTokensList);
-  console.log('sendTokenForExchange singleSwap state', sendTokenForExchange);
-  console.log('receiveTokenForExchange singleSwap state', receiveTokenForExchange);
 
   console.log('1112 filteredSend', filteredData);
   console.log('1112 filteredReceive', filteredReceiveTokensListData);
@@ -316,6 +302,8 @@ export default function SwapComponent() {
   };
 
   let convertReceiveTokenToUSDCurrency = async (tokenData) => {
+    setTokensReceiveUSDCurrency('Loading');
+
     if (tokenData.amount === '') {
       tokenData.amount = '0';
     }
@@ -557,12 +545,19 @@ export default function SwapComponent() {
 
   //---------------------
 
-  const [toggleExchangedTokens, setToggleExchangedTokens] = useState(false);
-
   const toggleSwappedTokens = () => {
     setToggleExchangedTokens(!toggleExchangedTokens);
-    setReceiveTokenForExchange(initSendTokenSwap);
-    setSendTokenForExchange(initReceiveFirstTokenSwap);
+
+    dispatch({
+      type: actionTypes.SET_INIT_SEND_TOKEN_SWAP,
+      payload: initReceiveFirstTokenSwap,
+    });
+
+    dispatch({
+      type: actionTypes.SET_INIT_RECEIVE_FIRST_TOKEN_SWAP,
+      payload: initSendTokenSwap,
+    });
+
     setTokenSendUSDCurrency(tokenReceiveUSDCurrency);
     setTokensReceiveUSDCurrency(tokenSendUSDCurrency);
     setSendTokenForExchangeAmount(receiveTokenForExchangeAmount);
