@@ -3,6 +3,8 @@ import Web3 from 'web3';
 import UniStakingABI from '../../../abi/uniStakingContract.json';
 import Addresses from '../../../contractAddresses';
 import UniswapV2 from '../LiqudityPools/UniswapV2';
+
+//use below function to get uniswap LP data
 export const getuniswapV2data = async (attributes) => {
   const pools = [];
   await axios
@@ -54,19 +56,23 @@ export const getuniswapV2data = async (attributes) => {
           // object.token0name = res[i].pair.token0.name;
           // object.token1name = res[i].pair.token1.name;
           object.name = res[i].pair.token0.name + '-' + res[i].pair.token1.name;
-          // object.token0Symbol = res[i].pair.token0.symbol;
-          // object.token1Symbol = res[i].pair.token1.symbol;
-          object.tokenName = res[i].pair.token0.symbol + '-' + res[i].pair.token1.symbol;
+          let token0Symbol = res[i].pair.token0.symbol;
+          let token1Symbol = res[i].pair.token1.symbol;
+          //object.symbol = res[i].pair.token0.symbol + '-' + res[i].pair.token1.symbol;
+          object.symbol =
+            token0Symbol.replace('yDAI+yUSDC+yUSDT+yTUSD', 'Y Curve') +
+            '/' +
+            token1Symbol.replace('yDAI+yUSDC+yUSDT+yTUSD', 'Y Curve');
           object.liquidity = res[i].pair.reserveUSD;
           object.volume = res[i].pair.volumeUSD;
           object.protocol = 'Uniswap V2';
           object.chain = 'Ethereum';
           let Images = [];
           object.value = (
-            (res[i].pair.reserveUSD / res[i].pair.totalSupply) *
-            res[i].liquidityTokenBalance
+            (res[i].liquidityTokenBalance / res[i].pair.totalSupply) *
+            res[i].pair.reserveUSD
           ).toFixed(2);
-          object.price = object.value / res[i].liquidityTokenBalance;
+          object.price = parseFloat(object.value / res[i].liquidityTokenBalance).toFixed(4);
           await axios
             .get(
               `https://api.coingecko.com/api/v3/coins/ethereum/contract/${res[i].pair.token0.id}`
@@ -89,8 +95,6 @@ export const getuniswapV2data = async (attributes) => {
             });
           object.imageData = Images;
           if (object.value > 0) {
-            tot += parseFloat(object.value);
-            object.totalValue = tot;
             pools.push(object);
           }
         }

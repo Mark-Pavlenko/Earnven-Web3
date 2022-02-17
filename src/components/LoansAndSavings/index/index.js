@@ -20,6 +20,7 @@ import aaveLogo from '../../../assets/icons/aave-logo.svg';
 import SnowSwapLogo from '../../../assets/icons/snowswap-snow-logo.svg';
 import BalancerLogo from '../../../assets/icons/balancer.png';
 import pickleLogo from '../../../assets/icons/pickle_finance_logo.webp';
+import uniSwapLogo from '../../../assets/icons/Uniswap.webp';
 import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
 // import Ethereum2Staking from '../Ethereum2Staking';
 // import CurveFarming from '../CurveFarming';
@@ -28,8 +29,8 @@ import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
 //import UniswapV2 from '../LiqudityPools/UniswapV2';
 //import ConvexStaking from '../ConvexStaking';
 //import { SnowSwapStaking } from '../SnowSwapStaking';
-import Cream from '../Cream';
-import CreamIronBank from '../CreamIronBankSavings';
+// import Cream from '../Cream';
+// import CreamIronBank from '../CreamIronBankSavings';
 //import BalancerV2 from '../LiqudityPools/BalancerV2';
 
 export default function index({ accountAddress }) {
@@ -40,6 +41,7 @@ export default function index({ accountAddress }) {
   const [isVaultsOpen, setIsVaultsOpen] = useState(true);
   const [isDerivativesOpen, setDerivativesOpen] = useState(true);
   const [uniswapV2lpWithGaps, setUniswapV2lpWithGaps] = useState([]);
+  const [uniSwapV2lpTotal, setuniSwapV2lpTotal] = useState(0);
 
   //general
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
@@ -147,21 +149,21 @@ export default function index({ accountAddress }) {
   //uniswap (need to get total value from the object and put in redux separately)
   // const uniswapV2array = useSelector((state) => state.uniswapV2stake.uniswapV2stake); //saga (incorrect data structure. Work over appropriate look)
   // const uniswapV2StakeTotal = useSelector((state) => state.uniswapV2stake.uniswapV2stakeTotal); //saga (incorrect data structure. Work over appropriate look)
-  // const uniswapV2lp = useSelector((state) => state.uniswapV2lp.uniswapV2lp); //saga
-  // useEffect(() => {
-  //   const stringWithGaps = uniswapV2lp.map((el) => {
-  //     if (el.token1Symbol === 'yDAI+yUSDC+yUSDT+yTUSD') {
-  //       return {
-  //         ...el,
-  //         token1Symbol: el.token1Symbol.replace(/[+]/g, ' '),
-  //       };
-  //     } else {
-  //       return { ...el };
-  //     }
-  //   });
-
-  //   setUniswapV2lpWithGaps(stringWithGaps);
-  // }, [uniswapV2lp]);
+  const uniswapV2lp = useSelector((state) => state.uniswapV2lp.uniswapV2lp); //saga
+  //get the total value of uniSwapV2
+  useEffect(() => {
+    function getUniSwapV2Total() {
+      //get the total value of the unuswap tokens
+      if (uniswapV2lp.length > 0) {
+        let uniSwapv2Total = 0;
+        uniswapV2lp.map((object) => {
+          uniSwapv2Total += parseFloat(object.value);
+          setuniSwapV2lpTotal(uniSwapv2Total);
+        });
+      }
+    }
+    getUniSwapV2Total();
+  }, [uniswapV2lp]);
 
   return (
     <InvestmentWrapper>
@@ -173,7 +175,8 @@ export default function index({ accountAddress }) {
             SushiPoolsData.length > 0 ||
             curveLpToken.length > 0 ||
             snowSwapData.length > 0 ||
-            liquityTokenData.length > 0,
+            liquityTokenData.length > 0 ||
+            uniswapV2lp.length > 0,
         }}>
         <Header>
           <Title isLightTheme={theme}>{'Liquidity pools'}</Title>
@@ -188,7 +191,10 @@ export default function index({ accountAddress }) {
                 parseFloat(
                   parseFloat(SushiV2Total) +
                     parseFloat(curveLpTokenTotal) +
-                    parseFloat(balancerV2tot)
+                    parseFloat(balancerV2tot) +
+                    parseFloat(liquityTokenTotal) +
+                    parseFloat(snowSwapTotal) +
+                    parseFloat(uniSwapV2lpTotal)
                 ).toFixed(2)
               )}
             </TotalValue>
@@ -339,6 +345,38 @@ export default function index({ accountAddress }) {
             ) : (
               ''
             )}
+            {/* UniSwapV2 Protocol */}
+            {uniswapV2lp.length > 0 ? (
+              <React.Fragment>
+                <img
+                  src={uniSwapLogo}
+                  style={{
+                    height: '20px',
+                    marginTop: '',
+                    marginLeft: '15px',
+                    display: 'inline-block',
+                  }}
+                  alt=""
+                />
+                UniswapV2
+                {uniswapV2lp
+                  ? uniswapV2lp.map((object) => {
+                      return (
+                        <React.Fragment>
+                          <Investment
+                            protocol={object}
+                            protocolName={'UniswapV2'}
+                            logoImage={object.imageData}
+                          />
+                        </React.Fragment>
+                      );
+                    })
+                  : ''}
+              </React.Fragment>
+            ) : (
+              ''
+            )}
+            {/* ------------end of UniSwapV2--------- */}
           </React.Fragment>
         )}
       </PoolsBlock>
@@ -777,10 +815,10 @@ export default function index({ accountAddress }) {
             <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
             {/*<TotalEmptyCell></TotalEmptyCell>*/}
             <TotalValue isLightTheme={theme}>
-              $
+              {/* $
               {numberWithCommas(
                 parseFloat(parseFloat(liquityTokenTotal) + parseFloat(snowSwapTotal)).toFixed(2)
-              )}
+              )} */}
             </TotalValue>
           </TotalValueField>
         </div>
