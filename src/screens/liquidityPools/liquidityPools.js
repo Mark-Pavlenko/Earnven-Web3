@@ -43,6 +43,8 @@ import mkrImage from '../../assets/icons/mkr.svg';
 import aaveImage from '../../assets/icons/aave-logo.svg';
 import balancerImage from '../../assets/icons/balancer-icon.svg';
 import actionTypes from '../../constants/actionTypes';
+import UniswapV2 from '../../components/LoansAndSavings/LiqudityPools/UniswapV2';
+import { InvestmentWrapper } from '../../components/LoansAndSavings/index/styledComponents';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -79,10 +81,10 @@ function a11yProps(index) {
 export default function LiquidityPools() {
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
   const SushiPoolsData = useSelector((state) => state.sushiSwap.sushiSwapLPData);
+  const uniswapV2lp = useSelector((state) => state.uniswapV2lp.uniswapV2lp);
   const accountAddress = useSelector((state) => state.initSidebarValuesReducer.selectedAddress);
-  console.log('SushiPoolsData', SushiPoolsData);
 
-  const correctProtocolDataStructure = (protocol) => {
+  const correctSushiProtocolDataStructure = (protocol) => {
     return protocol.map((el) => {
       return {
         token0: {
@@ -104,7 +106,7 @@ export default function LiquidityPools() {
       };
     });
   };
-  const myPoolsData = correctProtocolDataStructure(SushiPoolsData);
+  const myPoolsData = correctSushiProtocolDataStructure(SushiPoolsData);
 
   const [value, setValue] = React.useState(0);
   const [inputValue, setInputValue] = React.useState('');
@@ -159,103 +161,9 @@ export default function LiquidityPools() {
     setValue(newValue);
   };
 
-  // const mockData = [
-  //   {
-  //     volumeUSD: '534543',
-  //     reserveUSD: '432434',
-  //     token0: {
-  //       id: '32432454223432csxczx',
-  //       image: mockTokenImage,
-  //       name: 'ETH',
-  //       symbol: 'ETH',
-  //     },
-  //     token1: {
-  //       id: '32432454223432csxcdsaasdszx',
-  //       image: mockTokenImage,
-  //       name: 'WETH',
-  //       symbol: 'WETH',
-  //     },
-  //   },
-  //   {
-  //     volumeUSD: '534543',
-  //     reserveUSD: '432434',
-  //     token0: {
-  //       id: '32432454223432csxczx',
-  //       image: mockTokenImage,
-  //       name: 'USDC',
-  //       symbol: 'USDC',
-  //     },
-  //     token1: {
-  //       id: '32432454223432csxcdsaasdszx',
-  //       image: mockTokenImage,
-  //       name: 'WETH',
-  //       symbol: 'WETH',
-  //     },
-  //   },
-  //   {
-  //     volumeUSD: '534543',
-  //     reserveUSD: '432434',
-  //     token0: {
-  //       id: '32432454223432csxczx',
-  //       image: mockTokenImage,
-  //       name: 'ETH',
-  //       symbol: 'ETH',
-  //     },
-  //     token1: {
-  //       id: '32432454223432csxcdsaasdszx',
-  //       image: mockTokenImage,
-  //       name: 'SNX',
-  //       symbol: 'SNX',
-  //     },
-  //   },
-  // ];
-  const mockData = [
-    {
-      imageData: [mkrImage, aaveImage, balancerImage],
-      liquidity: '432234432223434,32',
-      volumeUSD: '423432423',
-      reserveUSD: '454423',
-      balance: '3425432',
-      value: '44234123',
-      tokens: [
-        { name: 'WETH', id: '67tguygiuhi8nh89i7yhuky6iukyh' },
-        { name: 'USDC', id: '67tguygiuhi8nh89njhuhky6iukyh' },
-        { name: 'SNX', id: '67tguygiuh,uiko89i7yhuky6iukyh' },
-      ],
-      protocol: 'Curve',
-    },
-    {
-      imageData: [mkrImage, aaveImage, balancerImage],
-      liquidity: '432234432223434,32',
-      volumeUSD: '423432423',
-      reserveUSD: '454423',
-      balance: '3425432',
-      value: '44234123',
-      tokens: [
-        { name: 'WETH', id: '67tguygiuhi8nh89i7yhuky6iukyh' },
-        { name: 'USDC', id: '67tguygiuhi8nh89njhuhky6iukyh' },
-        { name: 'SNX', id: '67tguygiuh,uiko89i7yhuky6iukyh' },
-      ],
-      protocol: 'Curve',
-    },
-    {
-      imageData: [mkrImage, aaveImage, balancerImage],
-      liquidity: '432234432223434,32',
-      volumeUSD: '423432423',
-      reserveUSD: '454423',
-      balance: '3425432',
-      value: '44234123',
-      tokens: [
-        { name: 'WETH', id: '67tguygiuhi8nh89i7yhuky6iukyh' },
-        { name: 'USDC', id: '67tguygiuhi8nh89njhuhky6iukyh' },
-        { name: 'SNX', id: '67tguygiuh,uiko89i7yhuky6iukyh' },
-      ],
-      protocol: 'Curve',
-    },
-  ];
-
   return (
     <Box sx={{ width: '100%' }}>
+      <UniswapV2 accountAddress={accountAddress} />
       <Wrapper>
         <Description isLightTheme={isLightTheme}>
           Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool.

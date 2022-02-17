@@ -17,7 +17,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import tokenURIs from '../../screens/Exchange/tokenURIs';
 import Addresses from '../../contractAddresses';
 
 import PropTypes from 'prop-types';
@@ -33,11 +32,6 @@ import { Link, useParams } from 'react-router-dom';
 import {LiquidityPoolsTable} from "./liquidityPoolsTable/liquidityPoolsTable/liquidityPoolsTable";
 import {AddNewGroupButton} from "./uniV2/StyledComponents";
 import {useSelector} from "react-redux";
-import mockTokenImage from '../../assets/icons/ethereum.svg'
-import mkrImage from '../../assets/icons/mkr.svg'
-import aaveImage from '../../assets/icons/aave-logo.svg'
-import balancerImage from '../../assets/icons/balancer-icon.svg'
-import {InvestPoolsTable} from "./liquidityPoolsTable/investPoolsTable/investPoolsTable";
 import {addLiquidityNormalSushiV2, addLiquiditySushiV2} from "../../screens/liquidityPools/helpers";
 
 function TabPanel(props) {
@@ -93,7 +87,6 @@ export default function LiquidityPools({ inputValue, AllTokens }) {
   const { address } = useParams();
 
   const [Data, setData] = useState([]); //UNI V2 Pools
-  console.log('Sushi protocols Data', Data)
   const [Content, setContent] = useState(''); //UNI V2 33Pools
   const [Page, setPage] = useState('');
   const [AmountTokenA, setAmountTokenA] = useState('');
@@ -103,127 +96,6 @@ export default function LiquidityPools({ inputValue, AllTokens }) {
   const [AccountLiquidity, setAccountLiquidity] = useState('');
   const [ReceiveToken, setReceiveToken] = useState('');
   const [LiquidityAmount, setLiquidityAmount] = useState('');
-
-  // const [AllTokens, setAllTokens] = useState([]);
-
-  const mockData = [
-    {
-      volumeUSD: '534543',
-      reserveUSD: '432434',
-      token0: {
-        id: '32432454223432csxczx',
-        image: mockTokenImage,
-        name: 'ETH',
-        symbol:'ETH',
-      },
-      token1: {
-        id: '32432454223432csxcdsaasdszx',
-        image: mockTokenImage,
-        name: 'WETH',
-        symbol: 'WETH',
-      },
-    },
-    {
-      volumeUSD: '534543',
-      reserveUSD: '432434',
-      token0: {
-        id: '32432454223432csxczx',
-        image: mockTokenImage,
-        name: 'USDC',
-        symbol:'USDC',
-      },
-      token1: {
-        id: '32432454223432csxcdsaasdszx',
-        image: mockTokenImage,
-        name: 'WETH',
-        symbol: 'WETH',
-      },
-    },
-    {
-      volumeUSD: '534543',
-      reserveUSD: '432434',
-      token0: {
-        id: '32432454223432csxczx',
-        image: mockTokenImage,
-        name: 'ETH',
-        symbol:'ETH',
-      },
-      token1: {
-        id: '32432454223432csxcdsaasdszx',
-        image: mockTokenImage,
-        name: 'SNX',
-        symbol: 'SNX',
-      },
-    }
-  ]
-  const myPoolsMockData = [
-    {
-      imageData: [
-        mkrImage,
-        aaveImage,
-        balancerImage,
-      ],
-      liquidity: '432234432223434,32',
-      volumeUSD: '423432423',
-      reserveUSD: '454423',
-      balance: '3425432',
-      value: '44234123',
-      tokens: ['WETH', 'USDC', 'SNX'],
-      protocol: 'Curve'
-    },
-    {
-      imageData: [
-        mkrImage,
-        aaveImage,
-        balancerImage,
-      ],
-      liquidity: '432234432223434,32',
-      volumeUSD: '423432423',
-      reserveUSD: '454423',
-      balance: '3425432',
-      value: '44234123',
-      tokens: ['WETH', 'USDC', 'SNX'],
-      protocol: 'Curve'
-    },
-    {
-      imageData: [
-        mkrImage,
-        aaveImage,
-        balancerImage,
-      ],
-      liquidity: '432234432223434,32',
-      volumeUSD: '423432423',
-      reserveUSD: '454423',
-      balance: '3425432',
-      value: '44234123',
-      tokens: ['WETH', 'USDC', 'SNX'],
-      protocol: 'Curve'
-    }
-  ]
-
-  // useEffect(() => {
-  //   async function getData() {
-  //     let fetchedTokens;
-  //     await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {}).then(async (response) => {
-  //       setAllTokens(response.data.records);
-  //       fetchedTokens = response.data.records;
-  //     });
-  //     await axios
-  //       .get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
-  //       .then(async (response) => {
-  //         let data = response.data.tokens;
-  //         let tokens = fetchedTokens.map((token) => ({
-  //           ...token,
-  //           logoURI: data.find((x) => x.address === token.address)
-  //             ? data.find((x) => x.address === token.address).logoURI
-  //             : tokenURIs.find((x) => x.address === token.address).logoURI,
-  //         }));
-  //         setAllTokens(tokens);
-  //       }).catch((res) => {
-  //           console.log('liquidity pools Sushiswap-V2 returns error', res)});
-  //   }
-  //   getData();
-  // }, []);
 
   //worked useEffect
   useEffect(() => {
@@ -810,59 +682,6 @@ export default function LiquidityPools({ inputValue, AllTokens }) {
       .send({ from: accounts[0] });
     await UniRouter.methods
       .removeLiquidity(tokenA, tokenB, LiquidityAmount, 0, 0, accounts[0], start.toString())
-      .send({ from: accounts[0] });
-  }
-
-  //*********first input value sends to smartContract
-  async function addLiquidity(tokenA, tokenB, supplyToken, supplyTokenQtty, gasPrice, slippage) {
-    //we need to get as a parameter 'slippage'. It will be percent. We takes supplyTokenQtty and subtract slippage
-    //(ExpectedAmountTokens - slippage) then we have amount below for this percent. This is protection from exchange rate
-    // fluctuations. Then we put this value to contract like this:
-    // const minAmountOut = ExpectedAmountTokens - slippage.
-    // minAmountOut we will send to contract.
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var tokenContract = new web3.eth.Contract(ERC20ABI, supplyToken);
-    const oneClickContract = new web3.eth.Contract(
-      OneClickLiquidity,
-      Addresses.oneClickSushiV2Contract
-    );
-    await tokenContract.methods
-      .approve(Addresses.oneClickSushiV2Contract, supplyTokenQtty)
-      .send({ from: accounts[0], gasPrice:  web3.utils.toWei(gasPrice, 'gwei')});
-    await oneClickContract.methods
-      //.addLiquidityOneClick(tokenA, tokenB, supplyToken, supplyTokenQtty, minAmountOut) //examle of sending minAmountOut to contract
-      .addLiquidityOneClick(tokenA, tokenB, supplyToken, supplyTokenQtty)
-      .send({ from: accounts[0], gasPrice:  web3.utils.toWei(gasPrice, 'gwei') });
-  }
-
-  //********two inputs value send to smartContract
-  async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB, gasPrice) {
-    const start = parseInt(Date.now() / 1000) + 180;
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var tokenAContract = new web3.eth.Contract(ERC20ABI, tokenA);
-    var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
-    await tokenAContract.methods
-      .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenA, 'ether'))
-      .send({ from: accounts[0], gasPrice: web3.utils.toWei(gasPrice, 'gwei') });
-    await tokenBContract.methods
-      .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenB, 'ether'))
-      .send({ from: accounts[0], gasPrice: web3.utils.toWei(gasPrice, 'gwei') });
-    const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.sushiRouter);
-    await UniRouter.methods
-      .addLiquidity(
-        tokenA,
-        tokenB,
-        web3.utils.toWei(amountTokenA, 'ether'),
-        web3.utils.toWei(amountTokenB, 'ether'),
-        0,
-        0,
-        accounts[0],
-        start.toString()
-      )
       .send({ from: accounts[0] });
   }
 

@@ -25,7 +25,7 @@ import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
 // import CurveFarming from '../CurveFarming';
 // import AaveStaking from '../AaveStaking';
 // import Synthetix from '../Synthetix';
-//import UniswapV2 from '../LiqudityPools/UniswapV2';
+import UniswapV2 from '../LiqudityPools/UniswapV2';
 //import ConvexStaking from '../ConvexStaking';
 //import { SnowSwapStaking } from '../SnowSwapStaking';
 import Cream from '../Cream';
@@ -143,25 +143,6 @@ export default function index({ accountAddress }) {
   // const pickleStakeTotal = useSelector((state) => state.pickeStake.pickleStakeTotal); //saga
   const pickeDill = useSelector((state) => state.pickeDill.pickeDill); //saga
   const pickeDillTotal = useSelector((state) => state.pickeDill.pickeDillTotal); //saga
-
-  //uniswap (need to get total value from the object and put in redux separately)
-  // const uniswapV2array = useSelector((state) => state.uniswapV2stake.uniswapV2stake); //saga (incorrect data structure. Work over appropriate look)
-  // const uniswapV2StakeTotal = useSelector((state) => state.uniswapV2stake.uniswapV2stakeTotal); //saga (incorrect data structure. Work over appropriate look)
-  // const uniswapV2lp = useSelector((state) => state.uniswapV2lp.uniswapV2lp); //saga
-  // useEffect(() => {
-  //   const stringWithGaps = uniswapV2lp.map((el) => {
-  //     if (el.token1Symbol === 'yDAI+yUSDC+yUSDT+yTUSD') {
-  //       return {
-  //         ...el,
-  //         token1Symbol: el.token1Symbol.replace(/[+]/g, ' '),
-  //       };
-  //     } else {
-  //       return { ...el };
-  //     }
-  //   });
-
-  //   setUniswapV2lpWithGaps(stringWithGaps);
-  // }, [uniswapV2lp]);
 
   return (
     <InvestmentWrapper>
@@ -775,7 +756,6 @@ export default function index({ accountAddress }) {
         <div style={{ padding: '0 29px 20px 26px', marginBottom: '20px' }}>
           <TotalValueField isLightTheme={theme}>
             <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
-            {/*<TotalEmptyCell></TotalEmptyCell>*/}
             <TotalValue isLightTheme={theme}>
               $
               {numberWithCommas(
