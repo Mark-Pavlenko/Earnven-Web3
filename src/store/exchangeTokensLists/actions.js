@@ -8,6 +8,14 @@ export const getSendTokensList = (payload) => {
   };
 };
 
+export const setInitSendTokenSwap = (payload) => {
+  console.log('InitialSendTokenSingleSwap', payload);
+  return {
+    type: actionType.SET_INIT_SEND_TOKEN_SWAP,
+    payload,
+  };
+};
+
 export const getReceiveTokensList = (payload) => {
   // console.log('getReceiveTokensList action payload', payload);
   return {

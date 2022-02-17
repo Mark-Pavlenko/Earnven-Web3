@@ -11,23 +11,7 @@ import ERC20ABI from '../../abi/ERC20.json';
 import closeModalIcon from '../../assets/icons/close_nft.svg';
 import closeModalIconDark from '../../assets/icons/closenftdark.svg';
 import OutsideClickHandler from './outsideClickHandler';
-import {
-  Box,
-  Button,
-  Container,
-  Divider,
-  Grid,
-  IconButton,
-  Input,
-  InputAdornment,
-  Modal,
-  OutlinedInput,
-  Stack,
-  Tab,
-  Tabs,
-  TextField,
-  Typography,
-} from '@material-ui/core';
+import { Box, Button } from '@material-ui/core';
 import Uniswap from '../../assets/icons/Uniswap.webp';
 import EthIcon from '../../assets/icons/ethereum.svg';
 // import Curve from '../../generalAssets/icons/Curve.webp';
@@ -159,73 +143,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}>
-      {value === index && <Box>{children}</Box>}
-    </div>
-  );
-}
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
-
-const styles = () => ({
-  selected: {
-    color: 'red',
-  },
-});
-const style = {
-  position: 'absolute',
-  top: '45%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 500,
-  bgcolor: 'background.default',
-  // border: '2px solid #000',
-  // boxShadow: 24,
-  p: 4,
-  borderRadius: '10px',
-};
-const CurrencySelect = styled.button`
-  align-items: center;
-  height: 42px;
-  font-size: 18px;
-  font-weight: 600;
-  background-color: transparent;
-  color: #737373;
-  border-radius: 12px;
-  outline: none;
-  cursor: pointer;
-  user-select: none;
-  border: none;
-  padding: 0 0.5rem;
-  margin: 0 0.5rem;
-  :focus,
-  :hover {
-    background-color: blue;
-  }
-`;
 const erc20Abi = [
   'function balanceOf(address owner) view returns (uint256)',
   'function approve(address _spender, uint256 _value) public returns (bool success)',
   'function allowance(address _owner, address _spender) public view returns (uint256 remaining)',
 ];
-// const selectedProvider = new Web3(new Web3.providers.HttpProvider("https://mainnet.infura.io/v3/8b2159b7b0944586b64f0280c927d0a8"))
+
 const selectedProvider = new ethers.providers.JsonRpcProvider(
   'https://mainnet.infura.io/v3/8b2159b7b0944586b64f0280c927d0a8'
 );
+
 const makeCall = async (callName, contract, args, metadata = {}) => {
   if (contract[callName]) {
     let result;
@@ -251,24 +178,42 @@ export default function SwapComponent() {
   const classes = useStyles();
   const { address } = useParams();
 
-  const [sendTokenForExchange, setSendTokenForExchange] = useState({
-    symbol: 'ETH',
-    logoURI: EthIcon,
-    avatarIcon: 'Ethereum',
-    name: 'Ethereum',
-    id: 'ethereum',
-    sendTokensListItem: true,
-    address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-  });
-  const [receiveTokenForExchange, setReceiveTokenForExchange] = useState({
-    symbol: 'DAI',
-    logoURI: daiICon,
-    avatarIcon: 'Dai Stablecoin',
-    name: 'dai',
-    id: 'dai',
-    receiveTokensListItem: true,
-    address: '0x6b175474e89094c44da98b954eedeac495271d0f',
-  });
+  //work saga
+  const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
+  const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
+
+  const initSendTokenSwap = useSelector((state) => state.tokensListReducer.initSendTokenSwap);
+
+  console.log('initSendTokenSwap', { ...initSendTokenSwap });
+
+  const [sendTokenForExchange, setSendTokenForExchange] = useState(
+    { ...initSendTokenSwap }
+    // {
+    //   symbol: 'ETH',
+    //   logoURI: EthIcon,
+    //   name: 'Ethereum',
+    //   sendTokensListItem: true,
+    //   address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+    // }
+  );
+  // setSendTokenForExchange({ ...initSendTokenSwap });
+
+  const [receiveTokenForExchange, setReceiveTokenForExchange] = useState(
+    {
+      symbol: 'DAI',
+      logoURI: daiICon,
+      avatarIcon: 'Dai Stablecoin',
+      name: 'dai',
+      id: 'dai',
+      receiveTokensListItem: true,
+      address: '0x6b175474e89094c44da98b954eedeac495271d0f',
+    }
+    // finalReceiveTokensList[1]
+  );
+
+  console.log('single auf 1', finalSendTokensList[0]);
+  console.log('single auf 2', finalReceiveTokensList[1]);
+
   const [filteredData, setFilteredData] = useState([]);
   const [filteredReceiveTokensListData, setFilteredReceiveTokensListData] = useState([]);
   const [tokenSendUSDCurrency, setTokenSendUSDCurrency] = useState('$0.00');
@@ -283,10 +228,6 @@ export default function SwapComponent() {
 
   //mock data
   // const finalSendTokensList = sendTokensMockList;
-
-  //work saga
-  const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
-  const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
 
   console.log('single finalSendTokensList', finalSendTokensList);
   console.log('single finalReceiveTokensList', finalReceiveTokensList);

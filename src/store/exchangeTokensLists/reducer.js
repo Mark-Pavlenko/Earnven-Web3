@@ -3,6 +3,7 @@ import actionTypes from '../../constants/actionTypes';
 const initialState = {
   sendTokensList: [],
   receiveTokensList: [],
+  initSendTokenSwap: {},
 };
 //takes two arguments: The current state and the action and returns the new state.
 export const tokensListReducer = (state = initialState, action) => {
@@ -18,6 +19,13 @@ export const tokensListReducer = (state = initialState, action) => {
         ...state,
         receiveTokensList: action?.payload,
       };
+
+    case actionTypes.SET_INIT_SEND_TOKEN_SWAP:
+      return {
+        ...state,
+        initSendTokenSwap: action?.payload,
+      };
+
     default:
       return state;
   }

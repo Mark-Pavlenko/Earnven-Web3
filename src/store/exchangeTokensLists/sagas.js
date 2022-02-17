@@ -4,6 +4,7 @@ import actionTypes from '../../constants/actionTypes';
 import * as actions from './actions';
 import ethImage from '../../assets/icons/eth.png';
 import CoinGeckoMockTokensList from './CoinGecko.json';
+import { setInitialSendTokenSingleSwap } from './actions';
 
 export function* getSendTokensListSagaWatcher() {
   yield takeLatest(actionTypes.SET_SEND_TOKENS_LIST, getSendTokensListSagaWorker);
@@ -20,12 +21,13 @@ function* getSendTokensListSagaWorker(accountAddress) {
   const walletTokensList = [];
   if (addressInfoData.data.ETH.balance !== 0) {
     const tempObj = {};
-    tempObj.address = '';
+    tempObj.address = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
     tempObj.name = 'Ethereum';
     tempObj.symbol = 'ETH';
     tempObj.balance = parseFloat(addressInfoData.data.ETH.balance.toFixed(3));
     tempObj.logoURI = ethImage;
     tempObj.USDCurrency = addressInfoData.data.ETH.price.rate;
+    tempObj.sendTokensListItem = true;
 
     console.log('sagas tempObj', tempObj);
 
@@ -44,11 +46,11 @@ function* getSendTokensListSagaWorker(accountAddress) {
       tempObj.name = tokens[i].tokenInfo.name;
       tempObj.symbol = tokens[i].tokenInfo.symbol;
       tempObj.USDCurrency = tokens[i].tokenInfo.price.rate;
-
       // tempObj.balance = parseFloat(tokens[i].balance.toFixed(3));
       tempObj.balance = parseFloat(
         (tokens[i].balance * Math.pow(10, -parseInt(tokens[i].tokenInfo.decimals))).toFixed(3)
       );
+      tempObj.sendTokensListItem = true;
 
       if (tokens[i].tokenInfo.image !== undefined) {
         tempObj.logoURI = `https://ethplorer.io${tokens[i].tokenInfo.image}`;
@@ -68,6 +70,7 @@ function* getSendTokensListSagaWorker(accountAddress) {
   // console.log('sagas sendTokensList', sendTokensList);
 
   yield put(actions.getSendTokensList(walletTokensList));
+  yield put(actions.setInitSendTokenSwap(walletTokensList[0]));
   // yield put(actions.getSendTokensList(walletTokensList));
 }
 
@@ -98,6 +101,7 @@ function* getReceiveTokensListSagaWorker() {
 
   let finalList = zeroAPISwapTokensList.map((token) => ({
     ...token,
+    receiveTokensListItem: true,
     logoURI: uniswapFullCoinsList.tokens.find((x) => x.address === token.address)
       ? uniswapFullCoinsList.tokens.find((x) => x.address === token.address).logoURI
       : null,
