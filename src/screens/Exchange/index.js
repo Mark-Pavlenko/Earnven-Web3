@@ -604,7 +604,7 @@ export default function SwapComponent() {
     );
 
     if (convertTokensData.tokenAmount !== 0 && !isNaN(convertTokensData.tokenAmount)) {
-      if (convertTokensData.inputId === 'firstInput') {
+      if (convertTokensData.inputId === 'sendInput') {
         const convertedValue = await NewContract.methods
           .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
             convertTokensData.sendTokenForExchangeAddress,
@@ -624,27 +624,29 @@ export default function SwapComponent() {
           amount: +convertedValue[1] / 10 ** tokenDecimal2,
           address: convertTokensData.receiveTokenForExchangeAddress,
         });
+      } else if (convertTokensData.inputId === 'receiveInput') {
+        const convertedValue = await NewContract.methods
+          .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
+            convertTokensData.sendTokenForExchangeAddress,
+            convertTokensData.receiveTokenForExchangeAddress,
+          ])
+          .call();
 
-        // setAddLiquidityNormalTokenA((value * 10 ** tokenDecimal1).toString());
-        // setAddLiquidityNormalTokenB(convertedValue[1]);
-        //
-        // setOutValue(+convertedValue[1] / 10 ** tokenDecimal2);
-        // setInValue(value);
+        console.log('convertTokensData convertedValue', convertedValue);
+        console.log(
+          'convertTokensData receive input value ',
+          +convertedValue[1] / 10 ** tokenDecimal2
+        );
+
+        setSendTokenForExchangeAmount(+convertedValue[1] / 10 ** tokenDecimal2);
+
+        convertSendTokenToUSDCurrency({
+          amount: +convertedValue[1] / 10 ** tokenDecimal2,
+          address: convertTokensData.receiveTokenForExchangeAddress,
+          USDCurrency: initSendTokenSwap.USDCurrency,
+        });
       }
-      // if (inputId === 'secondInput') {
-      //   const convertedValue = await NewContract.methods
-      //     .getAmountsIn((value * 10 ** tokenDecimal2).toString(), [token1, token2])
-      //     .call();
-      //
-      //   setAddLiquidityNormalTokenA(convertedValue[0]);
-      //   setAddLiquidityNormalTokenB((value * 10 ** tokenDecimal2).toString());
-      //
-      //   setInValue(+convertedValue[0] / 10 ** tokenDecimal1);
-      //   setOutValue(value);
-      // }
     } else {
-      // setInValue('');
-      // setOutValue('');
       console.log('convertTokensData null amount orNAN error!');
       setReceiveTokenForExchangeAmount(0);
       convertReceiveTokenToUSDCurrency({
@@ -665,11 +667,32 @@ export default function SwapComponent() {
       ...initSendTokenSwap,
     });
     convertExchangeTokensCourse({
-      inputId: 'firstInput',
+      inputId: 'sendInput',
       tokenAmount: parseFloat(value),
       sendTokenForExchangeAddress: initSendTokenSwap.address,
       receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
     });
+    const isLimitExceeded = checkIfExchangedTokenLimitIsExceeded(value, initSendTokenSwap.balance);
+    setIsTokensLimitExceeded(isLimitExceeded);
+  };
+
+  const triggerReceiveTokenInputHandlers = (value, initReceiveTokenSwap) => {
+    setReceiveTokenForExchangeAmount(value);
+
+    console.log('initReceiveTokenSwap handle value', value);
+    console.log('initReceiveTokenSwap handle', initReceiveTokenSwap);
+
+    convertReceiveTokenToUSDCurrency({
+      amount: value,
+      ...initReceiveFirstTokenSwap,
+    });
+    convertExchangeTokensCourse({
+      inputId: 'receiveInput',
+      tokenAmount: parseFloat(value),
+      sendTokenForExchangeAddress: initSendTokenSwap.address,
+      receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
+    });
+
     const isLimitExceeded = checkIfExchangedTokenLimitIsExceeded(value, initSendTokenSwap.balance);
     setIsTokensLimitExceeded(isLimitExceeded);
   };
@@ -965,15 +988,16 @@ export default function SwapComponent() {
                     isLightTheme={isLightTheme}
                     placeholder="0.0"
                     value={receiveTokenForExchangeAmount}
-                    onChange={(e) => {
-                      setReceiveTokenForExchangeAmount(e.target.value);
-                      convertReceiveTokenToUSDCurrency({
-                        amount: e.target.value,
-                        ...initReceiveFirstTokenSwap,
-                      });
-                    }}
-                    onBlur={(e) => {
-                      console.log('focus removed');
+                    onChange={(event) => {
+                      triggerReceiveTokenInputHandlers(
+                        event.target.value,
+                        initReceiveFirstTokenSwap
+                      );
+                      // setReceiveTokenForExchangeAmount(e.target.value);
+                      // convertReceiveTokenToUSDCurrency({
+                      //   amount: e.target.value,
+                      //   ...initReceiveFirstTokenSwap,
+                      // });
                     }}
                   />
                 </SendTokensChooseButton>
