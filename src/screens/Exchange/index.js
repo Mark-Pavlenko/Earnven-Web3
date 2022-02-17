@@ -184,18 +184,16 @@ export default function SwapComponent() {
 
   const initSendTokenSwap = useSelector((state) => state.tokensListReducer.initSendTokenSwap);
 
-  console.log('initSendTokenSwap', { ...initSendTokenSwap });
+  console.log('initSendTokenSwap', initSendTokenSwap);
 
-  const [sendTokenForExchange, setSendTokenForExchange] = useState(
-    { ...initSendTokenSwap }
-    // {
-    //   symbol: 'ETH',
-    //   logoURI: EthIcon,
-    //   name: 'Ethereum',
-    //   sendTokensListItem: true,
-    //   address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-    // }
-  );
+  const [sendTokenForExchange, setSendTokenForExchange] = useState();
+  // {
+  //   symbol: 'ETH',
+  //   logoURI: EthIcon,
+  //   name: 'Ethereum',
+  //   sendTokensListItem: true,
+  //   address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+  // }
   // setSendTokenForExchange({ ...initSendTokenSwap });
 
   const [receiveTokenForExchange, setReceiveTokenForExchange] = useState(
@@ -274,7 +272,7 @@ export default function SwapComponent() {
 
   useEffect(() => {
     let filteredSendTokensList = finalSendTokensList.filter(
-      (token) => token.symbol !== sendTokenForExchange.symbol
+      (token) => token.symbol !== initSendTokenSwap.symbol
     );
     let filteredReceiveTokensList = finalReceiveTokensList.filter(
       (token) => token.symbol !== receiveTokenForExchange.symbol
@@ -286,6 +284,9 @@ export default function SwapComponent() {
     finalSendTokensList.length !== 0 && setFilteredData(filteredSendTokensList);
     finalReceiveTokensList.length !== 0 &&
       setFilteredReceiveTokensListData(filteredReceiveTokensList);
+
+    setSendTokenForExchangeAmount(0);
+    setReceiveTokenForExchangeAmount(0);
 
     //filter arr of tokens on existing values
     // const test = finalSendTokensList.filter(
@@ -393,7 +394,7 @@ export default function SwapComponent() {
       let txObject = selectedRate.transactObject;
       txObject.gas = parseInt(txObject.gas) + 100000;
       txObject.from = accounts[0];
-      if (sendTokenForExchange.symbol !== 'ETH') {
+      if (initSendTokenSwap.symbol !== 'ETH') {
         const ERC20contract = new web3.eth.Contract(ERC20ABI, txObject.sellTokenAddress);
         await ERC20contract.methods
           .approve(txObject.allowanceTarget, txObject.sellAmount)
@@ -414,11 +415,11 @@ export default function SwapComponent() {
   const calculateToAmount = async (tokenFromAmount) => {
     console.log('calculate method called with ammount::', tokenFromAmount);
     console.log('value of Tokenfromamount::', sendTokenForExchangeAmount);
-    console.log('value of tokenfrom object::', sendTokenForExchange);
+    console.log('value of tokenfrom object::', initSendTokenSwap);
     console.log('value of tokenTo::', TokenTo);
     if (tokenFromAmount > 0) {
       // console.log("calculate amount is called")
-      if (sendTokenForExchange.symbol !== '' && TokenTo !== '') {
+      if (initSendTokenSwap.symbol !== '' && TokenTo !== '') {
         let differentQuoteList = [];
         const protocolsList = ['', 'Uniswap', 'Curve', 'SushiSwap', 'Bancor', 'Balancer'];
         let amount = parseFloat(tokenFromAmount) * Math.pow(10, 18);
@@ -428,7 +429,7 @@ export default function SwapComponent() {
           try {
             let protocolQuote = {};
             const response = await axios.get(
-              `https://ropsten.api.0x.org/swap/v1/quote?buyToken=${TokenTo.symbol}&sellToken=${sendTokenForExchange.symbol}&sellAmount=${amount}&feeRecipient=0xE609192618aD9aC825B981fFECf3Dfd5E92E3cFB&buyTokenPercentageFee=0.02&includedSources=${protocolsList[i]}`
+              `https://ropsten.api.0x.org/swap/v1/quote?buyToken=${TokenTo.symbol}&sellToken=${initSendTokenSwap.symbol}&sellAmount=${amount}&feeRecipient=0xE609192618aD9aC825B981fFECf3Dfd5E92E3cFB&buyTokenPercentageFee=0.02&includedSources=${protocolsList[i]}`
             );
             console.log(`response for all ${protocolsList[i]}`, response.data);
 
@@ -511,13 +512,25 @@ export default function SwapComponent() {
 
   const selectSendTokenForExchange = (selectSendToken) => {
     console.log('selected send token value object 222', selectSendToken);
-    setSendTokenForExchange(selectSendToken);
-    // const initSendTokenAmount = 0;
+    // setSendTokenForExchange(selectSendToken);
+    setIsSendTokensModalVisible(false);
+    setSendTokenForExchangeAmount(0);
+    dispatch({
+      type: actionTypes.SET_INIT_SEND_TOKEN_SWAP,
+      payload: selectSendToken,
+    });
+    convertSendTokenToUSDCurrency({
+      amount: 0,
+      sendTokensListItem: true,
+      ...selectSendToken,
+      address: selectSendToken.address,
+    });
+  };
 
-    // checkIfExchangedTokenLimitIsExceeded(initSendTokenAmount, selectSendToken.balance);
-
-    // setSendTokenForExchangeAmount(initSendTokenAmount);
-
+  const selectReceiveTokenForExchange = (selectReceiveToken) => {
+    console.log('selected receive token value object 222', selectReceiveToken);
+    setReceiveTokenForExchange(selectReceiveToken);
+    setReceiveTokenForExchangeAmount(0);
     //old
     // setprotocolsRateList([]);
     // setselectedRate(null);
@@ -536,16 +549,6 @@ export default function SwapComponent() {
 
   // console.log('sendTokenForExchangeAmount 222', sendTokenForExchangeAmount);
 
-  const selectReceiveTokenForExchange = (selectReceiveToken) => {
-    console.log('selected receive token value object 222', selectReceiveToken);
-    setReceiveTokenForExchange(selectReceiveToken);
-    setReceiveTokenForExchangeAmount(0);
-    //old
-    // setprotocolsRateList([]);
-    // setselectedRate(null);
-    // setSources([]);
-  };
-
   console.log('token receive swap tokenReceiveUSDCurrency', tokenReceiveUSDCurrency);
 
   //---------------------
@@ -554,7 +557,7 @@ export default function SwapComponent() {
 
   const toggleSwappedTokens = () => {
     setToggleExchangedTokens(!toggleExchangedTokens);
-    setReceiveTokenForExchange(sendTokenForExchange);
+    setReceiveTokenForExchange(initSendTokenSwap);
     setSendTokenForExchange(receiveTokenForExchange);
     setTokenSendUSDCurrency(tokenReceiveUSDCurrency);
     setTokensReceiveUSDCurrency(tokenSendUSDCurrency);
@@ -566,7 +569,7 @@ export default function SwapComponent() {
     const result = filteredTokensByName(event, searchTokensData);
     console.log('result single 111', result, searchTokensData);
     if (searchTokensData.searchSendTokensList === true) {
-      let middle = result.filter((token) => token.symbol !== sendTokenForExchange.symbol);
+      let middle = result.filter((token) => token.symbol !== initSendTokenSwap.symbol);
       setFilteredData(middle);
     } else {
       setFilteredReceiveTokensListData(result);
@@ -666,8 +669,8 @@ export default function SwapComponent() {
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   <SendTokensChooseButton isLightTheme={isLightTheme}>
                     <ChooseBtnTokenBlock onClick={() => setIsSendTokensModalVisible(true)}>
-                      {sendTokenForExchange.logoURI !== null ? (
-                        <SendTokenImg alt="token_img" src={sendTokenForExchange.logoURI} />
+                      {initSendTokenSwap.logoURI !== null ? (
+                        <SendTokenImg alt="token_img" src={initSendTokenSwap.logoURI} />
                       ) : (
                         <Avatar
                           style={{
@@ -675,16 +678,14 @@ export default function SwapComponent() {
                             marginLeft: '12px',
                             marginTop: '2px',
                           }}
-                          name={sendTokenForExchange.avatarIcon}
+                          name={initSendTokenSwap.avatarIcon}
                           round={true}
                           size="21"
                           textSizeRatio={1}
                         />
                       )}
                       <ChosenTokenLabel isLightTheme={isLightTheme}>
-                        {sendTokenForExchange.symbol === 'ethereum'
-                          ? 'ETH'
-                          : sendTokenForExchange.symbol}
+                        {initSendTokenSwap.symbol === 'ethereum' ? 'ETH' : initSendTokenSwap.symbol}
                       </ChosenTokenLabel>
                       <img
                         src={isLightTheme ? chevronDownBlack : chevronDownLight}
@@ -713,17 +714,17 @@ export default function SwapComponent() {
                         setSendTokenForExchangeAmount(e.target.value);
                         convertSendTokenToUSDCurrency({
                           amount: e.target.value,
-                          ...sendTokenForExchange,
+                          ...initSendTokenSwap,
                         });
                         convertExchangeTokensCourse({
                           inputId: 'firstInput',
                           tokenAmount: parseInt(e.target.value),
-                          sendTokenForExchangeAddress: sendTokenForExchange.address,
+                          sendTokenForExchangeAddress: initSendTokenSwap.address,
                           receiveTokenForExchangeAddress: receiveTokenForExchange.address,
                         });
                         checkIfExchangedTokenLimitIsExceeded(
                           e.target.value,
-                          sendTokenForExchange.balance
+                          initSendTokenSwap.balance
                         );
                       }}
                     />
@@ -731,7 +732,7 @@ export default function SwapComponent() {
 
                   {isTokensLimitExceeded && (
                     <ExceededAmountTokensLimitWarning>
-                      Insufficient funds - available {sendTokenForExchange.balance}
+                      Insufficient funds - available {initSendTokenSwap.balance}
                     </ExceededAmountTokensLimitWarning>
                   )}
                 </div>
@@ -749,7 +750,7 @@ export default function SwapComponent() {
                         setIsSendTokensModalVisible(false);
                         setFilteredData(
                           finalSendTokensList.filter(
-                            (token) => token.symbol !== sendTokenForExchange.symbol
+                            (token) => token.symbol !== initSendTokenSwap.symbol
                           )
                         );
                       }}>
@@ -763,7 +764,7 @@ export default function SwapComponent() {
                               setIsSendTokensModalVisible(false);
                               setFilteredData(
                                 finalSendTokensList.filter(
-                                  (token) => token.symbol !== sendTokenForExchange.symbol
+                                  (token) => token.symbol !== initSendTokenSwap.symbol
                                 )
                               );
                             }}
@@ -822,22 +823,13 @@ export default function SwapComponent() {
                               <SendTokenModalListItem
                                 key={object.name}
                                 onClick={() => {
-                                  setIsSendTokensModalVisible(false);
+                                  selectSendTokenForExchange(object);
+
                                   setFilteredData(
                                     finalSendTokensList.filter(
                                       (token) => token.symbol !== object.symbol
                                     )
                                   );
-                                  selectSendTokenForExchange({
-                                    ...object,
-                                    sendTokensListItem: true,
-                                  });
-                                  convertSendTokenToUSDCurrency({
-                                    amount: 0,
-                                    sendTokensListItem: true,
-                                    ...object,
-                                    address: object.address,
-                                  });
                                 }}
                                 isLightTheme={isLightTheme}>
                                 <SendTokenLabelsBlock>
@@ -1265,7 +1257,7 @@ export default function SwapComponent() {
               <SwapBlockExchangeLayout isLightTheme={isLightTheme}>
                 <Button
                   disabled={isTokensLimitExceeded}
-                  onClick={() => calculateToAmount(sendTokenForExchange)}>
+                  onClick={() => calculateToAmount(initSendTokenSwap)}>
                   Exchange
                 </Button>
               </SwapBlockExchangeLayout>
