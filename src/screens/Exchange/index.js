@@ -109,21 +109,6 @@ import chevronDownBlack from '../../assets/icons/chevronDownLightTheme.svg';
 import chevronDownLight from '../../assets/icons/chevronDownLight.svg';
 import MultiSwapComponent from './multiSwap';
 import SelectTokensModalContainer from './selectTokensModal';
-import { SelectWrapper } from '../../components/liquidityPoolContents/styledComponents';
-import {
-  Balance,
-  BlockTokenName,
-  BlockTokens,
-  ButtonsBlock,
-  ChangeToken,
-  InputBlock,
-  LinksContainer,
-  ModalInput,
-  ModalLink,
-  ModalLinkRight,
-  SelectTitle,
-  SupplyTokenButton,
-} from '../../components/liquidityPoolContents/uniV2/StyledComponents';
 import { TokenImage, ModalTitle, CloseButton, Header } from './selectTokensModal/styles';
 import Autocomplete from '@mui/material/Autocomplete';
 import searchIcon from '../../assets/icons/searchIconLight.png';
@@ -203,6 +188,7 @@ export default function SwapComponent() {
   const [isSendTokensModalVisible, setIsSendTokensModalVisible] = useState(false);
   const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
   const [toggleExchangedTokens, setToggleExchangedTokens] = useState(false);
+  const [initConvertReceiveTokenAmount, setInitConvertReceiveTokenAmount] = useState(0);
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
@@ -273,6 +259,18 @@ export default function SwapComponent() {
 
     setTokenSendUSDCurrency('$0.00');
     setTokensReceiveUSDCurrency('$0.00');
+
+    // should in first time page load output the 1 sent token to total receive token amount - get undefined error
+    // setTimeout(
+    //   () =>
+    //     convertExchangeTokensCourse({
+    //       inputId: 'firstPageLoad',
+    //       tokenAmount: 1,
+    //       sendTokenForExchangeAddress: initSendTokenSwap.address,
+    //       receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
+    //     }),
+    //   5000
+    // );
 
     //filter arr of tokens on existing values
     // const test = finalSendTokensList.filter(
@@ -604,7 +602,41 @@ export default function SwapComponent() {
     );
 
     if (convertTokensData.tokenAmount !== 0 && !isNaN(convertTokensData.tokenAmount)) {
-      if (convertTokensData.inputId === 'sendInput') {
+      if (convertTokensData.inputId === 'firstPageLoad') {
+        const convertedValue = await NewContract.methods
+          .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
+            convertTokensData.sendTokenForExchangeAddress,
+            convertTokensData.receiveTokenForExchangeAddress,
+          ])
+          .call();
+
+        console.log('initLoad convertTokensData', convertedValue);
+
+        // setReceiveTokenForExchangeAmount(+convertedValue[1] / 10 ** tokenDecimal2);
+
+        convertReceiveTokenToUSDCurrency({
+          amount: +convertedValue[1] / 10 ** tokenDecimal2,
+          address: convertTokensData.receiveTokenForExchangeAddress,
+        });
+      } else if (convertTokensData.inputId === 'chooseSendToken') {
+        const convertedValue = await NewContract.methods
+          .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
+            convertTokensData.sendTokenForExchangeAddress,
+            convertTokensData.receiveTokenForExchangeAddress,
+          ])
+          .call();
+
+        console.log('chooseSendToken convertTokensData', convertedValue);
+
+        setInitConvertReceiveTokenAmount((+convertedValue[1] / 10 ** tokenDecimal2).toFixed(3));
+
+        // setReceiveTokenForExchangeAmount(+convertedValue[1] / 10 ** tokenDecimal2);
+
+        // convertReceiveTokenToUSDCurrency({
+        //   amount: +convertedValue[1] / 10 ** tokenDecimal2,
+        //   address: convertTokensData.receiveTokenForExchangeAddress,
+        // });
+      } else if (convertTokensData.inputId === 'sendInput') {
         const convertedValue = await NewContract.methods
           .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
             convertTokensData.sendTokenForExchangeAddress,
@@ -861,11 +893,20 @@ export default function SwapComponent() {
                                 key={object.name}
                                 onClick={() => {
                                   selectSendTokenForExchange(object);
+
                                   setFilteredData(
                                     finalSendTokensList.filter(
                                       (token) => token.symbol !== object.symbol
                                     )
                                   );
+
+                                  convertExchangeTokensCourse({
+                                    inputId: 'chooseSendToken',
+                                    tokenAmount: 1,
+                                    sendTokenForExchangeAddress: initSendTokenSwap.address,
+                                    receiveTokenForExchangeAddress:
+                                      initReceiveFirstTokenSwap.address,
+                                  });
                                 }}
                                 isLightTheme={isLightTheme}>
                                 <SendTokenLabelsBlock>
@@ -1092,6 +1133,13 @@ export default function SwapComponent() {
                                 key={object.name}
                                 onClick={() => {
                                   setFilteredReceiveTokensListData(finalReceiveTokensList);
+                                  convertExchangeTokensCourse({
+                                    inputId: 'chooseSendToken',
+                                    tokenAmount: 1,
+                                    sendTokenForExchangeAddress: initSendTokenSwap.address,
+                                    receiveTokenForExchangeAddress:
+                                      initReceiveFirstTokenSwap.address,
+                                  });
                                   // setFilteredReceiveTokensListData(
                                   //   finalReceiveTokensList.filter(
                                   //     (token) => token.symbol !== object.symbol
@@ -1164,7 +1212,7 @@ export default function SwapComponent() {
                     Rate
                   </LabelsBlockSubBlockSpan>
                   <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                    1 ETH = 2,858.255 DAI
+                    {`1 ${initSendTokenSwap.symbol} =  ${initConvertReceiveTokenAmount} ${initReceiveFirstTokenSwap.symbol}`}
                   </LabelsBlockSubBlockSpan>
                 </LabelsBlockSubBlock>
 
