@@ -108,7 +108,6 @@ export async function fetchBalance(attributes) {
       return s + (v || 0);
     }, 0);
 
-    console.log('final object', pool);
     return [[...pool], commonTotal];
   } catch (err) {
     console.log('error in pickle staking', err);
@@ -129,7 +128,7 @@ export async function fetchBalanceDill(attributes) {
       object.protocol = 'Pickle Finance';
       object.chain = 'Ethereum';
       object.icon = pickleIcon;
-      object.tokenName = 'Dill';
+      object.symbol = 'DILL';
       object.total = object.value;
       asset.push(object);
     })

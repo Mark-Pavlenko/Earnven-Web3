@@ -18,6 +18,8 @@ import ETHLogo from '../../../assets/icons/eth.png';
 import CurveLogo from '../../../assets/icons/curveLogo.png';
 import aaveLogo from '../../../assets/icons/aave-logo.svg';
 import SnowSwapLogo from '../../../assets/icons/snowswap-snow-logo.svg';
+import BalancerLogo from '../../../assets/icons/balancer.png';
+import pickleLogo from '../../../assets/icons/pickle_finance_logo.webp';
 import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
 // import Ethereum2Staking from '../Ethereum2Staking';
 // import CurveFarming from '../CurveFarming';
@@ -28,6 +30,7 @@ import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
 //import { SnowSwapStaking } from '../SnowSwapStaking';
 import Cream from '../Cream';
 import CreamIronBank from '../CreamIronBankSavings';
+//import BalancerV2 from '../LiqudityPools/BalancerV2';
 
 export default function index({ accountAddress }) {
   //save conditions of open/close investment blocks
@@ -91,9 +94,6 @@ export default function index({ accountAddress }) {
   //liquity
   const liquityTokenData = useSelector((state) => state.liquityToken.liquityTokenData); //saga
   const liquityTokenTotal = useSelector((state) => state.liquityToken.liquityTokenTotal); //saga
-
-  console.log('liquityTokenData', liquityTokenData);
-
   //if need create svg file on later
   const liquityImageUrl =
     'https://assets.coingecko.com/coins/images/14665/thumb/200-lqty-icon.png?1617631180';
@@ -127,17 +127,22 @@ export default function index({ accountAddress }) {
   //SnowSwap token
   const snowSwapData = useSelector((state) => state.snowSwap.snowSwanData);
   const snowSwapTotal = useSelector((state) => state.snowSwap.snowSwapTotal);
-  // console.log('snowSwapData', snowSwapData);
+
   //CreamIronBank
   const creamIronBankData = useSelector((state) => state.creamIronBank.creamIronBankData);
   const creamIronBankTotal = useSelector((state) => state.creamIronBank.creamIronBankTotal);
   const creamImageUrl =
     'https://assets.coingecko.com/coins/images/11976/thumb/Cream.png?1596593418';
+
+  //balancer V2
+  //balancerV2
+  const balancerV2lp = useSelector((state) => state.balancerV2lp.balancerV2lp); //saga
+  const balancerV2tot = useSelector((state) => state.balancerV2lp.balancerV2tot); //don't put to redux separately. Needs to take from object
   //pickle
   // const pickeStake = useSelector((state) => state.pickeStake.pickeStake); //saga
   // const pickleStakeTotal = useSelector((state) => state.pickeStake.pickleStakeTotal); //saga
-  // const pickeDill = useSelector((state) => state.pickeDill.pickeDill); //saga
-  // const pickeDillTotal = useSelector((state) => state.pickeDill.pickeDillTotal); //saga
+  const pickeDill = useSelector((state) => state.pickeDill.pickeDill); //saga
+  const pickeDillTotal = useSelector((state) => state.pickeDill.pickeDillTotal); //saga
 
   //uniswap (need to get total value from the object and put in redux separately)
   // const uniswapV2array = useSelector((state) => state.uniswapV2stake.uniswapV2stake); //saga (incorrect data structure. Work over appropriate look)
@@ -180,7 +185,11 @@ export default function index({ accountAddress }) {
             <TotalValue isLightTheme={theme}>
               $
               {numberWithCommas(
-                parseFloat(parseFloat(SushiV2Total) + parseFloat(curveLpTokenTotal)).toFixed(2)
+                parseFloat(
+                  parseFloat(SushiV2Total) +
+                    parseFloat(curveLpTokenTotal) +
+                    parseFloat(balancerV2tot)
+                ).toFixed(2)
               )}
             </TotalValue>
           </TotalValueField>
@@ -300,6 +309,33 @@ export default function index({ accountAddress }) {
                     })
                   : ''}
               </React.Fragment>
+            ) : (
+              ''
+            )}
+            {/* BalancerV2  */}
+            {balancerV2lp.length > 0 ? (
+              <>
+                <img
+                  src={BalancerLogo}
+                  style={{
+                    height: '20px',
+                    marginTop: '',
+                    marginLeft: '15px',
+                    display: 'inline-block',
+                  }}
+                  alt=""
+                />
+                Balancer V2
+                {balancerV2lp.map((object) => {
+                  return (
+                    <Investment
+                      protocol={object}
+                      protocolName={'BalancerV2'}
+                      logoImage={object.imageData}
+                    />
+                  );
+                })}
+              </>
             ) : (
               ''
             )}
@@ -544,7 +580,8 @@ export default function index({ accountAddress }) {
             YearnTokenData.length > 0 ||
             curveToken.length > 0 ||
             snxTokenData.length > 0 ||
-            snxCollateralData.length > 0,
+            snxCollateralData.length > 0 ||
+            pickeDill.length > 0,
         }}>
         <Header>
           <Title isLightTheme={theme}>{'Vaults'}</Title>
@@ -563,7 +600,8 @@ export default function index({ accountAddress }) {
                     parseFloat(olympusTokenTotal) +
                     parseFloat(curveTokenTotal) +
                     parseFloat(snxTokenTotal) +
-                    parseFloat(snxCollateralTotal)
+                    parseFloat(snxCollateralTotal) +
+                    parseFloat(pickeDillTotal > 0 ? pickeDillTotal : 0)
                 ).toFixed(2)
               )}
             </TotalValue>
@@ -692,6 +730,35 @@ export default function index({ accountAddress }) {
             ) : (
               ''
             )}
+            {/*Pickle Dill */}
+            {pickeDill.length > 0 ? (
+              <React.Fragment>
+                <img
+                  src={pickleLogo}
+                  style={{
+                    height: '20px',
+                    marginTop: '',
+                    marginLeft: '15px',
+                    display: 'inline-block',
+                  }}
+                  alt=""
+                />
+                Pickle Dill
+                {pickeDill
+                  ? pickeDill.map((object) => {
+                      return (
+                        <Investment
+                          protocol={object}
+                          protocolName={'Pickle Dill'}
+                          logoImage={pickleLogo}
+                        />
+                      );
+                    })
+                  : ''}
+              </React.Fragment>
+            ) : (
+              ''
+            )}
           </React.Fragment>
         )}
       </PoolsBlock>
@@ -717,70 +784,7 @@ export default function index({ accountAddress }) {
             </TotalValue>
           </TotalValueField>
         </div>
-        {isFarmingOpen && (
-          <React.Fragment>
-            {/*/!*liquityTokenData/*!/*/}
-            {/*{liquityTokenData.length > 0 ? (*/}
-            {/*  <React.Fragment>*/}
-            {/*    <img*/}
-            {/*      src={liquityImageUrl}*/}
-            {/*      style={{*/}
-            {/*        height: '20px',*/}
-            {/*        marginTop: '',*/}
-            {/*        marginLeft: '15px',*/}
-            {/*        display: 'inline-block',*/}
-            {/*      }}*/}
-            {/*      alt=""*/}
-            {/*    />*/}
-            {/*    Liquity*/}
-            {/*    {liquityTokenData*/}
-            {/*      ? liquityTokenData.map((object) => {*/}
-            {/*          return (*/}
-            {/*            <Investment*/}
-            {/*              protocol={object}*/}
-            {/*              protocolName={'Liquity'}*/}
-            {/*              logoImage={object.tokenImage}*/}
-            {/*            />*/}
-            {/*          );*/}
-            {/*        })*/}
-            {/*      : ''}*/}
-            {/*  </React.Fragment>*/}
-            {/*) : (*/}
-            {/*  ''*/}
-            {/*)}*/}
-
-            {/* SnowSwap protocol */}
-            {/*{snowSwapData.length > 0 ? (*/}
-            {/*  <React.Fragment>*/}
-            {/*    <img*/}
-            {/*      src={SnowSwapLogo}*/}
-            {/*      style={{*/}
-            {/*        height: '20px',*/}
-            {/*        marginTop: '',*/}
-            {/*        marginLeft: '15px',*/}
-            {/*        display: 'inline-block',*/}
-            {/*      }}*/}
-            {/*      alt=""*/}
-            {/*    />*/}
-            {/*    SnowSwap*/}
-            {/*    {snowSwapData*/}
-            {/*      ? snowSwapData.map((object) => {*/}
-            {/*          return (*/}
-            {/*            <Investment*/}
-            {/*              protocol={object}*/}
-            {/*              protocolName={'SnowSwap'}*/}
-            {/*              logoImage={SnowSwapLogo}*/}
-            {/*            />*/}
-            {/*          );*/}
-            {/*        })*/}
-            {/*      : ''}*/}
-            {/*  </React.Fragment>*/}
-            {/*) : (*/}
-            {/*  ''*/}
-            {/*)}*/}
-          </React.Fragment>
-        )}
-        {/* <CreamIronBank accountAddress={accountAddress} getTotal={() => {}} /> */}
+        {isFarmingOpen && <React.Fragment></React.Fragment>}
       </PoolsBlock>
     </InvestmentWrapper>
   );

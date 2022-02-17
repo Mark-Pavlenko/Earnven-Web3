@@ -67,7 +67,11 @@ const Investment = ({
     protocol.symbol = protocol.tokenName;
   }
 
-  if (protocolName === 'Curve Pool' || protocolName === 'SnowSwap') {
+  if (
+    protocolName === 'Curve Pool' ||
+    protocolName === 'SnowSwap' ||
+    protocolName === 'Pickle Dill'
+  ) {
     protocol.tokenImage = logoImage;
   }
 
@@ -75,11 +79,14 @@ const Investment = ({
     protocol.tokenImage = logoImage;
   }
 
-  if (protocolName === 'Aave') {
+  if (protocolName === 'Aave' || protocolName === 'BalancerV2') {
     let symbolArray = [];
     tokens.map((token) => {
       symbolArray.push(token.symbol);
     });
+    if (symbolArray.length == 3) {
+      protocol.symbol = symbolArray[0] + ' / ' + symbolArray[1] + ' / ' + symbolArray[2];
+    }
     if (symbolArray.length == 2) {
       protocol.symbol = symbolArray[0] + ' / ' + symbolArray[1];
     }

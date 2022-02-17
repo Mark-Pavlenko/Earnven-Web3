@@ -10,6 +10,13 @@ export function* getbalancerV2SagaWatcher() {
 
 function* Balancerv2worker(data) {
   const attributes = data.payload;
+  let total = 0;
   const lp = yield call(API_LP.getbalancerV2data, attributes);
+  if (lp.length > 0) {
+    lp.map((object) => {
+      total += parseFloat(object.totalValue);
+    });
+  }
   yield put(actions.getbalancerV2(lp));
+  yield put(actions.getBalancerV2Total(total));
 }
