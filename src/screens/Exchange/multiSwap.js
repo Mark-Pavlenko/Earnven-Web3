@@ -74,8 +74,9 @@ import greenDot from '../../assets/icons/greenDot.svg';
 import paraSwapIcon from '../../assets/icons/exchangers/paraSwapExchangerIcon.svg';
 import uniswapExchangerIcon from '../../assets/icons/exchangers/uniswapExchangerIcon.svg';
 
-import exchangersOfferedList from './exchangersOfferedList';
-import sendTokensMockList from './sendTokensMockList.json';
+import exchangersOfferedList from './exchangersOfferedListPolygon.js';
+// import sendTokensMockList from './sendTokensMockList.json';
+import sendTokensMockList from './sendTokensMockListPolygon.js';
 import SelectTokensModalContainer from './selectTokensModal';
 import OutsideClickHandler from './outsideClickHandler';
 import { CloseButton, Header, ModalTitle } from './selectTokensModal/styles';
@@ -86,6 +87,10 @@ import searchTokensImportModalLight from '../../assets/icons/searchTokensButtonM
 import Avatar from 'react-avatar';
 import Loader from 'react-loader-spinner';
 import { filteredTokensByName } from './helpers';
+import { useWeb3React } from '@web3-react/core';
+import { ethers } from 'ethers';
+import Web3 from 'web3';
+import multiCallAbi from '../../abi/MultiCall.json';
 
 const useStyles = makeStyles((theme) => ({
   noBorder: {
@@ -109,6 +114,7 @@ export default function MultiSwapComponent() {
 
   const [tokenSendUSDCurrency, setTokenSendUSDCurrency] = useState('$0.00');
 
+  // Polygon
   const initReceiveTokensList = [
     {
       symbol: 'WETH',
@@ -117,18 +123,43 @@ export default function MultiSwapComponent() {
       name: 'Wrapped Ether',
       id: 'weth',
       receiveTokensListItem: true,
-      address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+      address: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
     },
     {
-      symbol: 'DAI',
+      symbol: 'USDC',
       logoURI: 'https://assets.coingecko.com/coins/images/9956/thumb/4943.png?1636636734',
-      avatarIcon: 'Dai Stablecoin',
+      avatarIcon: 'Usdc Stablecoin',
       name: 'Dai Stablecoin',
-      id: 'dai',
+      id: 'usdc',
       receiveTokensListItem: true,
-      address: '0x6b175474e89094c44da98b954eedeac495271d0f',
+      address: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
     },
   ];
+
+  // MainNet
+  // const initReceiveTokensList = [
+  //   {
+  //     symbol: 'WETH',
+  //     logoURI: 'https://assets.coingecko.com/coins/images/2518/thumb/weth.png?1628852295',
+  //     avatarIcon: 'Weth',
+  //     name: 'Wrapped Ether',
+  //     id: 'weth',
+  //     receiveTokensListItem: true,
+  //     address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+  //   },
+  //   {
+  //     symbol: 'DAI',
+  //     logoURI: 'https://assets.coingecko.com/coins/images/9956/thumb/4943.png?1636636734',
+  //     avatarIcon: 'Dai Stablecoin',
+  //     name: 'Dai Stablecoin',
+  //     id: 'dai',
+  //     receiveTokensListItem: true,
+  //     address: '0x6b175474e89094c44da98b954eedeac495271d0f',
+  //   },
+  // ];
+
+  const { account, activate, active, chainId, connector, deactivate, error, provider, setError } =
+    useWeb3React();
 
   const [receiveTokensList, setReceiveTokensList] = useState(initReceiveTokensList);
 
@@ -150,6 +181,16 @@ export default function MultiSwapComponent() {
     finalSendTokensList.length !== 0 && setFilteredSendTokensListData(finalSendTokensList);
     finalReceiveTokensList.length !== 0 && setFilteredReceiveTokensListData(finalReceiveTokensList);
   }, [finalSendTokensList, finalReceiveTokensList]);
+
+  async function getWeb3() {
+    // const provider = active ? await connector.getProvider() : ethers.getDefaultProvider();
+    const web3 = await new Web3(window.ethereum);
+    return web3;
+  }
+
+  let exchange = async () => {
+    console.log(11111, '11111');
+  };
 
   let convertSendTokenToUSDCurrency = async (tokenData) => {
     console.log('multiswap tokenData', tokenData);
@@ -177,7 +218,7 @@ export default function MultiSwapComponent() {
   };
 
   let convertReceiveTokenToUSDCurrency = async (tokenData) => {
-    console.log('receive USD tokenData multiswap', tokenData);
+    // console.log('receive USD tokenData multiswap', tokenData);
 
     if (tokenData.amount === '' || typeof tokenData.amount === 'symbol') {
       tokenData.amount = '0';
@@ -244,6 +285,8 @@ export default function MultiSwapComponent() {
     temp_state[needIndex] = temp_element;
 
     setReceiveTokensList(temp_state);
+
+    await getAmountMulti();
   };
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -282,10 +325,47 @@ export default function MultiSwapComponent() {
   // console.log('useState tokensListModal multiswap', tokensListModal);
   // console.log('useState isSendTokenSelectedSwappedTokenType', isSendTokenSelectedSwapped);
 
-  const selectTokenForSwap = (selectedSwapToken, isSendTokenSelectedSwapped) => {
+  const getAmountMulti = async () => {
+    const web3 = await getWeb3();
+    const multiCallContract = new web3.eth.Contract(
+      multiCallAbi,
+      '0xFe2C75Fdd496792c8684F2e1168362E2f9e7c56f'
+    );
+
+    const routers = exchangersOfferedList.map((i) => i.routerAddress);
+    console.log('routers', routers);
+
+    let sendTokenAddress = sendTokenForExchange.address;
+
+    if (sendTokenAddress === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+      sendTokenAddress = '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270';
+    }
+
+    console.log('222222222222222', receiveTokensList);
+
+    for (let i = 0; i < receiveTokensList.length; i++) {
+      const item = receiveTokensList[i];
+      console.log('item111111111', item);
+      if (item.amount && item.amount > 0) {
+        // const decimals = web3.utils.toBN(item.decimals);
+        const amount = item.amount * 10 ** item.decimals;
+        console.log('amount', amount.toString());
+        receiveTokensList[i].swap = await multiCallContract.methods
+          .getAmountsIn(routers, sendTokenAddress, item.address, amount.toString())
+          .call();
+      }
+    }
+
+    console.log(receiveTokensList, 'receiveTokensList111111111111');
+    return true;
+  };
+
+  const selectTokenForSwap = async (selectedSwapToken, isSendTokenSelectedSwapped) => {
     console.log('selectedSwapToken multiswap 123', selectedSwapToken);
     console.log('objIDAddress multiswap 123', oldTokenSwappedAddress);
     console.log('isSendTokenSelectedSwapped multiswap 123', isSendTokenSelectedSwapped);
+    console.log(2222222, '33333333');
+    await getAmountMulti(selectedSwapToken, isSendTokenSelectedSwapped);
 
     if (isSendTokenSelectedSwapped === true) {
       setSendTokenForExchange(selectedSwapToken);
@@ -755,7 +835,7 @@ export default function MultiSwapComponent() {
           </LabelsBlockSubBlock>
         </DownDelimiterLabelsBlock>
         <SwapBlockExchangeLayout isLightTheme={isLightTheme}>
-          <Button>Exchange</Button>
+          <Button onClick={() => exchange()}>Exchange</Button>
         </SwapBlockExchangeLayout>
       </SwapTokensMainSubBlock>
     </SecondColumnSwapSubBlock>
