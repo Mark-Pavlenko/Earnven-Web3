@@ -271,6 +271,9 @@ export default function SwapComponent() {
     setSendTokenForExchangeAmount(0);
     setReceiveTokenForExchangeAmount(0);
 
+    setTokenSendUSDCurrency('$0.00');
+    setTokensReceiveUSDCurrency('$0.00');
+
     //filter arr of tokens on existing values
     // const test = finalSendTokensList.filter(
     //   (token) => token.symbol !== sendTokenForExchange.symbol
@@ -279,6 +282,25 @@ export default function SwapComponent() {
   }, [finalSendTokensList, finalReceiveTokensList]);
 
   //function of dynamic converting of token value to USD Currency
+
+  const toggleSwappedTokens = () => {
+    setToggleExchangedTokens(!toggleExchangedTokens);
+
+    dispatch({
+      type: actionTypes.SET_INIT_SEND_TOKEN_SWAP,
+      payload: initReceiveFirstTokenSwap,
+    });
+
+    dispatch({
+      type: actionTypes.SET_INIT_RECEIVE_FIRST_TOKEN_SWAP,
+      payload: initSendTokenSwap,
+    });
+
+    setTokenSendUSDCurrency(tokenReceiveUSDCurrency);
+    setTokensReceiveUSDCurrency(tokenSendUSDCurrency);
+    setSendTokenForExchangeAmount(receiveTokenForExchangeAmount);
+    setReceiveTokenForExchangeAmount(sendTokenForExchangeAmount);
+  };
 
   const searchTokensHandler = (event, searchTokensData) => {
     const result = filteredTokensByName(event, searchTokensData);
@@ -316,7 +338,7 @@ export default function SwapComponent() {
           `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
         )
         .then(async (response) => {
-          console.log('suc get usd', response);
+          console.log('suc get usd receive tokenData', response);
           tokenUSDCurrencyValue = response;
         })
         .catch((err) => {
@@ -324,11 +346,16 @@ export default function SwapComponent() {
           // tokenUSDCurrencyValue = err;
         });
 
-      console.log('receive tokenData USDCurrency', tokenUSDCurrencyValue);
+      console.log('receive tokenData total USDCurrency', tokenUSDCurrencyValue.data.price.rate);
 
       if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
+        // console.log(
+        //   'receive tokenData total',
+        //   (tokenUSDCurrencyValue.data.price.rate * tokenData.amount).toFixed(2)
+        // );
+
         setTokensReceiveUSDCurrency(
-          `$ ${(tokenUSDCurrencyValue.data.price.rate * parseInt(tokenData.amount)).toFixed(2)}`
+          `$ ${(tokenUSDCurrencyValue.data.price.rate * tokenData.amount).toFixed(2)}`
         );
       } else {
         setTokensReceiveUSDCurrency('Price not available');
@@ -339,7 +366,7 @@ export default function SwapComponent() {
       );
 
       setTokensReceiveUSDCurrency(
-        `$${(ethDollarValue.data.ethereum.usd * parseInt(tokenData.amount)).toFixed(2)}`
+        `$${(ethDollarValue.data.ethereum.usd * tokenData.amount).toFixed(2)}`
       );
     }
   };
@@ -367,7 +394,7 @@ export default function SwapComponent() {
 
     if (selectedRate !== null) {
       let txObject = selectedRate.transactObject;
-      txObject.gas = parseInt(txObject.gas) + 100000;
+      txObject.gas = parseFloat(txObject.gas) + 100000;
       txObject.from = accounts[0];
       if (initSendTokenSwap.symbol !== 'ETH') {
         const ERC20contract = new web3.eth.Contract(ERC20ABI, txObject.sellTokenAddress);
@@ -425,20 +452,20 @@ export default function SwapComponent() {
             protocolQuote.price = response.data.price;
             protocolQuote.minPrice = response.data.guaranteedPrice;
             protocolQuote.TokenToAmount = (
-              parseInt(response.data.buyAmount) * Math.pow(10, -TokenTo.decimals)
+              parseFloat(response.data.buyAmount) * Math.pow(10, -TokenTo.decimals)
             )
               .toFixed(2)
               .toString();
             const ethPrice = 3000;
             protocolQuote.gas = (
-              parseInt(response.data.gas) *
-              parseInt(response.data.gasPrice) *
+              parseFloat(response.data.gas) *
+              parseFloat(response.data.gasPrice) *
               Math.pow(10, -18) *
               ethPrice
             ).toFixed(2);
             console.log('dollar value of token', tokenToDollarValue);
             protocolQuote.receivedValueInDollar = (
-              parseInt(response.data.buyAmount) *
+              parseFloat(response.data.buyAmount) *
               Math.pow(10, -TokenTo.decimals) *
               tokenToDollarValue
             ).toFixed(2);
@@ -531,25 +558,6 @@ export default function SwapComponent() {
 
   //---------------------
 
-  const toggleSwappedTokens = () => {
-    setToggleExchangedTokens(!toggleExchangedTokens);
-
-    dispatch({
-      type: actionTypes.SET_INIT_SEND_TOKEN_SWAP,
-      payload: initReceiveFirstTokenSwap,
-    });
-
-    dispatch({
-      type: actionTypes.SET_INIT_RECEIVE_FIRST_TOKEN_SWAP,
-      payload: initSendTokenSwap,
-    });
-
-    setTokenSendUSDCurrency(tokenReceiveUSDCurrency);
-    setTokensReceiveUSDCurrency(tokenSendUSDCurrency);
-    setSendTokenForExchangeAmount(receiveTokenForExchangeAmount);
-    setReceiveTokenForExchangeAmount(sendTokenForExchangeAmount);
-  };
-
   //convert one token to another
   //now - mock Uniswap V2 Contract address
 
@@ -592,10 +600,10 @@ export default function SwapComponent() {
     const NewContract = new web3.eth.Contract(
       ROUTERABI,
       //Sushiswap contract address - should be changed dynamically
-      '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F'
+      '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
     );
 
-    if (!isNaN(convertTokensData.tokenAmount)) {
+    if (convertTokensData.tokenAmount !== 0 && !isNaN(convertTokensData.tokenAmount)) {
       if (convertTokensData.inputId === 'firstInput') {
         const convertedValue = await NewContract.methods
           .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
@@ -610,15 +618,12 @@ export default function SwapComponent() {
           +convertedValue[1] / 10 ** tokenDecimal2
         );
 
-        if (convertTokensData.tokenAmount === 0) {
-          setReceiveTokenForExchangeAmount(0);
-        } else {
-          setReceiveTokenForExchangeAmount(+convertedValue[1] / 10 ** tokenDecimal2);
-          convertReceiveTokenToUSDCurrency({
-            amount: +convertedValue[1] / 10 ** tokenDecimal2,
-            address: convertTokensData.receiveTokenForExchangeAddress,
-          });
-        }
+        setReceiveTokenForExchangeAmount(+convertedValue[1] / 10 ** tokenDecimal2);
+
+        convertReceiveTokenToUSDCurrency({
+          amount: +convertedValue[1] / 10 ** tokenDecimal2,
+          address: convertTokensData.receiveTokenForExchangeAddress,
+        });
 
         // setAddLiquidityNormalTokenA((value * 10 ** tokenDecimal1).toString());
         // setAddLiquidityNormalTokenB(convertedValue[1]);
@@ -640,7 +645,12 @@ export default function SwapComponent() {
     } else {
       // setInValue('');
       // setOutValue('');
-      console.log('convertTokensData NAN error!');
+      console.log('convertTokensData null amount orNAN error!');
+      setReceiveTokenForExchangeAmount(0);
+      convertReceiveTokenToUSDCurrency({
+        amount: 0,
+        address: convertTokensData.receiveTokenForExchangeAddress,
+      });
     }
   };
 
@@ -656,7 +666,7 @@ export default function SwapComponent() {
     });
     convertExchangeTokensCourse({
       inputId: 'firstInput',
-      tokenAmount: parseInt(value),
+      tokenAmount: parseFloat(value),
       sendTokenForExchangeAddress: initSendTokenSwap.address,
       receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
     });

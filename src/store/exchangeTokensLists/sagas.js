@@ -70,7 +70,7 @@ function* getSendTokensListSagaWorker(accountAddress) {
   // console.log('sagas sendTokensList', sendTokensList);
 
   yield put(actions.getSendTokensList(walletTokensList));
-  yield put(actions.setInitSendTokenSwap(walletTokensList[0]));
+  yield put(actions.setInitSendTokenSwap(walletTokensList[17]));
   // yield put(actions.getSendTokensList(walletTokensList));
 }
 

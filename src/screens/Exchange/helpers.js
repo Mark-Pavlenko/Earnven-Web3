@@ -22,23 +22,15 @@ export const convertSendTokenToUSDCurrencyHelper = (tokenData) => {
   // convertedUSDValue = 'Loading';
   // setTokenSendUSDCurrency('Loading');
 
-  console.log('multiswap helper tokenData', tokenData);
+  console.log('send tokenData helper', tokenData);
+  // console.log('send tokenData helper parseInt(tokenData.amount)', parseInt(tokenData.amount));
 
   if (tokenData.amount === '') {
     tokenData.amount = '0';
   }
 
-  // if (tokenData.symbol === 'ETH') {
-  //   axios
-  //     .get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd')
-  //     .then((res) => {
-  //       const ethData = res.data;
-  //       console.log('ethData helper', ethData);
-  //       return `$${(ethData.ethereum.usd * parseInt(tokenData.amount)).toFixed(2)}`;
-  //     });
-  // } else {
   if (tokenData.USDCurrency !== undefined) {
-    return `$${(tokenData.USDCurrency * parseInt(tokenData.amount)).toFixed(2)}`;
+    return `$${(tokenData.USDCurrency * parseFloat(tokenData.amount)).toFixed(2)}`;
   } else {
     return 'Price not available';
   }
