@@ -280,9 +280,20 @@ export default function SwapComponent() {
 
   //function of dynamic converting of token value to USD Currency
 
+  const searchTokensHandler = (event, searchTokensData) => {
+    const result = filteredTokensByName(event, searchTokensData);
+    console.log('result single 111', result, searchTokensData);
+    if (searchTokensData.searchSendTokensList === true) {
+      let middle = result.filter((token) => token.symbol !== initSendTokenSwap.symbol);
+      setFilteredData(middle);
+    } else {
+      setFilteredReceiveTokensListData(result);
+    }
+  };
+
   let convertSendTokenToUSDCurrency = (tokenData) => {
     let convertedToUSDValue = convertSendTokenToUSDCurrencyHelper(tokenData);
-    console.log('test convertedToUSDValue', convertedToUSDValue);
+    // console.log('test convertedToUSDValue', convertedToUSDValue);
     setTokenSendUSDCurrency(convertedToUSDValue);
   };
 
@@ -539,25 +550,17 @@ export default function SwapComponent() {
     setReceiveTokenForExchangeAmount(sendTokenForExchangeAmount);
   };
 
-  const searchTokensHandler = (event, searchTokensData) => {
-    const result = filteredTokensByName(event, searchTokensData);
-    console.log('result single 111', result, searchTokensData);
-    if (searchTokensData.searchSendTokensList === true) {
-      let middle = result.filter((token) => token.symbol !== initSendTokenSwap.symbol);
-      setFilteredData(middle);
-    } else {
-      setFilteredReceiveTokensListData(result);
-    }
-  };
-
   //convert one token to another
   //now - mock Uniswap V2 Contract address
 
   const convertExchangeTokensCourse = async (convertTokensData) => {
     console.log('convertTokensData single swap', convertTokensData);
-    console.log('single swap tokenDecimal token1', convertTokensData.sendTokenForExchangeAddress);
     console.log(
-      'single swap tokenDecimal token2',
+      ' convertTokensData single swap tokenDecimal token1',
+      convertTokensData.sendTokenForExchangeAddress
+    );
+    console.log(
+      ' convertTokensData single swap tokenDecimal token2',
       convertTokensData.receiveTokenForExchangeAddress
     );
 
@@ -583,41 +586,62 @@ export default function SwapComponent() {
         return res;
       });
 
-    console.log('single swap tokenDecimal 1', tokenDecimal1);
-    console.log('single swap tokenDecimal 2', tokenDecimal2);
+    console.log('convertTokensData single swap tokenDecimal 1', tokenDecimal1);
+    console.log('convertTokensData single swap tokenDecimal 2', tokenDecimal2);
 
-    // const NewContract = new web3.eth.Contract(
-    //   ROUTERABI,
-    //   //UNISWAP V2 contract address
-    //   '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
-    // );
-    // if (!isNaN(value)) {
-    //   if (inputId === 'firstInput') {
-    //     const convertedValue = await NewContract.methods
-    //       .getAmountsOut((value * 10 ** tokenDecimal1).toString(), [token1, token2])
-    //       .call();
-    //
-    //     setAddLiquidityNormalTokenA((value * 10 ** tokenDecimal1).toString());
-    //     setAddLiquidityNormalTokenB(convertedValue[1]);
-    //
-    //     setOutValue(+convertedValue[1] / 10 ** tokenDecimal2);
-    //     setInValue(value);
-    //   }
-    //   if (inputId === 'secondInput') {
-    //     const convertedValue = await NewContract.methods
-    //       .getAmountsIn((value * 10 ** tokenDecimal2).toString(), [token1, token2])
-    //       .call();
-    //
-    //     setAddLiquidityNormalTokenA(convertedValue[0]);
-    //     setAddLiquidityNormalTokenB((value * 10 ** tokenDecimal2).toString());
-    //
-    //     setInValue(+convertedValue[0] / 10 ** tokenDecimal1);
-    //     setOutValue(value);
-    //   }
-    // } else {
-    //   setInValue('');
-    //   setOutValue('');
-    // }
+    const NewContract = new web3.eth.Contract(
+      ROUTERABI,
+      //Sushiswap contract address - should be changed dynamically
+      '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F'
+    );
+
+    if (!isNaN(convertTokensData.tokenAmount)) {
+      if (convertTokensData.inputId === 'firstInput') {
+        const convertedValue = await NewContract.methods
+          .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
+            convertTokensData.sendTokenForExchangeAddress,
+            convertTokensData.receiveTokenForExchangeAddress,
+          ])
+          .call();
+
+        console.log('convertTokensData convertedValue', convertedValue);
+        console.log(
+          'convertTokensData receive input value ',
+          +convertedValue[1] / 10 ** tokenDecimal2
+        );
+
+        if (convertTokensData.tokenAmount === 0) {
+          setReceiveTokenForExchangeAmount(0);
+        } else {
+          setReceiveTokenForExchangeAmount(+convertedValue[1] / 10 ** tokenDecimal2);
+          convertReceiveTokenToUSDCurrency({
+            amount: +convertedValue[1] / 10 ** tokenDecimal2,
+            address: convertTokensData.receiveTokenForExchangeAddress,
+          });
+        }
+
+        // setAddLiquidityNormalTokenA((value * 10 ** tokenDecimal1).toString());
+        // setAddLiquidityNormalTokenB(convertedValue[1]);
+        //
+        // setOutValue(+convertedValue[1] / 10 ** tokenDecimal2);
+        // setInValue(value);
+      }
+      // if (inputId === 'secondInput') {
+      //   const convertedValue = await NewContract.methods
+      //     .getAmountsIn((value * 10 ** tokenDecimal2).toString(), [token1, token2])
+      //     .call();
+      //
+      //   setAddLiquidityNormalTokenA(convertedValue[0]);
+      //   setAddLiquidityNormalTokenB((value * 10 ** tokenDecimal2).toString());
+      //
+      //   setInValue(+convertedValue[0] / 10 ** tokenDecimal1);
+      //   setOutValue(value);
+      // }
+    } else {
+      // setInValue('');
+      // setOutValue('');
+      console.log('convertTokensData NAN error!');
+    }
   };
 
   const triggerSendTokenInputHandlers = (value, initSendTokenSwap) => {
@@ -694,7 +718,7 @@ export default function SwapComponent() {
                           style: {
                             textAlign: 'right',
                             paddingRight: 0,
-                            width: '100px',
+                            width: '200px',
                             fontWeight: 600,
                             color: isLightTheme ? 'black' : 'white',
                           },
@@ -921,7 +945,7 @@ export default function SwapComponent() {
                         style: {
                           textAlign: 'right',
                           paddingRight: 0,
-                          width: '100px',
+                          width: '200px',
                           fontWeight: 600,
                           color: isLightTheme ? 'black' : 'white',
                         },

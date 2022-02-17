@@ -613,17 +613,21 @@ export const SecondColumnTitleHeaderBlock = styled.div`
 
 export const TokensModalSubLayout = styled.div`
   margin-top: -80px;
-  background-color: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#4453AD1A')};
   width: 475px;
   height: 545px;
-
   background: ${(props) =>
-    props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)'};
+    props.isLightTheme
+      ? `url(${require(`./../../assets/images/lightDashboard.jpg`).default})`
+      : `#1F265C3D`};
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(35px);
   mix-blend-mode: normal;
   border-radius: 10px;
 `;
+
+// background-color: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#4453AD1A')};
+// background: ${(props) =>
+//     props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)'};
+// backdrop-filter: blur(35px);
 
 export const SearchTokensModalTextField = styled(TextField)`
   display: flex;
