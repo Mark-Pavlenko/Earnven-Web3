@@ -14,3 +14,13 @@ export const filteredTokensByName = (event, searchTokensData) => {
     }
   });
 };
+
+export const checkIfExchangedTokenLimitIsExceeded = (chosenTokenAmount, totalTokensBalance) => {
+  if (chosenTokenAmount > totalTokensBalance) {
+    console.log('limit is exceeded');
+    return true;
+  } else {
+    console.log('limit is not exceeded');
+    return false;
+  }
+};

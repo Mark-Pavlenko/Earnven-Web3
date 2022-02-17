@@ -131,7 +131,7 @@ import searchIcon from '../../assets/icons/searchIconLight.png';
 import SearchIcon from '@mui/icons-material/Search';
 import { TokensListTextField } from '../../components/searchTokens/styles';
 import actionTypes from '../../constants/actionTypes';
-import testFunction from './helpers';
+import testFunction, { checkIfExchangedTokenLimitIsExceeded } from './helpers';
 import { getTokenDataSaga } from '../../store/currentTokenData/actions';
 import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
 import Popover from '@mui/material/Popover';
@@ -529,19 +529,9 @@ export default function SwapComponent() {
     // setSources([]);
   };
 
-  const checkIfExchangedTokenLimitIsExceeded = (chosenTokenAmount, totalTokensBalance) => {
-    if (chosenTokenAmount > totalTokensBalance) {
-      console.log('limit is exceeded');
-      setIsTokensLimitExceeded(true);
-    } else {
-      console.log('limit is not exceeded');
-      setIsTokensLimitExceeded(false);
-    }
-  };
-
   // console.log('sendTokenForExchangeAmount 222', sendTokenForExchangeAmount);
 
-  console.log('token receive swap tokenReceiveUSDCurrency', tokenReceiveUSDCurrency);
+  // console.log('token receive swap tokenReceiveUSDCurrency', tokenReceiveUSDCurrency);
 
   //---------------------
 
@@ -645,6 +635,26 @@ export default function SwapComponent() {
     // }
   };
 
+  const triggerSendTokenInputHandlers = (value, initSendTokenSwap) => {
+    setSendTokenForExchangeAmount(value);
+
+    console.log('initSendTokenSwap handle value', value);
+    console.log('initSendTokenSwap handle', initSendTokenSwap);
+
+    convertSendTokenToUSDCurrency({
+      amount: value,
+      ...initSendTokenSwap,
+    });
+    convertExchangeTokensCourse({
+      inputId: 'firstInput',
+      tokenAmount: parseInt(value),
+      sendTokenForExchangeAddress: initSendTokenSwap.address,
+      receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
+    });
+    const isLimitExceeded = checkIfExchangedTokenLimitIsExceeded(value, initSendTokenSwap.balance);
+    setIsTokensLimitExceeded(isLimitExceeded);
+  };
+
   return (
     <>
       <ExchangeMainLayout>
@@ -710,21 +720,7 @@ export default function SwapComponent() {
                       placeholder="0.0"
                       value={sendTokenForExchangeAmount}
                       onChange={(e) => {
-                        setSendTokenForExchangeAmount(e.target.value);
-                        convertSendTokenToUSDCurrency({
-                          amount: e.target.value,
-                          ...initSendTokenSwap,
-                        });
-                        convertExchangeTokensCourse({
-                          inputId: 'firstInput',
-                          tokenAmount: parseInt(e.target.value),
-                          sendTokenForExchangeAddress: initSendTokenSwap.address,
-                          receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
-                        });
-                        checkIfExchangedTokenLimitIsExceeded(
-                          e.target.value,
-                          initSendTokenSwap.balance
-                        );
+                        triggerSendTokenInputHandlers(e.target.value, initSendTokenSwap);
                       }}
                     />
                   </SendTokensChooseButton>
