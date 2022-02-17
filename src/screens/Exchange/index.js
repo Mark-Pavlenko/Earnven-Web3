@@ -183,34 +183,25 @@ export default function SwapComponent() {
   const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
 
   const initSendTokenSwap = useSelector((state) => state.tokensListReducer.initSendTokenSwap);
-
-  console.log('initSendTokenSwap', initSendTokenSwap);
-
-  const [sendTokenForExchange, setSendTokenForExchange] = useState();
-  // {
-  //   symbol: 'ETH',
-  //   logoURI: EthIcon,
-  //   name: 'Ethereum',
-  //   sendTokensListItem: true,
-  //   address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-  // }
-  // setSendTokenForExchange({ ...initSendTokenSwap });
-
-  const [receiveTokenForExchange, setReceiveTokenForExchange] = useState(
-    {
-      symbol: 'DAI',
-      logoURI: daiICon,
-      avatarIcon: 'Dai Stablecoin',
-      name: 'dai',
-      id: 'dai',
-      receiveTokensListItem: true,
-      address: '0x6b175474e89094c44da98b954eedeac495271d0f',
-    }
-    // finalReceiveTokensList[1]
+  const initReceiveFirstTokenSwap = useSelector(
+    (state) => state.tokensListReducer.initReceiveFirstTokenSwap
   );
 
-  console.log('single auf 1', finalSendTokensList[0]);
-  console.log('single auf 2', finalReceiveTokensList[1]);
+  console.log('initSendTokenSwap', initSendTokenSwap);
+  console.log('initReceiveFirstTokenSwap', initReceiveFirstTokenSwap);
+
+  const [sendTokenForExchange, setSendTokenForExchange] = useState();
+
+  const [receiveTokenForExchange, setReceiveTokenForExchange] = useState({
+    symbol: 'DAI',
+    logoURI: daiICon,
+    avatarIcon: 'Dai Stablecoin',
+    name: 'dai',
+    id: 'dai',
+    receiveTokensListItem: true,
+    address: '0x6b175474e89094c44da98b954eedeac495271d0f',
+  });
+  // finalReceiveTokensList[1]
 
   const [filteredData, setFilteredData] = useState([]);
   const [filteredReceiveTokensListData, setFilteredReceiveTokensListData] = useState([]);
@@ -264,7 +255,7 @@ export default function SwapComponent() {
     try {
       dispatch({ type: actionTypes.SET_SEND_TOKENS_LIST, payload: address });
       dispatch({ type: actionTypes.SET_RECEIVE_TOKENS_LIST });
-      dispatch(getTokenDataSaga(receiveTokenForExchange.id));
+      dispatch(getTokenDataSaga(initReceiveFirstTokenSwap.id));
     } catch (error) {
       console.log(error);
     }
@@ -275,7 +266,7 @@ export default function SwapComponent() {
       (token) => token.symbol !== initSendTokenSwap.symbol
     );
     let filteredReceiveTokensList = finalReceiveTokensList.filter(
-      (token) => token.symbol !== receiveTokenForExchange.symbol
+      (token) => token.symbol !== initReceiveFirstTokenSwap.symbol
     );
 
     console.log('single filteredSendTokensList', filteredSendTokensList);
@@ -341,7 +332,7 @@ export default function SwapComponent() {
           `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
         )
         .then(async (response) => {
-          // console.log('suc get usd', response);
+          console.log('suc get usd', response);
           tokenUSDCurrencyValue = response;
         })
         .catch((err) => {
@@ -351,7 +342,7 @@ export default function SwapComponent() {
 
       console.log('receive tokenData USDCurrency', tokenUSDCurrencyValue);
 
-      if (tokenUSDCurrencyValue) {
+      if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
         setTokensReceiveUSDCurrency(
           `$ ${(tokenUSDCurrencyValue.data.price.rate * parseInt(tokenData.amount)).toFixed(2)}`
         );
@@ -529,8 +520,21 @@ export default function SwapComponent() {
 
   const selectReceiveTokenForExchange = (selectReceiveToken) => {
     console.log('selected receive token value object 222', selectReceiveToken);
-    setReceiveTokenForExchange(selectReceiveToken);
+
+    setIsReceiveTokensModalVisible(false);
     setReceiveTokenForExchangeAmount(0);
+
+    dispatch({
+      type: actionTypes.SET_INIT_RECEIVE_FIRST_TOKEN_SWAP,
+      payload: selectReceiveToken,
+    });
+
+    convertReceiveTokenToUSDCurrency({
+      amount: 0,
+      receiveTokensListItem: true,
+      ...selectReceiveToken,
+      address: selectReceiveToken.address,
+    });
     //old
     // setprotocolsRateList([]);
     // setselectedRate(null);
@@ -558,7 +562,7 @@ export default function SwapComponent() {
   const toggleSwappedTokens = () => {
     setToggleExchangedTokens(!toggleExchangedTokens);
     setReceiveTokenForExchange(initSendTokenSwap);
-    setSendTokenForExchange(receiveTokenForExchange);
+    setSendTokenForExchange(initReceiveFirstTokenSwap);
     setTokenSendUSDCurrency(tokenReceiveUSDCurrency);
     setTokensReceiveUSDCurrency(tokenSendUSDCurrency);
     setSendTokenForExchangeAmount(receiveTokenForExchangeAmount);
@@ -720,7 +724,7 @@ export default function SwapComponent() {
                           inputId: 'firstInput',
                           tokenAmount: parseInt(e.target.value),
                           sendTokenForExchangeAddress: initSendTokenSwap.address,
-                          receiveTokenForExchangeAddress: receiveTokenForExchange.address,
+                          receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
                         });
                         checkIfExchangedTokenLimitIsExceeded(
                           e.target.value,
@@ -824,7 +828,6 @@ export default function SwapComponent() {
                                 key={object.name}
                                 onClick={() => {
                                   selectSendTokenForExchange(object);
-
                                   setFilteredData(
                                     finalSendTokensList.filter(
                                       (token) => token.symbol !== object.symbol
@@ -910,8 +913,8 @@ export default function SwapComponent() {
                   {/*  <div>Toggled</div>*/}
                   {/*) : (*/}
                   <ChooseBtnTokenBlock onClick={() => setIsReceiveTokensModalVisible(true)}>
-                    {receiveTokenForExchange.logoURI !== null ? (
-                      <SendTokenImg alt="token_img" src={receiveTokenForExchange.logoURI} />
+                    {initReceiveFirstTokenSwap.logoURI !== null ? (
+                      <SendTokenImg alt="token_img" src={initReceiveFirstTokenSwap.logoURI} />
                     ) : (
                       <Avatar
                         style={{
@@ -919,14 +922,14 @@ export default function SwapComponent() {
                           marginLeft: '12px',
                           marginTop: '2px',
                         }}
-                        name={receiveTokenForExchange.avatarIcon}
+                        name={initReceiveFirstTokenSwap.avatarIcon}
                         round={true}
                         size="21"
                         textSizeRatio={1}
                       />
                     )}
                     <ChosenTokenLabel isLightTheme={isLightTheme}>
-                      {receiveTokenForExchange.symbol}
+                      {initReceiveFirstTokenSwap.symbol}
                     </ChosenTokenLabel>
 
                     <img
@@ -956,7 +959,7 @@ export default function SwapComponent() {
                       setReceiveTokenForExchangeAmount(e.target.value);
                       convertReceiveTokenToUSDCurrency({
                         amount: e.target.value,
-                        ...receiveTokenForExchange,
+                        ...initReceiveFirstTokenSwap,
                       });
                     }}
                     onBlur={(e) => {
@@ -1054,23 +1057,13 @@ export default function SwapComponent() {
                               <SendTokenModalListItem
                                 key={object.name}
                                 onClick={() => {
-                                  setIsReceiveTokensModalVisible(false);
                                   setFilteredReceiveTokensListData(finalReceiveTokensList);
                                   // setFilteredReceiveTokensListData(
                                   //   finalReceiveTokensList.filter(
                                   //     (token) => token.symbol !== object.symbol
                                   //   )
                                   // );
-                                  selectReceiveTokenForExchange({
-                                    ...object,
-                                    receiveTokensListItem: true,
-                                  });
-                                  convertReceiveTokenToUSDCurrency({
-                                    amount: 0,
-                                    receiveTokensListItem: true,
-                                    ...receiveTokenForExchange,
-                                    address: object.address,
-                                  });
+                                  selectReceiveTokenForExchange(object);
                                 }}
                                 isLightTheme={isLightTheme}>
                                 <SendTokenLabelsBlock>

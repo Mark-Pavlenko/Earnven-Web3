@@ -23,3 +23,11 @@ export const getReceiveTokensList = (payload) => {
     payload,
   };
 };
+
+export const setInitReceiveFirstTokenSwap = (payload) => {
+  console.log('InitialReceiveFirstTokenSwap', payload);
+  return {
+    type: actionType.SET_INIT_RECEIVE_FIRST_TOKEN_SWAP,
+    payload,
+  };
+};

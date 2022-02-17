@@ -4,7 +4,7 @@ import actionTypes from '../../constants/actionTypes';
 import * as actions from './actions';
 import ethImage from '../../assets/icons/eth.png';
 import CoinGeckoMockTokensList from './CoinGecko.json';
-import { setInitialSendTokenSingleSwap } from './actions';
+import { setInitialSendTokenSingleSwap, setInitReceiveFirstTokenSwap } from './actions';
 
 export function* getSendTokensListSagaWatcher() {
   yield takeLatest(actionTypes.SET_SEND_TOKENS_LIST, getSendTokensListSagaWorker);
@@ -116,4 +116,5 @@ function* getReceiveTokensListSagaWorker() {
   // console.log('getCoinGeckoTokenUSDCurrency sagas', getCoinGeckoTokenUSDCurrency);
 
   yield put(actions.getReceiveTokensList(finalList));
+  yield put(actions.setInitReceiveFirstTokenSwap(finalList[4]));
 }
