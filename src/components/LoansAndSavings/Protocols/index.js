@@ -26,7 +26,7 @@ import SushiLPToken from '../SushiLPToken';
 import CompoundFinance from '../CompoundFinance';
 import BalancerV2 from '../LiqudityPools/BalancerV2';
 import PickleDill from '../Vaults/PickleDill';
-//import UniswapV2 from '../LiqudityPools/UniswapV2';
+import UniswapV2 from '../LiqudityPools/UniswapV2';
 
 export default function Index({ accountAddress }) {
   //console.log('TestComp load from protocols index');
@@ -82,6 +82,7 @@ export default function Index({ accountAddress }) {
       <CreamIronBank accountAddress={accountAddress} getTotal={() => {}} />
       <BalancerV2 accountAddress={accountAddress} />
       <PickleDill accountAddress={accountAddress} />
+      <UniswapV2 accountAddress={accountAddress} />
     </React.Fragment>
   );
 }

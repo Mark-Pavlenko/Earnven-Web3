@@ -39,7 +39,6 @@ export const getCreamData = async (
       decimals = 10 ** 10;
   }
   const tokenAmount = IronBankAmount / decimals;
-  console.log('TestCream balance from API', tokenAmount);
   if (tokenAmount > 0) {
     await axios
       .get(`${coingecko_contract_address}`, {}, {})
@@ -56,7 +55,6 @@ export const getCreamData = async (
           object.balance = tokenAmount;
           object.protocol = 'Cream Iron Bank';
           object.chain = 'Ethereum';
-          console.log('TestCream object data', object);
         }
       })
       .catch((err) => {
