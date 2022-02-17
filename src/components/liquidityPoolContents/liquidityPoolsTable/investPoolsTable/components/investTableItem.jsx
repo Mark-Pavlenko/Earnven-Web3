@@ -66,12 +66,12 @@ import slowDice from '../../../../../assets/icons/slowDice-icon.svg';
 import actionTypes from '../../../../../constants/actionTypes';
 
 export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiquidityNormal }) => {
+  console.log('InvestTableItem', item);
   const GasPrices = useSelector((state) => state.gesData.gasPriceData);
   const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
   const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
   const addIconsGasPricesWithIcons = addIconsGasPrices(GasPrices, fastDice, middleDice, slowDice);
   const dispatch = useDispatch();
-  const address = useParams().address;
 
   const [isModalVisible, setIsModalVisible] = useState('');
   const [modalType, setModalType] = useState('');
@@ -87,6 +87,7 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
   const [addLiquidityNormalTokenB, setAddLiquidityNormalTokenB] = useState('');
 
   const [tokenAddress, setTokenAddress] = useState('0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+  console.log('tokenAddress', tokenAddress);
   const [singleTokenValue, setSingleTokenValue] = useState();
 
   const [allTokens, setAllTokens] = useState([]);
@@ -250,7 +251,7 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
     //------------------------------------->
     const NewContract = new web3.eth.Contract(
       ROUTERABI,
-      '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+      '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F'
     );
     if (!isNaN(value)) {
       if (inputId === 'firstInput') {
@@ -314,7 +315,7 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
 
     const NewContract = new web3.eth.Contract(
       ROUTERABI,
-      '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+      '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F'
     );
     if (tokenAddress !== token1) {
       const convertedValue1 = await NewContract.methods
@@ -420,7 +421,7 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
             <InputBlock>
               <BlockTokens>
                 <div>
-                  <TokenImage src={`https://ethplorer.io${item.token0.image}`} />
+                  <TokenImage src={`${item.token0.image}`} />
                 </div>
                 <BlockTokenName>{item.token0.name}</BlockTokenName>
               </BlockTokens>
@@ -448,7 +449,7 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
             <InputBlock>
               <BlockTokens>
                 <div>
-                  <TokenImage src={`https://ethplorer.io${item.token1.image}`} />
+                  <TokenImage src={`${item.token1.image}`} />
                 </div>
                 <BlockTokenName>{item.token1.name}</BlockTokenName>
               </BlockTokens>
@@ -562,19 +563,18 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
         <ItemHeader>
           <ItemIndex>{index + 1}</ItemIndex>
           <TokenImages>
-            {item.imageData.map((name) => (
-              <>
-                {name && (
-                  //<TokenImage src={`https://ethplorer.io${item[name].image}`} />
-                  <TokenImage src={`${name}`} />
-                )}
-              </>
-            ))}
+            {Object.keys(item)
+              .filter((token) => token.includes('token'))
+              .map((name) => (
+                <>{item[name].image && <TokenImage src={`${item[name].image}`} />}</>
+              ))}
           </TokenImages>
           <TokenNames>
-            {item.tokens.map((token) => (
-              <div>{token.name}</div>
-            ))}
+            {Object.keys(item)
+              .filter((token) => token.includes('token'))
+              .map((name) => (
+                <div>{item[name].symbol}</div>
+              ))}
           </TokenNames>
         </ItemHeader>
         <LiquidityValue>${numberWithCommas(parseFloat(item.reserveUSD).toFixed(2))}</LiquidityValue>

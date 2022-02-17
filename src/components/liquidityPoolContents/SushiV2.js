@@ -93,9 +93,8 @@ export default function LiquidityPools({ inputValue, AllTokens }) {
   const { address } = useParams();
 
   const [Data, setData] = useState([]); //UNI V2 Pools
+  console.log('Sushi protocols Data', Data)
   const [Content, setContent] = useState(''); //UNI V2 33Pools
-  const [TokenA, setTokenA] = useState('');
-  const [TokenB, setTokenB] = useState('');
   const [Page, setPage] = useState('');
   const [AmountTokenA, setAmountTokenA] = useState('');
   const [AmountTokenB, setAmountTokenB] = useState('');

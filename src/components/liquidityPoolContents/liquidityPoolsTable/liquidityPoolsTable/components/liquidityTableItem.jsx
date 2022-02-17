@@ -65,12 +65,12 @@ import actionTypes from '../../../../../constants/actionTypes';
 
 export const LiquidityTableItem = ({
   item,
+  type,
   index,
   theme,
-  type,
+  AllTokens,
   addLiquidity,
   addLiquidityNormal,
-  AllTokens,
 }) => {
   const GasPrices = useSelector((state) => state.gesData.gasPriceData);
   const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
@@ -574,7 +574,6 @@ export const LiquidityTableItem = ({
                 <>
                   {item[name].image && (
                     <TokenImage src={`https://ethplorer.io${item[name].image}`} />
-                    // <TokenImage src={`${item[name].image}`} />
                   )}
                 </>
               ))}

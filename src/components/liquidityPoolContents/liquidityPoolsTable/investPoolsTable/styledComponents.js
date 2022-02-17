@@ -20,7 +20,7 @@ export const TableItem = styled.div`
   color: ${(props) => (props.isLightTheme ? '#1E1E20' : ' white')};
 
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 2fr;
   grid-template-areas: 'head liquidity apr balance value buttons';
   align-items: center;
   padding: 11px 25px;
@@ -83,6 +83,38 @@ export const ItemIndexHidden = styled.div`
 `;
 
 export const HeaderApr = styled.div`
+  grid-area: apr;
+  @media (min-width: 175px) and (max-width: 840px) {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 100px;
+    margin-bottom: 20px;
+  }
+`;
+export const LPbalance = styled.div`
+  grid-area: balance;
+  @media (min-width: 175px) and (max-width: 840px) {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 100px;
+    margin-bottom: 20px;
+  }
+`;
+
+export const Value = styled.div`
+  grid-area: value;
+  @media (min-width: 175px) and (max-width: 840px) {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 100px;
+    margin-bottom: 20px;
+  }
+`;
+export const Buttons = styled.div`
+  grid-area: buttons;
   @media (min-width: 175px) and (max-width: 840px) {
     display: flex;
     align-items: center;
@@ -92,6 +124,7 @@ export const HeaderApr = styled.div`
   }
 `;
 export const HeaderLiquidity = styled.div`
+  grid-area: liquidity;
   @media (min-width: 175px) and (max-width: 840px) {
     display: none;
   }
@@ -149,10 +182,6 @@ export const TokenNames = styled.div`
   display: flex;
   gap: 5px;
   word-break: inherit;
-
-  @media (max-width: 1880px) {
-    display: block;
-  }
 
   @media (max-width: 300px) {
     font-size: 12px;

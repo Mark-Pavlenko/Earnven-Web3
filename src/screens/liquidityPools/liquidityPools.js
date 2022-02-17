@@ -34,7 +34,7 @@ import {
   SearchImg,
   Wrapper,
 } from '../style';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { InvestPoolsTable } from '../../components/liquidityPoolContents/liquidityPoolsTable/investPoolsTable/investPoolsTable';
 import mockTokenImage from '../../assets/icons/ethereum.svg';
 import axios from 'axios';
@@ -42,6 +42,7 @@ import tokenURIs from '../Exchange/tokenURIs';
 import mkrImage from '../../assets/icons/mkr.svg';
 import aaveImage from '../../assets/icons/aave-logo.svg';
 import balancerImage from '../../assets/icons/balancer-icon.svg';
+import actionTypes from '../../constants/actionTypes';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -76,10 +77,54 @@ function a11yProps(index) {
 }
 
 export default function LiquidityPools() {
+  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
+  const SushiPoolsData = useSelector((state) => state.sushiSwap.sushiSwapLPData);
+  const accountAddress = useSelector((state) => state.initSidebarValuesReducer.selectedAddress);
+  console.log('SushiPoolsData', SushiPoolsData);
+
+  const correctProtocolDataStructure = (protocol) => {
+    return protocol.map((el) => {
+      return {
+        token0: {
+          id: el.token0Id,
+          image: el.token0Image,
+          name: el.token0Symbol,
+          symbol: el.token0Symbol,
+        },
+        token1: {
+          id: el.token1Id,
+          image: el.token1Image,
+          name: el.token1Symbol,
+          symbol: el.token1Symbol,
+        },
+        reserveUSD: el.liquidity,
+        volumeUSD: el.volume,
+        value: el.value,
+        balance: el.balance,
+      };
+    });
+  };
+  const myPoolsData = correctProtocolDataStructure(SushiPoolsData);
+
   const [value, setValue] = React.useState(0);
   const [inputValue, setInputValue] = React.useState('');
   const [AllTokens, setAllTokens] = useState([]);
-  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const getSushiSwapLPData = async () => {
+      const sushiSwapObjects = { accountAddress: accountAddress };
+      try {
+        dispatch({
+          type: actionTypes.SET_SUSHILP_DATA,
+          payload: sushiSwapObjects,
+        });
+      } catch (err) {
+        console.log('Dispatch error in sushu=iswapLP process', err.message);
+      }
+    };
+    getSushiSwapLPData();
+  }, [accountAddress]);
 
   useEffect(() => {
     async function getData() {
@@ -231,7 +276,7 @@ export default function LiquidityPools() {
         <PoolsTitle isLightTheme={isLightTheme}>{'My pools'}</PoolsTitle>
         <InvestPoolsTable
           //data={Data}
-          data={mockData}
+          data={myPoolsData}
           type={'sushiswap'}
           AllTokens={AllTokens}
           // addLiquidity={addLiquidity}

@@ -8,6 +8,9 @@ import {
   ItemHeader,
   ItemIndex,
   HeaderApr,
+  LPbalance,
+  Value,
+  Buttons,
   HeaderLiquidity,
   AvailableTitle,
   ItemIndexHidden,
@@ -25,9 +28,9 @@ export const InvestPoolsTable = ({ data, type, addLiquidity, addLiquidityNormal 
         </ItemHeader>
         <HeaderLiquidity>{'Liquidity'}</HeaderLiquidity>
         <HeaderApr>{'APR'}</HeaderApr>
-        <HeaderApr>{'LP balance'}</HeaderApr>
-        <HeaderApr>{'Value'}</HeaderApr>
-        <div></div>
+        <LPbalance>{'LP balance'}</LPbalance>
+        <Value>{'Value'}</Value>
+        <Buttons></Buttons>
       </TableItem>
       {data &&
         data.map((item, index) => {
