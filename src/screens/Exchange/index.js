@@ -273,6 +273,11 @@ export default function SwapComponent() {
   const [filteredReceiveTokensListData, setFilteredReceiveTokensListData] = useState([]);
   const [tokenSendUSDCurrency, setTokenSendUSDCurrency] = useState('$0.00');
   const [tokenReceiveUSDCurrency, setTokensReceiveUSDCurrency] = useState('$0.00');
+  const [isTokensLimitExceeded, setIsTokensLimitExceeded] = useState(false);
+  const [sendTokenForExchangeAmount, setSendTokenForExchangeAmount] = useState();
+  const [receiveTokenForExchangeAmount, setReceiveTokenForExchangeAmount] = useState();
+  const [isSendTokensModalVisible, setIsSendTokensModalVisible] = useState(false);
+  const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
@@ -294,12 +299,9 @@ export default function SwapComponent() {
   //---OLD states
 
   const [TokenTo, setTokenTo] = useState('');
-  const [sendTokenForExchangeAmount, setSendTokenForExchangeAmount] = useState();
-  const [receiveTokenForExchangeAmount, setReceiveTokenForExchangeAmount] = useState();
+
   // const [Slippage, setSlippage] = useState(2);
   // const [selectedRate, setselectedRate] = useState(null);
-  const [isSendTokensModalVisible, setIsSendTokensModalVisible] = useState(false);
-  const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
 
   //------
 
@@ -354,9 +356,12 @@ export default function SwapComponent() {
   //function of dynamic converting of token value to USD Currency
 
   let convertSendTokenToUSDCurrency = async (tokenData) => {
+    setTokenSendUSDCurrency('Loading');
+
     console.log('main send tokenData', tokenData);
 
     if (tokenData.amount === '') tokenData.amount = '0';
+    // const tokenAmount = tokenData.amount.replace(/\s/g, '');
 
     if (tokenData.symbol === 'ETH') {
       // console.log('type send USD eth triggered');
@@ -578,8 +583,6 @@ export default function SwapComponent() {
     // setSources([]);
   };
 
-  const [isTokensLimitExceeded, setIsTokensLimitExceeded] = useState(false);
-
   const checkIfExchangedTokenLimitIsExceeded = (chosenTokenAmount, totalTokensBalance) => {
     if (chosenTokenAmount > totalTokensBalance) {
       console.log('limit is exceeded');
@@ -595,7 +598,7 @@ export default function SwapComponent() {
   const selectReceiveTokenForExchange = (selectReceiveToken) => {
     console.log('selected receive token value object 222', selectReceiveToken);
     setReceiveTokenForExchange(selectReceiveToken);
-    setReceiveTokenForExchangeAmount(1);
+    setReceiveTokenForExchangeAmount(0);
     //old
     // setprotocolsRateList([]);
     // setselectedRate(null);
@@ -777,6 +780,10 @@ export default function SwapComponent() {
                           sendTokenForExchangeAddress: sendTokenForExchange.address,
                           receiveTokenForExchangeAddress: receiveTokenForExchange.address,
                         });
+                        checkIfExchangedTokenLimitIsExceeded(
+                          e.target.value,
+                          sendTokenForExchange.balance
+                        );
                       }}
                     />
                   </SendTokensChooseButton>
@@ -885,7 +892,7 @@ export default function SwapComponent() {
                                     sendTokensListItem: true,
                                   });
                                   convertSendTokenToUSDCurrency({
-                                    amount: 1,
+                                    amount: 0,
                                     sendTokensListItem: true,
                                     ...object,
                                     address: object.address,
@@ -1126,7 +1133,7 @@ export default function SwapComponent() {
                                     receiveTokensListItem: true,
                                   });
                                   convertReceiveTokenToUSDCurrency({
-                                    amount: 1,
+                                    amount: 0,
                                     receiveTokensListItem: true,
                                     ...receiveTokenForExchange,
                                     address: object.address,
