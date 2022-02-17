@@ -169,7 +169,11 @@ export default function index({ accountAddress }) {
       <PoolsBlock //first
         isLightTheme={theme}
         style={{
-          display: SushiPoolsData.length > 0 || curveLpToken.length > 0 || balancerV2lp.length > 0,
+          display:
+            SushiPoolsData.length > 0 ||
+            curveLpToken.length > 0 ||
+            snowSwapData.length > 0 ||
+            liquityTokenData.length > 0,
         }}>
         <Header>
           <Title isLightTheme={theme}>{'Liquidity pools'}</Title>
@@ -249,9 +253,66 @@ export default function index({ accountAddress }) {
               </>
             ) : (
               ''
+            )}{' '}
+            {/* SnowSwap protocol */}
+            {snowSwapData.length > 0 ? (
+              <React.Fragment>
+                <img
+                  src={SnowSwapLogo}
+                  style={{
+                    height: '20px',
+                    marginTop: '',
+                    marginLeft: '15px',
+                    display: 'inline-block',
+                  }}
+                  alt=""
+                />
+                SnowSwap
+                {snowSwapData
+                  ? snowSwapData.map((object) => {
+                      return (
+                        <Investment
+                          protocol={object}
+                          protocolName={'SnowSwap'}
+                          logoImage={SnowSwapLogo}
+                        />
+                      );
+                    })
+                  : ''}
+              </React.Fragment>
+            ) : (
+              ''
+            )}
+            {/*liquityTokenData/*/}
+            {liquityTokenData.length > 0 ? (
+              <React.Fragment>
+                <img
+                  src={liquityImageUrl}
+                  style={{
+                    height: '20px',
+                    marginTop: '',
+                    marginLeft: '15px',
+                    display: 'inline-block',
+                  }}
+                  alt=""
+                />
+                Liquity
+                {liquityTokenData
+                  ? liquityTokenData.map((object) => {
+                      return (
+                        <Investment
+                          protocol={object}
+                          protocolName={'Liquity'}
+                          logoImage={object.tokenImage}
+                        />
+                      );
+                    })
+                  : ''}
+              </React.Fragment>
+            ) : (
+              ''
             )}
             {/* BalancerV2  */}
-
             {balancerV2lp.length > 0 ? (
               <>
                 <img
@@ -698,13 +759,6 @@ export default function index({ accountAddress }) {
             ) : (
               ''
             )}
-            {/*pickeDill/*/}
-            {/* Pickle Dill
-            {pickeDill.map((object) => {
-              return (
-                <Investment protocol={object} logoImage={pickleLogo} protocolName={'Pickle Dill'} />
-              );
-            })} */}
           </React.Fragment>
         )}
       </PoolsBlock>
@@ -712,7 +766,7 @@ export default function index({ accountAddress }) {
       <PoolsBlock //third
         isLightTheme={theme}
         style={{
-          display: liquityTokenData.length > 0 || snowSwapData.length > 0,
+          display: snowSwapData.length > 0,
         }}>
         <Header>
           <Title isLightTheme={theme}>{'Yield Farming'}</Title>
@@ -730,69 +784,7 @@ export default function index({ accountAddress }) {
             </TotalValue>
           </TotalValueField>
         </div>
-        {isFarmingOpen && (
-          <React.Fragment>
-            {/*liquityTokenData/*/}
-            {liquityTokenData.length > 0 ? (
-              <React.Fragment>
-                <img
-                  src={liquityImageUrl}
-                  style={{
-                    height: '20px',
-                    marginTop: '',
-                    marginLeft: '15px',
-                    display: 'inline-block',
-                  }}
-                  alt=""
-                />
-                Liquity
-                {liquityTokenData
-                  ? liquityTokenData.map((object) => {
-                      return (
-                        <Investment
-                          protocol={object}
-                          protocolName={'Liquity'}
-                          logoImage={object.tokenImage}
-                        />
-                      );
-                    })
-                  : ''}
-              </React.Fragment>
-            ) : (
-              ''
-            )}
-
-            {/* SnowSwap protocol */}
-            {snowSwapData.length > 0 ? (
-              <React.Fragment>
-                <img
-                  src={SnowSwapLogo}
-                  style={{
-                    height: '20px',
-                    marginTop: '',
-                    marginLeft: '15px',
-                    display: 'inline-block',
-                  }}
-                  alt=""
-                />
-                SnowSwap
-                {snowSwapData
-                  ? snowSwapData.map((object) => {
-                      return (
-                        <Investment
-                          protocol={object}
-                          protocolName={'SnowSwap'}
-                          logoImage={SnowSwapLogo}
-                        />
-                      );
-                    })
-                  : ''}
-              </React.Fragment>
-            ) : (
-              ''
-            )}
-          </React.Fragment>
-        )}
+        {isFarmingOpen && <React.Fragment></React.Fragment>}
       </PoolsBlock>
     </InvestmentWrapper>
   );

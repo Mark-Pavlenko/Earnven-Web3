@@ -23,7 +23,6 @@ import { curveLpToken } from './curveLpToken/reducer';
 import { AaveStaking } from './Aave/reducer';
 import { liquityToken } from './liquityToken/reducer';
 import { creamIronBank } from './creamIronBank/reducer';
-import { snowSwan } from './snowSwan/reducer';
 import { cream } from './cream/reducer';
 import { olympusStaking } from './olympusStaking/reducer';
 import { ethExplorerApi } from './ethExplorerApi/reducer';
@@ -68,7 +67,6 @@ export const rootReducer = combineReducers({
   AaveStaking,
   liquityToken,
   creamIronBank,
-  snowSwan,
   cream,
   olympusStaking,
   ethExplorerApi,
