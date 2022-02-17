@@ -55,7 +55,7 @@ export const FirstColumnTitleHeaderBlock = styled.div`
 
 export const SwapTokensMainSubBlock = styled.div`
   width: 525px;
-  height: 490px;
+  height: 515px;
   margin-top: 20px;
   padding: 32px 27px 16px 20px;
   background: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#1F265C3D')};
@@ -119,6 +119,14 @@ export const SendTokensChooseButton = styled.div`
   @media (max-width: 540px) {
     width: 345px;
   }
+`;
+
+export const ExceededAmountTokensLimitWarning = styled.span`
+  margin-left: auto;
+  margin-top: 5px;
+  margin-right: 3px;
+  font-size: 12px;
+  color: #ec3d3d;
 `;
 
 export const MultiSwapSendTokensChooseBlock = styled.div`
@@ -357,7 +365,7 @@ export const AdditionalOptionsSwapTokensSubBlock = styled.div`
 
 export const SingleSwapTokensOfferedBySubBlock = styled.div`
   width: 525px;
-  height: 490px;
+  height: 515px;
   background-color: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#4453AD1A')};
   box-shadow: ${(props) =>
     props.isLightTheme

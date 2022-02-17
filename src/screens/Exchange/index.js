@@ -117,6 +117,7 @@ import {
   GreenDotIcon,
   SaveSelectedExchangerButton,
   SingleSwapTokensOfferedBySubBlock,
+  ExceededAmountTokensLimitWarning,
 } from './styled';
 import { useDispatch, useSelector } from 'react-redux';
 import pyramidIcon from '../../assets/icons/pyramidIcon.svg';
@@ -250,7 +251,6 @@ export default function SwapComponent() {
   const classes = useStyles();
   const { address } = useParams();
 
-  const [value, setValue] = useState(0);
   const [sendTokenForExchange, setSendTokenForExchange] = useState({
     symbol: 'ETH',
     logoURI: EthIcon,
@@ -296,21 +296,28 @@ export default function SwapComponent() {
   const [TokenTo, setTokenTo] = useState('');
   const [sendTokenForExchangeAmount, setSendTokenForExchangeAmount] = useState();
   const [receiveTokenForExchangeAmount, setReceiveTokenForExchangeAmount] = useState();
-  const [TokenToAmount, setTokenToAmount] = useState();
-  const [Slippage, setSlippage] = useState(2);
-  const [Sources, setSources] = useState([]);
-  const [protocolsRateList, setprotocolsRateList] = useState([]);
-  const [ethPrice, setethPrice] = useState(0);
-  const [selectedRate, setselectedRate] = useState(null);
-  const [newSelectedRate, setnewSelectedRate] = useState(null);
-  const [txSuccess, settxSuccess] = useState(false);
-  const [txFailure, settxFailure] = useState(false);
-  const [selectedExchangeName, setselectedExchangeName] = useState('');
-  const [currencyModal, setcurrencyModal] = useState(false);
-  const [currencyToModal, setcurrencyToModal] = useState(false);
-  const [toTokens, settoTokens] = useState([]);
+  // const [Slippage, setSlippage] = useState(2);
+  // const [selectedRate, setselectedRate] = useState(null);
   const [isSendTokensModalVisible, setIsSendTokensModalVisible] = useState(false);
   const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
+
+  //------
+
+  //popover
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+
+  //-----
 
   useEffect(async () => {
     try {
@@ -434,6 +441,8 @@ export default function SwapComponent() {
     const accounts = await web3.eth.getAccounts();
     console.log('account selected is :::', accounts[0]);
 
+    //useState with null
+
     if (selectedRate !== null) {
       let txObject = selectedRate.transactObject;
       txObject.gas = parseInt(txObject.gas) + 100000;
@@ -446,10 +455,10 @@ export default function SwapComponent() {
       }
       try {
         await web3.eth.sendTransaction(txObject);
-        settxSuccess(true);
+        // settxSuccess(true);
       } catch (error) {
         console.log('tx failed::', error);
-        settxFailure(true);
+        // settxFailure(true);
       }
     } else {
       alert('Please Fill All fields');
@@ -487,7 +496,7 @@ export default function SwapComponent() {
                   sources2.push(sources[j]);
                 }
               }
-              setSources(sources2);
+              // setSources(sources2);
             } else {
               protocolQuote.name = protocolsList[i];
             }
@@ -498,6 +507,7 @@ export default function SwapComponent() {
             )
               .toFixed(2)
               .toString();
+            const ethPrice = 3000;
             protocolQuote.gas = (
               parseInt(response.data.gas) *
               parseInt(response.data.gasPrice) *
@@ -544,10 +554,10 @@ export default function SwapComponent() {
           }
         }
         differentQuoteList.sort((a, b) => b.netReceived - a.netReceived);
-        setselectedRate(differentQuoteList[0]);
+        // setselectedRate(differentQuoteList[0]);
         console.log('differentQuoteList[0].name', differentQuoteList);
-        setselectedExchangeName(differentQuoteList[0].name);
-        setprotocolsRateList(differentQuoteList);
+        // setselectedExchangeName(differentQuoteList[0].name);
+        // setprotocolsRateList(differentQuoteList);
         console.log('different rates we have::', differentQuoteList);
       }
     }
@@ -555,18 +565,17 @@ export default function SwapComponent() {
 
   const selectSendTokenForExchange = (selectSendToken) => {
     console.log('selected send token value object 222', selectSendToken);
-    const initSendTokenAmount = 1;
-
-    checkIfExchangedTokenLimitIsExceeded(initSendTokenAmount, selectSendToken.balance);
-
     setSendTokenForExchange(selectSendToken);
-    setSendTokenForExchangeAmount(initSendTokenAmount);
+    // const initSendTokenAmount = 0;
+
+    // checkIfExchangedTokenLimitIsExceeded(initSendTokenAmount, selectSendToken.balance);
+
+    // setSendTokenForExchangeAmount(initSendTokenAmount);
 
     //old
-    setTokenToAmount(0);
-    setprotocolsRateList([]);
-    setselectedRate(null);
-    setSources([]);
+    // setprotocolsRateList([]);
+    // setselectedRate(null);
+    // setSources([]);
   };
 
   const [isTokensLimitExceeded, setIsTokensLimitExceeded] = useState(false);
@@ -588,10 +597,9 @@ export default function SwapComponent() {
     setReceiveTokenForExchange(selectReceiveToken);
     setReceiveTokenForExchangeAmount(1);
     //old
-    setTokenToAmount(0);
-    setprotocolsRateList([]);
-    setselectedRate(null);
-    setSources([]);
+    // setprotocolsRateList([]);
+    // setselectedRate(null);
+    // setSources([]);
   };
 
   console.log('token receive swap tokenReceiveUSDCurrency', tokenReceiveUSDCurrency);
@@ -691,22 +699,6 @@ export default function SwapComponent() {
     // }
   };
 
-  //popover
-
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-
-  //-----
-
   return (
     <>
       <ExchangeMainLayout>
@@ -727,35 +719,35 @@ export default function SwapComponent() {
                 </SendBlockLabels>
 
                 {/* Open modal with tokens list*/}
-                <SendTokensChooseButton isLightTheme={isLightTheme}>
-                  <ChooseBtnTokenBlock onClick={() => setIsSendTokensModalVisible(true)}>
-                    {sendTokenForExchange.logoURI !== null ? (
-                      <SendTokenImg alt="token_img" src={sendTokenForExchange.logoURI} />
-                    ) : (
-                      <Avatar
-                        style={{
-                          marginRight: '12px',
-                          marginLeft: '12px',
-                          marginTop: '2px',
-                        }}
-                        name={sendTokenForExchange.avatarIcon}
-                        round={true}
-                        size="21"
-                        textSizeRatio={1}
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <SendTokensChooseButton isLightTheme={isLightTheme}>
+                    <ChooseBtnTokenBlock onClick={() => setIsSendTokensModalVisible(true)}>
+                      {sendTokenForExchange.logoURI !== null ? (
+                        <SendTokenImg alt="token_img" src={sendTokenForExchange.logoURI} />
+                      ) : (
+                        <Avatar
+                          style={{
+                            marginRight: '12px',
+                            marginLeft: '12px',
+                            marginTop: '2px',
+                          }}
+                          name={sendTokenForExchange.avatarIcon}
+                          round={true}
+                          size="21"
+                          textSizeRatio={1}
+                        />
+                      )}
+                      <ChosenTokenLabel isLightTheme={isLightTheme}>
+                        {sendTokenForExchange.symbol === 'ethereum'
+                          ? 'ETH'
+                          : sendTokenForExchange.symbol}
+                      </ChosenTokenLabel>
+                      <img
+                        src={isLightTheme ? chevronDownBlack : chevronDownLight}
+                        alt="chevron_icon"
                       />
-                    )}
-                    <ChosenTokenLabel isLightTheme={isLightTheme}>
-                      {sendTokenForExchange.symbol === 'ethereum'
-                        ? 'ETH'
-                        : sendTokenForExchange.symbol}
-                    </ChosenTokenLabel>
-                    <img
-                      src={isLightTheme ? chevronDownBlack : chevronDownLight}
-                      alt="chevron_icon"
-                    />
-                  </ChooseBtnTokenBlock>
+                    </ChooseBtnTokenBlock>
 
-                  {!isTokensLimitExceeded ? (
                     <ChosenSendReceiveTokenValueInput
                       //------
                       InputProps={{
@@ -787,44 +779,14 @@ export default function SwapComponent() {
                         });
                       }}
                     />
-                  ) : (
-                    <ChosenSendReceiveTokenValueInput
-                      error
-                      id="standard-error-helper-text"
-                      helperText="Insufficient funds"
-                      //------
-                      InputProps={{
-                        inputProps: {
-                          style: {
-                            textAlign: 'right',
-                            paddingRight: 0,
-                            width: '100px',
-                            fontWeight: 600,
-                            color: isLightTheme ? 'black' : 'white',
-                          },
-                        },
-                        classes: { notchedOutline: classes.noBorder },
-                      }}
-                      isLightTheme={isLightTheme}
-                      placeholder="0.0"
-                      value={sendTokenForExchangeAmount}
-                      onChange={(e) => {
-                        setSendTokenForExchangeAmount(e.target.value);
-                        convertSendTokenToUSDCurrency({
-                          amount: e.target.value,
-                          ...sendTokenForExchange,
-                        });
-                        convertExchangeTokensCourse({
-                          inputId: 'firstInput',
-                          tokenAmount: parseInt(e.target.value),
-                          sendTokenForExchangeAddress: sendTokenForExchange.address,
-                          receiveTokenForExchangeAddress: receiveTokenForExchange.address,
-                        });
-                      }}
-                    />
+                  </SendTokensChooseButton>
+
+                  {isTokensLimitExceeded && (
+                    <ExceededAmountTokensLimitWarning>
+                      Insufficient funds - available {sendTokenForExchange.balance}
+                    </ExceededAmountTokensLimitWarning>
                   )}
-                </SendTokensChooseButton>
-
+                </div>
                 {/* modal with send tokens list*/}
 
                 {isSendTokensModalVisible && (
@@ -1034,9 +996,6 @@ export default function SwapComponent() {
                   </ChooseBtnTokenBlock>
                   {/*)}*/}
                   <ChosenSendReceiveTokenValueInput
-                    error={true}
-                    id="standard-error-helper-text"
-                    helperText="Insufficient funds"
                     //--------
                     InputProps={{
                       inputProps: {
