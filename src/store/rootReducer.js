@@ -23,7 +23,6 @@ import { curveLpToken } from './curveLpToken/reducer';
 import { AaveStaking } from './Aave/reducer';
 import { liquityToken } from './liquityToken/reducer';
 import { creamIronBank } from './creamIronBank/reducer';
-import { snowSwan } from './snowSwan/reducer';
 import { cream } from './cream/reducer';
 import { olympusStaking } from './olympusStaking/reducer';
 import { ethExplorerApi } from './ethExplorerApi/reducer';
@@ -40,6 +39,7 @@ import { walletDataReducer } from './currentWalletData/reducer';
 import { tokenPriceHistoryReducer } from './currentTokenPriceHistory/reducer';
 import { Synthetix } from './Synthetix/reducer';
 import { tokensListReducer } from './exchangeTokensLists/reducer';
+import { snowSwap } from './SnowSwap/reducer';
 
 export const rootReducer = combineReducers({
   web3Reducer,
@@ -67,7 +67,6 @@ export const rootReducer = combineReducers({
   AaveStaking,
   liquityToken,
   creamIronBank,
-  snowSwan,
   cream,
   olympusStaking,
   ethExplorerApi,
@@ -85,4 +84,5 @@ export const rootReducer = combineReducers({
   walletDataReducer,
   tokenPriceHistoryReducer,
   Synthetix,
+  snowSwap,
 });

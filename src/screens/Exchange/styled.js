@@ -55,7 +55,7 @@ export const FirstColumnTitleHeaderBlock = styled.div`
 
 export const SwapTokensMainSubBlock = styled.div`
   width: 525px;
-  height: 480px;
+  height: 490px;
   margin-top: 20px;
   padding: 32px 27px 16px 20px;
   background: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#1F265C3D')};

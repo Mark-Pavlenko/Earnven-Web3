@@ -136,6 +136,7 @@ import testFunction from './helpers';
 import { getTokenDataSaga } from '../../store/currentTokenData/actions';
 import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
 import Popover from '@mui/material/Popover';
+import sendTokensMockList from './sendTokensMockList.json';
 
 const useStyles = makeStyles((theme) => ({
   noBorder: {
@@ -224,6 +225,8 @@ const makeCall = async (callName, contract, args, metadata = {}) => {
   }
 };
 
+import { filteredTokensByName } from './helpers';
+
 export default function SwapComponent() {
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -253,22 +256,15 @@ export default function SwapComponent() {
   const [tokenSendUSDCurrency, setTokenSendUSDCurrency] = useState('$0.00');
   const [tokenReceiveUSDCurrency, setTokensReceiveUSDCurrency] = useState('$0.00');
 
-  // console.log('sendTokenForExchange states', sendTokenForExchange);
-  // console.log('receiveTokenForExchange states', receiveTokenForExchange);
-
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
-  const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
+
+  //work saga
+  // const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
+
+  //mock data
+  const finalSendTokensList = sendTokensMockList;
+
   const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
-
-  // const exchangeTokenRateSendToken = useSelector(
-  //   (state) => state?.currentTokenDataReducer.currentTokenData
-  // );
-
-  const exchangeTokenRateReceiveToken = useSelector(
-    (state) => state?.currentTokenDataReducer.currentTokenData
-  );
-
-  // console.log('sendExchangeCurrency', exchangeTokenRateReceiveToken);
 
   //---OLD states
 
@@ -292,6 +288,9 @@ export default function SwapComponent() {
   const [isSendTokensModalVisible, setIsSendTokensModalVisible] = useState(false);
   const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
 
+  console.log('sendTokenForExchange singleSwap state', sendTokenForExchange);
+  console.log('receiveTokenForExchange singleSwap state', receiveTokenForExchange);
+
   useEffect(async () => {
     try {
       dispatch({ type: actionTypes.SET_SEND_TOKENS_LIST, payload: address });
@@ -305,58 +304,12 @@ export default function SwapComponent() {
   useEffect(() => {
     finalSendTokensList.length !== 0 && setFilteredData(finalSendTokensList);
     finalReceiveTokensList.length !== 0 && setFilteredReceiveTokensListData(finalReceiveTokensList);
-    // console.log('front finalSendTokensList', finalSendTokensList);
-    // console.log('front finalReceiveTokensList', finalReceiveTokensList);
   }, [finalSendTokensList, finalReceiveTokensList]);
-
-  let filteredTokensByName = (e, searchTokensData) => {
-    // console.log('searched tokens Data', searchTokensData);
-
-    let lowerCase = e.target.value.toLowerCase();
-    let filteredSearchTokensList = searchTokensData.tokensList.filter((el) => {
-      if (lowerCase.input === '') {
-        return el;
-      }
-      //return the item which contains the user input
-      else if (el.name !== undefined) {
-        return el.name.toLowerCase().includes(lowerCase);
-      } else {
-        // console.log('undef el', el);
-      }
-    });
-    if (searchTokensData.searchSendTokensList === true) {
-      setFilteredData(filteredSearchTokensList);
-    } else if (searchTokensData.searchReceiveTokensList === true) {
-      setFilteredReceiveTokensListData(filteredSearchTokensList);
-    }
-  };
 
   //function of dynamic converting of token value to USD Currency
 
-  //useEffect for init eth and dai value
-  useEffect(async () => {
-    // WORKS CORRECT - INITIAL COUNT OF ONE TOKEN
-    // let initSendTokenUSDCurrency = await axios.get(
-    //   `https://api.coingecko.com/api/v3/simple/price?ids=${sendTokenForExchange.id}&vs_currencies=usd`
-    // );
-    //
-    // let initReceiveTokenUSDCurrency = await axios.get(
-    //   `https://api.coingecko.com/api/v3/simple/price?ids=${receiveTokenForExchange.id}&vs_currencies=usd`
-    // );
-    // // console.log('triggered');
-    // setTokenSendUSDCurrency(`$${Object.values(initSendTokenUSDCurrency.data)[0].usd.toFixed(2)}`);
-    // setTokensReceiveUSDCurrency(
-    //   `$${Object.values(initReceiveTokenUSDCurrency.data)[0].usd.toFixed(2)}`
-    // );
-    // setTokenSendUSDCurrency(`$0.00`);
-    // setTokensReceiveUSDCurrency(`$0.00`);
-  }, []);
-
   let convertSendTokenToUSDCurrency = async (tokenData) => {
     console.log('main send tokenData', tokenData);
-    // console.log('typeof', !(typeof tokenData.amount === 'string'));
-
-    // console.log('typeof', typeof tokenData.amount);
 
     if (tokenData.amount === '') tokenData.amount = '0';
 
@@ -369,8 +322,6 @@ export default function SwapComponent() {
         `$${(ethDollarValue.data.ethereum.usd * parseInt(tokenData.amount)).toFixed(2)}`
       );
     } else {
-      // console.log('send USD tokenData.USDCurrency triggered', tokenData.USDCurrency);
-
       if (tokenData.USDCurrency !== undefined) {
         setTokenSendUSDCurrency(
           `$${(tokenData.USDCurrency * parseInt(tokenData.amount)).toFixed(2)}`
@@ -382,7 +333,7 @@ export default function SwapComponent() {
   };
 
   let convertReceiveTokenToUSDCurrency = async (tokenData) => {
-    if (tokenData.amount === '' || typeof tokenData.amount === 'symbol') {
+    if (tokenData.amount === '') {
       tokenData.amount = '0';
     }
 
@@ -390,29 +341,36 @@ export default function SwapComponent() {
 
     let tokenUSDCurrencyValue;
 
-    if (
-      tokenData.receiveTokensListItem === true &&
-      tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' &&
-      tokenData.USDCurrency === undefined
-    ) {
-      tokenUSDCurrencyValue = await axios.get(
-        `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
-      );
+    if (tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+      console.log('first triggered');
 
-      if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
+      await axios
+        .get(
+          `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
+        )
+        .then(async (response) => {
+          // console.log('suc get usd', response);
+          tokenUSDCurrencyValue = response;
+        })
+        .catch((err) => {
+          console.log('err of usd currency receive token', err);
+          // tokenUSDCurrencyValue = err;
+        });
+
+      console.log('receive tokenData USDCurrency', tokenUSDCurrencyValue);
+
+      if (tokenUSDCurrencyValue) {
         setTokensReceiveUSDCurrency(
           `$ ${(tokenUSDCurrencyValue.data.price.rate * parseInt(tokenData.amount)).toFixed(2)}`
         );
       } else {
         setTokensReceiveUSDCurrency('Price not available');
       }
-    } else if (
-      tokenData.address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' &&
-      tokenData.receiveTokensListItem === true
-    ) {
+    } else {
       const ethDollarValue = await axios.get(
         'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
       );
+
       setTokensReceiveUSDCurrency(
         `$${(ethDollarValue.data.ethereum.usd * parseInt(tokenData.amount)).toFixed(2)}`
       );
@@ -420,30 +378,6 @@ export default function SwapComponent() {
   };
 
   //----------
-
-  useEffect(async () => {
-    await axios.get(`https://cdn.furucombo.app/furucombo.tokenlist.json`).then(async (response) => {
-      // console.log('receive tokens arr ', response.data.tokens);
-      settoTokens(response.data.tokens);
-    });
-  }, []);
-
-  useEffect(async () => {
-    try {
-      const ethDollarValue = await axios.get(
-        'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
-      );
-      // console.log('ethDollarValue', ethDollarValue);
-      setethPrice(ethDollarValue.data.ethereum.usd);
-    } catch (err) {
-      console.log('getEthDollarValue err', err);
-    }
-  }, []);
-
-  useEffect(() => {
-    const timeOutId = setTimeout(() => calculateToAmount(sendTokenForExchangeAmount), 500);
-    return () => clearTimeout(timeOutId);
-  }, [sendTokenForExchangeAmount]);
 
   async function loadWeb3() {
     if (window.ethereum) {
@@ -483,27 +417,6 @@ export default function SwapComponent() {
       alert('Please Fill All fields');
     }
   }
-
-  const dollarValueOfToken = async (tokenAddress) => {
-    try {
-      if (tokenAddress === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
-        return ethPrice;
-      } else {
-        const response = await axios.get(
-          `https://api.ethplorer.io/getTokenInfo/${tokenAddress}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
-        );
-        let data = response.data;
-        console.log('response of ethplorere api::', data);
-        if (data.price !== undefined) {
-          console.log('enter inside method');
-          // settokenToDollarValue(data.price.rate);
-          return data.price.rate;
-        } else {
-          console.log('dollar value of this token is undefined');
-        }
-      }
-    } catch {}
-  };
 
   const calculateToAmount = async (tokenFromAmount) => {
     console.log('calculate method called with ammount::', tokenFromAmount);
@@ -713,11 +626,15 @@ export default function SwapComponent() {
     setReceiveTokenForExchangeAmount(sendTokenForExchangeAmount);
   };
 
-  // const receiveExchangeCurrency = useSelector(
-  //   (state) => state?.currentTokenDataReducer.currentTokenData
-  // );
-  //
-  // console.log('receiveExchangeCurrency saga', receiveExchangeCurrency);
+  const searchTokensHandler = (event, searchTokensData) => {
+    const result = filteredTokensByName(event, searchTokensData);
+    console.log('result', result);
+    if (searchTokensData.searchSendTokensList === true) {
+      setFilteredData(result);
+    } else {
+      setFilteredReceiveTokensListData(result);
+    }
+  };
 
   return (
     <>
@@ -759,8 +676,7 @@ export default function SwapComponent() {
                     <ChosenTokenLabel isLightTheme={isLightTheme}>
                       {sendTokenForExchange.symbol === 'ethereum'
                         ? 'ETH'
-                        : sendTokenForExchange.symbol}{' '}
-                      qwerty
+                        : sendTokenForExchange.symbol}
                     </ChosenTokenLabel>
                     <img
                       src={isLightTheme ? chevronDownBlack : chevronDownLight}
@@ -809,7 +725,9 @@ export default function SwapComponent() {
                       }}>
                       <TokensModalSubLayout isLightTheme={isLightTheme}>
                         <Header>
-                          <ModalTitle isLightTheme={isLightTheme}>Select token ABA</ModalTitle>
+                          <ModalTitle isLightTheme={isLightTheme}>
+                            Select token for sending
+                          </ModalTitle>
                           <CloseButton
                             onClick={() => {
                               setIsSendTokensModalVisible(false);
@@ -825,8 +743,8 @@ export default function SwapComponent() {
 
                         <SearchTokensModalTextField
                           isLightTheme={isLightTheme}
-                          onChange={(e) => {
-                            filteredTokensByName(e, {
+                          onChange={(event) => {
+                            searchTokensHandler(event, {
                               tokensList: finalSendTokensList,
                               searchSendTokensList: true,
                             });
@@ -890,7 +808,6 @@ export default function SwapComponent() {
                                   ) : (
                                     <Avatar
                                       style={{
-                                        // marginLeft: '4px',
                                         marginLeft: '12px',
                                         marginRight: '12px',
                                         marginTop: '2px',
@@ -965,7 +882,7 @@ export default function SwapComponent() {
                       />
                     )}
                     <ChosenTokenLabel isLightTheme={isLightTheme}>
-                      {receiveTokenForExchange.symbol} VIV
+                      {receiveTokenForExchange.symbol}
                     </ChosenTokenLabel>
 
                     <img
@@ -1020,7 +937,7 @@ export default function SwapComponent() {
                       <TokensModalSubLayout isLightTheme={isLightTheme}>
                         <Header>
                           <ModalTitle isLightTheme={isLightTheme}>
-                            Select token to receive UZU
+                            Select token for receiving
                           </ModalTitle>
                           <CloseButton
                             onClick={() => {
@@ -1035,8 +952,9 @@ export default function SwapComponent() {
                           </CloseButton>
                         </Header>
                         <SearchTokensModalTextField
-                          onChange={(e) => {
-                            filteredTokensByName(e, {
+                          isLightTheme={isLightTheme}
+                          onChange={(event) => {
+                            searchTokensHandler(event, {
                               tokensList: finalReceiveTokensList,
                               searchReceiveTokensList: true,
                             });
@@ -1120,6 +1038,13 @@ export default function SwapComponent() {
                                     </SendTokenConvertedMeasures>
                                   </div>
                                 </SendTokenLabelsBlock>
+                                <SendTokenBalance isLightTheme={isLightTheme}>
+                                  {object.balance === undefined ? (
+                                    <Loader type="Rings" color="#BB86FC" height={30} width={30} />
+                                  ) : (
+                                    <span>${object.balance}</span>
+                                  )}
+                                </SendTokenBalance>
                               </SendTokenModalListItem>
                             ))}
                           </SendTokensModalList>
@@ -1230,486 +1155,6 @@ export default function SwapComponent() {
           <MultiSwapComponent />
         </SwapSecondColumn>
       </ExchangeMainLayout>
-
-      {/* Old code*/}
-      {/*<Box sx={{ width: '100%', mt: 3 }}>*/}
-      {/*  <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>*/}
-      {/*    <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">*/}
-      {/*      <Tab label="Index" {...a11yProps(0)} />*/}
-      {/*      <Tab label="Nuke" {...a11yProps(1)} />*/}
-      {/*    </Tabs>*/}
-      {/*  </Box>*/}
-      {/*  <TabPanel value={value} index={0}>*/}
-      {/*    <Grid container>*/}
-      {/*      <Grid items xs={12} md={8} sx={{ mt: 5, ml: 5 }}>*/}
-      {/*        <Container>*/}
-      {/*          <Typography variant="h3" sx={{ fontStyle: 'normal' }}>*/}
-      {/*            Index*/}
-      {/*          </Typography>*/}
-      {/*          <Container*/}
-      {/*            sx={{*/}
-      {/*              border: '1px solid #737373',*/}
-      {/*              borderRadius: '7px',*/}
-      {/*              boxSizing: 'border-box',*/}
-      {/*              mt: 2.5,*/}
-      {/*            }}>*/}
-      {/*            <Box sx={{ mt: 4, mb: 3 }}>*/}
-      {/*              <Stack direction="row" spacing={2}>*/}
-      {/*                <Stack spacing={0.5}>*/}
-      {/*                  <Typography variant="caption" sx={{ color: 'red' }}>*/}
-      {/*                    Swap NNNNN*/}
-      {/*                  </Typography>*/}
-      {/*                  <FormControl variant="outlined" style={{ width: '120px' }}>*/}
-      {/*                    /!* inactual *!/*/}
-
-      {/*                    <Button*/}
-      {/*                      variant="outlined"*/}
-      {/*                      color="primary"*/}
-      {/*                      sx={{*/}
-      {/*                        height: '57px',*/}
-      {/*                        color: '#fff',*/}
-      {/*                        fontWeight: 500,*/}
-      {/*                        fontSize: '20px',*/}
-      {/*                        // background: (theme) => theme.palette.gradients.custom*/}
-      {/*                      }}*/}
-      {/*                      onClick={() => {*/}
-      {/*                        setcurrencyModal(true);*/}
-      {/*                      }}>*/}
-      {/*                      {TokenFrom}*/}
-      {/*                    </Button>*/}
-      {/*                  </FormControl>*/}
-
-      {/*                  <Modal*/}
-      {/*                    open={currencyModal}*/}
-      {/*                    onClose={handleDismissSearch}*/}
-      {/*                    aria-labelledby="modal-modal-title"*/}
-      {/*                    aria-describedby="modal-modal-description">*/}
-      {/*                    <Box*/}
-      {/*                      sx={{*/}
-      {/*                        marginTop: '2%',*/}
-      {/*                        maxHeight: '520px',*/}
-      {/*                        overflow: 'scroll',*/}
-      {/*                        position: 'absolute',*/}
-      {/*                        top: '45%',*/}
-      {/*                        left: '50%',*/}
-      {/*                        transform: 'translate(-50%, -50%)',*/}
-      {/*                        width: 400,*/}
-      {/*                        bgcolor: 'background.default',*/}
-      {/*                        p: 4,*/}
-      {/*                        borderRadius: '15px',*/}
-      {/*                      }}>*/}
-      {/*                      <Typography variant="h6" align="center" sx={{ color: '#f5f5f5' }}>*/}
-      {/*                        Token List*/}
-      {/*                      </Typography>*/}
-      {/*                      <Divider variant="fullWidth" sx={{ mt: 3 }} />*/}
-      {/*                      {AllTokens.map((object) => (*/}
-      {/*                        <Box>*/}
-      {/*                          <Box*/}
-      {/*                            onClick={() => {*/}
-      {/*                              fromTokenChange(object.symbol);*/}
-      {/*                              setcurrencyModal(false);*/}
-      {/*                            }}*/}
-      {/*                            sx={{*/}
-      {/*                              mt: 1,*/}
-      {/*                              p: 1,*/}
-      {/*                              cursor: 'pointer',*/}
-      {/*                              '&:hover': {*/}
-      {/*                                // background: (theme) => (theme.palette.gradients.custom)*/}
-      {/*                              },*/}
-      {/*                            }}>*/}
-      {/*                            <Stack direction="row" spacing={2}>*/}
-      {/*                              <Box sx={{ marginTop: '5px' }}>*/}
-      {/*                                {object.logoURI !== null ? (*/}
-      {/*                                  <img*/}
-      {/*                                    alt=""*/}
-      {/*                                    width="30"*/}
-      {/*                                    height="30"*/}
-      {/*                                    src={object.logoURI}*/}
-      {/*                                    style={{*/}
-      {/*                                      borderRadius: '50%',*/}
-      {/*                                      backgroundColor: '#e5e5e5',*/}
-      {/*                                    }}*/}
-      {/*                                  />*/}
-      {/*                                ) : (*/}
-      {/*                                  <Avatar*/}
-      {/*                                    style={{*/}
-      {/*                                      display: 'inline',*/}
-      {/*                                      maxWidth: '30px',*/}
-      {/*                                      verticalAlign: 'top',*/}
-      {/*                                      height: '30px',*/}
-      {/*                                      // marginLeft: '11px',*/}
-      {/*                                    }}*/}
-      {/*                                    color={'#737373'}*/}
-      {/*                                    name={object.name}*/}
-      {/*                                    round={true}*/}
-      {/*                                    size="30"*/}
-      {/*                                    textSizeRatio={1}*/}
-      {/*                                  />*/}
-      {/*                                )}*/}
-      {/*                              </Box>*/}
-      {/*                              <Stack direction="column">*/}
-      {/*                                <Typography variant="body1" sx={{ color: '#e3e3e3' }}>*/}
-      {/*                                  {object.symbol}*/}
-      {/*                                </Typography>*/}
-      {/*                                <Typography*/}
-      {/*                                  variant="caption"*/}
-      {/*                                  sx={{*/}
-      {/*                                    color: '#e3e3e3',*/}
-      {/*                                    fontSize: '11px',*/}
-      {/*                                  }}>*/}
-      {/*                                  {object.name}*/}
-      {/*                                </Typography>*/}
-      {/*                              </Stack>*/}
-      {/*                              <Box sx={{ flexGrow: 1 }}></Box>*/}
-      {/*                              <Box sx={{ marginTop: '5px' }}>*/}
-      {/*                                <Typography>*/}
-      {/*                                  {object.balance === undefined ? (*/}
-      {/*                                    <Loader*/}
-      {/*                                      type="Rings"*/}
-      {/*                                      color="#BB86FC"*/}
-      {/*                                      height={30}*/}
-      {/*                                      width={30}*/}
-      {/*                                    />*/}
-      {/*                                  ) : (*/}
-      {/*                                    object.balance*/}
-      {/*                                  )}*/}
-      {/*                                </Typography>*/}
-      {/*                              </Box>*/}
-      {/*                            </Stack>*/}
-      {/*                          </Box>*/}
-      {/*                          /!* <Divider variant='fullWidth' sx={{  }}></Divider> *!/*/}
-      {/*                        </Box>*/}
-      {/*                      ))}*/}
-      {/*                    </Box>*/}
-      {/*                  </Modal>*/}
-      {/*                </Stack>*/}
-      {/*                <Stack spacing={0.5}>*/}
-      {/*                  <Typography variant="caption" sx={{ color: '#0E1214' }}>*/}
-      {/*                    0*/}
-      {/*                  </Typography>*/}
-      {/*                  <TextField*/}
-      {/*                    style={{ backgroundColor: 'red' }}*/}
-      {/*                    variant="outlined"*/}
-      {/*                    id="outlined-basic"*/}
-      {/*                    placeholder="00.00"*/}
-      {/*                    value={TokenFromAmount}*/}
-      {/*                    onChange={(e) => {*/}
-      {/*                      setTokenFromAmount(e.target.value);*/}
-      {/*                      // calculateToAmount(e.target.value);*/}
-      {/*                    }}*/}
-      {/*                  />*/}
-      {/*                </Stack>*/}
-      {/*                <Stack spacing={0.5}>*/}
-      {/*                  <Typography variant="caption" sx={{ color: '#f5f5f5' }}>*/}
-      {/*                    For*/}
-      {/*                  </Typography>*/}
-      {/*                  <FormControl variant="outlined" style={{ width: '120px' }}>*/}
-      {/*                    <Button*/}
-      {/*                      variant="outlined"*/}
-      {/*                      color="primary"*/}
-      {/*                      sx={{*/}
-      {/*                        height: '57px',*/}
-      {/*                        color: '#fff',*/}
-      {/*                        fontWeight: 500,*/}
-      {/*                        fontSize: '20px',*/}
-      {/*                        // background: (theme) => theme.palette.gradients.custom*/}
-      {/*                      }}*/}
-      {/*                      onClick={() => {*/}
-      {/*                        setcurrencyToModal(true);*/}
-      {/*                      }}>*/}
-      {/*                      {TokenTo.symbol === undefined ? 'Select' : TokenTo.symbol}*/}
-      {/*                    </Button>*/}
-      {/*                  </FormControl>*/}
-      {/*                  <Modal*/}
-      {/*                    open={currencyToModal}*/}
-      {/*                    onClose={handleCurrencyToDismissSearch}*/}
-      {/*                    aria-labelledby="modal-modal-title"*/}
-      {/*                    aria-describedby="modal-modal-description">*/}
-      {/*                    <Box*/}
-      {/*                      sx={{*/}
-      {/*                        marginTop: '2%',*/}
-      {/*                        maxHeight: '520px',*/}
-      {/*                        overflow: 'scroll',*/}
-      {/*                        position: 'absolute',*/}
-      {/*                        top: '45%',*/}
-      {/*                        left: '50%',*/}
-      {/*                        transform: 'translate(-50%, -50%)',*/}
-      {/*                        width: 400,*/}
-      {/*                        bgcolor: 'background.default',*/}
-      {/*                        // border: '2px solid #000',*/}
-      {/*                        // boxShadow: 24,*/}
-      {/*                        p: 4,*/}
-      {/*                        borderRadius: '15px',*/}
-      {/*                      }}>*/}
-      {/*                      <Typography variant="h6" align="center" sx={{ color: '#f5f5f5' }}>*/}
-      {/*                        Token List*/}
-      {/*                      </Typography>*/}
-      {/*                      <Divider variant="fullWidth" sx={{ mt: 3 }} />*/}
-      {/*                      {toTokens.map((object) => (*/}
-      {/*                        <Box>*/}
-      {/*                          <Box*/}
-      {/*                            onClick={() => {*/}
-      {/*                              ToTokenChange(object);*/}
-      {/*                              setcurrencyToModal(false);*/}
-      {/*                            }}*/}
-      {/*                            sx={{*/}
-      {/*                              mt: 1,*/}
-      {/*                              p: 1,*/}
-      {/*                              cursor: 'pointer',*/}
-      {/*                              '&:hover': {*/}
-      {/*                                // background: (theme) => (theme.palette.gradients.custom)*/}
-      {/*                              },*/}
-      {/*                            }}>*/}
-      {/*                            <Stack direction="row" spacing={2}>*/}
-      {/*                              <Box sx={{ marginTop: '5px' }}>*/}
-      {/*                                {object.logoURI !== null ? (*/}
-      {/*                                  <img*/}
-      {/*                                    alt=""*/}
-      {/*                                    width="30"*/}
-      {/*                                    height="30"*/}
-      {/*                                    src={object.logoURI}></img>*/}
-      {/*                                ) : (*/}
-      {/*                                  <Avatar*/}
-      {/*                                    style={{*/}
-      {/*                                      display: 'inline',*/}
-      {/*                                      maxWidth: '30px',*/}
-      {/*                                      verticalAlign: 'top',*/}
-      {/*                                      height: '30px',*/}
-      {/*                                      // marginLeft: '11px',*/}
-      {/*                                    }}*/}
-      {/*                                    color={'#737373'}*/}
-      {/*                                    name={object.name}*/}
-      {/*                                    round={true}*/}
-      {/*                                    size="30"*/}
-      {/*                                    textSizeRatio={1}*/}
-      {/*                                  />*/}
-      {/*                                )}*/}
-      {/*                              </Box>*/}
-      {/*                              <Stack direction="column">*/}
-      {/*                                <Typography variant="body1" sx={{ color: '#e3e3e3' }}>*/}
-      {/*                                  {object.symbol}*/}
-      {/*                                </Typography>*/}
-      {/*                                <Typography*/}
-      {/*                                  variant="caption"*/}
-      {/*                                  sx={{*/}
-      {/*                                    color: '#e3e3e3',*/}
-      {/*                                    fontSize: '11px',*/}
-      {/*                                  }}>*/}
-      {/*                                  {object.name}*/}
-      {/*                                </Typography>*/}
-      {/*                              </Stack>*/}
-      {/*                            </Stack>*/}
-      {/*                          </Box>*/}
-      {/*                        </Box>*/}
-      {/*                      ))}*/}
-      {/*                    </Box>*/}
-      {/*                  </Modal>*/}
-      {/*                </Stack>*/}
-      {/*                <Stack spacing={0.5}>*/}
-      {/*                  <Typography variant="caption" sx={{ color: '#0E1214' }}>*/}
-      {/*                    0*/}
-      {/*                  </Typography>*/}
-      {/*                  <TextField*/}
-      {/*                    variant="outlined"*/}
-      {/*                    id="outlined-basic"*/}
-      {/*                    placeholder="00.00"*/}
-      {/*                    value={*/}
-      {/*                      selectedRate !== null && protocolsRateList.length > 0*/}
-      {/*                        ? selectedRate.TokenToAmount*/}
-      {/*                        : '00.00'*/}
-      {/*                    }*/}
-      {/*                    onChange={(e) => {*/}
-      {/*                      setTokenToAmount(e.target.value);*/}
-      {/*                    }}*/}
-      {/*                    disabled></TextField>*/}
-      {/*                </Stack>*/}
-      {/*              </Stack>*/}
-      {/*              {selectedRate !== null && protocolsRateList.length === 0 ? (*/}
-      {/*                <Typography variant="caption" sx={{ color: '#FFC107' }}>*/}
-      {/*                  This Index is yet not supported*/}
-      {/*                </Typography>*/}
-      {/*              ) : (*/}
-      {/*                <></>*/}
-      {/*              )}*/}
-      {/*              /!* <Stack direction='row' sx={{ mt: 2 }}>*/}
-      {/*                          {Sources.map((object) =>*/}
-      {/*                              <div>*/}
-      {/*                                  <Button variant='contained' color='primary' disabled size='small' sx={{fontSize:'10px'}}>*/}
-      {/*                                      {(parseFloat(object.proportion) * 100).toFixed(2)}% {object.name}*/}
-      {/*                                  </Button>*/}
-      {/*                                  <FaAngleRight style={{ paddingTop: '6px', marginLeft: '1px', color: '#737373' }} />*/}
-      {/*                              </div>*/}
-      {/*                          )}*/}
-      {/*                      </Stack> *!/*/}
-      {/*              <Typography variant="body1" sx={{ color: '#737373', mt: 2.5 }}>*/}
-      {/*                Transaction Settings*/}
-      {/*              </Typography>*/}
-      {/*              <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>*/}
-      {/*                <Typography variant="body2" sx={{ color: '#f5f5f5' }}>*/}
-      {/*                  Slippage*/}
-      {/*                </Typography>*/}
-      {/*                <Divider*/}
-      {/*                  sx={{*/}
-      {/*                    flexGrow: 1,*/}
-      {/*                    border: '0.5px dashed rgba(255, 255, 255, 0.3)',*/}
-      {/*                    height: '0px',*/}
-      {/*                  }}*/}
-      {/*                  style={{ marginTop: '10px' }}*/}
-      {/*                />*/}
-      {/*                /!* <TextField variant='outlined'*/}
-      {/*                              required*/}
-      {/*                              id="outlined-basic"*/}
-      {/*                              size='small'*/}
-      {/*                              style={{ marginTop: '-7px', width: '12%' }}*/}
-      {/*                              value={Slippage} onChange={(e) => { setSlippage(e.target.value) }}*/}
-      {/*                              endAdornment={<InputAdornment position="end" sx={{color:'red'}}>%K</InputAdornment>}>*/}
-      {/*                          </TextField> *!/*/}
-      {/*                <OutlinedInput*/}
-      {/*                  id="outlined-adornment-weight"*/}
-      {/*                  value={Slippage}*/}
-      {/*                  onChange={(e) => {*/}
-      {/*                    setSlippage(e.target.value);*/}
-      {/*                  }}*/}
-      {/*                  size="small"*/}
-      {/*                  style={{ marginTop: '-7px', width: '12%' }}*/}
-      {/*                  endAdornment={<InputAdornment position="end">%</InputAdornment>}*/}
-      {/*                  aria-describedby="outlined-weight-helper-text"*/}
-      {/*                  inputProps={{*/}
-      {/*                    'aria-label': 'weight',*/}
-      {/*                  }}*/}
-      {/*                />*/}
-      {/*              </Stack>*/}
-      {/*              /!* {protocolsRateList.length > 0 &&*/}
-      {/*                          <Stack direction='row' spacing={1} sx={{ mt: 1.5 }}>*/}
-      {/*                              <Typography variant='body2' sx={{ color: '#f5f5f5' }}>Offered By</Typography>*/}
-      {/*                              <Divider sx={{ flexGrow: 1, border: "0.5px dashed rgba(255, 255, 255, 0.3)", height: '0px' }} style={{ marginTop: '10px' }} />*/}
-      {/*                              <Button onClick={handleOpen} sx={{ height: '20px' }}>{selectedRate.name}</Button>*/}
-      {/*                              <Modal*/}
-      {/*                                  open={open}*/}
-      {/*                                  onClose={handleClose}*/}
-      {/*                                  aria-labelledby="modal-modal-title"*/}
-      {/*                                  aria-describedby="modal-modal-description"*/}
-      {/*                              >*/}
-      {/*                                  <Box sx={style}>*/}
-      {/*                                      <Typography variant='h6' align='center' sx={{ color: '#f5f5f5' }}>Offered By</Typography>*/}
-      {/*                                      <Divider variant='fullWidth' sx={{ mt: 3 }}></Divider>*/}
-      {/*                                      <Box>*/}
-      {/*                                          <Stack direction='row' spacing={6} sx={{ mt: 2 }}>*/}
-      {/*                                              <Typography variant='caption' sx={{ color: '#737373' }}>Receive</Typography>*/}
-      {/*                                              <Typography variant='caption' sx={{ color: '#737373' }}>Network Fee</Typography>*/}
-      {/*                                          </Stack>*/}
-      {/*                                      </Box>*/}
-      {/*                                      {protocolsRateList.map((object) => (*/}
-      {/*                                          (object.name === selectedExchangeName ?*/}
-      {/*                                              <Box onClick={() => newRateSelected(object)} sx={{ border: '1px solid #BB86FC', borderRadius: '7px', mt: 1, p: 1, cursor: 'pointer' }}>*/}
-      {/*                                                  <Stack direction='row' spacing={2}>*/}
-      {/*                                                      <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.receivedValueInDollar}</Typography>*/}
-      {/*                                                      <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.gas}</Typography>*/}
-      {/*                                                      <Box sx={{ flexGrow: 1 }}></Box>*/}
-
-      {/*                                                      <Tooltip title={object.name}>*/}
-      {/*                                                          {object.name === 'Balancer' ? <img alt="" width="21" height="20" src={Balancer} ></img> : object.name === '0x Index' ? <img alt="" width="21" height="20" src={object.image} style={{ filter: 'invert(1)' }} ></img> : <img alt="" width="21" height="20" src={object.image} ></img>}*/}
-      {/*                                                      </Tooltip>*/}
-      {/*                                                  </Stack>*/}
-      {/*                                              </Box> :*/}
-      {/*                                              <Box onClick={() => newRateSelected(object)} sx={{ border: '1px solid #737373', borderRadius: '7px', mt: 1, p: 1, cursor: 'pointer' }}>*/}
-      {/*                                                  <Stack direction='row' spacing={2}>*/}
-      {/*                                                      <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.receivedValueInDollar}</Typography>*/}
-      {/*                                                      <Typography variant='body1' sx={{ color: '#e3e3e3' }}>${object.gas}</Typography>*/}
-      {/*                                                      <Box sx={{ flexGrow: 1 }}></Box>*/}
-
-      {/*                                                      <Tooltip title={object.name}>*/}
-      {/*                                                          {object.name === 'Balancer' ? <img alt="" width="21" height="20" src={Balancer} ></img> : object.name === '0x Index' ? <img alt="" width="21" height="20" src={object.image} style={{ filter: 'invert(1)' }} ></img> : <img alt="" width="21" height="20" src={object.image} ></img>}*/}
-      {/*                                                      </Tooltip>*/}
-      {/*                                                  </Stack>*/}
-      {/*                                              </Box>)*/}
-      {/*                                      ))}*/}
-      {/*                                      <Box sx={{ marginLeft: '30%' }}>*/}
-      {/*                                          <Button onClick={updateSelectedRate} variant='outlined' sx={{ mt: 2 }} >Save for This Trade</Button>*/}
-      {/*                                      </Box>*/}
-      {/*                                  </Box>*/}
-      {/*                              </Modal>*/}
-      {/*                                          </Stack>} *!/*/}
-      {/*              <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>*/}
-      {/*                <Typography variant="body2" sx={{ color: '#f5f5f5' }}>*/}
-      {/*                  Min. output*/}
-      {/*                </Typography>*/}
-      {/*                <Divider*/}
-      {/*                  sx={{*/}
-      {/*                    flexGrow: 1,*/}
-      {/*                    border: '0.5px dashed rgba(255, 255, 255, 0.3)',*/}
-      {/*                    height: '0px',*/}
-      {/*                  }}*/}
-      {/*                  style={{ marginTop: '10px' }}*/}
-      {/*                />*/}
-      {/*                <Typography variant="body2">*/}
-      {/*                  {selectedRate !== null && protocolsRateList.length > 0*/}
-      {/*                    ? (*/}
-      {/*                        parseFloat(TokenFromAmount) * parseFloat(selectedRate.minPrice)*/}
-      {/*                      ).toFixed(2)*/}
-      {/*                    : '00.00'}*/}
-      {/*                  {TokenTo !== '' ? TokenTo.symbol : ''}*/}
-      {/*                </Typography>*/}
-      {/*              </Stack>*/}
-      {/*              <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>*/}
-      {/*                <Typography variant="body2" sx={{ color: '#f5f5f5' }}>*/}
-      {/*                  Rate*/}
-      {/*                </Typography>*/}
-      {/*                <Divider*/}
-      {/*                  sx={{*/}
-      {/*                    flexGrow: 1,*/}
-      {/*                    border: '0.5px dashed rgba(255, 255, 255, 0.3)',*/}
-      {/*                    height: '0px',*/}
-      {/*                  }}*/}
-      {/*                  style={{ marginTop: '10px' }}*/}
-      {/*                />*/}
-      {/*                <Typography variant="body2">*/}
-      {/*                  {' '}*/}
-      {/*                  1 {TokenFrom} ={' '}*/}
-      {/*                  {selectedRate !== null && protocolsRateList.length > 0*/}
-      {/*                    ? parseFloat(selectedRate.price).toFixed(2)*/}
-      {/*                    : '00.00'}{' '}*/}
-      {/*                  {TokenTo !== '' ? TokenTo.symbol : ''}*/}
-      {/*                </Typography>*/}
-      {/*              </Stack>*/}
-      {/*            </Box>*/}
-      {/*          </Container>*/}
-      {/*          {txSuccess && (*/}
-      {/*            <Typography variant="caption" sx={{ color: '#54D62C' }}>*/}
-      {/*              Swap is done Successfully*/}
-      {/*            </Typography>*/}
-      {/*          )}*/}
-      {/*          {txFailure && (*/}
-      {/*            <Typography variant="caption" sx={{ color: '#FF4842' }}>*/}
-      {/*              Swap is Failed*/}
-      {/*            </Typography>*/}
-      {/*          )}*/}
-      {/*          <TransparentButton*/}
-      {/*            value="Submit"*/}
-      {/*            onClick={transact}*/}
-      {/*            style={{*/}
-      {/*              height: '45px',*/}
-      {/*              width: '200px',*/}
-      {/*              background: 'transparent',*/}
-      {/*              borderWidth: '2px',*/}
-      {/*              borderStyle: 'solid',*/}
-      {/*              borderColor: '#3b2959',*/}
-      {/*              borderRadius: '5px',*/}
-      {/*              color: 'white',*/}
-      {/*              cursor: 'pointer',*/}
-      {/*              float: 'right',*/}
-      {/*              marginTop: '20px',*/}
-      {/*            }}></TransparentButton>{' '}*/}
-      {/*          <br />*/}
-      {/*          <br /> &nbsp;*/}
-      {/*        </Container>*/}
-      {/*      </Grid>*/}
-      {/*    </Grid>*/}
-      {/*  </TabPanel>*/}
-      {/*  <TabPanel value={value} index={1}>*/}
-      {/*    <NukeExchange />*/}
-      {/*  </TabPanel>*/}
-      {/*</Box>*/}
     </>
   );
 }

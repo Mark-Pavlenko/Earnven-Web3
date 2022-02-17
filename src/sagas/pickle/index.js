@@ -22,5 +22,7 @@ export function* getpickleDillSagaWatcher() {
 function* pickleDillworker(data) {
   const attributes = data.payload;
   const lp = yield call(API_LP.fetchBalanceDill, attributes);
-  yield put(actions.setpickleDill(lp));
+  if (parseFloat(lp[0].balance) != 0) {
+    yield put(actions.setpickleDill(lp));
+  }
 }

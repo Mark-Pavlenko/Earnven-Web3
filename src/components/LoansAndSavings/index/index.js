@@ -17,13 +17,20 @@ import SushiSwapLogo from '../../../assets/icons/Sushiswap.webp';
 import ETHLogo from '../../../assets/icons/eth.png';
 import CurveLogo from '../../../assets/icons/curveLogo.png';
 import aaveLogo from '../../../assets/icons/aave-logo.svg';
+import SnowSwapLogo from '../../../assets/icons/snowswap-snow-logo.svg';
+import BalancerLogo from '../../../assets/icons/balancer.png';
+import pickleLogo from '../../../assets/icons/pickle_finance_logo.webp';
 import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
-import Ethereum2Staking from '../Ethereum2Staking';
-import CurveFarming from '../CurveFarming';
-import AaveStaking from '../AaveStaking';
-import Synthetix from '../Synthetix';
+// import Ethereum2Staking from '../Ethereum2Staking';
+// import CurveFarming from '../CurveFarming';
+// import AaveStaking from '../AaveStaking';
+// import Synthetix from '../Synthetix';
 //import UniswapV2 from '../LiqudityPools/UniswapV2';
 //import ConvexStaking from '../ConvexStaking';
+//import { SnowSwapStaking } from '../SnowSwapStaking';
+import Cream from '../Cream';
+import CreamIronBank from '../CreamIronBankSavings';
+//import BalancerV2 from '../LiqudityPools/BalancerV2';
 
 export default function index({ accountAddress }) {
   //save conditions of open/close investment blocks
@@ -117,11 +124,25 @@ export default function index({ accountAddress }) {
   const convexImageUrl =
     'https://assets.coingecko.com/coins/images/15585/thumb/convex.png?1621256328';
 
+  //SnowSwap token
+  const snowSwapData = useSelector((state) => state.snowSwap.snowSwanData);
+  const snowSwapTotal = useSelector((state) => state.snowSwap.snowSwapTotal);
+
+  //CreamIronBank
+  const creamIronBankData = useSelector((state) => state.creamIronBank.creamIronBankData);
+  const creamIronBankTotal = useSelector((state) => state.creamIronBank.creamIronBankTotal);
+  const creamImageUrl =
+    'https://assets.coingecko.com/coins/images/11976/thumb/Cream.png?1596593418';
+
+  //balancer V2
+  //balancerV2
+  const balancerV2lp = useSelector((state) => state.balancerV2lp.balancerV2lp); //saga
+  const balancerV2tot = useSelector((state) => state.balancerV2lp.balancerV2tot); //don't put to redux separately. Needs to take from object
   //pickle
   // const pickeStake = useSelector((state) => state.pickeStake.pickeStake); //saga
   // const pickleStakeTotal = useSelector((state) => state.pickeStake.pickleStakeTotal); //saga
-  // const pickeDill = useSelector((state) => state.pickeDill.pickeDill); //saga
-  // const pickeDillTotal = useSelector((state) => state.pickeDill.pickeDillTotal); //saga
+  const pickeDill = useSelector((state) => state.pickeDill.pickeDill); //saga
+  const pickeDillTotal = useSelector((state) => state.pickeDill.pickeDillTotal); //saga
 
   //uniswap (need to get total value from the object and put in redux separately)
   // const uniswapV2array = useSelector((state) => state.uniswapV2stake.uniswapV2stake); //saga (incorrect data structure. Work over appropriate look)
@@ -148,7 +169,11 @@ export default function index({ accountAddress }) {
       <PoolsBlock //first
         isLightTheme={theme}
         style={{
-          display: SushiPoolsData.length > 0 || curveLpToken.length > 0,
+          display:
+            SushiPoolsData.length > 0 ||
+            curveLpToken.length > 0 ||
+            snowSwapData.length > 0 ||
+            liquityTokenData.length > 0,
         }}>
         <Header>
           <Title isLightTheme={theme}>{'Liquidity pools'}</Title>
@@ -160,7 +185,11 @@ export default function index({ accountAddress }) {
             <TotalValue isLightTheme={theme}>
               $
               {numberWithCommas(
-                parseFloat(parseFloat(SushiV2Total) + parseFloat(curveLpTokenTotal)).toFixed(2)
+                parseFloat(
+                  parseFloat(SushiV2Total) +
+                    parseFloat(curveLpTokenTotal) +
+                    parseFloat(balancerV2tot)
+                ).toFixed(2)
               )}
             </TotalValue>
           </TotalValueField>
@@ -224,6 +253,91 @@ export default function index({ accountAddress }) {
               </>
             ) : (
               ''
+            )}{' '}
+            {/* SnowSwap protocol */}
+            {snowSwapData.length > 0 ? (
+              <React.Fragment>
+                <img
+                  src={SnowSwapLogo}
+                  style={{
+                    height: '20px',
+                    marginTop: '',
+                    marginLeft: '15px',
+                    display: 'inline-block',
+                  }}
+                  alt=""
+                />
+                SnowSwap
+                {snowSwapData
+                  ? snowSwapData.map((object) => {
+                      return (
+                        <Investment
+                          protocol={object}
+                          protocolName={'SnowSwap'}
+                          logoImage={SnowSwapLogo}
+                        />
+                      );
+                    })
+                  : ''}
+              </React.Fragment>
+            ) : (
+              ''
+            )}
+            {/*liquityTokenData/*/}
+            {liquityTokenData.length > 0 ? (
+              <React.Fragment>
+                <img
+                  src={liquityImageUrl}
+                  style={{
+                    height: '20px',
+                    marginTop: '',
+                    marginLeft: '15px',
+                    display: 'inline-block',
+                  }}
+                  alt=""
+                />
+                Liquity
+                {liquityTokenData
+                  ? liquityTokenData.map((object) => {
+                      return (
+                        <Investment
+                          protocol={object}
+                          protocolName={'Liquity'}
+                          logoImage={object.tokenImage}
+                        />
+                      );
+                    })
+                  : ''}
+              </React.Fragment>
+            ) : (
+              ''
+            )}
+            {/* BalancerV2  */}
+            {balancerV2lp.length > 0 ? (
+              <>
+                <img
+                  src={BalancerLogo}
+                  style={{
+                    height: '20px',
+                    marginTop: '',
+                    marginLeft: '15px',
+                    display: 'inline-block',
+                  }}
+                  alt=""
+                />
+                Balancer V2
+                {balancerV2lp.map((object) => {
+                  return (
+                    <Investment
+                      protocol={object}
+                      protocolName={'BalancerV2'}
+                      logoImage={object.imageData}
+                    />
+                  );
+                })}
+              </>
+            ) : (
+              ''
             )}
           </React.Fragment>
         )}
@@ -237,7 +351,8 @@ export default function index({ accountAddress }) {
             eth2StakeData.length > 0 ||
             CrvStakingTokenData.length > 0 ||
             AaveStakingData.length > 0 ||
-            convexStakeData.length > 0,
+            convexStakeData.length > 0 ||
+            creamIronBankData.length > 0,
         }}>
         <Header>
           <Title isLightTheme={theme}>{'Saving/Loans'}</Title>
@@ -255,7 +370,8 @@ export default function index({ accountAddress }) {
                     parseFloat(CrvStakingTokenTotal) +
                     parseFloat(eth2StakeTotal) +
                     parseFloat(compTotalValue) +
-                    parseFloat(convexStakeTotal)
+                    parseFloat(convexStakeTotal) +
+                    parseFloat(creamIronBankTotal)
                 ).toFixed(2)
               )}
             </TotalValue>
@@ -424,6 +540,35 @@ export default function index({ accountAddress }) {
         ) : (
           ''
         )}
+        {/* CreamIronBank Protocol */}
+        {creamIronBankData.length > 0 ? (
+          <React.Fragment>
+            <img
+              src={creamImageUrl}
+              style={{
+                height: '20px',
+                marginTop: '',
+                marginLeft: '15px',
+                display: 'inline-block',
+              }}
+              alt=""
+            />
+            CreamIronBank
+            {creamIronBankData
+              ? creamIronBankData.map((object) => {
+                  return (
+                    <Investment
+                      protocol={object}
+                      protocolName={'Cream Iron Bank'}
+                      logoImage={object.tokenImage}
+                    />
+                  );
+                })
+              : ''}
+          </React.Fragment>
+        ) : (
+          ''
+        )}
       </PoolsBlock>
       {/*==============================Vaults==============================>*/}
       <PoolsBlock //four - Vaults
@@ -435,7 +580,8 @@ export default function index({ accountAddress }) {
             YearnTokenData.length > 0 ||
             curveToken.length > 0 ||
             snxTokenData.length > 0 ||
-            snxCollateralData.length > 0,
+            snxCollateralData.length > 0 ||
+            pickeDill.length > 0,
         }}>
         <Header>
           <Title isLightTheme={theme}>{'Vaults'}</Title>
@@ -454,7 +600,8 @@ export default function index({ accountAddress }) {
                     parseFloat(olympusTokenTotal) +
                     parseFloat(curveTokenTotal) +
                     parseFloat(snxTokenTotal) +
-                    parseFloat(snxCollateralTotal)
+                    parseFloat(snxCollateralTotal) +
+                    parseFloat(pickeDillTotal > 0 ? pickeDillTotal : 0)
                 ).toFixed(2)
               )}
             </TotalValue>
@@ -583,35 +730,11 @@ export default function index({ accountAddress }) {
             ) : (
               ''
             )}
-          </React.Fragment>
-        )}
-      </PoolsBlock>
-      {/*==================================Yield Farming======================================>*/}
-      <PoolsBlock //third
-        isLightTheme={theme}
-        style={{
-          display: liquityTokenData.length > 0 ? '' : 'none',
-        }}>
-        <Header>
-          <Title isLightTheme={theme}>{'Yield Farming'}</Title>
-          <ToggleButton onClick={farmingHandler} isOpen={isFarmingOpen} />
-        </Header>
-        <div style={{ padding: '0 29px 20px 26px', marginBottom: '20px' }}>
-          <TotalValueField isLightTheme={theme}>
-            <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
-            {/*<TotalEmptyCell></TotalEmptyCell>*/}
-            <TotalValue isLightTheme={theme}>
-              ${numberWithCommas(parseFloat(liquityTokenTotal).toFixed(2))}
-            </TotalValue>
-          </TotalValueField>
-        </div>
-        {isFarmingOpen && (
-          <React.Fragment>
-            {/*liquityTokenData/*/}
-            {liquityTokenData.length > 0 ? (
+            {/*Pickle Dill */}
+            {pickeDill.length > 0 ? (
               <React.Fragment>
                 <img
-                  src={liquityImageUrl}
+                  src={pickleLogo}
                   style={{
                     height: '20px',
                     marginTop: '',
@@ -620,14 +743,14 @@ export default function index({ accountAddress }) {
                   }}
                   alt=""
                 />
-                Liquity
-                {liquityTokenData
-                  ? liquityTokenData.map((object) => {
+                Pickle Dill
+                {pickeDill
+                  ? pickeDill.map((object) => {
                       return (
                         <Investment
                           protocol={object}
-                          protocolName={'Liquity'}
-                          logoImage={object.tokenImage}
+                          protocolName={'Pickle Dill'}
+                          logoImage={pickleLogo}
                         />
                       );
                     })
@@ -638,6 +761,30 @@ export default function index({ accountAddress }) {
             )}
           </React.Fragment>
         )}
+      </PoolsBlock>
+      {/*==================================Yield Farming======================================>*/}
+      <PoolsBlock //third
+        isLightTheme={theme}
+        style={{
+          display: snowSwapData.length > 0,
+        }}>
+        <Header>
+          <Title isLightTheme={theme}>{'Yield Farming'}</Title>
+          <ToggleButton onClick={farmingHandler} isOpen={isFarmingOpen} />
+        </Header>
+        <div style={{ padding: '0 29px 20px 26px', marginBottom: '20px' }}>
+          <TotalValueField isLightTheme={theme}>
+            <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
+            {/*<TotalEmptyCell></TotalEmptyCell>*/}
+            <TotalValue isLightTheme={theme}>
+              $
+              {numberWithCommas(
+                parseFloat(parseFloat(liquityTokenTotal) + parseFloat(snowSwapTotal)).toFixed(2)
+              )}
+            </TotalValue>
+          </TotalValueField>
+        </div>
+        {isFarmingOpen && <React.Fragment></React.Fragment>}
       </PoolsBlock>
     </InvestmentWrapper>
   );

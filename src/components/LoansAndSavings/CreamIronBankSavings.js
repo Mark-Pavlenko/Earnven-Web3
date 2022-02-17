@@ -17,140 +17,63 @@ import ApiUrl from '../../apiUrls';
 import Investment from '../common/investment/investment';
 import { useDispatch } from 'react-redux';
 import { setCreamIronBankTotal } from '../../store/creamIronBank/actions';
+import { ethers } from 'ethers';
+import { useWeb3React } from '@web3-react/core';
+import actionTypes from '../../constants/actionTypes';
 
 export default function CreamIronBank({ accountAddress, getTotal }) {
   const dispatch = useDispatch();
-  const [TotalSavings, setTotalSavings] = useState(0);
-  const [CreamUSDT, setCreamUSDT] = useState({});
-  const [CreamDAI, setCreamDAI] = useState({});
-  const [CreamUSDC, setCreamUSDC] = useState({});
-  const [CreamWETH, setCreamWETH] = useState({});
-  const [CreamLINK, setCreamLINK] = useState({});
-  const [CreamUNI, setCreamUNI] = useState({});
-  const [CreamSUSHI, setCreamSUSHI] = useState({});
-  const [CreamCRV, setCreamCRV] = useState({});
-  const [Creamv2, setCreamv2] = useState({});
-  const [CreamYFI, setCreamYFI] = useState({});
-  const [CreamSNX, setCreamSNX] = useState({});
-  const [CreamWBTC, setCreamWBTC] = useState({});
-  const [CreamSUSD, setCreamSUSD] = useState({});
-  const [CreamMUSD, setCreamMUSD] = useState({});
-  const [CreamEURS, setCreamEURS] = useState({});
-  const [CreamSEUR, setCreamSEUR] = useState({});
-  const [CreamDPI, setCreamDPI] = useState({});
-  const [CreamAAVE, setCreamAAVE] = useState({});
-  const [CreamMIM, setCreamMIM] = useState({});
-  const [CreamZAR, setCreamZAR] = useState({});
-  const tokensArray = [
-    CreamUSDT,
-    CreamDAI,
-    CreamUSDC,
-    CreamWETH,
-    CreamLINK,
-    CreamUNI,
-    CreamSUSHI,
-    CreamCRV,
-    Creamv2,
-    CreamYFI,
-    CreamSNX,
-    CreamWBTC,
-    CreamSUSD,
-    CreamMUSD,
-    CreamEURS,
-    CreamSEUR,
-    CreamDPI,
-    CreamAAVE,
-    CreamMIM,
-  ];
-  const filteredTokensArray = tokensArray.filter((el) => el.totalValue > 0);
-  const numberWithCommas = (x) => {
-    x = x.toString();
-    var pattern = /(-?\d+)(\d{3})/;
-    while (pattern.test(x)) x = x.replace(pattern, '$1,$2');
-    return x;
-  };
-  async function loadWeb3() {
-    if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum);
-      await window.ethereum.enable();
-    } else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider);
-    } else {
-      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
-    }
+  const { account, activate, active, chainId, connector, deactivate, error, provider, setError } =
+    useWeb3React();
+  //logic implementing for web3 provider connection using web3 React hook
+  async function getWeb3() {
+    const provider = active ? await connector.getProvider() : ethers.getDefaultProvider();
+    const web3 = new Web3(provider);
+    return web3;
   }
+
+  useEffect(() => {
+    const getCreamIronBankData = async () => {
+      const web3 = await getWeb3();
+
+      const creamIronAttributes = { accountAddress: accountAddress, web3: web3 };
+      try {
+        dispatch({
+          type: actionTypes.SET_CREAM_IRON_DATA,
+          payload: creamIronAttributes,
+        });
+      } catch (error) {
+        console.log('Dispatch error on Cream Iron Staking process error', error.message);
+      }
+    };
+    getCreamIronBankData();
+  }, [accountAddress]);
 
   async function checkCreamData(
     accountAddress,
     CreamABI,
     CreamIronBankAddress,
-    coingecko_contract_address,
-    setToken
+    coingecko_contract_address
   ) {
-    await loadWeb3();
-    const { web3 } = window;
+    const web3 = await getWeb3();
     const IronBankContract = new web3.eth.Contract(CreamABI, CreamIronBankAddress);
     const IronBankAmount = await IronBankContract.methods.balanceOf(accountAddress).call();
     const CreamSymbol = await IronBankContract.methods.symbol().call();
     const CreamDecimal = await IronBankContract.methods.decimals().call();
     const CreamTokenName = await IronBankContract.methods.name().call();
     let decimals;
-    switch (CreamSymbol) {
-      case 'cyUSDT':
-        decimals = 10 ** 10;
-        break;
-      case 'cyDAI':
-        decimals = 10 ** 10;
-        break;
-      case 'cyLINK':
-        decimals = 10 ** 14;
-        break;
-      case 'cyYFI':
-        decimals = 10 ** 13;
-        break;
-      default:
-        decimals = 10 ** 10;
-    }
-    const tokenAmount = IronBankAmount / decimals;
+
+    const tokenAmount = IronBankAmount / CreamDecimal;
     if (tokenAmount > 0) {
       await axios
         .get(`${coingecko_contract_address}`, {}, {})
         .then(async ({ data }) => {
           const tokenPrice = data.market_data.current_price.usd;
           const IronBankUSDPrice = (tokenAmount * tokenPrice).toFixed(2);
-          if (IronBankUSDPrice > 0) {
-            setToken({
-              tokenName: CreamTokenName,
-              symbol: CreamSymbol,
-              totalValue: parseFloat(IronBankUSDPrice),
-              image: data.image.thumb,
-              price: tokenPrice,
-              balance: tokenAmount,
-              protocol: 'Cream Iron Bank',
-              chain: 'Ethereum',
-            });
-          } else {
-            setToken({
-              tokenName: '',
-              symbol: '',
-              totalValue: 0,
-              image: '',
-              price: 0,
-              balance: 0,
-              protocol: '',
-            });
-          }
         })
         .catch((err) => {
           console.log('Error Message message', err);
         });
-    } else {
-      setToken({
-        tokenName: '',
-        symbol: '',
-        totalValue: 0,
-        image: '',
-      });
     }
   }
 
@@ -159,169 +82,53 @@ export default function CreamIronBank({ accountAddress, getTotal }) {
       accountAddress,
       CreamABI,
       CreamIronBankAddress,
-      coingecko_contract_address,
-      setToken
+      coingecko_contract_address
     ) {
       const CreamAmount = await checkCreamData(
         accountAddress,
         CreamABI,
         CreamIronBankAddress,
-        coingecko_contract_address,
-        setToken
+        coingecko_contract_address
       );
     }
     // USDT
-    getCreamData(
-      accountAddress,
-      CreamIronBankContract,
-      Addresses.CreamCRUSDT,
-      ApiUrl.USDT,
-      setCreamUSDT
-    );
+    getCreamData(accountAddress, CreamIronBankContract, Addresses.CreamCRUSDT, ApiUrl.USDT);
     // DAI
-    getCreamData(
-      accountAddress,
-      CreamIronBankContract,
-      Addresses.CreamCRDAI,
-      ApiUrl.DAI,
-      setCreamDAI
-    );
+    getCreamData(accountAddress, CreamIronBankContract, Addresses.CreamCRDAI, ApiUrl.DAI);
     // USDC
-    getCreamData(
-      accountAddress,
-      CreamIronBankContract,
-      Addresses.CreamCRUSDC,
-      ApiUrl.USDC,
-      setCreamUSDC
-    );
+    getCreamData(accountAddress, CreamIronBankContract, Addresses.CreamCRUSDC, ApiUrl.USDC);
     // WETH
-    getCreamData(
-      accountAddress,
-      CreamIronBankContract,
-      Addresses.CreamCWETH,
-      ApiUrl.ETH,
-      setCreamWETH
-    );
+    getCreamData(accountAddress, CreamIronBankContract, Addresses.CreamCWETH, ApiUrl.ETH);
     // LINK
-    getCreamData(
-      accountAddress,
-      CreamIronBankContract,
-      Addresses.CreamCLINK,
-      ApiUrl.LINK,
-      setCreamLINK
-    );
+    getCreamData(accountAddress, CreamIronBankContract, Addresses.CreamCLINK, ApiUrl.LINK);
     // CRV
-    getCreamData(
-      accountAddress,
-      CreamIronBankContract,
-      Addresses.CreamCCRV,
-      ApiUrl.CRV,
-      setCreamCRV
-    );
+    getCreamData(accountAddress, CreamIronBankContract, Addresses.CreamCCRV, ApiUrl.CRV);
     // CREAM
-    getCreamData(
-      accountAddress,
-      CreamIronBankContract,
-      Addresses.CreamCCream,
-      ApiUrl.CREAM,
-      setCreamv2
-    );
+    getCreamData(accountAddress, CreamIronBankContract, Addresses.CreamCCream, ApiUrl.CREAM);
     // UNI
-    getCreamData(
-      accountAddress,
-      CreamIronBankContract,
-      Addresses.CreamCUNI,
-      ApiUrl.UNI,
-      setCreamUNI
-    );
+    getCreamData(accountAddress, CreamIronBankContract, Addresses.CreamCUNI, ApiUrl.UNI);
     // SUSHI
-    getCreamData(
-      accountAddress,
-      CreamIronBankContract,
-      Addresses.CreamCSUSHI,
-      ApiUrl.SUSHI,
-      setCreamSUSHI
-    );
+    getCreamData(accountAddress, CreamIronBankContract, Addresses.CreamCSUSHI, ApiUrl.SUSHI);
     // YFI
-    getCreamData(
-      accountAddress,
-      CreamIronBankContract,
-      Addresses.CreamCYFI,
-      ApiUrl.YFI,
-      setCreamYFI
-    );
+    getCreamData(accountAddress, CreamIronBankContract, Addresses.CreamCYFI, ApiUrl.YFI);
     // SNX
-    getCreamData(
-      accountAddress,
-      CreamIronBankContract,
-      Addresses.CreamCSNX,
-      ApiUrl.SNX,
-      setCreamSNX
-    );
+    getCreamData(accountAddress, CreamIronBankContract, Addresses.CreamCSNX, ApiUrl.SNX);
     // WBTC
-    getCreamData(
-      accountAddress,
-      CreamIronBankContract,
-      Addresses.CreamCWBTC,
-      ApiUrl.WBTC,
-      setCreamWBTC
-    );
+    getCreamData(accountAddress, CreamIronBankContract, Addresses.CreamCWBTC, ApiUrl.WBTC);
     // SUSD
-    getCreamData(
-      accountAddress,
-      CreamIronBankContract,
-      Addresses.CreamCSUSD,
-      ApiUrl.SUSD,
-      setCreamSUSD
-    );
+    getCreamData(accountAddress, CreamIronBankContract, Addresses.CreamCSUSD, ApiUrl.SUSD);
     // MUSD
-    getCreamData(
-      accountAddress,
-      CreamIronBankContract,
-      Addresses.CreamCMUSD,
-      ApiUrl.MUSD,
-      setCreamMUSD
-    );
+    getCreamData(accountAddress, CreamIronBankContract, Addresses.CreamCMUSD, ApiUrl.MUSD);
     // EURS
-    getCreamData(
-      accountAddress,
-      CreamIronBankContract,
-      Addresses.CreamCEURS,
-      ApiUrl.EURS,
-      setCreamEURS
-    );
+    getCreamData(accountAddress, CreamIronBankContract, Addresses.CreamCEURS, ApiUrl.EURS);
     // SEUR
-    getCreamData(
-      accountAddress,
-      CreamIronBankContract,
-      Addresses.CreamCSEUR,
-      ApiUrl.SEUR,
-      setCreamSEUR
-    );
+    getCreamData(accountAddress, CreamIronBankContract, Addresses.CreamCSEUR, ApiUrl.SEUR);
     // DPI
-    getCreamData(
-      accountAddress,
-      CreamIronBankContract,
-      Addresses.CreamCDPI,
-      ApiUrl.DPI,
-      setCreamDPI
-    );
+    getCreamData(accountAddress, CreamIronBankContract, Addresses.CreamCDPI, ApiUrl.DPI);
     // AAVE
-    getCreamData(
-      accountAddress,
-      CreamIronBankContract,
-      Addresses.CreamCAAVE,
-      ApiUrl.AAVE,
-      setCreamAAVE
-    );
+    getCreamData(accountAddress, CreamIronBankContract, Addresses.CreamCAAVE, ApiUrl.AAVE);
     // MIM
-    getCreamData(
-      accountAddress,
-      CreamIronBankContract,
-      Addresses.CreamCMIM,
-      ApiUrl.MIM,
-      setCreamMIM
-    );
+    getCreamData(accountAddress, CreamIronBankContract, Addresses.CreamCMIM, ApiUrl.MIM);
     // // ZAR
     // getCreamData(
     //   accountAddress,
@@ -332,138 +139,5 @@ export default function CreamIronBank({ accountAddress, getTotal }) {
     // );
   }, [accountAddress]);
 
-  useEffect(() => {
-    setTotalSavings(
-      parseFloat(
-        CreamUSDT.totalValue +
-          CreamDAI.totalValue +
-          CreamUSDC.totalValue +
-          CreamWETH.totalValue +
-          CreamLINK.totalValue +
-          CreamCRV.totalValue +
-          Creamv2.totalValue +
-          CreamUNI.totalValue +
-          CreamSUSHI.totalValue +
-          CreamYFI.totalValue +
-          CreamSNX.totalValue +
-          CreamWBTC.totalValue +
-          CreamSUSD.totalValue +
-          CreamMUSD.totalValue +
-          CreamEURS.totalValue +
-          CreamSEUR.totalValue +
-          CreamDPI.totalValue +
-          CreamAAVE.totalValue +
-          CreamMIM.totalValue
-      )
-    );
-  }, [
-    CreamUSDT.totalValue,
-    CreamDAI.totalValue,
-    CreamUSDC.totalValue,
-    CreamWETH.totalValue,
-    CreamLINK.totalValue,
-    CreamCRV.totalValue,
-    Creamv2.totalValue,
-    CreamUNI.totalValue,
-    CreamSUSHI.totalValue,
-    CreamYFI.totalValue,
-    CreamSNX.totalValue,
-    CreamWBTC.totalValue,
-    CreamSUSD.totalValue,
-    CreamMUSD.totalValue,
-    CreamEURS.totalValue,
-    CreamSEUR.totalValue,
-    CreamDPI.totalValue,
-    CreamAAVE.totalValue,
-    CreamMIM.totalValue,
-  ]);
-
-  const IronBankLayout = (item) => {
-    return (
-      <div>
-        {parseFloat(item.totalValue) > 0 ? (
-          <div>
-            <div>
-              <img
-                src={item.image}
-                style={{
-                  height: '30px',
-                  marginTop: '1em',
-                  display: 'inline-block',
-                  marginLeft: '30px',
-                }}
-                alt=""
-              />
-              <div
-                style={{
-                  fontSize: '13px',
-                  display: 'inline-block',
-                  marginLeft: '10px',
-                }}>
-                {item.symbol} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{' '}
-                {numberWithCommas(item.totalValue)} USD
-              </div>
-            </div>
-            <div>
-              <div
-                style={{
-                  fontSize: '13px',
-                  display: 'inline-block',
-                  marginLeft: '30px',
-                }}>
-                Tokens: {numberWithCommas(item.balance.toFixed(2))} &nbsp; Price:{' '}
-                {numberWithCommas(item.price.toFixed(2))} USD
-              </div>
-            </div>
-            <br />
-          </div>
-        ) : (
-          ''
-        )}
-      </div>
-    );
-  };
-
-  IronBankLayout(CreamUSDT);
-  IronBankLayout(CreamDAI);
-  IronBankLayout(CreamUSDC);
-  IronBankLayout(CreamWETH);
-  IronBankLayout(CreamLINK);
-  IronBankLayout(CreamUNI);
-  IronBankLayout(CreamSUSHI);
-  IronBankLayout(Creamv2);
-  IronBankLayout(CreamCRV);
-  IronBankLayout(CreamYFI);
-  IronBankLayout(CreamSNX);
-  IronBankLayout(CreamWBTC);
-  IronBankLayout(CreamSUSD);
-  IronBankLayout(CreamMUSD);
-  IronBankLayout(CreamEURS);
-  IronBankLayout(CreamSEUR);
-  IronBankLayout(CreamDPI);
-  IronBankLayout(CreamAAVE);
-  IronBankLayout(CreamMIM);
-
-  if (filteredTokensArray.length > 0) {
-    const result = filteredTokensArray.reduce((el, acc) => {
-      return el + +acc.totalValue;
-    }, 0);
-    getTotal(result);
-  }
-
-  return (
-    <div>
-      {filteredTokensArray &&
-        filteredTokensArray.map((object, index) => {
-          return (
-            <Investment
-              key={index}
-              protocol={object}
-              logoImage={object.image}
-              protocolName={'Cream Iron Bank'}
-            />
-          );
-        })}
-    </div>
-  );
+  return <></>;
 }
