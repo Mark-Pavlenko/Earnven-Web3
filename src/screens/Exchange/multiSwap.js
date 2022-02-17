@@ -148,9 +148,9 @@ export default function MultiSwapComponent() {
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
   //working saga
-  // const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
+  const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
   // const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
-  const finalSendTokensList = sendTokensMockList;
+  // const finalSendTokensList = sendTokensMockList;
   const finalReceiveTokensList = sendTokensMockList;
 
   const [filteredSendTokensListData, setFilteredSendTokensListData] = useState([]);
@@ -162,6 +162,8 @@ export default function MultiSwapComponent() {
   }, [finalSendTokensList, finalReceiveTokensList]);
 
   let convertSendTokenToUSDCurrency = async (tokenData) => {
+    setTokenSendUSDCurrency('Loading');
+
     console.log('multiswap tokenData', tokenData);
 
     if (tokenData.amount === '') {
@@ -201,21 +203,17 @@ export default function MultiSwapComponent() {
       tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' &&
       tokenData.USDCurrency === undefined
     ) {
-      // tokenUSDCurrencyValue = await axios.get(
-      //   `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
-      // );
+      tokenUSDCurrencyValue = await axios.get(
+        `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
+      );
 
-      // if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
-      // finalUSDCurrencyValue = `$ ${(
-      //   tokenUSDCurrencyValue.data.price.rate * parseInt(tokenData.amount)
-      // ).toFixed(2)}`;
-
-      //not permanent solution
-      finalUSDCurrencyValue = `$${1.0 * parseInt(tokenData.amount)}`;
-
-      // } else {
-      //   console.log('Price not available');
-      // }
+      if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
+        finalUSDCurrencyValue = `$ ${(
+          tokenUSDCurrencyValue.data.price.rate * parseInt(tokenData.amount)
+        ).toFixed(2)}`;
+      } else {
+        console.log('Price not available');
+      }
     } else if (
       tokenData.address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' &&
       tokenData.receiveTokensListItem === true
@@ -387,7 +385,7 @@ export default function MultiSwapComponent() {
 
             <USDCurrencyInputBlock>
               <ChosenMultiSwapSendReceiveTokenValueInput
-                disabled={true}
+                // disabled={true}
                 InputProps={{
                   inputProps: {
                     style: {

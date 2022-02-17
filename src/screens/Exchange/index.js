@@ -131,7 +131,10 @@ import searchIcon from '../../assets/icons/searchIconLight.png';
 import SearchIcon from '@mui/icons-material/Search';
 import { TokensListTextField } from '../../components/searchTokens/styles';
 import actionTypes from '../../constants/actionTypes';
-import testFunction, { checkIfExchangedTokenLimitIsExceeded } from './helpers';
+import {
+  checkIfExchangedTokenLimitIsExceeded,
+  convertSendTokenToUSDCurrencyHelper,
+} from './helpers';
 import { getTokenDataSaga } from '../../store/currentTokenData/actions';
 import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
 import Popover from '@mui/material/Popover';
@@ -277,31 +280,10 @@ export default function SwapComponent() {
 
   //function of dynamic converting of token value to USD Currency
 
-  let convertSendTokenToUSDCurrency = async (tokenData) => {
-    setTokenSendUSDCurrency('Loading');
-
-    console.log('main send tokenData', tokenData);
-
-    if (tokenData.amount === '') tokenData.amount = '0';
-    // const tokenAmount = tokenData.amount.replace(/\s/g, '');
-
-    if (tokenData.symbol === 'ETH') {
-      // console.log('type send USD eth triggered');
-      const ethDollarValue = await axios.get(
-        'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
-      );
-      setTokenSendUSDCurrency(
-        `$${(ethDollarValue.data.ethereum.usd * parseInt(tokenData.amount)).toFixed(2)}`
-      );
-    } else {
-      if (tokenData.USDCurrency !== undefined) {
-        setTokenSendUSDCurrency(
-          `$${(tokenData.USDCurrency * parseInt(tokenData.amount)).toFixed(2)}`
-        );
-      } else {
-        setTokenSendUSDCurrency('Price not available');
-      }
-    }
+  let convertSendTokenToUSDCurrency = (tokenData) => {
+    let convertedToUSDValue = convertSendTokenToUSDCurrencyHelper(tokenData);
+    console.log('test convertedToUSDValue', convertedToUSDValue);
+    setTokenSendUSDCurrency(convertedToUSDValue);
   };
 
   let convertReceiveTokenToUSDCurrency = async (tokenData) => {
