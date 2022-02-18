@@ -56,7 +56,6 @@ const initialState = {
 export const initSidebarValuesReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'GET_SELECTED_ADDRESS':
-      console.log('GET_SELECTED_ADDRESS', action.type);
       return {
         ...state,
         selectedAddress: action.selectedAddress,

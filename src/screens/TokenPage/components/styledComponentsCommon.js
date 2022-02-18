@@ -64,7 +64,7 @@ export const CommonSubmitButton = styled.button`
   box-shadow: inset 0 11px 21px -6px rgb(51 78 131 / 12%);
   border-radius: 10px;
   border: none;
-  //padding: 9px 55px;
+  padding: 9px 9px;
   font-family: 'Saira', serif;
   font-weight: 500;
   font-size: 14px;

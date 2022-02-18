@@ -147,9 +147,9 @@ export default function index({ accountAddress }) {
   const pickeDillTotal = useSelector((state) => state.pickeDill.pickeDillTotal); //saga
 
   //uniswap (need to get total value from the object and put in redux separately)
-  // const uniswapV2array = useSelector((state) => state.uniswapV2stake.uniswapV2stake); //saga (incorrect data structure. Work over appropriate look)
-  // const uniswapV2StakeTotal = useSelector((state) => state.uniswapV2stake.uniswapV2stakeTotal); //saga (incorrect data structure. Work over appropriate look)
   const uniswapV2lp = useSelector((state) => state.uniswapV2lp.uniswapV2lp); //saga
+  console.log('uniswapV2lp', uniswapV2lp);
+
   //get the total value of uniSwapV2
   useEffect(() => {
     function getUniSwapV2Total() {
@@ -813,7 +813,6 @@ export default function index({ accountAddress }) {
         <div style={{ padding: '0 29px 20px 26px', marginBottom: '20px' }}>
           <TotalValueField isLightTheme={theme}>
             <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
-            {/*<TotalEmptyCell></TotalEmptyCell>*/}
             <TotalValue isLightTheme={theme}>
               {/* $
               {numberWithCommas(
