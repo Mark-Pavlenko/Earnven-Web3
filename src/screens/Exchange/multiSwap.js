@@ -140,6 +140,20 @@ export default function MultiSwapComponent() {
     },
   ];
 
+  const [receiveTokensList, setReceiveTokensList] = useState(initReceiveTokensList);
+
+  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
+
+  const initSendMultiSwapToken = useSelector(
+    (state) => state.tokensListReducer.initSendTokenMultiSwap
+  );
+  const initReceiveMultiSwapTokensList = useSelector(
+    (state) => state.tokensListReducer.initReceiveMultiSwapTokensList
+  );
+
+  console.log('multi init state SendTokenSwap', initSendMultiSwapToken);
+  console.log('multi init state ReceiveMultiSwapTokensList', initReceiveMultiSwapTokensList);
+
   //popover open/close
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -155,20 +169,8 @@ export default function MultiSwapComponent() {
   const { account, activate, active, chainId, connector, deactivate, error, provider, setError } =
     useWeb3React();
 
-  const [receiveTokensList, setReceiveTokensList] = useState(initReceiveTokensList);
-
-  console.log('init receive multiswap state', receiveTokensList);
-
-  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
-
   //working saga
   const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
-  const initSendTokenSwap = useSelector((state) => state.tokensListReducer.initSendTokenMultiSwap);
-  console.log('multi init state SendTokenSwap', initSendTokenSwap);
-  const initReceiveMultiSwapTokensList = useSelector(
-    (state) => state.tokensListReducer.initReceiveMultiSwapTokensList
-  );
-  console.log('multi init state ReceiveMultiSwapTokensList', initReceiveMultiSwapTokensList);
 
   const finalReceiveTokensList = sendTokensMockList;
 
@@ -180,7 +182,6 @@ export default function MultiSwapComponent() {
     finalReceiveTokensList.length !== 0 && setFilteredReceiveTokensListData(finalReceiveTokensList);
   }, [finalSendTokensList, finalReceiveTokensList]);
 
-  console.log('state sendTokenForExchange multiswap', sendTokenForExchange);
   console.log('state receiveTokenForExchange array multiswap 123', receiveTokensList);
   console.log('state setSendTokenForExchangeAmount multiswap', sendTokenForExchangeAmount);
 
@@ -295,7 +296,7 @@ export default function MultiSwapComponent() {
     const routers = exchangersOfferedList.map((i) => i.routerAddress);
     console.log('multiswap routers', routers);
 
-    let sendTokenAddress = sendTokenForExchange.address;
+    let sendTokenAddress = initSendMultiSwapToken.address;
 
     if (sendTokenAddress === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
       sendTokenAddress = '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270';
@@ -327,7 +328,11 @@ export default function MultiSwapComponent() {
     await getAmountMulti(selectedSwapToken, isSendTokenSelectedSwapped);
 
     if (isSendTokenSelectedSwapped === true) {
-      setSendTokenForExchange(selectedSwapToken);
+      dispatch({
+        type: actionTypes.SET_INIT_SEND_MULTISWAP_TOKEN,
+        payload: selectedSwapToken,
+      });
+
       setSendTokenForExchangeAmount(1);
       convertSendTokenToUSDCurrency({
         amount: 1,
@@ -384,22 +389,24 @@ export default function MultiSwapComponent() {
                 openModalHelper({ tokensList: finalSendTokensList, isSendModalOpen: true })
               }>
               <div>
-                {sendTokenForExchange.logoURI !== null ? (
+                {initSendMultiSwapToken.logoURI !== null ? (
                   <SendTokenImg
                     alt="token_img"
-                    src={sendTokenForExchange.logoURI}
+                    src={initSendMultiSwapToken.logoURI}
                     style={{ marginLeft: '4px' }}
                   />
                 ) : (
                   <MultiSwapTokenAvatar
-                    name={sendTokenForExchange.avatarIcon}
+                    name={initSendMultiSwapToken.avatarIcon}
                     round={true}
                     size="21"
                     textSizeRatio={1}
                   />
                 )}
                 <ChosenTokenLabel isLightTheme={isLightTheme}>
-                  {sendTokenForExchange.symbol === 'ethereum' ? 'ETH' : sendTokenForExchange.symbol}
+                  {initSendMultiSwapToken.symbol === 'ethereum'
+                    ? 'ETH'
+                    : initSendMultiSwapToken.symbol}
                 </ChosenTokenLabel>
                 <img src={isLightTheme ? chevronDownBlack : chevronDownLight} alt="chevron_icon" />
               </div>
@@ -433,7 +440,7 @@ export default function MultiSwapComponent() {
                   setSendTokenForExchangeAmount(e.target.value);
                   convertSendTokenToUSDCurrency({
                     amount: e.target.value,
-                    ...sendTokenForExchange,
+                    ...initSendMultiSwapToken,
                   });
                 }}
               />
