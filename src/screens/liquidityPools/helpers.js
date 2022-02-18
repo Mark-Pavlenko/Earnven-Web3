@@ -70,14 +70,20 @@ export const addLiquiditySushiV2 = async (
   tokenB,
   supplyToken,
   supplyTokenQtty,
-  gasPrice,
-  slippage
+  gasPrice
 ) => {
   //we need to get as a parameter 'slippage'. It will be percent. We takes supplyTokenQtty and subtract slippage
   //(ExpectedAmountTokens - slippage) then we have amount below for this percent. This is protection from exchange rate
   // fluctuations. Then we put this value to contract like this:
   // const minAmountOut = ExpectedAmountTokens - slippage.
   // minAmountOut we will send to contract.
+
+  console.log('add liquidity tokenA', tokenA);
+  console.log('add liquidity tokenB', tokenB);
+  console.log('add liquidity supplyToken', supplyToken);
+  console.log('add liquidity supplyTokenQtty', supplyTokenQtty);
+  console.log('add liquidity gasPrice', gasPrice);
+
   await loadWeb3();
   const web3 = window.web3;
   const accounts = await web3.eth.getAccounts();
