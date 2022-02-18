@@ -163,6 +163,14 @@ export const getuniswapV2stakedata = async (attributes) => {
           reserveUSD
           totalSupply
           volumeUSD
+          token0{
+            symbol
+            name
+          }
+          token1 {
+            symbol
+            name
+          }
         }
         
         USDC : pairs(
@@ -173,6 +181,14 @@ export const getuniswapV2stakedata = async (attributes) => {
           reserveUSD
           totalSupply
           volumeUSD
+          token0{
+            symbol
+            name
+          }
+          token1 {
+            symbol
+            name
+          }
         }
         
         DAI : pairs(
@@ -183,6 +199,14 @@ export const getuniswapV2stakedata = async (attributes) => {
           reserveUSD
           totalSupply
           volumeUSD
+          token0{
+            symbol
+            name
+          }
+          token1 {
+            symbol
+            name
+          }
         }
         
         WBTC: pairs(
@@ -193,6 +217,14 @@ export const getuniswapV2stakedata = async (attributes) => {
           reserveUSD
           totalSupply
           volumeUSD
+          token0{
+            symbol
+            name
+          }
+          token1 {
+            symbol
+            name
+          }
         }
       }`,
     })
@@ -207,7 +239,9 @@ export const getuniswapV2stakedata = async (attributes) => {
         object.price =
           response.data.data.USDT[0].reserveUSD / response.data.data.USDT[0].totalSupply;
         object.protocol = 'Uniswap V2';
-        object.tokenName = 'USDT';
+        //object.tokenName = 'USDT';
+        object.tokenName =
+          response.data.data.USDT[0].token0.symbol + '/' + response.data.data.USDT[0].token1.symbol;
         object.value =
           (response.data.data.USDT[0].reserveUSD / response.data.data.USDT[0].totalSupply) *
           USDTAmount;
@@ -215,21 +249,10 @@ export const getuniswapV2stakedata = async (attributes) => {
         object.totalValue = tot;
         object.icon = imageUni;
         object.chain = 'Ethereum';
-        // USDT.push(response.data.data.USDT[0].reserveUSD);
-        // USDT.push(response.data.data.USDT[0].volumeUSD);
-        // USDT.push(response.data.data.USDT[0].reserveUSD / response.data.data.USDT[0].totalSupply);
-        // USDT.push(
-        //   (response.data.data.USDT[0].reserveUSD / response.data.data.USDT[0].totalSupply) *
-        //     USDTAmount
-        // );
-        // USDT.push(USDTAmount);
-        // USDT.push(USDTAmountClaimables);
-        // object.USDT = USDT;
+
         pools.push(object);
       }
-      // else {
-      //   object.USDT = 'null';
-      // }
+
       // Dai ----------------------------------------------------------------------
       if (DAIAmount > 0) {
         let DAI = [];
@@ -241,7 +264,9 @@ export const getuniswapV2stakedata = async (attributes) => {
         object.price = response.data.data.DAI[0].reserveUSD / response.data.data.DAI[0].totalSupply;
         object.protocol = 'Uniswap V2';
         object.chain = 'Ethereum';
-        object.tokenName = 'DAI';
+        //object.tokenName = 'DAI';
+        object.tokenName =
+          response.data.data.DAI[0].token0.symbol + '/' + response.data.data.DAI[0].token1.symbol;
         object.value =
           (response.data.data.DAI[0].reserveUSD / response.data.data.DAI[0].totalSupply) *
           DAIAmount;
@@ -249,20 +274,9 @@ export const getuniswapV2stakedata = async (attributes) => {
         object.totalValue = tot;
         object.icon = imageUni;
 
-        // DAI.push(response.data.data.DAI[0].reserveUSD);
-        // DAI.push(response.data.data.DAI[0].volumeUSD);
-        // DAI.push(response.data.data.DAI[0].reserveUSD / response.data.data.DAI[0].totalSupply);
-        // DAI.push(
-        //   (response.data.data.DAI[0].reserveUSD / response.data.data.DAI[0].totalSupply) * DAIAmount
-        // );
-        // DAI.push(DAIAmount);
-        // DAI.push(DAIAmountClaimables);
-        // object.DAI = DAI;
         pools.push(object);
       }
-      //  else {
-      //   object.DAI = 'null';
-      // }
+
       // USDC -----------------------------------------------------------------------
       if (USDCAmount > 0) {
         let USDC = [];
@@ -275,7 +289,9 @@ export const getuniswapV2stakedata = async (attributes) => {
           response.data.data.USDC[0].reserveUSD / response.data.data.USDC[0].totalSupply;
         object.protocol = 'Uniswap V2';
         object.chain = 'Ethereum';
-        object.tokenName = 'USDC';
+        //object.tokenName = 'USDC';
+        object.tokenName =
+          response.data.data.USDC[0].token0.symbol + '/' + response.data.data.USDC[0].token1.symbol;
         object.value =
           (response.data.data.USDC[0].reserveUSD / response.data.data.USDC[0].totalSupply) *
           USDCAmount;
@@ -283,21 +299,9 @@ export const getuniswapV2stakedata = async (attributes) => {
         object.totalValue = tot;
         object.icon = imageUni;
 
-        // USDC.push(response.data.data.USDC[0].reserveUSD);
-        // USDC.push(response.data.data.USDC[0].volumeUSD);
-        // USDC.push(response.data.data.USDC[0].reserveUSD / response.data.data.USDC[0].totalSupply);
-        // USDC.push(
-        //   (response.data.data.USDC[0].reserveUSD / response.data.data.USDC[0].totalSupply) *
-        //     USDCAmount
-        // );
-        // USDC.push(USDCAmount);
-        // USDC.push(USDCAmountClaimables);
-        // object.USDC = USDC;
         pools.push(object);
       }
-      //  else {
-      //   object.USDC = 'null';
-      // }
+
       // WBTC ----------------------------------------------------------------------
       if (WBTCAmount > 0) {
         let WBTC = [];
@@ -309,7 +313,9 @@ export const getuniswapV2stakedata = async (attributes) => {
         object.price =
           response.data.data.WBTC[0].reserveUSD / response.data.data.WBTC[0].totalSupply;
         object.protocol = 'Uniswap V2';
-        object.tokenName = 'WBTC';
+        //object.tokenName = 'WBTC';
+        object.tokenName =
+          response.data.data.WBTC[0].token0.symbol + '/' + response.data.data.WBTC[0].token1.symbol;
         object.chain = 'Ethereum';
         object.value =
           (response.data.data.WBTC[0].reserveUSD / response.data.data.WBTC[0].totalSupply) *
@@ -318,22 +324,9 @@ export const getuniswapV2stakedata = async (attributes) => {
         object.totalValue = tot;
         object.icon = imageUni;
 
-        // WBTC.push(response.data.data.WBTC[0].reserveUSD);
-        // WBTC.push(response.data.data.WBTC[0].volumeUSD);
-        // WBTC.push(response.data.data.WBTC[0].reserveUSD / response.data.data.WBTC[0].totalSupply);
-        // WBTC.push(
-        //   (response.data.data.WBTC[0].reserveUSD / response.data.data.WBTC[0].totalSupply) *
-        //     WBTCAmount
-        // );
-        // WBTC.push(WBTCAmount);
-        // WBTC.push(WBTCAmountClaimable);
-        // object.WBTC = WBTC;
         pools.push(object);
       }
-      // } else {
-      //   object.WBTC = 'null';
-      // }
     });
-  console.log('uniswapApi', pools);
+
   return pools;
 };

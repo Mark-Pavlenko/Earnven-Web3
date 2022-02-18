@@ -84,6 +84,7 @@ export default function Index({ accountAddress }) {
       <PickleDill accountAddress={accountAddress} />
       <UniswapV2 accountAddress={accountAddress} />
       <SushiStaking accountAddress={accountAddress} />
+      <UniStaking accountAddress={accountAddress} />
     </React.Fragment>
   );
 }

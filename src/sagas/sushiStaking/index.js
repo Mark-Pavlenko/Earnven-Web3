@@ -23,9 +23,10 @@ function* sushiStakeSagaWorker(sushiStakingObjects) {
     let slpTokenVolume = 0;
     let slpTokenLiquidity = 0;
     let totalValue = 0;
-    let images = [];
+
     for (var i = 0; i < res.users.length; i++) {
       let object = {};
+      let images = [];
       //store this balanceOf amount for each pair in the arrayOf value as object
       amount[i] = response.data.data.users[i].amount;
       poolId[i] = response.data.data.users[i].pool.pair;

@@ -33,7 +33,7 @@ import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
 // import CreamIronBank from '../CreamIronBankSavings';
 //import BalancerV2 from '../LiqudityPools/BalancerV2';
 //import SushiStaking from '../SushiStaking';
-//import SushiProtocol from '../../common/investment/sushiProtocolComponent/sushiProtocol';
+//import UniStaking from '../UniStaking';
 
 export default function index({ accountAddress }) {
   //save conditions of open/close investment blocks
@@ -152,6 +152,8 @@ export default function index({ accountAddress }) {
 
   //uniswap (need to get total value from the object and put in redux separately)
   const uniswapV2lp = useSelector((state) => state.uniswapV2lp.uniswapV2lp); //saga
+  const uniswapV2stake = useSelector((state) => state.uniswapV2stake.uniswapV2stake);
+  const uniswapV2stakeTotal = useSelector((state) => state.uniswapV2stake.uniswapV2stakeTotal);
 
   //get the total value of uniSwapV2
   useEffect(() => {
@@ -394,7 +396,8 @@ export default function index({ accountAddress }) {
             AaveStakingData.length > 0 ||
             convexStakeData.length > 0 ||
             creamIronBankData.length > 0 ||
-            sushiStakeData.length > 0,
+            sushiStakeData.length > 0 ||
+            uniswapV2stake.length > 0,
         }}>
         <Header>
           <Title isLightTheme={theme}>{'Saving/Loans'}</Title>
@@ -414,7 +417,8 @@ export default function index({ accountAddress }) {
                     parseFloat(compTotalValue) +
                     parseFloat(convexStakeTotal) +
                     parseFloat(creamIronBankTotal) +
-                    parseFloat(sushiStakeTotal)
+                    parseFloat(sushiStakeTotal) +
+                    parseFloat(uniswapV2stakeTotal)
                 ).toFixed(2)
               )}
             </TotalValue>
@@ -643,6 +647,34 @@ export default function index({ accountAddress }) {
           ''
         )}
         {/* --------------------End of Sushi Staking----------------- */}
+        {/* UniSwapV2 Staking */}
+        {uniswapV2stake.length > 0 ? (
+          <React.Fragment>
+            <img
+              src={uniSwapLogo}
+              style={{
+                height: '20px',
+                marginTop: '',
+                marginLeft: '15px',
+                display: 'inline-block',
+              }}
+              alt=""
+            />
+            Uniswap Staking
+            {uniswapV2stake
+              ? uniswapV2stake.map((object) => {
+                  return (
+                    <React.Fragment>
+                      <Investment protocol={object} protocolName={'UniswapV2 Staking'} />
+                    </React.Fragment>
+                  );
+                })
+              : ''}
+          </React.Fragment>
+        ) : (
+          ''
+        )}
+        {/* ------------end of UniSwapV2--------- */}
       </PoolsBlock>
       {/*==============================Vaults==============================>*/}
       <PoolsBlock //four - Vaults
