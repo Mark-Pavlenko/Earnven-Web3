@@ -8,6 +8,7 @@ import {
   setInitialSendTokenSingleSwap,
   setInitReceiveFirstTokenSwap,
   setInitReceiveMultiSwapTokensList,
+  setInitReceiveMultiSwapTokensListLoading,
   setInitReceiveSecondTokenSwap,
   setInitSendTokenMultiSwap,
 } from './actions';
@@ -124,5 +125,11 @@ function* getReceiveTokensListSagaWorker() {
   yield put(actions.getReceiveTokensList(finalList));
   yield put(actions.setInitReceiveFirstTokenSwap(finalList[4]));
   yield put(actions.setInitReceiveSecondTokenSwap(finalList[2]));
+
+  // yield put({ type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING, payload: true });
+  // yield put(setInitReceiveMultiSwapTokensListLoading(true));
+
   yield put(actions.setInitReceiveMultiSwapTokensList([finalList[2], finalList[4]]));
+
+  yield put(setInitReceiveMultiSwapTokensListLoading(false));
 }

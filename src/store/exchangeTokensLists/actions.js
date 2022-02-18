@@ -49,9 +49,17 @@ export const setInitReceiveSecondTokenSwap = (payload) => {
 };
 
 export const setInitReceiveMultiSwapTokensList = (payload) => {
-  console.log('set InitialReceive MULTISWAP Tokens list', payload);
+  // console.log('set InitialReceive MULTISWAP Tokens list', payload);
   return {
     type: actionType.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST,
+    payload,
+  };
+};
+
+export const setInitReceiveMultiSwapTokensListLoading = (payload) => {
+  // console.log('set InitialReceive MULTISWAP Tokens list loading', payload);
+  return {
+    type: actionType.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING,
     payload,
   };
 };
