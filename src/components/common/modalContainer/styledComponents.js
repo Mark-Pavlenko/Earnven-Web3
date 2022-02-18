@@ -28,7 +28,7 @@ export const MainContent = styled.div`
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
   mix-blend-mode: normal;
   z-index: 1201;
-  backdrop-filter: blur(35px);
+  //backdrop-filter: blur(5px);
   border-radius: 10px;
   @media (max-width: 768px) {
     padding: 18px 15px 30px 15px;

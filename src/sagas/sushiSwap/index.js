@@ -13,6 +13,7 @@ function* sushiSwapLPSagaWorker(sushiSwapObjects) {
   const attributes = sushiSwapObjects.payload;
 
   const response = yield call(API.getSushiV2SubgraphData, attributes.accountAddress);
+  console.log('sushiSwapLPSagaWorker', response.data.data);
   if (response.data.data) {
     if (response.data.data.users[0]) {
       let totalValue = 0;
@@ -33,8 +34,10 @@ function* sushiSwapLPSagaWorker(sushiSwapObjects) {
           tokenData = yield call(API.getSushiLpTokenImage, tokenSymbolPair);
           object.token0Image = tokenData[0].logoURI; //token0Data.tokenImage;
           object.token0Symbol = res[i].pair.token0.symbol;
+          object.token0Id = res[i].pair.token0.id;
           object.token1Image = tokenData[1].logoURI; //token1Data.tokenImage;
           object.token1Symbol = res[i].pair.token1.symbol;
+          object.token1Id = res[i].pair.token1.id;
           //other attributes
           object.volume = parseFloat(res[i].pair.volumeUSD).toFixed(2);
           object.balance = parseFloat(res[i].liquidityTokenBalance).toFixed(4);

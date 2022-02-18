@@ -30,9 +30,10 @@ import Box from '@material-ui/core/Box';
 
 import { Button } from '@material-ui/core';
 import { Link, useParams } from 'react-router-dom';
-import { LiquidityPoolsTable } from './liquidityPoolsTable/liquidityPoolsTable';
-import { AddNewGroupButton } from './uniV2/StyledComponents';
-import { useSelector } from 'react-redux';
+import {LiquidityPoolsTable} from "./liquidityPoolsTable/liquidityPoolsTable/liquidityPoolsTable";
+import {AddNewGroupButton} from "./uniV2/StyledComponents";
+import {useSelector} from "react-redux";
+import {addLiquidityNormalSushiV2, addLiquiditySushiV2} from "../../screens/liquidityPools/helpers";
 import mockTokenImage from '../../assets/icons/ethereum.svg';
 
 function TabPanel(props) {
@@ -75,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function LiquidityPools({ inputValue }) {
+export default function LiquidityPools({ inputValue, AllTokens }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [Loading, setLoading] = useState(false);
@@ -89,8 +90,6 @@ export default function LiquidityPools({ inputValue }) {
 
   const [Data, setData] = useState([]); //UNI V2 Pools
   const [Content, setContent] = useState(''); //UNI V2 33Pools
-  const [TokenA, setTokenA] = useState('');
-  const [TokenB, setTokenB] = useState('');
   const [Page, setPage] = useState('');
   const [AmountTokenA, setAmountTokenA] = useState('');
   const [AmountTokenB, setAmountTokenB] = useState('');
@@ -99,34 +98,6 @@ export default function LiquidityPools({ inputValue }) {
   const [AccountLiquidity, setAccountLiquidity] = useState('');
   const [ReceiveToken, setReceiveToken] = useState('');
   const [LiquidityAmount, setLiquidityAmount] = useState('');
-
-  const [AllTokens, setAllTokens] = useState([]);
-
-  useEffect(() => {
-    async function getData() {
-      let fetchedTokens;
-      await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {}).then(async (response) => {
-        setAllTokens(response.data.records);
-        fetchedTokens = response.data.records;
-      });
-      await axios
-        .get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
-        .then(async (response) => {
-          let data = response.data.tokens;
-          let tokens = fetchedTokens.map((token) => ({
-            ...token,
-            logoURI: data.find((x) => x.address === token.address)
-              ? data.find((x) => x.address === token.address).logoURI
-              : tokenURIs.find((x) => x.address === token.address).logoURI,
-          }));
-          setAllTokens(tokens);
-        })
-        .catch((res) => {
-          console.log('liquidity pools Sushiswap-V2 returns error', res);
-        });
-    }
-    getData();
-  }, []);
 
   //worked useEffect
   useEffect(() => {
@@ -619,57 +590,6 @@ export default function LiquidityPools({ inputValue }) {
     getData();
   }, [Page]);
 
-  const mockData = [
-    {
-      volumeUSD: '534543',
-      reserveUSD: '432434',
-      token0: {
-        id: '32432454223432csxczx',
-        image: mockTokenImage,
-        name: 'ETH',
-        symbol: 'ETH',
-      },
-      token1: {
-        id: '32432454223432csxcdsaasdszx',
-        image: mockTokenImage,
-        name: 'WETH',
-        symbol: 'WETH',
-      },
-    },
-    {
-      volumeUSD: '534543',
-      reserveUSD: '432434',
-      token0: {
-        id: '32432454223432csxczx',
-        image: mockTokenImage,
-        name: 'USDC',
-        symbol: 'USDC',
-      },
-      token1: {
-        id: '32432454223432csxcdsaasdszx',
-        image: mockTokenImage,
-        name: 'WETH',
-        symbol: 'WETH',
-      },
-    },
-    {
-      volumeUSD: '534543',
-      reserveUSD: '432434',
-      token0: {
-        id: '32432454223432csxczx',
-        image: mockTokenImage,
-        name: 'ETH',
-        symbol: 'ETH',
-      },
-      token1: {
-        id: '32432454223432csxcdsaasdszx',
-        image: mockTokenImage,
-        name: 'SNX',
-        symbol: 'SNX',
-      },
-    },
-  ];
-
   useEffect(() => {
     setData([]);
   }, []);
@@ -767,59 +687,6 @@ export default function LiquidityPools({ inputValue }) {
       .send({ from: accounts[0] });
   }
 
-  //*********first input value sends to smartContract
-  async function addLiquidity(tokenA, tokenB, supplyToken, supplyTokenQtty, gasPrice, slippage) {
-    //we need to get as a parameter 'slippage'. It will be percent. We takes supplyTokenQtty and subtract slippage
-    //(ExpectedAmountTokens - slippage) then we have amount below for this percent. This is protection from exchange rate
-    // fluctuations. Then we put this value to contract like this:
-    // const minAmountOut = ExpectedAmountTokens - slippage.
-    // minAmountOut we will send to contract.
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var tokenContract = new web3.eth.Contract(ERC20ABI, supplyToken);
-    const oneClickContract = new web3.eth.Contract(
-      OneClickLiquidity,
-      Addresses.oneClickSushiV2Contract
-    );
-    await tokenContract.methods
-      .approve(Addresses.oneClickSushiV2Contract, supplyTokenQtty)
-      .send({ from: accounts[0], gasPrice: web3.utils.toWei(gasPrice, 'gwei') });
-    await oneClickContract.methods
-      //.addLiquidityOneClick(tokenA, tokenB, supplyToken, supplyTokenQtty, minAmountOut) //examle of sending minAmountOut to contract
-      .addLiquidityOneClick(tokenA, tokenB, supplyToken, supplyTokenQtty)
-      .send({ from: accounts[0], gasPrice: web3.utils.toWei(gasPrice, 'gwei') });
-  }
-
-  //********two inputs value send to smartContract
-  async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB, gasPrice) {
-    const start = parseInt(Date.now() / 1000) + 180;
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var tokenAContract = new web3.eth.Contract(ERC20ABI, tokenA);
-    var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
-    await tokenAContract.methods
-      .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenA, 'ether'))
-      .send({ from: accounts[0], gasPrice: web3.utils.toWei(gasPrice, 'gwei') });
-    await tokenBContract.methods
-      .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenB, 'ether'))
-      .send({ from: accounts[0], gasPrice: web3.utils.toWei(gasPrice, 'gwei') });
-    const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.sushiRouter);
-    await UniRouter.methods
-      .addLiquidity(
-        tokenA,
-        tokenB,
-        web3.utils.toWei(amountTokenA, 'ether'),
-        web3.utils.toWei(amountTokenB, 'ether'),
-        0,
-        0,
-        accounts[0],
-        start.toString()
-      )
-      .send({ from: accounts[0] });
-  }
-
   async function addLiquidityEth(tokenA, tokenB, ethAmount) {
     await loadWeb3();
     const web3 = window.web3;
@@ -846,14 +713,12 @@ export default function LiquidityPools({ inputValue }) {
   return (
     <div>
       <LiquidityPoolsTable
-        data={Data}
-        // data={mockData}
+        data={filterData(Data)}
         type={'sushiswap'}
         AllTokens={AllTokens}
-        addLiquidity={addLiquidity}
-        addLiquidityNormal={addLiquidityNormal}
+        addLiquidity={addLiquiditySushiV2}
+        addLiquidityNormal={addLiquidityNormalSushiV2}
       />
-      <br />
       <center>
         <AddNewGroupButton
           isLightTheme={isLightTheme}
@@ -863,7 +728,7 @@ export default function LiquidityPools({ inputValue }) {
           {Loading ? 'Loading...' : 'More Pools'}
         </AddNewGroupButton>
       </center>
-      {Content}
+      {/*{Content}*/}
     </div>
   );
 }

@@ -13,14 +13,19 @@ import {
   ItemButtons,
   APR,
   AprValue,
+  LiquidityValue,
   BalanceValue,
+  TokensValue,
   ResetButton,
   MenuPopoverBoxTitle,
-} from './styledComponents';
-import { SvgComponent } from '../svgComponent/svgComponent';
-import { addIconsGasPrices, numberWithCommas } from '../../../commonFunctions/commonFunctions';
-import ModalContainer from '../../common/modalContainer/modalContainer';
-import { SelectWrapper } from '../styledComponents';
+} from '../styledComponents';
+import { SvgComponent } from '../../../svgComponent/svgComponent';
+import {
+  addIconsGasPrices,
+  numberWithCommas,
+} from '../../../../../commonFunctions/commonFunctions';
+import ModalContainer from '../../../../common/modalContainer/modalContainer';
+import { SelectWrapper } from '../../../styledComponents';
 import {
   ButtonsBlock,
   ChangeToken,
@@ -34,46 +39,39 @@ import {
   Balance,
   BlockTokenName,
   BlockTokens,
-} from '../uniV2/StyledComponents';
+} from '../../../uniV2/StyledComponents';
 import Select from 'react-select';
 import { Link, useParams } from 'react-router-dom';
 
-import { SelectOptionsWithJSX } from '../HOC/selectOptionsWithJSX';
+import { SelectOptionsWithJSX } from '../../../HOC/selectOptionsWithJSX';
 import Web3 from 'web3';
-import ERC20ABI from '../../../abi/ERC20.json';
-import ROUTERABI from '../../../abi/UniRouterV2.json';
-import FACTORYABI from '../../../abi/UniFactoryV2.json';
-import Addresses from '../../../contractAddresses';
+import ERC20ABI from '../../../../../abi/ERC20.json';
+import ROUTERABI from '../../../../../abi/UniRouterV2.json';
+import FACTORYABI from '../../../../../abi/UniFactoryV2.json';
+import Addresses from '../../../../../contractAddresses';
 import axios from 'axios';
-import tokenURIs from '../../../screens/Exchange/tokenURIs';
-import TOKENDECIMALSABI from '../../../abi/TokenDecomals.json';
+import tokenURIs from '../../../../../screens/Exchange/tokenURIs';
+import TOKENDECIMALSABI from '../../../../../abi/TokenDecomals.json';
 import {
   CommonSubmitButton,
   CommonHoverButton,
   CommonHoverButtonTrans,
-} from '../../../screens/TokenPage/components/styledComponentsCommon';
-import { GasMenuItem } from '../../gasDropDownMenu/styles';
+} from '../../../../../screens/TokenPage/components/styledComponentsCommon';
+import { GasMenuItem } from '../../../../gasDropDownMenu/styles';
 import { useDispatch, useSelector } from 'react-redux';
-import { data } from '../../../globalStore';
-import fastDice from '../../../assets/icons/fastDice-icon.svg';
-import middleDice from '../../../assets/icons/middleDice-icon.svg';
-import slowDice from '../../../assets/icons/slowDice-icon.svg';
-import actionTypes from '../../../constants/actionTypes';
+import { data } from '../../../../../globalStore';
+import fastDice from '../../../../../assets/icons/fastDice-icon.svg';
+import middleDice from '../../../../../assets/icons/middleDice-icon.svg';
+import slowDice from '../../../../../assets/icons/slowDice-icon.svg';
+import actionTypes from '../../../../../constants/actionTypes';
 
-export const LiquidityTableItem = ({
-  item,
-  index,
-  theme,
-  type,
-  addLiquidity,
-  addLiquidityNormal,
-}) => {
+export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiquidityNormal }) => {
+  console.log('InvestTableItem', item);
   const GasPrices = useSelector((state) => state.gesData.gasPriceData);
   const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
   const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
   const addIconsGasPricesWithIcons = addIconsGasPrices(GasPrices, fastDice, middleDice, slowDice);
   const dispatch = useDispatch();
-  const address = useParams().address;
 
   const [isModalVisible, setIsModalVisible] = useState('');
   const [modalType, setModalType] = useState('');
@@ -89,6 +87,7 @@ export const LiquidityTableItem = ({
   const [addLiquidityNormalTokenB, setAddLiquidityNormalTokenB] = useState('');
 
   const [tokenAddress, setTokenAddress] = useState('0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+  console.log('tokenAddress', tokenAddress);
   const [singleTokenValue, setSingleTokenValue] = useState();
 
   const [allTokens, setAllTokens] = useState([]);
@@ -249,18 +248,10 @@ export const LiquidityTableItem = ({
       .then((res) => {
         return res;
       });
-
-    console.log('tokenDecimal inputId', inputId);
-    console.log('tokenDecimal value', value);
-    console.log('tokenDecimal token1', token1);
-    console.log('tokenDecimal token2', token2);
-    console.log('tokenDecimal decimals 1', tokenDecimal1);
-    console.log('tokenDecimal decimals 2', tokenDecimal2);
     //------------------------------------->
     const NewContract = new web3.eth.Contract(
       ROUTERABI,
-      //UNISWAP V2 contract address
-      '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+      '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F'
     );
     if (!isNaN(value)) {
       if (inputId === 'firstInput') {
@@ -268,25 +259,11 @@ export const LiquidityTableItem = ({
           .getAmountsOut((value * 10 ** tokenDecimal1).toString(), [token1, token2])
           .call();
 
-        console.log('tokenDecimal convertedValue', convertedValue);
-
         setAddLiquidityNormalTokenA((value * 10 ** tokenDecimal1).toString());
         setAddLiquidityNormalTokenB(convertedValue[1]);
 
-        console.log(
-          'tokenDecimal AddLiquidityNormalTokenA',
-          (value * 10 ** tokenDecimal1).toString()
-        );
-        console.log('tokenDecimal AddLiquidityNormalTokenB', convertedValue[1]);
-
         setOutValue(+convertedValue[1] / 10 ** tokenDecimal2);
         setInValue(value);
-
-        console.log(
-          'tokenDecimal +convertedValue[1] / 10 ** tokenDecimal2',
-          +convertedValue[1] / 10 ** tokenDecimal2
-        );
-        console.log('tokenDecimal setInValue', value);
       }
       if (inputId === 'secondInput') {
         const convertedValue = await NewContract.methods
@@ -338,7 +315,7 @@ export const LiquidityTableItem = ({
 
     const NewContract = new web3.eth.Contract(
       ROUTERABI,
-      '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+      '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F'
     );
     if (tokenAddress !== token1) {
       const convertedValue1 = await NewContract.methods
@@ -444,7 +421,7 @@ export const LiquidityTableItem = ({
             <InputBlock>
               <BlockTokens>
                 <div>
-                  <TokenImage src={`https://ethplorer.io${item.token0.image}`} />
+                  <TokenImage src={`${item.token0.image}`} />
                 </div>
                 <BlockTokenName>{item.token0.name}</BlockTokenName>
               </BlockTokens>
@@ -472,7 +449,7 @@ export const LiquidityTableItem = ({
             <InputBlock>
               <BlockTokens>
                 <div>
-                  <TokenImage src={`https://ethplorer.io${item.token1.image}`} />
+                  <TokenImage src={`${item.token1.image}`} />
                 </div>
                 <BlockTokenName>{item.token1.name}</BlockTokenName>
               </BlockTokens>
@@ -586,70 +563,61 @@ export const LiquidityTableItem = ({
         <ItemHeader>
           <ItemIndex>{index + 1}</ItemIndex>
           <TokenImages>
-            {Object.keys(item)
-              .filter((token) => token.includes('token'))
-              .map((name) => (
-                <>
-                  {item[name].image && (
-                    //<TokenImage src={`https://ethplorer.io${item[name].image}`} />
-                    <TokenImage src={`${item[name].image}`} />
-                  )}
-                </>
-              ))}
+            {item.imageData.map((image) => (
+              <>{image && <TokenImage src={`${image}`} />}</>
+            ))}
           </TokenImages>
-          <TokenNames>
-            {Object.keys(item)
-              .filter((token) => token.includes('token'))
-              .map((name) => (
-                <div>{item[name].symbol}</div>
-              ))}
-          </TokenNames>
+          <TokenNames>{item.symbol}</TokenNames>
         </ItemHeader>
-        <BalanceValue>${numberWithCommas(parseFloat(item.reserveUSD).toFixed(2))}</BalanceValue>
+        <LiquidityValue>{numberWithCommas(parseFloat(item.liquidity).toFixed(2))}</LiquidityValue>
         <APR>
           <AprBlock>
-            <AprName>Weekly</AprName>
+            <AprName>{'Weekly'}</AprName>
+            <AprValue color="#00DFD1">
+              +{(((parseInt(item.volume) * 0.003) / parseInt(item.liquidity)) * 100 * 7).toFixed(2)}
+              %
+            </AprValue>
+          </AprBlock>
+          <AprBlock>
+            <AprName>{'Yearly'}</AprName>
             <AprValue color="#00DFD1">
               +
-              {(((parseInt(item.volumeUSD) * 0.003) / parseInt(item.reserveUSD)) * 100 * 7).toFixed(
+              {(((parseInt(item.volume) * 0.003) / parseInt(item.liquidity)) * 100 * 365).toFixed(
                 2
               )}
               %
             </AprValue>
           </AprBlock>
-          <AprBlock>
-            <AprName>Yearly</AprName>
-            <AprValue color="#00DFD1">
-              +
-              {(
-                ((parseInt(item.volumeUSD) * 0.003) / parseInt(item.reserveUSD)) *
-                100 *
-                365
-              ).toFixed(2)}
-              %
-            </AprValue>
-          </AprBlock>
         </APR>
+        <BalanceValue>${numberWithCommas(parseFloat(item.balance).toFixed(2))}</BalanceValue>
+        <TokensValue>${numberWithCommas(parseFloat(item.value).toFixed(2))}</TokensValue>
         <ItemButtons>
           <CommonSubmitButton
-            width={'165px'}
+            width={'150px'}
             isLightTheme={theme}
             id="Add Liquidity"
             onClick={switchModal}>
-            Invest
+            {'Invest'}
+          </CommonSubmitButton>
+          <CommonSubmitButton
+            width={'150px'}
+            isLightTheme={theme}
+            id="Add Liquidity"
+            onClick={switchModal}>
+            {'Withdraw'}
           </CommonSubmitButton>
           {type === 'sushiswap' ? (
-            <Link to={`/${address}/${type}/address/${item.token0.id}/${item.token1.id}`}>
-              <InfoButton isLightTheme={theme}>
-                {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
-              </InfoButton>
-            </Link>
+            // <Link to={`/${address}/${type}/address/${item.token0.id}/${item.token1.id}`}>
+            <InfoButton isLightTheme={theme}>
+              {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
+            </InfoButton>
           ) : (
-            <Link to={`/${address}/${type}/address/${item.token0.id}/${item.token1.id}`}>
-              <InfoButton isLightTheme={theme}>
-                {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
-              </InfoButton>
-            </Link>
+            // </Link>
+            // <Link to={`/${address}/${type}/address/${item.token0.id}/${item.token1.id}`}>
+            <InfoButton isLightTheme={theme}>
+              {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
+            </InfoButton>
+            // </Link>
           )}
         </ItemButtons>
       </TableItem>
