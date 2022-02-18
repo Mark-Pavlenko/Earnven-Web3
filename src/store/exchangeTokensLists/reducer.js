@@ -4,7 +4,10 @@ const initialState = {
   sendTokensList: [],
   receiveTokensList: [],
   initSendTokenSwap: {},
+  initSendTokenMultiSwap: {},
   initReceiveFirstTokenSwap: {},
+  initReceiveSecondTokenSwap: {},
+  initReceiveMultiSwapTokensList: [],
 };
 //takes two arguments: The current state and the action and returns the new state.
 export const tokensListReducer = (state = initialState, action) => {
@@ -28,10 +31,28 @@ export const tokensListReducer = (state = initialState, action) => {
         initSendTokenSwap: action?.payload,
       };
 
+    case actionTypes.SET_INIT_SEND_MULTISWAP_TOKEN:
+      return {
+        ...state,
+        initSendTokenMultiSwap: action?.payload,
+      };
+
     case actionTypes.SET_INIT_RECEIVE_FIRST_TOKEN_SWAP:
       return {
         ...state,
         initReceiveFirstTokenSwap: action?.payload,
+      };
+
+    case actionTypes.SET_INIT_RECEIVE_SECOND_TOKEN_SWAP:
+      return {
+        ...state,
+        initReceiveSecondTokenSwap: action?.payload,
+      };
+
+    case actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST:
+      return {
+        ...state,
+        initReceiveMultiSwapTokensList: action?.payload,
       };
 
     default:

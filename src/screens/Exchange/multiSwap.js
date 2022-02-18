@@ -86,7 +86,7 @@ import searchTokensImportModalDark from '../../assets/icons/searchTokensInputMod
 import searchTokensImportModalLight from '../../assets/icons/searchTokensButtonMobileLight.svg';
 import Avatar from 'react-avatar';
 import Loader from 'react-loader-spinner';
-import { filteredTokensByName } from './helpers';
+import { convertSendTokenToUSDCurrencyHelper, filteredTokensByName } from './helpers';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import Web3 from 'web3';
@@ -163,8 +163,13 @@ export default function MultiSwapComponent() {
 
   //working saga
   const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
-  // const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
-  // const finalSendTokensList = sendTokensMockList;
+  const initSendTokenSwap = useSelector((state) => state.tokensListReducer.initSendTokenMultiSwap);
+  console.log('multi init state SendTokenSwap', initSendTokenSwap);
+  const initReceiveMultiSwapTokensList = useSelector(
+    (state) => state.tokensListReducer.initReceiveMultiSwapTokensList
+  );
+  console.log('multi init state ReceiveMultiSwapTokensList', initReceiveMultiSwapTokensList);
+
   const finalReceiveTokensList = sendTokensMockList;
 
   const [filteredSendTokensListData, setFilteredSendTokensListData] = useState([]);
@@ -189,31 +194,10 @@ export default function MultiSwapComponent() {
     console.log(11111, '11111');
   };
 
-  let convertSendTokenToUSDCurrency = async (tokenData) => {
-    setTokenSendUSDCurrency('Loading');
-
-    console.log('multiswap tokenData', tokenData);
-
-    if (tokenData.amount === '') {
-      tokenData.amount = '0';
-    }
-
-    if (tokenData.symbol === 'ETH') {
-      const ethDollarValue = await axios.get(
-        'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
-      );
-      setTokenSendUSDCurrency(
-        `$${(ethDollarValue.data.ethereum.usd * parseInt(tokenData.amount)).toFixed(2)}`
-      );
-    } else {
-      if (tokenData.USDCurrency !== undefined) {
-        setTokenSendUSDCurrency(
-          `$${(tokenData.USDCurrency * parseInt(tokenData.amount)).toFixed(2)}`
-        );
-      } else {
-        setTokenSendUSDCurrency('Price not available');
-      }
-    }
+  let convertSendTokenToUSDCurrency = (tokenData) => {
+    let convertedToUSDValue = convertSendTokenToUSDCurrencyHelper(tokenData);
+    // console.log('multiswap convertedToUSDValue', convertedToUSDValue);
+    setTokenSendUSDCurrency(convertedToUSDValue);
   };
 
   let convertReceiveTokenToUSDCurrency = async (tokenData) => {

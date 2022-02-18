@@ -200,7 +200,7 @@ export default function SwapComponent() {
   //console.log('1112 filteredSend', filteredData);
   //console.log('1112 filteredReceive', filteredReceiveTokensListData);
 
-  console.log('single swap sendTokenForExchangeAmount', sendTokenForExchangeAmount);
+  // console.log('single swap sendTokenForExchangeAmount', sendTokenForExchangeAmount);
   //console.log('single swap receiveTokenForExchangeAmount', receiveTokenForExchangeAmount);
 
   //---OLD states
@@ -339,7 +339,7 @@ export default function SwapComponent() {
           tokenUSDCurrencyValue = response;
         })
         .catch((err) => {
-          //console.log('err of usd currency receive token', err);
+          console.log('err of usd currency receive token', err);
           // tokenUSDCurrencyValue = err;
         });
 

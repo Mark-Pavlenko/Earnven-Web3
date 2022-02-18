@@ -4,7 +4,13 @@ import actionTypes from '../../constants/actionTypes';
 import * as actions from './actions';
 import ethImage from '../../assets/icons/eth.png';
 import CoinGeckoMockTokensList from './CoinGecko.json';
-import { setInitialSendTokenSingleSwap, setInitReceiveFirstTokenSwap } from './actions';
+import {
+  setInitialSendTokenSingleSwap,
+  setInitReceiveFirstTokenSwap,
+  setInitReceiveMultiSwapTokensList,
+  setInitReceiveSecondTokenSwap,
+  setInitSendTokenMultiSwap,
+} from './actions';
 
 export function* getSendTokensListSagaWatcher() {
   yield takeLatest(actionTypes.SET_SEND_TOKENS_LIST, getSendTokensListSagaWorker);
@@ -70,6 +76,7 @@ function* getSendTokensListSagaWorker(accountAddress) {
 
   yield put(actions.getSendTokensList(walletTokensList));
   yield put(actions.setInitSendTokenSwap(walletTokensList[17]));
+  yield put(actions.setInitSendTokenMultiSwap(walletTokensList[0]));
   // yield put(actions.getSendTokensList(walletTokensList));
 }
 
@@ -116,4 +123,6 @@ function* getReceiveTokensListSagaWorker() {
 
   yield put(actions.getReceiveTokensList(finalList));
   yield put(actions.setInitReceiveFirstTokenSwap(finalList[4]));
+  yield put(actions.setInitReceiveSecondTokenSwap(finalList[2]));
+  yield put(actions.setInitReceiveMultiSwapTokensList([finalList[2], finalList[4]]));
 }
