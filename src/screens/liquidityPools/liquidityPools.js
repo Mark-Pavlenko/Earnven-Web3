@@ -84,29 +84,30 @@ export default function LiquidityPools() {
   const uniswapV2lp = useSelector((state) => state.uniswapV2lp.uniswapV2lp);
   const accountAddress = useSelector((state) => state.initSidebarValuesReducer.selectedAddress);
 
-  const correctSushiProtocolDataStructure = (protocol) => {
-    return protocol.map((el) => {
-      return {
-        token0: {
-          id: el.token0Id,
-          image: el.token0Image,
-          name: el.token0Symbol,
-          symbol: el.token0Symbol,
-        },
-        token1: {
-          id: el.token1Id,
-          image: el.token1Image,
-          name: el.token1Symbol,
-          symbol: el.token1Symbol,
-        },
-        reserveUSD: el.liquidity,
-        volumeUSD: el.volume,
-        value: el.value,
-        balance: el.balance,
-      };
-    });
-  };
-  const myPoolsData = correctSushiProtocolDataStructure(SushiPoolsData);
+  const [commonPoolsArray, setCommonPoolsArray] = useState([]);
+  console.log('coooooommon', commonPoolsArray);
+
+  useEffect(() => {
+    const correctSushiProtocolDataStructure = (protocol) => {
+      return protocol.map((el) => {
+        return {
+          imageData: [el.token0Image, el.token1Image],
+          name: `${el.token0Symbol} ${el.token1Symbol}`,
+          symbol: `${el.token0Symbol} ${el.token1Symbol}`,
+          balance: el.balance,
+          liquidity: el.liquidity,
+          price: el.price,
+          value: el.value,
+          volume: el.volume,
+          token0Id: el.token0Id,
+          token1Id: el.token1Id,
+        };
+      });
+    };
+    const myPoolsData = correctSushiProtocolDataStructure(SushiPoolsData);
+    const commonPoolsArray = [...myPoolsData, ...uniswapV2lp];
+    setCommonPoolsArray(commonPoolsArray);
+  }, [SushiPoolsData, uniswapV2lp]);
 
   const [value, setValue] = React.useState(0);
   const [inputValue, setInputValue] = React.useState('');
@@ -184,7 +185,7 @@ export default function LiquidityPools() {
         <PoolsTitle isLightTheme={isLightTheme}>{'My pools'}</PoolsTitle>
         <InvestPoolsTable
           //data={Data}
-          data={myPoolsData}
+          data={commonPoolsArray}
           type={'sushiswap'}
           AllTokens={AllTokens}
           // addLiquidity={addLiquidity}

@@ -20,7 +20,11 @@ export const TableItem = styled.div`
   color: ${(props) => (props.isLightTheme ? '#1E1E20' : ' white')};
 
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 2fr;
+  grid-template-columns:
+    minmax(40px, 1fr) minmax(40px, 1fr) minmax(40px, 1fr) minmax(40px, 1fr) minmax(40px, 1fr)
+    minmax(100px, 2fr);
+  grid-gap: 5px;
+  //grid-template-columns: repeat(5, minmax(40px, 1fr)) 2fr;
   grid-template-areas: 'head liquidity apr balance value buttons';
   align-items: center;
   padding: 11px 25px;

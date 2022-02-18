@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import {
   TableItem,
   ItemHeader,
-  InvestButton,
   InfoButton,
   TokenImage,
   ItemIndex,
@@ -43,18 +42,9 @@ import { Link, useParams } from 'react-router-dom';
 
 import { SelectOptionsWithJSX } from '../../../HOC/selectOptionsWithJSX';
 import Web3 from 'web3';
-import ERC20ABI from '../../../../../abi/ERC20.json';
 import ROUTERABI from '../../../../../abi/UniRouterV2.json';
-import FACTORYABI from '../../../../../abi/UniFactoryV2.json';
-import Addresses from '../../../../../contractAddresses';
-import axios from 'axios';
-import tokenURIs from '../../../../../screens/Exchange/tokenURIs';
 import TOKENDECIMALSABI from '../../../../../abi/TokenDecomals.json';
-import {
-  CommonSubmitButton,
-  CommonHoverButton,
-  CommonHoverButtonTrans,
-} from '../../../../../screens/TokenPage/components/styledComponentsCommon';
+import { CommonSubmitButton } from '../../../../../screens/TokenPage/components/styledComponentsCommon';
 import { GasMenuItem } from '../../../../gasDropDownMenu/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { data } from '../../../../../globalStore';

@@ -563,29 +563,18 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
         <ItemHeader>
           <ItemIndex>{index + 1}</ItemIndex>
           <TokenImages>
-            {Object.keys(item)
-              .filter((token) => token.includes('token'))
-              .map((name) => (
-                <>{item[name].image && <TokenImage src={`${item[name].image}`} />}</>
-              ))}
+            {item.imageData.map((image) => (
+              <>{image && <TokenImage src={`${image}`} />}</>
+            ))}
           </TokenImages>
-          <TokenNames>
-            {Object.keys(item)
-              .filter((token) => token.includes('token'))
-              .map((name) => (
-                <div>{item[name].symbol}</div>
-              ))}
-          </TokenNames>
+          <TokenNames>{item.symbol}</TokenNames>
         </ItemHeader>
-        <LiquidityValue>${numberWithCommas(parseFloat(item.reserveUSD).toFixed(2))}</LiquidityValue>
+        <LiquidityValue>{numberWithCommas(parseFloat(item.liquidity).toFixed(2))}</LiquidityValue>
         <APR>
           <AprBlock>
             <AprName>{'Weekly'}</AprName>
             <AprValue color="#00DFD1">
-              +
-              {(((parseInt(item.volumeUSD) * 0.003) / parseInt(item.reserveUSD)) * 100 * 7).toFixed(
-                2
-              )}
+              +{(((parseInt(item.volume) * 0.003) / parseInt(item.liquidity)) * 100 * 7).toFixed(2)}
               %
             </AprValue>
           </AprBlock>
@@ -593,11 +582,9 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
             <AprName>{'Yearly'}</AprName>
             <AprValue color="#00DFD1">
               +
-              {(
-                ((parseInt(item.volumeUSD) * 0.003) / parseInt(item.reserveUSD)) *
-                100 *
-                365
-              ).toFixed(2)}
+              {(((parseInt(item.volume) * 0.003) / parseInt(item.liquidity)) * 100 * 365).toFixed(
+                2
+              )}
               %
             </AprValue>
           </AprBlock>

@@ -1,10 +1,19 @@
-//uniV2 invest functions
-//----------------------------------------------------------------->
-//*first input value sends to smartContract
 import ERC20ABI from '../../abi/ERC20.json';
 import OneClickLiquidity from '../../abi/UniV2PoolsOneClick.json';
 import Addresses from '../../contractAddresses';
 import ROUTERABI from '../../abi/UniRouterV2.json';
+import Web3 from 'web3';
+
+async function loadWeb3() {
+  if (window.ethereum) {
+    window.web3 = new Web3(window.ethereum);
+    await window.ethereum.enable();
+  } else if (window.web3) {
+    window.web3 = new Web3(window.web3.currentProvider);
+  } else {
+    window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
+  }
+}
 
 export const addLiquidityUniV2 = async (tokenA, tokenB, supplyToken, supplyTokenQtty) => {
   await loadWeb3();
