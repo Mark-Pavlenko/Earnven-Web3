@@ -17,6 +17,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import tokenURIs from '../../screens/Exchange/tokenURIs';
 import Addresses from '../../contractAddresses';
 
 import PropTypes from 'prop-types';
@@ -33,6 +34,7 @@ import {LiquidityPoolsTable} from "./liquidityPoolsTable/liquidityPoolsTable/liq
 import {AddNewGroupButton} from "./uniV2/StyledComponents";
 import {useSelector} from "react-redux";
 import {addLiquidityNormalSushiV2, addLiquiditySushiV2} from "../../screens/liquidityPools/helpers";
+import mockTokenImage from '../../assets/icons/ethereum.svg';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
