@@ -160,6 +160,7 @@ import TOKENDECIMALSABI from '../../abi/TokenDecomals.json';
 import ROUTERABI from '../../abi/UniRouterV2.json';
 import exchangersOfferedList from './exchangersOfferedList';
 import greenDot from '../../assets/icons/greenDot.svg';
+import { addLiquiditySushiV2 } from '../liquidityPools/helpers';
 
 export default function SwapComponent() {
   const dispatch = useDispatch();
@@ -176,11 +177,10 @@ export default function SwapComponent() {
   const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
   const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
 
-  console.log('single GasPrice selected', selectedGasPrice);
-  console.log('single GasPrice propose', proposeGasPrice);
-
-  console.log('initSendTokenSwap', initSendTokenSwap);
-  console.log('initReceiveFirstTokenSwap', initReceiveFirstTokenSwap);
+  //console.log('single GasPrice selected', selectedGasPrice);
+  //console.log('single GasPrice propose', proposeGasPrice);
+  //console.log('initSendTokenSwap', initSendTokenSwap);
+  //console.log('initReceiveFirstTokenSwap', initReceiveFirstTokenSwap);
 
   const [filteredData, setFilteredData] = useState([]);
   const [filteredReceiveTokensListData, setFilteredReceiveTokensListData] = useState([]);
@@ -199,14 +199,14 @@ export default function SwapComponent() {
   //mock data
   // const finalSendTokensList = sendTokensMockList;
 
-  console.log('single finalSendTokensList', finalSendTokensList);
-  console.log('single finalReceiveTokensList', finalReceiveTokensList);
+  //console.log('single finalSendTokensList', finalSendTokensList);
+  //console.log('single finalReceiveTokensList', finalReceiveTokensList);
 
-  console.log('1112 filteredSend', filteredData);
-  console.log('1112 filteredReceive', filteredReceiveTokensListData);
+  //console.log('1112 filteredSend', filteredData);
+  //console.log('1112 filteredReceive', filteredReceiveTokensListData);
 
-  console.log('single swap sendTokenForExchangeAmount', sendTokenForExchangeAmount);
-  console.log('single swap receiveTokenForExchangeAmount', receiveTokenForExchangeAmount);
+  //console.log('single swap sendTokenForExchangeAmount', sendTokenForExchangeAmount);
+  //console.log('single swap receiveTokenForExchangeAmount', receiveTokenForExchangeAmount);
 
   //---OLD states
 
@@ -251,8 +251,8 @@ export default function SwapComponent() {
       (token) => token.symbol !== initReceiveFirstTokenSwap.symbol
     );
 
-    console.log('single filteredSendTokensList', filteredSendTokensList);
-    console.log('single filteredReceiveTokensList', filteredReceiveTokensList);
+    //console.log('single filteredSendTokensList', filteredSendTokensList);
+    //console.log('single filteredReceiveTokensList', filteredReceiveTokensList);
 
     finalSendTokensList.length !== 0 && setFilteredData(filteredSendTokensList);
     finalReceiveTokensList.length !== 0 &&
@@ -306,7 +306,7 @@ export default function SwapComponent() {
 
   const searchTokensHandler = (event, searchTokensData) => {
     const result = filteredTokensByName(event, searchTokensData);
-    console.log('result single 111', result, searchTokensData);
+    //console.log('result single 111', result, searchTokensData);
     if (searchTokensData.searchSendTokensList === true) {
       let middle = result.filter((token) => token.symbol !== initSendTokenSwap.symbol);
       setFilteredData(middle);
@@ -328,27 +328,27 @@ export default function SwapComponent() {
       tokenData.amount = '0';
     }
 
-    console.log('main receive tokenData', tokenData);
+    //console.log('main receive tokenData', tokenData);
 
     let tokenUSDCurrencyValue;
 
     if (tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
-      console.log('first triggered');
+      //console.log('first triggered');
 
       await axios
         .get(
           `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
         )
         .then(async (response) => {
-          console.log('suc get usd receive tokenData', response);
+          //console.log('suc get usd receive tokenData', response);
           tokenUSDCurrencyValue = response;
         })
         .catch((err) => {
-          console.log('err of usd currency receive token', err);
+          //console.log('err of usd currency receive token', err);
           // tokenUSDCurrencyValue = err;
         });
 
-      console.log('receive tokenData total USDCurrency', tokenUSDCurrencyValue.data.price.rate);
+      //console.log('receive tokenData total USDCurrency', tokenUSDCurrencyValue.data.price.rate);
 
       if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
         // console.log(
@@ -515,7 +515,7 @@ export default function SwapComponent() {
   };
 
   const selectSendTokenForExchange = (selectSendToken) => {
-    console.log('selected send token value object 222', selectSendToken);
+    //console.log('selected send token value object 222', selectSendToken);
     // setSendTokenForExchange(selectSendToken);
     setIsSendTokensModalVisible(false);
     setSendTokenForExchangeAmount(0);
@@ -532,7 +532,7 @@ export default function SwapComponent() {
   };
 
   const selectReceiveTokenForExchange = (selectReceiveToken) => {
-    console.log('selected receive token value object 222', selectReceiveToken);
+    //console.log('selected receive token value object 222', selectReceiveToken);
 
     setIsReceiveTokensModalVisible(false);
     setReceiveTokenForExchangeAmount(0);
@@ -564,15 +564,15 @@ export default function SwapComponent() {
   //now - mock Uniswap V2 Contract address
 
   const convertExchangeTokensCourse = async (convertTokensData) => {
-    console.log('convertTokensData single swap', convertTokensData);
-    console.log(
-      ' convertTokensData single swap tokenDecimal token1',
-      convertTokensData.sendTokenForExchangeAddress
-    );
-    console.log(
-      ' convertTokensData single swap tokenDecimal token2',
-      convertTokensData.receiveTokenForExchangeAddress
-    );
+    // console.log('convertTokensData single swap', convertTokensData);
+    // console.log(
+    //   ' convertTokensData single swap tokenDecimal token1',
+    //   convertTokensData.sendTokenForExchangeAddress
+    // );
+    // console.log(
+    //   ' convertTokensData single swap tokenDecimal token2',
+    //   convertTokensData.receiveTokenForExchangeAddress
+    // );
 
     await loadWeb3();
     const web3 = window.web3;
@@ -596,8 +596,8 @@ export default function SwapComponent() {
         return res;
       });
 
-    console.log('convertTokensData single swap tokenDecimal 1', tokenDecimal1);
-    console.log('convertTokensData single swap tokenDecimal 2', tokenDecimal2);
+    //console.log('convertTokensData single swap tokenDecimal 1', tokenDecimal1);
+    //console.log('convertTokensData single swap tokenDecimal 2', tokenDecimal2);
 
     const NewContract = new web3.eth.Contract(
       ROUTERABI,
@@ -614,7 +614,7 @@ export default function SwapComponent() {
           ])
           .call();
 
-        console.log('initLoad convertTokensData', convertedValue);
+        //console.log('initLoad convertTokensData', convertedValue);
 
         // setReceiveTokenForExchangeAmount(+convertedValue[1] / 10 ** tokenDecimal2);
 
@@ -630,7 +630,7 @@ export default function SwapComponent() {
           ])
           .call();
 
-        console.log('chooseSendToken convertTokensData', convertedValue);
+        //console.log('chooseSendToken convertTokensData', convertedValue);
 
         setInitConvertReceiveTokenAmount((+convertedValue[1] / 10 ** tokenDecimal2).toFixed(3));
 
@@ -648,11 +648,11 @@ export default function SwapComponent() {
           ])
           .call();
 
-        console.log('convertTokensData convertedValue', convertedValue);
-        console.log(
-          'convertTokensData receive input value ',
-          +convertedValue[1] / 10 ** tokenDecimal2
-        );
+        //console.log('convertTokensData convertedValue', convertedValue);
+        // console.log(
+        //   'convertTokensData receive input value ',
+        //   +convertedValue[1] / 10 ** tokenDecimal2
+        // );
 
         setReceiveTokenForExchangeAmount(+convertedValue[1] / 10 ** tokenDecimal2);
 
@@ -668,11 +668,11 @@ export default function SwapComponent() {
           ])
           .call();
 
-        console.log('convertTokensData convertedValue', convertedValue);
-        console.log(
-          'convertTokensData receive input value ',
-          +convertedValue[1] / 10 ** tokenDecimal2
-        );
+        // console.log('convertTokensData convertedValue', convertedValue);
+        // console.log(
+        //   'convertTokensData receive input value ',
+        //   +convertedValue[1] / 10 ** tokenDecimal2
+        // );
 
         setSendTokenForExchangeAmount(+convertedValue[1] / 10 ** tokenDecimal2);
 
@@ -695,8 +695,8 @@ export default function SwapComponent() {
   const triggerSendTokenInputHandlers = (value, initSendTokenSwap) => {
     setSendTokenForExchangeAmount(value);
 
-    console.log('initSendTokenSwap handle value', value);
-    console.log('initSendTokenSwap handle', initSendTokenSwap);
+    // console.log('initSendTokenSwap handle value', value);
+    // console.log('initSendTokenSwap handle', initSendTokenSwap);
 
     convertSendTokenToUSDCurrency({
       amount: value,
@@ -715,8 +715,8 @@ export default function SwapComponent() {
   const triggerReceiveTokenInputHandlers = (value, initReceiveTokenSwap) => {
     setReceiveTokenForExchangeAmount(value);
 
-    console.log('initReceiveTokenSwap handle value', value);
-    console.log('initReceiveTokenSwap handle', initReceiveTokenSwap);
+    // console.log('initReceiveTokenSwap handle value', value);
+    // console.log('initReceiveTokenSwap handle', initReceiveTokenSwap);
 
     convertReceiveTokenToUSDCurrency({
       amount: value,
@@ -1338,7 +1338,16 @@ export default function SwapComponent() {
               <SwapBlockExchangeLayout isLightTheme={isLightTheme}>
                 <Button
                   disabled={isTokensLimitExceeded}
-                  onClick={() => calculateToAmount(initSendTokenSwap)}>
+                  onClick={() => {
+                    calculateToAmount(initSendTokenSwap);
+                    //token swap (sushiswap exchanger only)
+                    addLiquiditySushiV2(
+                      initSendTokenSwap.address,
+                      initReceiveFirstTokenSwap.address,
+                      sendTokenForExchangeAmount,
+                      proposeGasPrice
+                    );
+                  }}>
                   Exchange
                 </Button>
               </SwapBlockExchangeLayout>

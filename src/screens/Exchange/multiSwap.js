@@ -134,39 +134,19 @@ export default function MultiSwapComponent() {
       receiveTokensListItem: true,
       address: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
     },
-    // {
-    //   id: 'usdt',
-    //   symbol: 'USDT',
-    //   name: 'Tether USD',
-    //   decimals: 6,
-    //   tokenType: 'ERC20',
-    //   address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-    //   logoURI: 'https://assets.coingecko.com/coins/images/325/thumb/Tether-logo.png?1598003707',
-    //   receiveTokensListItem: true,
-    // },
   ];
 
-  // MainNet
-  // const initReceiveTokensList = [
-  //   {
-  //     symbol: 'WETH',
-  //     logoURI: 'https://assets.coingecko.com/coins/images/2518/thumb/weth.png?1628852295',
-  //     avatarIcon: 'Weth',
-  //     name: 'Wrapped Ether',
-  //     id: 'weth',
-  //     receiveTokensListItem: true,
-  //     address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-  //   },
-  //   {
-  //     symbol: 'DAI',
-  //     logoURI: 'https://assets.coingecko.com/coins/images/9956/thumb/4943.png?1636636734',
-  //     avatarIcon: 'Dai Stablecoin',
-  //     name: 'Dai Stablecoin',
-  //     id: 'dai',
-  //     receiveTokensListItem: true,
-  //     address: '0x6b175474e89094c44da98b954eedeac495271d0f',
-  //   },
-  // ];
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
 
   const { account, activate, active, chainId, connector, deactivate, error, provider, setError } =
     useWeb3React();
@@ -267,12 +247,12 @@ export default function MultiSwapComponent() {
       ).toFixed(2)}`;
     }
 
-    console.log('receive USD finalUSDCurrencyValue', finalUSDCurrencyValue);
+    console.log('multiswap receive USD finalUSDCurrencyValue', finalUSDCurrencyValue);
 
     // found necessary index of element, which currency is updated
     const needIndex = receiveTokensList.findIndex((token) => token.address === tokenData.address);
 
-    console.log('receive USD index', needIndex);
+    console.log('multiswap receive USD index', needIndex);
 
     // && needIndex === tokenData.receiveTokenIndex
 
@@ -296,18 +276,6 @@ export default function MultiSwapComponent() {
 
     await getAmountMulti();
   };
-
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
 
   let [tokensListModal, setTokensListModal] = useState([]);
   let [isSendTokenSelectedSwapped, setIsSendTokenSelectedSwapped] = useState(false);
@@ -341,7 +309,7 @@ export default function MultiSwapComponent() {
     );
 
     const routers = exchangersOfferedList.map((i) => i.routerAddress);
-    console.log('routers', routers);
+    console.log('multiswap routers', routers);
 
     let sendTokenAddress = sendTokenForExchange.address;
 
@@ -349,30 +317,29 @@ export default function MultiSwapComponent() {
       sendTokenAddress = '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270';
     }
 
-    console.log('222222222222222', receiveTokensList);
+    console.log('multiswap receiveTokensList', receiveTokensList);
 
     for (let i = 0; i < receiveTokensList.length; i++) {
       const item = receiveTokensList[i];
-      console.log('item111111111', item);
+      console.log('multiswap item111111111', item);
       if (item.amount && item.amount > 0) {
         // const decimals = web3.utils.toBN(item.decimals);
         const amount = item.amount * 10 ** item.decimals;
-        console.log('amount', amount.toString());
+        console.log('multiswap amount', amount.toString());
         receiveTokensList[i].swap = await multiCallContract.methods
           .getAmountsIn(routers, sendTokenAddress, item.address, amount.toString())
           .call();
       }
     }
 
-    console.log(receiveTokensList, 'receiveTokensList111111111111');
+    console.log(receiveTokensList, 'multiswap receiveTokensList111111111111');
     return true;
   };
 
   const selectTokenForSwap = async (selectedSwapToken, isSendTokenSelectedSwapped) => {
-    console.log('selectedSwapToken multiswap 123', selectedSwapToken);
-    console.log('objIDAddress multiswap 123', oldTokenSwappedAddress);
-    console.log('isSendTokenSelectedSwapped multiswap 123', isSendTokenSelectedSwapped);
-    console.log(2222222, '33333333');
+    console.log('multiswap selectedSwapToken multiswap 123', selectedSwapToken);
+    console.log('multiswap objIDAddress multiswap 123', oldTokenSwappedAddress);
+    console.log('multiswap isSendTokenSelectedSwapped multiswap 123', isSendTokenSelectedSwapped);
     await getAmountMulti(selectedSwapToken, isSendTokenSelectedSwapped);
 
     if (isSendTokenSelectedSwapped === true) {
@@ -384,7 +351,7 @@ export default function MultiSwapComponent() {
         address: selectedSwapToken.address,
       });
     } else {
-      console.log('123 typeof', typeof oldTokenSwappedAddress);
+      console.log('multiswap 123 typeof', typeof oldTokenSwappedAddress);
 
       const needIndex = receiveTokensList.findIndex(
         (token) => token.address === oldTokenSwappedAddress

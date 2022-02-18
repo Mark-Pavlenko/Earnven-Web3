@@ -70,7 +70,8 @@ export const addLiquiditySushiV2 = async (
   tokenB,
   supplyToken,
   supplyTokenQtty,
-  gasPrice
+  gasPrice,
+  slippage
 ) => {
   //we need to get as a parameter 'slippage'. It will be percent. We takes supplyTokenQtty and subtract slippage
   //(ExpectedAmountTokens - slippage) then we have amount below for this percent. This is protection from exchange rate
@@ -78,11 +79,11 @@ export const addLiquiditySushiV2 = async (
   // const minAmountOut = ExpectedAmountTokens - slippage.
   // minAmountOut we will send to contract.
 
-  console.log('add liquidity tokenA', tokenA);
-  console.log('add liquidity tokenB', tokenB);
-  console.log('add liquidity supplyToken', supplyToken);
-  console.log('add liquidity supplyTokenQtty', supplyTokenQtty);
-  console.log('add liquidity gasPrice', gasPrice);
+  console.log('sushiswap add liquidity firstReceiveToken', tokenA);
+  console.log('sushiswap add liquidity secondReceiveToken', tokenB);
+  console.log('sushiswap add liquidity sendTokenAddress', supplyToken);
+  console.log('sushiswap add liquidity sendTokenAmount', supplyTokenQtty);
+  console.log('sushiswap add liquidity gasPrice', gasPrice);
 
   await loadWeb3();
   const web3 = window.web3;
