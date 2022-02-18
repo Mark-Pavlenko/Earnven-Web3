@@ -56,7 +56,7 @@ import {
 import { TokenButtonsBlock } from '../../../screens/dashboard/styledComponents';
 import { LiquidityPoolsTable } from '../liquidityPoolsTable/liquidityPoolsTable/liquidityPoolsTable';
 import {useSelector} from "react-redux";
-import {addLiquidityNormalUniV2, addLiquidityUniV2} from "../../../screens/liquidityPools/helpers";
+import {addLiquidityNormal, addLiquidity} from "../../../screens/liquidityPools/helpers";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -515,12 +515,12 @@ export default function LiquidityPools({ inputValue, AllTokens }) {
                     <TransparentButton
                       value="Remove Liquidity In Tokens"
                       onClick={(e) => {
-                        removeLiquidity(
-                          object.token0.id,
-                          object.token1.id,
-                          ReceiveToken,
-                          (LiquidityAmount * 10 ** 18).toString()
-                        );
+                        // removeLiquidity(
+                        //   object.token0.id,
+                        //   object.token1.id,
+                        //   ReceiveToken,
+                        //   (LiquidityAmount * 10 ** 18).toString()
+                        // );
                       }}
                     />
                   </div>
@@ -543,11 +543,11 @@ export default function LiquidityPools({ inputValue, AllTokens }) {
                   <TransparentButton
                     value="Remove Liquidity Classic"
                     onClick={(e) => {
-                      removeLiquidityNormal(
-                        object.token0.id,
-                        object.token1.id,
-                        (LiquidityAmount * 10 ** 18).toString()
-                      );
+                      // removeLiquidityNormal(
+                      //   object.token0.id,
+                      //   object.token1.id,
+                      //   (LiquidityAmount * 10 ** 18).toString()
+                      // );
                     }}
                   />
                 </center>
@@ -706,28 +706,25 @@ export default function LiquidityPools({ inputValue, AllTokens }) {
     setAccountLiquidity(qtty);
   }
 
-  //----->
-  //don't need anymore
-  async function removeLiquidity(tokenA, tokenB, receiveToken, liquidityAmount) {
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.uniFactory);
-    var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call();
-    var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
-    const oneClickContract = new web3.eth.Contract(
-      OneClickLiquidity,
-      Addresses.oneClickUniV2Contract
-    );
-    await PairContract.methods
-      .approve(Addresses.oneClickUniV2Contract, liquidityAmount)
-      .send({ from: accounts[0] });
-    await oneClickContract.methods
-      .removeLiquidityOneClick(tokenA, tokenB, receiveToken, liquidityAmount)
-      .send({ from: accounts[0] });
-  }
+  // async function removeLiquidity(tokenA, tokenB, receiveToken, liquidityAmount) {
+  //   await loadWeb3();
+  //   const web3 = window.web3;
+  //   const accounts = await web3.eth.getAccounts();
+  //   var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.uniFactory);
+  //   var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call();
+  //   var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
+  //   const oneClickContract = new web3.eth.Contract(
+  //     OneClickLiquidity,
+  //     Addresses.oneClickUniV2Contract
+  //   );
+  //   await PairContract.methods
+  //     .approve(Addresses.oneClickUniV2Contract, liquidityAmount)
+  //     .send({ from: accounts[0] });
+  //   await oneClickContract.methods
+  //     .removeLiquidityOneClick(tokenA, tokenB, receiveToken, liquidityAmount)
+  //     .send({ from: accounts[0] });
+  // }
 
-  //don't need anymore
   async function removeLiquidityETH(tokenA, tokenB, LiquidityAmount) {
     await loadWeb3();
     const web3 = window.web3;
@@ -747,44 +744,42 @@ export default function LiquidityPools({ inputValue, AllTokens }) {
       .send({ from: accounts[0] });
   }
 
-  //don't need anymore
-  async function removeLiquidityNormal(tokenA, tokenB, LiquidityAmount) {
-    const start = parseInt(Date.now() / 1000) + 180;
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.uniFactory);
-    var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call();
-    var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
-    const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.uniRouter);
-    await PairContract.methods
-      .approve(Addresses.uniRouter, LiquidityAmount)
-      .send({ from: accounts[0] });
-    await UniRouter.methods
-      .removeLiquidity(tokenA, tokenB, LiquidityAmount, 0, 0, accounts[0], start.toString())
-      .send({ from: accounts[0] });
-  }
+  // async function removeLiquidityNormal(tokenA, tokenB, LiquidityAmount) {
+  //   const start = parseInt(Date.now() / 1000) + 180;
+  //   await loadWeb3();
+  //   const web3 = window.web3;
+  //   const accounts = await web3.eth.getAccounts();
+  //   var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.uniFactory);
+  //   var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call();
+  //   var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
+  //   const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.uniRouter);
+  //   await PairContract.methods
+  //     .approve(Addresses.uniRouter, LiquidityAmount)
+  //     .send({ from: accounts[0] });
+  //   await UniRouter.methods
+  //     .removeLiquidity(tokenA, tokenB, LiquidityAmount, 0, 0, accounts[0], start.toString())
+  //     .send({ from: accounts[0] });
+  // }
   //----->
 
   //*first input value sends to smartContract
-  async function addLiquidity(tokenA, tokenB, supplyToken, supplyTokenQtty) {
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var tokenContract = new web3.eth.Contract(ERC20ABI, supplyToken);
-    const oneClickContract = new web3.eth.Contract(
-      OneClickLiquidity,
-      Addresses.oneClickUniV2Contract
-    );
-    await tokenContract.methods
-      .approve(Addresses.oneClickUniV2Contract, supplyTokenQtty)
-      .send({ from: accounts[0] });
-    await oneClickContract.methods
-      .addLiquidityOneClick(tokenA, tokenB, supplyToken, supplyTokenQtty)
-      .send({ from: accounts[0] });
-  }
+  // async function addLiquidity(tokenA, tokenB, supplyToken, supplyTokenQtty) {
+  //   await loadWeb3();
+  //   const web3 = window.web3;
+  //   const accounts = await web3.eth.getAccounts();
+  //   var tokenContract = new web3.eth.Contract(ERC20ABI, supplyToken);
+  //   const oneClickContract = new web3.eth.Contract(
+  //     OneClickLiquidity,
+  //     Addresses.oneClickUniV2Contract
+  //   );
+  //   await tokenContract.methods
+  //     .approve(Addresses.oneClickUniV2Contract, supplyTokenQtty)
+  //     .send({ from: accounts[0] });
+  //   await oneClickContract.methods
+  //     .addLiquidityOneClick(tokenA, tokenB, supplyToken, supplyTokenQtty)
+  //     .send({ from: accounts[0] });
+  // }
 
-  //don't need anymore
   async function addLiquidityEth(tokenA, tokenB, ethAmount) {
     await loadWeb3();
     const web3 = window.web3;
@@ -798,64 +793,34 @@ export default function LiquidityPools({ inputValue, AllTokens }) {
       .send({ from: accounts[0], value: web3.utils.toWei(ethAmount, 'ether') });
   }
 
-  //*two inputs value send to smartContract
-  async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB) {
-    const start = parseInt(Date.now() / 1000) + 180;
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var tokenAContract = new web3.eth.Contract(ERC20ABI, tokenA);
-    var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
-    await tokenAContract.methods
-      .approve(Addresses.uniRouter, web3.utils.toWei(amountTokenA, 'ether'))
-      .send({ from: accounts[0] });
-    await tokenBContract.methods
-      .approve(Addresses.uniRouter, web3.utils.toWei(amountTokenB, 'ether'))
-      .send({ from: accounts[0] });
-    const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.uniRouter);
-    await UniRouter.methods
-      .addLiquidity(
-        tokenA,
-        tokenB,
-        web3.utils.toWei(amountTokenA, 'ether'),
-        web3.utils.toWei(amountTokenB, 'ether'),
-        0,
-        0,
-        accounts[0],
-        start.toString()
-      )
-      .send({ from: accounts[0] });
-  }
-
-  //useState for mamaging open/close modal
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // //options for select inside of modal
-  // const options = [
-  //   {
-  //     image: eth,
-  //     name: 'Ethereum',
-  //     value: '1',
-  //   },
-  //   {
-  //     image: uni,
-  //     name: 'Uniswap',
-  //     value: '2',
-  //   },
-  //   {
-  //     image: mkr,
-  //     name: 'Uniswap MKR Pool (v1)',
-  //     value: '3',
-  //   },
-  //   {
-  //     image: mkr,
-  //     name: 'Uniswap MKR Pool (v1)',
-  //     value: '4',
-  //   },
-  // ];
-
-  //this function turns array of options to JSX for modal select
-
+  // //*two inputs value send to smartContract
+  // async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB) {
+  //   const start = parseInt(Date.now() / 1000) + 180;
+  //   await loadWeb3();
+  //   const web3 = window.web3;
+  //   const accounts = await web3.eth.getAccounts();
+  //   var tokenAContract = new web3.eth.Contract(ERC20ABI, tokenA);
+  //   var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
+  //   await tokenAContract.methods
+  //     .approve(Addresses.uniRouter, web3.utils.toWei(amountTokenA, 'ether'))
+  //     .send({ from: accounts[0] });
+  //   await tokenBContract.methods
+  //     .approve(Addresses.uniRouter, web3.utils.toWei(amountTokenB, 'ether'))
+  //     .send({ from: accounts[0] });
+  //   const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.uniRouter);
+  //   await UniRouter.methods
+  //     .addLiquidity(
+  //       tokenA,
+  //       tokenB,
+  //       web3.utils.toWei(amountTokenA, 'ether'),
+  //       web3.utils.toWei(amountTokenB, 'ether'),
+  //       0,
+  //       0,
+  //       accounts[0],
+  //       start.toString()
+  //     )
+  //     .send({ from: accounts[0] });
+  // }
 
   //select styles
   // const selectStyle = {
@@ -939,11 +904,6 @@ export default function LiquidityPools({ inputValue, AllTokens }) {
   //   },
   // };
 
-  const handler = (data) => {
-    console.log('vfvfvfv', data)
-  }
-
-
   const filterData = (Data) => {
     return Data.filter(d => d.id.includes(inputValue) || (d.token0.symbol + ' ' + d.token1.symbol).includes(inputValue.toUpperCase()) || d.token0.name.includes(inputValue) || d.token1.name.includes(inputValue));
   }
@@ -956,8 +916,9 @@ export default function LiquidityPools({ inputValue, AllTokens }) {
           data={Data}
           type={'uniswap'}
           AllTokens={AllTokens}
-          addLiquidity={addLiquidityUniV2}
-          addLiquidityNormal={addLiquidityNormalUniV2}
+          addLiquidity={addLiquidity}
+          addLiquidityNormal={addLiquidityNormal}
+          protocolType={'Unisvap V2'}
       />
 
       <br />

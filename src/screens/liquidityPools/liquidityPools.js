@@ -20,6 +20,12 @@ import CurveLogo from '../../assets/icons/curve-icon.svg';
 import InchLogo from '../../assets/icons/inch-icon.svg';
 import SearchIcon from '../../assets/icons/copy-icon.svg';
 import SearchIconLight from '../../assets/icons/searchIconLight.svg';
+import {
+  addLiquidityNormal,
+  addLiquidity,
+  removeLiquidity,
+  removeLiquidityNormal,
+} from './helpers';
 
 import {
   AllTabs,
@@ -45,6 +51,7 @@ import balancerImage from '../../assets/icons/balancer-icon.svg';
 import actionTypes from '../../constants/actionTypes';
 import UniswapV2 from '../../components/LoansAndSavings/LiqudityPools/UniswapV2';
 import { InvestmentWrapper } from '../../components/LoansAndSavings/index/styledComponents';
+import { LiquidityPoolsTable } from '../../components/liquidityPoolContents/liquidityPoolsTable/liquidityPoolsTable/liquidityPoolsTable';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -85,22 +92,27 @@ export default function LiquidityPools() {
   const accountAddress = useSelector((state) => state.initSidebarValuesReducer.selectedAddress);
 
   const [commonPoolsArray, setCommonPoolsArray] = useState([]);
-  console.log('coooooommon', commonPoolsArray);
+  console.log('commonPoolsArray', SushiPoolsData);
 
   useEffect(() => {
     const correctSushiProtocolDataStructure = (protocol) => {
       return protocol.map((el) => {
         return {
           imageData: [el.token0Image, el.token1Image],
-          name: `${el.token0Symbol} ${el.token1Symbol}`,
-          symbol: `${el.token0Symbol} ${el.token1Symbol}`,
+          symbol: `${el.token0Symbol} ${el.token0Symbol}`,
+          name: `${el.token0Symbol} ${el.token0Symbol}`,
+          poolDetails: {
+            token0Address: el.token0Id,
+            token1Address: el.token1Id,
+          },
           balance: el.balance,
           liquidity: el.liquidity,
           price: el.price,
           value: el.value,
           volume: el.volume,
-          token0Id: el.token0Id,
-          token1Id: el.token1Id,
+          token0Symbol: el.token0Symbol,
+          token1Symbol: el.token1Symbol,
+          protocol: el.protocol,
         };
       });
     };
@@ -184,12 +196,13 @@ export default function LiquidityPools() {
         {/*===============>  MY POOLS*/}
         <PoolsTitle isLightTheme={isLightTheme}>{'My pools'}</PoolsTitle>
         <InvestPoolsTable
-          //data={Data}
-          data={commonPoolsArray}
           type={'sushiswap'}
           AllTokens={AllTokens}
-          // addLiquidity={addLiquidity}
-          // addLiquidityNormal={addLiquidityNormal}
+          data={commonPoolsArray}
+          addLiquidity={addLiquidity}
+          removeLiquidity={removeLiquidity}
+          addLiquidityNormal={addLiquidityNormal}
+          removeLiquidityNormal={removeLiquidityNormal}
         />
         {/*===============>  MY POOLS*/}
         <PoolsTitle isLightTheme={isLightTheme}>{'Available pools'}</PoolsTitle>

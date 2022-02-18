@@ -16,7 +16,14 @@ import {
   ItemIndexHidden,
 } from './styledComponents';
 
-export const InvestPoolsTable = ({ data, type, addLiquidity, addLiquidityNormal }) => {
+export const InvestPoolsTable = ({
+  data,
+  type,
+  addLiquidity,
+  removeLiquidity,
+  addLiquidityNormal,
+  removeLiquidityNormal,
+}) => {
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
 
   return (
@@ -37,11 +44,13 @@ export const InvestPoolsTable = ({ data, type, addLiquidity, addLiquidityNormal 
           return (
             <InvestTableItem
               item={item}
+              type={type}
               index={index}
               theme={theme}
-              type={type}
               addLiquidity={addLiquidity}
+              removeLiquidity={removeLiquidity}
               addLiquidityNormal={addLiquidityNormal}
+              removeLiquidityNormal={removeLiquidityNormal}
             />
           );
         })}

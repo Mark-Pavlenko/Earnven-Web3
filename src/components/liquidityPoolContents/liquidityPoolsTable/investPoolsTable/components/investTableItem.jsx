@@ -65,13 +65,23 @@ import middleDice from '../../../../../assets/icons/middleDice-icon.svg';
 import slowDice from '../../../../../assets/icons/slowDice-icon.svg';
 import actionTypes from '../../../../../constants/actionTypes';
 
-export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiquidityNormal }) => {
-  console.log('InvestTableItem', item);
-  const GasPrices = useSelector((state) => state.gesData.gasPriceData);
-  const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
-  const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
-  const addIconsGasPricesWithIcons = addIconsGasPrices(GasPrices, fastDice, middleDice, slowDice);
+export const InvestTableItem = ({
+  item,
+  type,
+  index,
+  theme,
+  addLiquidity,
+  removeLiquidity,
+  addLiquidityNormal,
+  removeLiquidityNormal,
+}) => {
   const dispatch = useDispatch();
+  const address = useParams().address;
+  const GasPrices = useSelector((state) => state.gesData.gasPriceData);
+  const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
+  const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
+
+  const addIconsGasPricesWithIcons = addIconsGasPrices(GasPrices, fastDice, middleDice, slowDice);
 
   const [isModalVisible, setIsModalVisible] = useState('');
   const [modalType, setModalType] = useState('');
@@ -87,7 +97,6 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
   const [addLiquidityNormalTokenB, setAddLiquidityNormalTokenB] = useState('');
 
   const [tokenAddress, setTokenAddress] = useState('0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
-  console.log('tokenAddress', tokenAddress);
   const [singleTokenValue, setSingleTokenValue] = useState();
 
   const [allTokens, setAllTokens] = useState([]);
@@ -95,8 +104,7 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
 
   const [selected, setSelected] = useState('');
 
-  // const [selectedGasValue, setSelectedGasValue] = useState(proposeGasPrice);
-  // setSelectedGasValue(selectedGasPrice);
+  const [isWithdrawActive, setIsWithdrawActive] = useState(false);
 
   const selectInitialValue = {
     label: 'Ether',
@@ -339,23 +347,48 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
   };
 
   const inputsHandler = () => {
-    switch (inputType) {
-      case 'single':
-        return addLiquidity(
-          item.token0.id,
-          item.token1.id,
-          tokenAddress,
-          (singleTokenValue * 10 ** 18).toString(),
-          selectedGasPrice ? selectedGasPrice : proposeGasPrice
-        );
-      case 'pair':
-        return addLiquidityNormal(
-          item.token0.id,
-          item.token1.id,
-          addLiquidityNormalTokenA,
-          addLiquidityNormalTokenB,
-          selectedGasPrice ? selectedGasPrice : proposeGasPrice
-        );
+    if (!isWithdrawActive) {
+      switch (inputType) {
+        case 'single':
+          return addLiquidity(
+            item.poolDetails.token0Address,
+            item.poolDetails.token1Address,
+            tokenAddress,
+            (singleTokenValue * 10 ** 18).toString(),
+            selectedGasPrice ? selectedGasPrice : proposeGasPrice,
+            item.protocol
+          );
+        case 'pair':
+          return addLiquidityNormal(
+            item.poolDetails.token0Address,
+            item.poolDetails.token1Address,
+            addLiquidityNormalTokenA,
+            addLiquidityNormalTokenB,
+            selectedGasPrice ? selectedGasPrice : proposeGasPrice,
+            item.protocol
+          );
+      }
+    }
+    if (isWithdrawActive) {
+      switch (inputType) {
+        case 'single':
+          return removeLiquidity(
+            item.poolDetails.token0Address,
+            item.poolDetails.token1Address,
+            tokenAddress,
+            (singleTokenValue * 10 ** 18).toString(),
+            selectedGasPrice ? selectedGasPrice : proposeGasPrice,
+            item.protocol
+          );
+        case 'pair':
+          return removeLiquidityNormal(
+            item.poolDetails.token0Address,
+            item.poolDetails.token1Address,
+            (singleTokenValue * 10 ** 18).toString(),
+            selectedGasPrice ? selectedGasPrice : proposeGasPrice,
+            item.protocol
+          );
+      }
     }
   };
 
@@ -387,7 +420,8 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
           theme={theme}
           title={selectedModal}
           isOpen={isModalVisible}
-          closeModal={setIsModalVisible}>
+          closeModal={setIsModalVisible}
+          setIsWithdrawActive={setIsWithdrawActive}>
           <SelectWrapper>
             <SelectTitle>{'Supply a token'}</SelectTitle>
             <Select
@@ -401,9 +435,11 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
                 value={singleTokenValue}
                 type="number"
                 onChange={(e) => {
-                  addLiquidityToPair(item.token0.id, item.token1.id, e.target.value).then(
-                    (res) => res
-                  );
+                  addLiquidityToPair(
+                    item.poolDetails.token0Address,
+                    item.poolDetails.token1Address,
+                    e.target.value
+                  ).then((res) => res);
                   setSingleTokenValue(e.target.value);
                   setInputType('single');
                 }}
@@ -421,9 +457,9 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
             <InputBlock>
               <BlockTokens>
                 <div>
-                  <TokenImage src={`${item.token0.image}`} />
+                  <TokenImage src={`${item.imageData[0]}`} />
                 </div>
-                <BlockTokenName>{item.token0.name}</BlockTokenName>
+                <BlockTokenName>{item.token0Symbol}</BlockTokenName>
               </BlockTokens>
               <ModalInput
                 value={inValue}
@@ -431,8 +467,8 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
                   convertTokenPrice(
                     'firstInput',
                     parseInt(e.target.value),
-                    item.token0.id,
-                    item.token1.id
+                    item.poolDetails.token0Address,
+                    item.poolDetails.token1Address
                   );
                   setInputType('pair');
                 }}
@@ -449,9 +485,9 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
             <InputBlock>
               <BlockTokens>
                 <div>
-                  <TokenImage src={`${item.token1.image}`} />
+                  <TokenImage src={`${item.imageData[1]}`} />
                 </div>
-                <BlockTokenName>{item.token1.name}</BlockTokenName>
+                <BlockTokenName>{item.token1Symbol}</BlockTokenName>
               </BlockTokens>
               <ModalInput
                 value={outValue}
@@ -459,8 +495,8 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
                   convertTokenPrice(
                     'secondInput',
                     parseInt(e.target.value),
-                    item.token0.id,
-                    item.token1.id
+                    item.poolDetails.token0Address,
+                    item.poolDetails.token1Address
                   );
                   setInputType('pair');
                 }}
@@ -602,22 +638,27 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
           <CommonSubmitButton
             width={'150px'}
             isLightTheme={theme}
-            id="Add Liquidity"
-            onClick={switchModal}>
+            id="Withdraw Liquidity"
+            onClick={(e) => {
+              switchModal(e);
+              setIsWithdrawActive(true);
+            }}>
             {'Withdraw'}
           </CommonSubmitButton>
           {type === 'sushiswap' ? (
-            // <Link to={`/${address}/${type}/address/${item.token0.id}/${item.token1.id}`}>
-            <InfoButton isLightTheme={theme}>
-              {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
-            </InfoButton>
+            <Link
+              to={`/${address}/${type}/address/${item.poolDetails.token0Address}/${item.poolDetails.token1Address}`}>
+              <InfoButton isLightTheme={theme}>
+                {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
+              </InfoButton>
+            </Link>
           ) : (
-            // </Link>
-            // <Link to={`/${address}/${type}/address/${item.token0.id}/${item.token1.id}`}>
-            <InfoButton isLightTheme={theme}>
-              {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
-            </InfoButton>
-            // </Link>
+            <Link
+              to={`/${address}/${type}/address/${item.poolDetails.token0Address}/${item.poolDetails.token1Address}`}>
+              <InfoButton isLightTheme={theme}>
+                {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
+              </InfoButton>
+            </Link>
           )}
         </ItemButtons>
       </TableItem>

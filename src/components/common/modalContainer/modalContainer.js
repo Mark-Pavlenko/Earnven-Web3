@@ -3,7 +3,7 @@ import ReactDom from 'react-dom';
 import { ShadowBlock, MainContent, Header, CloseButton, Title, Content } from './styledComponents';
 import { useSelector } from 'react-redux';
 
-const ModalContainer = ({ title, children, closeModal, modalType }) => {
+const ModalContainer = ({ title, children, closeModal, modalType, setIsWithdrawActive }) => {
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
   return ReactDom.createPortal(
@@ -16,6 +16,7 @@ const ModalContainer = ({ title, children, closeModal, modalType }) => {
             <CloseButton
               onClick={() => {
                 closeModal('');
+                setIsWithdrawActive(false);
               }}
               isLightTheme={isLightTheme}
             />

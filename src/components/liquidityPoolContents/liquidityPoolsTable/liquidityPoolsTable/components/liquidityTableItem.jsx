@@ -59,9 +59,11 @@ export const LiquidityTableItem = ({
   index,
   theme,
   AllTokens,
+  protocolType,
   addLiquidity,
   addLiquidityNormal,
 }) => {
+  console.log('protocolType', item.protocol);
   const GasPrices = useSelector((state) => state.gesData.gasPriceData);
   const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
   const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
@@ -97,34 +99,6 @@ export const LiquidityTableItem = ({
     label: 'Ether',
     value: 'Ether',
   };
-
-  // useEffect(() => {
-  //   async function getData() {
-  //     let fetchedTokens;
-  //     await axios.get(`https://api.0x.org/swap/v1/tokens`, {}).then(async (response) => {
-  //       setAllTokens(response.data.records);
-  //       fetchedTokens = response.data.records;
-  //     });
-  //     await axios
-  //       .get(`https://tokens.coingecko.com/uniswap/all.json`, {})
-  //       .then(async (response) => {
-  //         let data = response.data.tokens;
-  //         console.log('imagesTOKENS', data);
-  //         let tokens = fetchedTokens.map((token) => ({
-  //           ...token,
-  //           logoURI: data.find((x) => x.address === token.address)
-  //             ? data.find((x) => x.address === token.address).logoURI
-  //             : tokenURIs.find((x) => x.address === token.address).logoURI,
-  //         }));
-  //         console.log('tokensWithImages', tokens);
-  //         setAllTokens(tokens);
-  //       })
-  //       .catch((res) => {
-  //         console.log('liquidity pools Sushiswap-V2 returns error', res);
-  //       });
-  //   }
-  //   getData().then((r) => r);
-  // }, []);
 
   const switchModal = (e) => {
     setSelectedModal(e.target.id);
@@ -243,13 +217,6 @@ export const LiquidityTableItem = ({
       .then((res) => {
         return res;
       });
-
-    console.log('tokenDecimal inputId', inputId);
-    console.log('tokenDecimal value', value);
-    console.log('tokenDecimal token1', token1);
-    console.log('tokenDecimal token2', token2);
-    console.log('tokenDecimal decimals 1', tokenDecimal1);
-    console.log('tokenDecimal decimals 2', tokenDecimal2);
     //------------------------------------->
     const NewContract = new web3.eth.Contract(
       ROUTERABI,
@@ -363,7 +330,8 @@ export const LiquidityTableItem = ({
           item.token1.id,
           tokenAddress,
           (singleTokenValue * 10 ** 18).toString(),
-          selectedGasPrice ? selectedGasPrice : proposeGasPrice
+          selectedGasPrice ? selectedGasPrice : proposeGasPrice,
+          item.protocol !== undefined ? item.protocol : protocolType
         );
       case 'pair':
         return addLiquidityNormal(
@@ -371,7 +339,8 @@ export const LiquidityTableItem = ({
           item.token1.id,
           addLiquidityNormalTokenA,
           addLiquidityNormalTokenB,
-          selectedGasPrice ? selectedGasPrice : proposeGasPrice
+          selectedGasPrice ? selectedGasPrice : proposeGasPrice,
+          item.protocol ? item.protocol : protocolType
         );
     }
   };

@@ -33,7 +33,7 @@ import { Link, useParams } from 'react-router-dom';
 import {LiquidityPoolsTable} from "./liquidityPoolsTable/liquidityPoolsTable/liquidityPoolsTable";
 import {AddNewGroupButton} from "./uniV2/StyledComponents";
 import {useSelector} from "react-redux";
-import {addLiquidityNormalSushiV2, addLiquiditySushiV2} from "../../screens/liquidityPools/helpers";
+import {addLiquidityNormal, addLiquidity} from "../../screens/liquidityPools/helpers";
 import mockTokenImage from '../../assets/icons/ethereum.svg';
 
 function TabPanel(props) {
@@ -455,12 +455,12 @@ export default function LiquidityPools({ inputValue, AllTokens }) {
                       <TransparentButton
                         value="Remove Liquidity In Tokens"
                         onClick={(e) => {
-                          removeLiquidity(
-                            object.token0.id,
-                            object.token1.id,
-                            ReceiveToken,
-                            (LiquidityAmount * 10 ** 18).toString()
-                          );
+                          // removeLiquidity(
+                          //   object.token0.id,
+                          //   object.token1.id,
+                          //   ReceiveToken,
+                          //   (LiquidityAmount * 10 ** 18).toString()
+                          // );
                         }}
                       />
                     </div>
@@ -483,11 +483,11 @@ export default function LiquidityPools({ inputValue, AllTokens }) {
                     <TransparentButton
                       value="Remove Liquidity Classic"
                       onClick={(e) => {
-                        removeLiquidityNormal(
-                          object.token0.id,
-                          object.token1.id,
-                          (LiquidityAmount * 10 ** 18).toString()
-                        );
+                        // removeLiquidityNormal(
+                        //   object.token0.id,
+                        //   object.token1.id,
+                        //   (LiquidityAmount * 10 ** 18).toString()
+                        // );
                       }}
                     />
                   </center>
@@ -631,25 +631,24 @@ export default function LiquidityPools({ inputValue, AllTokens }) {
     setAccountLiquidity(qtty);
   }
 
-  async function removeLiquidity(tokenA, tokenB, receiveToken, liquidityAmount) {
-    // console.log(tokenA, tokenB, receiveToken, liquidityAmount)
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.sushiFactory);
-    var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call();
-    var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
-    const oneClickContract = new web3.eth.Contract(
-      OneClickLiquidity,
-      Addresses.oneClickSushiV2Contract
-    );
-    await PairContract.methods
-      .approve(Addresses.oneClickSushiV2Contract, liquidityAmount)
-      .send({ from: accounts[0] });
-    await oneClickContract.methods
-      .removeLiquidityOneClick(tokenA, tokenB, receiveToken, liquidityAmount)
-      .send({ from: accounts[0] });
-  }
+  // async function removeLiquidity(tokenA, tokenB, receiveToken, liquidityAmount) {
+  //   await loadWeb3();
+  //   const web3 = window.web3;
+  //   const accounts = await web3.eth.getAccounts();
+  //   var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.sushiFactory);
+  //   var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call();
+  //   var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
+  //   const oneClickContract = new web3.eth.Contract(
+  //     OneClickLiquidity,
+  //     Addresses.oneClickSushiV2Contract
+  //   );
+  //   await PairContract.methods
+  //     .approve(Addresses.oneClickSushiV2Contract, liquidityAmount)
+  //     .send({ from: accounts[0] });
+  //   await oneClickContract.methods
+  //     .removeLiquidityOneClick(tokenA, tokenB, receiveToken, liquidityAmount)
+  //     .send({ from: accounts[0] });
+  // }
 
   async function removeLiquidityETH(tokenA, tokenB, LiquidityAmount) {
     await loadWeb3();
@@ -670,22 +669,22 @@ export default function LiquidityPools({ inputValue, AllTokens }) {
       .send({ from: accounts[0] });
   }
 
-  async function removeLiquidityNormal(tokenA, tokenB, LiquidityAmount) {
-    const start = parseInt(Date.now() / 1000) + 180;
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.sushiFactory);
-    var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call();
-    var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
-    const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.sushiRouter);
-    await PairContract.methods
-      .approve(Addresses.sushiRouter, LiquidityAmount)
-      .send({ from: accounts[0] });
-    await UniRouter.methods
-      .removeLiquidity(tokenA, tokenB, LiquidityAmount, 0, 0, accounts[0], start.toString())
-      .send({ from: accounts[0] });
-  }
+  // async function removeLiquidityNormal(tokenA, tokenB, LiquidityAmount) {
+  //   const start = parseInt(Date.now() / 1000) + 180;
+  //   await loadWeb3();
+  //   const web3 = window.web3;
+  //   const accounts = await web3.eth.getAccounts();
+  //   var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.sushiFactory);
+  //   var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call();
+  //   var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
+  //   const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.sushiRouter);
+  //   await PairContract.methods
+  //     .approve(Addresses.sushiRouter, LiquidityAmount)
+  //     .send({ from: accounts[0] });
+  //   await UniRouter.methods
+  //     .removeLiquidity(tokenA, tokenB, LiquidityAmount, 0, 0, accounts[0], start.toString())
+  //     .send({ from: accounts[0] });
+  // }
 
   async function addLiquidityEth(tokenA, tokenB, ethAmount) {
     await loadWeb3();
@@ -716,8 +715,9 @@ export default function LiquidityPools({ inputValue, AllTokens }) {
         data={filterData(Data)}
         type={'sushiswap'}
         AllTokens={AllTokens}
-        addLiquidity={addLiquiditySushiV2}
-        addLiquidityNormal={addLiquidityNormalSushiV2}
+        addLiquidity={addLiquidity}
+        addLiquidityNormal={addLiquidityNormal}
+        protocolType={'Sushiswap'}
       />
       <center>
         <AddNewGroupButton

@@ -64,10 +64,12 @@ export const getuniswapV2data = async (attributes) => {
           let token0Symbol = res[i].pair.token0.symbol;
           let token1Symbol = res[i].pair.token1.symbol;
           //object.symbol = res[i].pair.token0.symbol + '-' + res[i].pair.token1.symbol;
-          object.symbol =
-            token0Symbol.replace('yDAI+yUSDC+yUSDT+yTUSD', 'Y Curve') +
-            '/' +
-            token1Symbol.replace('yDAI+yUSDC+yUSDT+yTUSD', 'Y Curve');
+          object.symbol = `${token0Symbol.replace(
+            'yDAI+yUSDC+yUSDT+yTUSD',
+            'Y Curve'
+          )} ${token1Symbol.replace('yDAI+yUSDC+yUSDT+yTUSD', 'Y Curve')}`;
+          object.token0Symbol = token0Symbol.replace('yDAI+yUSDC+yUSDT+yTUSD', 'Y Curve');
+          object.token1Symbol = token1Symbol.replace('yDAI+yUSDC+yUSDT+yTUSD', 'Y Curve');
           object.liquidity = res[i].pair.reserveUSD;
           object.volume = res[i].pair.volumeUSD;
           object.protocol = 'Uniswap V2';
