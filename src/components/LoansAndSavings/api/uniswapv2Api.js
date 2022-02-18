@@ -50,6 +50,11 @@ export const getuniswapV2data = async (attributes) => {
         const res = response.data.data.liquidityPositions;
         for (let i = 0; i < res.length; i++) {
           const object = {};
+          object.poolDetails = {
+            poolAddress: res[i].pair.id,
+            token0Address: res[i].pair.token0.id,
+            token1Address: res[i].pair.token1.id,
+          };
           object.id = res[i].pair.id;
           object.balance = res[i].liquidityTokenBalance;
           object.tokenSupply = res[i].pair.totalSupply;
@@ -101,6 +106,7 @@ export const getuniswapV2data = async (attributes) => {
         pools.sort((a, b) => parseFloat(b.value) - parseFloat(a.value));
       }
     });
+
   return pools;
 };
 
