@@ -110,20 +110,16 @@ import chevronDownLight from '../../assets/icons/chevronDownLight.svg';
 import MultiSwapComponent from './multiSwap';
 import SelectTokensModalContainer from './selectTokensModal';
 import { TokenImage, ModalTitle, CloseButton, Header } from './selectTokensModal/styles';
-import Autocomplete from '@mui/material/Autocomplete';
-import searchIcon from '../../assets/icons/searchIconLight.png';
 
-import SearchIcon from '@mui/icons-material/Search';
-import { TokensListTextField } from '../../components/searchTokens/styles';
 import actionTypes from '../../constants/actionTypes';
 import {
   checkIfExchangedTokenLimitIsExceeded,
   convertSendTokenToUSDCurrencyHelper,
+  filteredTokensByName,
 } from './helpers';
+
 import { getTokenDataSaga } from '../../store/currentTokenData/actions';
-import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
 import Popover from '@mui/material/Popover';
-import sendTokensMockList from './sendTokensMockList.json';
 
 const useStyles = makeStyles((theme) => ({
   noBorder: {
@@ -155,12 +151,11 @@ const makeCall = async (callName, contract, args, metadata = {}) => {
   }
 };
 
-import { filteredTokensByName } from './helpers';
 import TOKENDECIMALSABI from '../../abi/TokenDecomals.json';
 import ROUTERABI from '../../abi/UniRouterV2.json';
 import exchangersOfferedList from './exchangersOfferedList';
 import greenDot from '../../assets/icons/greenDot.svg';
-import { addLiquiditySushiV2 } from '../liquidityPools/helpers';
+import { singleSushiSwapV2 } from './helpers';
 
 export default function SwapComponent() {
   const dispatch = useDispatch();
@@ -179,7 +174,7 @@ export default function SwapComponent() {
 
   //console.log('single GasPrice selected', selectedGasPrice);
   //console.log('single GasPrice propose', proposeGasPrice);
-  //console.log('initSendTokenSwap', initSendTokenSwap);
+  // console.log('initSendTokenSwap', initSendTokenSwap);
   //console.log('initReceiveFirstTokenSwap', initReceiveFirstTokenSwap);
 
   const [filteredData, setFilteredData] = useState([]);
@@ -205,7 +200,7 @@ export default function SwapComponent() {
   //console.log('1112 filteredSend', filteredData);
   //console.log('1112 filteredReceive', filteredReceiveTokensListData);
 
-  //console.log('single swap sendTokenForExchangeAmount', sendTokenForExchangeAmount);
+  console.log('single swap sendTokenForExchangeAmount', sendTokenForExchangeAmount);
   //console.log('single swap receiveTokenForExchangeAmount', receiveTokenForExchangeAmount);
 
   //---OLD states
@@ -1337,16 +1332,26 @@ export default function SwapComponent() {
 
               <SwapBlockExchangeLayout isLightTheme={isLightTheme}>
                 <Button
-                  disabled={isTokensLimitExceeded}
+                  disabled={
+                    isTokensLimitExceeded ||
+                    false ||
+                    sendTokenForExchangeAmount === '0' ||
+                    sendTokenForExchangeAmount === 0 ||
+                    sendTokenForExchangeAmount?.length === 0
+                  }
                   onClick={() => {
                     calculateToAmount(initSendTokenSwap);
-                    //token swap (sushiswap exchanger only)
-                    addLiquiditySushiV2(
-                      initSendTokenSwap.address,
-                      initReceiveFirstTokenSwap.address,
-                      sendTokenForExchangeAmount,
-                      proposeGasPrice
-                    );
+
+                    //token single swap
+                    // sushiswap exchanger only
+                    // also should be send exchanger address in order to chosen exchanger
+                    //now, by default, sushiswap v2 hardcode only
+                    singleSushiSwapV2({
+                      sendTokenAddress: initSendTokenSwap.address,
+                      sendTokenAmount: sendTokenForExchangeAmount,
+                      receiveTokenAddress: initReceiveFirstTokenSwap.address,
+                      gasPrice: selectedGasPrice ? selectedGasPrice : proposeGasPrice,
+                    });
                   }}>
                   Exchange
                 </Button>

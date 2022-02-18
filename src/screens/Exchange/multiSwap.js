@@ -102,6 +102,14 @@ export default function MultiSwapComponent() {
   const { address } = useParams();
   const dispatch = useDispatch();
   const classes = useStyles();
+  const [tokenSendUSDCurrency, setTokenSendUSDCurrency] = useState('$0.00');
+  let [tokensListModal, setTokensListModal] = useState([]);
+  const [sendTokenForExchangeAmount, setSendTokenForExchangeAmount] = useState();
+  let [oldTokenSwappedAddress, setOldTokenSwappedAddress] = useState();
+  let [isSendTokenSelectedSwapped, setIsSendTokenSelectedSwapped] = useState(false);
+  const [openTokensModal, setOpenTokensModal] = useState(false);
+
+  // Polygon
   const [sendTokenForExchange, setSendTokenForExchange] = useState({
     symbol: 'ETH',
     logoURI: EthIcon,
@@ -111,10 +119,6 @@ export default function MultiSwapComponent() {
     sendTokensListItem: true,
     address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
   });
-
-  const [tokenSendUSDCurrency, setTokenSendUSDCurrency] = useState('$0.00');
-
-  // Polygon
   const initReceiveTokensList = [
     {
       symbol: 'WETH',
@@ -136,17 +140,17 @@ export default function MultiSwapComponent() {
     },
   ];
 
-  const [anchorEl, setAnchorEl] = useState(null);
+  //popover open/close
 
+  const [anchorEl, setAnchorEl] = useState(null);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
   const handleClose = () => {
     setAnchorEl(null);
   };
-
   const open = Boolean(anchorEl);
+  //-------------
 
   const { account, activate, active, chainId, connector, deactivate, error, provider, setError } =
     useWeb3React();
@@ -155,7 +159,6 @@ export default function MultiSwapComponent() {
 
   console.log('init receive multiswap state', receiveTokensList);
 
-  const [openTokensModal, setOpenTokensModal] = useState(false);
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
   //working saga
@@ -171,6 +174,10 @@ export default function MultiSwapComponent() {
     finalSendTokensList.length !== 0 && setFilteredSendTokensListData(finalSendTokensList);
     finalReceiveTokensList.length !== 0 && setFilteredReceiveTokensListData(finalReceiveTokensList);
   }, [finalSendTokensList, finalReceiveTokensList]);
+
+  console.log('state sendTokenForExchange multiswap', sendTokenForExchange);
+  console.log('state receiveTokenForExchange array multiswap 123', receiveTokensList);
+  console.log('state setSendTokenForExchangeAmount multiswap', sendTokenForExchangeAmount);
 
   async function getWeb3() {
     // const provider = active ? await connector.getProvider() : ethers.getDefaultProvider();
@@ -277,13 +284,6 @@ export default function MultiSwapComponent() {
     await getAmountMulti();
   };
 
-  let [tokensListModal, setTokensListModal] = useState([]);
-  let [isSendTokenSelectedSwapped, setIsSendTokenSelectedSwapped] = useState(false);
-
-  const [sendTokenForExchangeAmount, setSendTokenForExchangeAmount] = useState();
-  const [receiveTokenForExchangeAmount, setReceiveTokenForExchangeAmount] = useState();
-  let [oldTokenSwappedAddress, setOldTokenSwappedAddress] = useState();
-
   const openModalHelper = (payload) => {
     setOpenTokensModal(true);
     console.log('tokensList multiswap payload', payload);
@@ -376,10 +376,6 @@ export default function MultiSwapComponent() {
       // }
     }
   };
-
-  console.log('state sendTokenForExchange multiswap', sendTokenForExchange);
-  console.log('state receiveTokenForExchange array multiswap 123', receiveTokensList);
-  console.log('state setSendTokenForExchangeAmount multiswap', sendTokenForExchangeAmount);
 
   return (
     <SecondColumnSwapSubBlock>
