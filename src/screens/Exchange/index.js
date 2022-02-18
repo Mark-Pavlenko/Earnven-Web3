@@ -11,23 +11,7 @@ import ERC20ABI from '../../abi/ERC20.json';
 import closeModalIcon from '../../assets/icons/close_nft.svg';
 import closeModalIconDark from '../../assets/icons/closenftdark.svg';
 import OutsideClickHandler from './outsideClickHandler';
-import {
-  Box,
-  Button,
-  Container,
-  Divider,
-  Grid,
-  IconButton,
-  Input,
-  InputAdornment,
-  Modal,
-  OutlinedInput,
-  Stack,
-  Tab,
-  Tabs,
-  TextField,
-  Typography,
-} from '@material-ui/core';
+import { Box, Button } from '@material-ui/core';
 import Uniswap from '../../assets/icons/Uniswap.webp';
 import EthIcon from '../../assets/icons/ethereum.svg';
 // import Curve from '../../generalAssets/icons/Curve.webp';
@@ -103,6 +87,21 @@ import {
   SendTokenConvertedMeasures,
   SendTokenBalance,
   AbsentFoundTokensBlock,
+  SwapTokensOfferedBySubBlock,
+  ExchangersMainSubLayout,
+  OfferedByLayoutLabelBlock,
+  ExchangersLayout,
+  ExchangersLayoutTitlesBlock,
+  ExchangersMainListLayout,
+  ExchangerMainList,
+  ExchangerElementListItem,
+  ExchangerElementSpan,
+  ExchangerBestRateSpan,
+  ExchangerIcon,
+  GreenDotIcon,
+  SaveSelectedExchangerButton,
+  SingleSwapTokensOfferedBySubBlock,
+  ExceededAmountTokensLimitWarning,
 } from './styled';
 import { useDispatch, useSelector } from 'react-redux';
 import pyramidIcon from '../../assets/icons/pyramidIcon.svg';
@@ -110,21 +109,6 @@ import chevronDownBlack from '../../assets/icons/chevronDownLightTheme.svg';
 import chevronDownLight from '../../assets/icons/chevronDownLight.svg';
 import MultiSwapComponent from './multiSwap';
 import SelectTokensModalContainer from './selectTokensModal';
-import { SelectWrapper } from '../../components/liquidityPoolContents/styledComponents';
-import {
-  Balance,
-  BlockTokenName,
-  BlockTokens,
-  ButtonsBlock,
-  ChangeToken,
-  InputBlock,
-  LinksContainer,
-  ModalInput,
-  ModalLink,
-  ModalLinkRight,
-  SelectTitle,
-  SupplyTokenButton,
-} from '../../components/liquidityPoolContents/uniV2/StyledComponents';
 import { TokenImage, ModalTitle, CloseButton, Header } from './selectTokensModal/styles';
 import Autocomplete from '@mui/material/Autocomplete';
 import searchIcon from '../../assets/icons/searchIconLight.png';
@@ -132,7 +116,10 @@ import searchIcon from '../../assets/icons/searchIconLight.png';
 import SearchIcon from '@mui/icons-material/Search';
 import { TokensListTextField } from '../../components/searchTokens/styles';
 import actionTypes from '../../constants/actionTypes';
-import testFunction from './helpers';
+import {
+  checkIfExchangedTokenLimitIsExceeded,
+  convertSendTokenToUSDCurrencyHelper,
+} from './helpers';
 import { getTokenDataSaga } from '../../store/currentTokenData/actions';
 import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
 import Popover from '@mui/material/Popover';
@@ -144,73 +131,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}>
-      {value === index && <Box>{children}</Box>}
-    </div>
-  );
-}
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
-
-const styles = () => ({
-  selected: {
-    color: 'red',
-  },
-});
-const style = {
-  position: 'absolute',
-  top: '45%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 500,
-  bgcolor: 'background.default',
-  // border: '2px solid #000',
-  // boxShadow: 24,
-  p: 4,
-  borderRadius: '10px',
-};
-const CurrencySelect = styled.button`
-  align-items: center;
-  height: 42px;
-  font-size: 18px;
-  font-weight: 600;
-  background-color: transparent;
-  color: #737373;
-  border-radius: 12px;
-  outline: none;
-  cursor: pointer;
-  user-select: none;
-  border: none;
-  padding: 0 0.5rem;
-  margin: 0 0.5rem;
-  :focus,
-  :hover {
-    background-color: blue;
-  }
-`;
 const erc20Abi = [
   'function balanceOf(address owner) view returns (uint256)',
   'function approve(address _spender, uint256 _value) public returns (bool success)',
   'function allowance(address _owner, address _spender) public view returns (uint256 remaining)',
 ];
-// const selectedProvider = new Web3(new Web3.providers.HttpProvider("https://mainnet.infura.io/v3/8b2159b7b0944586b64f0280c927d0a8"))
+
 const selectedProvider = new ethers.providers.JsonRpcProvider(
   'https://mainnet.infura.io/v3/8b2159b7b0944586b64f0280c927d0a8'
 );
+
 const makeCall = async (callName, contract, args, metadata = {}) => {
   if (contract[callName]) {
     let result;
@@ -226,113 +156,170 @@ const makeCall = async (callName, contract, args, metadata = {}) => {
 };
 
 import { filteredTokensByName } from './helpers';
+import TOKENDECIMALSABI from '../../abi/TokenDecomals.json';
+import ROUTERABI from '../../abi/UniRouterV2.json';
+import exchangersOfferedList from './exchangersOfferedList';
+import greenDot from '../../assets/icons/greenDot.svg';
 
 export default function SwapComponent() {
   const dispatch = useDispatch();
   const classes = useStyles();
   const { address } = useParams();
 
-  const [value, setValue] = useState(0);
-  const [sendTokenForExchange, setSendTokenForExchange] = useState({
-    symbol: 'ETH',
-    logoURI: EthIcon,
-    avatarIcon: 'Ethereum',
-    name: 'Ethereum',
-    id: 'ethereum',
-    sendTokensListItem: true,
-    address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-  });
-  const [receiveTokenForExchange, setReceiveTokenForExchange] = useState({
-    symbol: 'DAI',
-    logoURI: daiICon,
-    avatarIcon: 'Dai Stablecoin',
-    name: 'dai',
-    id: 'dai',
-    receiveTokensListItem: true,
-    address: '0x6b175474e89094c44da98b954eedeac495271d0f',
-  });
+  //work saga
+  const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
+  const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
+
+  const initSendTokenSwap = useSelector((state) => state.tokensListReducer.initSendTokenSwap);
+  const initReceiveFirstTokenSwap = useSelector(
+    (state) => state.tokensListReducer.initReceiveFirstTokenSwap
+  );
+
+  console.log('initSendTokenSwap', initSendTokenSwap);
+  console.log('initReceiveFirstTokenSwap', initReceiveFirstTokenSwap);
+
   const [filteredData, setFilteredData] = useState([]);
   const [filteredReceiveTokensListData, setFilteredReceiveTokensListData] = useState([]);
   const [tokenSendUSDCurrency, setTokenSendUSDCurrency] = useState('$0.00');
   const [tokenReceiveUSDCurrency, setTokensReceiveUSDCurrency] = useState('$0.00');
+  const [isTokensLimitExceeded, setIsTokensLimitExceeded] = useState(false);
+  const [sendTokenForExchangeAmount, setSendTokenForExchangeAmount] = useState();
+  const [receiveTokenForExchangeAmount, setReceiveTokenForExchangeAmount] = useState();
+  const [isSendTokensModalVisible, setIsSendTokensModalVisible] = useState(false);
+  const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
+  const [toggleExchangedTokens, setToggleExchangedTokens] = useState(false);
+  const [initConvertReceiveTokenAmount, setInitConvertReceiveTokenAmount] = useState(0);
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
-  //work saga
-  // const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
-
   //mock data
-  const finalSendTokensList = sendTokensMockList;
+  // const finalSendTokensList = sendTokensMockList;
 
-  const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
+  console.log('single finalSendTokensList', finalSendTokensList);
+  console.log('single finalReceiveTokensList', finalReceiveTokensList);
+
+  console.log('1112 filteredSend', filteredData);
+  console.log('1112 filteredReceive', filteredReceiveTokensListData);
+
+  console.log('single swap sendTokenForExchangeAmount', sendTokenForExchangeAmount);
+  console.log('single swap receiveTokenForExchangeAmount', receiveTokenForExchangeAmount);
 
   //---OLD states
 
   const [TokenTo, setTokenTo] = useState('');
-  const [sendTokenForExchangeAmount, setSendTokenForExchangeAmount] = useState();
-  const [receiveTokenForExchangeAmount, setReceiveTokenForExchangeAmount] = useState();
-  const [TokenToAmount, setTokenToAmount] = useState();
-  const [Slippage, setSlippage] = useState(2);
-  const [Sources, setSources] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [protocolsRateList, setprotocolsRateList] = useState([]);
-  const [ethPrice, setethPrice] = useState(0);
-  const [selectedRate, setselectedRate] = useState(null);
-  const [newSelectedRate, setnewSelectedRate] = useState(null);
-  const [txSuccess, settxSuccess] = useState(false);
-  const [txFailure, settxFailure] = useState(false);
-  const [selectedExchangeName, setselectedExchangeName] = useState('');
-  const [currencyModal, setcurrencyModal] = useState(false);
-  const [currencyToModal, setcurrencyToModal] = useState(false);
-  const [toTokens, settoTokens] = useState([]);
-  const [isSendTokensModalVisible, setIsSendTokensModalVisible] = useState(false);
-  const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
 
-  console.log('sendTokenForExchange singleSwap state', sendTokenForExchange);
-  console.log('receiveTokenForExchange singleSwap state', receiveTokenForExchange);
+  // const [Slippage, setSlippage] = useState(2);
+  // const [selectedRate, setselectedRate] = useState(null);
+
+  //------
+
+  //popover
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+
+  //-----
 
   useEffect(async () => {
     try {
       dispatch({ type: actionTypes.SET_SEND_TOKENS_LIST, payload: address });
       dispatch({ type: actionTypes.SET_RECEIVE_TOKENS_LIST });
-      dispatch(getTokenDataSaga(receiveTokenForExchange.id));
+      dispatch(getTokenDataSaga(initReceiveFirstTokenSwap.id));
     } catch (error) {
       console.log(error);
     }
   }, []);
 
   useEffect(() => {
-    finalSendTokensList.length !== 0 && setFilteredData(finalSendTokensList);
-    finalReceiveTokensList.length !== 0 && setFilteredReceiveTokensListData(finalReceiveTokensList);
+    let filteredSendTokensList = finalSendTokensList.filter(
+      (token) => token.symbol !== initSendTokenSwap.symbol
+    );
+    let filteredReceiveTokensList = finalReceiveTokensList.filter(
+      (token) => token.symbol !== initReceiveFirstTokenSwap.symbol
+    );
+
+    console.log('single filteredSendTokensList', filteredSendTokensList);
+    console.log('single filteredReceiveTokensList', filteredReceiveTokensList);
+
+    finalSendTokensList.length !== 0 && setFilteredData(filteredSendTokensList);
+    finalReceiveTokensList.length !== 0 &&
+      setFilteredReceiveTokensListData(filteredReceiveTokensList);
+
+    setSendTokenForExchangeAmount(0);
+    setReceiveTokenForExchangeAmount(0);
+
+    setTokenSendUSDCurrency('$0.00');
+    setTokensReceiveUSDCurrency('$0.00');
+
+    // should in first time page load output the 1 sent token to total receive token amount - get undefined error
+    // setTimeout(
+    //   () =>
+    //     convertExchangeTokensCourse({
+    //       inputId: 'firstPageLoad',
+    //       tokenAmount: 1,
+    //       sendTokenForExchangeAddress: initSendTokenSwap.address,
+    //       receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
+    //     }),
+    //   5000
+    // );
+
+    //filter arr of tokens on existing values
+    // const test = finalSendTokensList.filter(
+    //   (token) => token.symbol !== sendTokenForExchange.symbol
+    // );
+    // console.log('test single', test);
   }, [finalSendTokensList, finalReceiveTokensList]);
 
   //function of dynamic converting of token value to USD Currency
 
-  let convertSendTokenToUSDCurrency = async (tokenData) => {
-    console.log('main send tokenData', tokenData);
+  const toggleSwappedTokens = () => {
+    setToggleExchangedTokens(!toggleExchangedTokens);
 
-    if (tokenData.amount === '') tokenData.amount = '0';
+    dispatch({
+      type: actionTypes.SET_INIT_SEND_TOKEN_SWAP,
+      payload: initReceiveFirstTokenSwap,
+    });
 
-    if (tokenData.symbol === 'ETH') {
-      // console.log('type send USD eth triggered');
-      const ethDollarValue = await axios.get(
-        'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
-      );
-      setTokenSendUSDCurrency(
-        `$${(ethDollarValue.data.ethereum.usd * parseInt(tokenData.amount)).toFixed(2)}`
-      );
+    dispatch({
+      type: actionTypes.SET_INIT_RECEIVE_FIRST_TOKEN_SWAP,
+      payload: initSendTokenSwap,
+    });
+
+    setTokenSendUSDCurrency(tokenReceiveUSDCurrency);
+    setTokensReceiveUSDCurrency(tokenSendUSDCurrency);
+    setSendTokenForExchangeAmount(receiveTokenForExchangeAmount);
+    setReceiveTokenForExchangeAmount(sendTokenForExchangeAmount);
+  };
+
+  const searchTokensHandler = (event, searchTokensData) => {
+    const result = filteredTokensByName(event, searchTokensData);
+    console.log('result single 111', result, searchTokensData);
+    if (searchTokensData.searchSendTokensList === true) {
+      let middle = result.filter((token) => token.symbol !== initSendTokenSwap.symbol);
+      setFilteredData(middle);
     } else {
-      if (tokenData.USDCurrency !== undefined) {
-        setTokenSendUSDCurrency(
-          `$${(tokenData.USDCurrency * parseInt(tokenData.amount)).toFixed(2)}`
-        );
-      } else {
-        setTokenSendUSDCurrency('Price not available');
-      }
+      setFilteredReceiveTokensListData(result);
     }
   };
 
+  let convertSendTokenToUSDCurrency = (tokenData) => {
+    let convertedToUSDValue = convertSendTokenToUSDCurrencyHelper(tokenData);
+    // console.log('test convertedToUSDValue', convertedToUSDValue);
+    setTokenSendUSDCurrency(convertedToUSDValue);
+  };
+
   let convertReceiveTokenToUSDCurrency = async (tokenData) => {
+    setTokensReceiveUSDCurrency('Loading');
+
     if (tokenData.amount === '') {
       tokenData.amount = '0';
     }
@@ -349,7 +336,7 @@ export default function SwapComponent() {
           `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
         )
         .then(async (response) => {
-          // console.log('suc get usd', response);
+          console.log('suc get usd receive tokenData', response);
           tokenUSDCurrencyValue = response;
         })
         .catch((err) => {
@@ -357,11 +344,16 @@ export default function SwapComponent() {
           // tokenUSDCurrencyValue = err;
         });
 
-      console.log('receive tokenData USDCurrency', tokenUSDCurrencyValue);
+      console.log('receive tokenData total USDCurrency', tokenUSDCurrencyValue.data.price.rate);
 
-      if (tokenUSDCurrencyValue) {
+      if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
+        // console.log(
+        //   'receive tokenData total',
+        //   (tokenUSDCurrencyValue.data.price.rate * tokenData.amount).toFixed(2)
+        // );
+
         setTokensReceiveUSDCurrency(
-          `$ ${(tokenUSDCurrencyValue.data.price.rate * parseInt(tokenData.amount)).toFixed(2)}`
+          `$ ${(tokenUSDCurrencyValue.data.price.rate * tokenData.amount).toFixed(2)}`
         );
       } else {
         setTokensReceiveUSDCurrency('Price not available');
@@ -372,7 +364,7 @@ export default function SwapComponent() {
       );
 
       setTokensReceiveUSDCurrency(
-        `$${(ethDollarValue.data.ethereum.usd * parseInt(tokenData.amount)).toFixed(2)}`
+        `$${(ethDollarValue.data.ethereum.usd * tokenData.amount).toFixed(2)}`
       );
     }
   };
@@ -396,11 +388,13 @@ export default function SwapComponent() {
     const accounts = await web3.eth.getAccounts();
     console.log('account selected is :::', accounts[0]);
 
+    //useState with null
+
     if (selectedRate !== null) {
       let txObject = selectedRate.transactObject;
-      txObject.gas = parseInt(txObject.gas) + 100000;
+      txObject.gas = parseFloat(txObject.gas) + 100000;
       txObject.from = accounts[0];
-      if (sendTokenForExchange.symbol !== 'ETH') {
+      if (initSendTokenSwap.symbol !== 'ETH') {
         const ERC20contract = new web3.eth.Contract(ERC20ABI, txObject.sellTokenAddress);
         await ERC20contract.methods
           .approve(txObject.allowanceTarget, txObject.sellAmount)
@@ -408,10 +402,10 @@ export default function SwapComponent() {
       }
       try {
         await web3.eth.sendTransaction(txObject);
-        settxSuccess(true);
+        // settxSuccess(true);
       } catch (error) {
         console.log('tx failed::', error);
-        settxFailure(true);
+        // settxFailure(true);
       }
     } else {
       alert('Please Fill All fields');
@@ -421,11 +415,11 @@ export default function SwapComponent() {
   const calculateToAmount = async (tokenFromAmount) => {
     console.log('calculate method called with ammount::', tokenFromAmount);
     console.log('value of Tokenfromamount::', sendTokenForExchangeAmount);
-    console.log('value of tokenfrom object::', sendTokenForExchange);
+    console.log('value of tokenfrom object::', initSendTokenSwap);
     console.log('value of tokenTo::', TokenTo);
     if (tokenFromAmount > 0) {
       // console.log("calculate amount is called")
-      if (sendTokenForExchange.symbol !== '' && TokenTo !== '') {
+      if (initSendTokenSwap.symbol !== '' && TokenTo !== '') {
         let differentQuoteList = [];
         const protocolsList = ['', 'Uniswap', 'Curve', 'SushiSwap', 'Bancor', 'Balancer'];
         let amount = parseFloat(tokenFromAmount) * Math.pow(10, 18);
@@ -435,7 +429,7 @@ export default function SwapComponent() {
           try {
             let protocolQuote = {};
             const response = await axios.get(
-              `https://ropsten.api.0x.org/swap/v1/quote?buyToken=${TokenTo.symbol}&sellToken=${sendTokenForExchange.symbol}&sellAmount=${amount}&feeRecipient=0xE609192618aD9aC825B981fFECf3Dfd5E92E3cFB&buyTokenPercentageFee=0.02&includedSources=${protocolsList[i]}`
+              `https://ropsten.api.0x.org/swap/v1/quote?buyToken=${TokenTo.symbol}&sellToken=${initSendTokenSwap.symbol}&sellAmount=${amount}&feeRecipient=0xE609192618aD9aC825B981fFECf3Dfd5E92E3cFB&buyTokenPercentageFee=0.02&includedSources=${protocolsList[i]}`
             );
             console.log(`response for all ${protocolsList[i]}`, response.data);
 
@@ -449,26 +443,27 @@ export default function SwapComponent() {
                   sources2.push(sources[j]);
                 }
               }
-              setSources(sources2);
+              // setSources(sources2);
             } else {
               protocolQuote.name = protocolsList[i];
             }
             protocolQuote.price = response.data.price;
             protocolQuote.minPrice = response.data.guaranteedPrice;
             protocolQuote.TokenToAmount = (
-              parseInt(response.data.buyAmount) * Math.pow(10, -TokenTo.decimals)
+              parseFloat(response.data.buyAmount) * Math.pow(10, -TokenTo.decimals)
             )
               .toFixed(2)
               .toString();
+            const ethPrice = 3000;
             protocolQuote.gas = (
-              parseInt(response.data.gas) *
-              parseInt(response.data.gasPrice) *
+              parseFloat(response.data.gas) *
+              parseFloat(response.data.gasPrice) *
               Math.pow(10, -18) *
               ethPrice
             ).toFixed(2);
             console.log('dollar value of token', tokenToDollarValue);
             protocolQuote.receivedValueInDollar = (
-              parseInt(response.data.buyAmount) *
+              parseFloat(response.data.buyAmount) *
               Math.pow(10, -TokenTo.decimals) *
               tokenToDollarValue
             ).toFixed(2);
@@ -506,134 +501,232 @@ export default function SwapComponent() {
           }
         }
         differentQuoteList.sort((a, b) => b.netReceived - a.netReceived);
-        setselectedRate(differentQuoteList[0]);
+        // setselectedRate(differentQuoteList[0]);
         console.log('differentQuoteList[0].name', differentQuoteList);
-        setselectedExchangeName(differentQuoteList[0].name);
-        setprotocolsRateList(differentQuoteList);
+        // setselectedExchangeName(differentQuoteList[0].name);
+        // setprotocolsRateList(differentQuoteList);
         console.log('different rates we have::', differentQuoteList);
       }
     }
   };
 
   const selectSendTokenForExchange = (selectSendToken) => {
-    console.log('selected send token value object 111', selectSendToken);
-    setSendTokenForExchange(selectSendToken);
-    setSendTokenForExchangeAmount(1);
-    //old
-    setTokenToAmount(0);
-    setprotocolsRateList([]);
-    setselectedRate(null);
-    setSources([]);
+    console.log('selected send token value object 222', selectSendToken);
+    // setSendTokenForExchange(selectSendToken);
+    setIsSendTokensModalVisible(false);
+    setSendTokenForExchangeAmount(0);
+    dispatch({
+      type: actionTypes.SET_INIT_SEND_TOKEN_SWAP,
+      payload: selectSendToken,
+    });
+    convertSendTokenToUSDCurrency({
+      amount: 0,
+      sendTokensListItem: true,
+      ...selectSendToken,
+      address: selectSendToken.address,
+    });
   };
 
   const selectReceiveTokenForExchange = (selectReceiveToken) => {
-    console.log('selected receive token value object 111', selectReceiveToken);
-    setReceiveTokenForExchange(selectReceiveToken);
-    setReceiveTokenForExchangeAmount(1);
+    console.log('selected receive token value object 222', selectReceiveToken);
+
+    setIsReceiveTokensModalVisible(false);
+    setReceiveTokenForExchangeAmount(0);
+
+    dispatch({
+      type: actionTypes.SET_INIT_RECEIVE_FIRST_TOKEN_SWAP,
+      payload: selectReceiveToken,
+    });
+
+    convertReceiveTokenToUSDCurrency({
+      amount: 0,
+      receiveTokensListItem: true,
+      ...selectReceiveToken,
+      address: selectReceiveToken.address,
+    });
     //old
-    setTokenToAmount(0);
-    setprotocolsRateList([]);
-    setselectedRate(null);
-    setSources([]);
+    // setprotocolsRateList([]);
+    // setselectedRate(null);
+    // setSources([]);
   };
 
-  const ToTokenChange = (value) => {
-    setTokenTo(value);
-    setSendTokenForExchangeAmount(0);
-    setTokenToAmount(0);
-    setprotocolsRateList([]);
-    setselectedRate(null);
-    setSources([]);
-  };
+  // console.log('sendTokenForExchangeAmount 222', sendTokenForExchangeAmount);
 
-  const handleDismissSearch = () => {
-    setcurrencyModal(false);
-  };
-  const handleCurrencyToDismissSearch = () => {
-    setcurrencyToModal(false);
-  };
-
-  //old useEffect for swap --------------
-
-  const [AllTokens, setAllTokens] = useState([]);
-  const [TokenFrom, setTokenFrom] = useState('ETH');
-  const [TokenFromAmount, setTokenFromAmount] = useState();
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  const fromTokenChange = (value) => {
-    setTokenFrom(value);
-    // setTokenTo('');
-    setTokenFromAmount(0);
-    setTokenToAmount(0);
-    setprotocolsRateList([]);
-    setselectedRate(null);
-    setSources([]);
-  };
-
-  console.log('token receive swap tokenReceiveUSDCurrency', tokenReceiveUSDCurrency);
-
-  useEffect(async () => {
-    await axios
-      .get(`https://api.ethplorer.io/getAddressInfo/${address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`)
-      .then(async (response) => {
-        const arr1 = [];
-        if (response.data.ETH.balance !== 0) {
-          const tempObj = {};
-          tempObj.address = '';
-          tempObj.name = 'Ethereum';
-          tempObj.symbol = 'ETH';
-          tempObj.balance = response.data.ETH.balance.toFixed(2).toString();
-          tempObj.logoURI = ethImage;
-          arr1.push(tempObj);
-        }
-        let tokens = response.data.tokens;
-        for (let i = 0; i < tokens.length; i++) {
-          const tempObj = {};
-          tempObj.address = tokens[i].tokenInfo.address;
-          tempObj.name = tokens[i].tokenInfo.name;
-          tempObj.symbol = tokens[i].tokenInfo.symbol;
-          tempObj.balance = (
-            tokens[i].balance * Math.pow(10, -parseInt(tokens[i].tokenInfo.decimals))
-          )
-            .toFixed(2)
-            .toString();
-          if (tokens[i].tokenInfo.image !== undefined) {
-            tempObj.logoURI = `https://ethplorer.io${tokens[i].tokenInfo.image}`;
-          } else {
-            tempObj.logoURI = null;
-          }
-          arr1.push(tempObj);
-        }
-        // console.log('final wallet`s tokens list arr', arr1);
-        setAllTokens(arr1);
-      });
-  }, []);
+  // console.log('token receive swap tokenReceiveUSDCurrency', tokenReceiveUSDCurrency);
 
   //---------------------
 
-  const [toggleExchangedTokens, setToggleExchangedTokens] = useState(false);
+  //convert one token to another
+  //now - mock Uniswap V2 Contract address
 
-  const toggleSwappedTokens = () => {
-    setToggleExchangedTokens(!toggleExchangedTokens);
-    setReceiveTokenForExchange(sendTokenForExchange);
-    setSendTokenForExchange(receiveTokenForExchange);
-    setTokenSendUSDCurrency(tokenReceiveUSDCurrency);
-    setTokensReceiveUSDCurrency(tokenSendUSDCurrency);
-    setSendTokenForExchangeAmount(receiveTokenForExchangeAmount);
-    setReceiveTokenForExchangeAmount(sendTokenForExchangeAmount);
+  const convertExchangeTokensCourse = async (convertTokensData) => {
+    console.log('convertTokensData single swap', convertTokensData);
+    console.log(
+      ' convertTokensData single swap tokenDecimal token1',
+      convertTokensData.sendTokenForExchangeAddress
+    );
+    console.log(
+      ' convertTokensData single swap tokenDecimal token2',
+      convertTokensData.receiveTokenForExchangeAddress
+    );
+
+    await loadWeb3();
+    const web3 = window.web3;
+
+    const tokenDecimal1 = await new web3.eth.Contract(
+      TOKENDECIMALSABI,
+      convertTokensData.sendTokenForExchangeAddress
+    ).methods
+      .decimals()
+      .call()
+      .then((res) => {
+        return res;
+      });
+    const tokenDecimal2 = await new web3.eth.Contract(
+      TOKENDECIMALSABI,
+      convertTokensData.receiveTokenForExchangeAddress
+    ).methods
+      .decimals()
+      .call()
+      .then((res) => {
+        return res;
+      });
+
+    console.log('convertTokensData single swap tokenDecimal 1', tokenDecimal1);
+    console.log('convertTokensData single swap tokenDecimal 2', tokenDecimal2);
+
+    const NewContract = new web3.eth.Contract(
+      ROUTERABI,
+      //Sushiswap contract address - should be changed dynamically
+      '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+    );
+
+    if (convertTokensData.tokenAmount !== 0 && !isNaN(convertTokensData.tokenAmount)) {
+      if (convertTokensData.inputId === 'firstPageLoad') {
+        const convertedValue = await NewContract.methods
+          .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
+            convertTokensData.sendTokenForExchangeAddress,
+            convertTokensData.receiveTokenForExchangeAddress,
+          ])
+          .call();
+
+        console.log('initLoad convertTokensData', convertedValue);
+
+        // setReceiveTokenForExchangeAmount(+convertedValue[1] / 10 ** tokenDecimal2);
+
+        convertReceiveTokenToUSDCurrency({
+          amount: +convertedValue[1] / 10 ** tokenDecimal2,
+          address: convertTokensData.receiveTokenForExchangeAddress,
+        });
+      } else if (convertTokensData.inputId === 'chooseSendToken') {
+        const convertedValue = await NewContract.methods
+          .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
+            convertTokensData.sendTokenForExchangeAddress,
+            convertTokensData.receiveTokenForExchangeAddress,
+          ])
+          .call();
+
+        console.log('chooseSendToken convertTokensData', convertedValue);
+
+        setInitConvertReceiveTokenAmount((+convertedValue[1] / 10 ** tokenDecimal2).toFixed(3));
+
+        // setReceiveTokenForExchangeAmount(+convertedValue[1] / 10 ** tokenDecimal2);
+
+        // convertReceiveTokenToUSDCurrency({
+        //   amount: +convertedValue[1] / 10 ** tokenDecimal2,
+        //   address: convertTokensData.receiveTokenForExchangeAddress,
+        // });
+      } else if (convertTokensData.inputId === 'sendInput') {
+        const convertedValue = await NewContract.methods
+          .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
+            convertTokensData.sendTokenForExchangeAddress,
+            convertTokensData.receiveTokenForExchangeAddress,
+          ])
+          .call();
+
+        console.log('convertTokensData convertedValue', convertedValue);
+        console.log(
+          'convertTokensData receive input value ',
+          +convertedValue[1] / 10 ** tokenDecimal2
+        );
+
+        setReceiveTokenForExchangeAmount(+convertedValue[1] / 10 ** tokenDecimal2);
+
+        convertReceiveTokenToUSDCurrency({
+          amount: +convertedValue[1] / 10 ** tokenDecimal2,
+          address: convertTokensData.receiveTokenForExchangeAddress,
+        });
+      } else if (convertTokensData.inputId === 'receiveInput') {
+        const convertedValue = await NewContract.methods
+          .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
+            convertTokensData.sendTokenForExchangeAddress,
+            convertTokensData.receiveTokenForExchangeAddress,
+          ])
+          .call();
+
+        console.log('convertTokensData convertedValue', convertedValue);
+        console.log(
+          'convertTokensData receive input value ',
+          +convertedValue[1] / 10 ** tokenDecimal2
+        );
+
+        setSendTokenForExchangeAmount(+convertedValue[1] / 10 ** tokenDecimal2);
+
+        convertSendTokenToUSDCurrency({
+          amount: +convertedValue[1] / 10 ** tokenDecimal2,
+          address: convertTokensData.receiveTokenForExchangeAddress,
+          USDCurrency: initSendTokenSwap.USDCurrency,
+        });
+      }
+    } else {
+      console.log('convertTokensData null amount orNAN error!');
+      setReceiveTokenForExchangeAmount(0);
+      convertReceiveTokenToUSDCurrency({
+        amount: 0,
+        address: convertTokensData.receiveTokenForExchangeAddress,
+      });
+    }
   };
 
-  const searchTokensHandler = (event, searchTokensData) => {
-    const result = filteredTokensByName(event, searchTokensData);
-    console.log('result', result);
-    if (searchTokensData.searchSendTokensList === true) {
-      setFilteredData(result);
-    } else {
-      setFilteredReceiveTokensListData(result);
-    }
+  const triggerSendTokenInputHandlers = (value, initSendTokenSwap) => {
+    setSendTokenForExchangeAmount(value);
+
+    console.log('initSendTokenSwap handle value', value);
+    console.log('initSendTokenSwap handle', initSendTokenSwap);
+
+    convertSendTokenToUSDCurrency({
+      amount: value,
+      ...initSendTokenSwap,
+    });
+    convertExchangeTokensCourse({
+      inputId: 'sendInput',
+      tokenAmount: parseFloat(value),
+      sendTokenForExchangeAddress: initSendTokenSwap.address,
+      receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
+    });
+    const isLimitExceeded = checkIfExchangedTokenLimitIsExceeded(value, initSendTokenSwap.balance);
+    setIsTokensLimitExceeded(isLimitExceeded);
+  };
+
+  const triggerReceiveTokenInputHandlers = (value, initReceiveTokenSwap) => {
+    setReceiveTokenForExchangeAmount(value);
+
+    console.log('initReceiveTokenSwap handle value', value);
+    console.log('initReceiveTokenSwap handle', initReceiveTokenSwap);
+
+    convertReceiveTokenToUSDCurrency({
+      amount: value,
+      ...initReceiveFirstTokenSwap,
+    });
+    convertExchangeTokensCourse({
+      inputId: 'receiveInput',
+      tokenAmount: parseFloat(value),
+      sendTokenForExchangeAddress: initSendTokenSwap.address,
+      receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
+    });
+
+    const isLimitExceeded = checkIfExchangedTokenLimitIsExceeded(value, initSendTokenSwap.balance);
+    setIsTokensLimitExceeded(isLimitExceeded);
   };
 
   return (
@@ -656,59 +749,62 @@ export default function SwapComponent() {
                 </SendBlockLabels>
 
                 {/* Open modal with tokens list*/}
-                <SendTokensChooseButton isLightTheme={isLightTheme}>
-                  <ChooseBtnTokenBlock onClick={() => setIsSendTokensModalVisible(true)}>
-                    {sendTokenForExchange.logoURI !== null ? (
-                      <SendTokenImg alt="token_img" src={sendTokenForExchange.logoURI} />
-                    ) : (
-                      <Avatar
-                        style={{
-                          marginRight: '12px',
-                          marginLeft: '12px',
-                          marginTop: '2px',
-                        }}
-                        name={sendTokenForExchange.avatarIcon}
-                        round={true}
-                        size="21"
-                        textSizeRatio={1}
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <SendTokensChooseButton isLightTheme={isLightTheme}>
+                    <ChooseBtnTokenBlock onClick={() => setIsSendTokensModalVisible(true)}>
+                      {initSendTokenSwap.logoURI !== null ? (
+                        <SendTokenImg alt="token_img" src={initSendTokenSwap.logoURI} />
+                      ) : (
+                        <Avatar
+                          style={{
+                            marginRight: '12px',
+                            marginLeft: '12px',
+                            marginTop: '2px',
+                          }}
+                          name={initSendTokenSwap.avatarIcon}
+                          round={true}
+                          size="21"
+                          textSizeRatio={1}
+                        />
+                      )}
+                      <ChosenTokenLabel isLightTheme={isLightTheme}>
+                        {initSendTokenSwap.symbol === 'ethereum' ? 'ETH' : initSendTokenSwap.symbol}
+                      </ChosenTokenLabel>
+                      <img
+                        src={isLightTheme ? chevronDownBlack : chevronDownLight}
+                        alt="chevron_icon"
                       />
-                    )}
-                    <ChosenTokenLabel isLightTheme={isLightTheme}>
-                      {sendTokenForExchange.symbol === 'ethereum'
-                        ? 'ETH'
-                        : sendTokenForExchange.symbol}
-                    </ChosenTokenLabel>
-                    <img
-                      src={isLightTheme ? chevronDownBlack : chevronDownLight}
-                      alt="chevron_icon"
-                    />
-                  </ChooseBtnTokenBlock>
-                  <ChosenSendReceiveTokenValueInput
-                    InputProps={{
-                      inputProps: {
-                        style: {
-                          textAlign: 'right',
-                          paddingRight: 0,
-                          width: '100px',
-                          fontWeight: 600,
-                          color: isLightTheme ? 'black' : 'white',
-                        },
-                      },
-                      classes: { notchedOutline: classes.noBorder },
-                    }}
-                    isLightTheme={isLightTheme}
-                    placeholder="0.0"
-                    value={sendTokenForExchangeAmount}
-                    onChange={(e) => {
-                      setSendTokenForExchangeAmount(e.target.value);
-                      convertSendTokenToUSDCurrency({
-                        amount: e.target.value,
-                        ...sendTokenForExchange,
-                      });
-                    }}
-                  />
-                </SendTokensChooseButton>
+                    </ChooseBtnTokenBlock>
 
+                    <ChosenSendReceiveTokenValueInput
+                      //------
+                      InputProps={{
+                        inputProps: {
+                          style: {
+                            textAlign: 'right',
+                            paddingRight: 0,
+                            width: '200px',
+                            fontWeight: 600,
+                            color: isLightTheme ? 'black' : 'white',
+                          },
+                        },
+                        classes: { notchedOutline: classes.noBorder },
+                      }}
+                      isLightTheme={isLightTheme}
+                      placeholder="0.0"
+                      value={sendTokenForExchangeAmount}
+                      onChange={(e) => {
+                        triggerSendTokenInputHandlers(e.target.value, initSendTokenSwap);
+                      }}
+                    />
+                  </SendTokensChooseButton>
+
+                  {isTokensLimitExceeded && (
+                    <ExceededAmountTokensLimitWarning>
+                      Insufficient funds - available {initSendTokenSwap.balance}
+                    </ExceededAmountTokensLimitWarning>
+                  )}
+                </div>
                 {/* modal with send tokens list*/}
 
                 {isSendTokensModalVisible && (
@@ -721,7 +817,11 @@ export default function SwapComponent() {
                     <OutsideClickHandler
                       onOutsideClick={() => {
                         setIsSendTokensModalVisible(false);
-                        setFilteredData(finalSendTokensList);
+                        setFilteredData(
+                          finalSendTokensList.filter(
+                            (token) => token.symbol !== initSendTokenSwap.symbol
+                          )
+                        );
                       }}>
                       <TokensModalSubLayout isLightTheme={isLightTheme}>
                         <Header>
@@ -731,7 +831,11 @@ export default function SwapComponent() {
                           <CloseButton
                             onClick={() => {
                               setIsSendTokensModalVisible(false);
-                              setFilteredData(finalSendTokensList);
+                              setFilteredData(
+                                finalSendTokensList.filter(
+                                  (token) => token.symbol !== initSendTokenSwap.symbol
+                                )
+                              );
                             }}
                             isLightTheme={isLightTheme}>
                             <img
@@ -788,17 +892,20 @@ export default function SwapComponent() {
                               <SendTokenModalListItem
                                 key={object.name}
                                 onClick={() => {
-                                  setIsSendTokensModalVisible(false);
-                                  setFilteredData(finalSendTokensList);
-                                  selectSendTokenForExchange({
-                                    ...object,
-                                    sendTokensListItem: true,
-                                  });
-                                  convertSendTokenToUSDCurrency({
-                                    amount: 1,
-                                    sendTokensListItem: true,
-                                    ...object,
-                                    address: object.address,
+                                  selectSendTokenForExchange(object);
+
+                                  setFilteredData(
+                                    finalSendTokensList.filter(
+                                      (token) => token.symbol !== object.symbol
+                                    )
+                                  );
+
+                                  convertExchangeTokensCourse({
+                                    inputId: 'chooseSendToken',
+                                    tokenAmount: 1,
+                                    sendTokenForExchangeAddress: initSendTokenSwap.address,
+                                    receiveTokenForExchangeAddress:
+                                      initReceiveFirstTokenSwap.address,
                                   });
                                 }}
                                 isLightTheme={isLightTheme}>
@@ -823,16 +930,30 @@ export default function SwapComponent() {
                                       {object.name}
                                     </SendTokenName>
                                     <SendTokenConvertedMeasures isLightTheme={isLightTheme}>
-                                      409,333 UNI · $19,18
+                                      {object.balance} ·{' '}
+                                      {object.USDCurrency !== undefined
+                                        ? `$${object.USDCurrency.toFixed(3)}`
+                                        : 'Price is not available'}
                                     </SendTokenConvertedMeasures>
                                   </div>
                                 </SendTokenLabelsBlock>
                                 <SendTokenBalance isLightTheme={isLightTheme}>
-                                  {object.balance === undefined ? (
-                                    <Loader type="Rings" color="#BB86FC" height={30} width={30} />
-                                  ) : (
-                                    <span>${object.balance}</span>
-                                  )}
+                                  {object.balance !== undefined &&
+                                    object.USDCurrency !== undefined && (
+                                      // (
+                                      <span>{`$${
+                                        object.balance > 0
+                                          ? (
+                                              object.balance * object.USDCurrency.toFixed(2)
+                                            ).toFixed(3)
+                                          : (
+                                              object.balance * object.USDCurrency.toFixed(2)
+                                            ).toFixed(2)
+                                      }`}</span>
+                                    )}
+                                  {/*) : ( */}
+                                  {/*<Loader type="Rings" color="#BB86FC" height={30} width={30} />*/}
+                                  {/* )}*/}
                                 </SendTokenBalance>
                               </SendTokenModalListItem>
                             ))}
@@ -866,8 +987,8 @@ export default function SwapComponent() {
                   {/*  <div>Toggled</div>*/}
                   {/*) : (*/}
                   <ChooseBtnTokenBlock onClick={() => setIsReceiveTokensModalVisible(true)}>
-                    {receiveTokenForExchange.logoURI !== null ? (
-                      <SendTokenImg alt="token_img" src={receiveTokenForExchange.logoURI} />
+                    {initReceiveFirstTokenSwap.logoURI !== null ? (
+                      <SendTokenImg alt="token_img" src={initReceiveFirstTokenSwap.logoURI} />
                     ) : (
                       <Avatar
                         style={{
@@ -875,14 +996,14 @@ export default function SwapComponent() {
                           marginLeft: '12px',
                           marginTop: '2px',
                         }}
-                        name={receiveTokenForExchange.avatarIcon}
+                        name={initReceiveFirstTokenSwap.avatarIcon}
                         round={true}
                         size="21"
                         textSizeRatio={1}
                       />
                     )}
                     <ChosenTokenLabel isLightTheme={isLightTheme}>
-                      {receiveTokenForExchange.symbol}
+                      {initReceiveFirstTokenSwap.symbol}
                     </ChosenTokenLabel>
 
                     <img
@@ -892,12 +1013,13 @@ export default function SwapComponent() {
                   </ChooseBtnTokenBlock>
                   {/*)}*/}
                   <ChosenSendReceiveTokenValueInput
+                    //--------
                     InputProps={{
                       inputProps: {
                         style: {
                           textAlign: 'right',
                           paddingRight: 0,
-                          width: '100px',
+                          width: '200px',
                           fontWeight: 600,
                           color: isLightTheme ? 'black' : 'white',
                         },
@@ -907,15 +1029,16 @@ export default function SwapComponent() {
                     isLightTheme={isLightTheme}
                     placeholder="0.0"
                     value={receiveTokenForExchangeAmount}
-                    onChange={(e) => {
-                      setReceiveTokenForExchangeAmount(e.target.value);
-                      convertReceiveTokenToUSDCurrency({
-                        amount: e.target.value,
-                        ...receiveTokenForExchange,
-                      });
-                    }}
-                    onBlur={(e) => {
-                      console.log('focus removed');
+                    onChange={(event) => {
+                      triggerReceiveTokenInputHandlers(
+                        event.target.value,
+                        initReceiveFirstTokenSwap
+                      );
+                      // setReceiveTokenForExchangeAmount(e.target.value);
+                      // convertReceiveTokenToUSDCurrency({
+                      //   amount: e.target.value,
+                      //   ...initReceiveFirstTokenSwap,
+                      // });
                     }}
                   />
                 </SendTokensChooseButton>
@@ -932,7 +1055,12 @@ export default function SwapComponent() {
                     <OutsideClickHandler
                       onOutsideClick={() => {
                         setIsReceiveTokensModalVisible(false);
-                        setFilteredReceiveTokensListData(finalReceiveTokensList);
+                        setFilteredReceiveTokensListData(
+                          // finalReceiveTokensList.filter(
+                          //   (token) => token.symbol !== receiveTokenForExchange.symbol
+                          // )
+                          finalReceiveTokensList
+                        );
                       }}>
                       <TokensModalSubLayout isLightTheme={isLightTheme}>
                         <Header>
@@ -942,7 +1070,12 @@ export default function SwapComponent() {
                           <CloseButton
                             onClick={() => {
                               setIsReceiveTokensModalVisible(false);
-                              setFilteredReceiveTokensListData(finalReceiveTokensList);
+                              setFilteredReceiveTokensListData(
+                                finalReceiveTokensList
+                                // finalReceiveTokensList.filter(
+                                //   (token) => token.symbol !== receiveTokenForExchange.symbol
+                                // )
+                              );
                             }}
                             isLightTheme={isLightTheme}>
                             <img
@@ -999,18 +1132,20 @@ export default function SwapComponent() {
                               <SendTokenModalListItem
                                 key={object.name}
                                 onClick={() => {
-                                  setIsReceiveTokensModalVisible(false);
                                   setFilteredReceiveTokensListData(finalReceiveTokensList);
-                                  selectReceiveTokenForExchange({
-                                    ...object,
-                                    receiveTokensListItem: true,
+                                  convertExchangeTokensCourse({
+                                    inputId: 'chooseSendToken',
+                                    tokenAmount: 1,
+                                    sendTokenForExchangeAddress: initSendTokenSwap.address,
+                                    receiveTokenForExchangeAddress:
+                                      initReceiveFirstTokenSwap.address,
                                   });
-                                  convertReceiveTokenToUSDCurrency({
-                                    amount: 1,
-                                    receiveTokensListItem: true,
-                                    ...receiveTokenForExchange,
-                                    address: object.address,
-                                  });
+                                  // setFilteredReceiveTokensListData(
+                                  //   finalReceiveTokensList.filter(
+                                  //     (token) => token.symbol !== object.symbol
+                                  //   )
+                                  // );
+                                  selectReceiveTokenForExchange(object);
                                 }}
                                 isLightTheme={isLightTheme}>
                                 <SendTokenLabelsBlock>
@@ -1077,7 +1212,7 @@ export default function SwapComponent() {
                     Rate
                   </LabelsBlockSubBlockSpan>
                   <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                    1 ETH = 2,858.255 DAI
+                    {`1 ${initSendTokenSwap.symbol} =  ${initConvertReceiveTokenAmount} ${initReceiveFirstTokenSwap.symbol}`}
                   </LabelsBlockSubBlockSpan>
                 </LabelsBlockSubBlock>
 
@@ -1085,45 +1220,94 @@ export default function SwapComponent() {
                   <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
                     Offered by
                   </LabelsBlockSubBlockSpan>
-                  <PopupState variant="popover" popupId="demo-popup-popover">
-                    {(popupState) => (
-                      <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
-                        <img src={paraSwapIcon} alt="paraSwapIcon" />
-                        <span {...bindTrigger(popupState)} style={{ cursor: 'pointer' }}>
-                          ParaSwap
-                        </span>
 
-                        <Popover
-                          {...bindPopover(popupState)}
-                          anchorOrigin={{
-                            vertical: 'center',
-                            horizontal: 'right',
-                          }}
-                          transformOrigin={{
-                            vertical: 'center',
-                            horizontal: 'right',
-                          }}
-                          PaperProps={{
-                            sx: {
-                              marginTop: '-102px',
-                              marginLeft: '27px',
-                              width: '525px',
-                              height: '490px',
-                              backgroundColor: isLightTheme ? '#ffffff29' : '#10142D',
-                              boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-                              backdropFilter: 'blur(35px)',
-                              mixBlendMode: 'normal',
-                              borderRadius: '10px',
-                            },
-                          }}>
-                          <div
-                            style={{ width: '525px', height: '490px', backgroundColor: 'green' }}>
-                            Content
-                          </div>
-                        </Popover>
-                      </AdditionalOptionsSwapTokensSubBlock>
-                    )}
-                  </PopupState>
+                  <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
+                    <img src={paraSwapIcon} alt="paraSwapIcon" />
+                    <span onClick={handleClick} style={{ cursor: 'pointer' }}>
+                      ParaSwap
+                    </span>
+                    <Popover
+                      open={open}
+                      anchorEl={anchorEl}
+                      onClose={handleClose}
+                      anchorOrigin={{
+                        vertical: 'center',
+                        horizontal: 'right',
+                      }}
+                      transformOrigin={{
+                        vertical: 'center',
+                        horizontal: 'right',
+                      }}
+                      PaperProps={{
+                        sx: {
+                          marginTop: '-103px',
+                          marginLeft: '27px',
+                          width: '525px',
+                          height: '490px',
+                          backgroundColor: isLightTheme ? '#FFFFFF29' : '#4453AD1A',
+                          boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+                          backdropFilter: 'blur(35px)',
+                          mixBlendMode: 'normal',
+                          borderRadius: '10px',
+                        },
+                      }}>
+                      <SingleSwapTokensOfferedBySubBlock isLightTheme={isLightTheme}>
+                        <ExchangersMainSubLayout>
+                          <OfferedByLayoutLabelBlock
+                            isLightTheme={isLightTheme}
+                            onClick={handleClose}>
+                            <img
+                              src={isLightTheme ? chevronDownBlack : chevronDownLight}
+                              alt="chevron_icon"
+                            />
+                            <span>Offered by</span>
+                          </OfferedByLayoutLabelBlock>
+                          <ExchangersLayout isLightTheme={isLightTheme}>
+                            <ExchangersLayoutTitlesBlock isLightTheme={isLightTheme}>
+                              <span>Receive</span>
+                              <span>Gas fee</span>
+                            </ExchangersLayoutTitlesBlock>
+                            <ExchangersMainListLayout isLightTheme={isLightTheme}>
+                              <ExchangerMainList>
+                                {exchangersOfferedList.map((exchanger) => (
+                                  <ExchangerElementListItem isLightTheme={isLightTheme}>
+                                    <ExchangerElementSpan
+                                      isLightTheme={isLightTheme}
+                                      style={{ marginRight: '36px' }}>
+                                      {exchanger.receiveTokenUSDCurrencyCourse}
+                                    </ExchangerElementSpan>
+                                    <ExchangerElementSpan isLightTheme={isLightTheme}>
+                                      {exchanger.gasFee}
+                                    </ExchangerElementSpan>
+                                    <ExchangerBestRateSpan
+                                      isLightTheme={isLightTheme}
+                                      style={{
+                                        visibility: exchanger.isBestRate === false && 'hidden',
+                                      }}>
+                                      Best rate
+                                    </ExchangerBestRateSpan>
+                                    <ExchangerIcon src={exchanger.logoIcon} alt="icon" />
+                                    <GreenDotIcon
+                                      src={greenDot}
+                                      alt="green_dot"
+                                      style={{
+                                        visibility: exchanger.greenDotIcon === false && 'hidden',
+                                      }}
+                                    />
+                                  </ExchangerElementListItem>
+                                ))}
+                              </ExchangerMainList>
+                            </ExchangersMainListLayout>
+                            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                              <SaveSelectedExchangerButton isLightTheme={isLightTheme}>
+                                Save
+                              </SaveSelectedExchangerButton>
+                            </div>
+                          </ExchangersLayout>
+                        </ExchangersMainSubLayout>
+                      </SingleSwapTokensOfferedBySubBlock>
+                    </Popover>
+                  </AdditionalOptionsSwapTokensSubBlock>
                 </LabelsBlockSubBlock>
 
                 <LabelsBlockSubBlock isLightTheme={isLightTheme}>
@@ -1146,7 +1330,11 @@ export default function SwapComponent() {
               </DownDelimiterLabelsBlock>
 
               <SwapBlockExchangeLayout isLightTheme={isLightTheme}>
-                <Button>Exchange</Button>
+                <Button
+                  disabled={isTokensLimitExceeded}
+                  onClick={() => calculateToAmount(initSendTokenSwap)}>
+                  Exchange
+                </Button>
               </SwapBlockExchangeLayout>
             </SwapTokensMainSubBlock>
           </FirstColumnSwapSubBlock>

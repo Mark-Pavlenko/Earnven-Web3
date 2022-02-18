@@ -55,7 +55,7 @@ export const FirstColumnTitleHeaderBlock = styled.div`
 
 export const SwapTokensMainSubBlock = styled.div`
   width: 525px;
-  height: 490px;
+  height: 515px;
   margin-top: 20px;
   padding: 32px 27px 16px 20px;
   background: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#1F265C3D')};
@@ -119,6 +119,14 @@ export const SendTokensChooseButton = styled.div`
   @media (max-width: 540px) {
     width: 345px;
   }
+`;
+
+export const ExceededAmountTokensLimitWarning = styled.span`
+  margin-left: auto;
+  margin-top: 5px;
+  margin-right: 3px;
+  font-size: 12px;
+  color: #ec3d3d;
 `;
 
 export const MultiSwapSendTokensChooseBlock = styled.div`
@@ -353,6 +361,18 @@ export const AdditionalOptionsSwapTokensSubBlock = styled.div`
     color: ${(props) => (props.isLightTheme ? '#4453AD' : '#8F86FF')};
     font-weight: 600;
   }
+`;
+
+export const SingleSwapTokensOfferedBySubBlock = styled.div`
+  width: 525px;
+  height: 515px;
+  background-color: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#4453AD1A')};
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'
+      : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+  backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
+  border-radius: 10px;
 `;
 
 export const SwapTokensOfferedBySubBlock = styled.div`
@@ -593,17 +613,21 @@ export const SecondColumnTitleHeaderBlock = styled.div`
 
 export const TokensModalSubLayout = styled.div`
   margin-top: -80px;
-  background-color: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#4453AD1A')};
   width: 475px;
   height: 545px;
-
   background: ${(props) =>
-    props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)'};
+    props.isLightTheme
+      ? `url(${require(`./../../assets/images/lightDashboard.jpg`).default})`
+      : `#1F265C3D`};
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(35px);
   mix-blend-mode: normal;
   border-radius: 10px;
 `;
+
+// background-color: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#4453AD1A')};
+// background: ${(props) =>
+//     props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)'};
+// backdrop-filter: blur(35px);
 
 export const SearchTokensModalTextField = styled(TextField)`
   display: flex;

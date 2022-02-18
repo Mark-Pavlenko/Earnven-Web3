@@ -249,9 +249,17 @@ export const LiquidityTableItem = ({
       .then((res) => {
         return res;
       });
+
+    console.log('tokenDecimal inputId', inputId);
+    console.log('tokenDecimal value', value);
+    console.log('tokenDecimal token1', token1);
+    console.log('tokenDecimal token2', token2);
+    console.log('tokenDecimal decimals 1', tokenDecimal1);
+    console.log('tokenDecimal decimals 2', tokenDecimal2);
     //------------------------------------->
     const NewContract = new web3.eth.Contract(
       ROUTERABI,
+      //UNISWAP V2 contract address
       '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
     );
     if (!isNaN(value)) {
@@ -260,11 +268,25 @@ export const LiquidityTableItem = ({
           .getAmountsOut((value * 10 ** tokenDecimal1).toString(), [token1, token2])
           .call();
 
+        console.log('tokenDecimal convertedValue', convertedValue);
+
         setAddLiquidityNormalTokenA((value * 10 ** tokenDecimal1).toString());
         setAddLiquidityNormalTokenB(convertedValue[1]);
 
+        console.log(
+          'tokenDecimal AddLiquidityNormalTokenA',
+          (value * 10 ** tokenDecimal1).toString()
+        );
+        console.log('tokenDecimal AddLiquidityNormalTokenB', convertedValue[1]);
+
         setOutValue(+convertedValue[1] / 10 ** tokenDecimal2);
         setInValue(value);
+
+        console.log(
+          'tokenDecimal +convertedValue[1] / 10 ** tokenDecimal2',
+          +convertedValue[1] / 10 ** tokenDecimal2
+        );
+        console.log('tokenDecimal setInValue', value);
       }
       if (inputId === 'secondInput') {
         const convertedValue = await NewContract.methods
