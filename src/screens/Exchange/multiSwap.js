@@ -322,9 +322,12 @@ export default function MultiSwapComponent() {
   };
 
   const selectTokenForSwap = async (selectedSwapToken, isSendTokenSelectedSwapped) => {
-    console.log('multiswap selectedSwapToken multiswap 123', selectedSwapToken);
-    console.log('multiswap objIDAddress multiswap 123', oldTokenSwappedAddress);
-    console.log('multiswap isSendTokenSelectedSwapped multiswap 123', isSendTokenSelectedSwapped);
+    console.log('multiswap selectTokenForSwap selectedSwapToken multiswap 123', selectedSwapToken);
+    console.log('multiswap  selectTokenForSwap objIDAddress multiswap 123', oldTokenSwappedAddress);
+    console.log(
+      'multiswap selectTokenForSwap  isSendTokenSelectedSwapped multiswap 123',
+      isSendTokenSelectedSwapped
+    );
     await getAmountMulti(selectedSwapToken, isSendTokenSelectedSwapped);
 
     if (isSendTokenSelectedSwapped === true) {
@@ -334,26 +337,58 @@ export default function MultiSwapComponent() {
       });
 
       setSendTokenForExchangeAmount(1);
+
       convertSendTokenToUSDCurrency({
         amount: 1,
         ...selectedSwapToken,
         address: selectedSwapToken.address,
       });
     } else {
-      console.log('multiswap 123 typeof', typeof oldTokenSwappedAddress);
+      console.log('multiswap not 123 typeof', oldTokenSwappedAddress);
 
-      const needIndex = receiveTokensList.findIndex(
+      const needIndex = initReceiveMultiSwapTokensList.findIndex(
         (token) => token.address === oldTokenSwappedAddress
       );
 
-      console.log('need index receive multiswap 123', needIndex);
-      console.log('obj multiswap 123', { ...selectedSwapToken, receiveTokensListItem: true });
-      console.log('multiswap 123 need elem', receiveTokensList[needIndex]);
+      console.log('multiswap not need index receive multiswap 123', needIndex);
+      console.log('multiswap not  old token obj', initReceiveMultiSwapTokensList[needIndex]);
+      console.log('multiswap not new token object', {
+        ...selectedSwapToken,
+        receiveTokensListItem: true,
+      });
+
+      console.log('multiswap not before update 123', initReceiveMultiSwapTokensList);
+
+      let result;
+      if (needIndex !== -1)
+        result = initReceiveMultiSwapTokensList[needIndex] = {
+          ...selectedSwapToken,
+          receiveTokensListItem: true,
+        };
+
+      console.log('multiswap not after update 123', result);
+
+      // let result = (initReceiveMultiSwapTokensList[needIndex] = [
+      //   {
+      //     ...selectedSwapToken,
+      //     receiveTokensListItem: true,
+      //   },
+      //   ...initReceiveMultiSwapTokensList,
+      // ]);
+
+      // console.log('multiswap not after update 123', result);
 
       receiveTokensList[needIndex] = {
         ...selectedSwapToken,
         receiveTokensListItem: true,
       };
+
+      // dispatch({
+      //   type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST,
+      //   payload: { ...selectedSwapToken, receiveTokensListItem: true },
+      // });
+
+      // console.log('multiswap not receiveTokensList after receive token update', receiveTokensList);
 
       // setReceiveTokenForExchangeAmount(1)
 
