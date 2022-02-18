@@ -32,6 +32,8 @@ import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
 // import Cream from '../Cream';
 // import CreamIronBank from '../CreamIronBankSavings';
 //import BalancerV2 from '../LiqudityPools/BalancerV2';
+//import SushiStaking from '../SushiStaking';
+//import SushiProtocol from '../../common/investment/sushiProtocolComponent/sushiProtocol';
 
 export default function index({ accountAddress }) {
   //save conditions of open/close investment blocks
@@ -88,6 +90,8 @@ export default function index({ accountAddress }) {
   //sushiSwapLP token
   const SushiPoolsData = useSelector((state) => state.sushiSwap.sushiSwapLPData);
   const SushiV2Total = useSelector((state) => state.sushiSwap.sushiSwapLPTotal);
+  const sushiStakeData = useSelector((state) => state.sushiStaking.sushiStakeData);
+  const sushiStakeTotal = useSelector((state) => state.sushiStaking.sushiStakeTotal);
 
   //Ethereum 2.0
   const eth2StakeData = useSelector((state) => state.eth2Stake.eth2StakeData);
@@ -148,7 +152,6 @@ export default function index({ accountAddress }) {
 
   //uniswap (need to get total value from the object and put in redux separately)
   const uniswapV2lp = useSelector((state) => state.uniswapV2lp.uniswapV2lp); //saga
-  console.log('uniswapV2lp', uniswapV2lp);
 
   //get the total value of uniSwapV2
   useEffect(() => {
@@ -390,7 +393,8 @@ export default function index({ accountAddress }) {
             CrvStakingTokenData.length > 0 ||
             AaveStakingData.length > 0 ||
             convexStakeData.length > 0 ||
-            creamIronBankData.length > 0,
+            creamIronBankData.length > 0 ||
+            sushiStakeData.length > 0,
         }}>
         <Header>
           <Title isLightTheme={theme}>{'Saving/Loans'}</Title>
@@ -409,7 +413,8 @@ export default function index({ accountAddress }) {
                     parseFloat(eth2StakeTotal) +
                     parseFloat(compTotalValue) +
                     parseFloat(convexStakeTotal) +
-                    parseFloat(creamIronBankTotal)
+                    parseFloat(creamIronBankTotal) +
+                    parseFloat(sushiStakeTotal)
                 ).toFixed(2)
               )}
             </TotalValue>
@@ -607,6 +612,37 @@ export default function index({ accountAddress }) {
         ) : (
           ''
         )}
+
+        {/* Sushi Staking */}
+        {sushiStakeData.length > 0 ? (
+          <React.Fragment>
+            <img
+              src={SushiSwapLogo}
+              style={{
+                height: '20px',
+                marginTop: '',
+                marginLeft: '15px',
+                display: 'inline-block',
+              }}
+              alt=""
+            />
+            Sushi Staking
+            {sushiStakeData
+              ? sushiStakeData.map((object) => {
+                  return (
+                    <Investment
+                      protocol={object}
+                      protocolName={'SushiswapStaking'}
+                      logoImage={object.imageData}
+                    />
+                  );
+                })
+              : ''}
+          </React.Fragment>
+        ) : (
+          ''
+        )}
+        {/* --------------------End of Sushi Staking----------------- */}
       </PoolsBlock>
       {/*==============================Vaults==============================>*/}
       <PoolsBlock //four - Vaults
