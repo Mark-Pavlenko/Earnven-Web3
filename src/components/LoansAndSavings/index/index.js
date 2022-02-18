@@ -184,7 +184,7 @@ export default function index({ accountAddress }) {
             uniswapV2lp.length > 0,
         }}>
         <Header>
-          <Title isLightTheme={theme}>{'Liquidity pools'}</Title>
+          <Title isLightTheme={theme}>{'Liquidity pools 111'}</Title>
           <ToggleButton onClick={poolsHandler} isOpen={isPoolsOpen} />
         </Header>
         <div style={{ padding: '0 29px 20px 26px', marginBottom: '20px' }}>

@@ -78,6 +78,13 @@ export const addLiquiditySushiV2 = async (
   // fluctuations. Then we put this value to contract like this:
   // const minAmountOut = ExpectedAmountTokens - slippage.
   // minAmountOut we will send to contract.
+
+  console.log('sushiswap add liquidity firstReceiveToken', tokenA);
+  console.log('sushiswap add liquidity secondReceiveToken', tokenB);
+  console.log('sushiswap add liquidity sendTokenAddress', supplyToken);
+  console.log('sushiswap add liquidity sendTokenAmount', supplyTokenQtty);
+  console.log('sushiswap add liquidity gasPrice', gasPrice);
+
   await loadWeb3();
   const web3 = window.web3;
   const accounts = await web3.eth.getAccounts();
