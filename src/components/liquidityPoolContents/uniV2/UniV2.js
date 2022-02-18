@@ -56,7 +56,7 @@ import {
 import { SelectOptionsWithJSX } from '../HOC/selectOptionsWithJSX';
 import { TokenButtonsBlock } from '../../../screens/dashboard/styledComponents';
 import { LiquidityPoolsTable } from '../liquidityPoolsTable/liquidityPoolsTable';
-import {useSelector} from "react-redux";
+import { useSelector } from 'react-redux';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -129,15 +129,15 @@ export default function LiquidityPools({ inputValue }) {
     async function getData() {
       let fetchedTokens;
       await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {}).then(async (response) => {
-        const selectOptions = []
+        const selectOptions = [];
         for (let i = 0; i < response.data.records.length; i++) {
           let object = {};
           object.name = response.data.records[i].name;
           object.value = response.data.records[i].name;
           object.address = response.data.records[i].address;
-          selectOptions.push(object)
+          selectOptions.push(object);
         }
-        setAllTokensSelect(selectOptions)
+        setAllTokensSelect(selectOptions);
         setAllTokens(response.data.records);
         fetchedTokens = response.data.records;
       });
@@ -400,7 +400,6 @@ export default function LiquidityPools({ inputValue }) {
                 <center>
                   {' '}
                   {/*submit two finish------------------------------------------------->*/}
-
                   OR <br />
                   <br />
                   <br />
@@ -800,10 +799,10 @@ export default function LiquidityPools({ inputValue }) {
 
   //*two inputs value send to smartContract
   async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB) {
-    console.log('addLiquidityNormaltokenA', tokenA)
-    console.log('addLiquidityNormaltokenB', tokenB)
-    console.log('addLiquidityNormalsupplyToken', amountTokenA)
-    console.log('addLiquidityNormalsupplyTokenQtty', amountTokenB)
+    console.log('addLiquidityNormaltokenA', tokenA);
+    console.log('addLiquidityNormaltokenB', tokenB);
+    console.log('addLiquidityNormalsupplyToken', amountTokenA);
+    console.log('addLiquidityNormalsupplyTokenQtty', amountTokenB);
 
     // const start = parseInt(Date.now() / 1000) + 180;
     // await loadWeb3();
@@ -860,7 +859,7 @@ export default function LiquidityPools({ inputValue }) {
   // ];
 
   //this function turns array of options to JSX for modal select
- const updatedOptions = SelectOptionsWithJSX(allTokensSelect)
+  const updatedOptions = SelectOptionsWithJSX(allTokensSelect);
 
   //select styles
   // const selectStyle = {
@@ -945,13 +944,18 @@ export default function LiquidityPools({ inputValue }) {
   // };
 
   const handler = (data) => {
-    console.log('vfvfvfv', data)
-  }
-
+    console.log('vfvfvfv', data);
+  };
 
   const filterData = (Data) => {
-    return Data.filter(d => d.id.includes(inputValue) || (d.token0.symbol + ' ' + d.token1.symbol).includes(inputValue.toUpperCase()) || d.token0.name.includes(inputValue) || d.token1.name.includes(inputValue));
-  }
+    return Data.filter(
+      (d) =>
+        d.id.includes(inputValue) ||
+        (d.token0.symbol + ' ' + d.token1.symbol).includes(inputValue.toUpperCase()) ||
+        d.token0.name.includes(inputValue) ||
+        d.token1.name.includes(inputValue)
+    );
+  };
 
   return (
     <div>
@@ -970,45 +974,45 @@ export default function LiquidityPools({ inputValue }) {
         </AddNewGroupButton>
 
         {/*ModalContainer - this is component consists portal logic inside. Component wraps content and displays it as a children. */}
-       {/*Modal is here =====================================>*/}
-       {/* <ModalContainer title={'Add Liquidity'} isOpen={isModalOpen} onClose={() => {setIsModalOpen(false)}}>*/}
-       {/*   <SelectWrapper>*/}
-       {/*     <SelectTitle>{'Supply a token'}</SelectTitle>*/}
-       {/*     <Select*/}
-       {/*         defaultValue={'Ethereum'}*/}
-       {/*         styles={selectStyle}*/}
-       {/*       options={updatedOptions}*/}
-       {/*   />*/}
-       {/*   <InputBlock>*/}
-       {/*     <ModalInput type="number"/>*/}
-       {/*     <Balance>{`Balance: ${5}`}</Balance>*/}
-       {/*   </InputBlock>*/}
-       {/*     <ButtonsBlock>*/}
-       {/*       <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>*/}
-       {/*     </ButtonsBlock>*/}
-       {/*     <ButtonsBlock>*/}
-       {/*       <ChangeToken>{'Or'}</ChangeToken>*/}
-       {/*     </ButtonsBlock>*/}
-       {/*     <SelectTitle>{'Supply a token'}</SelectTitle>*/}
-       {/*     <InputBlock>*/}
-       {/*       <ModalInput type="number"/>*/}
-       {/*       <Balance>{`Balance: ${5}`}</Balance>*/}
-       {/*     </InputBlock>*/}
-       {/*     <InputBlock>*/}
-       {/*       <ModalInput type="number"/>*/}
-       {/*       <Balance>{`Balance: ${5}`}</Balance>*/}
-       {/*     </InputBlock>*/}
-       {/*     <LinksContainer>*/}
-       {/*       <ModalLink href={'#'}>aaa</ModalLink>*/}
-       {/*       <ModalLinkRight href={'#'}>bbb</ModalLinkRight>*/}
-       {/*       <ModalLink href={'#'}>ccc</ModalLink>*/}
-       {/*       <ModalLinkRight href={'#'}>ddd</ModalLinkRight>*/}
-       {/*     </LinksContainer>*/}
-       {/*   <ButtonsBlock>*/}
-       {/*     <SupplyTokenButton>{`Supply tokens`}</SupplyTokenButton>*/}
-       {/*   </ButtonsBlock>*/}
-       {/*   </SelectWrapper>*/}
-       {/* </ModalContainer>*/}
+        {/*Modal is here =====================================>*/}
+        {/* <ModalContainer title={'Add Liquidity'} isOpen={isModalOpen} onClose={() => {setIsModalOpen(false)}}>*/}
+        {/*   <SelectWrapper>*/}
+        {/*     <SelectTitle>{'Supply a token'}</SelectTitle>*/}
+        {/*     <Select*/}
+        {/*         defaultValue={'Ethereum'}*/}
+        {/*         styles={selectStyle}*/}
+        {/*       options={updatedOptions}*/}
+        {/*   />*/}
+        {/*   <InputBlock>*/}
+        {/*     <ModalInput type="number"/>*/}
+        {/*     <Balance>{`Balance: ${5}`}</Balance>*/}
+        {/*   </InputBlock>*/}
+        {/*     <ButtonsBlock>*/}
+        {/*       <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>*/}
+        {/*     </ButtonsBlock>*/}
+        {/*     <ButtonsBlock>*/}
+        {/*       <ChangeToken>{'Or'}</ChangeToken>*/}
+        {/*     </ButtonsBlock>*/}
+        {/*     <SelectTitle>{'Supply a token'}</SelectTitle>*/}
+        {/*     <InputBlock>*/}
+        {/*       <ModalInput type="number"/>*/}
+        {/*       <Balance>{`Balance: ${5}`}</Balance>*/}
+        {/*     </InputBlock>*/}
+        {/*     <InputBlock>*/}
+        {/*       <ModalInput type="number"/>*/}
+        {/*       <Balance>{`Balance: ${5}`}</Balance>*/}
+        {/*     </InputBlock>*/}
+        {/*     <LinksContainer>*/}
+        {/*       <ModalLink href={'#'}>aaa</ModalLink>*/}
+        {/*       <ModalLinkRight href={'#'}>bbb</ModalLinkRight>*/}
+        {/*       <ModalLink href={'#'}>ccc</ModalLink>*/}
+        {/*       <ModalLinkRight href={'#'}>ddd</ModalLinkRight>*/}
+        {/*     </LinksContainer>*/}
+        {/*   <ButtonsBlock>*/}
+        {/*     <SupplyTokenButton>{`Supply tokens`}</SupplyTokenButton>*/}
+        {/*   </ButtonsBlock>*/}
+        {/*   </SelectWrapper>*/}
+        {/* </ModalContainer>*/}
         {/*Modal is here =====================================>*/}
       </center>
       {Content}

@@ -169,11 +169,15 @@ export default function SwapComponent() {
   //work saga
   const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
   const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
-
   const initSendTokenSwap = useSelector((state) => state.tokensListReducer.initSendTokenSwap);
   const initReceiveFirstTokenSwap = useSelector(
     (state) => state.tokensListReducer.initReceiveFirstTokenSwap
   );
+  const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
+  const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
+
+  console.log('single GasPrice selected', selectedGasPrice);
+  console.log('single GasPrice propose', proposeGasPrice);
 
   console.log('initSendTokenSwap', initSendTokenSwap);
   console.log('initReceiveFirstTokenSwap', initReceiveFirstTokenSwap);
@@ -1168,18 +1172,20 @@ export default function SwapComponent() {
                                     <SendTokenName isLightTheme={isLightTheme}>
                                       {object.name}
                                     </SendTokenName>
-                                    <SendTokenConvertedMeasures isLightTheme={isLightTheme}>
+                                    <SendTokenConvertedMeasures
+                                      isLightTheme={isLightTheme}
+                                      style={{ visibility: 'hidden' }}>
                                       409,333 UNI · $19,18
                                     </SendTokenConvertedMeasures>
                                   </div>
                                 </SendTokenLabelsBlock>
-                                <SendTokenBalance isLightTheme={isLightTheme}>
-                                  {object.balance === undefined ? (
-                                    <Loader type="Rings" color="#BB86FC" height={30} width={30} />
-                                  ) : (
-                                    <span>${object.balance}</span>
-                                  )}
-                                </SendTokenBalance>
+                                {/*<SendTokenBalance isLightTheme={isLightTheme}>*/}
+                                {/*  {object.balance === undefined ? (*/}
+                                {/*    <Loader type="Rings" color="#BB86FC" height={30} width={30} />*/}
+                                {/*  ) : (*/}
+                                {/*    <span>${object.balance}</span>*/}
+                                {/*  )}*/}
+                                {/*</SendTokenBalance>*/}
                               </SendTokenModalListItem>
                             ))}
                           </SendTokensModalList>

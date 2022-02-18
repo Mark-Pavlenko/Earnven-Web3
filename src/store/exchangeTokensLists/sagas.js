@@ -11,12 +11,11 @@ export function* getSendTokensListSagaWatcher() {
 }
 
 function* getSendTokensListSagaWorker(accountAddress) {
-  // console.log('getSendTokensListSagaWorker', accountAddress);
   const addressInfoData = yield call(API.getAddressInfo, accountAddress.payload);
-  console.log('only addressInfoData sagas', addressInfoData.data);
+  // console.log('only addressInfoData sagas', addressInfoData.data);
 
   const zeroAPISwapTokensList = yield call(API.getZeroAPITokensList);
-  console.log('sagas zeroAPITokensList', zeroAPISwapTokensList);
+  // console.log('sagas zeroAPITokensList', zeroAPISwapTokensList);
 
   const walletTokensList = [];
   if (addressInfoData.data.ETH.balance !== 0) {
@@ -29,7 +28,7 @@ function* getSendTokensListSagaWorker(accountAddress) {
     tempObj.USDCurrency = addressInfoData.data.ETH.price.rate;
     tempObj.sendTokensListItem = true;
 
-    console.log('sagas tempObj', tempObj);
+    // console.log('sagas tempObj', tempObj);
 
     walletTokensList.push(tempObj);
   }
@@ -80,16 +79,16 @@ export function* getReceiveTokensListSagaWatcher() {
 
 function* getReceiveTokensListSagaWorker() {
   const zeroAPISwapTokensList = yield call(API.getZeroAPITokensList);
-  // console.log('sagas zeroAPITokensList', zeroAPISwapTokensList);
+  console.log('sagas zeroAPITokensList', zeroAPISwapTokensList);
 
   const uniswapFullCoinsList = yield call(API.getUniswapFullCoinsList);
   // console.log('uniswapFullCoinsList sagas', uniswapFullCoinsList);
 
   // return 429
-  // const coinGeckoFullTokensList = yield call(API.getCoinGeckoFullTokensList);
-  // console.log('coinGeckoFullTokensList sagas', coinGeckoFullTokensList);
+  const coinGeckoFullTokensList = yield call(API.getCoinGeckoFullTokensList);
+  console.log('coinGeckoFullTokensList sagas', coinGeckoFullTokensList);
 
-  let filteredCoinGeckoTokensList = CoinGeckoMockTokensList.filter((walletToken) =>
+  let filteredCoinGeckoTokensList = coinGeckoFullTokensList.filter((walletToken) =>
     zeroAPISwapTokensList.find(
       (zeroToken) =>
         walletToken.symbol === zeroToken.symbol.toLowerCase() &&
@@ -97,7 +96,7 @@ function* getReceiveTokensListSagaWorker() {
     )
   );
 
-  // console.log('sagas filteredCoinGeckoTokensList', filteredCoinGeckoTokensList);
+  console.log('sagas filteredCoinGeckoTokensList', filteredCoinGeckoTokensList);
 
   let finalList = zeroAPISwapTokensList.map((token) => ({
     ...token,

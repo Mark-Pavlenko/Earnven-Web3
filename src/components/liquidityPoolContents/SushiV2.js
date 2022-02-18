@@ -774,6 +774,14 @@ export default function LiquidityPools({ inputValue }) {
     // fluctuations. Then we put this value to contract like this:
     // const minAmountOut = ExpectedAmountTokens - slippage.
     // minAmountOut we will send to contract.
+    //
+
+    console.log('addLiquidity send token address', supplyToken);
+    console.log('addLiquidity send token amount', supplyTokenQtty);
+    console.log('addLiquidity first receive token address', tokenA);
+    console.log('addLiquidity second receive token address', tokenB);
+    console.log('addLiquidity gasPrice (for sushiswap exchanger)', gasPrice);
+
     await loadWeb3();
     const web3 = window.web3;
     const accounts = await web3.eth.getAccounts();
