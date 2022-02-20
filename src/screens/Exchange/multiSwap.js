@@ -147,7 +147,8 @@ export default function MultiSwapComponent() {
   const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
   console.log('multiswap finalSendTokensList 12345', finalSendTokensList);
 
-  const finalReceiveTokensList = sendTokensMockList;
+  // const finalReceiveTokensList = sendTokensMockList;
+  const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
 
   const [filteredSendTokensListData, setFilteredSendTokensListData] = useState([]);
   const [filteredReceiveTokensListData, setFilteredReceiveTokensListData] = useState([]);
@@ -245,13 +246,23 @@ export default function MultiSwapComponent() {
 
   const openModalHelper = (payload) => {
     setOpenTokensModal(true);
-    console.log('tokensList multiswap payload', payload);
+    // console.log('tokensList multiswap payload', payload);
 
-    let filteredSendTokensList = payload.tokensList.filter(
-      (token) => token.symbol !== initSendMultiSwapToken.symbol
-    );
+    if (payload.isSendModalOpen === true) {
+      let filteredSendTokensList = payload.tokensList.filter(
+        (token) => token.symbol !== initSendMultiSwapToken.symbol
+      );
+      setTokensListModal(filteredSendTokensList);
+    } else {
+      let filteredReceiveTokensList = payload.tokensList.filter(
+        (token) => token.symbol !== payload.receiveToken.symbol
+      );
 
-    setTokensListModal(filteredSendTokensList);
+      // console.log('tokensList multiswap payload qwerty', filteredReceiveTokensList);
+
+      setTokensListModal(filteredReceiveTokensList);
+    }
+
     setIsSendTokenSelectedSwapped(payload.isSendModalOpen);
   };
 
@@ -452,6 +463,7 @@ export default function MultiSwapComponent() {
                       openModalHelper({
                         tokensList: finalReceiveTokensList,
                         isSendModalOpen: false,
+                        receiveToken,
                       });
                     }}>
                     <div>
