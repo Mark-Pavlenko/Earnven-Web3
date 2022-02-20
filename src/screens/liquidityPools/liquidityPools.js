@@ -1,57 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-
-import Bancor from '../../components/liquidityPoolContents/Bancor';
-import Curve from '../../components/liquidityPoolContents/Curve';
-import UniV2 from '../../components/liquidityPoolContents/uniV2/UniV2';
-import SushiV2 from '../../components/liquidityPoolContents/SushiV2';
-import Balancer from '../../components/liquidityPoolContents/Balancer';
-import UniV3 from '../../components/liquidityPoolContents/UniV3';
-import UniswapIcon from '../../assets/icons/uniswap-icon.svg';
-import SushiswapLogo from '../../assets/icons/Sushiswap.webp';
-import UniswapV3Logo from '../../assets/icons/uniswapV3-icon.svg';
-import BalancerLogo from '../../assets/icons/balancer-icon.svg';
-import BancorLogo from '../../assets/icons/bancor-icon.svg';
+import tokenURIs from '../Exchange/tokenURIs';
+import Typography from '@material-ui/core/Typography';
+import actionTypes from '../../constants/actionTypes';
+import { useDispatch, useSelector } from 'react-redux';
 import CurveLogo from '../../assets/icons/curve-icon.svg';
-import InchLogo from '../../assets/icons/inch-icon.svg';
 import SearchIcon from '../../assets/icons/copy-icon.svg';
+import BancorLogo from '../../assets/icons/bancor-icon.svg';
+import SushiswapLogo from '../../assets/icons/Sushiswap.webp';
+import UniswapIcon from '../../assets/icons/uniswap-icon.svg';
+import BalancerLogo from '../../assets/icons/balancer-icon.svg';
+import Curve from '../../components/liquidityPoolContents/Curve';
+import UniV3 from '../../components/liquidityPoolContents/UniV3';
+import UniswapV3Logo from '../../assets/icons/uniswapV3-icon.svg';
+import Bancor from '../../components/liquidityPoolContents/Bancor';
+import SushiV2 from '../../components/liquidityPoolContents/SushiV2';
 import SearchIconLight from '../../assets/icons/searchIconLight.svg';
+import UniV2 from '../../components/liquidityPoolContents/uniV2/UniV2';
+import Balancer from '../../components/liquidityPoolContents/Balancer';
 import {
-  addLiquidityNormal,
   addLiquidity,
   removeLiquidity,
+  addLiquidityNormal,
   removeLiquidityNormal,
 } from './helpers';
 
 import {
-  AllTabs,
-  ComingBlock,
-  Description,
   Input,
-  InputBlock,
-  LabelIcon,
+  AllTabs,
+  Wrapper,
   LabelTab,
   PanelTab,
-  PoolsTitle,
+  LabelIcon,
   SearchImg,
-  Wrapper,
+  InputBlock,
+  PoolsTitle,
+  ComingBlock,
+  Description,
 } from '../style';
-import { useDispatch, useSelector } from 'react-redux';
-import { InvestPoolsTable } from '../../components/liquidityPoolContents/liquidityPoolsTable/investPoolsTable/investPoolsTable';
-import mockTokenImage from '../../assets/icons/ethereum.svg';
 import axios from 'axios';
-import tokenURIs from '../Exchange/tokenURIs';
-import mkrImage from '../../assets/icons/mkr.svg';
-import aaveImage from '../../assets/icons/aave-logo.svg';
-import balancerImage from '../../assets/icons/balancer-icon.svg';
-import actionTypes from '../../constants/actionTypes';
 import UniswapV2 from '../../components/LoansAndSavings/LiqudityPools/UniswapV2';
-import { InvestmentWrapper } from '../../components/LoansAndSavings/index/styledComponents';
-import { LiquidityPoolsTable } from '../../components/liquidityPoolContents/liquidityPoolsTable/liquidityPoolsTable/liquidityPoolsTable';
+import { InvestPoolsTable } from '../../components/liquidityPoolContents/liquidityPoolsTable/investPoolsTable/investPoolsTable';
+import { AddNewGroupButton } from '../../components/liquidityPoolContents/uniV2/StyledComponents';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -86,21 +78,25 @@ function a11yProps(index) {
 }
 
 export default function LiquidityPools() {
+  const uniswapV2lp = useSelector((state) => state.uniswapV2lp.uniswapV2lp);
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
   const SushiPoolsData = useSelector((state) => state.sushiSwap.sushiSwapLPData);
-  const uniswapV2lp = useSelector((state) => state.uniswapV2lp.uniswapV2lp);
   const accountAddress = useSelector((state) => state.initSidebarValuesReducer.selectedAddress);
 
+  const dispatch = useDispatch();
+
+  const [page, setPage] = useState(5);
+  const [Loading, setLoading] = useState(false);
   const [commonPoolsArray, setCommonPoolsArray] = useState([]);
-  console.log('commonPoolsArray', SushiPoolsData);
 
   useEffect(() => {
     const correctSushiProtocolDataStructure = (protocol) => {
+      setLoading(true);
       return protocol.map((el) => {
         return {
           imageData: [el.token0Image, el.token1Image],
-          symbol: `${el.token0Symbol} ${el.token0Symbol}`,
-          name: `${el.token0Symbol} ${el.token0Symbol}`,
+          symbol: `${el.token0Symbol} ${el.token1Symbol}`,
+          name: `${el.token0Symbol} ${el.token1Symbol}`,
           poolDetails: {
             token0Address: el.token0Id,
             token1Address: el.token1Id,
@@ -119,13 +115,13 @@ export default function LiquidityPools() {
     const myPoolsData = correctSushiProtocolDataStructure(SushiPoolsData);
     const commonPoolsArray = [...myPoolsData, ...uniswapV2lp];
     setCommonPoolsArray(commonPoolsArray);
+    setLoading(false);
   }, [SushiPoolsData, uniswapV2lp]);
 
   const [value, setValue] = React.useState(0);
   const [inputValue, setInputValue] = React.useState('');
   const [AllTokens, setAllTokens] = useState([]);
 
-  const dispatch = useDispatch();
   useEffect(() => {
     const getSushiSwapLPData = async () => {
       const sushiSwapObjects = { accountAddress: accountAddress };
@@ -167,6 +163,13 @@ export default function LiquidityPools() {
     getData();
   }, []);
 
+  const addNewPoolsPortion = (array, elementAmount) => {
+    return array.filter((el, index) => {
+      return index <= elementAmount - 1;
+    });
+  };
+  const poolsLimitedAmount = addNewPoolsPortion(commonPoolsArray, page);
+
   const inputChange = (e) => {
     setInputValue(e.target.value);
   };
@@ -194,16 +197,30 @@ export default function LiquidityPools() {
           <SearchImg src={isLightTheme ? SearchIcon : SearchIconLight} alt="" />
         </InputBlock>
         {/*===============>  MY POOLS*/}
-        <PoolsTitle isLightTheme={isLightTheme}>{'My pools'}</PoolsTitle>
-        <InvestPoolsTable
-          type={'sushiswap'}
-          AllTokens={AllTokens}
-          data={commonPoolsArray}
-          addLiquidity={addLiquidity}
-          removeLiquidity={removeLiquidity}
-          addLiquidityNormal={addLiquidityNormal}
-          removeLiquidityNormal={removeLiquidityNormal}
-        />
+        {poolsLimitedAmount.length > 0 && (
+          <>
+            <PoolsTitle isLightTheme={isLightTheme}>{'My pools'}</PoolsTitle>
+            <InvestPoolsTable
+              AllTokens={AllTokens}
+              data={poolsLimitedAmount}
+              addLiquidity={addLiquidity}
+              removeLiquidity={removeLiquidity}
+              addLiquidityNormal={addLiquidityNormal}
+              removeLiquidityNormal={removeLiquidityNormal}
+            />
+            {page < commonPoolsArray.length && (
+              <center>
+                <AddNewGroupButton
+                  isLightTheme={isLightTheme}
+                  onClick={(e) => {
+                    setPage(page + 5);
+                  }}>
+                  {Loading ? 'Loading...' : 'More Pools'}
+                </AddNewGroupButton>
+              </center>
+            )}
+          </>
+        )}
         {/*===============>  MY POOLS*/}
         <PoolsTitle isLightTheme={isLightTheme}>{'Available pools'}</PoolsTitle>
       </Wrapper>

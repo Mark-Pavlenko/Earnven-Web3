@@ -53,7 +53,6 @@ import {
   ModalLink,
   ModalLinkRight,
 } from './StyledComponents';
-import { TokenButtonsBlock } from '../../../screens/dashboard/styledComponents';
 import { LiquidityPoolsTable } from '../liquidityPoolsTable/liquidityPoolsTable/liquidityPoolsTable';
 import {useSelector} from "react-redux";
 import {addLiquidityNormal, addLiquidity} from "../../../screens/liquidityPools/helpers";
@@ -515,12 +514,12 @@ export default function LiquidityPools({ inputValue, AllTokens }) {
                     <TransparentButton
                       value="Remove Liquidity In Tokens"
                       onClick={(e) => {
-                        // removeLiquidity(
-                        //   object.token0.id,
-                        //   object.token1.id,
-                        //   ReceiveToken,
-                        //   (LiquidityAmount * 10 ** 18).toString()
-                        // );
+                        removeLiquidity(
+                          object.token0.id,
+                          object.token1.id,
+                          ReceiveToken,
+                          (LiquidityAmount * 10 ** 18).toString()
+                        );
                       }}
                     />
                   </div>
@@ -707,6 +706,11 @@ export default function LiquidityPools({ inputValue, AllTokens }) {
   }
 
   // async function removeLiquidity(tokenA, tokenB, receiveToken, liquidityAmount) {
+  //   console.log('removeFunc tokenA', tokenA)
+  //   console.log('removeFunc tokenB', tokenB)
+  //   console.log('removeFunc receiveToken', receiveToken)
+  //   console.log('removeFunc liquidityAmount', liquidityAmount)
+  //   console.log('removeFunc removeLiquidity')
   //   await loadWeb3();
   //   const web3 = window.web3;
   //   const accounts = await web3.eth.getAccounts();
@@ -745,6 +749,10 @@ export default function LiquidityPools({ inputValue, AllTokens }) {
   }
 
   // async function removeLiquidityNormal(tokenA, tokenB, LiquidityAmount) {
+  //     console.log('removeFunc tokenA', tokenA)
+  //     console.log('removeFunc tokenB', tokenB)
+  //     console.log('removeFunc receiveToken', LiquidityAmount)
+  //
   //   const start = parseInt(Date.now() / 1000) + 180;
   //   await loadWeb3();
   //   const web3 = window.web3;
@@ -973,7 +981,7 @@ export default function LiquidityPools({ inputValue, AllTokens }) {
        {/* </ModalContainer>*/}
         {/*Modal is here =====================================>*/}
       </center>
-      {Content}
+      {/*{Content}*/}
     </div>
   );
 }

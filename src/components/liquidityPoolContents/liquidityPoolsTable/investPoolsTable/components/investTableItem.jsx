@@ -67,7 +67,6 @@ import actionTypes from '../../../../../constants/actionTypes';
 
 export const InvestTableItem = ({
   item,
-  type,
   index,
   theme,
   addLiquidity,
@@ -645,16 +644,16 @@ export const InvestTableItem = ({
             }}>
             {'Withdraw'}
           </CommonSubmitButton>
-          {type === 'sushiswap' ? (
+          {item.protocol === 'Sushiswap' ? (
             <Link
-              to={`/${address}/${type}/address/${item.poolDetails.token0Address}/${item.poolDetails.token1Address}`}>
+              to={`/${address}/sushiswap/address/${item.poolDetails.token0Address}/${item.poolDetails.token1Address}`}>
               <InfoButton isLightTheme={theme}>
                 {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
               </InfoButton>
             </Link>
           ) : (
             <Link
-              to={`/${address}/${type}/address/${item.poolDetails.token0Address}/${item.poolDetails.token1Address}`}>
+              to={`/${address}/uniswap/address/${item.poolDetails.token0Address}/${item.poolDetails.token1Address}`}>
               <InfoButton isLightTheme={theme}>
                 {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
               </InfoButton>

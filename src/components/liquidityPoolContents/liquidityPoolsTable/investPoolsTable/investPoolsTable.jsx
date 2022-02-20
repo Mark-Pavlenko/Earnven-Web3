@@ -44,7 +44,6 @@ export const InvestPoolsTable = ({
           return (
             <InvestTableItem
               item={item}
-              type={type}
               index={index}
               theme={theme}
               addLiquidity={addLiquidity}
