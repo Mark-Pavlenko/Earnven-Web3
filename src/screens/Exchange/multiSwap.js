@@ -203,45 +203,38 @@ export default function MultiSwapComponent() {
     console.log('receive USD tokenData multiswap amount raw', amount);
     console.log('receive USD tokenData multiswap raw', tokenData);
 
-    dispatch({ type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING, payload: true });
-
     if (amount === '' || typeof amount === 'symbol') {
       amount = '0';
     }
 
+    //not the best solution - can`t enter float value
+    // dispatch({ type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING, payload: true });
+
     let tokenUSDCurrencyValue;
     let finalUSDCurrencyValue;
 
-    if (
-      tokenData.receiveTokensListItem === true &&
-      tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' &&
-      tokenData.USDCurrency === undefined
-    ) {
-      tokenUSDCurrencyValue = await axios.get(
-        `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
-      );
-
-      console.log(
-        'receive USD tokenUSDCurrencyValue.data.price.rate',
-        tokenUSDCurrencyValue.data.price.rate
-      );
+    if (tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+      await axios
+        .get(
+          `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
+        )
+        .then(async (response) => {
+          tokenUSDCurrencyValue = response;
+        })
+        .catch((err) => {
+          console.log('err of usd currency receive token', err);
+        });
 
       if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
         finalUSDCurrencyValue = `$ ${(tokenUSDCurrencyValue.data.price.rate * amount).toFixed(2)}`;
-        console.log(
-          'receive USD finalUSDCurrencyValue',
-          tokenUSDCurrencyValue.data.price.rate * amount
-        );
       } else {
-        console.log('Price not available');
+        finalUSDCurrencyValue = 'Price not available';
       }
-    } else if (
-      tokenData.address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' &&
-      tokenData.receiveTokensListItem === true
-    ) {
+    } else {
       const ethDollarValue = await axios.get(
         'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
       );
+
       finalUSDCurrencyValue = `$${(ethDollarValue.data.ethereum.usd * amount).toFixed(2)}`;
     }
 
@@ -254,17 +247,17 @@ export default function MultiSwapComponent() {
 
     console.log('multiswap receive USD index', needIndex);
 
-    if (needIndex !== -1)
+    if (needIndex !== -1) {
       initReceiveMultiSwapTokensList[needIndex] = {
         ...tokenData,
         USDCurrency: finalUSDCurrencyValue,
         amount: parseFloat(amount),
-        receiveTokensListItem: true,
       };
+    }
 
     // SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST
 
-    dispatch({ type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING, payload: false });
+    // dispatch({ type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING, payload: false });
 
     console.log('multiswap receive USD total', initReceiveMultiSwapTokensList);
 
