@@ -203,6 +203,8 @@ export default function MultiSwapComponent() {
     console.log('receive USD tokenData multiswap amount raw', amount);
     console.log('receive USD tokenData multiswap raw', tokenData);
 
+    dispatch({ type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING, payload: true });
+
     if (amount === '' || typeof amount === 'symbol') {
       amount = '0';
     }
@@ -219,10 +221,17 @@ export default function MultiSwapComponent() {
         `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
       );
 
+      console.log(
+        'receive USD tokenUSDCurrencyValue.data.price.rate',
+        tokenUSDCurrencyValue.data.price.rate
+      );
+
       if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
-        finalUSDCurrencyValue = `$ ${(
-          tokenUSDCurrencyValue.data.price.rate * parseFloat(amount)
-        ).toFixed(2)}`;
+        finalUSDCurrencyValue = `$ ${(tokenUSDCurrencyValue.data.price.rate * amount).toFixed(2)}`;
+        console.log(
+          'receive USD finalUSDCurrencyValue',
+          tokenUSDCurrencyValue.data.price.rate * amount
+        );
       } else {
         console.log('Price not available');
       }
@@ -233,9 +242,7 @@ export default function MultiSwapComponent() {
       const ethDollarValue = await axios.get(
         'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
       );
-      finalUSDCurrencyValue = `$${(ethDollarValue.data.ethereum.usd * parseFloat(amount)).toFixed(
-        2
-      )}`;
+      finalUSDCurrencyValue = `$${(ethDollarValue.data.ethereum.usd * amount).toFixed(2)}`;
     }
 
     console.log('multiswap receive USD finalUSDCurrencyValue', finalUSDCurrencyValue);
@@ -256,6 +263,8 @@ export default function MultiSwapComponent() {
       };
 
     // SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST
+
+    dispatch({ type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING, payload: false });
 
     console.log('multiswap receive USD total', initReceiveMultiSwapTokensList);
 
@@ -480,9 +489,7 @@ export default function MultiSwapComponent() {
             </USDCurrencyInputBlock>
           </MultiSwapSendTokensChooseBlock>
           {isTokensLimitExceeded && (
-            <ExceededAmountTokensLimitWarning>
-              Insufficient funds - available {initSendMultiSwapToken.balance}
-            </ExceededAmountTokensLimitWarning>
+            <ExceededAmountTokensLimitWarning>Insufficient funds</ExceededAmountTokensLimitWarning>
           )}
 
           <SwitchTokensBtn
@@ -535,11 +542,11 @@ export default function MultiSwapComponent() {
                         alt="chevron_icon"
                       />
                     </div>
-                    <div>
-                      <MultiSwapSendValueLabel isLightTheme={isLightTheme}>
-                        3510,03 BTC
-                      </MultiSwapSendValueLabel>
-                    </div>
+                    {/*<div>*/}
+                    {/*  <MultiSwapSendValueLabel isLightTheme={isLightTheme}>*/}
+                    {/*    3510,03 BTC*/}
+                    {/*  </MultiSwapSendValueLabel>*/}
+                    {/*</div>*/}
                   </MultiSwapChooseBtnTokenBlock>
                   <USDCurrencyInputBlock>
                     <ChosenMultiSwapSendReceiveTokenValueInput
