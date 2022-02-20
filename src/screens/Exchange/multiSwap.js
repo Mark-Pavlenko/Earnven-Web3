@@ -267,14 +267,28 @@ export default function MultiSwapComponent() {
   };
 
   const searchTokensHandler = (event, searchTokensData) => {
-    console.log('event multiswap', event);
-    const result = filteredTokensByName(event, searchTokensData);
-    console.log('result multiswap', result);
-    setTokensListModal(result);
+    console.log('filter test event target value', event.target.value);
+    console.log('filter test searchTokensData multiswap', searchTokensData);
+
+    let lowerCase = event.target.value.toLowerCase();
+    let filteredTokensList = searchTokensData.tokensList.filter((el) => {
+      if (lowerCase.input === '') {
+        return el;
+      }
+      //return the item which contains the user input
+      else if (el.name !== undefined && el.name.toLowerCase().includes(lowerCase)) {
+        return el.name.toLowerCase().includes(lowerCase);
+      } else {
+        // console.log('undef el', el);
+      }
+    });
+
+    // console.log('filter test total', filteredTokensList);
+
+    setTokensListModal(filteredTokensList);
   };
 
-  // console.log('useState tokensListModal multiswap', tokensListModal);
-  // console.log('useState isSendTokenSelectedSwappedTokenType', isSendTokenSelectedSwapped);
+  console.log('token filter tokensListModal', tokensListModal);
 
   const getAmountMulti = async () => {
     const web3 = await getWeb3();
@@ -672,7 +686,7 @@ export default function MultiSwapComponent() {
                   isLightTheme={isLightTheme}
                   onChange={(event) => {
                     searchTokensHandler(event, {
-                      tokensList: tokensListModal,
+                      tokensList: finalReceiveTokensList,
                     });
                   }}
                   InputProps={{

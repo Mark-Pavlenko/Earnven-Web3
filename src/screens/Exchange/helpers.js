@@ -13,6 +13,7 @@ export const filteredTokensByName = (event, searchTokensData) => {
     }
     //return the item which contains the user input
     else if (el.name !== undefined) {
+      // console.log('test el.name', el.name.includes(lowerCase));
       return el.name.toLowerCase().includes(lowerCase);
     } else {
       // console.log('undef el', el);

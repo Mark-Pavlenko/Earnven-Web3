@@ -294,6 +294,7 @@ export default function SwapComponent() {
   };
 
   const searchTokensHandler = (event, searchTokensData) => {
+    // console.log('single search data', searchTokensData);
     const result = filteredTokensByName(event, searchTokensData);
     //console.log('result single 111', result, searchTokensData);
     if (searchTokensData.searchSendTokensList === true) {
