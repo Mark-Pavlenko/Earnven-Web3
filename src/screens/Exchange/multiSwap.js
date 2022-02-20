@@ -103,6 +103,7 @@ export default function MultiSwapComponent() {
   const dispatch = useDispatch();
   const classes = useStyles();
   const [tokenSendUSDCurrency, setTokenSendUSDCurrency] = useState('$0.00');
+  const [tokenSendAmount, setTokenSendAmount] = useState();
   let [tokensListModal, setTokensListModal] = useState([]);
   const [sendTokenForExchangeAmount, setSendTokenForExchangeAmount] = useState();
   let [oldTokenSwappedAddress, setOldTokenSwappedAddress] = useState();
@@ -125,8 +126,12 @@ export default function MultiSwapComponent() {
     (state) => state.tokensListReducer.initReceiveMultiSwapTokensList
   );
 
-  console.log('multi init state SendTokenSwap 12345', initSendMultiSwapToken);
-  console.log('multi init state ReceiveMultiSwapTokensList', initReceiveMultiSwapTokensList);
+  console.log('receive USD multi init state SendTokenSwap 12345', initSendMultiSwapToken);
+  console.log('receive USD token send Amount', tokenSendAmount);
+  console.log(
+    ' receive USD multi init state ReceiveMultiSwapTokensList',
+    initReceiveMultiSwapTokensList
+  );
 
   //popover open/close
 
@@ -150,15 +155,15 @@ export default function MultiSwapComponent() {
   // const finalReceiveTokensList = sendTokensMockList;
   const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
 
+  console.log('multiswap receive tokens list', finalReceiveTokensList);
+
   const [filteredSendTokensListData, setFilteredSendTokensListData] = useState([]);
   const [filteredReceiveTokensListData, setFilteredReceiveTokensListData] = useState([]);
 
   useEffect(() => {
-    //
-    // console.log('filteredSendTokensList 12345', filteredSendTokensList);
+    setTokenSendAmount(0);
 
     finalSendTokensList.length !== 0 && setFilteredSendTokensListData(finalSendTokensList);
-
     finalReceiveTokensList.length !== 0 && setFilteredReceiveTokensListData(finalReceiveTokensList);
   }, []);
 
@@ -178,10 +183,11 @@ export default function MultiSwapComponent() {
     let convertedToUSDValue = convertSendTokenToUSDCurrencyHelper(tokenData);
     // console.log('multiswap convertedToUSDValue', convertedToUSDValue);
     setTokenSendUSDCurrency(convertedToUSDValue);
+    setTokenSendAmount(tokenData.amount);
   };
 
   let convertReceiveTokenToUSDCurrency = async (tokenData) => {
-    // console.log('receive USD tokenData multiswap', tokenData);
+    console.log('receive USD tokenData multiswap', tokenData);
 
     if (tokenData.amount === '' || typeof tokenData.amount === 'symbol') {
       tokenData.amount = '0';

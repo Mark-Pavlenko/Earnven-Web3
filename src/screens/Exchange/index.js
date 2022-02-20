@@ -318,34 +318,21 @@ export default function SwapComponent() {
       tokenData.amount = '0';
     }
 
-    //console.log('main receive tokenData', tokenData);
-
     let tokenUSDCurrencyValue;
 
     if (tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
-      //console.log('first triggered');
-
       await axios
         .get(
           `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
         )
         .then(async (response) => {
-          //console.log('suc get usd receive tokenData', response);
           tokenUSDCurrencyValue = response;
         })
         .catch((err) => {
           console.log('err of usd currency receive token', err);
-          // tokenUSDCurrencyValue = err;
         });
 
-      //console.log('receive tokenData total USDCurrency', tokenUSDCurrencyValue.data.price.rate);
-
       if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
-        // console.log(
-        //   'receive tokenData total',
-        //   (tokenUSDCurrencyValue.data.price.rate * tokenData.amount).toFixed(2)
-        // );
-
         setTokensReceiveUSDCurrency(
           `$ ${(tokenUSDCurrencyValue.data.price.rate * tokenData.amount).toFixed(2)}`
         );
