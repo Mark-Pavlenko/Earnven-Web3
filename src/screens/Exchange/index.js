@@ -270,12 +270,6 @@ export default function SwapComponent() {
     //     }),
     //   5000
     // );
-
-    //filter arr of tokens on existing values
-    // const test = finalSendTokensList.filter(
-    //   (token) => token.symbol !== sendTokenForExchange.symbol
-    // );
-    // console.log('test single', test);
   }, [finalSendTokensList, finalReceiveTokensList]);
 
   //function of dynamic converting of token value to USD Currency
@@ -939,20 +933,14 @@ export default function SwapComponent() {
                                 <SendTokenBalance isLightTheme={isLightTheme}>
                                   {object.balance !== undefined &&
                                     object.USDCurrency !== undefined && (
-                                      // (
                                       <span>{`$${
                                         object.balance > 0
                                           ? (
                                               object.balance * object.USDCurrency.toFixed(2)
                                             ).toFixed(3)
-                                          : (
-                                              object.balance * object.USDCurrency.toFixed(2)
-                                            ).toFixed(2)
+                                          : object.balance * object.USDCurrency
                                       }`}</span>
                                     )}
-                                  {/*) : ( */}
-                                  {/*<Loader type="Rings" color="#BB86FC" height={30} width={30} />*/}
-                                  {/* )}*/}
                                 </SendTokenBalance>
                               </SendTokenModalListItem>
                             ))}

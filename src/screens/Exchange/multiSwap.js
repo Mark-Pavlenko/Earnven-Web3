@@ -115,28 +115,6 @@ export default function MultiSwapComponent() {
   console.log('isLoadingReceiveTokensList', isLoadingReceiveTokensList);
 
   // Polygon
-  const initReceiveTokensList = [
-    {
-      symbol: 'WETH',
-      logoURI: 'https://assets.coingecko.com/coins/images/2518/thumb/weth.png?1628852295',
-      avatarIcon: 'Weth',
-      name: 'Wrapped Ether',
-      id: 'weth',
-      receiveTokensListItem: true,
-      address: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
-    },
-    {
-      symbol: 'USDC',
-      logoURI: 'https://assets.coingecko.com/coins/images/9956/thumb/4943.png?1636636734',
-      avatarIcon: 'Usdc Stablecoin',
-      name: 'Dai Stablecoin',
-      id: 'usdc',
-      receiveTokensListItem: true,
-      address: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
-    },
-  ];
-
-  const [receiveTokensList, setReceiveTokensList] = useState(initReceiveTokensList);
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
@@ -147,7 +125,7 @@ export default function MultiSwapComponent() {
     (state) => state.tokensListReducer.initReceiveMultiSwapTokensList
   );
 
-  console.log('multi init state SendTokenSwap', initSendMultiSwapToken);
+  console.log('multi init state SendTokenSwap 12345', initSendMultiSwapToken);
   console.log('multi init state ReceiveMultiSwapTokensList', initReceiveMultiSwapTokensList);
 
   //popover open/close
@@ -167,6 +145,7 @@ export default function MultiSwapComponent() {
 
   //working saga
   const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
+  console.log('multiswap finalSendTokensList 12345', finalSendTokensList);
 
   const finalReceiveTokensList = sendTokensMockList;
 
@@ -174,9 +153,13 @@ export default function MultiSwapComponent() {
   const [filteredReceiveTokensListData, setFilteredReceiveTokensListData] = useState([]);
 
   useEffect(() => {
+    //
+    // console.log('filteredSendTokensList 12345', filteredSendTokensList);
+
     finalSendTokensList.length !== 0 && setFilteredSendTokensListData(finalSendTokensList);
+
     finalReceiveTokensList.length !== 0 && setFilteredReceiveTokensListData(finalReceiveTokensList);
-  }, [finalSendTokensList, finalReceiveTokensList]);
+  }, []);
 
   console.log(
     'not multiswap state receiveTokenForExchange array multiswap 123',
@@ -257,23 +240,18 @@ export default function MultiSwapComponent() {
       };
     }
 
-    let temp_state = [...initReceiveMultiSwapTokensList];
-
-    let temp_element = { ...temp_state[needIndex] };
-
-    temp_element.USDCurrency = finalUSDCurrencyValue;
-
-    temp_state[needIndex] = temp_element;
-
-    setReceiveTokensList(temp_state);
-
     await getAmountMulti();
   };
 
   const openModalHelper = (payload) => {
     setOpenTokensModal(true);
     console.log('tokensList multiswap payload', payload);
-    setTokensListModal(payload.tokensList);
+
+    let filteredSendTokensList = payload.tokensList.filter(
+      (token) => token.symbol !== initSendMultiSwapToken.symbol
+    );
+
+    setTokensListModal(filteredSendTokensList);
     setIsSendTokenSelectedSwapped(payload.isSendModalOpen);
   };
 
