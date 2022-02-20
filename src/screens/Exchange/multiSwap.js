@@ -162,10 +162,6 @@ export default function MultiSwapComponent() {
     finalReceiveTokensList.length !== 0 && setFilteredReceiveTokensListData(finalReceiveTokensList);
   }, []);
 
-  console.log(
-    'not multiswap state receiveTokenForExchange array multiswap 123',
-    initReceiveMultiSwapTokensList
-  );
   console.log('state setSendTokenForExchangeAmount multiswap', sendTokenForExchangeAmount);
 
   async function getWeb3() {
@@ -685,9 +681,13 @@ export default function MultiSwapComponent() {
                 <SearchTokensModalTextField
                   isLightTheme={isLightTheme}
                   onChange={(event) => {
-                    searchTokensHandler(event, {
-                      tokensList: finalReceiveTokensList,
-                    });
+                    isSendTokenSelectedSwapped
+                      ? searchTokensHandler(event, {
+                          tokensList: finalSendTokensList,
+                        })
+                      : searchTokensHandler(event, {
+                          tokensList: finalReceiveTokensList,
+                        });
                   }}
                   InputProps={{
                     endAdornment: (
