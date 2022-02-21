@@ -94,7 +94,7 @@ function* getReceiveTokensListSagaWorker() {
   const zeroAPISwapTokensList = yield call(API.getZeroAPITokensList);
   console.log('sagas zeroAPITokensList', zeroAPISwapTokensList);
 
-  const uniswapFullCoinsList = yield call(API.getUniswapFullCoinsList);
+  // const uniswapFullCoinsList = yield call(API.getUniswapFullCoinsList);
   // console.log('uniswapFullCoinsList sagas', uniswapFullCoinsList);
 
   // return 429
@@ -117,9 +117,9 @@ function* getReceiveTokensListSagaWorker() {
   let finalList = zeroAPISwapTokensList.map((token) => ({
     ...token,
     receiveTokensListItem: true,
-    logoURI: uniswapFullCoinsList.tokens.find((x) => x.address === token.address)
-      ? uniswapFullCoinsList.tokens.find((x) => x.address === token.address).logoURI
-      : null,
+    // logoURI: uniswapFullCoinsList.tokens.find((x) => x.address === token.address)
+    //   ? uniswapFullCoinsList.tokens.find((x) => x.address === token.address).logoURI
+    //   : null,
     id: filteredCoinGeckoTokensList.find((x) => x.symbol === token.symbol.toLowerCase())
       ? filteredCoinGeckoTokensList.find((x) => x.symbol === token.symbol.toLowerCase()).id
       : null,

@@ -112,8 +112,9 @@ export default function MultiSwapComponent() {
   const [tokenSendAmount, setTokenSendAmount] = useState();
   let [tokensListModal, setTokensListModal] = useState([]);
   const [sendTokenForExchangeAmount, setSendTokenForExchangeAmount] = useState();
+  const [nullerReceiveTokensAmount, setNullerReceiveTokensAmount] = useState();
   //test
-  const [receiveTokenForExchangeAmount, setReceiveTokenForExchangeAmount] = useState();
+  const [receiveTokensForExchangeAmountsArr, setReceiveTokensForExchangeAmountsArr] = useState([]);
   //
   let [oldTokenSwappedAddress, setOldTokenSwappedAddress] = useState();
   let [isSendTokenSelectedSwapped, setIsSendTokenSelectedSwapped] = useState(false);
@@ -142,6 +143,8 @@ export default function MultiSwapComponent() {
     ' receive USD multi init state ReceiveMultiSwapTokensList',
     initReceiveMultiSwapTokensList
   );
+
+  console.log('receiveTokensForExchangeAmountsArr', receiveTokensForExchangeAmountsArr);
 
   //popover open/close
 
@@ -173,6 +176,8 @@ export default function MultiSwapComponent() {
   useEffect(() => {
     // setTokenSendAmount(0);
     setSendTokenForExchangeAmount(0);
+    setNullerReceiveTokensAmount(0);
+    // setNullerReceiveTokensAmount(0);
 
     finalSendTokensList.length !== 0 && setFilteredSendTokensListData(finalSendTokensList);
     finalReceiveTokensList.length !== 0 && setFilteredReceiveTokensListData(finalReceiveTokensList);
@@ -342,7 +347,7 @@ export default function MultiSwapComponent() {
   };
 
   const selectTokenForSwap = async (selectedSwapToken, isSendTokenSelectedSwapped) => {
-    console.log('copy multiswap send/receive selectedSwapToken', selectedSwapToken);
+    // console.log('copy multiswap send/receive selectedSwapToken', selectedSwapToken);
 
     // await getAmountMulti(selectedSwapToken, isSendTokenSelectedSwapped);
 
@@ -372,7 +377,7 @@ export default function MultiSwapComponent() {
         (token) => token.address === oldTokenSwappedAddress
       );
 
-      console.log('copy multiswap receive USD index', needIndex);
+      // console.log('copy multiswap receive USD index', needIndex);
 
       if (needIndex !== -1) {
         receiveTokensListCopy[needIndex] = {
@@ -383,7 +388,7 @@ export default function MultiSwapComponent() {
         };
       }
 
-      console.log('receiveTokensListCopy', receiveTokensListCopy);
+      // console.log('receiveTokensListCopy', receiveTokensListCopy);
 
       dispatch({
         type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST,
@@ -579,11 +584,21 @@ export default function MultiSwapComponent() {
                         }}
                         isLightTheme={isLightTheme}
                         placeholder="0.0"
-                        value={receiveToken.amount}
+                        value={nullerReceiveTokensAmount}
                         onChange={(e) => {
                           convertReceiveTokenToUSDCurrency(e.target.value, {
                             ...receiveToken,
                           });
+                          setNullerReceiveTokensAmount(e.target.value);
+                          //add new item to an array if it is not added yet
+                          //in order to change amount value in input field
+                          receiveTokensForExchangeAmountsArr.findIndex(
+                            (x) => x.address === receiveToken.address
+                          ) &&
+                            receiveTokensForExchangeAmountsArr.push({
+                              amount: e.target.value,
+                              ...receiveToken,
+                            });
                         }}
                       />
 

@@ -200,7 +200,6 @@ export default function SwapComponent() {
   //console.log('1112 filteredSend', filteredData);
   //console.log('1112 filteredReceive', filteredReceiveTokensListData);
 
-  // console.log('single swap sendTokenForExchangeAmount', sendTokenForExchangeAmount);
   //console.log('single swap receiveTokenForExchangeAmount', receiveTokenForExchangeAmount);
 
   //---OLD states
@@ -530,8 +529,6 @@ export default function SwapComponent() {
     // setselectedRate(null);
     // setSources([]);
   };
-
-  // console.log('sendTokenForExchangeAmount 222', sendTokenForExchangeAmount);
 
   // console.log('token receive swap tokenReceiveUSDCurrency', tokenReceiveUSDCurrency);
 
