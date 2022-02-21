@@ -4,6 +4,7 @@ import actionTypes from '../../constants/actionTypes';
 import * as actions from './actions';
 import ethImage from '../../assets/icons/eth.png';
 import CoinGeckoMockTokensList from './CoinGecko.json';
+import UniSwapTokensList from './UniSwapTokensList.json';
 import {
   setInitialSendTokenSingleSwap,
   setInitReceiveFirstTokenSwap,
@@ -100,6 +101,7 @@ function* getReceiveTokensListSagaWorker() {
   // const coinGeckoFullTokensList = yield call(API.getCoinGeckoFullTokensList);
   // console.log('coinGeckoFullTokensList sagas', coinGeckoFullTokensList);
 
+  // const uniswapFullCoinsList = UniSwapTokensList;
   const coinGeckoFullTokensList = CoinGeckoMockTokensList;
 
   let filteredCoinGeckoTokensList = coinGeckoFullTokensList.filter((walletToken) =>
