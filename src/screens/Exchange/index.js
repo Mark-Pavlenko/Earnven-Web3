@@ -721,7 +721,9 @@ export default function SwapComponent() {
                 Trade any token or LP share in a single transaction
               </ColumnMainSubTitles>
             </FirstColumnTitleHeaderBlock>
-            <SwapTokensMainSubBlock isLightTheme={isLightTheme}>
+            <SwapTokensMainSubBlock
+              isLightTheme={isLightTheme}
+              style={{ padding: '32px 27px 16px 20px' }}>
               {/*send block */}
               <SendReceiveSubBlock>
                 <SendBlockLabels isLightTheme={isLightTheme}>

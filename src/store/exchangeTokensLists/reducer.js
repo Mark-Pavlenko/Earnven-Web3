@@ -9,6 +9,7 @@ const initialState = {
   initReceiveSecondTokenSwap: {},
   initReceiveMultiSwapTokensList: [],
   isReceiveMultiSwapTokensListLoading: true,
+  // isReceiveMultiSwapUSDCurrencyLoading: true,
 };
 //takes two arguments: The current state and the action and returns the new state.
 export const tokensListReducer = (state = initialState, action) => {

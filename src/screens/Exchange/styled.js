@@ -57,7 +57,7 @@ export const SwapTokensMainSubBlock = styled.div`
   width: 525px;
   height: 515px;
   margin-top: 20px;
-  padding: 32px 27px 16px 20px;
+
   background: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#1F265C3D')};
   mix-blend-mode: normal;
   box-shadow: 2px 2px 4px 0 #ffffff1a inset;
@@ -136,6 +136,7 @@ export const MultiSwapSendTokensChooseBlock = styled.div`
   width: 475px;
   height: 60px;
   margin-top: -3px;
+  margin: 32px 27px 16px 20px;
   color: black;
   background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
   box-shadow: ${(props) =>
@@ -152,6 +153,16 @@ export const MultiSwapSendTokensChooseBlock = styled.div`
   @media (max-width: 540px) {
     width: 345px;
   }
+`;
+
+export const SubLayoutReceiveTokensBlock = styled.div`
+  overflow: auto;
+  height: 270px;
+  //background-color: blue;
+  padding-left: 20px;
+  //margin: 0 27px 16px 20px;
+  padding-top: 5px;
+  overflow-x: hidden;
 `;
 
 export const MultiSwapReceiveTokensBlock = styled.div`
@@ -299,7 +310,6 @@ export const ColumnMainSubTitles = styled.p`
 
 export const AddReceiveTokenMultiSwapBtn = styled(Button)`
   display: flex;
-  margin-top: 5px;
   max-width: 28px;
   max-height: 28px;
   min-width: 28px;

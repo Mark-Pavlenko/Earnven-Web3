@@ -51,6 +51,7 @@ import {
   SendTokenBalance,
   AbsentFoundTokensBlock,
   ExceededAmountTokensLimitWarning,
+  SubLayoutReceiveTokensBlock,
 } from './styled';
 import EthIcon from '../../assets/icons/ethereum.svg';
 import chevronDownBlack from '../../assets/icons/chevronDownLightTheme.svg';
@@ -207,6 +208,13 @@ export default function MultiSwapComponent() {
       amount = '0';
     }
 
+    // found necessary index of element, which currency is updated
+    const needIndex = initReceiveMultiSwapTokensList.findIndex(
+      (token) => token.address === tokenData.address
+    );
+
+    console.log('multiswap receive USD index', needIndex);
+
     //not the best solution - can`t enter float value
     // dispatch({ type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING, payload: true });
 
@@ -239,13 +247,6 @@ export default function MultiSwapComponent() {
     }
 
     console.log('multiswap receive USD finalUSDCurrencyValue', finalUSDCurrencyValue);
-
-    // found necessary index of element, which currency is updated
-    const needIndex = initReceiveMultiSwapTokensList.findIndex(
-      (token) => token.address === tokenData.address
-    );
-
-    console.log('multiswap receive USD index', needIndex);
 
     if (needIndex !== -1) {
       initReceiveMultiSwapTokensList[needIndex] = {
@@ -287,28 +288,15 @@ export default function MultiSwapComponent() {
   };
 
   const searchTokensHandler = (event, searchTokensData) => {
-    console.log('filter test event target value', event.target.value);
-    console.log('filter test searchTokensData multiswap', searchTokensData);
+    // console.log('filter test event target value', event.target.value);
+    // console.log('filter test searchTokensData multiswap', searchTokensData);
 
-    let lowerCase = event.target.value.toLowerCase();
-    let filteredTokensList = searchTokensData.tokensList.filter((el) => {
-      if (lowerCase.input === '') {
-        return el;
-      }
-      //return the item which contains the user input
-      else if (el.name !== undefined && el.name.toLowerCase().includes(lowerCase)) {
-        return el.name.toLowerCase().includes(lowerCase);
-      } else {
-        // console.log('undef el', el);
-      }
-    });
-
-    // console.log('filter test total', filteredTokensList);
+    let filteredTokensList = filteredTokensByName(event, searchTokensData);
 
     setTokensListModal(filteredTokensList);
   };
 
-  console.log('token filter tokensListModal', tokensListModal);
+  // console.log('token filter tokensListModal', tokensListModal);
 
   const getAmountMulti = async () => {
     const web3 = await getWeb3();
@@ -376,11 +364,28 @@ export default function MultiSwapComponent() {
         (token) => token.address === oldTokenSwappedAddress
       );
 
-      if (needIndex !== -1)
-        initReceiveMultiSwapTokensList[needIndex] = {
-          ...selectedSwapToken,
-          receiveTokensListItem: true,
-        };
+      //don`t choose another tokens if we have enter some value in amount field
+      //help to remove amount and usd currency to another array of objects (with token address)???
+
+      let test;
+      if (needIndex > -1) {
+        test = initReceiveMultiSwapTokensList.splice(needIndex, 1); // 2nd parameter means remove one item only
+      }
+
+      initReceiveMultiSwapTokensList.push({
+        ...selectedSwapToken,
+        receiveTokensListItem: true,
+        amount: 0,
+      });
+
+      console.log('switch tokens test', test);
+
+      // if (needIndex !== -1)
+      //   initReceiveMultiSwapTokensList[needIndex] = {
+      //     ...selectedSwapToken,
+      //     receiveTokensListItem: true,
+      //     // amount: 0,
+      //   };
 
       //
 
@@ -389,6 +394,19 @@ export default function MultiSwapComponent() {
         payload: false,
       });
     }
+  };
+
+  const addReceiveTokensHandler = () => {
+    console.log('clicked');
+    dispatch({
+      type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING,
+      payload: true,
+    });
+    initReceiveMultiSwapTokensList.push(initSendMultiSwapToken);
+    dispatch({
+      type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING,
+      payload: false,
+    });
   };
 
   return (
@@ -499,7 +517,7 @@ export default function MultiSwapComponent() {
             </MultiSwapReceiveTokensBlock>
           </>
         ) : (
-          <>
+          <SubLayoutReceiveTokensBlock>
             {initReceiveMultiSwapTokensList.map((receiveToken) => (
               <MultiSwapReceiveTokensBlock isLightTheme={isLightTheme}>
                 <FirstSubLayoutMultiSwapReceiveTokensBlock>
@@ -562,8 +580,6 @@ export default function MultiSwapComponent() {
                       onChange={(e) => {
                         convertReceiveTokenToUSDCurrency(e.target.value, {
                           ...receiveToken,
-                          receiveTokenIndex: initReceiveMultiSwapTokensList.indexOf(receiveToken),
-                          receiveTokensListItem: receiveToken.receiveTokensListItem,
                         });
                       }}
                     />
@@ -680,7 +696,7 @@ export default function MultiSwapComponent() {
                 </SecondSubLayoutMultiSwapReceiveTokensBlock>
               </MultiSwapReceiveTokensBlock>
             ))}
-          </>
+          </SubLayoutReceiveTokensBlock>
         )}
 
         {/* choose send/receive tokens modal*/}
@@ -807,16 +823,21 @@ export default function MultiSwapComponent() {
           </SelectTokensModalContainer>
         )}
 
-        <AddReceiveTokenMultiSwapBtn isLightTheme={isLightTheme}>
+        <AddReceiveTokenMultiSwapBtn isLightTheme={isLightTheme} onClick={addReceiveTokensHandler}>
           <img
             src={isLightTheme ? plusIconDark : plusIconLight}
             alt="add_receive_multiswap_token"
           />
         </AddReceiveTokenMultiSwapBtn>
 
-        <SwapBlockDelimiter isLightTheme={isLightTheme} style={{ marginTop: '10px' }} />
+        <SwapBlockDelimiter
+          isLightTheme={isLightTheme}
+          style={{ marginTop: '20px', margin: '0 27px 0 20px' }}
+        />
         {/* Labels block*/}
-        <DownDelimiterLabelsBlock isLightTheme={isLightTheme} style={{ marginTop: '20px' }}>
+        <DownDelimiterLabelsBlock
+          isLightTheme={isLightTheme}
+          style={{ marginTop: '20px', padding: '20 27px 16px 20px' }}>
           <LabelsBlockSubBlock isLightTheme={isLightTheme}>
             <LabelsBlockImportantSpan isLightTheme={isLightTheme}>
               Slippage Tolerance
