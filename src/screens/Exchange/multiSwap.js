@@ -120,7 +120,7 @@ export default function MultiSwapComponent() {
   const isLoadingReceiveTokensList = useSelector(
     (state) => state.tokensListReducer.isReceiveMultiSwapTokensListLoading
   );
-  console.log('isLoadingReceiveTokensList', isLoadingReceiveTokensList);
+  // console.log('isLoadingReceiveTokensList', isLoadingReceiveTokensList);
 
   // Polygon
 
@@ -134,7 +134,7 @@ export default function MultiSwapComponent() {
   );
 
   console.log('receive USD multi init state SendTokenSwap 12345', initSendMultiSwapToken);
-  console.log('receive USD token send Amount', tokenSendAmount);
+  // console.log('receive USD token send Amount', tokenSendAmount);
   console.log(
     ' receive USD multi init state ReceiveMultiSwapTokensList',
     initReceiveMultiSwapTokensList
@@ -162,7 +162,7 @@ export default function MultiSwapComponent() {
   // const finalReceiveTokensList = sendTokensMockList;
   const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
 
-  console.log('multiswap receive tokens list', finalReceiveTokensList);
+  // console.log('multiswap receive tokens list', finalReceiveTokensList);
 
   const [filteredSendTokensListData, setFilteredSendTokensListData] = useState([]);
   const [filteredReceiveTokensListData, setFilteredReceiveTokensListData] = useState([]);
@@ -263,16 +263,12 @@ export default function MultiSwapComponent() {
       payload: receiveTokensListCopy,
     });
 
-    //
-
     // dispatch({ type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING, payload: false });
 
     console.log('multiswap receive USD total', initReceiveMultiSwapTokensList);
 
     await getAmountMulti();
   };
-
-  console.log('multiswap receive USD overwrite total', initReceiveMultiSwapTokensList);
 
   const openModalHelper = (payload) => {
     setOpenTokensModal(true);
@@ -343,13 +339,9 @@ export default function MultiSwapComponent() {
   };
 
   const selectTokenForSwap = async (selectedSwapToken, isSendTokenSelectedSwapped) => {
-    // console.log('multiswap selectTokenForSwap selectedSwapToken multiswap 123', selectedSwapToken);
-    // console.log('multiswap  selectTokenForSwap objIDAddress multiswap 123', oldTokenSwappedAddress);
-    // console.log(
-    //   'multiswap selectTokenForSwap  isSendTokenSelectedSwapped multiswap 123',
-    //   isSendTokenSelectedSwapped
-    // );
-    await getAmountMulti(selectedSwapToken, isSendTokenSelectedSwapped);
+    console.log('copy multiswap send/receive selectedSwapToken', selectedSwapToken);
+
+    // await getAmountMulti(selectedSwapToken, isSendTokenSelectedSwapped);
 
     if (isSendTokenSelectedSwapped === true) {
       setSendTokenForExchangeAmount(0);
@@ -366,37 +358,36 @@ export default function MultiSwapComponent() {
         ...selectedSwapToken,
         address: selectedSwapToken.address,
       });
-    } else {
+    } else if (selectedSwapToken.receiveTokensListItem === true) {
       dispatch({ type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING, payload: true });
-
-      const needIndex = initReceiveMultiSwapTokensList.findIndex(
-        (token) => token.address === oldTokenSwappedAddress
-      );
 
       //don`t choose another tokens if we have enter some value in amount field
       //help to remove amount and usd currency to another array of objects (with token address)???
 
-      let test;
-      if (needIndex > -1) {
-        test = initReceiveMultiSwapTokensList.splice(needIndex, 1); // 2nd parameter means remove one item only
+      let receiveTokensListCopy = [...initReceiveMultiSwapTokensList];
+
+      // found necessary index of element, which currency is updated
+      const needIndex = receiveTokensListCopy.findIndex(
+        (token) => token.address === oldTokenSwappedAddress
+      );
+
+      console.log('copy multiswap receive USD index', needIndex);
+
+      if (needIndex !== -1) {
+        receiveTokensListCopy[needIndex] = {
+          ...selectedSwapToken,
+          receiveTokensListItem: true,
+          USDCurrency: '$ 0.00',
+          amount: 0,
+        };
       }
 
-      initReceiveMultiSwapTokensList.push({
-        ...selectedSwapToken,
-        receiveTokensListItem: true,
-        amount: 0,
+      console.log('receiveTokensListCopy', receiveTokensListCopy);
+
+      dispatch({
+        type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST,
+        payload: receiveTokensListCopy,
       });
-
-      console.log('switch tokens test', test);
-
-      // if (needIndex !== -1)
-      //   initReceiveMultiSwapTokensList[needIndex] = {
-      //     ...selectedSwapToken,
-      //     receiveTokensListItem: true,
-      //     // amount: 0,
-      //   };
-
-      //
 
       dispatch({
         type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING,
