@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   AdditionalOptionsSwapTokensSubBlock,
   AddReceiveTokenMultiSwapBtn,
@@ -112,14 +112,14 @@ export default function MultiSwapComponent() {
   const [tokenSendAmount, setTokenSendAmount] = useState();
   let [tokensListModal, setTokensListModal] = useState([]);
   const [sendTokenForExchangeAmount, setSendTokenForExchangeAmount] = useState();
-  const [nullerReceiveTokensAmount, setNullerReceiveTokensAmount] = useState();
-  //test
-  const [receiveTokensForExchangeAmountsArr, setReceiveTokensForExchangeAmountsArr] = useState([]);
+  const [receiveTokensRefsList, setReceiveTokensRefsList] = useState([]);
   //
   let [oldTokenSwappedAddress, setOldTokenSwappedAddress] = useState();
   let [isSendTokenSelectedSwapped, setIsSendTokenSelectedSwapped] = useState(false);
   const [openTokensModal, setOpenTokensModal] = useState(false);
   const [isTokensLimitExceeded, setIsTokensLimitExceeded] = useState(false);
+
+  let textInput = useRef(null);
 
   const isLoadingReceiveTokensList = useSelector(
     (state) => state.tokensListReducer.isReceiveMultiSwapTokensListLoading
@@ -143,8 +143,6 @@ export default function MultiSwapComponent() {
     ' receive USD multi init state ReceiveMultiSwapTokensList',
     initReceiveMultiSwapTokensList
   );
-
-  console.log('receiveTokensForExchangeAmountsArr', receiveTokensForExchangeAmountsArr);
 
   //popover open/close
 
@@ -170,24 +168,9 @@ export default function MultiSwapComponent() {
 
   // console.log('multiswap receive tokens list', finalReceiveTokensList);
 
-  const [filteredSendTokensListData, setFilteredSendTokensListData] = useState([]);
-  const [filteredReceiveTokensListData, setFilteredReceiveTokensListData] = useState([]);
-
   useEffect(() => {
-    // setTokenSendAmount(0);
     setSendTokenForExchangeAmount(0);
-    setNullerReceiveTokensAmount(0);
-    // setNullerReceiveTokensAmount(0);
-
-    finalSendTokensList.length !== 0 && setFilteredSendTokensListData(finalSendTokensList);
-    finalReceiveTokensList.length !== 0 && setFilteredReceiveTokensListData(finalReceiveTokensList);
-
-    // convertReceiveTokenToUSDCurrency(e.target.value, {
-    //   ...receiveToken,
-    //   receiveTokenIndex: initReceiveMultiSwapTokensList.indexOf(receiveToken),
-    //   receiveTokensListItem: receiveToken.receiveTokensListItem,
-    // });
-  }, [finalSendTokensList, finalReceiveTokensList]);
+  }, []);
 
   console.log('state setSendTokenForExchangeAmount multiswap', sendTokenForExchangeAmount);
 
@@ -198,7 +181,12 @@ export default function MultiSwapComponent() {
   }
 
   let exchange = async () => {
-    console.log(11111, '11111');
+    console.log('total MultiSwap sendToken initSendMultiSwapToken', initSendMultiSwapToken);
+    console.log('total MultiSwap sendToken object AMOUNT', tokenSendAmount);
+    console.log(
+      'total MultiSwap receiveTokensList exchange object',
+      initReceiveMultiSwapTokensList
+    );
   };
 
   let convertSendTokenToUSDCurrency = (tokenData) => {
@@ -209,12 +197,8 @@ export default function MultiSwapComponent() {
   };
 
   let convertReceiveTokenToUSDCurrency = async (amount, tokenData) => {
-    console.log('receive USD tokenData multiswap amount raw', amount);
-    console.log('receive USD tokenData multiswap raw', tokenData);
-
-    // if (amount === '' || typeof amount === 'symbol') {
-    //   amount = '0';
-    // }
+    // console.log('receive USD tokenData multiswap amount raw', amount);
+    // console.log('receive USD tokenData multiswap raw', tokenData);
 
     let tokenUSDCurrencyValue;
     let finalUSDCurrencyValue;
@@ -278,7 +262,13 @@ export default function MultiSwapComponent() {
     await getAmountMulti();
   };
 
-  const openModalHelper = (payload) => {
+  let [test, setTest] = useState(0);
+
+  const openModalHelper = (payload, key) => {
+    console.log('key value', key);
+
+    let test = setReceiveTokensRefsList[key];
+
     setOpenTokensModal(true);
     // console.log('tokensList multiswap payload', payload);
 
@@ -301,15 +291,9 @@ export default function MultiSwapComponent() {
   };
 
   const searchTokensHandler = (event, searchTokensData) => {
-    // console.log('filter test event target value', event.target.value);
-    // console.log('filter test searchTokensData multiswap', searchTokensData);
-
     let filteredTokensList = filteredTokensByName(event, searchTokensData);
-
     setTokensListModal(filteredTokensList);
   };
-
-  // console.log('token filter tokensListModal', tokensListModal);
 
   const getAmountMulti = async () => {
     const web3 = await getWeb3();
@@ -367,9 +351,6 @@ export default function MultiSwapComponent() {
     } else if (selectedSwapToken.receiveTokensListItem === true) {
       dispatch({ type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING, payload: true });
 
-      //don`t choose another tokens if we have enter some value in amount field
-      //help to remove amount and usd currency to another array of objects (with token address)???
-
       let receiveTokensListCopy = [...initReceiveMultiSwapTokensList];
 
       // found necessary index of element, which currency is updated
@@ -388,7 +369,9 @@ export default function MultiSwapComponent() {
         };
       }
 
-      // console.log('receiveTokensListCopy', receiveTokensListCopy);
+      //clear the old input value from token field
+      // should bee done for all tokens - do only for last by ref, should be done by keys
+      textInput.current.value = '';
 
       dispatch({
         type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST,
@@ -526,17 +509,20 @@ export default function MultiSwapComponent() {
         ) : (
           <>
             <SubLayoutReceiveTokensBlock>
-              {initReceiveMultiSwapTokensList.map((receiveToken) => (
+              {initReceiveMultiSwapTokensList.map((receiveToken, key) => (
                 <MultiSwapReceiveTokensBlock isLightTheme={isLightTheme}>
                   <FirstSubLayoutMultiSwapReceiveTokensBlock>
                     <MultiSwapChooseBtnTokenBlock
                       onClick={() => {
                         setOldTokenSwappedAddress(receiveToken.address);
-                        openModalHelper({
-                          tokensList: finalReceiveTokensList,
-                          isSendModalOpen: false,
-                          receiveToken,
-                        });
+                        openModalHelper(
+                          {
+                            tokensList: finalReceiveTokensList,
+                            isSendModalOpen: false,
+                            receiveToken,
+                          },
+                          key
+                        );
                       }}>
                       <div>
                         {receiveToken.logoURI !== null ? (
@@ -561,14 +547,10 @@ export default function MultiSwapComponent() {
                           alt="chevron_icon"
                         />
                       </div>
-                      {/*<div>*/}
-                      {/*  <MultiSwapSendValueLabel isLightTheme={isLightTheme}>*/}
-                      {/*    3510,03 BTC*/}
-                      {/*  </MultiSwapSendValueLabel>*/}
-                      {/*</div>*/}
                     </MultiSwapChooseBtnTokenBlock>
                     <USDCurrencyInputBlock>
                       <ChosenMultiSwapSendReceiveTokenValueInput
+                        // inputRef={(ref) => (receiveTokensRefsList[key] = ref)}
                         InputProps={{
                           inputProps: {
                             style: {
@@ -584,21 +566,12 @@ export default function MultiSwapComponent() {
                         }}
                         isLightTheme={isLightTheme}
                         placeholder="0.0"
-                        value={nullerReceiveTokensAmount}
+                        inputRef={textInput}
+                        // value={receiveToken.amount}
                         onChange={(e) => {
                           convertReceiveTokenToUSDCurrency(e.target.value, {
                             ...receiveToken,
                           });
-                          setNullerReceiveTokensAmount(e.target.value);
-                          //add new item to an array if it is not added yet
-                          //in order to change amount value in input field
-                          receiveTokensForExchangeAmountsArr.findIndex(
-                            (x) => x.address === receiveToken.address
-                          ) &&
-                            receiveTokensForExchangeAmountsArr.push({
-                              amount: e.target.value,
-                              ...receiveToken,
-                            });
                         }}
                       />
 
@@ -794,7 +767,6 @@ export default function MultiSwapComponent() {
                       <SendTokensModalList isLightTheme={isLightTheme}>
                         {tokensListModal.map((object) => (
                           <SendTokenModalListItem
-                            key={object.id}
                             onClick={() => {
                               setOpenTokensModal(false);
                               selectTokenForSwap(object, isSendTokenSelectedSwapped);
