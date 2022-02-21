@@ -104,6 +104,7 @@ export const InvestTableItem = ({
   const [selected, setSelected] = useState('');
 
   const [isWithdrawActive, setIsWithdrawActive] = useState(false);
+  const [supplyTokenBalance, setSupplyTokenBalance] = useState('');
 
   const selectInitialValue = {
     label: 'Ether',
@@ -138,17 +139,29 @@ export const InvestTableItem = ({
     getData().then((r) => r);
   }, []);
 
+  useEffect(() => {
+    const getBalance = async () => {
+      await loadWeb3();
+      const web3 = window.web3;
+      const getBalance = await web3.eth.getBalance(tokenAddress);
+      const ethBalance = web3.utils.fromWei(getBalance, 'ether');
+      setSupplyTokenBalance(ethBalance);
+    };
+    getBalance().then((res) => res);
+  }, [tokenAddress]);
+
   const switchModal = (e) => {
     setSelectedModal(e.target.id);
     setIsModalVisible('addLiquidity');
   };
 
   const selectStyle = {
+    //opened dropdown
     menu: (provided, state) => ({
       ...provided,
       width: '100%',
       height: 'fitContent',
-      background: 'rgba(255, 255, 255, 0.16)',
+      background: theme ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)',
       boxSizing: 'border-box',
       boxShadow: 'inset 2px 0px 0px rgba(255, 255, 255, 0.1)',
       borderTop: 'none',
@@ -162,10 +175,20 @@ export const InvestTableItem = ({
       //valueLine
       return {
         ...provided,
-        background: state.menuIsOpen ? 'rgba(255, 255, 255, 0.16)' : '#FFFFFF',
-        boxShadow: state.menuIsOpen
+        background: theme
+          ? state.menuIsOpen
+            ? 'rgba(255, 255, 255, 0.16)'
+            : '#FFFFFF'
+          : state.menuIsOpen
+          ? 'rgba(31, 38, 92, 0.24)'
+          : 'rgba(31, 38, 92, 0.24)',
+        boxShadow: theme
+          ? state.menuIsOpen
+            ? 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'
+            : 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+          : state.menuIsOpen
           ? 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'
-          : 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
+          : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
         backdropFilter: 'blur(35px)',
         mixBlendMode: 'normal',
         border: 'none',
@@ -189,14 +212,15 @@ export const InvestTableItem = ({
       // ...provided,
       height: '20px',
       width: '20px',
-      color: '#4453AD',
+      color: theme ? '#4453AD' : '#8F86FF',
     }),
     indicatorsContainer: () => ({
       color: 'transparent',
     }),
     singleValue: (provided, state) => ({
+      //select closed
       ...provided,
-      color: '#464C52',
+      color: theme ? '#464C52' : '#FFFFFF',
       fontSize: '18px',
       background: state.isSelected ? 'black' : 'transparent',
     }),
@@ -411,6 +435,17 @@ export const InvestTableItem = ({
     setIsModalVisible('addLiquidity');
   };
 
+  // async function checkLiquidity(tokenA, tokenB) {
+  //   await loadWeb3();
+  //   const web3 = window.web3;
+  //   const accounts = await web3.eth.getAccounts();
+  //   var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.sushiFactory);
+  //   var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call();
+  //   var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
+  //   var qtty = await PairContract.methods.balanceOf(accounts[0]).call();
+  //   console.log('checkLiquidity', qtty);
+  // }
+
   return (
     <>
       {/*MODAL addLiquidity====================================>*/}
@@ -418,6 +453,7 @@ export const InvestTableItem = ({
         <ModalContainer
           theme={theme}
           title={selectedModal}
+          modalType={'withdraw'}
           isOpen={isModalVisible}
           closeModal={setIsModalVisible}
           setIsWithdrawActive={setIsWithdrawActive}>
@@ -431,6 +467,7 @@ export const InvestTableItem = ({
             />
             <InputBlock>
               <ModalInput
+                isLightTheme={theme}
                 value={singleTokenValue}
                 type="number"
                 onChange={(e) => {
@@ -443,7 +480,7 @@ export const InvestTableItem = ({
                   setInputType('single');
                 }}
               />
-              <Balance>{`Balance: ${5}`}</Balance>
+              <Balance>{`Balance: ${parseFloat(supplyTokenBalance).toFixed(2)}`}</Balance>
             </InputBlock>
             {/*<ButtonsBlock>*/}
             {/*  <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>*/}
@@ -461,6 +498,7 @@ export const InvestTableItem = ({
                 <BlockTokenName>{item.token0Symbol}</BlockTokenName>
               </BlockTokens>
               <ModalInput
+                isLightTheme={theme}
                 value={inValue}
                 onChange={(e) => {
                   convertTokenPrice(
@@ -490,6 +528,7 @@ export const InvestTableItem = ({
               </BlockTokens>
               <ModalInput
                 value={outValue}
+                isLightTheme={theme}
                 onChange={(e) => {
                   convertTokenPrice(
                     'secondInput',
@@ -510,11 +549,13 @@ export const InvestTableItem = ({
             {/*input-------------------->*/}
             <LinksContainer>
               <ModalLink onClick={slippageHandler} href={'#'}>
-                {'Slippage Tolerance'}
+                {'Transaction speed'}
               </ModalLink>
-              <ModalLinkRight href={'#'}>bbb</ModalLinkRight>
-              <ModalLink href={'#'}>{'Transaction speed'}</ModalLink>
-              <ModalLinkRight href={'#'}>ddd</ModalLinkRight>
+              <ModalLinkRight onClick={slippageHandler} href={'#'}>
+                {`${selectedGasPrice.length > 0 ? selectedGasPrice : proposeGasPrice} Gwei`}
+              </ModalLinkRight>
+              {/*<ModalLink href={'#'}>{'Slippage Tolerance'}</ModalLink>*/}
+              {/*<ModalLinkRight href={'#'}>ddd</ModalLinkRight>*/}
             </LinksContainer>
             <ButtonsBlock>
               <SupplyTokenButton onClick={inputsHandler}>{`Supply tokens`}</SupplyTokenButton>

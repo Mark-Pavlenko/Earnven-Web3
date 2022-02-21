@@ -16,7 +16,7 @@ const ModalContainer = ({ title, children, closeModal, modalType, setIsWithdrawA
             <CloseButton
               onClick={() => {
                 closeModal('');
-                setIsWithdrawActive(false);
+                modalType === 'withdraw' && setIsWithdrawActive(false);
               }}
               isLightTheme={isLightTheme}
             />

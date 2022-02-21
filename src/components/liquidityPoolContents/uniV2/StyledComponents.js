@@ -32,8 +32,11 @@ export const ModalInput = styled.input`
   width: 100%;
   cursor: pointer;
   border: none;
-  background: #ffffff;
-  box-shadow: inset 0 5px 10px -6px rgba(51, 78, 131, 0.12);
+  background: ${(props) => (props.isLightTheme ? '#ffffff' : 'rgba(31, 38, 92, 0.24)')};
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 0 5px 10px -6px rgba(51, 78, 131, 0.12)'
+      : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
   border-radius: 7px;
   outline: none;
   font-family: serif Saira;
@@ -41,7 +44,7 @@ export const ModalInput = styled.input`
   font-weight: 500;
   font-size: 20px;
   line-height: 31px;
-  color: #1e1e20;
+  color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#ffffff')};
   padding: 0 21px;
 `;
 

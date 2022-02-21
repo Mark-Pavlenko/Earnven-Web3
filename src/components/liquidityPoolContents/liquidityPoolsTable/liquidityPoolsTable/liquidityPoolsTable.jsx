@@ -21,7 +21,6 @@ export const LiquidityPoolsTable = ({
   AllTokens,
   protocolType,
 }) => {
-  console.log('rtbvgrhfdgvsdr', data);
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
 
   return (
