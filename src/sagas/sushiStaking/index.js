@@ -22,9 +22,11 @@ function* sushiStakeSagaWorker(sushiStakingObjects) {
     let sushiStaking = [];
     let slpTokenVolume = 0;
     let slpTokenLiquidity = 0;
-    let sushiStakingtTotalValue = 0;
+    let totalValue = 0;
+
     for (var i = 0; i < res.users.length; i++) {
       let object = {};
+      let images = [];
       //store this balanceOf amount for each pair in the arrayOf value as object
       amount[i] = response.data.data.users[i].amount;
       poolId[i] = response.data.data.users[i].pool.pair;
@@ -33,9 +35,23 @@ function* sushiStakeSagaWorker(sushiStakingObjects) {
       const pairResponse = yield call(API.getSushiPoolData, poolId[i]);
       if (pairResponse) {
         const pairData = pairResponse.data.data.pairs;
+        try {
+          const SLPToken0ImageUrl = yield call(API.getTokenImage, pairData[0].token0.id);
+          const SLPToken1ImageUrl = yield call(API.getTokenImage, pairData[0].token1.id);
+          let sushiLPToken0ImageUrl = SLPToken0ImageUrl.data.image.thumb;
+          let sushiLPToken1ImageUrl = SLPToken1ImageUrl.data.image.thumb;
+          //add pair of token images into an array
+          if (sushiLPToken0ImageUrl) {
+            images.push(sushiLPToken0ImageUrl);
+          }
+          if (sushiLPToken1ImageUrl) {
+            images.push(sushiLPToken1ImageUrl);
+          }
+        } catch (err) {
+          console.log('Sushi Staking token image url is not available', err.message);
+        }
 
-        const SLPToken0ImageUrl = yield call(API.getTokenImage, pairData[0].token0.id);
-        const SLPToken1ImageUrl = yield call(API.getTokenImage, pairData[0].token1.id);
+        object.imageData = images;
 
         //get the volume and liquidity value of the sushi lp token
         //api created with name getSushiLpTokenData three args token0,token1 and epoc time
@@ -57,25 +73,22 @@ function* sushiStakeSagaWorker(sushiStakingObjects) {
 
         const sushiTokenPrice = pairData[0].reserveUSD / pairData[0].totalSupply;
 
-        object.sushiLpTokenSymbol = pairData[0].name;
-        object.sushiLpTokenBalance = sushiStakeAmount;
-        object.sushiLpTokenPrice = parseFloat(sushiTokenPrice).toFixed(2);
-        object.sushiLpTokenValue = parseFloat(
-          object.sushiLpTokenBalance * object.sushiLpTokenPrice
-        ).toFixed(2);
-        object.sushiLpTokenVolume = parseFloat(slpTokenVolume).toFixed(2);
-        object.sushiLpTokenLiquidity = parseInt(slpTokenLiquidity).toFixed(2);
-        object.sushiLPToken0ImageUrl = SLPToken0ImageUrl.data.image.thumb;
-        object.sushiLPToken1ImageUrl = SLPToken1ImageUrl.data.image.thumb;
-        object.sushiLpProtocol = 'Ethereum';
-        object.sushiLpChain = 'SushiSwap';
+        object.symbol = pairData[0].name;
+        object.balance = parseFloat(sushiStakeAmount).toFixed(4);
+        object.price = parseFloat(sushiTokenPrice).toFixed(2);
+        object.value = parseFloat(object.balance * object.price).toFixed(2);
+        object.volume = parseFloat(slpTokenVolume).toFixed(2);
+        object.liquidity = parseInt(slpTokenLiquidity).toFixed(2);
 
-        sushiStakingtTotalValue += parseFloat(object.sushiLpTokenValue);
+        object.protocol = 'Ethereum';
+        object.chain = 'SushiSwap';
+
+        totalValue += parseFloat(object.value);
         sushiStaking.push(object);
       }
     } //end of for loop
 
     yield put(actions.getSushiStakeData(sushiStaking));
-    yield put(actions.getSushiStakeTotalValue(sushiStakingtTotalValue));
+    yield put(actions.getSushiStakeTotalValue(totalValue));
   }
 }

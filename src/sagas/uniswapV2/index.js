@@ -20,7 +20,14 @@ export function* getuniswapV2StakeSagaWatcher() {
 function* Uniswapv2Stakeworker(data) {
   const attributes = data.payload;
   const lp = yield call(API_LP.getuniswapV2stakedata, attributes);
-  console.log('Uniswapv2Stakeworker', lp);
-  yield put(actions.getuniswapV2stake(lp));
-  yield put(actions.getuniswapV2stakeTotal(lp[0].totalValue));
+
+  //get the value and total value of the uniuswap staking tokens
+  if (lp.length > 0) {
+    let uniSwapv2StakingTotal = 0;
+    lp.map((object) => {
+      uniSwapv2StakingTotal += parseFloat(object.value);
+    });
+    yield put(actions.getuniswapV2stake(lp));
+    yield put(actions.getuniswapV2stakeTotal(uniSwapv2StakingTotal));
+  }
 }

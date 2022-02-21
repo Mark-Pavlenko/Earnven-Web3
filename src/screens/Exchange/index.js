@@ -110,20 +110,16 @@ import chevronDownLight from '../../assets/icons/chevronDownLight.svg';
 import MultiSwapComponent from './multiSwap';
 import SelectTokensModalContainer from './selectTokensModal';
 import { TokenImage, ModalTitle, CloseButton, Header } from './selectTokensModal/styles';
-import Autocomplete from '@mui/material/Autocomplete';
-import searchIcon from '../../assets/icons/searchIconLight.png';
 
-import SearchIcon from '@mui/icons-material/Search';
-import { TokensListTextField } from '../../components/searchTokens/styles';
 import actionTypes from '../../constants/actionTypes';
 import {
   checkIfExchangedTokenLimitIsExceeded,
   convertSendTokenToUSDCurrencyHelper,
+  filteredTokensByName,
 } from './helpers';
+
 import { getTokenDataSaga } from '../../store/currentTokenData/actions';
-import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
 import Popover from '@mui/material/Popover';
-import sendTokensMockList from './sendTokensMockList.json';
 
 const useStyles = makeStyles((theme) => ({
   noBorder: {
@@ -155,11 +151,11 @@ const makeCall = async (callName, contract, args, metadata = {}) => {
   }
 };
 
-import { filteredTokensByName } from './helpers';
 import TOKENDECIMALSABI from '../../abi/TokenDecomals.json';
 import ROUTERABI from '../../abi/UniRouterV2.json';
 import exchangersOfferedList from './exchangersOfferedList';
 import greenDot from '../../assets/icons/greenDot.svg';
+import { singleSushiSwapV2 } from './helpers';
 
 export default function SwapComponent() {
   const dispatch = useDispatch();
@@ -169,14 +165,17 @@ export default function SwapComponent() {
   //work saga
   const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
   const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
-
   const initSendTokenSwap = useSelector((state) => state.tokensListReducer.initSendTokenSwap);
   const initReceiveFirstTokenSwap = useSelector(
     (state) => state.tokensListReducer.initReceiveFirstTokenSwap
   );
+  const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
+  const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
 
-  console.log('initSendTokenSwap', initSendTokenSwap);
-  console.log('initReceiveFirstTokenSwap', initReceiveFirstTokenSwap);
+  //console.log('single GasPrice selected', selectedGasPrice);
+  //console.log('single GasPrice propose', proposeGasPrice);
+  // console.log('initSendTokenSwap', initSendTokenSwap);
+  //console.log('initReceiveFirstTokenSwap', initReceiveFirstTokenSwap);
 
   const [filteredData, setFilteredData] = useState([]);
   const [filteredReceiveTokensListData, setFilteredReceiveTokensListData] = useState([]);
@@ -195,14 +194,13 @@ export default function SwapComponent() {
   //mock data
   // const finalSendTokensList = sendTokensMockList;
 
-  console.log('single finalSendTokensList', finalSendTokensList);
-  console.log('single finalReceiveTokensList', finalReceiveTokensList);
+  //console.log('single finalSendTokensList', finalSendTokensList);
+  //console.log('single finalReceiveTokensList', finalReceiveTokensList);
 
-  console.log('1112 filteredSend', filteredData);
-  console.log('1112 filteredReceive', filteredReceiveTokensListData);
+  //console.log('1112 filteredSend', filteredData);
+  //console.log('1112 filteredReceive', filteredReceiveTokensListData);
 
-  console.log('single swap sendTokenForExchangeAmount', sendTokenForExchangeAmount);
-  console.log('single swap receiveTokenForExchangeAmount', receiveTokenForExchangeAmount);
+  //console.log('single swap receiveTokenForExchangeAmount', receiveTokenForExchangeAmount);
 
   //---OLD states
 
@@ -247,8 +245,8 @@ export default function SwapComponent() {
       (token) => token.symbol !== initReceiveFirstTokenSwap.symbol
     );
 
-    console.log('single filteredSendTokensList', filteredSendTokensList);
-    console.log('single filteredReceiveTokensList', filteredReceiveTokensList);
+    //console.log('single filteredSendTokensList', filteredSendTokensList);
+    //console.log('single filteredReceiveTokensList', filteredReceiveTokensList);
 
     finalSendTokensList.length !== 0 && setFilteredData(filteredSendTokensList);
     finalReceiveTokensList.length !== 0 &&
@@ -271,12 +269,6 @@ export default function SwapComponent() {
     //     }),
     //   5000
     // );
-
-    //filter arr of tokens on existing values
-    // const test = finalSendTokensList.filter(
-    //   (token) => token.symbol !== sendTokenForExchange.symbol
-    // );
-    // console.log('test single', test);
   }, [finalSendTokensList, finalReceiveTokensList]);
 
   //function of dynamic converting of token value to USD Currency
@@ -301,8 +293,9 @@ export default function SwapComponent() {
   };
 
   const searchTokensHandler = (event, searchTokensData) => {
+    // console.log('single search data', searchTokensData);
     const result = filteredTokensByName(event, searchTokensData);
-    console.log('result single 111', result, searchTokensData);
+    //console.log('result single 111', result, searchTokensData);
     if (searchTokensData.searchSendTokensList === true) {
       let middle = result.filter((token) => token.symbol !== initSendTokenSwap.symbol);
       setFilteredData(middle);
@@ -324,34 +317,21 @@ export default function SwapComponent() {
       tokenData.amount = '0';
     }
 
-    console.log('main receive tokenData', tokenData);
-
     let tokenUSDCurrencyValue;
 
     if (tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
-      console.log('first triggered');
-
       await axios
         .get(
           `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
         )
         .then(async (response) => {
-          console.log('suc get usd receive tokenData', response);
           tokenUSDCurrencyValue = response;
         })
         .catch((err) => {
           console.log('err of usd currency receive token', err);
-          // tokenUSDCurrencyValue = err;
         });
 
-      console.log('receive tokenData total USDCurrency', tokenUSDCurrencyValue.data.price.rate);
-
       if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
-        // console.log(
-        //   'receive tokenData total',
-        //   (tokenUSDCurrencyValue.data.price.rate * tokenData.amount).toFixed(2)
-        // );
-
         setTokensReceiveUSDCurrency(
           `$ ${(tokenUSDCurrencyValue.data.price.rate * tokenData.amount).toFixed(2)}`
         );
@@ -511,7 +491,7 @@ export default function SwapComponent() {
   };
 
   const selectSendTokenForExchange = (selectSendToken) => {
-    console.log('selected send token value object 222', selectSendToken);
+    //console.log('selected send token value object 222', selectSendToken);
     // setSendTokenForExchange(selectSendToken);
     setIsSendTokensModalVisible(false);
     setSendTokenForExchangeAmount(0);
@@ -528,7 +508,7 @@ export default function SwapComponent() {
   };
 
   const selectReceiveTokenForExchange = (selectReceiveToken) => {
-    console.log('selected receive token value object 222', selectReceiveToken);
+    //console.log('selected receive token value object 222', selectReceiveToken);
 
     setIsReceiveTokensModalVisible(false);
     setReceiveTokenForExchangeAmount(0);
@@ -550,8 +530,6 @@ export default function SwapComponent() {
     // setSources([]);
   };
 
-  // console.log('sendTokenForExchangeAmount 222', sendTokenForExchangeAmount);
-
   // console.log('token receive swap tokenReceiveUSDCurrency', tokenReceiveUSDCurrency);
 
   //---------------------
@@ -560,15 +538,15 @@ export default function SwapComponent() {
   //now - mock Uniswap V2 Contract address
 
   const convertExchangeTokensCourse = async (convertTokensData) => {
-    console.log('convertTokensData single swap', convertTokensData);
-    console.log(
-      ' convertTokensData single swap tokenDecimal token1',
-      convertTokensData.sendTokenForExchangeAddress
-    );
-    console.log(
-      ' convertTokensData single swap tokenDecimal token2',
-      convertTokensData.receiveTokenForExchangeAddress
-    );
+    // console.log('convertTokensData single swap', convertTokensData);
+    // console.log(
+    //   ' convertTokensData single swap tokenDecimal token1',
+    //   convertTokensData.sendTokenForExchangeAddress
+    // );
+    // console.log(
+    //   ' convertTokensData single swap tokenDecimal token2',
+    //   convertTokensData.receiveTokenForExchangeAddress
+    // );
 
     await loadWeb3();
     const web3 = window.web3;
@@ -592,8 +570,8 @@ export default function SwapComponent() {
         return res;
       });
 
-    console.log('convertTokensData single swap tokenDecimal 1', tokenDecimal1);
-    console.log('convertTokensData single swap tokenDecimal 2', tokenDecimal2);
+    //console.log('convertTokensData single swap tokenDecimal 1', tokenDecimal1);
+    //console.log('convertTokensData single swap tokenDecimal 2', tokenDecimal2);
 
     const NewContract = new web3.eth.Contract(
       ROUTERABI,
@@ -610,7 +588,7 @@ export default function SwapComponent() {
           ])
           .call();
 
-        console.log('initLoad convertTokensData', convertedValue);
+        //console.log('initLoad convertTokensData', convertedValue);
 
         // setReceiveTokenForExchangeAmount(+convertedValue[1] / 10 ** tokenDecimal2);
 
@@ -626,7 +604,7 @@ export default function SwapComponent() {
           ])
           .call();
 
-        console.log('chooseSendToken convertTokensData', convertedValue);
+        //console.log('chooseSendToken convertTokensData', convertedValue);
 
         setInitConvertReceiveTokenAmount((+convertedValue[1] / 10 ** tokenDecimal2).toFixed(3));
 
@@ -644,11 +622,11 @@ export default function SwapComponent() {
           ])
           .call();
 
-        console.log('convertTokensData convertedValue', convertedValue);
-        console.log(
-          'convertTokensData receive input value ',
-          +convertedValue[1] / 10 ** tokenDecimal2
-        );
+        //console.log('convertTokensData convertedValue', convertedValue);
+        // console.log(
+        //   'convertTokensData receive input value ',
+        //   +convertedValue[1] / 10 ** tokenDecimal2
+        // );
 
         setReceiveTokenForExchangeAmount(+convertedValue[1] / 10 ** tokenDecimal2);
 
@@ -664,11 +642,11 @@ export default function SwapComponent() {
           ])
           .call();
 
-        console.log('convertTokensData convertedValue', convertedValue);
-        console.log(
-          'convertTokensData receive input value ',
-          +convertedValue[1] / 10 ** tokenDecimal2
-        );
+        // console.log('convertTokensData convertedValue', convertedValue);
+        // console.log(
+        //   'convertTokensData receive input value ',
+        //   +convertedValue[1] / 10 ** tokenDecimal2
+        // );
 
         setSendTokenForExchangeAmount(+convertedValue[1] / 10 ** tokenDecimal2);
 
@@ -691,8 +669,8 @@ export default function SwapComponent() {
   const triggerSendTokenInputHandlers = (value, initSendTokenSwap) => {
     setSendTokenForExchangeAmount(value);
 
-    console.log('initSendTokenSwap handle value', value);
-    console.log('initSendTokenSwap handle', initSendTokenSwap);
+    // console.log('initSendTokenSwap handle value', value);
+    // console.log('initSendTokenSwap handle', initSendTokenSwap);
 
     convertSendTokenToUSDCurrency({
       amount: value,
@@ -711,8 +689,8 @@ export default function SwapComponent() {
   const triggerReceiveTokenInputHandlers = (value, initReceiveTokenSwap) => {
     setReceiveTokenForExchangeAmount(value);
 
-    console.log('initReceiveTokenSwap handle value', value);
-    console.log('initReceiveTokenSwap handle', initReceiveTokenSwap);
+    // console.log('initReceiveTokenSwap handle value', value);
+    // console.log('initReceiveTokenSwap handle', initReceiveTokenSwap);
 
     convertReceiveTokenToUSDCurrency({
       amount: value,
@@ -740,7 +718,9 @@ export default function SwapComponent() {
                 Trade any token or LP share in a single transaction
               </ColumnMainSubTitles>
             </FirstColumnTitleHeaderBlock>
-            <SwapTokensMainSubBlock isLightTheme={isLightTheme}>
+            <SwapTokensMainSubBlock
+              isLightTheme={isLightTheme}
+              style={{ padding: '32px 27px 16px 20px' }}>
               {/*send block */}
               <SendReceiveSubBlock>
                 <SendBlockLabels isLightTheme={isLightTheme}>
@@ -940,20 +920,14 @@ export default function SwapComponent() {
                                 <SendTokenBalance isLightTheme={isLightTheme}>
                                   {object.balance !== undefined &&
                                     object.USDCurrency !== undefined && (
-                                      // (
                                       <span>{`$${
                                         object.balance > 0
                                           ? (
                                               object.balance * object.USDCurrency.toFixed(2)
                                             ).toFixed(3)
-                                          : (
-                                              object.balance * object.USDCurrency.toFixed(2)
-                                            ).toFixed(2)
+                                          : object.balance * object.USDCurrency
                                       }`}</span>
                                     )}
-                                  {/*) : ( */}
-                                  {/*<Loader type="Rings" color="#BB86FC" height={30} width={30} />*/}
-                                  {/* )}*/}
                                 </SendTokenBalance>
                               </SendTokenModalListItem>
                             ))}
@@ -1168,18 +1142,20 @@ export default function SwapComponent() {
                                     <SendTokenName isLightTheme={isLightTheme}>
                                       {object.name}
                                     </SendTokenName>
-                                    <SendTokenConvertedMeasures isLightTheme={isLightTheme}>
+                                    <SendTokenConvertedMeasures
+                                      isLightTheme={isLightTheme}
+                                      style={{ visibility: 'hidden' }}>
                                       409,333 UNI · $19,18
                                     </SendTokenConvertedMeasures>
                                   </div>
                                 </SendTokenLabelsBlock>
-                                <SendTokenBalance isLightTheme={isLightTheme}>
-                                  {object.balance === undefined ? (
-                                    <Loader type="Rings" color="#BB86FC" height={30} width={30} />
-                                  ) : (
-                                    <span>${object.balance}</span>
-                                  )}
-                                </SendTokenBalance>
+                                {/*<SendTokenBalance isLightTheme={isLightTheme}>*/}
+                                {/*  {object.balance === undefined ? (*/}
+                                {/*    <Loader type="Rings" color="#BB86FC" height={30} width={30} />*/}
+                                {/*  ) : (*/}
+                                {/*    <span>${object.balance}</span>*/}
+                                {/*  )}*/}
+                                {/*</SendTokenBalance>*/}
                               </SendTokenModalListItem>
                             ))}
                           </SendTokensModalList>
@@ -1331,8 +1307,27 @@ export default function SwapComponent() {
 
               <SwapBlockExchangeLayout isLightTheme={isLightTheme}>
                 <Button
-                  disabled={isTokensLimitExceeded}
-                  onClick={() => calculateToAmount(initSendTokenSwap)}>
+                  disabled={
+                    isTokensLimitExceeded ||
+                    false ||
+                    sendTokenForExchangeAmount === '0' ||
+                    sendTokenForExchangeAmount === 0 ||
+                    sendTokenForExchangeAmount?.length === 0
+                  }
+                  onClick={() => {
+                    calculateToAmount(initSendTokenSwap);
+
+                    //token single swap
+                    // sushiswap exchanger only
+                    // also should be send exchanger address in order to chosen exchanger
+                    //now, by default, sushiswap v2 hardcode only
+                    singleSushiSwapV2({
+                      sendTokenAddress: initSendTokenSwap.address,
+                      sendTokenAmount: sendTokenForExchangeAmount,
+                      receiveTokenAddress: initReceiveFirstTokenSwap.address,
+                      gasPrice: selectedGasPrice ? selectedGasPrice : proposeGasPrice,
+                    });
+                  }}>
                   Exchange
                 </Button>
               </SwapBlockExchangeLayout>

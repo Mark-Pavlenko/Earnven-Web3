@@ -4,19 +4,26 @@ import actionTypes from '../../constants/actionTypes';
 import * as actions from './actions';
 import ethImage from '../../assets/icons/eth.png';
 import CoinGeckoMockTokensList from './CoinGecko.json';
-import { setInitialSendTokenSingleSwap, setInitReceiveFirstTokenSwap } from './actions';
+import UniSwapTokensList from './UniSwapTokensList.json';
+import {
+  setInitialSendTokenSingleSwap,
+  setInitReceiveFirstTokenSwap,
+  setInitReceiveMultiSwapTokensList,
+  setInitReceiveMultiSwapTokensListLoading,
+  setInitReceiveSecondTokenSwap,
+  setInitSendTokenMultiSwap,
+} from './actions';
 
 export function* getSendTokensListSagaWatcher() {
   yield takeLatest(actionTypes.SET_SEND_TOKENS_LIST, getSendTokensListSagaWorker);
 }
 
 function* getSendTokensListSagaWorker(accountAddress) {
-  // console.log('getSendTokensListSagaWorker', accountAddress);
   const addressInfoData = yield call(API.getAddressInfo, accountAddress.payload);
-  console.log('only addressInfoData sagas', addressInfoData.data);
+  // console.log('only addressInfoData sagas', addressInfoData.data);
 
   const zeroAPISwapTokensList = yield call(API.getZeroAPITokensList);
-  console.log('sagas zeroAPITokensList', zeroAPISwapTokensList);
+  // console.log('sagas zeroAPITokensList', zeroAPISwapTokensList);
 
   const walletTokensList = [];
   if (addressInfoData.data.ETH.balance !== 0) {
@@ -29,7 +36,7 @@ function* getSendTokensListSagaWorker(accountAddress) {
     tempObj.USDCurrency = addressInfoData.data.ETH.price.rate;
     tempObj.sendTokensListItem = true;
 
-    console.log('sagas tempObj', tempObj);
+    // console.log('sagas tempObj', tempObj);
 
     walletTokensList.push(tempObj);
   }
@@ -61,6 +68,10 @@ function* getSendTokensListSagaWorker(accountAddress) {
     }
   }
 
+  const finalWalletTokensList = walletTokensList.filter(
+    (token) => token.symbol !== walletTokensList[0].symbol
+  );
+
   // console.log('sagas walletTokensList', walletTokensList);
 
   // const sendTokensList = walletTokensList.filter((walletToken) =>
@@ -69,8 +80,9 @@ function* getSendTokensListSagaWorker(accountAddress) {
   //
   // console.log('sagas sendTokensList', sendTokensList);
 
-  yield put(actions.getSendTokensList(walletTokensList));
+  yield put(actions.getSendTokensList(finalWalletTokensList));
   yield put(actions.setInitSendTokenSwap(walletTokensList[17]));
+  yield put(actions.setInitSendTokenMultiSwap(walletTokensList[0]));
   // yield put(actions.getSendTokensList(walletTokensList));
 }
 
@@ -80,7 +92,7 @@ export function* getReceiveTokensListSagaWatcher() {
 
 function* getReceiveTokensListSagaWorker() {
   const zeroAPISwapTokensList = yield call(API.getZeroAPITokensList);
-  // console.log('sagas zeroAPITokensList', zeroAPISwapTokensList);
+  console.log('sagas zeroAPITokensList', zeroAPISwapTokensList);
 
   const uniswapFullCoinsList = yield call(API.getUniswapFullCoinsList);
   // console.log('uniswapFullCoinsList sagas', uniswapFullCoinsList);
@@ -89,7 +101,10 @@ function* getReceiveTokensListSagaWorker() {
   // const coinGeckoFullTokensList = yield call(API.getCoinGeckoFullTokensList);
   // console.log('coinGeckoFullTokensList sagas', coinGeckoFullTokensList);
 
-  let filteredCoinGeckoTokensList = CoinGeckoMockTokensList.filter((walletToken) =>
+  // const uniswapFullCoinsList = UniSwapTokensList;
+  const coinGeckoFullTokensList = CoinGeckoMockTokensList;
+
+  let filteredCoinGeckoTokensList = coinGeckoFullTokensList.filter((walletToken) =>
     zeroAPISwapTokensList.find(
       (zeroToken) =>
         walletToken.symbol === zeroToken.symbol.toLowerCase() &&
@@ -97,7 +112,7 @@ function* getReceiveTokensListSagaWorker() {
     )
   );
 
-  // console.log('sagas filteredCoinGeckoTokensList', filteredCoinGeckoTokensList);
+  console.log('sagas filteredCoinGeckoTokensList', filteredCoinGeckoTokensList);
 
   let finalList = zeroAPISwapTokensList.map((token) => ({
     ...token,
@@ -108,6 +123,8 @@ function* getReceiveTokensListSagaWorker() {
     id: filteredCoinGeckoTokensList.find((x) => x.symbol === token.symbol.toLowerCase())
       ? filteredCoinGeckoTokensList.find((x) => x.symbol === token.symbol.toLowerCase()).id
       : null,
+    USDCurrency: '$0.00',
+    amount: 0,
   }));
 
   // console.log('finalList sagas', finalList);
@@ -117,4 +134,12 @@ function* getReceiveTokensListSagaWorker() {
 
   yield put(actions.getReceiveTokensList(finalList));
   yield put(actions.setInitReceiveFirstTokenSwap(finalList[4]));
+  yield put(actions.setInitReceiveSecondTokenSwap(finalList[2]));
+
+  // yield put({ type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING, payload: true });
+  // yield put(setInitReceiveMultiSwapTokensListLoading(true));
+
+  yield put(actions.setInitReceiveMultiSwapTokensList([finalList[2], finalList[4]]));
+
+  yield put(setInitReceiveMultiSwapTokensListLoading(false));
 }
