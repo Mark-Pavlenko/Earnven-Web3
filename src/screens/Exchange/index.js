@@ -270,12 +270,6 @@ export default function SwapComponent() {
     //     }),
     //   5000
     // );
-
-    //filter arr of tokens on existing values
-    // const test = finalSendTokensList.filter(
-    //   (token) => token.symbol !== sendTokenForExchange.symbol
-    // );
-    // console.log('test single', test);
   }, [finalSendTokensList, finalReceiveTokensList]);
 
   //function of dynamic converting of token value to USD Currency
@@ -300,6 +294,7 @@ export default function SwapComponent() {
   };
 
   const searchTokensHandler = (event, searchTokensData) => {
+    // console.log('single search data', searchTokensData);
     const result = filteredTokensByName(event, searchTokensData);
     //console.log('result single 111', result, searchTokensData);
     if (searchTokensData.searchSendTokensList === true) {
@@ -323,34 +318,21 @@ export default function SwapComponent() {
       tokenData.amount = '0';
     }
 
-    //console.log('main receive tokenData', tokenData);
-
     let tokenUSDCurrencyValue;
 
     if (tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
-      //console.log('first triggered');
-
       await axios
         .get(
           `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
         )
         .then(async (response) => {
-          //console.log('suc get usd receive tokenData', response);
           tokenUSDCurrencyValue = response;
         })
         .catch((err) => {
           console.log('err of usd currency receive token', err);
-          // tokenUSDCurrencyValue = err;
         });
 
-      //console.log('receive tokenData total USDCurrency', tokenUSDCurrencyValue.data.price.rate);
-
       if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
-        // console.log(
-        //   'receive tokenData total',
-        //   (tokenUSDCurrencyValue.data.price.rate * tokenData.amount).toFixed(2)
-        // );
-
         setTokensReceiveUSDCurrency(
           `$ ${(tokenUSDCurrencyValue.data.price.rate * tokenData.amount).toFixed(2)}`
         );
@@ -739,7 +721,9 @@ export default function SwapComponent() {
                 Trade any token or LP share in a single transaction
               </ColumnMainSubTitles>
             </FirstColumnTitleHeaderBlock>
-            <SwapTokensMainSubBlock isLightTheme={isLightTheme}>
+            <SwapTokensMainSubBlock
+              isLightTheme={isLightTheme}
+              style={{ padding: '32px 27px 16px 20px' }}>
               {/*send block */}
               <SendReceiveSubBlock>
                 <SendBlockLabels isLightTheme={isLightTheme}>
@@ -939,20 +923,14 @@ export default function SwapComponent() {
                                 <SendTokenBalance isLightTheme={isLightTheme}>
                                   {object.balance !== undefined &&
                                     object.USDCurrency !== undefined && (
-                                      // (
                                       <span>{`$${
                                         object.balance > 0
                                           ? (
                                               object.balance * object.USDCurrency.toFixed(2)
                                             ).toFixed(3)
-                                          : (
-                                              object.balance * object.USDCurrency.toFixed(2)
-                                            ).toFixed(2)
+                                          : object.balance * object.USDCurrency
                                       }`}</span>
                                     )}
-                                  {/*) : ( */}
-                                  {/*<Loader type="Rings" color="#BB86FC" height={30} width={30} />*/}
-                                  {/* )}*/}
                                 </SendTokenBalance>
                               </SendTokenModalListItem>
                             ))}

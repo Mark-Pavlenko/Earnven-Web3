@@ -67,6 +67,10 @@ function* getSendTokensListSagaWorker(accountAddress) {
     }
   }
 
+  const finalWalletTokensList = walletTokensList.filter(
+    (token) => token.symbol !== walletTokensList[0].symbol
+  );
+
   // console.log('sagas walletTokensList', walletTokensList);
 
   // const sendTokensList = walletTokensList.filter((walletToken) =>
@@ -75,7 +79,7 @@ function* getSendTokensListSagaWorker(accountAddress) {
   //
   // console.log('sagas sendTokensList', sendTokensList);
 
-  yield put(actions.getSendTokensList(walletTokensList));
+  yield put(actions.getSendTokensList(finalWalletTokensList));
   yield put(actions.setInitSendTokenSwap(walletTokensList[17]));
   yield put(actions.setInitSendTokenMultiSwap(walletTokensList[0]));
   // yield put(actions.getSendTokensList(walletTokensList));
