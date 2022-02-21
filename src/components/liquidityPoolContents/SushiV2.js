@@ -737,7 +737,7 @@ export default function LiquidityPools({ inputValue, AllTokens }) {
           {Loading ? 'Loading...' : 'More Pools'}
         </AddNewGroupButton>
       </center>
-      {Content}
+      {/*{Content}*/}
     </div>
   );
 }
