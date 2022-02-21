@@ -97,8 +97,10 @@ function* getReceiveTokensListSagaWorker() {
   // console.log('uniswapFullCoinsList sagas', uniswapFullCoinsList);
 
   // return 429
-  const coinGeckoFullTokensList = yield call(API.getCoinGeckoFullTokensList);
-  console.log('coinGeckoFullTokensList sagas', coinGeckoFullTokensList);
+  // const coinGeckoFullTokensList = yield call(API.getCoinGeckoFullTokensList);
+  // console.log('coinGeckoFullTokensList sagas', coinGeckoFullTokensList);
+
+  const coinGeckoFullTokensList = CoinGeckoMockTokensList;
 
   let filteredCoinGeckoTokensList = coinGeckoFullTokensList.filter((walletToken) =>
     zeroAPISwapTokensList.find(
@@ -119,6 +121,8 @@ function* getReceiveTokensListSagaWorker() {
     id: filteredCoinGeckoTokensList.find((x) => x.symbol === token.symbol.toLowerCase())
       ? filteredCoinGeckoTokensList.find((x) => x.symbol === token.symbol.toLowerCase()).id
       : null,
+    USDCurrency: '$0.00',
+    amount: 0,
   }));
 
   // console.log('finalList sagas', finalList);

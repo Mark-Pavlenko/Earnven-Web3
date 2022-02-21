@@ -208,13 +208,6 @@ export default function MultiSwapComponent() {
       amount = '0';
     }
 
-    // found necessary index of element, which currency is updated
-    const needIndex = initReceiveMultiSwapTokensList.findIndex(
-      (token) => token.address === tokenData.address
-    );
-
-    console.log('multiswap receive USD index', needIndex);
-
     //not the best solution - can`t enter float value
     // dispatch({ type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING, payload: true });
 
@@ -242,21 +235,35 @@ export default function MultiSwapComponent() {
       const ethDollarValue = await axios.get(
         'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
       );
-
       finalUSDCurrencyValue = `$${(ethDollarValue.data.ethereum.usd * amount).toFixed(2)}`;
     }
 
     console.log('multiswap receive USD finalUSDCurrencyValue', finalUSDCurrencyValue);
 
+    let receiveTokensListCopy = [...initReceiveMultiSwapTokensList];
+    console.log('receiveTokensListCopy', receiveTokensListCopy);
+
+    // found necessary index of element, which currency is updated
+    const needIndex = receiveTokensListCopy.findIndex(
+      (token) => token.address === tokenData.address
+    );
+
+    console.log('multiswap receive USD index', needIndex);
+
     if (needIndex !== -1) {
-      initReceiveMultiSwapTokensList[needIndex] = {
+      receiveTokensListCopy[needIndex] = {
         ...tokenData,
         USDCurrency: finalUSDCurrencyValue,
         amount: parseFloat(amount),
       };
     }
 
-    // SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST
+    dispatch({
+      type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST,
+      payload: receiveTokensListCopy,
+    });
+
+    //
 
     // dispatch({ type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING, payload: false });
 
@@ -264,6 +271,8 @@ export default function MultiSwapComponent() {
 
     await getAmountMulti();
   };
+
+  console.log('multiswap receive USD overwrite total', initReceiveMultiSwapTokensList);
 
   const openModalHelper = (payload) => {
     setOpenTokensModal(true);
