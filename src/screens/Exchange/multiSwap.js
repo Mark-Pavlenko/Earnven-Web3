@@ -830,31 +830,29 @@ export default function MultiSwapComponent() {
           />
         </AddReceiveTokenMultiSwapBtn>
 
-        <SwapBlockDelimiter
-          isLightTheme={isLightTheme}
-          style={{ marginTop: '20px', margin: '0 27px 0 20px' }}
-        />
+        <SwapBlockDelimiter isLightTheme={isLightTheme} style={{ margin: '20px  27px 0 20px' }} />
         {/* Labels block*/}
         <DownDelimiterLabelsBlock
           isLightTheme={isLightTheme}
           style={{ marginTop: '20px', padding: '20 27px 16px 20px' }}>
-          <LabelsBlockSubBlock isLightTheme={isLightTheme}>
-            <LabelsBlockImportantSpan isLightTheme={isLightTheme}>
-              Slippage Tolerance
-            </LabelsBlockImportantSpan>
-            <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
-              <span>1%</span>
-            </AdditionalOptionsSwapTokensSubBlock>
-          </LabelsBlockSubBlock>
-
-          <LabelsBlockSubBlock isLightTheme={isLightTheme}>
-            <LabelsBlockImportantSpan isLightTheme={isLightTheme}>
-              Transaction speed
-            </LabelsBlockImportantSpan>
-            <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
-              <span>$20 ^ Average</span>
-            </AdditionalOptionsSwapTokensSubBlock>
-          </LabelsBlockSubBlock>
+          <div style={{ padding: '0 27px 16px 20px' }}>
+            <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+              <LabelsBlockImportantSpan isLightTheme={isLightTheme}>
+                Slippage Tolerance
+              </LabelsBlockImportantSpan>
+              <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
+                <span>1%</span>
+              </AdditionalOptionsSwapTokensSubBlock>
+            </LabelsBlockSubBlock>
+            <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+              <LabelsBlockImportantSpan isLightTheme={isLightTheme}>
+                Transaction speed
+              </LabelsBlockImportantSpan>
+              <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
+                <span>$20 ^ Average</span>
+              </AdditionalOptionsSwapTokensSubBlock>
+            </LabelsBlockSubBlock>
+          </div>
         </DownDelimiterLabelsBlock>
         <SwapBlockExchangeLayout isLightTheme={isLightTheme}>
           <Button
