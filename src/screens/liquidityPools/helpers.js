@@ -3,6 +3,7 @@ import OneClickLiquidity from '../../abi/UniV2PoolsOneClick.json';
 import Addresses from '../../contractAddresses';
 import ROUTERABI from '../../abi/UniRouterV2.json';
 import Web3 from 'web3';
+import FACTORYABI from '../../abi/UniFactoryV2.json';
 
 async function loadWeb3() {
   if (window.ethereum) {
@@ -15,86 +16,34 @@ async function loadWeb3() {
   }
 }
 
-export const addLiquidityUniV2 = async (tokenA, tokenB, supplyToken, supplyTokenQtty) => {
-  await loadWeb3();
-  const web3 = window.web3;
-  const accounts = await web3.eth.getAccounts();
-  var tokenContract = new web3.eth.Contract(ERC20ABI, supplyToken);
-  const oneClickContract = new web3.eth.Contract(
-    OneClickLiquidity,
-    Addresses.oneClickUniV2Contract
-  );
-  await tokenContract.methods
-    .approve(Addresses.oneClickUniV2Contract, supplyTokenQtty)
-    .send({ from: accounts[0] });
-  await oneClickContract.methods
-    .addLiquidityOneClick(tokenA, tokenB, supplyToken, supplyTokenQtty)
-    .send({ from: accounts[0] });
-};
-
-//*two inputs value send to smartContract
-export const addLiquidityNormalUniV2 = async (tokenA, tokenB, amountTokenA, amountTokenB) => {
-  const start = parseInt(Date.now() / 1000) + 180;
-  await loadWeb3();
-  const web3 = window.web3;
-  const accounts = await web3.eth.getAccounts();
-  var tokenAContract = new web3.eth.Contract(ERC20ABI, tokenA);
-  var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
-  await tokenAContract.methods
-    .approve(Addresses.uniRouter, web3.utils.toWei(amountTokenA, 'ether'))
-    .send({ from: accounts[0] });
-  await tokenBContract.methods
-    .approve(Addresses.uniRouter, web3.utils.toWei(amountTokenB, 'ether'))
-    .send({ from: accounts[0] });
-  const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.uniRouter);
-  await UniRouter.methods
-    .addLiquidity(
-      tokenA,
-      tokenB,
-      web3.utils.toWei(amountTokenA, 'ether'),
-      web3.utils.toWei(amountTokenB, 'ether'),
-      0,
-      0,
-      accounts[0],
-      start.toString()
-    )
-    .send({ from: accounts[0] });
-};
-//----------------------------------------------------------------->
-
-//sushiV2 invest functions
 //----------------------------------------------------------------->
 //*********first input value sends to smartContract
-export const addLiquiditySushiV2 = async (
+export const addLiquidity = async (
   tokenA,
   tokenB,
   supplyToken,
   supplyTokenQtty,
   gasPrice,
-  slippage
+  // slippage,
+  protocolType
 ) => {
+  console.log('HELPERS addLiquidity works and get protocol type ===>', protocolType);
   //we need to get as a parameter 'slippage'. It will be percent. We takes supplyTokenQtty and subtract slippage
   //(ExpectedAmountTokens - slippage) then we have amount below for this percent. This is protection from exchange rate
   // fluctuations. Then we put this value to contract like this:
   // const minAmountOut = ExpectedAmountTokens - slippage.
   // minAmountOut we will send to contract.
-
-  console.log('sushiswap add liquidity firstReceiveToken', tokenA);
-  console.log('sushiswap add liquidity secondReceiveToken', tokenB);
-  console.log('sushiswap add liquidity sendTokenAddress', supplyToken);
-  console.log('sushiswap add liquidity sendTokenAmount', supplyTokenQtty);
-  console.log('sushiswap add liquidity gasPrice', gasPrice);
-
+  const contract =
+    protocolType === 'Sushiswap'
+      ? Addresses.oneClickSushiV2Contract
+      : Addresses.oneClickUniV2Contract;
   await loadWeb3();
   const web3 = window.web3;
   const accounts = await web3.eth.getAccounts();
   var tokenContract = new web3.eth.Contract(ERC20ABI, supplyToken);
-  const oneClickContract = new web3.eth.Contract(
-    OneClickLiquidity,
-    Addresses.oneClickSushiV2Contract
-  );
+  const oneClickContract = new web3.eth.Contract(OneClickLiquidity, contract);
   await tokenContract.methods
-    .approve(Addresses.oneClickSushiV2Contract, supplyTokenQtty)
+    .approve(contract, supplyTokenQtty)
     .send({ from: accounts[0], gasPrice: web3.utils.toWei(gasPrice, 'gwei') });
   await oneClickContract.methods
     //.addLiquidityOneClick(tokenA, tokenB, supplyToken, supplyTokenQtty, minAmountOut) //examle of sending minAmountOut to contract
@@ -103,13 +52,16 @@ export const addLiquiditySushiV2 = async (
 };
 
 //********two inputs value send to smartContract
-export const addLiquidityNormalSushiV2 = async (
+export const addLiquidityNormal = async (
   tokenA,
   tokenB,
   amountTokenA,
   amountTokenB,
-  gasPrice
+  gasPrice,
+  protocolType
 ) => {
+  console.log('HELPERS addLiquidityNormal works and get protocol type ===>', protocolType);
+  const routerAddress = protocolType === 'Sushiswap' ? Addresses.sushiRouter : Addresses.uniRouter;
   const start = parseInt(Date.now() / 1000) + 180;
   await loadWeb3();
   const web3 = window.web3;
@@ -117,13 +69,13 @@ export const addLiquidityNormalSushiV2 = async (
   var tokenAContract = new web3.eth.Contract(ERC20ABI, tokenA);
   var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
   await tokenAContract.methods
-    .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenA, 'ether'))
+    .approve(routerAddress, web3.utils.toWei(amountTokenA, 'ether'))
     .send({ from: accounts[0], gasPrice: web3.utils.toWei(gasPrice, 'gwei') });
   await tokenBContract.methods
-    .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenB, 'ether'))
+    .approve(routerAddress, web3.utils.toWei(amountTokenB, 'ether'))
     .send({ from: accounts[0], gasPrice: web3.utils.toWei(gasPrice, 'gwei') });
-  const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.sushiRouter);
-  await UniRouter.methods
+  const router = new web3.eth.Contract(ROUTERABI, routerAddress);
+  await router.methods
     .addLiquidity(
       tokenA,
       tokenB,
@@ -137,3 +89,54 @@ export const addLiquidityNormalSushiV2 = async (
     .send({ from: accounts[0] });
 };
 //----------------------------------------------------------------->
+
+//*********first input value sends to smartContract for removing tokens
+export const removeLiquidity = async (
+  tokenA,
+  tokenB,
+  receiveToken,
+  liquidityAmount,
+  gasPrice,
+  protocolType
+) => {
+  await loadWeb3();
+  const factory = protocolType === 'Sushiswap' ? Addresses.sushiFactory : Addresses.uniFactory;
+  const contract =
+    protocolType === 'Sushiswap'
+      ? Addresses.oneClickSushiV2Contract
+      : Addresses.oneClickUniV2Contract;
+  const web3 = window.web3;
+  const accounts = await web3.eth.getAccounts();
+  var FactoryContract = new web3.eth.Contract(FACTORYABI, factory);
+  var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call();
+  var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
+  const oneClickContract = new web3.eth.Contract(OneClickLiquidity, contract);
+  await PairContract.methods.approve(contract, liquidityAmount).send({ from: accounts[0] });
+  await oneClickContract.methods
+    .removeLiquidityOneClick(tokenA, tokenB, receiveToken, liquidityAmount)
+    .send({ from: accounts[0] });
+};
+
+//********two inputs value send to smartContract to remove tokens
+export const removeLiquidityNormal = async (
+  tokenA,
+  tokenB,
+  LiquidityAmount,
+  gasPrice,
+  protocolType
+) => {
+  const start = parseInt(Date.now() / 1000) + 180;
+  await loadWeb3();
+  const factory = protocolType === 'Sushiswap' ? Addresses.sushiFactory : Addresses.uniFactory;
+  const router = protocolType === 'Sushiswap' ? Addresses.sushiRouter : Addresses.uniRouter;
+  const web3 = window.web3;
+  const accounts = await web3.eth.getAccounts();
+  var FactoryContract = new web3.eth.Contract(FACTORYABI, factory);
+  var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call();
+  var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
+  const Router = new web3.eth.Contract(ROUTERABI, router);
+  await PairContract.methods.approve(router, LiquidityAmount).send({ from: accounts[0] });
+  await Router.methods
+    .removeLiquidity(tokenA, tokenB, LiquidityAmount, 0, 0, accounts[0], start.toString())
+    .send({ from: accounts[0] });
+};

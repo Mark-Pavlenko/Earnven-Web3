@@ -65,13 +65,22 @@ import middleDice from '../../../../../assets/icons/middleDice-icon.svg';
 import slowDice from '../../../../../assets/icons/slowDice-icon.svg';
 import actionTypes from '../../../../../constants/actionTypes';
 
-export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiquidityNormal }) => {
-  console.log('InvestTableItem', item);
-  const GasPrices = useSelector((state) => state.gesData.gasPriceData);
-  const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
-  const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
-  const addIconsGasPricesWithIcons = addIconsGasPrices(GasPrices, fastDice, middleDice, slowDice);
+export const InvestTableItem = ({
+  item,
+  index,
+  theme,
+  addLiquidity,
+  removeLiquidity,
+  addLiquidityNormal,
+  removeLiquidityNormal,
+}) => {
   const dispatch = useDispatch();
+  const address = useParams().address;
+  const GasPrices = useSelector((state) => state.gesData.gasPriceData);
+  const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
+  const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
+
+  const addIconsGasPricesWithIcons = addIconsGasPrices(GasPrices, fastDice, middleDice, slowDice);
 
   const [isModalVisible, setIsModalVisible] = useState('');
   const [modalType, setModalType] = useState('');
@@ -87,7 +96,6 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
   const [addLiquidityNormalTokenB, setAddLiquidityNormalTokenB] = useState('');
 
   const [tokenAddress, setTokenAddress] = useState('0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
-  console.log('tokenAddress', tokenAddress);
   const [singleTokenValue, setSingleTokenValue] = useState();
 
   const [allTokens, setAllTokens] = useState([]);
@@ -95,8 +103,8 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
 
   const [selected, setSelected] = useState('');
 
-  // const [selectedGasValue, setSelectedGasValue] = useState(proposeGasPrice);
-  // setSelectedGasValue(selectedGasPrice);
+  const [isWithdrawActive, setIsWithdrawActive] = useState(false);
+  const [supplyTokenBalance, setSupplyTokenBalance] = useState('');
 
   const selectInitialValue = {
     label: 'Ether',
@@ -131,17 +139,29 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
     getData().then((r) => r);
   }, []);
 
+  useEffect(() => {
+    const getBalance = async () => {
+      await loadWeb3();
+      const web3 = window.web3;
+      const getBalance = await web3.eth.getBalance(tokenAddress);
+      const ethBalance = web3.utils.fromWei(getBalance, 'ether');
+      setSupplyTokenBalance(ethBalance);
+    };
+    getBalance().then((res) => res);
+  }, [tokenAddress]);
+
   const switchModal = (e) => {
     setSelectedModal(e.target.id);
     setIsModalVisible('addLiquidity');
   };
 
   const selectStyle = {
+    //opened dropdown
     menu: (provided, state) => ({
       ...provided,
       width: '100%',
       height: 'fitContent',
-      background: 'rgba(255, 255, 255, 0.16)',
+      background: theme ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)',
       boxSizing: 'border-box',
       boxShadow: 'inset 2px 0px 0px rgba(255, 255, 255, 0.1)',
       borderTop: 'none',
@@ -155,10 +175,20 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
       //valueLine
       return {
         ...provided,
-        background: state.menuIsOpen ? 'rgba(255, 255, 255, 0.16)' : '#FFFFFF',
-        boxShadow: state.menuIsOpen
+        background: theme
+          ? state.menuIsOpen
+            ? 'rgba(255, 255, 255, 0.16)'
+            : '#FFFFFF'
+          : state.menuIsOpen
+          ? 'rgba(31, 38, 92, 0.24)'
+          : 'rgba(31, 38, 92, 0.24)',
+        boxShadow: theme
+          ? state.menuIsOpen
+            ? 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'
+            : 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+          : state.menuIsOpen
           ? 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'
-          : 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
+          : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
         backdropFilter: 'blur(35px)',
         mixBlendMode: 'normal',
         border: 'none',
@@ -182,14 +212,15 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
       // ...provided,
       height: '20px',
       width: '20px',
-      color: '#4453AD',
+      color: theme ? '#4453AD' : '#8F86FF',
     }),
     indicatorsContainer: () => ({
       color: 'transparent',
     }),
     singleValue: (provided, state) => ({
+      //select closed
       ...provided,
-      color: '#464C52',
+      color: theme ? '#464C52' : '#FFFFFF',
       fontSize: '18px',
       background: state.isSelected ? 'black' : 'transparent',
     }),
@@ -339,23 +370,48 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
   };
 
   const inputsHandler = () => {
-    switch (inputType) {
-      case 'single':
-        return addLiquidity(
-          item.token0.id,
-          item.token1.id,
-          tokenAddress,
-          (singleTokenValue * 10 ** 18).toString(),
-          selectedGasPrice ? selectedGasPrice : proposeGasPrice
-        );
-      case 'pair':
-        return addLiquidityNormal(
-          item.token0.id,
-          item.token1.id,
-          addLiquidityNormalTokenA,
-          addLiquidityNormalTokenB,
-          selectedGasPrice ? selectedGasPrice : proposeGasPrice
-        );
+    if (!isWithdrawActive) {
+      switch (inputType) {
+        case 'single':
+          return addLiquidity(
+            item.poolDetails.token0Address,
+            item.poolDetails.token1Address,
+            tokenAddress,
+            (singleTokenValue * 10 ** 18).toString(),
+            selectedGasPrice ? selectedGasPrice : proposeGasPrice,
+            item.protocol
+          );
+        case 'pair':
+          return addLiquidityNormal(
+            item.poolDetails.token0Address,
+            item.poolDetails.token1Address,
+            addLiquidityNormalTokenA,
+            addLiquidityNormalTokenB,
+            selectedGasPrice ? selectedGasPrice : proposeGasPrice,
+            item.protocol
+          );
+      }
+    }
+    if (isWithdrawActive) {
+      switch (inputType) {
+        case 'single':
+          return removeLiquidity(
+            item.poolDetails.token0Address,
+            item.poolDetails.token1Address,
+            tokenAddress,
+            (singleTokenValue * 10 ** 18).toString(),
+            selectedGasPrice ? selectedGasPrice : proposeGasPrice,
+            item.protocol
+          );
+        case 'pair':
+          return removeLiquidityNormal(
+            item.poolDetails.token0Address,
+            item.poolDetails.token1Address,
+            (singleTokenValue * 10 ** 18).toString(),
+            selectedGasPrice ? selectedGasPrice : proposeGasPrice,
+            item.protocol
+          );
+      }
     }
   };
 
@@ -379,6 +435,17 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
     setIsModalVisible('addLiquidity');
   };
 
+  // async function checkLiquidity(tokenA, tokenB) {
+  //   await loadWeb3();
+  //   const web3 = window.web3;
+  //   const accounts = await web3.eth.getAccounts();
+  //   var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.sushiFactory);
+  //   var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call();
+  //   var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
+  //   var qtty = await PairContract.methods.balanceOf(accounts[0]).call();
+  //   console.log('checkLiquidity', qtty);
+  // }
+
   return (
     <>
       {/*MODAL addLiquidity====================================>*/}
@@ -386,8 +453,10 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
         <ModalContainer
           theme={theme}
           title={selectedModal}
+          modalType={'withdraw'}
           isOpen={isModalVisible}
-          closeModal={setIsModalVisible}>
+          closeModal={setIsModalVisible}
+          setIsWithdrawActive={setIsWithdrawActive}>
           <SelectWrapper>
             <SelectTitle>{'Supply a token'}</SelectTitle>
             <Select
@@ -398,17 +467,20 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
             />
             <InputBlock>
               <ModalInput
+                isLightTheme={theme}
                 value={singleTokenValue}
                 type="number"
                 onChange={(e) => {
-                  addLiquidityToPair(item.token0.id, item.token1.id, e.target.value).then(
-                    (res) => res
-                  );
+                  addLiquidityToPair(
+                    item.poolDetails.token0Address,
+                    item.poolDetails.token1Address,
+                    e.target.value
+                  ).then((res) => res);
                   setSingleTokenValue(e.target.value);
                   setInputType('single');
                 }}
               />
-              <Balance>{`Balance: ${5}`}</Balance>
+              <Balance>{`Balance: ${parseFloat(supplyTokenBalance).toFixed(2)}`}</Balance>
             </InputBlock>
             {/*<ButtonsBlock>*/}
             {/*  <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>*/}
@@ -421,18 +493,19 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
             <InputBlock>
               <BlockTokens>
                 <div>
-                  <TokenImage src={`${item.token0.image}`} />
+                  <TokenImage src={`${item.imageData[0]}`} />
                 </div>
-                <BlockTokenName>{item.token0.name}</BlockTokenName>
+                <BlockTokenName>{item.token0Symbol}</BlockTokenName>
               </BlockTokens>
               <ModalInput
+                isLightTheme={theme}
                 value={inValue}
                 onChange={(e) => {
                   convertTokenPrice(
                     'firstInput',
                     parseInt(e.target.value),
-                    item.token0.id,
-                    item.token1.id
+                    item.poolDetails.token0Address,
+                    item.poolDetails.token1Address
                   );
                   setInputType('pair');
                 }}
@@ -449,18 +522,19 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
             <InputBlock>
               <BlockTokens>
                 <div>
-                  <TokenImage src={`${item.token1.image}`} />
+                  <TokenImage src={`${item.imageData[1]}`} />
                 </div>
-                <BlockTokenName>{item.token1.name}</BlockTokenName>
+                <BlockTokenName>{item.token1Symbol}</BlockTokenName>
               </BlockTokens>
               <ModalInput
                 value={outValue}
+                isLightTheme={theme}
                 onChange={(e) => {
                   convertTokenPrice(
                     'secondInput',
                     parseInt(e.target.value),
-                    item.token0.id,
-                    item.token1.id
+                    item.poolDetails.token0Address,
+                    item.poolDetails.token1Address
                   );
                   setInputType('pair');
                 }}
@@ -475,11 +549,13 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
             {/*input-------------------->*/}
             <LinksContainer>
               <ModalLink onClick={slippageHandler} href={'#'}>
-                {'Slippage Tolerance'}
+                {'Transaction speed'}
               </ModalLink>
-              <ModalLinkRight href={'#'}>bbb</ModalLinkRight>
-              <ModalLink href={'#'}>{'Transaction speed'}</ModalLink>
-              <ModalLinkRight href={'#'}>ddd</ModalLinkRight>
+              <ModalLinkRight onClick={slippageHandler} href={'#'}>
+                {`${selectedGasPrice.length > 0 ? selectedGasPrice : proposeGasPrice} Gwei`}
+              </ModalLinkRight>
+              {/*<ModalLink href={'#'}>{'Slippage Tolerance'}</ModalLink>*/}
+              {/*<ModalLinkRight href={'#'}>ddd</ModalLinkRight>*/}
             </LinksContainer>
             <ButtonsBlock>
               <SupplyTokenButton onClick={inputsHandler}>{`Supply tokens`}</SupplyTokenButton>
@@ -602,22 +678,27 @@ export const InvestTableItem = ({ item, index, theme, type, addLiquidity, addLiq
           <CommonSubmitButton
             width={'150px'}
             isLightTheme={theme}
-            id="Add Liquidity"
-            onClick={switchModal}>
+            id="Withdraw Liquidity"
+            onClick={(e) => {
+              switchModal(e);
+              setIsWithdrawActive(true);
+            }}>
             {'Withdraw'}
           </CommonSubmitButton>
-          {type === 'sushiswap' ? (
-            // <Link to={`/${address}/${type}/address/${item.token0.id}/${item.token1.id}`}>
-            <InfoButton isLightTheme={theme}>
-              {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
-            </InfoButton>
+          {item.protocol === 'Sushiswap' ? (
+            <Link
+              to={`/${address}/sushiswap/address/${item.poolDetails.token0Address}/${item.poolDetails.token1Address}`}>
+              <InfoButton isLightTheme={theme}>
+                {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
+              </InfoButton>
+            </Link>
           ) : (
-            // </Link>
-            // <Link to={`/${address}/${type}/address/${item.token0.id}/${item.token1.id}`}>
-            <InfoButton isLightTheme={theme}>
-              {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
-            </InfoButton>
-            // </Link>
+            <Link
+              to={`/${address}/uniswap/address/${item.poolDetails.token0Address}/${item.poolDetails.token1Address}`}>
+              <InfoButton isLightTheme={theme}>
+                {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
+              </InfoButton>
+            </Link>
           )}
         </ItemButtons>
       </TableItem>

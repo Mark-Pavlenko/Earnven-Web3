@@ -19,6 +19,7 @@ export const LiquidityPoolsTable = ({
   addLiquidity,
   addLiquidityNormal,
   AllTokens,
+  protocolType,
 }) => {
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
 
@@ -44,6 +45,7 @@ export const LiquidityPoolsTable = ({
               addLiquidity={addLiquidity}
               addLiquidityNormal={addLiquidityNormal}
               AllTokens={AllTokens}
+              protocolType={protocolType}
             />
           );
         })}

@@ -31,6 +31,7 @@
     "big-number": "^2.0.0",
     "bignumber.js": "^9.0.2",
     "chart.js": "^3.5.1",
+    "chroma-js": "^2.4.2",
     "coingecko-api": "^1.0.10",
     "dotenv": "^10.0.0",
     "eth-permit": "^0.1.7",
