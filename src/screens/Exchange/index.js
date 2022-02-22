@@ -538,7 +538,7 @@ export default function SwapComponent() {
   //now - mock Uniswap V2 Contract address
 
   const convertExchangeTokensCourse = async (convertTokensData) => {
-    // console.log('convertTokensData single swap', convertTokensData);
+    console.log('convertTokensData single swap', convertTokensData);
     // console.log(
     //   ' convertTokensData single swap tokenDecimal token1',
     //   convertTokensData.sendTokenForExchangeAddress

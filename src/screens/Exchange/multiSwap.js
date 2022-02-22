@@ -97,6 +97,8 @@ import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import Web3 from 'web3';
 import multiCallAbi from '../../abi/MultiCall.json';
+import TOKENDECIMALSABI from '../../abi/TokenDecomals.json';
+import ROUTERABI from '../../abi/UniRouterV2.json';
 
 const useStyles = makeStyles((theme) => ({
   noBorder: {
@@ -166,28 +168,11 @@ export default function MultiSwapComponent() {
   // const finalReceiveTokensList = sendTokensMockList;
   const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
 
-  // console.log('multiswap receive tokens list', finalReceiveTokensList);
-
-  useEffect(() => {
-    setSendTokenForExchangeAmount(0);
-  }, []);
-
-  console.log('state setSendTokenForExchangeAmount multiswap', sendTokenForExchangeAmount);
-
   async function getWeb3() {
     // const provider = active ? await connector.getProvider() : ethers.getDefaultProvider();
     const web3 = await new Web3(window.ethereum);
     return web3;
   }
-
-  let exchange = async () => {
-    console.log('total MultiSwap sendToken initSendMultiSwapToken', initSendMultiSwapToken);
-    console.log('total MultiSwap sendToken object AMOUNT', tokenSendAmount);
-    console.log(
-      'total MultiSwap receiveTokensList exchange object',
-      initReceiveMultiSwapTokensList
-    );
-  };
 
   let convertSendTokenToUSDCurrency = (tokenData) => {
     let convertedToUSDValue = convertSendTokenToUSDCurrencyHelper(tokenData);
@@ -197,10 +182,6 @@ export default function MultiSwapComponent() {
   };
 
   let convertReceiveTokenToUSDCurrency = async (amount, tokenData) => {
-    // console.log('receive USD tokenData multiswap amount raw', amount);
-    // console.log('receive USD tokenData multiswap amount raw', typeof amount.toString());
-    // // console.log('receive USD tokenData multiswap raw', tokenData);
-
     // dispatch({ type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING, payload: true });
 
     if (amount === '') {
@@ -264,6 +245,125 @@ export default function MultiSwapComponent() {
     console.log('multiswap receive USD total', initReceiveMultiSwapTokensList);
 
     await getAmountMulti();
+  };
+
+  useEffect(() => {
+    setSendTokenForExchangeAmount(0);
+
+    const timer = setTimeout(() => {
+      for (let i = 0; i < initReceiveMultiSwapTokensList.length; i++) {
+        convertExchangeTokensCourse({
+          sendTokenForExchangeAddress: initSendMultiSwapToken.address,
+          receiveTokenForExchangeAddress: initReceiveMultiSwapTokensList[i].address,
+          tokenAmount: 1,
+        });
+      }
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [initSendMultiSwapToken, initReceiveMultiSwapTokensList]);
+
+  //------
+
+  async function loadWeb3() {
+    if (window.ethereum) {
+      window.web3 = new Web3(window.ethereum);
+      await window.ethereum.enable();
+    } else if (window.web3) {
+      window.web3 = new Web3(window.web3.currentProvider);
+    } else {
+      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
+    }
+  }
+
+  const convertExchangeTokensCourse = async (convertTokensData) => {
+    console.log('convertTokensData multiswap', convertTokensData);
+
+    let needIndex = initReceiveMultiSwapTokensList.findIndex(
+      (token) => token.address === convertTokensData.receiveTokenForExchangeAddress
+    );
+
+    if (needIndex !== -1) {
+      initReceiveMultiSwapTokensList[needIndex] = {
+        ...initReceiveMultiSwapTokensList[needIndex],
+        singleAmountSendTokenConvert: 0,
+      };
+    }
+
+    await loadWeb3();
+    const web3 = window.web3;
+
+    const tokenDecimal1 = await new web3.eth.Contract(
+      TOKENDECIMALSABI,
+      convertTokensData.sendTokenForExchangeAddress
+    ).methods
+      .decimals()
+      .call()
+      .then((res) => {
+        return res;
+      });
+    const tokenDecimal2 = await new web3.eth.Contract(
+      TOKENDECIMALSABI,
+      convertTokensData.receiveTokenForExchangeAddress
+    ).methods
+      .decimals()
+      .call()
+      .then((res) => {
+        return res;
+      });
+
+    const NewContract = new web3.eth.Contract(
+      ROUTERABI,
+      //Sushiswap contract address - should be changed dynamically
+      '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+    );
+
+    if (convertTokensData.tokenAmount !== 0 && !isNaN(convertTokensData.tokenAmount)) {
+      // console.log('is not null!');
+
+      //self-made loader
+      // if (needIndex !== -1) {
+      //   initReceiveMultiSwapTokensList[needIndex] = {
+      //     ...initReceiveMultiSwapTokensList[needIndex],
+      //     singleAmountSendTokenConvert: 'Loading...',
+      //   };
+      // }
+
+      const convertedValue = await NewContract.methods
+        .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
+          convertTokensData.sendTokenForExchangeAddress,
+          convertTokensData.receiveTokenForExchangeAddress,
+        ])
+        .call();
+
+      if (needIndex !== -1) {
+        initReceiveMultiSwapTokensList[needIndex] = {
+          ...initReceiveMultiSwapTokensList[needIndex],
+          singleAmountSendTokenConvert: (+convertedValue[1] / 10 ** tokenDecimal2)
+            .toString()
+            .substring(0, 7),
+        };
+      }
+    } else {
+      console.log('convertTokensData null amount orNAN error!');
+
+      if (needIndex !== -1) {
+        initReceiveMultiSwapTokensList[needIndex] = {
+          ...initReceiveMultiSwapTokensList[needIndex],
+          singleAmountSendTokenConvert: 0,
+        };
+      }
+    }
+  };
+
+  //----- convert token course (need to implement necessary network)
+
+  let exchange = async () => {
+    console.log('total MultiSwap sendToken initSendMultiSwapToken', initSendMultiSwapToken);
+    console.log('total MultiSwap sendToken object AMOUNT', tokenSendAmount);
+    console.log(
+      'total MultiSwap receiveTokensList exchange object',
+      initReceiveMultiSwapTokensList
+    );
   };
 
   const openModalHelper = (payload, key) => {
@@ -346,7 +446,7 @@ export default function MultiSwapComponent() {
       });
 
       convertSendTokenToUSDCurrency({
-        // amount: 0,
+        amount: 0,
         ...selectedSwapToken,
         address: selectedSwapToken.address,
       });
@@ -359,8 +459,6 @@ export default function MultiSwapComponent() {
       const needIndex = receiveTokensListCopy.findIndex(
         (token) => token.address === oldTokenSwappedAddress
       );
-
-      // console.log('copy multiswap receive USD index', needIndex);
 
       if (needIndex !== -1) {
         receiveTokensListCopy[needIndex] = {
@@ -593,9 +691,17 @@ export default function MultiSwapComponent() {
                       <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
                         Exchange rate
                       </LabelsBlockSubBlockSpan>
-                      <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                        1 ETH = 0,82 DAI
-                      </LabelsBlockSubBlockSpan>
+
+                      {receiveToken.singleAmountSendTokenConvert !== 0 ? (
+                        <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                          1 {initSendMultiSwapToken.symbol} ={' '}
+                          {receiveToken.singleAmountSendTokenConvert} {receiveToken.symbol}
+                        </LabelsBlockSubBlockSpan>
+                      ) : (
+                        <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                          Unavailable
+                        </LabelsBlockSubBlockSpan>
+                      )}
                     </LabelsBlockSubBlock>
                     <LabelsBlockSubBlock isLightTheme={isLightTheme}>
                       <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
