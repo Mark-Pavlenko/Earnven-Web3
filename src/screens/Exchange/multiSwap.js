@@ -198,7 +198,14 @@ export default function MultiSwapComponent() {
 
   let convertReceiveTokenToUSDCurrency = async (amount, tokenData) => {
     // console.log('receive USD tokenData multiswap amount raw', amount);
-    // console.log('receive USD tokenData multiswap raw', tokenData);
+    // console.log('receive USD tokenData multiswap amount raw', typeof amount.toString());
+    // // console.log('receive USD tokenData multiswap raw', tokenData);
+
+    // dispatch({ type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING, payload: true });
+
+    if (amount === '') {
+      amount = '0';
+    }
 
     let tokenUSDCurrencyValue;
     let finalUSDCurrencyValue;
@@ -243,11 +250,8 @@ export default function MultiSwapComponent() {
     console.log('multiswap receive USD index', needIndex);
 
     if (needIndex !== -1) {
-      receiveTokensListCopy[needIndex] = {
-        ...tokenData,
-        USDCurrency: finalUSDCurrencyValue,
-        amount: parseFloat(amount),
-      };
+      receiveTokensListCopy[needIndex].USDCurrency = finalUSDCurrencyValue;
+      receiveTokensListCopy[needIndex].amount = amount;
     }
 
     dispatch({
@@ -261,8 +265,6 @@ export default function MultiSwapComponent() {
 
     await getAmountMulti();
   };
-
-  let [test, setTest] = useState(0);
 
   const openModalHelper = (payload, key) => {
     console.log('key value', key);
@@ -344,7 +346,7 @@ export default function MultiSwapComponent() {
       });
 
       convertSendTokenToUSDCurrency({
-        amount: 0,
+        // amount: 0,
         ...selectedSwapToken,
         address: selectedSwapToken.address,
       });
@@ -365,7 +367,7 @@ export default function MultiSwapComponent() {
           ...selectedSwapToken,
           receiveTokensListItem: true,
           USDCurrency: '$ 0.00',
-          amount: 0,
+          // amount: 0,
         };
       }
 
@@ -567,7 +569,7 @@ export default function MultiSwapComponent() {
                         isLightTheme={isLightTheme}
                         placeholder="0.0"
                         inputRef={textInput}
-                        // value={receiveToken.amount}
+                        value={receiveToken.amount}
                         onChange={(e) => {
                           convertReceiveTokenToUSDCurrency(e.target.value, {
                             ...receiveToken,

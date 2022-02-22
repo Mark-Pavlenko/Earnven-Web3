@@ -687,6 +687,7 @@ export default function SwapComponent() {
   };
 
   const triggerReceiveTokenInputHandlers = (value, initReceiveTokenSwap) => {
+    console.log('single init value', value);
     setReceiveTokenForExchangeAmount(value);
 
     // console.log('initReceiveTokenSwap handle value', value);

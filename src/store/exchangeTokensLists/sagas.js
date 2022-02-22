@@ -124,7 +124,7 @@ function* getReceiveTokensListSagaWorker() {
       ? filteredCoinGeckoTokensList.find((x) => x.symbol === token.symbol.toLowerCase()).id
       : null,
     USDCurrency: '$0.00',
-    amount: 0,
+    // amount: ' ',
   }));
 
   // console.log('finalList sagas', finalList);
