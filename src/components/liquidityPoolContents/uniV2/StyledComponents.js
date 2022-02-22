@@ -8,8 +8,8 @@ export const SelectTitle = styled.div`
   line-height: 19px;
   display: flex;
   align-items: center;
-  color: #1e1e20;
-  opacity: 0.5;
+  color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#fff')};
+  opacity: ${(props) => (props.isLightTheme ? '0.5' : '0.8')};
   margin-bottom: 5px;
 `;
 
@@ -60,7 +60,7 @@ export const BlockTokenName = styled.div`
   font-style: normal;
   font-weight: 500;
   font-size: 20px;
-  color: #1e1e20;
+  color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#ffffff')};
 `;
 export const Balance = styled.div`
   display: flex;
@@ -72,7 +72,7 @@ export const Balance = styled.div`
   font-size: 12px;
   line-height: 19px;
   text-align: right;
-  color: #1e1e20;
+  color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#ffffff')};
   margin-top: 10px;
 `;
 
@@ -82,16 +82,18 @@ export const SupplyTokenButton = styled.div`
   justify-content: center;
   width: 150px;
   height: 40px;
-  background: #ffffff;
-  box-shadow: inset 0 5px 10px -6px rgba(51, 78, 131, 0.12);
+  background: ${(props) => (props.isLightTheme ? '#ffffff' : '#8F86FF')};
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 0 5px 10px -6px rgba(51, 78, 131, 0.12)'
+      : '7px 21px 22px -15px rgba(51, 78, 131, 0.17)'};
   border-radius: 10px;
-
   font-family: serif Saira;
   font-style: normal;
   font-weight: 500;
   font-size: 14px;
   line-height: 22px;
-  color: #4453ad;
+  color: ${(props) => (props.isLightTheme ? '#4453ad' : '#ffffff')};
   cursor: pointer;
   margin-bottom: 20px;
 `;
@@ -140,7 +142,7 @@ export const ModalLink = styled.a`
   display: flex;
   align-items: center;
   text-align: right;
-  color: #4453ad;
+  color: ${(props) => (props.isLightTheme ? '#4453ad' : '#8F86FF')};
   text-decoration: none;
   margin-bottom: 10px;
 `;
@@ -156,6 +158,6 @@ export const ModalLinkRight = styled.a`
   line-height: 19px;
   align-items: center;
   text-align: right;
-  color: #4453ad;
+  color: ${(props) => (props.isLightTheme ? '#4453ad' : '#8F86FF')};
   text-decoration: none;
 `;

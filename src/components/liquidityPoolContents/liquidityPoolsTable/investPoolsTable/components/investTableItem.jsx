@@ -80,7 +80,16 @@ export const InvestTableItem = ({
   const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
   const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
 
-  const addIconsGasPricesWithIcons = addIconsGasPrices(GasPrices, fastDice, middleDice, slowDice);
+  const addIconsGasPricesWithIcons = addIconsGasPrices(
+    GasPrices,
+    fastDice,
+    middleDice,
+    slowDice,
+    fastDice,
+    middleDice,
+    slowDice,
+    theme
+  );
 
   const [isModalVisible, setIsModalVisible] = useState('');
   const [modalType, setModalType] = useState('');
@@ -458,7 +467,7 @@ export const InvestTableItem = ({
           closeModal={setIsModalVisible}
           setIsWithdrawActive={setIsWithdrawActive}>
           <SelectWrapper>
-            <SelectTitle>{'Supply a token'}</SelectTitle>
+            <SelectTitle isLightTheme={theme}>{'Supply a token'}</SelectTitle>
             <Select
               defaultValue={selectInitialValue}
               styles={selectStyle}
@@ -480,7 +489,9 @@ export const InvestTableItem = ({
                   setInputType('single');
                 }}
               />
-              <Balance>{`Balance: ${parseFloat(supplyTokenBalance).toFixed(2)}`}</Balance>
+              <Balance isLightTheme={theme}>{`Balance: ${parseFloat(supplyTokenBalance).toFixed(
+                2
+              )}`}</Balance>
             </InputBlock>
             {/*<ButtonsBlock>*/}
             {/*  <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>*/}
@@ -488,14 +499,14 @@ export const InvestTableItem = ({
             <ButtonsBlock>
               <ChangeToken>{'Or'}</ChangeToken>
             </ButtonsBlock>
-            <SelectTitle>{'Supply a token'}</SelectTitle>
+            <SelectTitle isLightTheme={theme}>{'Supply a token'}</SelectTitle>
             {/*input-------------------->*/}
             <InputBlock>
               <BlockTokens>
                 <div>
                   <TokenImage src={`${item.imageData[0]}`} />
                 </div>
-                <BlockTokenName>{item.token0Symbol}</BlockTokenName>
+                <BlockTokenName isLightTheme={theme}>{item.token0Symbol}</BlockTokenName>
               </BlockTokens>
               <ModalInput
                 isLightTheme={theme}
@@ -515,7 +526,7 @@ export const InvestTableItem = ({
                   setSingleTokenValue('');
                 }}
               />
-              <Balance>{`Balance: ${5}`}</Balance>
+              <Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>
             </InputBlock>
             {/*input-------------------->*/}
             {/*input-------------------->*/}
@@ -524,7 +535,7 @@ export const InvestTableItem = ({
                 <div>
                   <TokenImage src={`${item.imageData[1]}`} />
                 </div>
-                <BlockTokenName>{item.token1Symbol}</BlockTokenName>
+                <BlockTokenName isLightTheme={theme}>{item.token1Symbol}</BlockTokenName>
               </BlockTokens>
               <ModalInput
                 value={outValue}
@@ -544,21 +555,23 @@ export const InvestTableItem = ({
                   setSingleTokenValue('');
                 }}
               />
-              <Balance>{`Balance: ${5}`}</Balance>
+              <Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>
             </InputBlock>
             {/*input-------------------->*/}
             <LinksContainer>
-              <ModalLink onClick={slippageHandler} href={'#'}>
+              <ModalLink isLightTheme={theme} onClick={slippageHandler} href={'#'}>
                 {'Transaction speed'}
               </ModalLink>
-              <ModalLinkRight onClick={slippageHandler} href={'#'}>
+              <ModalLinkRight isLightTheme={theme} onClick={slippageHandler} href={'#'}>
                 {`${selectedGasPrice.length > 0 ? selectedGasPrice : proposeGasPrice} Gwei`}
               </ModalLinkRight>
               {/*<ModalLink href={'#'}>{'Slippage Tolerance'}</ModalLink>*/}
               {/*<ModalLinkRight href={'#'}>ddd</ModalLinkRight>*/}
             </LinksContainer>
             <ButtonsBlock>
-              <SupplyTokenButton onClick={inputsHandler}>{`Supply tokens`}</SupplyTokenButton>
+              <SupplyTokenButton
+                isLightTheme={theme}
+                onClick={inputsHandler}>{`Supply tokens`}</SupplyTokenButton>
             </ButtonsBlock>
           </SelectWrapper>
         </ModalContainer>
