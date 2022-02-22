@@ -206,7 +206,7 @@ export const LiquidityTableItem = ({
         boxShadow: state.isSelected && '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',
         // -------------------------------->
         display: 'flex',
-        color: '#FFFFFF !important',
+        color: state.menuIsOpen ? (theme ? 'black' : 'white') : theme ? 'black' : 'white',
         mixBlendMode: 'normal',
         height: state.isSelected ? '43px' : '60px',
         padding: '5px 10px',
@@ -216,6 +216,24 @@ export const LiquidityTableItem = ({
     },
   };
 
+  // (styles, { data, isDisabled, isFocused, isSelected }) => {
+  //   return {
+  //     ...styles,
+  //     backgroundColor: isLightTheme
+  //       ? isSelected
+  //         ? '#ffffff'
+  //         : null
+  //       : isSelected
+  //       ? '#1F265C'
+  //       : null,
+  //     boxShadow: isSelected ? 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)' : null,
+  //     fontSize: 14,
+  //     color: isSelected ? (isLightTheme ? 'black' : '#8F86FF') : isLightTheme ? 'black' : 'white',
+  //     // width: isSelected ? '150px' : '160px',
+  //     borderRadius: isSelected ? '10px' : '0',
+  //     // color: '#000000',
+  //   };
+  // },
   async function loadWeb3() {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
