@@ -92,6 +92,7 @@ import {
   checkIfExchangedTokenLimitIsExceeded,
   convertSendTokenToUSDCurrencyHelper,
   filteredTokensByName,
+  initFilteringModalTokensList,
 } from './helpers';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
@@ -413,51 +414,25 @@ export default function MultiSwapComponent() {
 
   const searchTokensHandler = (event, isSendTokenSelectedSwapped, searchTokensData) => {
     if (isSendTokenSelectedSwapped) {
-      //remove ability to choose duplicate token from send token list
-      let copyTokensList = searchTokensData.tokensList.filter(function (obj) {
-        return obj.address !== initSendMultiSwapToken.address;
-      });
+      let removedInitTokenValuesList = initFilteringModalTokensList(
+        searchTokensData,
+        initSendMultiSwapToken,
+        initReceiveMultiSwapTokensList
+      );
 
-      //remove ability to choose any already chosen tokens from receive tokens list
-      for (let i = copyTokensList.length - 1; i >= 0; i--) {
-        for (let j = 0; j < initReceiveMultiSwapTokensList.length; j++) {
-          if (
-            copyTokensList[i] &&
-            copyTokensList[i].address === initReceiveMultiSwapTokensList[j].address
-          ) {
-            copyTokensList.splice(i, 1);
-          }
-        }
-      }
+      // console.log('removedInitTokenValuesList', removedInitTokenValuesList);
 
-      let filteredTokensList = filteredTokensByName(event, copyTokensList);
+      let filteredTokensList = filteredTokensByName(event, removedInitTokenValuesList);
 
       setTokensListModal(filteredTokensList);
     } else {
-      console.log('z test finalReceiveTokensList before', finalReceiveTokensList);
+      let removedInitTokenValuesList = initFilteringModalTokensList(
+        searchTokensData,
+        initSendMultiSwapToken,
+        initReceiveMultiSwapTokensList
+      );
 
-      //remove send token from  receive tokens list
-      let copyTokensList = searchTokensData.tokensList.filter(function (obj) {
-        return obj.address !== initSendMultiSwapToken.address;
-      });
-
-      console.log('z test remove send token from list', copyTokensList);
-
-      //remove initReceiveTokens from searchable receive tokens list
-      for (let i = copyTokensList.length - 1; i >= 0; i--) {
-        for (let j = 0; j < initReceiveMultiSwapTokensList.length; j++) {
-          if (
-            copyTokensList[i] &&
-            copyTokensList[i].address === initReceiveMultiSwapTokensList[j].address
-          ) {
-            copyTokensList.splice(i, 1);
-          }
-        }
-      }
-
-      console.log('z test finalReceiveTokensList after', copyTokensList);
-
-      let filteredTokensList = filteredTokensByName(event, copyTokensList);
+      let filteredTokensList = filteredTokensByName(event, removedInitTokenValuesList);
 
       setTokensListModal(filteredTokensList);
     }

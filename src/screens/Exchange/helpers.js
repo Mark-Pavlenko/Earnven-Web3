@@ -3,6 +3,32 @@ import ERC20ABI from '../../abi/ERC20.json';
 import OneClickLiquidity from '../../abi/UniV2PoolsOneClick.json';
 import Addresses from '../../contractAddresses';
 
+export const initFilteringModalTokensList = (
+  searchTokensData,
+  initSendMultiSwapToken,
+  initReceiveMultiSwapTokensList
+) => {
+  let copyTokensList = searchTokensData.tokensList.filter(function (obj) {
+    return obj.address !== initSendMultiSwapToken.address;
+  });
+
+  let test;
+
+  for (let i = copyTokensList.length - 1; i >= 0; i--) {
+    for (let j = 0; j < initReceiveMultiSwapTokensList.length; j++) {
+      if (
+        copyTokensList[i] &&
+        copyTokensList[i].address === initReceiveMultiSwapTokensList[j].address
+      ) {
+        test = copyTokensList.filter(function (obj) {
+          return obj !== copyTokensList.splice(i, 1);
+        });
+      }
+    }
+  }
+  return test;
+};
+
 export const filteredTokensByName = (event, searchTokensData) => {
   console.log('searched tokens Data', searchTokensData);
 
