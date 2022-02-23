@@ -120,6 +120,7 @@ export default function MultiSwapComponent() {
   let [isSendTokenSelectedSwapped, setIsSendTokenSelectedSwapped] = useState(false);
   const [openTokensModal, setOpenTokensModal] = useState(false);
   const [isTokensLimitExceeded, setIsTokensLimitExceeded] = useState(false);
+  let [isAddedReceiveTokensLimitExceeded, setIsAddedReceiveTokensLimitExceeded] = useState(false);
 
   let textInput = useRef(null);
 
@@ -472,24 +473,28 @@ export default function MultiSwapComponent() {
     initReceiveMultiSwapTokensList
   );
 
-  const addReceiveTokensHandler = () => {
+  const addReceiveTokensHandler = (fullTokensList) => {
     dispatch({
       type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING,
       payload: true,
     });
 
-    for (let i = finalReceiveTokensList.length - 1; i >= 0; i--) {
-      for (let j = 0; j < initReceiveMultiSwapTokensList.length; j++) {
-        if (
-          finalReceiveTokensList[i] &&
-          finalReceiveTokensList[i].address === initReceiveMultiSwapTokensList[j].address
-        ) {
-          finalReceiveTokensList.splice(i, 1);
-        }
-      }
-    }
+    // searchTokensData.tokensList
+    // console.log('add receive token handler fullTokensList init', fullTokensList);
 
-    console.log('finalReceiveTokensList test filtered', finalReceiveTokensList);
+    let removedInitTokenValuesList = initFilteringModalTokensList(
+      fullTokensList,
+      initSendMultiSwapToken,
+      initReceiveMultiSwapTokensList
+    );
+
+    // console.log('add receive token handler finalReceiveTokensList ', removedInitTokenValuesList);
+
+    if (removedInitTokenValuesList.length !== 0) {
+      initReceiveMultiSwapTokensList.push(removedInitTokenValuesList[0]);
+    } else {
+      setIsAddedReceiveTokensLimitExceeded(true);
+    }
 
     dispatch({
       type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING,
@@ -930,14 +935,19 @@ export default function MultiSwapComponent() {
               </SelectTokensModalContainer>
             )}
 
-            <AddReceiveTokenMultiSwapBtn
-              isLightTheme={isLightTheme}
-              onClick={addReceiveTokensHandler}>
-              <img
-                src={isLightTheme ? plusIconDark : plusIconLight}
-                alt="add_receive_multiswap_token"
-              />
-            </AddReceiveTokenMultiSwapBtn>
+            {isAddedReceiveTokensLimitExceeded === false && (
+              <AddReceiveTokenMultiSwapBtn
+                style={{ marginTop: '20px' }}
+                isLightTheme={isLightTheme}
+                onClick={() => {
+                  addReceiveTokensHandler({ tokensList: finalReceiveTokensList });
+                }}>
+                <img
+                  src={isLightTheme ? plusIconDark : plusIconLight}
+                  alt="add_receive_multiswap_token"
+                />
+              </AddReceiveTokenMultiSwapBtn>
+            )}
           </>
         )}
         <SwapBlockDelimiter isLightTheme={isLightTheme} style={{ margin: '20px  27px 0 20px' }} />

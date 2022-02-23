@@ -157,12 +157,12 @@ export const MultiSwapSendTokensChooseBlock = styled.div`
 
 export const SubLayoutReceiveTokensBlock = styled.div`
   overflow: auto;
-  height: 275px;
+  height: 265px;
   //background-color: blue;
   padding-left: 20px;
   //margin: 0 27px 16px 20px;
-  padding-top: 5px;
-  overflow-x: hidden;
+  //padding-top: 5px;
+  //overflow-x: hidden;
 `;
 
 export const MultiSwapReceiveTokensBlock = styled.div`
@@ -171,7 +171,7 @@ export const MultiSwapReceiveTokensBlock = styled.div`
   width: 475px;
   height: 115px;
   margin-top: -3px;
-  margin-bottom: 23px;
+  margin-bottom: 20px;
   color: black;
   background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
   box-shadow: ${(props) =>
