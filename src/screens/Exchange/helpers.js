@@ -51,7 +51,7 @@ export const filteredTokensByName = (event, searchTokensData) => {
 };
 
 export const convertSendTokenToUSDCurrencyHelper = (tokenData) => {
-  console.log('send tokenData helper', tokenData);
+  console.log('send tokenData  single swap helper', tokenData);
   // console.log('send tokenData helper parseInt(tokenData.amount)', parseInt(tokenData.amount));
 
   if (tokenData.amount === '') {
