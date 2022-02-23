@@ -390,7 +390,7 @@ export default function MultiSwapComponent() {
       });
 
       console.log(' finalSendTokensList after 2 1filter', filteredSendTokensList);
-
+      //
       setTokensListModal(filteredSendTokensList);
     } else {
       finalReceiveTokensList = payload.tokensList.filter(function (obj) {
@@ -667,8 +667,14 @@ export default function MultiSwapComponent() {
                             style={{ marginLeft: '4px' }}
                           />
                         ) : (
-                          <MultiSwapTokenAvatar
-                            name={receiveToken.avatarIcon}
+                          <Avatar
+                            style={{
+                              marginRight: '12px',
+                              height: '21px',
+                              width: '21px',
+                              marginLeft: '5px',
+                            }}
+                            name={receiveToken.name}
                             round={true}
                             size="21"
                             textSizeRatio={1}
