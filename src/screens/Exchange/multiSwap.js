@@ -413,29 +413,17 @@ export default function MultiSwapComponent() {
   console.log('tokensListModal modal', tokensListModal);
 
   const searchTokensHandler = (event, isSendTokenSelectedSwapped, searchTokensData) => {
-    if (isSendTokenSelectedSwapped) {
-      let removedInitTokenValuesList = initFilteringModalTokensList(
-        searchTokensData,
-        initSendMultiSwapToken,
-        initReceiveMultiSwapTokensList
-      );
+    let removedInitTokenValuesList = initFilteringModalTokensList(
+      searchTokensData,
+      initSendMultiSwapToken,
+      initReceiveMultiSwapTokensList
+    );
 
-      // console.log('removedInitTokenValuesList', removedInitTokenValuesList);
+    // console.log('z removedInitTokenValuesList ', removedInitTokenValuesList);
 
-      let filteredTokensList = filteredTokensByName(event, removedInitTokenValuesList);
+    let filteredTokensList = filteredTokensByName(event, removedInitTokenValuesList);
 
-      setTokensListModal(filteredTokensList);
-    } else {
-      let removedInitTokenValuesList = initFilteringModalTokensList(
-        searchTokensData,
-        initSendMultiSwapToken,
-        initReceiveMultiSwapTokensList
-      );
-
-      let filteredTokensList = filteredTokensByName(event, removedInitTokenValuesList);
-
-      setTokensListModal(filteredTokensList);
-    }
+    setTokensListModal(filteredTokensList);
   };
 
   const getAmountMulti = async () => {

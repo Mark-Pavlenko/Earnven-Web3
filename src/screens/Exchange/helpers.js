@@ -20,13 +20,16 @@ export const initFilteringModalTokensList = (
         copyTokensList[i] &&
         copyTokensList[i].address === initReceiveMultiSwapTokensList[j].address
       ) {
-        test = copyTokensList.filter(function (obj) {
-          return obj !== copyTokensList.splice(i, 1);
-        });
+        test = copyTokensList.splice(i, 1);
       }
     }
   }
-  return test;
+  copyTokensList.filter(function (obj) {
+    return obj !== test;
+  });
+
+  return copyTokensList;
+  // test;
 };
 
 export const filteredTokensByName = (event, searchTokensData) => {
