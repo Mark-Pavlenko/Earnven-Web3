@@ -367,7 +367,7 @@ export default function MultiSwapComponent() {
     setOpenTokensModal(true);
 
     if (payload.isSendModalOpen === true) {
-      console.log(' finalSendTokensList before 1filter', finalSendTokensList);
+      // console.log(' finalSendTokensList before 1filter', finalSendTokensList);
 
       let filteredSendTokensList = [...finalSendTokensList];
 
@@ -383,7 +383,7 @@ export default function MultiSwapComponent() {
         }
       }
 
-      console.log(' finalSendTokensList after 1filter', filteredSendTokensList);
+      // console.log(' finalSendTokensList after 1filter', filteredSendTokensList);
 
       filteredSendTokensList = filteredSendTokensList.filter(function (obj) {
         return obj.address !== initSendMultiSwapToken.address;
@@ -393,10 +393,35 @@ export default function MultiSwapComponent() {
       //
       setTokensListModal(filteredSendTokensList);
     } else {
-      finalReceiveTokensList = payload.tokensList.filter(function (obj) {
+      let filteredReceiveTokensList = [...finalReceiveTokensList];
+
+      // console.log(' 0 2filteredReceiveTokensList before 1filter', filteredReceiveTokensList);
+
+      //remove initReceive tokens list items from default and search list
+      for (let i = filteredReceiveTokensList.length - 1; i >= 0; i--) {
+        for (let j = 0; j < initReceiveMultiSwapTokensList.length; j++) {
+          if (
+            finalReceiveTokensList[i] &&
+            finalReceiveTokensList[i].address === initReceiveMultiSwapTokensList[j].address
+          ) {
+            filteredReceiveTokensList.splice(i, 1);
+          }
+        }
+      }
+
+      console.log(
+        ' middle receive filteredReceiveTokensList after 1filter',
+        filteredReceiveTokensList
+      );
+
+      //remove send token from search list
+      finalReceiveTokensList = filteredReceiveTokensList.filter(function (obj) {
         return obj.address !== initSendMultiSwapToken.address;
       });
-      setTokensListModal(finalReceiveTokensList);
+
+      // console.log(' 2 2filteredReceiveTokensList after 2filter', filteredReceiveTokensList);
+
+      setTokensListModal(filteredReceiveTokensList);
     }
 
     setIsSendTokenSelectedSwapped(payload.isSendModalOpen);
@@ -404,14 +429,54 @@ export default function MultiSwapComponent() {
 
   console.log('tokensListModal modal', tokensListModal);
 
-  const searchTokensHandler = (event, searchTokensData) => {
-    let copyTokensList = searchTokensData.tokensList.filter(function (obj) {
-      return obj.address !== initSendMultiSwapToken.address;
-    });
+  const searchTokensHandler = (event, isSendTokenSelectedSwapped, searchTokensData) => {
+    //if we have send token search list filtering
 
-    let filteredTokensList = filteredTokensByName(event, copyTokensList);
+    // console.log(' isSendTokenSelectedSwapped', isSendTokenSelectedSwapped);
 
-    setTokensListModal(filteredTokensList);
+    if (isSendTokenSelectedSwapped) {
+      //remove ability to choose duplicate token from send token list
+      let copyTokensList = searchTokensData.tokensList.filter(function (obj) {
+        return obj.address !== initSendMultiSwapToken.address;
+      });
+
+      //remove ability to choose any already chosen tokens from receive tokens list
+      for (let i = copyTokensList.length - 1; i >= 0; i--) {
+        for (let j = 0; j < initReceiveMultiSwapTokensList.length; j++) {
+          if (
+            copyTokensList[i] &&
+            copyTokensList[i].address === initReceiveMultiSwapTokensList[j].address
+          ) {
+            copyTokensList.splice(i, 1);
+          }
+        }
+      }
+
+      let filteredTokensList = filteredTokensByName(event, copyTokensList);
+
+      setTokensListModal(filteredTokensList);
+    } else {
+      console.log('z finalReceiveTokensList before', finalReceiveTokensList);
+
+      let copyTokensList = searchTokensData.tokensList.filter(function (obj) {
+        return obj.address !== initSendMultiSwapToken.address;
+      });
+
+      console.log('z remove send token from list', copyTokensList);
+
+      for (let i = copyTokensList.length - 1; i >= 0; i--) {
+        for (let j = 0; j < initReceiveMultiSwapTokensList.length; j++) {
+          if (
+            finalReceiveTokensList[i] &&
+            finalReceiveTokensList[i].address === initReceiveMultiSwapTokensList[j].address
+          ) {
+            copyTokensList.splice(i, 1);
+          }
+        }
+      }
+
+      console.log('z finalReceiveTokensList after', copyTokensList);
+    }
   };
 
   const getAmountMulti = async () => {
@@ -872,10 +937,10 @@ export default function MultiSwapComponent() {
                       isLightTheme={isLightTheme}
                       onChange={(event) => {
                         isSendTokenSelectedSwapped
-                          ? searchTokensHandler(event, {
+                          ? searchTokensHandler(event, isSendTokenSelectedSwapped, {
                               tokensList: finalSendTokensList,
                             })
-                          : searchTokensHandler(event, {
+                          : searchTokensHandler(event, isSendTokenSelectedSwapped, {
                               tokensList: finalReceiveTokensList,
                             });
                       }}
