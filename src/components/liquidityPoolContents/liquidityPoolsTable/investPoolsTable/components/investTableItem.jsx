@@ -113,8 +113,8 @@ export const InvestTableItem = ({
   const [supplyTokenBalance, setSupplyTokenBalance] = useState('');
 
   const selectInitialValue = {
-    label: 'Ether',
-    value: 'Ether',
+    label: 'Ethereum',
+    value: 'Ethereum',
   };
 
   useEffect(() => {
@@ -490,7 +490,7 @@ export const InvestTableItem = ({
                   setSingleTokenValue('');
                 }}
               />
-              <Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>
+              {/*<Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>*/}
             </InputBlock>
             {/*input-------------------->*/}
             {/*input-------------------->*/}
@@ -519,7 +519,7 @@ export const InvestTableItem = ({
                   setSingleTokenValue('');
                 }}
               />
-              <Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>
+              {/*<Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>*/}
             </InputBlock>
             {/*input-------------------->*/}
             <LinksContainer>
@@ -565,18 +565,18 @@ export const InvestTableItem = ({
               </div>
             ))}
           </div>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <CommonSubmitButton
-              width={'189px'}
-              isLightTheme={theme}
-              // onClick={() => {
-              //   setIsModalVisible('advancedSettings');
-              // }}
-            >
-              {'Advanced settings'}
-            </CommonSubmitButton>
-          </div>
           {/*//TODO:slippageTolerance (doesn't implemented yet)*/}
+          {/*<div style={{ display: 'flex', justifyContent: 'center' }}>*/}
+          {/*  <CommonSubmitButton*/}
+          {/*    width={'189px'}*/}
+          {/*    isLightTheme={theme}*/}
+          {/*    // onClick={() => {*/}
+          {/*    //   setIsModalVisible('advancedSettings');*/}
+          {/*    // }}*/}
+          {/*  >*/}
+          {/*    {'Advanced settings'}*/}
+          {/*  </CommonSubmitButton>*/}
+          {/*</div>*/}
           {/*<MenuPopoverBoxTitle isLightTheme={theme}>{'Slippage Tolerance'}</MenuPopoverBoxTitle>*/}
           {/*<CommonHoverButtonTrans*/}
           {/*  height={'45px'}*/}
@@ -627,14 +627,14 @@ export const InvestTableItem = ({
         <LiquidityValue>{numberWithCommas(parseFloat(item.liquidity).toFixed(2))}</LiquidityValue>
         <APR>
           <AprBlock>
-            <AprName>{'Weekly'}</AprName>
+            <AprName isLightTheme={theme}>{'Weekly'}</AprName>
             <AprValue color="#00DFD1">
               +{(((parseInt(item.volume) * 0.003) / parseInt(item.liquidity)) * 100 * 7).toFixed(2)}
               %
             </AprValue>
           </AprBlock>
           <AprBlock>
-            <AprName>{'Yearly'}</AprName>
+            <AprName isLightTheme={theme}>{'Yearly'}</AprName>
             <AprValue color="#00DFD1">
               +
               {(((parseInt(item.volume) * 0.003) / parseInt(item.liquidity)) * 100 * 365).toFixed(

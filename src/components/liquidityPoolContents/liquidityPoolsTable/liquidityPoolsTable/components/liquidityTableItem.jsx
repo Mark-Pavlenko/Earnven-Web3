@@ -62,7 +62,6 @@ export const LiquidityTableItem = ({
   type,
   index,
   theme,
-  AllTokens,
   protocolType,
   addLiquidity,
   addLiquidityNormal,
@@ -116,8 +115,8 @@ export const LiquidityTableItem = ({
   }, [tokenAddress]);
 
   const selectInitialValue = {
-    label: 'Ether',
-    value: 'Ether',
+    label: 'Ethereum',
+    value: 'Ethereum',
   };
 
   const switchModal = (e) => {
@@ -454,7 +453,7 @@ export const LiquidityTableItem = ({
                   setSingleTokenValue('');
                 }}
               />
-              <Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>
+              {/*<Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>*/}
             </InputBlock>
             {/*input-------------------->*/}
             {/*input-------------------->*/}
@@ -483,7 +482,7 @@ export const LiquidityTableItem = ({
                   setSingleTokenValue('');
                 }}
               />
-              <Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>
+              {/*<Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>*/}
             </InputBlock>
             {/*input-------------------->*/}
             <LinksContainer>
@@ -529,18 +528,18 @@ export const LiquidityTableItem = ({
               </div>
             ))}
           </div>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <CommonSubmitButton
-              width={'189px'}
-              isLightTheme={theme}
-              // onClick={() => {
-              //   setIsModalVisible('advancedSettings');
-              // }}
-            >
-              {'Advanced settings'}
-            </CommonSubmitButton>
-          </div>
           {/*//TODO:slippageTolerance (doesn't implemented yet)*/}
+          {/*<div style={{ display: 'flex', justifyContent: 'center' }}>*/}
+          {/*  <CommonSubmitButton*/}
+          {/*    width={'189px'}*/}
+          {/*    isLightTheme={theme}*/}
+          {/*    // onClick={() => {*/}
+          {/*    //   setIsModalVisible('advancedSettings');*/}
+          {/*    // }}*/}
+          {/*  >*/}
+          {/*    {'Advanced settings'}*/}
+          {/*  </CommonSubmitButton>*/}
+          {/*</div>*/}
           {/*<MenuPopoverBoxTitle isLightTheme={theme}>{'Slippage Tolerance'}</MenuPopoverBoxTitle>*/}
           {/*<CommonHoverButtonTrans*/}
           {/*  height={'45px'}*/}
@@ -603,7 +602,7 @@ export const LiquidityTableItem = ({
         <BalanceValue>${numberWithCommas(parseFloat(item.reserveUSD).toFixed(2))}</BalanceValue>
         <APR>
           <AprBlock>
-            <AprName>Weekly</AprName>
+            <AprName isLightTheme={theme}>Weekly</AprName>
             <AprValue color="#00DFD1">
               +
               {(((parseInt(item.volumeUSD) * 0.003) / parseInt(item.reserveUSD)) * 100 * 7).toFixed(
@@ -613,7 +612,7 @@ export const LiquidityTableItem = ({
             </AprValue>
           </AprBlock>
           <AprBlock>
-            <AprName>Yearly</AprName>
+            <AprName isLightTheme={theme}>Yearly</AprName>
             <AprValue color="#00DFD1">
               +
               {(
@@ -626,12 +625,8 @@ export const LiquidityTableItem = ({
           </AprBlock>
         </APR>
         <ItemButtons>
-          <CommonSubmitButton
-            width={'165px'}
-            isLightTheme={theme}
-            id="Add Liquidity"
-            onClick={switchModal}>
-            Invest
+          <CommonSubmitButton isLightTheme={theme} id="Add Liquidity" onClick={switchModal}>
+            {'Invest'}
           </CommonSubmitButton>
           {type === 'sushiswap' ? (
             <Link to={`/${address}/${type}/address/${item.token0.id}/${item.token1.id}`}>

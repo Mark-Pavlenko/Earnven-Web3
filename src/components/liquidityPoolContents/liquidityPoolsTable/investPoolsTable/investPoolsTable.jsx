@@ -30,7 +30,7 @@ export const InvestPoolsTable = ({
     <TableWrapper isLightTheme={theme}>
       <TableItem isLightTheme={theme}>
         <ItemHeader>
-          <ItemIndexHidden>{'№'}</ItemIndexHidden>
+          <ItemIndexHidden isLightTheme={theme}>{'№'}</ItemIndexHidden>
           <AvailableTitle>{'Available pools'}</AvailableTitle>
         </ItemHeader>
         <HeaderLiquidity>{'Liquidity'}</HeaderLiquidity>

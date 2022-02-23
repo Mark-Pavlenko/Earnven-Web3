@@ -96,6 +96,9 @@ export const SupplyTokenButton = styled.div`
   color: ${(props) => (props.isLightTheme ? '#4453ad' : '#ffffff')};
   cursor: pointer;
   margin-bottom: 20px;
+  @media (min-width: 175px) and (max-width: 520px) {
+    width: 100%;
+  }
 `;
 
 export const ChangeToken = styled.div`
@@ -115,6 +118,27 @@ export const ChangeToken = styled.div`
   line-height: 25px;
   color: #4453ad;
   margin-bottom: 20px;
+  position: relative;
+  &:before {
+    content: '';
+    width: 114px;
+    height: 1px;
+    position: absolute;
+    background-color: #1e1e20;
+    opacity: 0.1;
+    top: 14px;
+    left: -159px;
+  }
+  &:after {
+    content: '';
+    width: 114px;
+    height: 1px;
+    position: absolute;
+    background-color: #1e1e20;
+    opacity: 0.1;
+    top: 14px;
+    left: 73px;
+  }
 `;
 export const ButtonsBlock = styled.div`
   display: flex;

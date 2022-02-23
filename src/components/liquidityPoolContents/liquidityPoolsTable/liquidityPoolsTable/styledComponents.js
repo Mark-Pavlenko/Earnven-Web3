@@ -29,7 +29,7 @@ export const TableItem = styled.div`
 
   &:first-child {
     font-size: 10px;
-    color: #1e1e20;
+    color: ${(props) => (props.isLightTheme ? '#1E1E20' : ' white')};
     opacity: 0.5;
   }
 
@@ -171,7 +171,7 @@ export const AprName = styled.div`
   font-weight: 600;
   font-size: 10px;
   line-height: 16px;
-  color: #1e1e20;
+  color: ${(props) => (props.isLightTheme ? '#1E1E20' : ' white')};
   opacity: 0.5;
 
   @media (min-width: 175px) and (max-width: 840px) {

@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import close from '../../../assets/icons/close_nft.svg';
+import closeMobile from '../../../assets/icons/crossClose_mobile.svg';
 import closeDark from '../../../assets/icons/close_nft_night.svg';
 
 export const ShadowBlock = styled.div`
@@ -78,6 +79,12 @@ export const CloseButton = styled.div`
   border-radius: 7px;
   mix-blend-mode: ${(props) => (props.isLightTheme ? 'none' : 'normal')};
   backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
+  @media (min-width: 175px) and (max-width: 520px) {
+    background: url(${(props) => (props.isLightTheme ? closeMobile : closeDark)}) no-repeat center
+      center;
+    background-color: transparent;
+    box-shadow: none;
+  }
 `;
 
 export const Title = styled.div`
@@ -87,4 +94,7 @@ export const Title = styled.div`
   font-size: 26px;
   line-height: 41px;
   color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#ffffff')};
+  @media (min-width: 175px) and (max-width: 520px) {
+    font-size: 20px;
+  }
 `;

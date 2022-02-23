@@ -18,13 +18,11 @@ export const TableWrapper = styled.div`
 
 export const TableItem = styled.div`
   color: ${(props) => (props.isLightTheme ? '#1E1E20' : ' white')};
-
   display: grid;
   grid-template-columns:
-    minmax(40px, 1fr) minmax(40px, 1fr) minmax(40px, 1fr) minmax(40px, 1fr) minmax(40px, 1fr)
-    minmax(100px, 2fr);
+    minmax(135px, 1fr) minmax(100px, 1fr) minmax(140px, 1fr) minmax(0, 1fr) minmax(0, 1fr)
+    minmax(50px, 2fr);
   grid-gap: 5px;
-  //grid-template-columns: repeat(5, minmax(40px, 1fr)) 2fr;
   grid-template-areas: 'head liquidity apr balance value buttons';
   align-items: center;
   padding: 11px 25px;
@@ -33,8 +31,10 @@ export const TableItem = styled.div`
 
   &:first-child {
     font-size: 10px;
-    color: #1e1e20;
+    color: ${(props) => (props.isLightTheme ? '#1E1E20' : ' white')};
     opacity: 0.5;
+    font-weight: 600;
+    font-size: 10px;
   }
 
   @media (min-width: 175px) and (max-width: 840px) {
@@ -76,7 +76,7 @@ export const ItemIndex = styled.div`
   @media (min-width: 175px) and (max-width: 840px) {
   }
 `;
-
+//878995
 export const ItemIndexHidden = styled.div`
   width: 15px;
   grid-area: index;
@@ -99,7 +99,7 @@ export const HeaderApr = styled.div`
 export const LPbalance = styled.div`
   grid-area: balance;
   @media (min-width: 175px) and (max-width: 840px) {
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: flex-end;
     padding-right: 100px;
@@ -110,7 +110,7 @@ export const LPbalance = styled.div`
 export const Value = styled.div`
   grid-area: value;
   @media (min-width: 175px) and (max-width: 840px) {
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: flex-end;
     padding-right: 100px;
@@ -120,7 +120,7 @@ export const Value = styled.div`
 export const Buttons = styled.div`
   grid-area: buttons;
   @media (min-width: 175px) and (max-width: 840px) {
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: flex-end;
     padding-right: 100px;
@@ -176,7 +176,7 @@ export const TokenImage = styled.img`
 
 export const TokenImages = styled.div`
   display: flex;
-  width: 30px;
+  min-width: 30px;
 
   @media (max-width: 300px) {
     display: none;
@@ -203,13 +203,14 @@ export const AprBlock = styled.div`
 export const AprName = styled.div`
   display: flex;
   align-items: center;
-  width: 75px;
+  //width: 75px;
   font-size: 10px;
   font-weight: 600;
   font-size: 10px;
   line-height: 16px;
-  color: #1e1e20;
+  color: ${(props) => (props.isLightTheme ? '#1E1E20' : ' white')};
   opacity: 0.5;
+  margin-right: 20px;
 
   @media (min-width: 175px) and (max-width: 840px) {
     width: 50px;
@@ -233,7 +234,7 @@ export const AprValue = styled.div`
 
 export const ItemButtons = styled.div`
   display: flex;
-  gap: 30px;
+  gap: 10px;
   grid-area: buttons;
   @media (min-width: 175px) and (max-width: 840px) {
     display: grid;
