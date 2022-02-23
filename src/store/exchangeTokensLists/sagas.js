@@ -127,17 +127,11 @@ function* getReceiveTokensListSagaWorker() {
     // amount: ' ',
   }));
 
-  // console.log('finalList sagas', finalList);
+  console.log('sagas filter finalReceiveTokensList', finalList);
 
-  // const getCoinGeckoTokenUSDCurrency = yield call(API.getCoinGeckoTokenUSDCurrency);
-  // console.log('getCoinGeckoTokenUSDCurrency sagas', getCoinGeckoTokenUSDCurrency);
-
-  yield put(actions.getReceiveTokensList(finalList));
   yield put(actions.setInitReceiveFirstTokenSwap(finalList[4]));
+  yield put(actions.getReceiveTokensList(finalList));
   yield put(actions.setInitReceiveSecondTokenSwap(finalList[2]));
-
-  // yield put({ type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING, payload: true });
-  // yield put(setInitReceiveMultiSwapTokensListLoading(true));
 
   yield put(actions.setInitReceiveMultiSwapTokensList([finalList[2], finalList[4]]));
 

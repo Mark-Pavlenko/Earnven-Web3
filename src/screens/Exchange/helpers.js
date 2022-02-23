@@ -7,7 +7,7 @@ export const filteredTokensByName = (event, searchTokensData) => {
   console.log('searched tokens Data', searchTokensData);
 
   let lowerCase = event.target.value.toLowerCase();
-  return searchTokensData.tokensList.filter((el) => {
+  return searchTokensData.filter((el) => {
     if (lowerCase.input === '') {
       return el;
     }

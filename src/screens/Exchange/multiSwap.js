@@ -107,7 +107,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function MultiSwapComponent() {
-  const { address } = useParams();
   const dispatch = useDispatch();
   const classes = useStyles();
   const [tokenSendUSDCurrency, setTokenSendUSDCurrency] = useState('$0.00');
@@ -126,9 +125,6 @@ export default function MultiSwapComponent() {
   const isLoadingReceiveTokensList = useSelector(
     (state) => state.tokensListReducer.isReceiveMultiSwapTokensListLoading
   );
-  // console.log('isLoadingReceiveTokensList', isLoadingReceiveTokensList);
-
-  // Polygon
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
@@ -166,7 +162,7 @@ export default function MultiSwapComponent() {
   console.log('multiswap finalSendTokensList 12345', finalSendTokensList);
 
   // const finalReceiveTokensList = sendTokensMockList;
-  const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
+  let finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
 
   async function getWeb3() {
     // const provider = active ? await connector.getProvider() : ethers.getDefaultProvider();
@@ -262,6 +258,13 @@ export default function MultiSwapComponent() {
     return () => clearTimeout(timer);
   }, [initSendMultiSwapToken, initReceiveMultiSwapTokensList]);
 
+  // useEffect(() => {
+  //   finalReceiveTokensList = finalReceiveTokensList.filter(function (obj) {
+  //     return obj.address !== initSendMultiSwapToken.address;
+  //   });
+  //   console.log('filter finalReceiveTokensList', finalReceiveTokensList);
+  // }, [finalReceiveTokensList]);
+
   //------
 
   async function loadWeb3() {
@@ -320,14 +323,6 @@ export default function MultiSwapComponent() {
     if (convertTokensData.tokenAmount !== 0 && !isNaN(convertTokensData.tokenAmount)) {
       // console.log('is not null!');
 
-      //self-made loader
-      // if (needIndex !== -1) {
-      //   initReceiveMultiSwapTokensList[needIndex] = {
-      //     ...initReceiveMultiSwapTokensList[needIndex],
-      //     singleAmountSendTokenConvert: 'Loading...',
-      //   };
-      // }
-
       const convertedValue = await NewContract.methods
         .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
           convertTokensData.sendTokenForExchangeAddress,
@@ -367,33 +362,55 @@ export default function MultiSwapComponent() {
   };
 
   const openModalHelper = (payload, key) => {
-    console.log('key value', key);
-
-    let test = setReceiveTokensRefsList[key];
-
+    console.log('modal payload value', payload);
+    setTokensListModal([]);
     setOpenTokensModal(true);
-    // console.log('tokensList multiswap payload', payload);
 
     if (payload.isSendModalOpen === true) {
-      let filteredSendTokensList = payload.tokensList.filter(
-        (token) => token.symbol !== initSendMultiSwapToken.symbol
-      );
+      console.log(' finalSendTokensList before 1filter', finalSendTokensList);
+
+      let filteredSendTokensList = [...finalSendTokensList];
+
+      //filter send tokens array from all values from initReceive tokens arr
+      for (let i = filteredSendTokensList.length - 1; i >= 0; i--) {
+        for (let j = 0; j < initReceiveMultiSwapTokensList.length; j++) {
+          if (
+            finalSendTokensList[i] &&
+            finalSendTokensList[i].address === initReceiveMultiSwapTokensList[j].address
+          ) {
+            filteredSendTokensList.splice(i, 1);
+          }
+        }
+      }
+
+      console.log(' finalSendTokensList after 1filter', filteredSendTokensList);
+
+      filteredSendTokensList = filteredSendTokensList.filter(function (obj) {
+        return obj.address !== initSendMultiSwapToken.address;
+      });
+
+      console.log(' finalSendTokensList after 2 1filter', filteredSendTokensList);
+
       setTokensListModal(filteredSendTokensList);
     } else {
-      let filteredReceiveTokensList = payload.tokensList.filter(
-        (token) => token.symbol !== payload.receiveToken.symbol
-      );
-
-      // console.log('tokensList multiswap payload qwerty', filteredReceiveTokensList);
-
-      setTokensListModal(filteredReceiveTokensList);
+      finalReceiveTokensList = payload.tokensList.filter(function (obj) {
+        return obj.address !== initSendMultiSwapToken.address;
+      });
+      setTokensListModal(finalReceiveTokensList);
     }
 
     setIsSendTokenSelectedSwapped(payload.isSendModalOpen);
   };
 
+  console.log('tokensListModal modal', tokensListModal);
+
   const searchTokensHandler = (event, searchTokensData) => {
-    let filteredTokensList = filteredTokensByName(event, searchTokensData);
+    let copyTokensList = searchTokensData.tokensList.filter(function (obj) {
+      return obj.address !== initSendMultiSwapToken.address;
+    });
+
+    let filteredTokensList = filteredTokensByName(event, copyTokensList);
+
     setTokensListModal(filteredTokensList);
   };
 
@@ -485,13 +502,31 @@ export default function MultiSwapComponent() {
     }
   };
 
+  console.log('finalReceiveTokensList multiswap', finalReceiveTokensList);
+  console.log(
+    'finalReceiveTokensList initReceiveMultiSwapTokensList multiswap',
+    initReceiveMultiSwapTokensList
+  );
+
   const addReceiveTokensHandler = () => {
-    console.log('clicked');
     dispatch({
       type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING,
       payload: true,
     });
-    initReceiveMultiSwapTokensList.push(initSendMultiSwapToken);
+
+    for (let i = finalReceiveTokensList.length - 1; i >= 0; i--) {
+      for (let j = 0; j < initReceiveMultiSwapTokensList.length; j++) {
+        if (
+          finalReceiveTokensList[i] &&
+          finalReceiveTokensList[i].address === initReceiveMultiSwapTokensList[j].address
+        ) {
+          finalReceiveTokensList.splice(i, 1);
+        }
+      }
+    }
+
+    console.log('finalReceiveTokensList test filtered', finalReceiveTokensList);
+
     dispatch({
       type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING,
       payload: false,
