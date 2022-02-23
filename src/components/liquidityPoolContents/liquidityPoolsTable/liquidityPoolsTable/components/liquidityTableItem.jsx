@@ -1,57 +1,61 @@
 import React, { useEffect, useState } from 'react';
+import Web3 from 'web3';
 import {
+  APR,
+  AprName,
+  AprBlock,
+  AprValue,
   TableItem,
+  ItemIndex,
   ItemHeader,
   InfoButton,
   TokenImage,
-  ItemIndex,
-  TokenImages,
   TokenNames,
-  AprBlock,
-  AprName,
   ItemButtons,
-  APR,
-  AprValue,
-  BalanceValue,
+  TokenImages,
   ResetButton,
+  BalanceValue,
   MenuPopoverBoxTitle,
 } from '../styledComponents';
-import { SvgComponent } from '../../../svgComponent/svgComponent';
+import chroma from 'chroma-js';
+import Select from 'react-select';
+import {
+  Balance,
+  ModalLink,
+  ModalInput,
+  InputBlock,
+  ChangeToken,
+  SelectTitle,
+  BlockTokens,
+  ButtonsBlock,
+  LinksContainer,
+  ModalLinkRight,
+  BlockTokenName,
+  SupplyTokenButton,
+} from '../../../uniV2/StyledComponents';
+import { data } from '../../../../../globalStore';
+import { Link, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   addIconsGasPrices,
   numberWithCommas,
 } from '../../../../../commonFunctions/commonFunctions';
-import ModalContainer from '../../../../common/modalContainer/modalContainer';
 import { SelectWrapper } from '../../../styledComponents';
-import {
-  ButtonsBlock,
-  ChangeToken,
-  InputBlock,
-  LinksContainer,
-  ModalInput,
-  ModalLink,
-  ModalLinkRight,
-  SelectTitle,
-  SupplyTokenButton,
-  Balance,
-  BlockTokenName,
-  BlockTokens,
-} from '../../../uniV2/StyledComponents';
-import Select from 'react-select';
-import { Link, useParams } from 'react-router-dom';
-
-import { SelectOptionsWithJSX } from '../../../HOC/selectOptionsWithJSX';
-import Web3 from 'web3';
 import ROUTERABI from '../../../../../abi/UniRouterV2.json';
-import TOKENDECIMALSABI from '../../../../../abi/TokenDecomals.json';
-import { CommonSubmitButton } from '../../../../../screens/TokenPage/components/styledComponentsCommon';
-import { GasMenuItem } from '../../../../gasDropDownMenu/styles';
-import { useDispatch, useSelector } from 'react-redux';
-import { data } from '../../../../../globalStore';
-import fastDice from '../../../../../assets/icons/fastDice-icon.svg';
-import middleDice from '../../../../../assets/icons/middleDice-icon.svg';
-import slowDice from '../../../../../assets/icons/slowDice-icon.svg';
 import actionTypes from '../../../../../constants/actionTypes';
+import { GasMenuItem } from '../../../../gasDropDownMenu/styles';
+import { SvgComponent } from '../../../svgComponent/svgComponent';
+import TOKENDECIMALSABI from '../../../../../abi/TokenDecomals.json';
+import fastDice from '../../../../../assets/icons/fastDice-icon.svg';
+import fastDiceDark from '../../../../../assets/icons/fastDiceNight-icon.svg';
+import slowDice from '../../../../../assets/icons/slowDice-icon.svg';
+import slowDiceDark from '../../../../../assets/icons/slowDiceNight-icon.svg';
+import { SelectOptionsWithJSX } from '../../../HOC/selectOptionsWithJSX';
+import middleDice from '../../../../../assets/icons/middleDice-icon.svg';
+import middleDiceDark from '../../../../../assets/icons/middleDiceNight-icon.svg';
+import ModalContainer from '../../../../common/modalContainer/modalContainer';
+import { CommonSubmitButton } from '../../../../../screens/TokenPage/components/styledComponentsCommon';
+import Addresses from '../../../../../contractAddresses';
 
 export const LiquidityTableItem = ({
   item,
@@ -63,36 +67,42 @@ export const LiquidityTableItem = ({
   addLiquidity,
   addLiquidityNormal,
 }) => {
-  console.log('protocolType', item.protocol);
-  const GasPrices = useSelector((state) => state.gesData.gasPriceData);
-  const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
-  const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
-  const addIconsGasPricesWithIcons = addIconsGasPrices(GasPrices, fastDice, middleDice, slowDice);
   const dispatch = useDispatch();
   const address = useParams().address;
 
-  const [isModalVisible, setIsModalVisible] = useState('');
-  const [modalType, setModalType] = useState('');
-  //''
-  //addLiquidity
-  //slippageTolerance
-  const [selectedModal, setSelectedModal] = useState('');
+  const GasPrices = useSelector((state) => state.gesData.gasPriceData);
+  const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
+  const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
+  const allTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
 
-  const [outValue, setOutValue] = useState('');
+  const gasPricesWithIcons = addIconsGasPrices(
+    GasPrices,
+    fastDice,
+    middleDice,
+    slowDice,
+    fastDiceDark,
+    middleDiceDark,
+    slowDiceDark,
+    theme
+  );
+
+  // const [modalType, setModalType] = useState('');
+  // //''
+  // //addLiquidity
+  // //slippageTolerance
   const [inValue, setInValue] = useState('');
-
+  const [outValue, setOutValue] = useState('');
+  const [selected, setSelected] = useState('');
+  const [singleTokenValue, setSingleTokenValue] = useState();
+  const [inputType, setInputType] = useState('single');
+  const [selectedModal, setSelectedModal] = useState('');
+  const [isModalVisible, setIsModalVisible] = useState('');
+  const [supplyTokenBalance, setSupplyTokenBalance] = useState('');
   const [addLiquidityNormalTokenA, setAddLiquidityNormalTokenA] = useState('');
   const [addLiquidityNormalTokenB, setAddLiquidityNormalTokenB] = useState('');
-
   const [tokenAddress, setTokenAddress] = useState('0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
-  const [singleTokenValue, setSingleTokenValue] = useState();
 
-  // const [allTokens, setAllTokens] = useState([]);
-  const [inputType, setInputType] = useState('single');
-
-  const [selected, setSelected] = useState('');
-
-  const [supplyTokenBalance, setSupplyTokenBalance] = useState('');
+  const updatedOptions = SelectOptionsWithJSX(allTokensList);
 
   useEffect(() => {
     const getBalance = async () => {
@@ -149,8 +159,8 @@ export const LiquidityTableItem = ({
           : state.menuIsOpen
           ? 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'
           : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-        backdropFilter: 'blur(35px)',
-        mixBlendMode: 'normal',
+        // backdropFilter: 'blur(35px)',
+        // mixBlendMode: 'normal',
         border: 'none',
         borderRadius: state.menuIsOpen ? '7px 7px 0 0' : '7px',
         color: '#464C52',
@@ -184,40 +194,44 @@ export const LiquidityTableItem = ({
       fontSize: '18px',
       background: state.isSelected ? 'black' : 'transparent',
     }),
-    option: (provided, state) => {
-      return {
-        ...provided,
-        ':hover': {
-          background: '#FFFFFF',
-          boxShadow: 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
-          borderRadius: '7px',
-        },
-        // -------------------------------->
-        background: state.isSelected ? 'rgba(255, 255, 255, 0.16)' : 'transparent',
-        // -------------------------------->
-        boxShadow: state.isSelected && '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',
-        // -------------------------------->
-        display: 'flex',
-        color: '#616161',
-        mixBlendMode: 'normal',
-        height: state.isSelected ? '43px' : '60px',
-        padding: '5px 10px',
-        fontSize: '18px',
+    option: (provided, state) => ({
+      ...provided,
+      ':hover': {
+        background: theme ? '#FFFFFF' : 'rgba(31, 38, 92, 0.24)',
+        boxShadow: theme
+          ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+          : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
         borderRadius: '7px',
-      };
-    },
+      },
+      // -------------------------------->
+      background: theme
+        ? state.isSelected
+          ? 'rgba(255, 255, 255, 0.16)'
+          : 'transparent'
+        : state.isSelected
+        ? 'rgba(31, 38, 92, 0.24)'
+        : 'transparent',
+      // -------------------------------->
+      boxShadow: theme
+        ? state.isSelected && '7px 21px 22px -15px rgba(51, 78, 131, 0.17)'
+        : state.isSelected && 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+      // -------------------------------->
+      color: 'red',
+      display: 'flex',
+      // mixBlendMode: 'normal',
+      height: state.isSelected ? '43px' : '60px',
+      padding: '5px 10px',
+      fontSize: '18px',
+      borderRadius: '7px',
+    }),
   };
-
-  const updatedOptions = SelectOptionsWithJSX(AllTokens);
 
   async function loadWeb3() {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
-      console.log('qwerty1', window.web3);
       await window.ethereum.enable();
     } else if (window.web3) {
       window.web3 = new Web3(window.web3.currentProvider);
-      console.log('qwerty2', window.web3);
     } else {
       window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
     }
@@ -243,7 +257,7 @@ export const LiquidityTableItem = ({
     const NewContract = new web3.eth.Contract(
       ROUTERABI,
       //UNISWAP V2 contract address
-      '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+      item.protocol === 'Sushiswap' ? Addresses.sushiRouter : Addresses.uniRouter
     );
     if (!isNaN(value)) {
       if (inputId === 'firstInput') {
@@ -251,25 +265,11 @@ export const LiquidityTableItem = ({
           .getAmountsOut((value * 10 ** tokenDecimal1).toString(), [token1, token2])
           .call();
 
-        console.log('tokenDecimal convertedValue', convertedValue);
-
         setAddLiquidityNormalTokenA((value * 10 ** tokenDecimal1).toString());
         setAddLiquidityNormalTokenB(convertedValue[1]);
 
-        console.log(
-          'tokenDecimal AddLiquidityNormalTokenA',
-          (value * 10 ** tokenDecimal1).toString()
-        );
-        console.log('tokenDecimal AddLiquidityNormalTokenB', convertedValue[1]);
-
         setOutValue(+convertedValue[1] / 10 ** tokenDecimal2);
         setInValue(value);
-
-        console.log(
-          'tokenDecimal +convertedValue[1] / 10 ** tokenDecimal2',
-          +convertedValue[1] / 10 ** tokenDecimal2
-        );
-        console.log('tokenDecimal setInValue', value);
       }
       if (inputId === 'secondInput') {
         const convertedValue = await NewContract.methods
@@ -321,7 +321,7 @@ export const LiquidityTableItem = ({
 
     const NewContract = new web3.eth.Contract(
       ROUTERABI,
-      '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+      item.protocol === 'Sushiswap' ? Addresses.sushiRouter : Addresses.uniRouter
     );
     if (tokenAddress !== token1) {
       const convertedValue1 = await NewContract.methods
@@ -396,8 +396,8 @@ export const LiquidityTableItem = ({
           title={selectedModal}
           isOpen={isModalVisible}
           closeModal={setIsModalVisible}>
-          <SelectWrapper>
-            <SelectTitle>{'Supply a token'}</SelectTitle>
+          <SelectWrapper isLightTheme={theme}>
+            <SelectTitle isLightTheme={theme}>{'Supply a token'}</SelectTitle>
             <Select
               defaultValue={selectInitialValue}
               styles={selectStyle}
@@ -417,7 +417,9 @@ export const LiquidityTableItem = ({
                   setInputType('single');
                 }}
               />
-              <Balance>{`Balance: ${parseFloat(supplyTokenBalance).toFixed(2)}`}</Balance>
+              <Balance isLightTheme={theme}>{`Balance: ${parseFloat(supplyTokenBalance).toFixed(
+                2
+              )}`}</Balance>
             </InputBlock>
             {/*<ButtonsBlock>*/}
             {/*  <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>*/}
@@ -425,14 +427,14 @@ export const LiquidityTableItem = ({
             <ButtonsBlock>
               <ChangeToken>{'Or'}</ChangeToken>
             </ButtonsBlock>
-            <SelectTitle>{'Supply a token'}</SelectTitle>
+            <SelectTitle isLightTheme={theme}>{'Supply a token'}</SelectTitle>
             {/*input-------------------->*/}
             <InputBlock>
               <BlockTokens>
                 <div>
                   <TokenImage src={`https://ethplorer.io${item.token0.image}`} />
                 </div>
-                <BlockTokenName>{item.token0.name}</BlockTokenName>
+                <BlockTokenName isLightTheme={theme}>{item.token0.name}</BlockTokenName>
               </BlockTokens>
               <ModalInput
                 value={inValue}
@@ -452,7 +454,7 @@ export const LiquidityTableItem = ({
                   setSingleTokenValue('');
                 }}
               />
-              <Balance>{`Balance: ${5}`}</Balance>
+              <Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>
             </InputBlock>
             {/*input-------------------->*/}
             {/*input-------------------->*/}
@@ -461,7 +463,7 @@ export const LiquidityTableItem = ({
                 <div>
                   <TokenImage src={`https://ethplorer.io${item.token1.image}`} />
                 </div>
-                <BlockTokenName>{item.token1.name}</BlockTokenName>
+                <BlockTokenName isLightTheme={theme}>{item.token1.name}</BlockTokenName>
               </BlockTokens>
               <ModalInput
                 value={outValue}
@@ -481,21 +483,23 @@ export const LiquidityTableItem = ({
                   setSingleTokenValue('');
                 }}
               />
-              <Balance>{`Balance: ${5}`}</Balance>
+              <Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>
             </InputBlock>
             {/*input-------------------->*/}
             <LinksContainer>
-              <ModalLink onClick={slippageHandler} href={'#'}>
+              <ModalLink isLightTheme={theme} onClick={slippageHandler} href={'#'}>
                 {'Transaction speed'}
               </ModalLink>
-              <ModalLinkRight href={'#'}>
+              <ModalLinkRight onClick={slippageHandler} isLightTheme={theme} href={'#'}>
                 {`${selectedGasPrice.length > 0 ? selectedGasPrice : proposeGasPrice} Gwei`}
               </ModalLinkRight>
               {/*<ModalLink href={'#'}>{'Slippage Tolerance'}</ModalLink>*/}
               {/*<ModalLinkRight href={'#'}>ddd</ModalLinkRight>*/}
             </LinksContainer>
             <ButtonsBlock>
-              <SupplyTokenButton onClick={inputsHandler}>{`Supply tokens`}</SupplyTokenButton>
+              <SupplyTokenButton
+                isLightTheme={theme}
+                onClick={inputsHandler}>{`Supply tokens`}</SupplyTokenButton>
             </ButtonsBlock>
           </SelectWrapper>
         </ModalContainer>
@@ -505,7 +509,7 @@ export const LiquidityTableItem = ({
         <ModalContainer modalType={isModalVisible} theme={theme} closeModal={setIsModalVisible}>
           <MenuPopoverBoxTitle isLightTheme={theme}>{'Realtime Gas Prices'}</MenuPopoverBoxTitle>
           <div style={{ marginBottom: '22px' }}>
-            {addIconsGasPricesWithIcons.map((option) => (
+            {gasPricesWithIcons.map((option) => (
               <div
                 style={{ display: 'flex', flexDirection: 'column' }}
                 selected={option.label === selected}
@@ -529,12 +533,14 @@ export const LiquidityTableItem = ({
             <CommonSubmitButton
               width={'189px'}
               isLightTheme={theme}
-              onClick={() => {
-                setIsModalVisible('advancedSettings');
-              }}>
+              // onClick={() => {
+              //   setIsModalVisible('advancedSettings');
+              // }}
+            >
               {'Advanced settings'}
             </CommonSubmitButton>
           </div>
+          {/*//TODO:slippageTolerance (doesn't implemented yet)*/}
           {/*<MenuPopoverBoxTitle isLightTheme={theme}>{'Slippage Tolerance'}</MenuPopoverBoxTitle>*/}
           {/*<CommonHoverButtonTrans*/}
           {/*  height={'45px'}*/}

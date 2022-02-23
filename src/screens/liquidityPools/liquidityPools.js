@@ -138,29 +138,31 @@ export default function LiquidityPools() {
   }, [accountAddress]);
 
   useEffect(() => {
-    async function getData() {
-      let fetchedTokens;
-      await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {}).then(async (response) => {
-        setAllTokens(response.data.records);
-        fetchedTokens = response.data.records;
-      });
-      await axios
-        .get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
-        .then(async (response) => {
-          let data = response.data.tokens;
-          let tokens = fetchedTokens.map((token) => ({
-            ...token,
-            logoURI: data.find((x) => x.address === token.address)
-              ? data.find((x) => x.address === token.address).logoURI
-              : tokenURIs.find((x) => x.address === token.address).logoURI,
-          }));
-          setAllTokens(tokens);
-        })
-        .catch((res) => {
-          console.log('liquidity pools Sushiswap-V2 returns error', res);
-        });
-    }
-    getData();
+    // async function getData() {
+    //   console.log('getData call amounts');
+    //   let fetchedTokens;
+    //   await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {}).then(async (response) => {
+    //     setAllTokens(response.data.records);
+    //     fetchedTokens = response.data.records;
+    //   });
+    //   await axios
+    //     .get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
+    //     .then(async (response) => {
+    //       let data = response.data.tokens;
+    //       let tokens = fetchedTokens.map((token) => ({
+    //         ...token,
+    //         logoURI: data.find((x) => x.address === token.address)
+    //           ? data.find((x) => x.address === token.address).logoURI
+    //           : tokenURIs.find((x) => x.address === token.address).logoURI,
+    //       }));
+    //       setAllTokens(tokens);
+    //     })
+    //     .catch((res) => {
+    //       console.log('liquidity pools Sushiswap-V2 returns error', res);
+    //     });
+    // }
+    // getData();
+    dispatch({ type: actionTypes.SET_RECEIVE_TOKENS_LIST });
   }, []);
 
   const addNewPoolsPortion = (array, elementAmount) => {
@@ -201,7 +203,6 @@ export default function LiquidityPools() {
           <>
             <PoolsTitle isLightTheme={isLightTheme}>{'My pools'}</PoolsTitle>
             <InvestPoolsTable
-              AllTokens={AllTokens}
               data={poolsLimitedAmount}
               addLiquidity={addLiquidity}
               removeLiquidity={removeLiquidity}

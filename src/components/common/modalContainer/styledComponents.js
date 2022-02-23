@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import close from '../../../assets/icons/close_nft.svg';
+import closeDark from '../../../assets/icons/close_nft_night.svg';
 
 export const ShadowBlock = styled.div`
   position: fixed;
@@ -19,9 +20,9 @@ export const MainContent = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
-  padding: 18px 30px 30px 30px;
+  padding: 18px 30px 0 30px;
   max-width: ${(props) => (props.modalType === 'slippageTolerance' ? '375px' : '830px')};
-  height: ${(props) => (props.modalType === 'slippageTolerance' ? '491px' : '867px')};
+  height: ${(props) => (props.modalType === 'slippageTolerance' ? '491px' : '800px')};
   transform: translate(-50%, -50%);
   background: ${(props) =>
     props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)'};
@@ -66,7 +67,7 @@ export const CloseButton = styled.div`
   width: 40px;
   height: 40px;
   transform: ${(props) => (props.isOpen ? 'rotate(0deg)' : 'rotate(180deg)')};
-  background: url(${close}) no-repeat center center;
+  background: url(${(props) => (props.isLightTheme ? close : closeDark)}) no-repeat center center;
   margin-left: 9px;
   cursor: pointer;
   background-color: ${(props) => (props.isLightTheme ? '#ffffff' : 'rgba(68, 83, 173, 0.1)')};

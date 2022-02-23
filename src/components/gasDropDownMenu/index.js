@@ -24,7 +24,11 @@ export default function GasDropdownMenuHeader({ isLightTheme }) {
     GasPrices,
     FastGweiGasIcon,
     MiddleGweiGasIcon,
-    SlowGweiGasIcon
+    SlowGweiGasIcon,
+    FastGweiGasIcon,
+    MiddleGweiGasIcon,
+    SlowGweiGasIcon,
+    isLightTheme
   );
   const anchorRef = useRef(null);
   const [open, setopen] = useState(false);
