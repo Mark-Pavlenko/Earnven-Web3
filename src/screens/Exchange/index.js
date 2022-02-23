@@ -524,30 +524,9 @@ export default function SwapComponent() {
       ...selectReceiveToken,
       address: selectReceiveToken.address,
     });
-    //old
-    // setprotocolsRateList([]);
-    // setselectedRate(null);
-    // setSources([]);
   };
 
-  // console.log('token receive swap tokenReceiveUSDCurrency', tokenReceiveUSDCurrency);
-
-  //---------------------
-
-  //convert one token to another
-  //now - mock Uniswap V2 Contract address
-
   const convertExchangeTokensCourse = async (convertTokensData) => {
-    // console.log('convertTokensData single swap', convertTokensData);
-    // console.log(
-    //   ' convertTokensData single swap tokenDecimal token1',
-    //   convertTokensData.sendTokenForExchangeAddress
-    // );
-    // console.log(
-    //   ' convertTokensData single swap tokenDecimal token2',
-    //   convertTokensData.receiveTokenForExchangeAddress
-    // );
-
     await loadWeb3();
     const web3 = window.web3;
 
@@ -570,9 +549,6 @@ export default function SwapComponent() {
         return res;
       });
 
-    //console.log('convertTokensData single swap tokenDecimal 1', tokenDecimal1);
-    //console.log('convertTokensData single swap tokenDecimal 2', tokenDecimal2);
-
     const NewContract = new web3.eth.Contract(
       ROUTERABI,
       //Sushiswap contract address - should be changed dynamically
@@ -588,10 +564,6 @@ export default function SwapComponent() {
           ])
           .call();
 
-        //console.log('initLoad convertTokensData', convertedValue);
-
-        // setReceiveTokenForExchangeAmount(+convertedValue[1] / 10 ** tokenDecimal2);
-
         convertReceiveTokenToUSDCurrency({
           amount: +convertedValue[1] / 10 ** tokenDecimal2,
           address: convertTokensData.receiveTokenForExchangeAddress,
@@ -604,16 +576,7 @@ export default function SwapComponent() {
           ])
           .call();
 
-        //console.log('chooseSendToken convertTokensData', convertedValue);
-
         setInitConvertReceiveTokenAmount((+convertedValue[1] / 10 ** tokenDecimal2).toFixed(3));
-
-        // setReceiveTokenForExchangeAmount(+convertedValue[1] / 10 ** tokenDecimal2);
-
-        // convertReceiveTokenToUSDCurrency({
-        //   amount: +convertedValue[1] / 10 ** tokenDecimal2,
-        //   address: convertTokensData.receiveTokenForExchangeAddress,
-        // });
       } else if (convertTokensData.inputId === 'sendInput') {
         const convertedValue = await NewContract.methods
           .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
@@ -621,12 +584,6 @@ export default function SwapComponent() {
             convertTokensData.receiveTokenForExchangeAddress,
           ])
           .call();
-
-        //console.log('convertTokensData convertedValue', convertedValue);
-        // console.log(
-        //   'convertTokensData receive input value ',
-        //   +convertedValue[1] / 10 ** tokenDecimal2
-        // );
 
         setReceiveTokenForExchangeAmount(+convertedValue[1] / 10 ** tokenDecimal2);
 
@@ -641,12 +598,6 @@ export default function SwapComponent() {
             convertTokensData.receiveTokenForExchangeAddress,
           ])
           .call();
-
-        // console.log('convertTokensData convertedValue', convertedValue);
-        // console.log(
-        //   'convertTokensData receive input value ',
-        //   +convertedValue[1] / 10 ** tokenDecimal2
-        // );
 
         setSendTokenForExchangeAmount(+convertedValue[1] / 10 ** tokenDecimal2);
 
@@ -666,46 +617,29 @@ export default function SwapComponent() {
     }
   };
 
-  const triggerSendTokenInputHandlers = (value, initSendTokenSwap) => {
-    setSendTokenForExchangeAmount(value);
-
-    // console.log('initSendTokenSwap handle value', value);
-    // console.log('initSendTokenSwap handle', initSendTokenSwap);
+  const triggerTokenInputHandler = (value, tokenForSwap, chosenTokenType) => {
+    console.log('chosenTokenType', chosenTokenType.isSendTokenSwapped);
 
     convertSendTokenToUSDCurrency({
       amount: value,
-      ...initSendTokenSwap,
+      ...tokenForSwap,
     });
+
+    const isLimitExceeded = checkIfExchangedTokenLimitIsExceeded(value, initSendTokenSwap.balance);
+    setIsTokensLimitExceeded(isLimitExceeded);
+
     convertExchangeTokensCourse({
       inputId: 'sendInput',
       tokenAmount: parseFloat(value),
       sendTokenForExchangeAddress: initSendTokenSwap.address,
       receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
     });
-    const isLimitExceeded = checkIfExchangedTokenLimitIsExceeded(value, initSendTokenSwap.balance);
-    setIsTokensLimitExceeded(isLimitExceeded);
-  };
 
-  const triggerReceiveTokenInputHandlers = (value, initReceiveTokenSwap) => {
-    console.log('single init value', value);
-    setReceiveTokenForExchangeAmount(value);
-
-    // console.log('initReceiveTokenSwap handle value', value);
-    // console.log('initReceiveTokenSwap handle', initReceiveTokenSwap);
-
-    convertReceiveTokenToUSDCurrency({
-      amount: value,
-      ...initReceiveFirstTokenSwap,
-    });
-    convertExchangeTokensCourse({
-      inputId: 'receiveInput',
-      tokenAmount: parseFloat(value),
-      sendTokenForExchangeAddress: initSendTokenSwap.address,
-      receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
-    });
-
-    const isLimitExceeded = checkIfExchangedTokenLimitIsExceeded(value, initSendTokenSwap.balance);
-    setIsTokensLimitExceeded(isLimitExceeded);
+    if (chosenTokenType.isSendTokenSwapped === true) {
+      setSendTokenForExchangeAmount(value);
+    } else {
+      setReceiveTokenForExchangeAmount(value);
+    }
   };
 
   return (
@@ -775,7 +709,9 @@ export default function SwapComponent() {
                       placeholder="0.0"
                       value={sendTokenForExchangeAmount}
                       onChange={(e) => {
-                        triggerSendTokenInputHandlers(e.target.value, initSendTokenSwap);
+                        triggerTokenInputHandler(e.target.value, initSendTokenSwap, {
+                          isSendTokenSwapped: true,
+                        });
                       }}
                     />
                   </SendTokensChooseButton>
@@ -1005,15 +941,9 @@ export default function SwapComponent() {
                     placeholder="0.0"
                     value={receiveTokenForExchangeAmount}
                     onChange={(event) => {
-                      triggerReceiveTokenInputHandlers(
-                        event.target.value,
-                        initReceiveFirstTokenSwap
-                      );
-                      // setReceiveTokenForExchangeAmount(e.target.value);
-                      // convertReceiveTokenToUSDCurrency({
-                      //   amount: e.target.value,
-                      //   ...initReceiveFirstTokenSwap,
-                      // });
+                      triggerTokenInputHandler(event.target.value, initReceiveFirstTokenSwap, {
+                        isSendTokenSwapped: false,
+                      });
                     }}
                   />
                 </SendTokensChooseButton>
