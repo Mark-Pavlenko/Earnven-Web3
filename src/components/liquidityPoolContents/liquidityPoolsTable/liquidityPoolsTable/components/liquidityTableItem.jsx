@@ -55,6 +55,7 @@ import middleDice from '../../../../../assets/icons/middleDice-icon.svg';
 import middleDiceDark from '../../../../../assets/icons/middleDiceNight-icon.svg';
 import ModalContainer from '../../../../common/modalContainer/modalContainer';
 import { CommonSubmitButton } from '../../../../../screens/TokenPage/components/styledComponentsCommon';
+import Addresses from '../../../../../contractAddresses';
 
 export const LiquidityTableItem = ({
   item,
@@ -72,6 +73,7 @@ export const LiquidityTableItem = ({
   const GasPrices = useSelector((state) => state.gesData.gasPriceData);
   const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
   const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
+  const allTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
 
   const gasPricesWithIcons = addIconsGasPrices(
     GasPrices,
@@ -100,7 +102,7 @@ export const LiquidityTableItem = ({
   const [addLiquidityNormalTokenB, setAddLiquidityNormalTokenB] = useState('');
   const [tokenAddress, setTokenAddress] = useState('0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
 
-  const updatedOptions = SelectOptionsWithJSX(AllTokens);
+  const updatedOptions = SelectOptionsWithJSX(allTokensList);
 
   useEffect(() => {
     const getBalance = async () => {
@@ -157,8 +159,8 @@ export const LiquidityTableItem = ({
           : state.menuIsOpen
           ? 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'
           : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-        backdropFilter: 'blur(35px)',
-        mixBlendMode: 'normal',
+        // backdropFilter: 'blur(35px)',
+        // mixBlendMode: 'normal',
         border: 'none',
         borderRadius: state.menuIsOpen ? '7px 7px 0 0' : '7px',
         color: '#464C52',
@@ -192,56 +194,44 @@ export const LiquidityTableItem = ({
       fontSize: '18px',
       background: state.isSelected ? 'black' : 'transparent',
     }),
-    option: (provided, state) => {
-      return {
-        ...provided,
-        ':hover': {
-          background: '#FFFFFF',
-          boxShadow: 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
-          borderRadius: '7px',
-        },
-        // -------------------------------->
-        background: state.isSelected ? 'rgba(255, 255, 255, 0.16)' : 'transparent',
-        // -------------------------------->
-        boxShadow: state.isSelected && '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',
-        // -------------------------------->
-        display: 'flex',
-        color: state.menuIsOpen ? (theme ? 'black' : 'white') : theme ? 'black' : 'white',
-        mixBlendMode: 'normal',
-        height: state.isSelected ? '43px' : '60px',
-        padding: '5px 10px',
-        fontSize: '18px',
+    option: (provided, state) => ({
+      ...provided,
+      ':hover': {
+        background: theme ? '#FFFFFF' : 'rgba(31, 38, 92, 0.24)',
+        boxShadow: theme
+          ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+          : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
         borderRadius: '7px',
-      };
-    },
+      },
+      // -------------------------------->
+      background: theme
+        ? state.isSelected
+          ? 'rgba(255, 255, 255, 0.16)'
+          : 'transparent'
+        : state.isSelected
+        ? 'rgba(31, 38, 92, 0.24)'
+        : 'transparent',
+      // -------------------------------->
+      boxShadow: theme
+        ? state.isSelected && '7px 21px 22px -15px rgba(51, 78, 131, 0.17)'
+        : state.isSelected && 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+      // -------------------------------->
+      color: 'red',
+      display: 'flex',
+      // mixBlendMode: 'normal',
+      height: state.isSelected ? '43px' : '60px',
+      padding: '5px 10px',
+      fontSize: '18px',
+      borderRadius: '7px',
+    }),
   };
 
-  // (styles, { data, isDisabled, isFocused, isSelected }) => {
-  //   return {
-  //     ...styles,
-  //     backgroundColor: isLightTheme
-  //       ? isSelected
-  //         ? '#ffffff'
-  //         : null
-  //       : isSelected
-  //       ? '#1F265C'
-  //       : null,
-  //     boxShadow: isSelected ? 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)' : null,
-  //     fontSize: 14,
-  //     color: isSelected ? (isLightTheme ? 'black' : '#8F86FF') : isLightTheme ? 'black' : 'white',
-  //     // width: isSelected ? '150px' : '160px',
-  //     borderRadius: isSelected ? '10px' : '0',
-  //     // color: '#000000',
-  //   };
-  // },
   async function loadWeb3() {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
-      console.log('qwerty1', window.web3);
       await window.ethereum.enable();
     } else if (window.web3) {
       window.web3 = new Web3(window.web3.currentProvider);
-      console.log('qwerty2', window.web3);
     } else {
       window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
     }
@@ -267,7 +257,7 @@ export const LiquidityTableItem = ({
     const NewContract = new web3.eth.Contract(
       ROUTERABI,
       //UNISWAP V2 contract address
-      '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+      item.protocol === 'Sushiswap' ? Addresses.sushiRouter : Addresses.uniRouter
     );
     if (!isNaN(value)) {
       if (inputId === 'firstInput') {
@@ -275,25 +265,11 @@ export const LiquidityTableItem = ({
           .getAmountsOut((value * 10 ** tokenDecimal1).toString(), [token1, token2])
           .call();
 
-        console.log('tokenDecimal convertedValue', convertedValue);
-
         setAddLiquidityNormalTokenA((value * 10 ** tokenDecimal1).toString());
         setAddLiquidityNormalTokenB(convertedValue[1]);
 
-        console.log(
-          'tokenDecimal AddLiquidityNormalTokenA',
-          (value * 10 ** tokenDecimal1).toString()
-        );
-        console.log('tokenDecimal AddLiquidityNormalTokenB', convertedValue[1]);
-
         setOutValue(+convertedValue[1] / 10 ** tokenDecimal2);
         setInValue(value);
-
-        console.log(
-          'tokenDecimal +convertedValue[1] / 10 ** tokenDecimal2',
-          +convertedValue[1] / 10 ** tokenDecimal2
-        );
-        console.log('tokenDecimal setInValue', value);
       }
       if (inputId === 'secondInput') {
         const convertedValue = await NewContract.methods
@@ -345,7 +321,7 @@ export const LiquidityTableItem = ({
 
     const NewContract = new web3.eth.Contract(
       ROUTERABI,
-      '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+      item.protocol === 'Sushiswap' ? Addresses.sushiRouter : Addresses.uniRouter
     );
     if (tokenAddress !== token1) {
       const convertedValue1 = await NewContract.methods
@@ -420,7 +396,7 @@ export const LiquidityTableItem = ({
           title={selectedModal}
           isOpen={isModalVisible}
           closeModal={setIsModalVisible}>
-          <SelectWrapper>
+          <SelectWrapper isLightTheme={theme}>
             <SelectTitle isLightTheme={theme}>{'Supply a token'}</SelectTitle>
             <Select
               defaultValue={selectInitialValue}
@@ -557,12 +533,14 @@ export const LiquidityTableItem = ({
             <CommonSubmitButton
               width={'189px'}
               isLightTheme={theme}
-              onClick={() => {
-                setIsModalVisible('advancedSettings');
-              }}>
+              // onClick={() => {
+              //   setIsModalVisible('advancedSettings');
+              // }}
+            >
               {'Advanced settings'}
             </CommonSubmitButton>
           </div>
+          {/*//TODO:slippageTolerance (doesn't implemented yet)*/}
           {/*<MenuPopoverBoxTitle isLightTheme={theme}>{'Slippage Tolerance'}</MenuPopoverBoxTitle>*/}
           {/*<CommonHoverButtonTrans*/}
           {/*  height={'45px'}*/}

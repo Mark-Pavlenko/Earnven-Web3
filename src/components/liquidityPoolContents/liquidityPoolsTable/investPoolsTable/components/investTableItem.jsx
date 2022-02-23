@@ -79,6 +79,7 @@ export const InvestTableItem = ({
   const GasPrices = useSelector((state) => state.gesData.gasPriceData);
   const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
   const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
+  const allTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
 
   const addIconsGasPricesWithIcons = addIconsGasPrices(
     GasPrices,
@@ -92,10 +93,7 @@ export const InvestTableItem = ({
   );
 
   const [isModalVisible, setIsModalVisible] = useState('');
-  const [modalType, setModalType] = useState('');
-  //''
-  //addLiquidity
-  //slippageTolerance
+
   const [selectedModal, setSelectedModal] = useState('');
 
   const [outValue, setOutValue] = useState('');
@@ -107,7 +105,6 @@ export const InvestTableItem = ({
   const [tokenAddress, setTokenAddress] = useState('0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
   const [singleTokenValue, setSingleTokenValue] = useState();
 
-  const [allTokens, setAllTokens] = useState([]);
   const [inputType, setInputType] = useState('single');
 
   const [selected, setSelected] = useState('');
@@ -119,34 +116,6 @@ export const InvestTableItem = ({
     label: 'Ether',
     value: 'Ether',
   };
-
-  useEffect(() => {
-    async function getData() {
-      let fetchedTokens;
-      await axios.get(`https://api.0x.org/swap/v1/tokens`, {}).then(async (response) => {
-        setAllTokens(response.data.records);
-        fetchedTokens = response.data.records;
-      });
-      await axios
-        .get(`https://tokens.coingecko.com/uniswap/all.json`, {})
-        .then(async (response) => {
-          let data = response.data.tokens;
-          console.log('imagesTOKENS', data);
-          let tokens = fetchedTokens.map((token) => ({
-            ...token,
-            logoURI: data.find((x) => x.address === token.address)
-              ? data.find((x) => x.address === token.address).logoURI
-              : tokenURIs.find((x) => x.address === token.address).logoURI,
-          }));
-          console.log('tokensWithImages', tokens);
-          setAllTokens(tokens);
-        })
-        .catch((res) => {
-          console.log('liquidity pools Sushiswap-V2 returns error', res);
-        });
-    }
-    getData().then((r) => r);
-  }, []);
 
   useEffect(() => {
     const getBalance = async () => {
@@ -198,8 +167,8 @@ export const InvestTableItem = ({
           : state.menuIsOpen
           ? 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'
           : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-        backdropFilter: 'blur(35px)',
-        mixBlendMode: 'normal',
+        // backdropFilter: 'blur(35px)',
+        // mixBlendMode: 'normal',
         border: 'none',
         borderRadius: state.menuIsOpen ? '7px 7px 0 0' : '7px',
         color: '#464C52',
@@ -233,40 +202,46 @@ export const InvestTableItem = ({
       fontSize: '18px',
       background: state.isSelected ? 'black' : 'transparent',
     }),
-    option: (provided, state) => {
-      return {
-        ...provided,
-        ':hover': {
-          background: '#FFFFFF',
-          boxShadow: 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)',
-          borderRadius: '7px',
-        },
-        // -------------------------------->
-        background: state.isSelected ? 'rgba(255, 255, 255, 0.16)' : 'transparent',
-        // -------------------------------->
-        boxShadow: state.isSelected && '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',
-        // -------------------------------->
-        display: 'flex',
-        color: '#616161',
-        mixBlendMode: 'normal',
-        height: state.isSelected ? '43px' : '60px',
-        padding: '5px 10px',
-        fontSize: '18px',
+    option: (provided, state) => ({
+      ...provided,
+      ':hover': {
+        background: theme ? '#FFFFFF' : 'rgba(31, 38, 92, 0.24)',
+        boxShadow: theme
+          ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+          : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
         borderRadius: '7px',
-      };
-    },
+      },
+      // -------------------------------->
+      background: theme
+        ? state.isSelected
+          ? 'rgba(255, 255, 255, 0.16)'
+          : 'transparent'
+        : state.isSelected
+        ? 'rgba(31, 38, 92, 0.24)'
+        : 'transparent',
+      // -------------------------------->
+      boxShadow: theme
+        ? state.isSelected && '7px 21px 22px -15px rgba(51, 78, 131, 0.17)'
+        : state.isSelected && 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+      // -------------------------------->
+      color: 'red',
+      display: 'flex',
+      // mixBlendMode: 'normal',
+      height: state.isSelected ? '43px' : '60px',
+      padding: '5px 10px',
+      fontSize: '18px',
+      borderRadius: '7px',
+    }),
   };
 
-  const updatedOptions = SelectOptionsWithJSX(allTokens);
+  const updatedOptions = SelectOptionsWithJSX(allTokensList);
 
   async function loadWeb3() {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
-      console.log('qwerty1', window.web3);
       await window.ethereum.enable();
     } else if (window.web3) {
       window.web3 = new Web3(window.web3.currentProvider);
-      console.log('qwerty2', window.web3);
     } else {
       window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
     }
@@ -355,7 +330,7 @@ export const InvestTableItem = ({
 
     const NewContract = new web3.eth.Contract(
       ROUTERABI,
-      '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F'
+      item.protocol === 'Sushiswap' ? Addresses.sushiRouter : Addresses.uniRouter
     );
     if (tokenAddress !== token1) {
       const convertedValue1 = await NewContract.methods
@@ -444,17 +419,6 @@ export const InvestTableItem = ({
     setIsModalVisible('addLiquidity');
   };
 
-  // async function checkLiquidity(tokenA, tokenB) {
-  //   await loadWeb3();
-  //   const web3 = window.web3;
-  //   const accounts = await web3.eth.getAccounts();
-  //   var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.sushiFactory);
-  //   var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call();
-  //   var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
-  //   var qtty = await PairContract.methods.balanceOf(accounts[0]).call();
-  //   console.log('checkLiquidity', qtty);
-  // }
-
   return (
     <>
       {/*MODAL addLiquidity====================================>*/}
@@ -466,7 +430,7 @@ export const InvestTableItem = ({
           isOpen={isModalVisible}
           closeModal={setIsModalVisible}
           setIsWithdrawActive={setIsWithdrawActive}>
-          <SelectWrapper>
+          <SelectWrapper isLightTheme={theme}>
             <SelectTitle isLightTheme={theme}>{'Supply a token'}</SelectTitle>
             <Select
               defaultValue={selectInitialValue}
@@ -605,12 +569,14 @@ export const InvestTableItem = ({
             <CommonSubmitButton
               width={'189px'}
               isLightTheme={theme}
-              onClick={() => {
-                setIsModalVisible('advancedSettings');
-              }}>
+              // onClick={() => {
+              //   setIsModalVisible('advancedSettings');
+              // }}
+            >
               {'Advanced settings'}
             </CommonSubmitButton>
           </div>
+          {/*//TODO:slippageTolerance (doesn't implemented yet)*/}
           {/*<MenuPopoverBoxTitle isLightTheme={theme}>{'Slippage Tolerance'}</MenuPopoverBoxTitle>*/}
           {/*<CommonHoverButtonTrans*/}
           {/*  height={'45px'}*/}

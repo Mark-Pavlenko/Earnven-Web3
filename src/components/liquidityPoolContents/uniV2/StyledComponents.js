@@ -114,7 +114,6 @@ export const ChangeToken = styled.div`
   font-size: 16px;
   line-height: 25px;
   color: #4453ad;
-  cursor: pointer;
   margin-bottom: 20px;
 `;
 export const ButtonsBlock = styled.div`
