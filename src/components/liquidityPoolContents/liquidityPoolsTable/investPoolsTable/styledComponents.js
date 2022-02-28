@@ -39,10 +39,8 @@ export const TableItem = styled.div`
 
   @media (min-width: 175px) and (max-width: 840px) {
     &:first-child {
-      //justify-content: center;
       grid-template-columns: 50% 50%;
       grid-template-areas: 'head apr';
-      //align-items: center;
       padding: 5px 15px 0;
       font-weight: 600;
       opacity: 1;
@@ -94,6 +92,7 @@ export const HeaderApr = styled.div`
     justify-content: flex-end;
     padding-right: 100px;
     margin-bottom: 20px;
+    color: ${(props) => (props.isLightTheme ? '#1E1E20' : ' white')};
   }
 `;
 export const LPbalance = styled.div`
@@ -238,8 +237,28 @@ export const ItemButtons = styled.div`
   grid-area: buttons;
   @media (min-width: 175px) and (max-width: 840px) {
     display: grid;
-    grid-template-columns: 3fr 40px;
+    grid-template-areas:
+      'invest invest info'
+      'withdraw withdraw withdraw';
     justify-content: space-between;
+  }
+`;
+
+export const MyPoolsItemButton = styled.button`
+  height: 40px;
+  width: 150px;
+  background: ${(props) => (props.isLightTheme ? '#fff' : '#8f86ff')};
+  color: ${(props) => (props.isLightTheme ? '#4453AD' : ' white')};
+  box-shadow: inset 0 11px 21px -6px rgb(51 78 131 / 12%);
+  border-radius: 10px;
+  border: none;
+  padding: 9px 9px;
+  font-family: 'Saira', serif;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  @media (min-width: 175px) and (max-width: 840px) {
+    width: 100%;
   }
 `;
 
@@ -254,6 +273,7 @@ export const LiquidityValue = styled.div`
 export const BalanceValue = styled.div`
   grid-area: balance;
   @media (min-width: 175px) and (max-width: 840px) {
+    display: none;
     margin-bottom: 10px;
     padding-left: 20px;
   }
@@ -262,6 +282,7 @@ export const BalanceValue = styled.div`
 export const TokensValue = styled.div`
   grid-area: value;
   @media (min-width: 175px) and (max-width: 840px) {
+    display: none;
     margin-bottom: 10px;
     padding-left: 20px;
   }
@@ -284,6 +305,7 @@ export const AvailableTitle = styled.div`
   justify-content: center;
   @media (min-width: 175px) and (max-width: 840px) {
     font-width: 600;
+    color: ${(props) => (props.isLightTheme ? '#1E1E20' : ' white')};
   }
 `;
 

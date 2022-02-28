@@ -386,6 +386,19 @@ export const LiquidityTableItem = ({
     setIsModalVisible('addLiquidity');
   };
 
+  const invalidChars = ['-', '+', 'e'];
+
+  const excludeE = (e) => {
+    console.log('excludeE', e.target.value);
+    if (invalidChars.includes(e.key)) {
+      e.preventDefault();
+    } else {
+      addLiquidityToPair(item.token0.id, item.token1.id, e).then((res) => res);
+      setSingleTokenValue(e.target.value);
+      setInputType('single');
+    }
+  };
+
   return (
     <>
       {/*MODAL addLiquidity====================================>*/}
@@ -409,11 +422,7 @@ export const LiquidityTableItem = ({
                 value={singleTokenValue}
                 type="number"
                 onChange={(e) => {
-                  addLiquidityToPair(item.token0.id, item.token1.id, e.target.value).then(
-                    (res) => res
-                  );
-                  setSingleTokenValue(e.target.value);
-                  setInputType('single');
+                  excludeE(e);
                 }}
               />
               <Balance isLightTheme={theme}>{`Balance: ${parseFloat(supplyTokenBalance).toFixed(

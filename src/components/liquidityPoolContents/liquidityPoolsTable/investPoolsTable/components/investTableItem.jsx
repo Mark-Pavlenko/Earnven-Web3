@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import {
   TableItem,
   ItemHeader,
-  InvestButton,
   InfoButton,
   TokenImage,
   ItemIndex,
@@ -18,6 +17,7 @@ import {
   TokensValue,
   ResetButton,
   MenuPopoverBoxTitle,
+  MyPoolsItemButton,
 } from '../styledComponents';
 import { SvgComponent } from '../../../svgComponent/svgComponent';
 import {
@@ -45,18 +45,10 @@ import { Link, useParams } from 'react-router-dom';
 
 import { SelectOptionsWithJSX } from '../../../HOC/selectOptionsWithJSX';
 import Web3 from 'web3';
-import ERC20ABI from '../../../../../abi/ERC20.json';
 import ROUTERABI from '../../../../../abi/UniRouterV2.json';
-import FACTORYABI from '../../../../../abi/UniFactoryV2.json';
 import Addresses from '../../../../../contractAddresses';
-import axios from 'axios';
-import tokenURIs from '../../../../../screens/Exchange/tokenURIs';
 import TOKENDECIMALSABI from '../../../../../abi/TokenDecomals.json';
-import {
-  CommonSubmitButton,
-  CommonHoverButton,
-  CommonHoverButtonTrans,
-} from '../../../../../screens/TokenPage/components/styledComponentsCommon';
+import { CommonSubmitButton } from '../../../../../screens/TokenPage/components/styledComponentsCommon';
 import { GasMenuItem } from '../../../../gasDropDownMenu/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { data } from '../../../../../globalStore';
@@ -647,15 +639,15 @@ export const InvestTableItem = ({
         <BalanceValue>${numberWithCommas(parseFloat(item.balance).toFixed(2))}</BalanceValue>
         <TokensValue>${numberWithCommas(parseFloat(item.value).toFixed(2))}</TokensValue>
         <ItemButtons>
-          <CommonSubmitButton
-            width={'150px'}
+          <MyPoolsItemButton
+            style={{ gridArea: 'invest' }}
             isLightTheme={theme}
             id="Add Liquidity"
             onClick={switchModal}>
             {'Invest'}
-          </CommonSubmitButton>
-          <CommonSubmitButton
-            width={'150px'}
+          </MyPoolsItemButton>
+          <MyPoolsItemButton
+            style={{ gridArea: 'withdraw' }}
             isLightTheme={theme}
             id="Withdraw Liquidity"
             onClick={(e) => {
@@ -663,18 +655,18 @@ export const InvestTableItem = ({
               setIsWithdrawActive(true);
             }}>
             {'Withdraw'}
-          </CommonSubmitButton>
+          </MyPoolsItemButton>
           {item.protocol === 'Sushiswap' ? (
             <Link
               to={`/${address}/sushiswap/address/${item.poolDetails.token0Address}/${item.poolDetails.token1Address}`}>
-              <InfoButton isLightTheme={theme}>
+              <InfoButton style={{ gridArea: 'info' }} isLightTheme={theme}>
                 {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
               </InfoButton>
             </Link>
           ) : (
             <Link
               to={`/${address}/uniswap/address/${item.poolDetails.token0Address}/${item.poolDetails.token1Address}`}>
-              <InfoButton isLightTheme={theme}>
+              <InfoButton style={{ gridArea: 'info' }} isLightTheme={theme}>
                 {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
               </InfoButton>
             </Link>
