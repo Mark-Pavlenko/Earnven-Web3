@@ -11,7 +11,7 @@ function* eth2StakeSagaWorker(userAccountAddress) {
   const stakeUserAccount = userAccountAddress.payload;
   const response = yield call(API.getEth2StakeData, stakeUserAccount);
 
-  if (response.data.length > 0) {
+  if (response) {
     if (response.data.data.depositors.length > 0) {
       try {
         const res = response.data.data.depositors[0];
