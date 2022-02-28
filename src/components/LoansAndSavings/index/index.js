@@ -8,6 +8,8 @@ import {
   TotalTitle,
   TotalValue,
   InvestmentWrapper,
+  LoadingSpinner,
+  PortocolLoadingBlock,
 } from './styledComponents';
 import Investment from '../../common/investment/investment';
 import { useSelector } from 'react-redux';
@@ -22,18 +24,7 @@ import BalancerLogo from '../../../assets/icons/balancer.png';
 import pickleLogo from '../../../assets/icons/pickle_finance_logo.webp';
 import uniSwapLogo from '../../../assets/icons/Uniswap.webp';
 import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
-// import Ethereum2Staking from '../Ethereum2Staking';
-// import CurveFarming from '../CurveFarming';
-// import AaveStaking from '../AaveStaking';
-// import Synthetix from '../Synthetix';
-//import UniswapV2 from '../LiqudityPools/UniswapV2';
-//import ConvexStaking from '../ConvexStaking';
-//import { SnowSwapStaking } from '../SnowSwapStaking';
-// import Cream from '../Cream';
-// import CreamIronBank from '../CreamIronBankSavings';
-//import BalancerV2 from '../LiqudityPools/BalancerV2';
-//import SushiStaking from '../SushiStaking';
-//import UniStaking from '../UniStaking';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function index({ accountAddress }) {
   //save conditions of open/close investment blocks
@@ -90,6 +81,9 @@ export default function index({ accountAddress }) {
   //sushiSwapLP token
   const SushiPoolsData = useSelector((state) => state.sushiSwap.sushiSwapLPData);
   const SushiV2Total = useSelector((state) => state.sushiSwap.sushiSwapLPTotal);
+  const issushiSwapLpIsLoading = useSelector((state) => state.sushiSwap.sushiSwapLpIsLoading);
+
+  //Sushi Staking
   const sushiStakeData = useSelector((state) => state.sushiStaking.sushiStakeData);
   const sushiStakeTotal = useSelector((state) => state.sushiStaking.sushiStakeTotal);
 
@@ -100,6 +94,7 @@ export default function index({ accountAddress }) {
   //liquity
   const liquityTokenData = useSelector((state) => state.liquityToken.liquityTokenData); //saga
   const liquityTokenTotal = useSelector((state) => state.liquityToken.liquityTokenTotal); //saga
+  const isliquityTokenIsLoading = useSelector((state) => state.liquityToken.liquityTokenIsLoading);
   //if need create svg file on later
   const liquityImageUrl =
     'https://assets.coingecko.com/coins/images/14665/thumb/200-lqty-icon.png?1617631180';
@@ -108,8 +103,10 @@ export default function index({ accountAddress }) {
   const CrvStakingTokenTotal = useSelector((state) => state.curveStaking.curveStakingTotal);
   const curveToken = useSelector((state) => state.curveToken.curveTokenData); //saga
   const curveTokenTotal = useSelector((state) => state.curveToken.curveTokenTotal); //saga
+
   const curveLpToken = useSelector((state) => state.curveLpToken.curveLpTokenData);
   const curveLpTokenTotal = useSelector((state) => state.curveLpToken.curveLpTokenTotal);
+  const iscurveLpTokenIsLoading = useSelector((state) => state.curveLpToken.curveLpTokenIsLoading);
 
   //AAVE -- Aave protocol not moved to saga so using from useEffect for now
   const AaveStakingData = useSelector((state) => state.AaveStaking.AaveStakingData); //saga
@@ -133,6 +130,7 @@ export default function index({ accountAddress }) {
   //SnowSwap token
   const snowSwapData = useSelector((state) => state.snowSwap.snowSwanData);
   const snowSwapTotal = useSelector((state) => state.snowSwap.snowSwapTotal);
+  const issnowSwapIsLoading = useSelector((state) => state.snowSwap.snowSwapIsLoading);
 
   //CreamIronBank
   const creamIronBankData = useSelector((state) => state.creamIronBank.creamIronBankData);
@@ -143,7 +141,10 @@ export default function index({ accountAddress }) {
   //balancer V2
   //balancerV2
   const balancerV2lp = useSelector((state) => state.balancerV2lp.balancerV2lp); //saga
-  const balancerV2tot = useSelector((state) => state.balancerV2lp.balancerV2tot); //don't put to redux separately. Needs to take from object
+  const balancerV2tot = useSelector((state) => state.balancerV2lp.balancerV2tot); //
+  const isbalancerProtocolisLoading = useSelector(
+    (state) => state.balancerV2lp.balancerProtocolisLoading
+  );
   //pickle
   // const pickeStake = useSelector((state) => state.pickeStake.pickeStake); //saga
   // const pickleStakeTotal = useSelector((state) => state.pickeStake.pickleStakeTotal); //saga
@@ -152,6 +153,10 @@ export default function index({ accountAddress }) {
 
   //uniswap (need to get total value from the object and put in redux separately)
   const uniswapV2lp = useSelector((state) => state.uniswapV2lp.uniswapV2lp); //saga
+  const isuniswapProtocolisLoading = useSelector(
+    (state) => state.uniswapV2lp.uniswapProtocolisLoading
+  ); //saga boolean
+
   const uniswapV2stake = useSelector((state) => state.uniswapV2stake.uniswapV2stake);
   const uniswapV2stakeTotal = useSelector((state) => state.uniswapV2stake.uniswapV2stakeTotal);
 
@@ -181,10 +186,11 @@ export default function index({ accountAddress }) {
             curveLpToken.length > 0 ||
             snowSwapData.length > 0 ||
             liquityTokenData.length > 0 ||
-            uniswapV2lp.length > 0,
+            uniswapV2lp.length > 0 ||
+            balancerV2lp.length > 0,
         }}>
         <Header>
-          <Title isLightTheme={theme}>{'Liquidity pools 111'}</Title>
+          <Title isLightTheme={theme}>{'Liquidity pools'}</Title>
           <ToggleButton onClick={poolsHandler} isOpen={isPoolsOpen} />
         </Header>
         <div style={{ padding: '0 29px 20px 26px', marginBottom: '20px' }}>
@@ -207,180 +213,263 @@ export default function index({ accountAddress }) {
         </div>
         {isPoolsOpen && (
           <React.Fragment>
-            {/* Sushiswap Protocol */}
-            {SushiPoolsData.length > 0 ? (
-              <React.Fragment>
-                <img
-                  src={SushiSwapLogo}
-                  style={{
-                    height: '20px',
-                    marginTop: '',
-                    marginLeft: '15px',
-                    display: 'inline-block',
-                  }}
-                  alt=""
-                />
-                Sushiswap
-                {SushiPoolsData
-                  ? SushiPoolsData.map((object) => {
-                      return (
-                        <React.Fragment>
+            <>
+              {/* Sushiswap Protocol */}
+              {issushiSwapLpIsLoading == true ? (
+                <PortocolLoadingBlock isLightTheme={theme}>
+                  <LoadingSpinner isLightTheme={theme}>
+                    <CircularProgress />
+                  </LoadingSpinner>
+                  <div>Sushiswap </div>
+                  <div>Data is fetching</div>
+                </PortocolLoadingBlock>
+              ) : (
+                <>
+                  {SushiPoolsData.length > 0 ? (
+                    <React.Fragment>
+                      <img
+                        src={SushiSwapLogo}
+                        style={{
+                          height: '20px',
+                          marginTop: '',
+                          marginLeft: '15px',
+                          display: 'inline-block',
+                        }}
+                        alt=""
+                      />
+                      Sushiswap
+                      {SushiPoolsData
+                        ? SushiPoolsData.map((object) => {
+                            return (
+                              <React.Fragment>
+                                <Investment
+                                  protocol={object}
+                                  protocolName={'Sushiswap'}
+                                  logoImage={SushiSwapLogo}
+                                />
+                              </React.Fragment>
+                            );
+                          })
+                        : ''}
+                    </React.Fragment>
+                  ) : (
+                    ''
+                  )}
+                </>
+              )}
+              <br />
+
+              {/*curveLpToken/*/}
+              {iscurveLpTokenIsLoading == true ? (
+                <PortocolLoadingBlock isLightTheme={theme}>
+                  <LoadingSpinner>
+                    <CircularProgress />
+                  </LoadingSpinner>
+                  <div>Curve </div>
+                  <div>Data is fetching</div>
+                </PortocolLoadingBlock>
+              ) : (
+                <>
+                  {curveLpToken.length > 0 ? (
+                    <>
+                      <img
+                        src={CurveLogo}
+                        style={{
+                          height: '20px',
+                          marginTop: '',
+                          marginLeft: '15px',
+                          display: 'inline-block',
+                        }}
+                        alt=""
+                      />
+                      Curve Pool
+                      {curveLpToken.map((object) => {
+                        return (
                           <Investment
                             protocol={object}
-                            protocolName={'Sushiswap'}
-                            logoImage={SushiSwapLogo}
+                            protocolName={'Curve Pool'}
+                            logoImage={CurveLogo}
                           />
-                        </React.Fragment>
-                      );
-                    })
-                  : ''}
-              </React.Fragment>
-            ) : (
-              ''
-            )}
-            {/*curveLpToken/*/}
-            {curveLpToken.length > 0 ? (
-              <>
-                <img
-                  src={CurveLogo}
-                  style={{
-                    height: '20px',
-                    marginTop: '',
-                    marginLeft: '15px',
-                    display: 'inline-block',
-                  }}
-                  alt=""
-                />
-                Curve Pool
-                {curveLpToken.map((object) => {
-                  return (
-                    <Investment
-                      protocol={object}
-                      protocolName={'Curve Pool'}
-                      logoImage={CurveLogo}
-                    />
-                  );
-                })}
-              </>
-            ) : (
-              ''
-            )}{' '}
-            {/* SnowSwap protocol */}
-            {snowSwapData.length > 0 ? (
-              <React.Fragment>
-                <img
-                  src={SnowSwapLogo}
-                  style={{
-                    height: '20px',
-                    marginTop: '',
-                    marginLeft: '15px',
-                    display: 'inline-block',
-                  }}
-                  alt=""
-                />
-                SnowSwap
-                {snowSwapData
-                  ? snowSwapData.map((object) => {
-                      return (
-                        <Investment
-                          protocol={object}
-                          protocolName={'SnowSwap'}
-                          logoImage={SnowSwapLogo}
-                        />
-                      );
-                    })
-                  : ''}
-              </React.Fragment>
-            ) : (
-              ''
-            )}
-            {/*liquityTokenData/*/}
-            {liquityTokenData.length > 0 ? (
-              <React.Fragment>
-                <img
-                  src={liquityImageUrl}
-                  style={{
-                    height: '20px',
-                    marginTop: '',
-                    marginLeft: '15px',
-                    display: 'inline-block',
-                  }}
-                  alt=""
-                />
-                Liquity
-                {liquityTokenData
-                  ? liquityTokenData.map((object) => {
-                      return (
-                        <Investment
-                          protocol={object}
-                          protocolName={'Liquity'}
-                          logoImage={object.tokenImage}
-                        />
-                      );
-                    })
-                  : ''}
-              </React.Fragment>
-            ) : (
-              ''
-            )}
-            {/* BalancerV2  */}
-            {balancerV2lp.length > 0 ? (
-              <>
-                <img
-                  src={BalancerLogo}
-                  style={{
-                    height: '20px',
-                    marginTop: '',
-                    marginLeft: '15px',
-                    display: 'inline-block',
-                  }}
-                  alt=""
-                />
-                Balancer V2
-                {balancerV2lp.map((object) => {
-                  return (
-                    <Investment
-                      protocol={object}
-                      protocolName={'BalancerV2'}
-                      logoImage={object.imageData}
-                    />
-                  );
-                })}
-              </>
-            ) : (
-              ''
-            )}
-            {/* UniSwapV2 Protocol */}
-            {uniswapV2lp.length > 0 ? (
-              <React.Fragment>
-                <img
-                  src={uniSwapLogo}
-                  style={{
-                    height: '20px',
-                    marginTop: '',
-                    marginLeft: '15px',
-                    display: 'inline-block',
-                  }}
-                  alt=""
-                />
-                UniswapV2
-                {uniswapV2lp
-                  ? uniswapV2lp.map((object) => {
-                      return (
-                        <React.Fragment>
+                        );
+                      })}
+                    </>
+                  ) : (
+                    ''
+                  )}
+                </>
+              )}
+              <br />
+
+              {/* SnowSwap protocol */}
+              {issnowSwapIsLoading == true ? (
+                <PortocolLoadingBlock isLightTheme={theme}>
+                  <LoadingSpinner>
+                    <CircularProgress />
+                  </LoadingSpinner>
+                  <div>SnowSwap </div>
+                  <div>Data is fetching</div>
+                </PortocolLoadingBlock>
+              ) : (
+                <>
+                  {snowSwapData.length > 0 ? (
+                    <React.Fragment>
+                      <img
+                        src={SnowSwapLogo}
+                        style={{
+                          height: '20px',
+                          marginTop: '',
+                          marginLeft: '15px',
+                          display: 'inline-block',
+                        }}
+                        alt=""
+                      />
+                      SnowSwap
+                      {snowSwapData
+                        ? snowSwapData.map((object) => {
+                            return (
+                              <Investment
+                                protocol={object}
+                                protocolName={'SnowSwap'}
+                                logoImage={SnowSwapLogo}
+                              />
+                            );
+                          })
+                        : ''}
+                    </React.Fragment>
+                  ) : (
+                    ''
+                  )}
+                </>
+              )}
+              <br />
+
+              {/*liquityTokenData/*/}
+              {isliquityTokenIsLoading == true ? (
+                <PortocolLoadingBlock isLightTheme={theme}>
+                  <LoadingSpinner>
+                    <CircularProgress />
+                  </LoadingSpinner>
+                  <div>Liquity </div>
+                  <div>Data is fetching</div>
+                </PortocolLoadingBlock>
+              ) : (
+                <>
+                  {liquityTokenData.length > 0 ? (
+                    <React.Fragment>
+                      <img
+                        src={liquityImageUrl}
+                        style={{
+                          height: '20px',
+                          marginTop: '',
+                          marginLeft: '15px',
+                          display: 'inline-block',
+                        }}
+                        alt=""
+                      />
+                      Liquity
+                      {liquityTokenData
+                        ? liquityTokenData.map((object) => {
+                            return (
+                              <Investment
+                                protocol={object}
+                                protocolName={'Liquity'}
+                                logoImage={object.tokenImage}
+                              />
+                            );
+                          })
+                        : ''}
+                    </React.Fragment>
+                  ) : (
+                    ''
+                  )}
+                </>
+              )}
+              <br />
+              {/* BalancerV2  */}
+              {isbalancerProtocolisLoading == true ? (
+                <PortocolLoadingBlock isLightTheme={theme}>
+                  <LoadingSpinner>
+                    <CircularProgress />
+                  </LoadingSpinner>
+                  <div>Balancer </div>
+                  <div>Data is fetching</div>
+                </PortocolLoadingBlock>
+              ) : (
+                <>
+                  {balancerV2lp.length > 0 ? (
+                    <>
+                      <img
+                        src={BalancerLogo}
+                        style={{
+                          height: '20px',
+                          marginTop: '',
+                          marginLeft: '15px',
+                          display: 'inline-block',
+                        }}
+                        alt=""
+                      />
+                      Balancer V2
+                      {balancerV2lp.map((object) => {
+                        return (
                           <Investment
                             protocol={object}
-                            protocolName={'UniswapV2'}
+                            protocolName={'BalancerV2'}
                             logoImage={object.imageData}
                           />
-                        </React.Fragment>
-                      );
-                    })
-                  : ''}
-              </React.Fragment>
-            ) : (
-              ''
-            )}
+                        );
+                      })}
+                    </>
+                  ) : (
+                    ''
+                  )}
+                </>
+              )}
+              <br />
+              {/* UniSwapV2 Protocol */}
+              {isuniswapProtocolisLoading == true ? (
+                <PortocolLoadingBlock isLightTheme={theme}>
+                  <LoadingSpinner>
+                    <CircularProgress />
+                  </LoadingSpinner>
+                  <div>Uniswap </div>
+                  <div>Data is fetching</div>
+                </PortocolLoadingBlock>
+              ) : (
+                <>
+                  {uniswapV2lp.length > 0 ? (
+                    <React.Fragment>
+                      <img
+                        src={uniSwapLogo}
+                        style={{
+                          height: '20px',
+                          marginTop: '',
+                          marginLeft: '15px',
+                          display: 'inline-block',
+                        }}
+                        alt=""
+                      />
+                      UniswapV2
+                      {uniswapV2lp
+                        ? uniswapV2lp.map((object) => {
+                            return (
+                              <React.Fragment>
+                                <Investment
+                                  protocol={object}
+                                  protocolName={'UniswapV2'}
+                                  logoImage={object.imageData}
+                                />
+                              </React.Fragment>
+                            );
+                          })
+                        : ''}
+                    </React.Fragment>
+                  ) : (
+                    ''
+                  )}
+                </>
+              )}
+            </>
+
             {/* ------------end of UniSwapV2--------- */}
           </React.Fragment>
         )}

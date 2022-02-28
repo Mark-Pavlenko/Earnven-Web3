@@ -64,7 +64,7 @@ function* sushiStakeSagaWorker(sushiStakingObjects) {
         );
 
         //get the value if sushi lp token data is available
-        if (SLPTokenData) {
+        if (SLPTokenData.pairDayDatas.length > 0) {
           slpTokenVolume = SLPTokenData.pairDayDatas[0].volumeUSD;
           slpTokenLiquidity = SLPTokenData.pairs[0].reserveUSD;
         }

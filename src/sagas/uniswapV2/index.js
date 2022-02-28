@@ -11,6 +11,7 @@ function* Uniswapv2worker(data) {
   const attributes = data.payload;
   const lp = yield call(API_LP.getuniswapV2data, attributes);
   yield put(actions.getuniswapV2(lp));
+  yield put(actions.setUniswapV2isLoading(false));
 }
 
 export function* getuniswapV2StakeSagaWatcher() {

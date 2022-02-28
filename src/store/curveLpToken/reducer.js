@@ -3,6 +3,7 @@ import actionTypes from '../../constants/actionTypes';
 const initialState = {
   curveLpTokenData: [],
   curveLpTokenTotal: 0,
+  curveLpTokenIsLoading: true,
 };
 //takes two arguments: The current state and the action and returns the new state.
 export const curveLpToken = (state = initialState, action) => {
@@ -16,6 +17,11 @@ export const curveLpToken = (state = initialState, action) => {
       return {
         ...state,
         curveLpTokenTotal: action?.payload,
+      };
+    case actionTypes.SET_CRV_LP_LOADING:
+      return {
+        ...state,
+        curveLpTokenIsLoading: action?.payload,
       };
     default:
       return state;

@@ -13,3 +13,10 @@ export const getSnowSwapTotal = (payload) => {
     payload,
   };
 };
+
+export const setSnowSwapIsLoading = (payload) => {
+  return {
+    type: actionTypes.SET_SNOW_SWAP_LOADING,
+    payload,
+  };
+};

@@ -19,4 +19,5 @@ function* Balancerv2worker(data) {
   }
   yield put(actions.getbalancerV2(lp));
   yield put(actions.getBalancerV2Total(total));
+  yield put(actions.setBalancerProtocolisLoading(false));
 }

@@ -51,4 +51,5 @@ function* snowSwapWorker(snowSwapAttributes) {
     yield put(actions.getSnowSwapData(protocolData));
     yield put(actions.getSnowSwapTotal(totalValue));
   }
+  yield put(actions.setSnowSwapIsLoading(false));
 }

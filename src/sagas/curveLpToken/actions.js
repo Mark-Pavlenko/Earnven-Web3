@@ -13,3 +13,10 @@ export const getCurveLPTokenTotal = (payload) => {
     payload,
   };
 };
+
+export const setCurveLPTokenIsLoading = (payload) => {
+  return {
+    type: actionTypes.SET_CRV_LP_LOADING,
+    payload,
+  };
+};
