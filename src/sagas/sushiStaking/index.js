@@ -33,7 +33,7 @@ function* sushiStakeSagaWorker(sushiStakingObjects) {
 
       //api created with getSushiPoolData with argument of poolId
       const pairResponse = yield call(API.getSushiPoolData, poolId[i]);
-      if (pairResponse.data.length > 0) {
+      if (pairResponse) {
         const pairData = pairResponse.data.data.pairs;
         try {
           const SLPToken0ImageUrl = yield call(API.getTokenImage, pairData[0].token0.id);
