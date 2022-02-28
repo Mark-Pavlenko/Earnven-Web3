@@ -18,7 +18,7 @@ function* curveStakingClaimDataSagaWorker(curveStakingAttributes) {
     curveStakingParams.accountAddress
   );
 
-  if (curveFarmingData.data.length > 0) {
+  if (curveFarmingData) {
     if (curveFarmingData.data.data.accounts[0]) {
       let crvStakingArrayOfData = [];
       let crvStakingTotalValue = 0;
