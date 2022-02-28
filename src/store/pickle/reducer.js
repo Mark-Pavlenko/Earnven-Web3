@@ -8,6 +8,7 @@ const initialState = {
 const initialStateDill = {
   pickeDill: [],
   pickeDillTotal: 0,
+  pickeDillIsLoading: true,
 };
 
 export const pickeStake = (state = initialState, action) => {
@@ -34,6 +35,11 @@ export const pickeDill = (state = initialStateDill, action) => {
         ...state,
         pickeDill: action?.payload,
         pickeDillTotal: action?.payload[0].total,
+      };
+    case actionTypes.SET_PICKLE_DILL_LOADING:
+      return {
+        ...state,
+        pickeDillIsLoading: action?.payload,
       };
     default:
       return state;

@@ -27,3 +27,10 @@ export const getYTokenTotal = (payload) => {
     payload,
   };
 };
+
+export const setYearnFinanceisLoading = (payload) => {
+  return {
+    type: actionTypes.SET_YFI_LOADING,
+    payload,
+  };
+};

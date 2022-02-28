@@ -20,3 +20,10 @@ export const setpickleDill = (payload) => {
     payload,
   };
 };
+
+export const setPickleDillIsLoading = (payload) => {
+  return {
+    type: actionTypes.SET_PICKLE_DILL_LOADING,
+    payload,
+  };
+};

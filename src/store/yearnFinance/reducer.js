@@ -8,6 +8,7 @@ const initialState = {
   yearnFinanceTotal: 0,
   yearnYTokenData: [],
   yearnYTokenTotal: 0,
+  yearnFinanceisLoading: true,
 };
 //takes two arguments: The current state and the action and returns the new state.
 export const yearnFinance = (state = initialState, action) => {
@@ -31,6 +32,11 @@ export const yearnFinance = (state = initialState, action) => {
       return {
         ...state,
         yearnYTokenTotal: action?.payload,
+      };
+    case actionTypes.SET_YFI_LOADING:
+      return {
+        ...state,
+        yearnFinanceisLoading: action?.payload,
       };
     default:
       return state;

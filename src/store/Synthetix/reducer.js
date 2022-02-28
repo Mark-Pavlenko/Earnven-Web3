@@ -5,6 +5,7 @@ const initialState = {
   snxTokenTotal: 0,
   snxCollateralData: [],
   snxCollateralTotal: 0,
+  synthetixIsLoading: true,
 };
 
 export const Synthetix = (state = initialState, action) => {
@@ -28,6 +29,11 @@ export const Synthetix = (state = initialState, action) => {
       return {
         ...state,
         snxCollateralTotal: action.payload,
+      };
+    case actionTypes.SET_SNX_LOADING:
+      return {
+        ...state,
+        synthetixIsLoading: action.payload,
       };
     default:
       return state;

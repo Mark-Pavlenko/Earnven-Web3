@@ -64,15 +64,8 @@ function* yearnFinanceSagaWorker(yearnAccountAddress) {
 
     yield put(actions.getYearnFinaceTokenData(yearnDataArray));
     yield put(actions.getYearnFinanceTokenTotal(parseFloat(totalValue).toFixed(2)));
-
-    // yield put(
-    //   actions.getYearnFinanceTokenTotal(parseFloat(totalValue.toFixed(2)).toLocaleString())
-    // );
-    //yield put(actions.getYearnFinaceData('Prabha Testing'));
-    //yield put(actions.getYearnFinanceTokenTotal(100));
-    //console.log('TestPrabhaYToken YearnFinance components data ', yearnDataArray);
   }
-  //below API call is used to get yTokens (yUSDC, yUSDT etc..) based on the listed yTokens from the address list
+  yield put(actions.setYearnFinanceisLoading(false));
 }
 
 //---------------------YToken process--------------------------
@@ -142,5 +135,5 @@ function* yearnFinanceYTokenSagaWorker(yearnTokenAttributes) {
     yield put(actions.getYTokenData(yearnTokenDataSet));
     yield put(actions.getYTokenTotal(parseFloat(yearnTokenTotalValue).toFixed(2)));
   }
-  //yield put(actions.getYTokenData('Prabha testing YToken Data'));
+  yield put(actions.setYearnFinanceisLoading(false));
 }

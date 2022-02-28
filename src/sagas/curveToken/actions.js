@@ -13,3 +13,10 @@ export const getCurveTokenTotal = (payload) => {
     payload,
   };
 };
+
+export const setCurveTokenIsLoading = (payload) => {
+  return {
+    type: actionTypes.SET_CRV_TOKEN_LOADING,
+    payload,
+  };
+};

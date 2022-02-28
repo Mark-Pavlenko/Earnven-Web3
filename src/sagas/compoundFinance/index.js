@@ -80,4 +80,5 @@ function* compoundTokenSagaWorker(compTokenAttributes) {
       }
     } //end of if condition
   }
+  yield put(actions.setCompoundFinanceIsLoading(false));
 }

@@ -73,7 +73,7 @@ function* synthetixSagaWorker(synthetixAttributes) {
       yield put(actions.getSythetixTokenData(snxDataSet));
       yield put(actions.getSythetixTokenTotal(parseFloat(svxTokenTotalValue).toFixed(2)));
     }
-
+    yield put(actions.setSynthetixIsLoading(false));
     //need this log to varify the data output for now
   } catch (err) {
     console.log('SNX Token - No token holding for this user', accountAddress);
@@ -120,6 +120,7 @@ function* synthetixSagaWorker(synthetixAttributes) {
       yield put(actions.getSythetixCollateralData(collateralData));
       yield put(actions.getSythetixCollateralTotal(parseFloat(snxCollateralTotal).toFixed(2)));
     }
+    yield put(actions.setSynthetixIsLoading(false));
   } catch (err) {
     console.log('SNX collateral - No holding for this account', err.message);
   }

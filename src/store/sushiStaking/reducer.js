@@ -6,6 +6,7 @@ import actionTypes from '../../constants/actionTypes';
 const initialState = {
   sushiStakeData: [],
   sushiStakeTotal: 0,
+  sushiStakeIsLoading: true,
 };
 //takes two arguments: The current state and the action and returns the new state.
 export const sushiStaking = (state = initialState, action) => {
@@ -19,6 +20,11 @@ export const sushiStaking = (state = initialState, action) => {
       return {
         ...state,
         sushiStakeTotal: action?.payload,
+      };
+    case actionTypes.SET_SUSHI_STAKE_LOADING:
+      return {
+        ...state,
+        sushiStakeIsLoading: action?.payload,
       };
     default:
       return state;

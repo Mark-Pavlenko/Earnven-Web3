@@ -62,6 +62,6 @@ function* sushiSwapLPSagaWorker(sushiSwapObjects) {
         console.log(err);
       }
     }
-    yield put(actions.setSushiSwapLpIsLoading(false));
   }
+  yield put(actions.setSushiSwapLpIsLoading(false));
 }

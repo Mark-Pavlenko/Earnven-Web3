@@ -13,3 +13,10 @@ export const getConvexStakingTotal = (payload) => {
     payload,
   };
 };
+
+export const setConvexIsLoading = (payload) => {
+  return {
+    type: actionTypes.SET_CONVEX_LOADING,
+    payload,
+  };
+};

@@ -3,6 +3,7 @@ import actionTypes from '../../constants/actionTypes';
 const initialState = {
   creamIronBankData: [],
   creamIronBankTotal: 0,
+  creamIronBankIsLoading: true,
 };
 
 export const creamIronBank = (state = initialState, action) => {
@@ -16,6 +17,11 @@ export const creamIronBank = (state = initialState, action) => {
       return {
         ...state,
         creamIronBankTotal: action?.payload,
+      };
+    case actionTypes.SET_CREAM_IRON_LOADING:
+      return {
+        ...state,
+        creamIronBankIsLoading: action?.payload,
       };
     default:
       return state;

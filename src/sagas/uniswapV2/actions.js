@@ -27,3 +27,10 @@ export const getuniswapV2stakeTotal = (payload) => {
     payload,
   };
 };
+
+export const setUniswapStakingisLoading = (payload) => {
+  return {
+    type: actionTypes.SET_UNISWAP_STAKE_LOADING,
+    payload,
+  };
+};

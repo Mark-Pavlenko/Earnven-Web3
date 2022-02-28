@@ -33,7 +33,7 @@ function* sushiStakeSagaWorker(sushiStakingObjects) {
 
       //api created with getSushiPoolData with argument of poolId
       const pairResponse = yield call(API.getSushiPoolData, poolId[i]);
-      if (pairResponse) {
+      if (pairResponse.data.length > 0) {
         const pairData = pairResponse.data.data.pairs;
         try {
           const SLPToken0ImageUrl = yield call(API.getTokenImage, pairData[0].token0.id);
@@ -91,4 +91,5 @@ function* sushiStakeSagaWorker(sushiStakingObjects) {
     yield put(actions.getSushiStakeData(sushiStaking));
     yield put(actions.getSushiStakeTotalValue(totalValue));
   }
+  yield put(actions.setSushiStakeIsLoading(false));
 }
