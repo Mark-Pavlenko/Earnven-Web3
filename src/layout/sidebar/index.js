@@ -294,7 +294,7 @@ export default function Sidebar({
     // console.log('Updating Layout....')
     const content = GasPrices.map((option) => (
       <Box
-        // key={option.value}
+        key={option.value}
         selected={option.label === selected}
         onClick={() => {
           handleGasItemListClose();

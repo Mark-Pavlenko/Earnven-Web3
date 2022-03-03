@@ -56,6 +56,7 @@ import fastDice from '../../../../../assets/icons/fastDice-icon.svg';
 import middleDice from '../../../../../assets/icons/middleDice-icon.svg';
 import slowDice from '../../../../../assets/icons/slowDice-icon.svg';
 import actionTypes from '../../../../../constants/actionTypes';
+import { GasPriceLabel } from '../../liquidityPoolsTable/styledComponents';
 
 export const InvestTableItem = ({
   item,
@@ -73,16 +74,7 @@ export const InvestTableItem = ({
   const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
   const allTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
 
-  const addIconsGasPricesWithIcons = addIconsGasPrices(
-    GasPrices,
-    fastDice,
-    middleDice,
-    slowDice,
-    fastDice,
-    middleDice,
-    slowDice,
-    theme
-  );
+  const gasPricesWithIcons = addIconsGasPrices(GasPrices, fastDice, middleDice, slowDice, theme);
 
   const [isModalVisible, setIsModalVisible] = useState('');
 
@@ -121,6 +113,7 @@ export const InvestTableItem = ({
   }, [tokenAddress]);
 
   const switchModal = (e) => {
+    console.log('switchModal', e.target.id);
     setSelectedModal(e.target.id);
     setIsModalVisible('addLiquidity');
   };
@@ -537,18 +530,20 @@ export const InvestTableItem = ({
         <ModalContainer modalType={isModalVisible} theme={theme} closeModal={setIsModalVisible}>
           <MenuPopoverBoxTitle isLightTheme={theme}>{'Realtime Gas Prices'}</MenuPopoverBoxTitle>
           <div style={{ marginBottom: '22px' }}>
-            {addIconsGasPricesWithIcons.map((option) => (
+            {gasPricesWithIcons.map((option) => (
               <div
-                style={{ display: 'flex', flexDirection: 'column' }}
-                selected={option.label === selected}
                 onClick={() => {
                   updateGasValue(option.value, option.label);
                 }}
+                selected={option.label === selected}
                 sx={{ py: 1, px: 2.5 }}>
                 <GasMenuItem isLightTheme={theme}>
                   <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                     <img src={option.icon} alt="" />
-                    <span>{`${option.label} `}</span>
+                    <GasPriceLabel
+                      style={
+                        option.label === selected ? { color: '#4453AD' } : { color: 'inherit' }
+                      }>{`${option.label}`}</GasPriceLabel>
                   </div>
                   <div>
                     <span>{`${option.value} Gwei`}</span>
@@ -587,7 +582,7 @@ export const InvestTableItem = ({
           {/*  onClick={() => {}}>*/}
           {/*  {'%'}*/}
           {/*</CommonHoverButtonTrans>*/}
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '45%' }}>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
             <ResetButton isLightTheme={theme} onClick={resetButtonHandler}>
               {'Reset'}
             </ResetButton>

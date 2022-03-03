@@ -262,3 +262,10 @@ export const MenuPopoverBoxTitle = styled.p`
     margin-left: 7px;
   }
 `;
+
+export const GasPriceLabel = styled.span`
+  color: ${(props) => (props.selected ? '#4453AD' : 'white')};
+  &:hover {
+    color: #4453ad;
+  }
+`;

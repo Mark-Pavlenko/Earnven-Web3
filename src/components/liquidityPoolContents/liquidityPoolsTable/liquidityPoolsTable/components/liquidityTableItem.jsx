@@ -16,8 +16,8 @@ import {
   ResetButton,
   BalanceValue,
   MenuPopoverBoxTitle,
+  GasPriceLabel,
 } from '../styledComponents';
-import chroma from 'chroma-js';
 import Select from 'react-select';
 import {
   Balance,
@@ -74,16 +74,7 @@ export const LiquidityTableItem = ({
   const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
   const allTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
 
-  const gasPricesWithIcons = addIconsGasPrices(
-    GasPrices,
-    fastDice,
-    middleDice,
-    slowDice,
-    fastDiceDark,
-    middleDiceDark,
-    slowDiceDark,
-    theme
-  );
+  const gasPricesWithIcons = addIconsGasPrices(GasPrices, fastDice, middleDice, slowDice, theme);
 
   // const [modalType, setModalType] = useState('');
   // //''
@@ -528,7 +519,10 @@ export const LiquidityTableItem = ({
                 <GasMenuItem isLightTheme={theme}>
                   <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                     <img src={option.icon} alt="" />
-                    <span>{`${option.label} `}</span>
+                    <GasPriceLabel
+                      style={
+                        option.label === selected ? { color: '#4453AD' } : { color: 'inherit' }
+                      }>{`${option.label} `}</GasPriceLabel>
                   </div>
                   <div>
                     <span>{`${option.value} Gwei`}</span>
@@ -567,7 +561,7 @@ export const LiquidityTableItem = ({
           {/*  onClick={() => {}}>*/}
           {/*  {'%'}*/}
           {/*</CommonHoverButtonTrans>*/}
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '45%' }}>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
             <ResetButton isLightTheme={theme} onClick={resetButtonHandler}>
               {'Reset'}
             </ResetButton>
