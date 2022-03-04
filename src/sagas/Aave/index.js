@@ -140,4 +140,5 @@ function* aaveStakeSagaWorker(aaveStakeAttributes) {
       yield put(actions.getAaveStakeTotalValue(AaveStakingTotalValue));
     }
   } //end of if checking balance value;
+  yield put(actions.setAaveIsLoading(false));
 }

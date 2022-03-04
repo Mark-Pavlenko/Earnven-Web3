@@ -6,6 +6,7 @@ import actionTypes from '../../constants/actionTypes';
 const initialState = {
   eth2StakeData: [],
   eth2StakeTotal: 0,
+  eth2StakeIsLoading: true,
 };
 //takes two arguments: The current state and the action and returns the new state.
 export const eth2Stake = (state = initialState, action) => {
@@ -20,6 +21,11 @@ export const eth2Stake = (state = initialState, action) => {
       return {
         ...state,
         eth2StakeTotal: action?.payload,
+      };
+    case actionTypes.SET_ETH2_LOADING:
+      return {
+        ...state,
+        eth2StakeIsLoading: action?.payload,
       };
     default:
       return state;

@@ -70,12 +70,10 @@ const Investment = ({
   if (
     protocolName === 'Curve Pool' ||
     protocolName === 'SnowSwap' ||
-    protocolName === 'Pickle Dill'
+    protocolName === 'Pickle Dill' ||
+    protocolName === 'Convex Staking' ||
+    protocolName === 'Eth2.0'
   ) {
-    protocol.tokenImage = logoImage;
-  }
-
-  if (protocolName === 'Convex Staking') {
     protocol.tokenImage = logoImage;
   }
 

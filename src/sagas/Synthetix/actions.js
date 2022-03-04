@@ -27,3 +27,10 @@ export const getSythetixCollateralTotal = (payload) => {
     payload,
   };
 };
+
+export const setSynthetixIsLoading = (payload) => {
+  return {
+    type: actionTypes.SET_SNX_LOADING,
+    payload,
+  };
+};

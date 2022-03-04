@@ -3,6 +3,7 @@ import actionTypes from '../../constants/actionTypes';
 const initialState = {
   AaveStakingData: [],
   AaveStakingTotal: 0,
+  AaveStakingIsLoading: true,
 };
 
 export const AaveStaking = (state = initialState, action) => {
@@ -16,6 +17,11 @@ export const AaveStaking = (state = initialState, action) => {
       return {
         ...state,
         AaveStakingTotal: action?.payload,
+      };
+    case actionTypes.SET_AAVE_LOADING:
+      return {
+        ...state,
+        AaveStakingIsLoading: action?.payload,
       };
     default:
       return state;

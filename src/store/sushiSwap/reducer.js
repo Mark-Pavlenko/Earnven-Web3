@@ -6,6 +6,7 @@ import actionTypes from '../../constants/actionTypes';
 const initialState = {
   sushiSwapLPData: [],
   sushiSwapLPTotal: 0,
+  sushiSwapLpIsLoading: true,
 };
 //takes two arguments: The current state and the action and returns the new state.
 export const sushiSwap = (state = initialState, action) => {
@@ -19,6 +20,11 @@ export const sushiSwap = (state = initialState, action) => {
       return {
         ...state,
         sushiSwapLPTotal: action?.payload,
+      };
+    case actionTypes.SET_SHUSHI_LP_LOADING:
+      return {
+        ...state,
+        sushiSwapLpIsLoading: action?.payload,
       };
     default:
       return state;

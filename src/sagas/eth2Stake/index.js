@@ -43,4 +43,5 @@ function* eth2StakeSagaWorker(userAccountAddress) {
       }
     }
   }
+  yield put(actions.setEth2IsLoading(false));
 }

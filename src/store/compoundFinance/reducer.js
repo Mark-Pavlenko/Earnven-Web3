@@ -4,6 +4,7 @@ const initialState = {
   compTokenData: [],
   compTokenTotal: 0,
   compClaimValue: 0,
+  compoundFinanceIsLoading: true,
 };
 //takes two arguments: The current state and the action and returns the new state.
 export const compoundFinance = (state = initialState, action) => {
@@ -23,6 +24,12 @@ export const compoundFinance = (state = initialState, action) => {
         ...state,
         compClaimValue: action?.payload,
       };
+    case actionTypes.SET_COMP_LOADING:
+      return {
+        ...state,
+        compoundFinanceIsLoading: action?.payload,
+      };
+
     default:
       return state;
   }

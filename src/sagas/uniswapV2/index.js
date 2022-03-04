@@ -10,7 +10,10 @@ export function* getuniswapV2SagaWatcher() {
 function* Uniswapv2worker(data) {
   const attributes = data.payload;
   const lp = yield call(API_LP.getuniswapV2data, attributes);
-  yield put(actions.getuniswapV2(lp));
+  if (lp.length > 0) {
+    yield put(actions.getuniswapV2(lp));
+  }
+  yield put(actions.setUniswapV2isLoading(false));
 }
 
 export function* getuniswapV2StakeSagaWatcher() {
@@ -30,4 +33,5 @@ function* Uniswapv2Stakeworker(data) {
     yield put(actions.getuniswapV2stake(lp));
     yield put(actions.getuniswapV2stakeTotal(uniSwapv2StakingTotal));
   }
+  yield put(actions.setUniswapStakingisLoading(false));
 }

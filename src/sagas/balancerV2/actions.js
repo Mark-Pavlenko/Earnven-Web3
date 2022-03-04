@@ -13,3 +13,10 @@ export const getBalancerV2Total = (payload) => {
     payload,
   };
 };
+
+export const setBalancerProtocolisLoading = (payload) => {
+  return {
+    type: actionTypes.SET_BALANCER_PROTOCOL_LOADING,
+    payload,
+  };
+};

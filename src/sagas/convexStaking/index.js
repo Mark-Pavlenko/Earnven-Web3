@@ -134,4 +134,5 @@ function* convexStakingDataSagaWorker(convexStakingAttributes) {
     //console.log('TestCVX No curve lp token holding for this user', accountAddress);
     console.log('Convex Staking error raised from saga', err.message);
   }
+  yield put(actions.setConvexIsLoading(false));
 }

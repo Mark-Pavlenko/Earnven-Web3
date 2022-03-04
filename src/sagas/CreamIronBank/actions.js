@@ -13,3 +13,10 @@ export const getCreamIronTokenTotal = (payload) => {
     payload,
   };
 };
+
+export const setCreamIronIsLoading = (payload) => {
+  return {
+    type: actionTypes.SET_CREAM_IRON_LOADING,
+    payload,
+  };
+};

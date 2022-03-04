@@ -64,4 +64,5 @@ function* curveLPTokenSagaWorker(curveLpTokenAttributes) {
     yield put(actions.getCurveLPTokenData(staking));
     yield put(actions.getCurveLPTokenTotal(parseFloat(curveLpTokenTotalValue).toFixed(2)));
   }
+  yield put(actions.setCurveLPTokenIsLoading(false));
 }

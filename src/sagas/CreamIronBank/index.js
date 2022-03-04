@@ -203,4 +203,5 @@ function* creamIronTokenSagaWorker(creamIronAttributes) {
     yield put(actions.getCreamIronTokenData(data));
     yield put(actions.getCreamIronTokenTotal(CreamTokenTotal));
   }
+  yield put(actions.setCreamIronIsLoading(false));
 }

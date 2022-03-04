@@ -58,4 +58,5 @@ function* olympusTokenSagaWorker(olympusTokenAttributes) {
   }
   yield put(actions.getOHMTokenData(ArrayOfData));
   yield put(actions.getOHMTokenTotal(totalValue));
+  yield put(actions.setOlympusIsLoading(false));
 }

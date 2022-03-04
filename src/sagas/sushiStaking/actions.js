@@ -13,3 +13,9 @@ export const getSushiStakeTotalValue = (payload) => {
     payload,
   };
 };
+export const setSushiStakeIsLoading = (payload) => {
+  return {
+    type: actionTypes.SET_SUSHI_STAKE_LOADING,
+    payload,
+  };
+};

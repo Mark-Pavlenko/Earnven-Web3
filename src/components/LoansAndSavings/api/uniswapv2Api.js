@@ -3,6 +3,7 @@ import Web3 from 'web3';
 import UniStakingABI from '../../../abi/uniStakingContract.json';
 import Addresses from '../../../contractAddresses';
 import UniswapV2 from '../LiqudityPools/UniswapV2';
+import BatchCall from 'web3-batch-call';
 
 //use below function to get uniswap LP data
 export const getuniswapV2data = async (attributes) => {
@@ -64,12 +65,10 @@ export const getuniswapV2data = async (attributes) => {
           let token0Symbol = res[i].pair.token0.symbol;
           let token1Symbol = res[i].pair.token1.symbol;
           //object.symbol = res[i].pair.token0.symbol + '-' + res[i].pair.token1.symbol;
-          object.symbol = `${token0Symbol.replace(
-            'yDAI+yUSDC+yUSDT+yTUSD',
-            'Y Curve'
-          )} ${token1Symbol.replace('yDAI+yUSDC+yUSDT+yTUSD', 'Y Curve')}`;
-          object.token0Symbol = token0Symbol.replace('yDAI+yUSDC+yUSDT+yTUSD', 'Y Curve');
-          object.token1Symbol = token1Symbol.replace('yDAI+yUSDC+yUSDT+yTUSD', 'Y Curve');
+          object.symbol =
+            token0Symbol.replace('yDAI+yUSDC+yUSDT+yTUSD', 'Y Curve') +
+            '/' +
+            token1Symbol.replace('yDAI+yUSDC+yUSDT+yTUSD', 'Y Curve');
           object.liquidity = res[i].pair.reserveUSD;
           object.volume = res[i].pair.volumeUSD;
           object.protocol = 'Uniswap V2';
@@ -120,19 +119,72 @@ export const getuniswapV2stakedata = async (attributes) => {
     const web3 = new Web3(provider);
     return web3;
   }
-  const web3 = await getWeb3();
-  const UniStakeUSDT = new web3.eth.Contract(UniStakingABI, Addresses.uniStakingUSDT);
-  const UniStakeDAI = new web3.eth.Contract(UniStakingABI, Addresses.uniStakingDAI);
-  const UniStakeUSDC = new web3.eth.Contract(UniStakingABI, Addresses.uniStakingUSDC);
-  const UniStakeWBTC = new web3.eth.Contract(UniStakingABI, Addresses.uniStakingWBTC);
-  const USDTAmount = (await UniStakeUSDT.methods.balanceOf(attributes).call()) / 10 ** 18;
-  const DAIAmount = (await UniStakeDAI.methods.balanceOf(attributes).call()) / 10 ** 18;
-  const USDCAmount = (await UniStakeUSDC.methods.balanceOf(attributes).call()) / 10 ** 18;
-  const WBTCAmount = (await UniStakeWBTC.methods.balanceOf(attributes).call()) / 10 ** 18;
-  let WBTCAmountClaimable = (await UniStakeWBTC.methods.earned(attributes).call()) / 10 ** 18;
-  let USDCAmountClaimables = (await UniStakeUSDC.methods.earned(attributes).call()) / 10 ** 18;
-  let DAIAmountClaimables = (await UniStakeDAI.methods.earned(attributes).call()) / 10 ** 18;
-  let USDTAmountClaimables = (await UniStakeUSDT.methods.earned(attributes).call()) / 10 ** 18;
+  //batch-call process starts
+  //configuration
+  //set the request scheme with array of objects
+  const contracts = [
+    {
+      namespace: 'uniswapStaking', //Namespace will be used to group contract results
+      // list of contract address that need to look
+      addresses: [
+        '0x6c3e4cb2e96b01f4b866965a91ed4437839a121a', // USDT
+        '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711', // DAI
+        '0x7FBa4B8Dc5E7616e59622806932DBea72537A56b', // USDC
+        '0xCA35e32e7926b96A9988f61d510E038108d8068e', // WBTC
+      ],
+      // Specify an ABI to use for all addresses in this contract config
+      abi: UniStakingABI,
+      allReadMethods: false,
+      // set the read methods/Array of methods with custom arguments
+      readMethods: [
+        {
+          name: 'balanceOf', //method name
+          args: [attributes], //list of args that method need/expecting - here its userAddress
+        },
+        {
+          name: 'earned',
+          args: [attributes],
+        },
+      ],
+    },
+  ];
+  //--------set the batch call request-----------------------//
+  //get the web3 instance provider
+  const instance = {
+    web3: await getWeb3(),
+  };
+  // call the batchcall by passing the args with web3 instance
+  const batchCall = new BatchCall(instance);
+  //exeucte the batchCall by passing configure contracts to get the result of it
+  const result = await batchCall.execute(contracts);
+  console.log('TestUni batch call result', result);
+  //variable to store balanceOf the user
+  let USDTAmount = 0;
+  let DAIAmount = 0;
+  let USDCAmount = 0;
+  let WBTCAmount = 0;
+  //varisbles to store claimable value of the user
+  let USDTAmountClaimables = 0;
+  let DAIAmountClaimables = 0;
+  let USDCAmountClaimables = 0;
+  let WBTCAmountClaimable = 0;
+
+  //read the result return from contract
+
+  //USDT
+  USDTAmount = result[0].balanceOf[0].value / 10 ** 18;
+  USDTAmountClaimables = result[0].earned[0].value / 10 ** 18;
+  //DAI
+  DAIAmount = result[1].balanceOf[0].value / 10 ** 18;
+  DAIAmountClaimables = result[1].earned[0].value / 10 ** 18;
+  //USDC
+  USDCAmount = result[2].balanceOf[0].value / 10 ** 18;
+  USDCAmountClaimables = result[2].earned[0].value / 10 ** 18;
+  //WBTC
+  WBTCAmount = result[3].balanceOf[0].value / 10 ** 18;
+  WBTCAmountClaimable = result[3].earned[0].value / 10 ** 18;
+
+  //end of batch call process
   let uniCurrentPrice = 0;
   let imageUni = '';
   await axios
