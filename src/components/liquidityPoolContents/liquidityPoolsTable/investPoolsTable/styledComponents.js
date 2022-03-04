@@ -177,7 +177,7 @@ export const TokenImages = styled.div`
   display: flex;
   min-width: 30px;
 
-  @media (max-width: 300px) {
+  @media (max-width: 335px) {
     display: none;
   }
 `;
@@ -238,8 +238,8 @@ export const ItemButtons = styled.div`
   @media (min-width: 175px) and (max-width: 840px) {
     display: grid;
     grid-template-areas:
-      'invest invest info'
-      'withdraw withdraw withdraw';
+      'invest invest invest invest invest invest invest invest invest invest invest info'
+      'withdraw withdraw withdraw withdraw withdraw withdraw withdraw withdraw withdraw withdraw withdraw withdraw';
     justify-content: space-between;
   }
 `;

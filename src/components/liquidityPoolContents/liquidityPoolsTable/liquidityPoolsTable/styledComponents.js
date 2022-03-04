@@ -142,7 +142,7 @@ export const TokenImages = styled.div`
   display: flex;
   width: 30px;
 
-  @media (max-width: 300px) {
+  @media (max-width: 335px) {
     display: none;
   }
 `;

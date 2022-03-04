@@ -377,6 +377,16 @@ export const LiquidityTableItem = ({
     setIsModalVisible('addLiquidity');
   };
 
+  const inputBox = document.getElementById('inputBox');
+
+  const invalidChars = ['-', '+', 'e'];
+
+  inputBox?.addEventListener('keydown', function (e) {
+    if (invalidChars.includes(e.key)) {
+      e.preventDefault();
+    }
+  });
+
   return (
     <>
       {/*MODAL addLiquidity====================================>*/}
@@ -392,15 +402,23 @@ export const LiquidityTableItem = ({
               defaultValue={selectInitialValue}
               styles={selectStyle}
               options={updatedOptions}
-              onChange={supplyTokenHandler}
+              onChange={(e) => {
+                supplyTokenHandler(e);
+                setSingleTokenValue('');
+                setInValue('');
+                setOutValue('');
+              }}
             />
             <InputBlock>
               <ModalInput
                 isLightTheme={theme}
                 value={singleTokenValue}
+                id="inputBox"
                 type="number"
                 onChange={(e) => {
-                  addLiquidityToPair(item.token0.id, item.token1.id, e).then((res) => res);
+                  addLiquidityToPair(item.token0.id, item.token1.id, e.target.value).then(
+                    (res) => res
+                  );
                   setSingleTokenValue(e.target.value);
                   setInputType('single');
                 }}
