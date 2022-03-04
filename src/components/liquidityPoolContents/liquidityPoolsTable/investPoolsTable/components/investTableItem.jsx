@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import {
   TableItem,
   ItemHeader,
-  InvestButton,
   InfoButton,
   TokenImage,
   ItemIndex,
@@ -18,6 +17,7 @@ import {
   TokensValue,
   ResetButton,
   MenuPopoverBoxTitle,
+  MyPoolsItemButton,
 } from '../styledComponents';
 import { SvgComponent } from '../../../svgComponent/svgComponent';
 import {
@@ -45,18 +45,10 @@ import { Link, useParams } from 'react-router-dom';
 
 import { SelectOptionsWithJSX } from '../../../HOC/selectOptionsWithJSX';
 import Web3 from 'web3';
-import ERC20ABI from '../../../../../abi/ERC20.json';
 import ROUTERABI from '../../../../../abi/UniRouterV2.json';
-import FACTORYABI from '../../../../../abi/UniFactoryV2.json';
 import Addresses from '../../../../../contractAddresses';
-import axios from 'axios';
-import tokenURIs from '../../../../../screens/Exchange/tokenURIs';
 import TOKENDECIMALSABI from '../../../../../abi/TokenDecomals.json';
-import {
-  CommonSubmitButton,
-  CommonHoverButton,
-  CommonHoverButtonTrans,
-} from '../../../../../screens/TokenPage/components/styledComponentsCommon';
+import { CommonSubmitButton } from '../../../../../screens/TokenPage/components/styledComponentsCommon';
 import { GasMenuItem } from '../../../../gasDropDownMenu/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { data } from '../../../../../globalStore';
@@ -64,6 +56,7 @@ import fastDice from '../../../../../assets/icons/fastDice-icon.svg';
 import middleDice from '../../../../../assets/icons/middleDice-icon.svg';
 import slowDice from '../../../../../assets/icons/slowDice-icon.svg';
 import actionTypes from '../../../../../constants/actionTypes';
+import { GasPriceLabel } from '../../liquidityPoolsTable/styledComponents';
 
 export const InvestTableItem = ({
   item,
@@ -81,16 +74,7 @@ export const InvestTableItem = ({
   const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
   const allTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
 
-  const addIconsGasPricesWithIcons = addIconsGasPrices(
-    GasPrices,
-    fastDice,
-    middleDice,
-    slowDice,
-    fastDice,
-    middleDice,
-    slowDice,
-    theme
-  );
+  const gasPricesWithIcons = addIconsGasPrices(GasPrices, fastDice, middleDice, slowDice, theme);
 
   const [isModalVisible, setIsModalVisible] = useState('');
 
@@ -113,8 +97,8 @@ export const InvestTableItem = ({
   const [supplyTokenBalance, setSupplyTokenBalance] = useState('');
 
   const selectInitialValue = {
-    label: 'Ether',
-    value: 'Ether',
+    label: 'Ethereum',
+    value: 'Ethereum',
   };
 
   useEffect(() => {
@@ -129,6 +113,7 @@ export const InvestTableItem = ({
   }, [tokenAddress]);
 
   const switchModal = (e) => {
+    console.log('switchModal', e.target.id);
     setSelectedModal(e.target.id);
     setIsModalVisible('addLiquidity');
   };
@@ -419,6 +404,16 @@ export const InvestTableItem = ({
     setIsModalVisible('addLiquidity');
   };
 
+  const inputBox = document.getElementById('inputBox');
+
+  const invalidChars = ['-', '+', 'e'];
+
+  inputBox?.addEventListener('keydown', function (e) {
+    if (invalidChars.includes(e.key)) {
+      e.preventDefault();
+    }
+  });
+
   return (
     <>
       {/*MODAL addLiquidity====================================>*/}
@@ -433,14 +428,21 @@ export const InvestTableItem = ({
           <SelectWrapper isLightTheme={theme}>
             <SelectTitle isLightTheme={theme}>{'Supply a token'}</SelectTitle>
             <Select
+              defaultMenuIsOpen
               defaultValue={selectInitialValue}
               styles={selectStyle}
               options={updatedOptions}
-              onChange={supplyTokenHandler}
+              onChange={(e) => {
+                supplyTokenHandler(e);
+                setSingleTokenValue('');
+                setInValue('');
+                setOutValue('');
+              }}
             />
             <InputBlock>
               <ModalInput
                 isLightTheme={theme}
+                id="inputBox"
                 value={singleTokenValue}
                 type="number"
                 onChange={(e) => {
@@ -490,7 +492,7 @@ export const InvestTableItem = ({
                   setSingleTokenValue('');
                 }}
               />
-              <Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>
+              {/*<Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>*/}
             </InputBlock>
             {/*input-------------------->*/}
             {/*input-------------------->*/}
@@ -519,7 +521,7 @@ export const InvestTableItem = ({
                   setSingleTokenValue('');
                 }}
               />
-              <Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>
+              {/*<Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>*/}
             </InputBlock>
             {/*input-------------------->*/}
             <LinksContainer>
@@ -545,18 +547,20 @@ export const InvestTableItem = ({
         <ModalContainer modalType={isModalVisible} theme={theme} closeModal={setIsModalVisible}>
           <MenuPopoverBoxTitle isLightTheme={theme}>{'Realtime Gas Prices'}</MenuPopoverBoxTitle>
           <div style={{ marginBottom: '22px' }}>
-            {addIconsGasPricesWithIcons.map((option) => (
+            {gasPricesWithIcons.map((option) => (
               <div
-                style={{ display: 'flex', flexDirection: 'column' }}
-                selected={option.label === selected}
                 onClick={() => {
                   updateGasValue(option.value, option.label);
                 }}
+                selected={option.label === selected}
                 sx={{ py: 1, px: 2.5 }}>
                 <GasMenuItem isLightTheme={theme}>
                   <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                     <img src={option.icon} alt="" />
-                    <span>{`${option.label} `}</span>
+                    <GasPriceLabel
+                      style={
+                        option.label === selected ? { color: '#4453AD' } : { color: 'inherit' }
+                      }>{`${option.label}`}</GasPriceLabel>
                   </div>
                   <div>
                     <span>{`${option.value} Gwei`}</span>
@@ -565,18 +569,18 @@ export const InvestTableItem = ({
               </div>
             ))}
           </div>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <CommonSubmitButton
-              width={'189px'}
-              isLightTheme={theme}
-              // onClick={() => {
-              //   setIsModalVisible('advancedSettings');
-              // }}
-            >
-              {'Advanced settings'}
-            </CommonSubmitButton>
-          </div>
           {/*//TODO:slippageTolerance (doesn't implemented yet)*/}
+          {/*<div style={{ display: 'flex', justifyContent: 'center' }}>*/}
+          {/*  <CommonSubmitButton*/}
+          {/*    width={'189px'}*/}
+          {/*    isLightTheme={theme}*/}
+          {/*    // onClick={() => {*/}
+          {/*    //   setIsModalVisible('advancedSettings');*/}
+          {/*    // }}*/}
+          {/*  >*/}
+          {/*    {'Advanced settings'}*/}
+          {/*  </CommonSubmitButton>*/}
+          {/*</div>*/}
           {/*<MenuPopoverBoxTitle isLightTheme={theme}>{'Slippage Tolerance'}</MenuPopoverBoxTitle>*/}
           {/*<CommonHoverButtonTrans*/}
           {/*  height={'45px'}*/}
@@ -595,7 +599,7 @@ export const InvestTableItem = ({
           {/*  onClick={() => {}}>*/}
           {/*  {'%'}*/}
           {/*</CommonHoverButtonTrans>*/}
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '45%' }}>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
             <ResetButton isLightTheme={theme} onClick={resetButtonHandler}>
               {'Reset'}
             </ResetButton>
@@ -627,14 +631,14 @@ export const InvestTableItem = ({
         <LiquidityValue>{numberWithCommas(parseFloat(item.liquidity).toFixed(2))}</LiquidityValue>
         <APR>
           <AprBlock>
-            <AprName>{'Weekly'}</AprName>
+            <AprName isLightTheme={theme}>{'Weekly'}</AprName>
             <AprValue color="#00DFD1">
               +{(((parseInt(item.volume) * 0.003) / parseInt(item.liquidity)) * 100 * 7).toFixed(2)}
               %
             </AprValue>
           </AprBlock>
           <AprBlock>
-            <AprName>{'Yearly'}</AprName>
+            <AprName isLightTheme={theme}>{'Yearly'}</AprName>
             <AprValue color="#00DFD1">
               +
               {(((parseInt(item.volume) * 0.003) / parseInt(item.liquidity)) * 100 * 365).toFixed(
@@ -647,15 +651,15 @@ export const InvestTableItem = ({
         <BalanceValue>${numberWithCommas(parseFloat(item.balance).toFixed(2))}</BalanceValue>
         <TokensValue>${numberWithCommas(parseFloat(item.value).toFixed(2))}</TokensValue>
         <ItemButtons>
-          <CommonSubmitButton
-            width={'150px'}
+          <MyPoolsItemButton
+            style={{ gridArea: 'invest' }}
             isLightTheme={theme}
             id="Add Liquidity"
             onClick={switchModal}>
             {'Invest'}
-          </CommonSubmitButton>
-          <CommonSubmitButton
-            width={'150px'}
+          </MyPoolsItemButton>
+          <MyPoolsItemButton
+            style={{ gridArea: 'withdraw' }}
             isLightTheme={theme}
             id="Withdraw Liquidity"
             onClick={(e) => {
@@ -663,18 +667,18 @@ export const InvestTableItem = ({
               setIsWithdrawActive(true);
             }}>
             {'Withdraw'}
-          </CommonSubmitButton>
+          </MyPoolsItemButton>
           {item.protocol === 'Sushiswap' ? (
             <Link
               to={`/${address}/sushiswap/address/${item.poolDetails.token0Address}/${item.poolDetails.token1Address}`}>
-              <InfoButton isLightTheme={theme}>
+              <InfoButton style={{ gridArea: 'info' }} isLightTheme={theme}>
                 {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
               </InfoButton>
             </Link>
           ) : (
             <Link
               to={`/${address}/uniswap/address/${item.poolDetails.token0Address}/${item.poolDetails.token1Address}`}>
-              <InfoButton isLightTheme={theme}>
+              <InfoButton style={{ gridArea: 'info' }} isLightTheme={theme}>
                 {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
               </InfoButton>
             </Link>

@@ -18,13 +18,11 @@ export const TableWrapper = styled.div`
 
 export const TableItem = styled.div`
   color: ${(props) => (props.isLightTheme ? '#1E1E20' : ' white')};
-
   display: grid;
   grid-template-columns:
-    minmax(40px, 1fr) minmax(40px, 1fr) minmax(40px, 1fr) minmax(40px, 1fr) minmax(40px, 1fr)
-    minmax(100px, 2fr);
+    minmax(135px, 1fr) minmax(100px, 1fr) minmax(140px, 1fr) minmax(0, 1fr) minmax(0, 1fr)
+    minmax(50px, 2fr);
   grid-gap: 5px;
-  //grid-template-columns: repeat(5, minmax(40px, 1fr)) 2fr;
   grid-template-areas: 'head liquidity apr balance value buttons';
   align-items: center;
   padding: 11px 25px;
@@ -33,16 +31,16 @@ export const TableItem = styled.div`
 
   &:first-child {
     font-size: 10px;
-    color: #1e1e20;
+    color: ${(props) => (props.isLightTheme ? '#1E1E20' : ' white')};
     opacity: 0.5;
+    font-weight: 600;
+    font-size: 10px;
   }
 
   @media (min-width: 175px) and (max-width: 840px) {
     &:first-child {
-      //justify-content: center;
       grid-template-columns: 50% 50%;
       grid-template-areas: 'head apr';
-      //align-items: center;
       padding: 5px 15px 0;
       font-weight: 600;
       opacity: 1;
@@ -76,7 +74,7 @@ export const ItemIndex = styled.div`
   @media (min-width: 175px) and (max-width: 840px) {
   }
 `;
-
+//878995
 export const ItemIndexHidden = styled.div`
   width: 15px;
   grid-area: index;
@@ -94,12 +92,13 @@ export const HeaderApr = styled.div`
     justify-content: flex-end;
     padding-right: 100px;
     margin-bottom: 20px;
+    color: ${(props) => (props.isLightTheme ? '#1E1E20' : ' white')};
   }
 `;
 export const LPbalance = styled.div`
   grid-area: balance;
   @media (min-width: 175px) and (max-width: 840px) {
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: flex-end;
     padding-right: 100px;
@@ -110,7 +109,7 @@ export const LPbalance = styled.div`
 export const Value = styled.div`
   grid-area: value;
   @media (min-width: 175px) and (max-width: 840px) {
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: flex-end;
     padding-right: 100px;
@@ -120,7 +119,7 @@ export const Value = styled.div`
 export const Buttons = styled.div`
   grid-area: buttons;
   @media (min-width: 175px) and (max-width: 840px) {
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: flex-end;
     padding-right: 100px;
@@ -176,9 +175,9 @@ export const TokenImage = styled.img`
 
 export const TokenImages = styled.div`
   display: flex;
-  width: 30px;
+  min-width: 30px;
 
-  @media (max-width: 300px) {
+  @media (max-width: 335px) {
     display: none;
   }
 `;
@@ -203,13 +202,14 @@ export const AprBlock = styled.div`
 export const AprName = styled.div`
   display: flex;
   align-items: center;
-  width: 75px;
+  //width: 75px;
   font-size: 10px;
   font-weight: 600;
   font-size: 10px;
   line-height: 16px;
-  color: #1e1e20;
+  color: ${(props) => (props.isLightTheme ? '#1E1E20' : ' white')};
   opacity: 0.5;
+  margin-right: 20px;
 
   @media (min-width: 175px) and (max-width: 840px) {
     width: 50px;
@@ -233,12 +233,32 @@ export const AprValue = styled.div`
 
 export const ItemButtons = styled.div`
   display: flex;
-  gap: 30px;
+  gap: 10px;
   grid-area: buttons;
   @media (min-width: 175px) and (max-width: 840px) {
     display: grid;
-    grid-template-columns: 3fr 40px;
+    grid-template-areas:
+      'invest invest invest invest invest invest invest invest invest invest invest info'
+      'withdraw withdraw withdraw withdraw withdraw withdraw withdraw withdraw withdraw withdraw withdraw withdraw';
     justify-content: space-between;
+  }
+`;
+
+export const MyPoolsItemButton = styled.button`
+  height: 40px;
+  width: 150px;
+  background: ${(props) => (props.isLightTheme ? '#fff' : '#8f86ff')};
+  color: ${(props) => (props.isLightTheme ? '#4453AD' : ' white')};
+  box-shadow: inset 0 11px 21px -6px rgb(51 78 131 / 12%);
+  border-radius: 10px;
+  border: none;
+  padding: 9px 9px;
+  font-family: 'Saira', serif;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  @media (min-width: 175px) and (max-width: 840px) {
+    width: 100%;
   }
 `;
 
@@ -253,6 +273,7 @@ export const LiquidityValue = styled.div`
 export const BalanceValue = styled.div`
   grid-area: balance;
   @media (min-width: 175px) and (max-width: 840px) {
+    display: none;
     margin-bottom: 10px;
     padding-left: 20px;
   }
@@ -261,6 +282,7 @@ export const BalanceValue = styled.div`
 export const TokensValue = styled.div`
   grid-area: value;
   @media (min-width: 175px) and (max-width: 840px) {
+    display: none;
     margin-bottom: 10px;
     padding-left: 20px;
   }
@@ -283,6 +305,7 @@ export const AvailableTitle = styled.div`
   justify-content: center;
   @media (min-width: 175px) and (max-width: 840px) {
     font-width: 600;
+    color: ${(props) => (props.isLightTheme ? '#1E1E20' : ' white')};
   }
 `;
 

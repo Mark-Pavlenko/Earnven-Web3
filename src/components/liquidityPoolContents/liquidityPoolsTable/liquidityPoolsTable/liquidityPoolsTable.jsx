@@ -3,13 +3,12 @@ import { useSelector } from 'react-redux';
 import { LiquidityTableItem } from './components/liquidityTableItem';
 
 import {
-  TableWrapper,
   TableItem,
-  ItemHeader,
-  ItemIndex,
   HeaderApr,
-  HeaderLiquidity,
+  ItemHeader,
+  TableWrapper,
   AvailableTitle,
+  HeaderLiquidity,
   ItemIndexHidden,
 } from './styledComponents';
 
@@ -38,14 +37,14 @@ export const LiquidityPoolsTable = ({
         data.map((item, index) => {
           return (
             <LiquidityTableItem
+              type={type}
               item={item}
               index={index}
               theme={theme}
-              type={type}
-              addLiquidity={addLiquidity}
-              addLiquidityNormal={addLiquidityNormal}
               AllTokens={AllTokens}
+              addLiquidity={addLiquidity}
               protocolType={protocolType}
+              addLiquidityNormal={addLiquidityNormal}
             />
           );
         })}

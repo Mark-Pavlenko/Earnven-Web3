@@ -29,7 +29,7 @@ export const TableItem = styled.div`
 
   &:first-child {
     font-size: 10px;
-    color: #1e1e20;
+    color: ${(props) => (props.isLightTheme ? '#1E1E20' : ' white')};
     opacity: 0.5;
   }
 
@@ -142,7 +142,7 @@ export const TokenImages = styled.div`
   display: flex;
   width: 30px;
 
-  @media (max-width: 300px) {
+  @media (max-width: 335px) {
     display: none;
   }
 `;
@@ -171,7 +171,7 @@ export const AprName = styled.div`
   font-weight: 600;
   font-size: 10px;
   line-height: 16px;
-  color: #1e1e20;
+  color: ${(props) => (props.isLightTheme ? '#1E1E20' : ' white')};
   opacity: 0.5;
 
   @media (min-width: 175px) and (max-width: 840px) {
@@ -260,5 +260,12 @@ export const MenuPopoverBoxTitle = styled.p`
 
   @media (max-width: 910px) {
     margin-left: 7px;
+  }
+`;
+
+export const GasPriceLabel = styled.span`
+  color: ${(props) => (props.selected ? '#4453AD' : 'white')};
+  &:hover {
+    color: #4453ad;
   }
 `;

@@ -30,13 +30,13 @@ export const InvestPoolsTable = ({
     <TableWrapper isLightTheme={theme}>
       <TableItem isLightTheme={theme}>
         <ItemHeader>
-          <ItemIndexHidden>{'№'}</ItemIndexHidden>
-          <AvailableTitle>{'Available pools'}</AvailableTitle>
+          <ItemIndexHidden isLightTheme={theme}>{'№'}</ItemIndexHidden>
+          <AvailableTitle isLightTheme={theme}>{'Available pools'}</AvailableTitle>
         </ItemHeader>
-        <HeaderLiquidity>{'Liquidity'}</HeaderLiquidity>
-        <HeaderApr>{'APR'}</HeaderApr>
-        <LPbalance>{'LP balance'}</LPbalance>
-        <Value>{'Value'}</Value>
+        <HeaderLiquidity isLightTheme={theme}>{'Liquidity'}</HeaderLiquidity>
+        <HeaderApr isLightTheme={theme}>{'APR'}</HeaderApr>
+        <LPbalance isLightTheme={theme}>{'LP balance'}</LPbalance>
+        <Value isLightTheme={theme}>{'Value'}</Value>
         <Buttons></Buttons>
       </TableItem>
       {data &&
