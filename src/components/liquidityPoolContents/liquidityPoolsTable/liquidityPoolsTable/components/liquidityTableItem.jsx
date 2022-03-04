@@ -399,7 +399,6 @@ export const LiquidityTableItem = ({
           <SelectWrapper isLightTheme={theme}>
             <SelectTitle isLightTheme={theme}>{'Supply a token'}</SelectTitle>
             <Select
-              defaultMenuIsOpen
               defaultValue={selectInitialValue}
               styles={selectStyle}
               options={updatedOptions}

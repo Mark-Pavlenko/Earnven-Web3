@@ -428,7 +428,6 @@ export const InvestTableItem = ({
           <SelectWrapper isLightTheme={theme}>
             <SelectTitle isLightTheme={theme}>{'Supply a token'}</SelectTitle>
             <Select
-              defaultMenuIsOpen
               defaultValue={selectInitialValue}
               styles={selectStyle}
               options={updatedOptions}
