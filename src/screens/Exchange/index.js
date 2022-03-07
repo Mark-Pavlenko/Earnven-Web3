@@ -293,9 +293,10 @@ export default function SwapComponent() {
   };
 
   const searchTokensHandler = (event, searchTokensData) => {
-    // console.log('single search data', searchTokensData);
-    const result = filteredTokensByName(event, searchTokensData);
-    //console.log('result single 111', result, searchTokensData);
+    // console.log('single search event', event);
+    // console.log('single search data', searchTokensData.tokensList);
+    const result = filteredTokensByName(event, searchTokensData.tokensList);
+    // console.log('single search result 111', result, searchTokensData);
     if (searchTokensData.searchSendTokensList === true) {
       let middle = result.filter((token) => token.symbol !== initSendTokenSwap.symbol);
       setFilteredData(middle);
