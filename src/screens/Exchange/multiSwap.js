@@ -505,6 +505,13 @@ export default function MultiSwapComponent() {
     });
   };
 
+  const regex = /^[a-zA-Z\s]*$/;
+
+  // const handleSendReceiveAmountInput = (e) => {
+  //   console.log('activated', e);
+  //   e.target.value = e.target.value.replace(regex, '');
+  // };
+
   return (
     <SecondColumnSwapSubBlock>
       <SecondColumnTitleBlock>
@@ -596,7 +603,8 @@ export default function MultiSwapComponent() {
             // style={{ backgroundColor: 'red' }}
             >
               <MultiSwapSendValueLabel isLightTheme={isLightTheme} style={{ marginLeft: '30px' }}>
-                {initSendMultiSwapToken.USDCurrency?.toFixed(2)} {initSendMultiSwapToken.symbol}
+                {/*{initSendMultiSwapToken.USDCurrency?.toFixed(2)} {initSendMultiSwapToken.symbol}*/}
+                {initSendMultiSwapToken.balance} {initSendMultiSwapToken.symbol}
               </MultiSwapSendValueLabel>
 
               <MultiSwapSendValueLabel isLightTheme={isLightTheme}>
@@ -605,7 +613,9 @@ export default function MultiSwapComponent() {
             </MultiSwapSendValueLabelsLayout>
           </MultiSwapSendTokensChooseBlock>
           {isTokensLimitExceeded && (
-            <ExceededAmountTokensLimitWarning>Insufficient funds</ExceededAmountTokensLimitWarning>
+            <ExceededAmountTokensLimitWarning style={{ marginRight: '30px', marginTop: '-10px' }}>
+              Insufficient funds
+            </ExceededAmountTokensLimitWarning>
           )}
 
           <SwitchTokensBtn
