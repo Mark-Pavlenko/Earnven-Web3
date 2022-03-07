@@ -116,6 +116,7 @@ import {
   checkIfExchangedTokenLimitIsExceeded,
   convertSendTokenToUSDCurrencyHelper,
   filteredTokensByName,
+  initFilteringModalTokensList,
 } from './helpers';
 
 import { getTokenDataSaga } from '../../store/currentTokenData/actions';
@@ -239,14 +240,17 @@ export default function SwapComponent() {
 
   useEffect(() => {
     let filteredSendTokensList = finalSendTokensList.filter(
-      (token) => token.symbol !== initSendTokenSwap.symbol
+      (token) => token.address !== initSendTokenSwap.address
     );
     let filteredReceiveTokensList = finalReceiveTokensList.filter(
-      (token) => token.symbol !== initReceiveFirstTokenSwap.symbol
+      (token) => token.address !== initReceiveFirstTokenSwap.address
     );
 
-    //console.log('single filteredSendTokensList', filteredSendTokensList);
-    //console.log('single filteredReceiveTokensList', filteredReceiveTokensList);
+    // let finalSendTokensList = initFilteringModalTokensList(
+    //   searchTokensData,
+    //   initSendTokenSwap,
+    //   [initReceiveFirstTokenSwap]
+    // );
 
     finalSendTokensList.length !== 0 && setFilteredData(filteredSendTokensList);
     finalReceiveTokensList.length !== 0 &&
@@ -257,18 +261,6 @@ export default function SwapComponent() {
 
     setTokenSendUSDCurrency('$0.00');
     setTokensReceiveUSDCurrency('$0.00');
-
-    // should in first time page load output the 1 sent token to total receive token amount - get undefined error
-    // setTimeout(
-    //   () =>
-    //     convertExchangeTokensCourse({
-    //       inputId: 'firstPageLoad',
-    //       tokenAmount: 1,
-    //       sendTokenForExchangeAddress: initSendTokenSwap.address,
-    //       receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
-    //     }),
-    //   5000
-    // );
   }, [finalSendTokensList, finalReceiveTokensList]);
 
   //function of dynamic converting of token value to USD Currency
@@ -293,9 +285,16 @@ export default function SwapComponent() {
   };
 
   const searchTokensHandler = (event, searchTokensData) => {
-    // console.log('single search event', event);
-    // console.log('single search data', searchTokensData.tokensList);
-    const result = filteredTokensByName(event, searchTokensData.tokensList);
+    // console.log('single search init data', searchTokensData.tokensList);
+
+    let removedInitTokenValuesList = initFilteringModalTokensList(
+      searchTokensData,
+      initSendTokenSwap,
+      [initReceiveFirstTokenSwap]
+    );
+
+    const result = filteredTokensByName(event, removedInitTokenValuesList);
+
     // console.log('single search result 111', result, searchTokensData);
     if (searchTokensData.searchSendTokensList === true) {
       let middle = result.filter((token) => token.symbol !== initSendTokenSwap.symbol);
@@ -634,6 +633,35 @@ export default function SwapComponent() {
     setIsTokensLimitExceeded(isLimitExceeded);
   };
 
+  const tokensListModalHelper = (listModalData) => {
+    console.log('isSendTokensList', listModalData);
+    console.log('isSendTokensListModalOpen', listModalData.isSendTokensListModalOpen);
+
+    if (listModalData.isSendTokensListModalOpen === true) {
+      let searchTokensData = { tokensList: finalSendTokensList };
+
+      let removedInitTokenValuesList = initFilteringModalTokensList(
+        searchTokensData,
+        initSendTokenSwap,
+        [initReceiveFirstTokenSwap]
+      );
+
+      setFilteredData(removedInitTokenValuesList);
+      setIsSendTokensModalVisible(true);
+    } else {
+      let searchTokensData = { tokensList: finalReceiveTokensList };
+
+      let removedInitTokenValuesList = initFilteringModalTokensList(
+        searchTokensData,
+        initSendTokenSwap,
+        [initReceiveFirstTokenSwap]
+      );
+
+      setFilteredReceiveTokensListData(removedInitTokenValuesList);
+      setIsReceiveTokensModalVisible(true);
+    }
+  };
+
   return (
     <>
       <ExchangeMainLayout>
@@ -658,7 +686,13 @@ export default function SwapComponent() {
                 {/* Open modal with tokens list*/}
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   <SendTokensChooseButton isLightTheme={isLightTheme}>
-                    <ChooseBtnTokenBlock onClick={() => setIsSendTokensModalVisible(true)}>
+                    <ChooseBtnTokenBlock
+                      onClick={() =>
+                        tokensListModalHelper({
+                          isSendTokensListModalOpen: true,
+                          token: initSendTokenSwap,
+                        })
+                      }>
                       {initSendTokenSwap.logoURI !== null ? (
                         <SendTokenImg alt="token_img" src={initSendTokenSwap.logoURI} />
                       ) : (
@@ -889,7 +923,13 @@ export default function SwapComponent() {
                   {/*{toggleExchangedTokens ? (*/}
                   {/*  <div>Toggled</div>*/}
                   {/*) : (*/}
-                  <ChooseBtnTokenBlock onClick={() => setIsReceiveTokensModalVisible(true)}>
+                  <ChooseBtnTokenBlock
+                    onClick={() =>
+                      tokensListModalHelper({
+                        isSendTokensListModalOpen: false,
+                        token: initReceiveFirstTokenSwap,
+                      })
+                    }>
                     {initReceiveFirstTokenSwap.logoURI !== null ? (
                       <SendTokenImg alt="token_img" src={initReceiveFirstTokenSwap.logoURI} />
                     ) : (
