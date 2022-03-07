@@ -54,6 +54,7 @@ import {
   SubLayoutReceiveTokensBlock,
   USDCurrencySendInputBlock,
   MultiSwapSendValueLabelsLayout,
+  SendBlockLabels,
 } from './styled';
 import EthIcon from '../../assets/icons/ethereum.svg';
 import chevronDownBlack from '../../assets/icons/chevronDownLightTheme.svg';
@@ -520,12 +521,13 @@ export default function MultiSwapComponent() {
         style={{ marginTop: '0', height: '600px' }}>
         {/*Choose send tokens block*/}
         <SendReceiveSubBlock>
+          <SendBlockLabels isLightTheme={isLightTheme} style={{ margin: '32px 20px 0px 20px' }}>
+            <span>Send</span>
+          </SendBlockLabels>
           <MultiSwapSendTokensChooseBlock isLightTheme={isLightTheme}>
             {/* SEND block */}
 
-            <MultiSwapChooseBtnTokenBlock
-            // style={{ backgroundColor: 'green' }}
-            >
+            <MultiSwapChooseBtnTokenBlock>
               <div
                 onClick={() =>
                   openModalHelper({ tokensList: finalSendTokensList, isSendModalOpen: true })
@@ -619,6 +621,9 @@ export default function MultiSwapComponent() {
           </span>
         ) : (
           <>
+            <SendBlockLabels isLightTheme={isLightTheme} style={{ margin: '0px 20px 5px 20px' }}>
+              <span>Receive</span>
+            </SendBlockLabels>
             <SubLayoutReceiveTokensBlock>
               {initReceiveMultiSwapTokensList.map((receiveToken, key) => (
                 <MultiSwapReceiveTokensBlock isLightTheme={isLightTheme}>
