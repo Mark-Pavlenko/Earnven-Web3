@@ -22,6 +22,9 @@ import switchTokensDark from '../../assets/icons/switchTokensDark.svg';
 import paraSwapIcon from '../../assets/icons/exchangers/paraSwapExchangerIcon.svg';
 import searchTokensImportModalLight from '../../assets/icons/searchTokensButtonMobileLight.svg';
 import searchTokensImportModalDark from '../../assets/icons/searchTokensInputModalDark.svg';
+import fastSpeedIcon from '../../assets/icons/iron_man_icon.svg';
+import averageSpeedIcon from '../../assets/icons/starWarsIcon.svg';
+import slowSpeedIcon from '../../assets/icons/futuramaIcon.svg';
 
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -72,6 +75,9 @@ import {
   SaveSelectedExchangerButton,
   SingleSwapTokensOfferedBySubBlock,
   ExceededAmountTokensLimitWarning,
+  TransactionSpeedGridLayout,
+  TransactionSpeedGridLayoutItem,
+  GridLayoutItemIconSubBlock,
 } from './styled';
 import { useDispatch, useSelector } from 'react-redux';
 import chevronDownBlack from '../../assets/icons/chevronDownLightTheme.svg';
@@ -1458,7 +1464,47 @@ export default function SwapComponent() {
                               <span>Transaction speed</span>
                             </OfferedByLayoutLabelBlock>
                             <ExchangersLayout isLightTheme={isLightTheme}>
-                              Transaction speed content
+                              {/*Transaction speed content*/}
+
+                              <TransactionSpeedGridLayout>
+                                <TransactionSpeedGridLayoutItem>
+                                  <GridLayoutItemIconSubBlock>
+                                    <div
+                                      style={
+                                        {
+                                          // columnGap: '15px',
+                                        }
+                                      }>
+                                      <img src={fastSpeedIcon} alt="f" />
+                                      <span>Fast</span>
+                                    </div>
+                                  </GridLayoutItemIconSubBlock>
+
+                                  <span>92 Gwei ($40.50)</span>
+                                </TransactionSpeedGridLayoutItem>
+                                <TransactionSpeedGridLayoutItem>
+                                  <GridLayoutItemIconSubBlock>
+                                    <div>
+                                      <img src={averageSpeedIcon} alt="f" />
+
+                                      <span>Average</span>
+                                    </div>
+                                  </GridLayoutItemIconSubBlock>
+
+                                  <span>92 Gwei ($40.50)</span>
+                                </TransactionSpeedGridLayoutItem>
+                                <TransactionSpeedGridLayoutItem>
+                                  <GridLayoutItemIconSubBlock>
+                                    <div>
+                                      <img src={slowSpeedIcon} alt="f" />
+
+                                      <span>Slow</span>
+                                    </div>
+                                  </GridLayoutItemIconSubBlock>
+
+                                  <span>92 Gwei ($40.50)</span>
+                                </TransactionSpeedGridLayoutItem>
+                              </TransactionSpeedGridLayout>
                             </ExchangersLayout>
                           </ExchangersMainSubLayout>
                         </SingleSwapTokensOfferedBySubBlock>

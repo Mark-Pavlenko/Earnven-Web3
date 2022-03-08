@@ -440,6 +440,33 @@ export const OfferedByLayoutLabelBlock = styled.div`
 
 export const ExchangersLayout = styled.div``;
 
+export const TransactionSpeedGridLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+export const TransactionSpeedGridLayoutItem = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 336px;
+  margin: 26px 99px 0 89px;
+  font-size: 14px;
+  cursor: pointer;
+`;
+
+export const GridLayoutItemIconSubBlock = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  div {
+    display: grid;
+    grid-template-columns: 32px 60px;
+  }
+`;
+
 export const ExchangersMainListLayout = styled.div`
   height: 310px;
   overflow: auto;

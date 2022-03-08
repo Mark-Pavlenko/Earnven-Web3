@@ -60,6 +60,9 @@ export default function GasDropdownMenuHeader({ isLightTheme }) {
     ));
 
     setGasPricesContent(content);
+
+    console.log('addIconsGasPricesWithIcons', addIconsGasPricesWithIcons);
+    console.log('GasPricesContent', GasPricesContent);
   }, [GasPrices]);
 
   const handleOpen = () => {
