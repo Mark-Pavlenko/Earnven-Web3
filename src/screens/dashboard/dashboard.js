@@ -125,7 +125,7 @@ export default function Dashboard({ test, changeTheme }) {
   useEffect(() => {
     timer.current = setTimeout(() => {
       setisLoading(false);
-    }, 7000);
+    }, 10000);
   }, [address]);
 
   useEffect(() => {
