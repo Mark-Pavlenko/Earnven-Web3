@@ -603,7 +603,6 @@ export default function MultiSwapComponent() {
             // style={{ backgroundColor: 'red' }}
             >
               <MultiSwapSendValueLabel isLightTheme={isLightTheme} style={{ marginLeft: '30px' }}>
-                {/*{initSendMultiSwapToken.USDCurrency?.toFixed(2)} {initSendMultiSwapToken.symbol}*/}
                 {initSendMultiSwapToken.balance} {initSendMultiSwapToken.symbol}
               </MultiSwapSendValueLabel>
 

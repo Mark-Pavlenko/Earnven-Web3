@@ -318,6 +318,7 @@ export default function SwapComponent() {
 
     if (tokenData.USDCurrency !== undefined && tokenData.USDCurrency !== '$0.00') {
       console.log('test activation');
+      //
       setTokenSendUSDCurrency(
         `$${(tokenData.USDCurrency * parseFloat(tokenData.amount)).toFixed(2)}`
       );
@@ -780,66 +781,85 @@ export default function SwapComponent() {
 
                 {/* Open modal with tokens list*/}
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <SendTokensChooseButton isLightTheme={isLightTheme}>
-                    <ChooseBtnTokenBlock
-                      onClick={() =>
-                        tokensListModalHelper({
-                          isSendTokensListModalOpen: true,
-                          token: initSendTokenSwap,
-                        })
-                      }>
-                      {initSendTokenSwap.logoURI !== null ? (
-                        <SendTokenImg alt="token_img" src={initSendTokenSwap.logoURI} />
-                      ) : (
-                        <Avatar
-                          style={{
-                            marginRight: '12px',
-                            marginLeft: '12px',
-                            marginTop: '2px',
-                          }}
-                          name={initSendTokenSwap.avatarIcon}
-                          round={true}
-                          size="21"
-                          textSizeRatio={1}
+                  <SendTokensChooseButton
+                    isLightTheme={isLightTheme}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'normal',
+                    }}>
+                    <div style={{ display: 'flex', height: '34px' }}>
+                      <ChooseBtnTokenBlock
+                        onClick={() =>
+                          tokensListModalHelper({
+                            isSendTokensListModalOpen: true,
+                            token: initSendTokenSwap,
+                          })
+                        }
+                        style={{ height: '45px' }}>
+                        {initSendTokenSwap.logoURI !== null ? (
+                          <SendTokenImg alt="token_img" src={initSendTokenSwap.logoURI} />
+                        ) : (
+                          <Avatar
+                            style={{
+                              marginRight: '12px',
+                              marginLeft: '12px',
+                              marginTop: '2px',
+                            }}
+                            name={initSendTokenSwap.avatarIcon}
+                            round={true}
+                            size="21"
+                            textSizeRatio={1}
+                          />
+                        )}
+                        <ChosenTokenLabel isLightTheme={isLightTheme}>
+                          {initSendTokenSwap.symbol === 'ethereum'
+                            ? 'ETH'
+                            : initSendTokenSwap.symbol}
+                        </ChosenTokenLabel>
+                        <img
+                          src={isLightTheme ? chevronDownBlack : chevronDownLight}
+                          alt="chevron_icon"
                         />
-                      )}
-                      <ChosenTokenLabel isLightTheme={isLightTheme}>
-                        {initSendTokenSwap.symbol === 'ethereum' ? 'ETH' : initSendTokenSwap.symbol}
-                      </ChosenTokenLabel>
-                      <img
-                        src={isLightTheme ? chevronDownBlack : chevronDownLight}
-                        alt="chevron_icon"
-                      />
-                    </ChooseBtnTokenBlock>
+                      </ChooseBtnTokenBlock>
 
-                    <ChosenSendReceiveTokenValueInput
-                      //------
-                      InputProps={{
-                        inputProps: {
-                          style: {
-                            textAlign: 'right',
-                            paddingRight: 0,
-                            width: '200px',
-                            fontWeight: 600,
-                            color: isLightTheme ? 'black' : 'white',
+                      <ChosenSendReceiveTokenValueInput
+                        //------
+                        InputProps={{
+                          inputProps: {
+                            style: {
+                              textAlign: 'right',
+                              paddingRight: 0,
+                              width: '200px',
+                              fontWeight: 600,
+                              color: isLightTheme ? 'black' : 'white',
+                              height: '18px',
+                            },
                           },
-                        },
-                        classes: { notchedOutline: classes.noBorder },
-                      }}
-                      isLightTheme={isLightTheme}
-                      placeholder="0.0"
-                      value={sendTokenForExchangeAmount}
-                      onChange={(e) => {
-                        triggerTokenInputHandler(e.target.value, initSendTokenSwap, {
-                          isSendTokenSwapped: true,
-                        });
-                      }}
-                    />
+                          classes: { notchedOutline: classes.noBorder },
+                        }}
+                        isLightTheme={isLightTheme}
+                        placeholder="0.0"
+                        value={sendTokenForExchangeAmount}
+                        onChange={(e) => {
+                          triggerTokenInputHandler(e.target.value, initSendTokenSwap, {
+                            isSendTokenSwapped: true,
+                          });
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <MultiSwapSendValueLabel
+                        isLightTheme={isLightTheme}
+                        style={{ marginLeft: '43px', marginTop: '-5px' }}>
+                        {initSendTokenSwap.balance} {initSendTokenSwap.symbol}
+                      </MultiSwapSendValueLabel>
+                    </div>
                   </SendTokensChooseButton>
 
                   {isTokensLimitExceeded && (
-                    <ExceededAmountTokensLimitWarning>
-                      Insufficient funds - available {initSendTokenSwap.balance}
+                    <ExceededAmountTokensLimitWarning style={{ marginTop: '5px' }}>
+                      Insufficient funds
                     </ExceededAmountTokensLimitWarning>
                   )}
                 </div>
