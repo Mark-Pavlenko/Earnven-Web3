@@ -790,6 +790,12 @@ export default function SwapComponent() {
         amount: value,
         ...tokenForSwap,
       });
+
+      const isLimitExceeded = checkIfExchangedTokenLimitIsExceeded(
+        value,
+        initSendTokenSwap.balance
+      );
+      setIsTokensLimitExceeded(isLimitExceeded);
     } else if (chosenTokenType.isSendTokenSwapped === false) {
       setReceiveTokenForExchangeAmount(value);
 
@@ -805,8 +811,6 @@ export default function SwapComponent() {
         ...tokenForSwap,
       });
     }
-    const isLimitExceeded = checkIfExchangedTokenLimitIsExceeded(value, initSendTokenSwap.balance);
-    setIsTokensLimitExceeded(isLimitExceeded);
   };
 
   const tokensListModalHelper = (listModalData) => {
@@ -839,6 +843,17 @@ export default function SwapComponent() {
   };
 
   // // console.log('isAbleToReplaceTokensInSingleSwap', isAbleToReplaceTokensInSingleSwap);
+
+  const filterAmountInputFunction = (e, flag) => {
+    let test = e.currentTarget.value.replace(/[^\d.-]/g, '').replace(/[^\w.]|_/g, '');
+    console.log('regex test', test);
+
+    if (flag.isSendTokenSwapped === true) {
+      setSendTokenForExchangeAmount(test);
+    } else {
+      setReceiveTokenForExchangeAmount(test);
+    }
+  };
 
   return (
     <>
@@ -927,6 +942,7 @@ export default function SwapComponent() {
                           triggerTokenInputHandler(e.target.value, initSendTokenSwap, {
                             isSendTokenSwapped: true,
                           });
+                          filterAmountInputFunction(e, { isSendTokenSwapped: true });
                         }}
                       />
                     </div>
@@ -1179,6 +1195,7 @@ export default function SwapComponent() {
                       triggerTokenInputHandler(event.target.value, initReceiveFirstTokenSwap, {
                         isSendTokenSwapped: false,
                       });
+                      filterAmountInputFunction(event, { isSendTokenSwapped: false });
                     }}
                   />
                 </SendTokensChooseButton>
@@ -1475,7 +1492,10 @@ export default function SwapComponent() {
                     false ||
                     sendTokenForExchangeAmount === '0' ||
                     sendTokenForExchangeAmount === 0 ||
-                    sendTokenForExchangeAmount?.length === 0
+                    sendTokenForExchangeAmount?.length === 0 ||
+                    receiveTokenForExchangeAmount === '0' ||
+                    receiveTokenForExchangeAmount === 0 ||
+                    receiveTokenForExchangeAmount?.length === 0
                   }
                   onClick={() => {
                     calculateToAmount(initSendTokenSwap);
