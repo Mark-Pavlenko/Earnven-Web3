@@ -505,12 +505,7 @@ export default function MultiSwapComponent() {
     });
   };
 
-  const regex = /^[a-zA-Z\s]*$/;
-
-  // const handleSendReceiveAmountInput = (e) => {
-  //   console.log('activated', e);
-  //   e.target.value = e.target.value.replace(regex, '');
-  // };
+  console.log('isSendTokenSelectedSwapped', isSendTokenSelectedSwapped);
 
   return (
     <SecondColumnSwapSubBlock>
@@ -932,15 +927,16 @@ export default function MultiSwapComponent() {
                                 <SendTokenName isLightTheme={isLightTheme}>
                                   {object.name}
                                 </SendTokenName>
-                                <SendTokenConvertedMeasures isLightTheme={isLightTheme}>
+                                <SendTokenConvertedMeasures
+                                  isLightTheme={isLightTheme}
+                                  style={{ visibility: 'hidden' }}>
                                   409,333 UNI · $19,18
                                 </SendTokenConvertedMeasures>
                               </div>
                             </SendTokenLabelsBlock>
                             <SendTokenBalance isLightTheme={isLightTheme}>
-                              {object.balance === undefined ? (
-                                <Loader type="Rings" color="#BB86FC" height={30} width={30} />
-                              ) : (
+                              {object.balance !== undefined && isSendTokenSelectedSwapped === true && (
+                                // <Loader type="Rings" color="#BB86FC" height={30} width={30} />
                                 <span>${object.balance}</span>
                               )}
                             </SendTokenBalance>

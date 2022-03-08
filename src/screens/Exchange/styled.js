@@ -394,7 +394,7 @@ export const AdditionalOptionsSwapTokensSubBlock = styled.div`
 
 export const SingleSwapTokensOfferedBySubBlock = styled.div`
   width: 525px;
-  height: 515px;
+  //height: 515px;
   background-color: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#4453AD1A')};
   box-shadow: ${(props) =>
     props.isLightTheme
@@ -425,7 +425,6 @@ export const OfferedByLayoutLabelBlock = styled.div`
   padding-top: 20px;
   padding-left: 20px;
   cursor: pointer;
-  width: 180px;
 
   img {
     transform: rotate(90deg);
