@@ -51,19 +51,20 @@ export const filteredTokensByName = (event, searchTokensData) => {
 };
 
 export const convertSendTokenToUSDCurrencyHelper = (tokenData) => {
-  console.log('send tokenData  single swap helper', tokenData);
+  console.log('send tokenData single swap helper', tokenData);
   // console.log('send tokenData helper parseInt(tokenData.amount)', parseInt(tokenData.amount));
 
   if (tokenData.amount === '') {
     tokenData.amount = '0';
   }
 
-  if (tokenData.USDCurrency !== undefined) {
+  if (tokenData.USDCurrency !== undefined && tokenData.USDCurrency !== '$0.00') {
     return `$${(tokenData.USDCurrency * parseFloat(tokenData.amount)).toFixed(2)}`;
+  } else if (tokenData.USDCurrency === '$0.00') {
+    return 'Not able to count';
   } else {
     return 'Price not available';
   }
-  // }
 };
 
 export const checkIfExchangedTokenLimitIsExceeded = (chosenTokenAmount, totalTokensBalance) => {
