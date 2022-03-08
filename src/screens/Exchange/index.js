@@ -323,7 +323,7 @@ export default function SwapComponent() {
         `$${(tokenData.USDCurrency * parseFloat(tokenData.amount)).toFixed(2)}`
       );
     } else if (tokenData.USDCurrency === '$0.00') {
-      setTokenSendUSDCurrency('Loading');
+      // setTokenSendUSDCurrency('Loading');
 
       let tokenUSDCurrencyValue;
 
@@ -361,7 +361,7 @@ export default function SwapComponent() {
   };
 
   let convertReceiveTokenToUSDCurrency = async (tokenData) => {
-    setTokensReceiveUSDCurrency('Loading');
+    // setTokensReceiveUSDCurrency('Loading');
 
     console.log('receive tokenData single swap helper', tokenData);
 
@@ -567,19 +567,17 @@ export default function SwapComponent() {
         setIsAbleToReplaceTokensInSingleSwap(false);
       }
 
-      setIsSendTokensModalVisible(false);
-      setSendTokenForExchangeAmount(0);
       dispatch({
         type: actionTypes.SET_INIT_SEND_TOKEN_SWAP,
         payload: selectedToken,
       });
-      convertSendTokenToUSDCurrency({
-        amount: 0,
-        sendTokensListItem: true,
-        ...selectedToken,
-      });
 
+      setTokenSendUSDCurrency('$0.00');
+      setTokensReceiveUSDCurrency('$0.00');
+      setSendTokenForExchangeAmount(0);
+      setReceiveTokenForExchangeAmount(0);
       setIsTokensLimitExceeded(false);
+      setIsSendTokensModalVisible(false);
     } else {
       let ifSendTokenAvailableForSwap = finalReceiveTokensList.some((el) => {
         if (el.address === initSendTokenSwap.address) {
@@ -602,20 +600,17 @@ export default function SwapComponent() {
         setIsAbleToReplaceTokensInSingleSwap(false);
       }
 
-      setIsReceiveTokensModalVisible(false);
-      setReceiveTokenForExchangeAmount(0);
-
       dispatch({
         type: actionTypes.SET_INIT_RECEIVE_FIRST_TOKEN_SWAP,
         payload: selectedToken,
       });
 
-      convertReceiveTokenToUSDCurrency({
-        amount: 0,
-        receiveTokensListItem: true,
-        ...selectedToken,
-      });
+      setTokenSendUSDCurrency('$0.00');
+      setTokensReceiveUSDCurrency('$0.00');
+      setSendTokenForExchangeAmount(0);
+      setReceiveTokenForExchangeAmount(0);
       setIsTokensLimitExceeded(false);
+      setIsReceiveTokensModalVisible(false);
     }
   };
 
@@ -651,26 +646,44 @@ export default function SwapComponent() {
     );
 
     if (convertTokensData.tokenAmount !== 0 && !isNaN(convertTokensData.tokenAmount)) {
-      let convertedValue = await NewContract.methods
-        .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
-          convertTokensData.sendTokenForExchangeAddress,
-          convertTokensData.receiveTokenForExchangeAddress,
-        ])
-        .call();
-
-      let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
-
       if (convertTokensData.inputId === 'firstPageLoad') {
+        let convertedValue = await NewContract.methods
+          .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
+            convertTokensData.sendTokenForExchangeAddress,
+            convertTokensData.receiveTokenForExchangeAddress,
+          ])
+          .call();
+
+        let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
+
         convertReceiveTokenToUSDCurrency({
           amount: countedTokenAmount,
           address: convertTokensData.receiveTokenForExchangeAddress,
         });
       } else if (convertTokensData.inputId === 'chooseSendToken') {
+        let convertedValue = await NewContract.methods
+          .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
+            convertTokensData.sendTokenForExchangeAddress,
+            convertTokensData.receiveTokenForExchangeAddress,
+          ])
+          .call();
+
+        let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
+
         setInitConvertReceiveTokenAmount(countedTokenAmount.toFixed(3));
       }
 
       //
       else if (convertTokensData.inputId === 'sendInput') {
+        let convertedValue = await NewContract.methods
+          .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
+            convertTokensData.sendTokenForExchangeAddress,
+            convertTokensData.receiveTokenForExchangeAddress,
+          ])
+          .call();
+
+        let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
+
         setReceiveTokenForExchangeAmount(countedTokenAmount);
 
         convertReceiveTokenToUSDCurrency({
@@ -678,6 +691,17 @@ export default function SwapComponent() {
           address: convertTokensData.receiveTokenForExchangeAddress,
         });
       } else if (convertTokensData.inputId === 'receiveInput') {
+        let convertedValue = await NewContract.methods
+          .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
+            convertTokensData.receiveTokenForExchangeAddress,
+            convertTokensData.sendTokenForExchangeAddress,
+          ])
+          .call();
+
+        let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
+
+        // console.log('single swap 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', countedTokenAmount);
+
         setSendTokenForExchangeAmount(countedTokenAmount);
 
         convertSendTokenToUSDCurrency({
@@ -701,15 +725,15 @@ export default function SwapComponent() {
     console.log('chosenTokenType tokenForSwap', tokenForSwap);
     console.log('chosenTokenType tokenForSwap send type', chosenTokenType.isSendTokenSwapped);
 
-    convertExchangeTokensCourse({
-      inputId: chosenTokenType.isSendTokenSwapped ? 'sendInput' : 'receiveInput',
-      tokenAmount: parseFloat(value),
-      sendTokenForExchangeAddress: initSendTokenSwap.address,
-      receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
-    });
-
     if (chosenTokenType.isSendTokenSwapped === true) {
       setSendTokenForExchangeAmount(value);
+
+      convertExchangeTokensCourse({
+        inputId: 'sendInput',
+        tokenAmount: parseFloat(value),
+        sendTokenForExchangeAddress: initSendTokenSwap.address,
+        receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
+      });
 
       convertSendTokenToUSDCurrency({
         amount: value,
@@ -717,6 +741,13 @@ export default function SwapComponent() {
       });
     } else if (chosenTokenType.isSendTokenSwapped === false) {
       setReceiveTokenForExchangeAmount(value);
+
+      convertExchangeTokensCourse({
+        inputId: 'receiveInput',
+        tokenAmount: parseFloat(value),
+        sendTokenForExchangeAddress: initSendTokenSwap.address,
+        receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
+      });
 
       convertReceiveTokenToUSDCurrency({
         amount: value,
