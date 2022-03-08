@@ -1151,7 +1151,7 @@ export default function index({ accountAddress }) {
           )}
         </PoolsBlock>
         {/*==================================Yield Farming======================================>*/}
-        <PoolsBlock //third
+        {/* <PoolsBlock //third
           isLightTheme={theme}
           style={{
             display: snowSwapData.length > 0,
@@ -1163,16 +1163,11 @@ export default function index({ accountAddress }) {
           <div style={{ padding: '0 29px 20px 26px', marginBottom: '20px' }}>
             <TotalValueField isLightTheme={theme}>
               <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
-              <TotalValue isLightTheme={theme}>
-                {/* $
-              {numberWithCommas(
-                parseFloat(parseFloat(liquityTokenTotal) + parseFloat(snowSwapTotal)).toFixed(2)
-              )} */}
-              </TotalValue>
+              <TotalValue isLightTheme={theme}></TotalValue>
             </TotalValueField>
           </div>
           {isFarmingOpen && <React.Fragment></React.Fragment>}
-        </PoolsBlock>
+        </PoolsBlock> */}
       </InvestmentWrapper>
     </>
   );

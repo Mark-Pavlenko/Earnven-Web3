@@ -23,9 +23,12 @@ import {
   RightSideWrapper,
   Mobile,
   DashboardTabsLayout,
+  PortocolLoadingBlock,
+  LoadingSpinner,
 } from './styledComponents';
 import axios from 'axios';
 import Protocols from '../../components/LoansAndSavings/Protocols/index';
+import CircularProgress from '@mui/material/CircularProgress';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -46,6 +49,8 @@ export default function Dashboard({ test, changeTheme }) {
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
   const { address } = useParams();
   const [value, setValue] = useState(0);
+  const [isLoading, setisLoading] = useState(true);
+  const timer = React.useRef();
 
   const [totalValue, settotalValue] = useState('00.00');
   console.log('totalValue', totalValue);
@@ -117,6 +122,18 @@ export default function Dashboard({ test, changeTheme }) {
     window.open(`https://etherscan.io/address/${currentWallet}`, '_blank');
   };
 
+  useEffect(() => {
+    timer.current = setTimeout(() => {
+      setisLoading(false);
+    }, 7000);
+  }, [address]);
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(timer.current);
+    };
+  }, []);
+
   return (
     <Box sx={{ width: '100%', mt: 3 }}>
       <Protocols accountAddress={address} />
@@ -142,7 +159,20 @@ export default function Dashboard({ test, changeTheme }) {
                   {/* commented AllAssets component causing more noise */}
                   {/* <AllAssets isLightTheme={theme} address={address} />{' '} */}
                 </Mobile>
-                <LoansAndSavings accountAddress={address} />
+                <br />
+                {isLoading == true ? (
+                  <PortocolLoadingBlock isLightTheme={theme}>
+                    <LoadingSpinner>
+                      <CircularProgress size={22} />
+                    </LoadingSpinner>
+                    &nbsp;&nbsp;<div>Please wait while protocol data is fetching</div>
+                    <div></div>
+                  </PortocolLoadingBlock>
+                ) : (
+                  <LoansAndSavings accountAddress={address} />
+                )}
+
+                {/* <LoansAndSavings accountAddress={address} /> */}
               </LeftSideWrapper>
               <RightSideWrapper>
                 {/* <AllAssets isLightTheme={theme} address={address} /> */}
