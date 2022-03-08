@@ -312,9 +312,9 @@ export default function SwapComponent() {
   };
 
   let convertSendTokenToUSDCurrency = async (tokenData) => {
-    if (tokenData.amount === '') {
-      tokenData.amount = '0';
-    }
+    // if (tokenData.amount === '') {
+    //   tokenData.amount = '0';
+    // }
 
     if (tokenData.USDCurrency !== undefined && tokenData.USDCurrency !== '$0.00') {
       console.log('test activation');
@@ -365,9 +365,9 @@ export default function SwapComponent() {
 
     console.log('receive tokenData single swap helper', tokenData);
 
-    if (tokenData.amount === '') {
-      tokenData.amount = '0';
-    }
+    // if (tokenData.amount === '') {
+    //   tokenData.amount = '0';
+    // }
 
     let tokenUSDCurrencyValue;
 
@@ -712,7 +712,7 @@ export default function SwapComponent() {
       }
     } else {
       console.log('convertTokensData null amount orNAN error!');
-      setReceiveTokenForExchangeAmount(0);
+      // setReceiveTokenForExchangeAmount(0);
       convertReceiveTokenToUSDCurrency({
         amount: 0,
         address: convertTokensData.receiveTokenForExchangeAddress,
