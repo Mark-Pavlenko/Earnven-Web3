@@ -5,19 +5,14 @@ import * as actions from './actions';
 import ethImage from '../../assets/icons/eth.png';
 import CoinGeckoMockTokensList from './CoinGecko.json';
 import UniSwapTokensList from './UniSwapTokensList.json';
-import {
-  setInitialSendTokenSingleSwap,
-  setInitReceiveFirstTokenSwap,
-  setInitReceiveMultiSwapTokensList,
-  setInitReceiveMultiSwapTokensListLoading,
-  setInitReceiveSecondTokenSwap,
-  setInitSendTokenMultiSwap,
-} from './actions';
+import { setInitReceiveMultiSwapTokensListLoading } from './actions';
+
+// const sendTokensList = (state) => state.tokensListReducer.sendTokensList;
 
 export function* getSendTokensListSagaWatcher() {
   yield takeLatest(actionTypes.SET_SEND_TOKENS_LIST, getSendTokensListSagaWorker);
 }
-
+//
 function* getSendTokensListSagaWorker(accountAddress) {
   const addressInfoData = yield call(API.getAddressInfo, accountAddress.payload);
   // console.log('only addressInfoData sagas', addressInfoData.data);
@@ -36,24 +31,18 @@ function* getSendTokensListSagaWorker(accountAddress) {
     tempObj.USDCurrency = addressInfoData.data.ETH.price.rate;
     tempObj.sendTokensListItem = true;
 
-    // console.log('sagas tempObj', tempObj);
-
     walletTokensList.push(tempObj);
   }
   let tokens = addressInfoData.data.tokens;
-  // console.log('raw tokens arr of objects sagas', tokens);
 
   for (let i = 0; i < tokens.length; i++) {
     const tempObj = {};
 
     if (tokens[i].tokenInfo.price !== false && tokens[i].balance !== 0) {
-      // console.log('tokens sagas', tokens[i]);
-
       tempObj.address = tokens[i].tokenInfo.address;
       tempObj.name = tokens[i].tokenInfo.name;
       tempObj.symbol = tokens[i].tokenInfo.symbol;
       tempObj.USDCurrency = tokens[i].tokenInfo.price.rate;
-      // tempObj.balance = parseFloat(tokens[i].balance.toFixed(3));
       tempObj.balance = parseFloat(
         (tokens[i].balance * Math.pow(10, -parseInt(tokens[i].tokenInfo.decimals))).toFixed(3)
       );
@@ -72,18 +61,9 @@ function* getSendTokensListSagaWorker(accountAddress) {
     (token) => token.symbol !== walletTokensList[0].symbol
   );
 
-  // console.log('sagas walletTokensList', walletTokensList);
-
-  // const sendTokensList = walletTokensList.filter((walletToken) =>
-  //   zeroAPISwapTokensList.find((zeroToken) => walletToken.symbol === zeroToken.symbol)
-  // );
-  //
-  // console.log('sagas sendTokensList', sendTokensList);
-
   yield put(actions.getSendTokensList(finalWalletTokensList));
   yield put(actions.setInitSendTokenSwap(walletTokensList[17]));
   yield put(actions.setInitSendTokenMultiSwap(walletTokensList[0]));
-  // yield put(actions.getSendTokensList(walletTokensList));
 }
 
 export function* getReceiveTokensListSagaWatcher() {
@@ -112,7 +92,9 @@ function* getReceiveTokensListSagaWorker() {
     )
   );
 
-  console.log('sagas filteredCoinGeckoTokensList', filteredCoinGeckoTokensList);
+  // console.log('sagas filteredCoinGeckoTokensList', filteredCoinGeckoTokensList);
+  // const testSendTokensList = yield select(sendTokensList);
+  // console.log('sagas filteredCoinGeckoTokensList sendTokensList', testSendTokensList);
 
   let finalList = zeroAPISwapTokensList.map((token) => ({
     ...token,
