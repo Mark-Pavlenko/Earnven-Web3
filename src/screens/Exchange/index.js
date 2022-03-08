@@ -312,10 +312,15 @@ export default function SwapComponent() {
   };
 
   let convertSendTokenToUSDCurrency = async (tokenData) => {
-    // if (tokenData.amount === '') {
-    //   tokenData.amount = '0';
-    // }
-
+    if (tokenData.amount === '') {
+      tokenData.amount = '0';
+      // setSendTokenForExchangeAmount(0);
+      setReceiveTokenForExchangeAmount(0);
+      convertReceiveTokenToUSDCurrency({
+        amount: 0,
+        ...initReceiveFirstTokenSwap,
+      });
+    }
     if (tokenData.USDCurrency !== undefined && tokenData.USDCurrency !== '$0.00') {
       console.log('test activation');
       //
@@ -365,9 +370,14 @@ export default function SwapComponent() {
 
     console.log('receive tokenData single swap helper', tokenData);
 
-    // if (tokenData.amount === '') {
-    //   tokenData.amount = '0';
-    // }
+    if (tokenData.amount === '') {
+      tokenData.amount = '0';
+      setSendTokenForExchangeAmount(0);
+      convertSendTokenToUSDCurrency({
+        amount: 0,
+        ...initSendTokenSwap,
+      });
+    }
 
     let tokenUSDCurrencyValue;
 
@@ -712,7 +722,7 @@ export default function SwapComponent() {
       }
     } else {
       console.log('convertTokensData null amount orNAN error!');
-      // setReceiveTokenForExchangeAmount(0);
+
       convertReceiveTokenToUSDCurrency({
         amount: 0,
         address: convertTokensData.receiveTokenForExchangeAddress,
@@ -721,9 +731,9 @@ export default function SwapComponent() {
   };
 
   const triggerTokenInputHandler = (value, tokenForSwap, chosenTokenType) => {
-    console.log('chosenTokenType value', value);
-    console.log('chosenTokenType tokenForSwap', tokenForSwap);
-    console.log('chosenTokenType tokenForSwap send type', chosenTokenType.isSendTokenSwapped);
+    // console.log('chosenTokenType value', value);
+    // console.log('chosenTokenType tokenForSwap', tokenForSwap);
+    // console.log('chosenTokenType tokenForSwap send type', chosenTokenType.isSendTokenSwapped);
 
     if (chosenTokenType.isSendTokenSwapped === true) {
       setSendTokenForExchangeAmount(value);
@@ -787,7 +797,7 @@ export default function SwapComponent() {
     }
   };
 
-  console.log('isAbleToReplaceTokensInSingleSwap', isAbleToReplaceTokensInSingleSwap);
+  // console.log('isAbleToReplaceTokensInSingleSwap', isAbleToReplaceTokensInSingleSwap);
 
   return (
     <>
