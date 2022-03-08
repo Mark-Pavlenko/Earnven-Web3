@@ -542,81 +542,81 @@ export default function SwapComponent() {
     }
   };
 
-  const selectSendTokenForExchange = (selectSendToken) => {
-    // console.log('selected send token value object 222', selectSendToken);
-    // setSendTokenForExchange(selectSendToken);
+  const selectTokenForExchange = (selectedToken, flag) => {
+    // console.log('flag', flag.isSendTokenChosen);
 
-    let ifSendTokenAvailableForSwap = finalReceiveTokensList.some((el) => {
-      if (el.address === selectSendToken.address) {
-        return true;
+    if (flag.isSendTokenChosen === true) {
+      let ifSendTokenAvailableForSwap = finalReceiveTokensList.some((el) => {
+        if (el.address === selectedToken.address) {
+          return true;
+        }
+      });
+
+      let ifReceiveTokenAvailableForSwap = finalSendTokensList.some((el) => {
+        if (el.address === initReceiveFirstTokenSwap.address) {
+          return true;
+        }
+      });
+
+      if (ifSendTokenAvailableForSwap === true && ifReceiveTokenAvailableForSwap === true) {
+        setIsAbleToReplaceTokensInSingleSwap(true);
+      } else if (
+        ifSendTokenAvailableForSwap === false ||
+        ifReceiveTokenAvailableForSwap === false
+      ) {
+        setIsAbleToReplaceTokensInSingleSwap(false);
       }
-    });
 
-    let ifReceiveTokenAvailableForSwap = finalSendTokensList.some((el) => {
-      if (el.address === initReceiveFirstTokenSwap.address) {
-        return true;
+      setIsSendTokensModalVisible(false);
+      setSendTokenForExchangeAmount(0);
+      dispatch({
+        type: actionTypes.SET_INIT_SEND_TOKEN_SWAP,
+        payload: selectedToken,
+      });
+      convertSendTokenToUSDCurrency({
+        amount: 0,
+        sendTokensListItem: true,
+        ...selectedToken,
+      });
+
+      setIsTokensLimitExceeded(false);
+    } else {
+      let ifSendTokenAvailableForSwap = finalReceiveTokensList.some((el) => {
+        if (el.address === initSendTokenSwap.address) {
+          return true;
+        }
+      });
+
+      let ifReceiveTokenAvailableForSwap = finalSendTokensList.some((el) => {
+        if (el.address === selectedToken.address) {
+          return true;
+        }
+      });
+
+      if (ifSendTokenAvailableForSwap === true && ifReceiveTokenAvailableForSwap === true) {
+        setIsAbleToReplaceTokensInSingleSwap(true);
+      } else if (
+        ifSendTokenAvailableForSwap === false ||
+        ifReceiveTokenAvailableForSwap === false
+      ) {
+        setIsAbleToReplaceTokensInSingleSwap(false);
       }
-    });
 
-    // console.log('is send token in receive list 222', ifSendTokenAvailableForSwap);
-    // console.log('is receive token in list 222 send', ifReceiveTokenAvailableForSwap);
+      setIsReceiveTokensModalVisible(false);
+      setReceiveTokenForExchangeAmount(0);
 
-    if (ifSendTokenAvailableForSwap === true && ifReceiveTokenAvailableForSwap === true) {
-      setIsAbleToReplaceTokensInSingleSwap(true);
-    } else if (ifSendTokenAvailableForSwap === false || ifReceiveTokenAvailableForSwap === false) {
-      setIsAbleToReplaceTokensInSingleSwap(false);
+      dispatch({
+        type: actionTypes.SET_INIT_RECEIVE_FIRST_TOKEN_SWAP,
+        payload: selectedToken,
+      });
+
+      convertReceiveTokenToUSDCurrency({
+        amount: 0,
+        receiveTokensListItem: true,
+        ...selectedToken,
+      });
+      setIsTokensLimitExceeded(false);
     }
-
-    setIsSendTokensModalVisible(false);
-    setSendTokenForExchangeAmount(0);
-    dispatch({
-      type: actionTypes.SET_INIT_SEND_TOKEN_SWAP,
-      payload: selectSendToken,
-    });
-    convertSendTokenToUSDCurrency({
-      amount: 0,
-      sendTokensListItem: true,
-      ...selectSendToken,
-      address: selectSendToken.address,
-    });
-  };
-
-  const selectReceiveTokenForExchange = (selectReceiveToken) => {
-    let ifSendTokenAvailableForSwap = finalReceiveTokensList.some((el) => {
-      if (el.address === initSendTokenSwap.address) {
-        return true;
-      }
-    });
-
-    let ifReceiveTokenAvailableForSwap = finalSendTokensList.some((el) => {
-      if (el.address === selectReceiveToken.address) {
-        return true;
-      }
-    });
-
-    // console.log('is send token in receive list 333', ifSendTokenAvailableForSwap);
-    // console.log('is receive token in list 333 send', ifReceiveTokenAvailableForSwap);
-
-    if (ifSendTokenAvailableForSwap === true && ifReceiveTokenAvailableForSwap === true) {
-      setIsAbleToReplaceTokensInSingleSwap(true);
-    } else if (ifSendTokenAvailableForSwap === false || ifReceiveTokenAvailableForSwap === false) {
-      setIsAbleToReplaceTokensInSingleSwap(false);
-    }
-
-    setIsReceiveTokensModalVisible(false);
-    setReceiveTokenForExchangeAmount(0);
-
-    dispatch({
-      type: actionTypes.SET_INIT_RECEIVE_FIRST_TOKEN_SWAP,
-      payload: selectReceiveToken,
-    });
-
-    convertReceiveTokenToUSDCurrency({
-      amount: 0,
-      receiveTokensListItem: true,
-      ...selectReceiveToken,
-      address: selectReceiveToken.address,
-    });
   };
 
   const convertExchangeTokensCourse = async (convertTokensData) => {
@@ -950,7 +950,7 @@ export default function SwapComponent() {
                               <SendTokenModalListItem
                                 key={object.name}
                                 onClick={() => {
-                                  selectSendTokenForExchange(object);
+                                  selectTokenForExchange(object, { isSendTokenChosen: true });
 
                                   setFilteredData(
                                     finalSendTokensList.filter(
@@ -1198,12 +1198,9 @@ export default function SwapComponent() {
                                     receiveTokenForExchangeAddress:
                                       initReceiveFirstTokenSwap.address,
                                   });
-                                  // setFilteredReceiveTokensListData(
-                                  //   finalReceiveTokensList.filter(
-                                  //     (token) => token.symbol !== object.symbol
-                                  //   )
-                                  // );
-                                  selectReceiveTokenForExchange(object);
+                                  selectTokenForExchange(object, {
+                                    isSendTokenChosen: false,
+                                  });
                                 }}
                                 isLightTheme={isLightTheme}>
                                 <SendTokenLabelsBlock>
