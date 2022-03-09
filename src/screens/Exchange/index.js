@@ -78,6 +78,11 @@ import {
   TransactionSpeedGridLayout,
   TransactionSpeedGridLayoutItem,
   GridLayoutItemIconSubBlock,
+  AdvancedSettingsButton,
+  SlippageToleranceLabel,
+  StablePercentChooseToleranceBtn,
+  FloatPercentChooseToleranceBtn,
+  SlippageToleranceBtnsLayout,
 } from './styled';
 import { useDispatch, useSelector } from 'react-redux';
 import chevronDownBlack from '../../assets/icons/chevronDownLightTheme.svg';
@@ -1500,6 +1505,42 @@ export default function SwapComponent() {
                                   <span>92 Gwei ($40.50)</span>
                                 </TransactionSpeedGridLayoutItem>
                               </TransactionSpeedGridLayout>
+
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  justifyContent: 'center',
+                                }}>
+                                <AdvancedSettingsButton isLightTheme={isLightTheme}>
+                                  Advanced settings
+                                </AdvancedSettingsButton>
+                              </div>
+
+                              <SlippageToleranceLabel isLightTheme={isLightTheme}>
+                                Slippage Tolerance
+                              </SlippageToleranceLabel>
+                              <SlippageToleranceBtnsLayout>
+                                <StablePercentChooseToleranceBtn isLightTheme={isLightTheme}>
+                                  1%
+                                </StablePercentChooseToleranceBtn>
+                                <StablePercentChooseToleranceBtn isLightTheme={isLightTheme}>
+                                  3%
+                                </StablePercentChooseToleranceBtn>
+                                <FloatPercentChooseToleranceBtn isLightTheme={isLightTheme}>
+                                  %
+                                </FloatPercentChooseToleranceBtn>
+                              </SlippageToleranceBtnsLayout>
+
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  justifyContent: 'center',
+                                  marginTop: '13px',
+                                }}>
+                                <AdvancedSettingsButton isLightTheme={isLightTheme}>
+                                  Save
+                                </AdvancedSettingsButton>
+                              </div>
                             </ExchangersLayout>
                           </ExchangersMainSubLayout>
                         </SingleSwapTokensOfferedBySubBlock>

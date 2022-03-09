@@ -633,6 +633,77 @@ export const SwapBlockExchangeLayout = styled.div`
   }
 `;
 
+export const AdvancedSettingsButton = styled(Button)`
+  width: 150px;
+  height: 40px;
+  margin-top: 21px;
+  color: ${(props) => (props.isLightTheme ? '#4453AD' : '#FFFFFF')};
+  background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+      : '7px 21px 22px -15px rgba(51, 78, 131, 0.17)'};
+  border-radius: 10px;
+
+  :hover {
+    background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
+  }
+
+  @media (max-width: 540px) {
+    width: 345px;
+  }
+`;
+
+export const SlippageToleranceLabel = styled.span`
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 25px;
+  color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#FFFFFF')};
+`;
+
+export const SlippageToleranceBtnsLayout = styled.div`
+  width: 340px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+  margin-top: 20px;
+`;
+
+export const StablePercentChooseToleranceBtn = styled(Button)`
+  width: 55px;
+  height: 45px;
+  color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#FFFFFF')};
+  background: ${(props) => (props.isLightTheme ? '#ffffff29' : '#1F265C3D')};
+  mix-blend-mode: normal;
+  box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(35px);
+  border-radius: 10px;
+
+  :hover {
+    background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
+  }
+`;
+
+export const FloatPercentChooseToleranceBtn = styled(Button)`
+  width: 120px;
+  height: 45px;
+  color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#FFFFFF')};
+  background: ${(props) => (props.isLightTheme ? '#ffffff29' : '#1F265C3D')};
+  mix-blend-mode: normal;
+  box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(35px);
+  border-radius: 10px;
+
+  :hover {
+    background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
+  }
+`;
+
 export const SwapSecondColumn = styled.div`
   width: 540px;
   height: 585px;
