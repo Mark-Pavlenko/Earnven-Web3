@@ -149,13 +149,13 @@ export default function index({ accountAddress }) {
   const issnowSwapIsLoading = useSelector((state) => state.snowSwap.snowSwapIsLoading);
 
   //CreamIronBank
-  const creamIronBankData = useSelector((state) => state.creamIronBank.creamIronBankData);
-  const creamIronBankTotal = useSelector((state) => state.creamIronBank.creamIronBankTotal);
-  const iscreamIronBankIsLoading = useSelector(
-    (state) => state.creamIronBank.creamIronBankIsLoading
-  );
-  const creamImageUrl =
-    'https://assets.coingecko.com/coins/images/11976/thumb/Cream.png?1596593418';
+  // const creamIronBankData = useSelector((state) => state.creamIronBank.creamIronBankData);
+  // const creamIronBankTotal = useSelector((state) => state.creamIronBank.creamIronBankTotal);
+  // const iscreamIronBankIsLoading = useSelector(
+  //   (state) => state.creamIronBank.creamIronBankIsLoading
+  // );
+  // const creamImageUrl =
+  //   'https://assets.coingecko.com/coins/images/11976/thumb/Cream.png?1596593418';
 
   //balancer V2
   //balancerV2
@@ -510,7 +510,7 @@ export default function index({ accountAddress }) {
               CrvStakingTokenData.length > 0 ||
               AaveStakingData.length > 0 ||
               convexStakeData.length > 0 ||
-              creamIronBankData.length > 0 ||
+              // creamIronBankData.length > 0 ||
               sushiStakeData.length > 0 ||
               uniswapV2stake.length > 0,
           }}>
@@ -531,7 +531,7 @@ export default function index({ accountAddress }) {
                       parseFloat(eth2StakeTotal) +
                       parseFloat(compTotalValue) +
                       parseFloat(convexStakeTotal) +
-                      parseFloat(creamIronBankTotal) +
+                      // parseFloat(creamIronBankTotal) +
                       parseFloat(sushiStakeTotal) +
                       parseFloat(uniswapV2stakeTotal)
                   ).toFixed(2)
@@ -768,7 +768,7 @@ export default function index({ accountAddress }) {
           )}
 
           {/* CreamIronBank Protocol */}
-          {iscreamIronBankIsLoading == true ? (
+          {/* {iscreamIronBankIsLoading == true ? (
             <PortocolLoadingBlock isLightTheme={theme}>
               <LoadingSpinner>
                 <CircularProgress size={22} />
@@ -807,7 +807,7 @@ export default function index({ accountAddress }) {
                 ''
               )}
             </>
-          )}
+          )} */}
 
           {/* Sushi Staking */}
           {issushiStakeIsLoading == true ? (

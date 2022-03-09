@@ -7,21 +7,27 @@ import { ethers } from 'ethers';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import actionTypes from '../../../constants/actionTypes';
+import loadWeb3 from '../../../utils/loadWeb3';
 
 const PickleStake = ({ accountAddress }) => {
   //get useWeb3React hook
   const { account, activate, active, chainId, connector, deactivate, error, provider, setError } =
     useWeb3React();
+
   //logic implementing for web3 provider connection using web3 React hook
   async function getWeb3() {
-    const provider = active ? await connector.getProvider() : ethers.getDefaultProvider();
-    const web3 = await new Web3(provider);
+    let web3;
+    try {
+      const provider = active ? await connector.getProvider() : await loadWeb3();
+      web3 = new Web3(provider);
+    } catch (err) {
+      console.log('Web3 is not connected, check the Metamask connectivity!!');
+    }
     return web3;
   }
   const dispatch = useDispatch();
   useEffect(() => {
     try {
-      console.log('inside dispatch', accountAddress);
       let dataSend = [];
       dataSend.push(accountAddress);
       active ? dataSend.push(connector.getProvider()) : dataSend.push(ethers.getDefaultProvider());
@@ -38,7 +44,6 @@ const PickleStake = ({ accountAddress }) => {
   const pickleStakeArray = useSelector((state) => state.pickeStake?.pickeStake);
 
   useEffect(() => {
-    console.log('saga test', pickleStakeArray);
     let total = 0;
     if (pickleStakeArray?.length > 0) {
       pickleStakeArray.map((object) => {
@@ -72,18 +77,20 @@ const PickleStake = ({ accountAddress }) => {
   // }, [pickleStakeArray]);
   async function web3Conection_balance(address) {
     const web3 = await getWeb3();
-    const contract = new web3.eth.Contract(abi, address);
-    const balance = (await contract.methods.balanceOf(accountAddress).call()) / 10 ** 18;
-    console.log('balance pickle web 3', balance);
-    return balance;
+    if (web3 != undefined) {
+      const contract = new web3.eth.Contract(abi, address);
+      const balance = (await contract.methods.balanceOf(accountAddress).call()) / 10 ** 18;
+      return balance;
+    }
   }
 
   async function web3Conection_earned(address) {
     const web3 = await getWeb3();
-    const contract = new web3.eth.Contract(abi, address);
-    const earned = (await contract.methods.earned(accountAddress).call()) / 10 ** 18;
-    console.log('earned pickle web 3', earned);
-    return earned;
+    if (web3 != undefined) {
+      const contract = new web3.eth.Contract(abi, address);
+      const earned = (await contract.methods.earned(accountAddress).call()) / 10 ** 18;
+      return earned;
+    }
   }
   return (
     <div>

@@ -226,7 +226,6 @@ export const getAddressInfo = async (accountAddress) => {
 
 //this function is to get given token/coin details from coinGecko API
 export const getCoingeckoAPIData = async (contractAddress, tokenAddress) => {
-  console.log('I am inside to get the price of the token for token name', tokenAddress);
   let curveLpTokenMarketPrice = 0;
   //this API should run based on the lp token address but for some of the data should fetched from its
   //underlying token rather than lp token address so we need to split on this fetching process

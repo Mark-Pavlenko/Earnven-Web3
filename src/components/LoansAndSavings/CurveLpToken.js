@@ -29,6 +29,7 @@ import { useWeb3React } from '@web3-react/core';
 import Investment from '../common/investment/investment';
 import { useDispatch, useSelector } from 'react-redux';
 import actionTypes from '../../constants/actionTypes';
+import loadWeb3 from '../../utils/loadWeb3';
 // import {
 //   setCurveLpTokenDataAction,
 //   setCurveLpTokenTotalAction,
@@ -46,8 +47,13 @@ export default function CurveLpToken({ accountAddress }) {
 
   //logic implementing for web3 provider connection using web3 React hook
   async function getWeb3() {
-    const provider = await connector.getProvider();
-    const web3 = await new Web3(provider);
+    let web3;
+    try {
+      const provider = active ? await connector.getProvider() : await loadWeb3();
+      web3 = new Web3(provider);
+    } catch (err) {
+      console.log('Web3 is not connected, check the Metamask connectivity!!');
+    }
     return web3;
   }
 
@@ -55,14 +61,16 @@ export default function CurveLpToken({ accountAddress }) {
   useEffect(() => {
     const getCurveLpTokenData = async () => {
       const web3 = await getWeb3();
-      const curveLpTokenAttributes = { accountAddress: accountAddress, web3: web3 };
-      try {
-        dispatch({
-          type: actionTypes.SET_CRVLP_TOKEN_DATA,
-          payload: curveLpTokenAttributes,
-        });
-      } catch (err) {
-        console.log('Dispatch action is failed in curve lp token process', err.message);
+      if (web3 != undefined) {
+        const curveLpTokenAttributes = { accountAddress: accountAddress, web3: web3 };
+        try {
+          dispatch({
+            type: actionTypes.SET_CRVLP_TOKEN_DATA,
+            payload: curveLpTokenAttributes,
+          });
+        } catch (err) {
+          console.log('Dispatch action is failed in curve lp token process', err.message);
+        }
       }
     };
     getCurveLpTokenData();

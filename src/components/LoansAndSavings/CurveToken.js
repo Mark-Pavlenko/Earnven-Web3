@@ -12,6 +12,7 @@ import Web3 from 'web3';
 import { useWeb3React } from '@web3-react/core';
 import { useDispatch, useSelector } from 'react-redux';
 import actionTypes from '../../constants/actionTypes';
+import loadWeb3 from '../../utils/loadWeb3';
 
 export default function CurveToken({ accountAddress }) {
   const [CurveTokenContent, setCurveTokenContent] = useState([]); //cvx data content
@@ -20,8 +21,13 @@ export default function CurveToken({ accountAddress }) {
     useWeb3React();
 
   async function getWeb3() {
-    const provider = await connector.getProvider();
-    const web3 = await new Web3(provider);
+    let web3;
+    try {
+      const provider = active ? await connector.getProvider() : await loadWeb3();
+      web3 = new Web3(provider);
+    } catch (err) {
+      console.log('Web3 is not connected, check the Metamask connectivity!!');
+    }
     return web3;
   }
 
@@ -37,16 +43,16 @@ export default function CurveToken({ accountAddress }) {
   useEffect(() => {
     const getCurveTokenData = async () => {
       const web3 = await getWeb3();
-
-      const curveTokenAttributes = { accountAddress: accountAddress, web3: web3 };
-
-      try {
-        dispatch({
-          type: actionTypes.SET_CRV_TOKEN_DATA,
-          payload: curveTokenAttributes,
-        });
-      } catch (error) {
-        console.log('Curve Token error in dispatch', error.message);
+      if (web3 != undefined) {
+        const curveTokenAttributes = { accountAddress: accountAddress, web3: web3 };
+        try {
+          dispatch({
+            type: actionTypes.SET_CRV_TOKEN_DATA,
+            payload: curveTokenAttributes,
+          });
+        } catch (error) {
+          console.log('Curve Token error in dispatch', error.message);
+        }
       }
     };
     getCurveTokenData();
