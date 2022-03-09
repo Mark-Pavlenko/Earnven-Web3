@@ -25,7 +25,7 @@ import searchTokensImportModalDark from '../../assets/icons/searchTokensInputMod
 import fastSpeedIcon from '../../assets/icons/iron_man_icon.svg';
 import averageSpeedIcon from '../../assets/icons/starWarsIcon.svg';
 import slowSpeedIcon from '../../assets/icons/futuramaIcon.svg';
-
+import { addIconsGasPrices } from '../../commonFunctions/commonFunctions';
 import { makeStyles } from '@material-ui/styles';
 import {
   ChooseBtnTokenBlock,
@@ -136,6 +136,9 @@ import ROUTERABI from '../../abi/UniRouterV2.json';
 import exchangersOfferedList from './exchangersOfferedList';
 import greenDot from '../../assets/icons/greenDot.svg';
 import { singleSushiSwapV2 } from './helpers';
+import FastGweiGasIcon from '../../assets/icons/fastGweiGasIcon.png';
+import MiddleGweiGasIcon from '../../assets/icons/middleGweiGasIcon.png';
+import SlowGweiGasIcon from '../../assets/icons/slowGweiGasIcon.png';
 
 export default function SwapComponent() {
   const dispatch = useDispatch();
@@ -143,6 +146,7 @@ export default function SwapComponent() {
   const { address } = useParams();
 
   //work saga
+  const gasPrices = useSelector((state) => state.gesData.gasPriceData);
   const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
   const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
   const initSendTokenSwap = useSelector((state) => state.tokensListReducer.initSendTokenSwap);
@@ -151,6 +155,15 @@ export default function SwapComponent() {
   );
   const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
   const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
+
+  const addIconsGasPricesWithIcons = addIconsGasPrices(
+    gasPrices,
+    fastSpeedIcon,
+    averageSpeedIcon,
+    slowSpeedIcon
+  );
+
+  // console.log('addIconsGasPricesWithIcons exchange', addIconsGasPricesWithIcons);
 
   // console.log('finalSendTokensList 000', finalSendTokensList);
   // console.log('finalReceiveTokensList 000', finalReceiveTokensList);
@@ -1472,38 +1485,17 @@ export default function SwapComponent() {
                               {/*Transaction speed content*/}
 
                               <TransactionSpeedGridLayout>
-                                <TransactionSpeedGridLayoutItem isLightTheme={isLightTheme}>
-                                  <GridLayoutItemIconSubBlock>
-                                    <div>
-                                      <img src={fastSpeedIcon} alt="f" />
-                                      <span>Fast</span>
-                                    </div>
-                                  </GridLayoutItemIconSubBlock>
-
-                                  <span>92 Gwei ($40.50)</span>
-                                </TransactionSpeedGridLayoutItem>
-                                <TransactionSpeedGridLayoutItem isLightTheme={isLightTheme}>
-                                  <GridLayoutItemIconSubBlock>
-                                    <div>
-                                      <img src={averageSpeedIcon} alt="f" />
-
-                                      <span>Average</span>
-                                    </div>
-                                  </GridLayoutItemIconSubBlock>
-
-                                  <span>92 Gwei ($40.50)</span>
-                                </TransactionSpeedGridLayoutItem>
-                                <TransactionSpeedGridLayoutItem isLightTheme={isLightTheme}>
-                                  <GridLayoutItemIconSubBlock>
-                                    <div>
-                                      <img src={slowSpeedIcon} alt="f" />
-
-                                      <span>Slow</span>
-                                    </div>
-                                  </GridLayoutItemIconSubBlock>
-
-                                  <span>92 Gwei ($40.50)</span>
-                                </TransactionSpeedGridLayoutItem>
+                                {addIconsGasPricesWithIcons.map((option) => (
+                                  <TransactionSpeedGridLayoutItem isLightTheme={isLightTheme}>
+                                    <GridLayoutItemIconSubBlock>
+                                      <div>
+                                        <img src={option.icon} alt="f" />
+                                        <span>{option.label}</span>
+                                      </div>
+                                    </GridLayoutItemIconSubBlock>
+                                    <span>{option.value} Gwei ($40.50)</span>
+                                  </TransactionSpeedGridLayoutItem>
+                                ))}
                               </TransactionSpeedGridLayout>
 
                               <div
