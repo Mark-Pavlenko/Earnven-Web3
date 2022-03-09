@@ -1395,13 +1395,13 @@ export default function SwapComponent() {
                   </LabelsBlockSubBlockSpan>
 
                   <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
-                    <img src={paraSwapIcon} alt="paraSwapIcon" />
+                    <img src={activeExchanger.logoIcon} alt="e" />
                     <span
                       onClick={(event) =>
                         openExchangersListPopover(event, { isOfferedByPopoverActivated: true })
                       }
                       style={{ cursor: 'pointer' }}>
-                      ParaSwap
+                      {activeExchanger.name}
                     </span>
                     {/* offered by exchangers list popover*/}
                     <Popover
