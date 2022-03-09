@@ -91,6 +91,9 @@ import MultiSwapComponent from './multiSwap';
 import SelectTokensModalContainer from './selectTokensModal';
 import { ModalTitle, CloseButton, Header } from './selectTokensModal/styles';
 
+import sushiSwapExchangerIcon from '../../assets/icons/exchangers/sushiSwapExchangerIcon.svg';
+import uniswapV2ExchangerIcon from '../../assets/icons/exchangers/uniswapV2ExchangerIcon.svg';
+
 import actionTypes from '../../constants/actionTypes';
 import {
   checkIfExchangedTokenLimitIsExceeded,
@@ -133,12 +136,9 @@ const makeCall = async (callName, contract, args, metadata = {}) => {
 
 import TOKENDECIMALSABI from '../../abi/TokenDecomals.json';
 import ROUTERABI from '../../abi/UniRouterV2.json';
-import exchangersOfferedList from './exchangersOfferedList';
+// import exchangersOfferedList from './exchangersOfferedList';
 import greenDot from '../../assets/icons/greenDot.svg';
 import { singleSushiSwapV2 } from './helpers';
-import FastGweiGasIcon from '../../assets/icons/fastGweiGasIcon.png';
-import MiddleGweiGasIcon from '../../assets/icons/middleGweiGasIcon.png';
-import SlowGweiGasIcon from '../../assets/icons/slowGweiGasIcon.png';
 
 export default function SwapComponent() {
   const dispatch = useDispatch();
@@ -165,6 +165,9 @@ export default function SwapComponent() {
 
   // console.log('addIconsGasPricesWithIcons exchange', addIconsGasPricesWithIcons);
 
+  console.log('123', initSendTokenSwap);
+  console.log('123 b', initReceiveFirstTokenSwap);
+
   // console.log('finalSendTokensList 000', finalSendTokensList);
   // console.log('finalReceiveTokensList 000', finalReceiveTokensList);
   // console.log('initSendFirstTokenSwap 000', initSendTokenSwap);
@@ -183,7 +186,26 @@ export default function SwapComponent() {
   const [initConvertReceiveTokenAmount, setInitConvertReceiveTokenAmount] = useState(0);
   const [isAbleToReplaceTokensInSingleSwap, setIsAbleToReplaceTokensInSingleSwap] = useState();
   const [isOfferedByPopoverActivated, setisOfferedByPopoverActivated] = useState(true);
-
+  const [exchangersOfferedList, setExchangersOfferedList] = useState([
+    {
+      name: 'UniSwap',
+      routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
+      receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
+      gasFee: '$10.03',
+      isBestRate: true,
+      logoIcon: uniswapV2ExchangerIcon,
+      isExchangerSelected: true,
+    },
+    {
+      name: 'SushiSwap',
+      routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
+      receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
+      gasFee: '$10.03',
+      isBestRate: false,
+      logoIcon: sushiSwapExchangerIcon,
+      isExchangerSelected: false,
+    },
+  ]);
   const [activeExchanger, setActiveExchanger] = useState(exchangersOfferedList[0]);
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
@@ -866,6 +888,34 @@ export default function SwapComponent() {
     }
   };
 
+  const selectNewExchanger = (selectedNewExchanger) => {
+    // console.log('selectedNewExchanger', selectedNewExchanger);
+
+    const chosenExchanger = { ...selectedNewExchanger, isExchangerSelected: true };
+    // console.log('selectedNewExchanger first', chosenExchanger);
+
+    let notSelectedExchangersList = exchangersOfferedList.filter((el) => {
+      return chosenExchanger.routerAddress !== el.routerAddress;
+    });
+
+    // console.log('selectedNewExchanger second', notSelectedExchangersList);
+
+    notSelectedExchangersList = notSelectedExchangersList.map((el) => {
+      return { ...el, isExchangerSelected: false };
+    });
+
+    // console.log('selectedNewExchanger third', notSelectedExchangersList);
+    notSelectedExchangersList.unshift(chosenExchanger);
+    setActiveExchanger(chosenExchanger);
+    setExchangersOfferedList(notSelectedExchangersList);
+    setSendTokenForExchangeAmount(0);
+    setReceiveTokenForExchangeAmount(0);
+    setAnchorEl(false);
+  };
+
+  // console.log('selectedNewExchanger List', exchangersOfferedList);
+  // console.log('selectedNewExchanger chosen one', activeExchanger);
+
   return (
     <>
       <ExchangeMainLayout>
@@ -905,7 +955,8 @@ export default function SwapComponent() {
                           })
                         }
                         style={{ height: '45px' }}>
-                        {initSendTokenSwap.logoURI !== null ? (
+                        {initSendTokenSwap.logoURI !== null &&
+                        initSendTokenSwap.logoURI !== undefined ? (
                           <SendTokenImg alt="token_img" src={initSendTokenSwap.logoURI} />
                         ) : (
                           <Avatar
@@ -1449,7 +1500,12 @@ export default function SwapComponent() {
                               <ExchangersMainListLayout isLightTheme={isLightTheme}>
                                 <ExchangerMainList>
                                   {exchangersOfferedList.map((exchanger) => (
-                                    <ExchangerElementListItem isLightTheme={isLightTheme}>
+                                    <ExchangerElementListItem
+                                      isLightTheme={isLightTheme}
+                                      onClick={() =>
+                                        exchanger.routerAddress !== activeExchanger.routerAddress &&
+                                        selectNewExchanger(exchanger)
+                                      }>
                                       <ExchangerElementSpan
                                         isLightTheme={isLightTheme}
                                         style={{ marginRight: '36px' }}>

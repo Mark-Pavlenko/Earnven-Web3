@@ -57,12 +57,20 @@ function* getSendTokensListSagaWorker(accountAddress) {
     }
   }
 
-  const finalWalletTokensList = walletTokensList.filter(
-    (token) => token.symbol !== walletTokensList[0].symbol
-  );
+  // let finalWalletTokensList;
+  // if (walletTokensList.length > 1) {
+  //   finalWalletTokensList = walletTokensList.filter(
+  //     (token) => token.symbol !== walletTokensList[0].symbol
+  //   );
+  // } else {
+  //   finalWalletTokensList = walletTokensList;
+  // }
 
-  yield put(actions.getSendTokensList(finalWalletTokensList));
-  yield put(actions.setInitSendTokenSwap(walletTokensList[17]));
+  console.log('sagas exchange walletTokensList', walletTokensList);
+  // console.log('sagas exchange finalWalletTokensList', finalWalletTokensList);
+
+  yield put(actions.getSendTokensList(walletTokensList));
+  yield put(actions.setInitSendTokenSwap(walletTokensList[0]));
   yield put(actions.setInitSendTokenMultiSwap(walletTokensList[0]));
 }
 
