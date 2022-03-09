@@ -184,6 +184,8 @@ export default function SwapComponent() {
   const [isAbleToReplaceTokensInSingleSwap, setIsAbleToReplaceTokensInSingleSwap] = useState();
   const [isOfferedByPopoverActivated, setisOfferedByPopoverActivated] = useState(true);
 
+  const [activeExchanger, setActiveExchanger] = useState(exchangersOfferedList[0]);
+
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
   //---OLD states
@@ -292,6 +294,8 @@ export default function SwapComponent() {
     setTokenSendUSDCurrency('$0.00');
     setTokensReceiveUSDCurrency('$0.00');
   }, [finalSendTokensList, finalReceiveTokensList]);
+
+  console.log('activeExchanger', activeExchanger);
 
   //function of dynamic converting of token value to USD Currency
 
@@ -522,7 +526,7 @@ export default function SwapComponent() {
             )
               .toFixed(2)
               .toString();
-            const ethPrice = 3000;
+            const ethPrice = 10000;
             protocolQuote.gas = (
               parseFloat(response.data.gas) *
               parseFloat(response.data.gasPrice) *
@@ -694,7 +698,7 @@ export default function SwapComponent() {
     const NewContract = new web3.eth.Contract(
       ROUTERABI,
       //Sushiswap contract address - should be changed dynamically
-      '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+      activeExchanger.routerAddress
     );
 
     if (convertTokensData.tokenAmount !== 0 && !isNaN(convertTokensData.tokenAmount)) {
@@ -780,12 +784,15 @@ export default function SwapComponent() {
     if (chosenTokenType.isSendTokenSwapped === true) {
       setSendTokenForExchangeAmount(value);
 
-      convertExchangeTokensCourse({
-        inputId: 'sendInput',
-        tokenAmount: parseFloat(value),
-        sendTokenForExchangeAddress: initSendTokenSwap.address,
-        receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
-      });
+      setTimeout(
+        convertExchangeTokensCourse({
+          inputId: 'sendInput',
+          tokenAmount: parseFloat(value),
+          sendTokenForExchangeAddress: initSendTokenSwap.address,
+          receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
+        }),
+        10000
+      );
 
       convertSendTokenToUSDCurrency({
         amount: value,
@@ -800,12 +807,15 @@ export default function SwapComponent() {
     } else if (chosenTokenType.isSendTokenSwapped === false) {
       setReceiveTokenForExchangeAmount(value);
 
-      convertExchangeTokensCourse({
-        inputId: 'receiveInput',
-        tokenAmount: parseFloat(value),
-        sendTokenForExchangeAddress: initSendTokenSwap.address,
-        receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
-      });
+      setTimeout(
+        convertExchangeTokensCourse({
+          inputId: 'receiveInput',
+          tokenAmount: parseFloat(value),
+          sendTokenForExchangeAddress: initSendTokenSwap.address,
+          receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
+        }),
+        10000
+      );
 
       convertReceiveTokenToUSDCurrency({
         amount: value,
@@ -1057,13 +1067,16 @@ export default function SwapComponent() {
                                     )
                                   );
 
-                                  convertExchangeTokensCourse({
-                                    inputId: 'chooseSendToken',
-                                    tokenAmount: 1,
-                                    sendTokenForExchangeAddress: initSendTokenSwap.address,
-                                    receiveTokenForExchangeAddress:
-                                      initReceiveFirstTokenSwap.address,
-                                  });
+                                  setTimeout(
+                                    convertExchangeTokensCourse({
+                                      inputId: 'chooseSendToken',
+                                      tokenAmount: 1,
+                                      sendTokenForExchangeAddress: initSendTokenSwap.address,
+                                      receiveTokenForExchangeAddress:
+                                        initReceiveFirstTokenSwap.address,
+                                    }),
+                                    10000
+                                  );
                                 }}
                                 isLightTheme={isLightTheme}>
                                 <SendTokenLabelsBlock>
@@ -1291,13 +1304,16 @@ export default function SwapComponent() {
                                 key={object.symbol}
                                 onClick={() => {
                                   setFilteredReceiveTokensListData(finalReceiveTokensList);
-                                  convertExchangeTokensCourse({
-                                    inputId: 'chooseSendToken',
-                                    tokenAmount: 1,
-                                    sendTokenForExchangeAddress: initSendTokenSwap.address,
-                                    receiveTokenForExchangeAddress:
-                                      initReceiveFirstTokenSwap.address,
-                                  });
+                                  setTimeout(
+                                    convertExchangeTokensCourse({
+                                      inputId: 'chooseSendToken',
+                                      tokenAmount: 1,
+                                      sendTokenForExchangeAddress: initSendTokenSwap.address,
+                                      receiveTokenForExchangeAddress:
+                                        initReceiveFirstTokenSwap.address,
+                                    }),
+                                    10000
+                                  );
                                   selectTokenForExchange(object, {
                                     isSendTokenChosen: false,
                                   });
@@ -1454,7 +1470,8 @@ export default function SwapComponent() {
                                         src={greenDot}
                                         alt="green_dot"
                                         style={{
-                                          visibility: exchanger.greenDotIcon === false && 'hidden',
+                                          visibility:
+                                            exchanger.isExchangerSelected === false && 'hidden',
                                         }}
                                       />
                                     </ExchangerElementListItem>

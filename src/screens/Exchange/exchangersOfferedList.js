@@ -93,7 +93,7 @@ const exchangersOfferedList = [
     gasFee: '$10.03',
     isBestRate: true,
     logoIcon: uniswapV2ExchangerIcon,
-    greenDotIcon: true,
+    isExchangerSelected: true,
   },
   {
     routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
@@ -101,7 +101,7 @@ const exchangersOfferedList = [
     gasFee: '$10.03',
     isBestRate: false,
     logoIcon: sushiSwapExchangerIcon,
-    greenDotIcon: true,
+    isExchangerSelected: false,
   },
   // {
   //   receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
