@@ -394,7 +394,7 @@ export const AdditionalOptionsSwapTokensSubBlock = styled.div`
 
 export const SingleSwapTokensOfferedBySubBlock = styled.div`
   width: 525px;
-  //height: 515px;
+  height: 490px;
   background-color: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#4453AD1A')};
   box-shadow: ${(props) =>
     props.isLightTheme
@@ -454,6 +454,10 @@ export const TransactionSpeedGridLayoutItem = styled.div`
   margin: 26px 99px 0 89px;
   font-size: 14px;
   cursor: pointer;
+
+  span {
+    color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#FFFFFF')};
+  }
 `;
 
 export const GridLayoutItemIconSubBlock = styled.div`

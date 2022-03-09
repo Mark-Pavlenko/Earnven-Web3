@@ -1453,7 +1453,7 @@ export default function SwapComponent() {
                         </SingleSwapTokensOfferedBySubBlock>
                       ) : (
                         <SingleSwapTokensOfferedBySubBlock isLightTheme={isLightTheme}>
-                          <ExchangersMainSubLayout>
+                          <ExchangersMainSubLayout style={{ height: '490px' }}>
                             <OfferedByLayoutLabelBlock
                               isLightTheme={isLightTheme}
                               onClick={handleClose}>
@@ -1467,14 +1467,9 @@ export default function SwapComponent() {
                               {/*Transaction speed content*/}
 
                               <TransactionSpeedGridLayout>
-                                <TransactionSpeedGridLayoutItem>
+                                <TransactionSpeedGridLayoutItem isLightTheme={isLightTheme}>
                                   <GridLayoutItemIconSubBlock>
-                                    <div
-                                      style={
-                                        {
-                                          // columnGap: '15px',
-                                        }
-                                      }>
+                                    <div>
                                       <img src={fastSpeedIcon} alt="f" />
                                       <span>Fast</span>
                                     </div>
@@ -1482,7 +1477,7 @@ export default function SwapComponent() {
 
                                   <span>92 Gwei ($40.50)</span>
                                 </TransactionSpeedGridLayoutItem>
-                                <TransactionSpeedGridLayoutItem>
+                                <TransactionSpeedGridLayoutItem isLightTheme={isLightTheme}>
                                   <GridLayoutItemIconSubBlock>
                                     <div>
                                       <img src={averageSpeedIcon} alt="f" />
@@ -1493,7 +1488,7 @@ export default function SwapComponent() {
 
                                   <span>92 Gwei ($40.50)</span>
                                 </TransactionSpeedGridLayoutItem>
-                                <TransactionSpeedGridLayoutItem>
+                                <TransactionSpeedGridLayoutItem isLightTheme={isLightTheme}>
                                   <GridLayoutItemIconSubBlock>
                                     <div>
                                       <img src={slowSpeedIcon} alt="f" />
