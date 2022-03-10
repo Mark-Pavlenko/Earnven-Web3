@@ -133,6 +133,7 @@ import ROUTERABI from '../../abi/UniRouterV2.json';
 // import exchangersOfferedList from './exchangersOfferedList';
 import greenDot from '../../assets/icons/greenDot.svg';
 import { singleSushiSwapV2 } from './helpers';
+import { getWalletDataSaga } from '../../store/currentWalletData/actions';
 
 const useStyles = makeStyles(() => ({
   noBorder: {
@@ -174,6 +175,8 @@ export default function SwapComponent() {
 
   console.log('123', initSendTokenSwap);
   console.log('123 b', initReceiveFirstTokenSwap);
+
+  const walletData = useSelector((state) => state?.walletDataReducer.walletData);
 
   // console.log('finalSendTokensList 000', finalSendTokensList);
   // console.log('finalReceiveTokensList 000', finalReceiveTokensList);
@@ -251,6 +254,7 @@ export default function SwapComponent() {
       dispatch({ type: actionTypes.SET_SEND_TOKENS_LIST, payload: address });
       dispatch({ type: actionTypes.SET_RECEIVE_TOKENS_LIST });
       dispatch(getTokenDataSaga(initReceiveFirstTokenSwap.id));
+      dispatch(getWalletDataSaga(address));
 
       let ifSendTokenAvailableForSwap = finalReceiveTokensList.some((el) => {
         if (el.address === initSendTokenSwap.address) {
@@ -382,7 +386,7 @@ export default function SwapComponent() {
       // console.log('test activation');
       //
       setTokenSendUSDCurrency(
-        `$${(tokenData.USDCurrency * parseFloat(tokenData.amount)).toFixed(2)}`
+        `$${(tokenData.USDCurrency * parseFloat(tokenData.amount)).toFixed(5)}`
       );
     } else if (tokenData.USDCurrency === '$0.00') {
       // setTokenSendUSDCurrency('Loading');
@@ -403,7 +407,7 @@ export default function SwapComponent() {
 
         if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
           setTokenSendUSDCurrency(
-            `$ ${(tokenUSDCurrencyValue.data.price.rate * tokenData.amount).toFixed(2)}`
+            `$ ${(tokenUSDCurrencyValue.data.price.rate * tokenData.amount).toFixed(5)}`
           );
         } else {
           setTokenSendUSDCurrency('Price not available');
@@ -414,7 +418,7 @@ export default function SwapComponent() {
         );
 
         setTokenSendUSDCurrency(
-          `$${(ethDollarValue.data.ethereum.usd * tokenData.amount).toFixed(2)}`
+          `$${(ethDollarValue.data.ethereum.usd * tokenData.amount).toFixed(5)}`
         );
       }
     } else {
@@ -452,7 +456,7 @@ export default function SwapComponent() {
 
       if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
         setTokensReceiveUSDCurrency(
-          `$ ${(tokenUSDCurrencyValue.data.price.rate * tokenData.amount).toFixed(2)}`
+          `$ ${(tokenUSDCurrencyValue.data.price.rate * tokenData.amount).toFixed(5)}`
         );
       } else {
         setTokensReceiveUSDCurrency('Price not available');
@@ -463,7 +467,7 @@ export default function SwapComponent() {
       );
 
       setTokensReceiveUSDCurrency(
-        `$${(ethDollarValue.data.ethereum.usd * tokenData.amount).toFixed(2)}`
+        `$${(ethDollarValue.data.ethereum.usd * tokenData.amount).toFixed(5)}`
       );
     }
   };
@@ -478,36 +482,6 @@ export default function SwapComponent() {
       window.web3 = new Web3(window.web3.currentProvider);
     } else {
       window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
-    }
-  }
-
-  async function transact() {
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    // console.log('account selected is :::', accounts[0]);
-
-    //useState with null
-
-    if (selectedRate !== null) {
-      let txObject = selectedRate.transactObject;
-      txObject.gas = parseFloat(txObject.gas) + 100000;
-      txObject.from = accounts[0];
-      if (initSendTokenSwap.symbol !== 'ETH') {
-        const ERC20contract = new web3.eth.Contract(ERC20ABI, txObject.sellTokenAddress);
-        await ERC20contract.methods
-          .approve(txObject.allowanceTarget, txObject.sellAmount)
-          .send({ from: accounts[0] });
-      }
-      try {
-        await web3.eth.sendTransaction(txObject);
-        // settxSuccess(true);
-      } catch (error) {
-        // console.log('tx failed::', error);
-        // settxFailure(true);
-      }
-    } else {
-      alert('Please Fill All fields');
     }
   }
 
@@ -814,6 +788,64 @@ export default function SwapComponent() {
   // console.log('selectedNewExchanger List', exchangersOfferedList);
   // console.log('selectedNewExchanger chosen one', activeExchanger);
 
+  const makeSwappedTokensOperation = async (swappedTokensData) => {
+    await loadWeb3();
+    const web3 = window.web3;
+    const metaMaskWalletAddress = await web3.eth.getAccounts();
+    // console.log('single swap tokens operation accounts metaMaskWalletAddress', metaMaskWalletAddress);
+
+    // console.log('single swap tokens operation walletData', walletData);
+    console.log('single swap tokens operation raw data object', swappedTokensData);
+
+    const response = await axios.get(
+      `https://api.0x.org/swap/v1/quote?buyToken=${swappedTokensData.buyToken}&sellToken=${swappedTokensData.sellToken}&sellAmount=${swappedTokensData.sellAmount}`
+    );
+
+    //from: walletData.address
+    // console.log('single swap tokens operation 0x API obj', response.data);
+
+    let totalObject = { ...response.data, from: metaMaskWalletAddress[0] };
+
+    console.log('single swap tokens operation total obj', totalObject);
+
+    try {
+      await web3.eth.sendTransaction(totalObject);
+      console.log('single swap tokens operation - transaction in progress');
+    } catch (err) {
+      console.log('single swap tokens operation - tx failed::', err);
+    }
+  };
+
+  async function transact() {
+    await loadWeb3();
+    const web3 = window.web3;
+    const accounts = await web3.eth.getAccounts();
+    // console.log('account selected is :::', accounts[0]);
+
+    //useState with null
+
+    if (selectedRate !== null) {
+      let txObject = selectedRate.transactObject;
+      txObject.gas = parseFloat(txObject.gas) + 100000;
+      txObject.from = accounts[0];
+      if (initSendTokenSwap.symbol !== 'ETH') {
+        const ERC20contract = new web3.eth.Contract(ERC20ABI, txObject.sellTokenAddress);
+        await ERC20contract.methods
+          .approve(txObject.allowanceTarget, txObject.sellAmount)
+          .send({ from: accounts[0] });
+      }
+      try {
+        await web3.eth.sendTransaction(txObject);
+        // settxSuccess(true);
+      } catch (error) {
+        // console.log('tx failed::', error);
+        // settxFailure(true);
+      }
+    } else {
+      alert('Please Fill All fields');
+    }
+  }
+
   return (
     <>
       <ExchangeMainLayout>
@@ -1063,7 +1095,7 @@ export default function SwapComponent() {
                                       <span>{`$${
                                         object.balance > 0
                                           ? (
-                                              object.balance * object.USDCurrency.toFixed(2)
+                                              object.balance * object.USDCurrency.toFixed(5)
                                             ).toFixed(3)
                                           : object.balance * object.USDCurrency
                                       }`}</span>
@@ -1574,20 +1606,15 @@ export default function SwapComponent() {
                     sendTokenForExchangeAmount === '0' ||
                     sendTokenForExchangeAmount === 0 ||
                     sendTokenForExchangeAmount?.length === 0 ||
-                    receiveTokenForExchangeAmount === '0' ||
-                    receiveTokenForExchangeAmount === 0 ||
-                    receiveTokenForExchangeAmount?.length === 0
+                    isAbleToReplaceTokensInSingleSwap === false
                   }
                   onClick={() => {
-                    calculateToAmount(initSendTokenSwap);
-
-                    //token single swap
-                    // sushiswap exchanger only
-                    // also should be send exchanger address in order to chosen exchanger
-                    //now, by default, sushiswap v2 hardcode only
-                    singleSushiSwapV2({
+                    // calculateToAmount(initSendTokenSwap);
+                    makeSwappedTokensOperation({
+                      buyToken: initReceiveFirstTokenSwap.symbol,
+                      sellToken: initSendTokenSwap.symbol,
+                      sellAmount: sendTokenForExchangeAmount * Math.pow(10, 18).toString(),
                       sendTokenAddress: initSendTokenSwap.address,
-                      sendTokenAmount: sendTokenForExchangeAmount,
                       receiveTokenAddress: initReceiveFirstTokenSwap.address,
                       gasPrice: selectedGasPrice ? selectedGasPrice : proposeGasPrice,
                     });

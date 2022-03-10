@@ -84,12 +84,10 @@ export const singleSushiSwapV2 = async (tokensData) => {
   // fluctuations. Then we put this value to contract like this:
   // const minAmountOut = ExpectedAmountTokens - slippage.
   // minAmountOut we will send to contract.
-
-  console.log('single swap sushiswapV2  sendTokenAddress', tokensData.sendTokenAddress);
-  console.log('single swap sushiswapV2  sendTokenAmount', tokensData.sendTokenAmount);
-  console.log('single swap sushiswapV2  firstReceiveToken', tokensData.receiveTokenAddress);
-  console.log('single swap sushiswapV2 gasPrice', tokensData.gasPrice);
-
+  // console.log('single swap sushiswapV2  sendTokenAddress', tokensData.sendTokenAddress);
+  // console.log('single swap sushiswapV2  sendTokenAmount', tokensData.sendTokenAmount);
+  // console.log('single swap sushiswapV2  firstReceiveToken', tokensData.receiveTokenAddress);
+  // console.log('single swap sushiswapV2 gasPrice', tokensData.gasPrice);
   //liquidity pool functional - for couple of receive tokens
   // await loadWeb3();
   // const web3 = window.web3;
