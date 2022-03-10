@@ -11,7 +11,7 @@ import ERC20ABI from '../../abi/ERC20.json';
 import closeModalIcon from '../../assets/icons/close_nft.svg';
 import closeModalIconDark from '../../assets/icons/closenftdark.svg';
 import OutsideClickHandler from './outsideClickHandler';
-import { Box, Button } from '@material-ui/core';
+import { Box, Button, TextField } from '@material-ui/core';
 import Uniswap from '../../assets/icons/Uniswap.webp';
 import Balancer from '../../assets/icons/balancer.png';
 import { ethers } from 'ethers';
@@ -104,12 +104,6 @@ import {
 import { getTokenDataSaga } from '../../store/currentTokenData/actions';
 import Popover from '@mui/material/Popover';
 
-const useStyles = makeStyles((theme) => ({
-  noBorder: {
-    border: 'none !important',
-  },
-}));
-
 const erc20Abi = [
   'function balanceOf(address owner) view returns (uint256)',
   'function approve(address _spender, uint256 _value) public returns (bool success)',
@@ -140,9 +134,22 @@ import ROUTERABI from '../../abi/UniRouterV2.json';
 import greenDot from '../../assets/icons/greenDot.svg';
 import { singleSushiSwapV2 } from './helpers';
 
+const useStyles = makeStyles(() => ({
+  noBorder: {
+    border: 'none !important',
+  },
+  input: {
+    // '&::placeholder': {
+    //   color: 'red',
+    // },
+  },
+}));
+
 export default function SwapComponent() {
+  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
+
   const dispatch = useDispatch();
-  const classes = useStyles();
+  const classes = useStyles(isLightTheme);
   const { address } = useParams();
 
   //work saga
@@ -207,8 +214,6 @@ export default function SwapComponent() {
     },
   ]);
   const [activeExchanger, setActiveExchanger] = useState(exchangersOfferedList[0]);
-
-  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
   //---OLD states
 
@@ -506,104 +511,6 @@ export default function SwapComponent() {
     }
   }
 
-  const calculateToAmount = async (tokenFromAmount) => {
-    // console.log('calculate method called with ammount::', tokenFromAmount);
-    // console.log('value of Tokenfromamount::', sendTokenForExchangeAmount);
-    // console.log('value of tokenfrom object::', initSendTokenSwap);
-    // console.log('value of tokenTo::', TokenTo);
-    if (tokenFromAmount > 0) {
-      // // console.log("calculate amount is called")
-      if (initSendTokenSwap.symbol !== '' && TokenTo !== '') {
-        let differentQuoteList = [];
-        const protocolsList = ['', 'Uniswap', 'Curve', 'SushiSwap', 'Bancor', 'Balancer'];
-        let amount = parseFloat(tokenFromAmount) * Math.pow(10, 18);
-        const tokenToDollarValue = await dollarValueOfToken(TokenTo.address);
-
-        for (let i = 0; i < protocolsList.length; i++) {
-          try {
-            let protocolQuote = {};
-            const response = await axios.get(
-              `https://ropsten.api.0x.org/swap/v1/quote?buyToken=${TokenTo.symbol}&sellToken=${initSendTokenSwap.symbol}&sellAmount=${amount}&feeRecipient=0xE609192618aD9aC825B981fFECf3Dfd5E92E3cFB&buyTokenPercentageFee=0.02&includedSources=${protocolsList[i]}`
-            );
-            // console.log(`response for all ${protocolsList[i]}`, response.data);
-
-            if (protocolsList[i] === '') {
-              protocolQuote.name = '0x Index';
-              var sources = response.data.sources;
-              sources.sort((a, b) => parseFloat(b.proportion) - parseFloat(a.proportion));
-              var sources2 = [];
-              for (var j = 0; j < sources.length; j++) {
-                if (sources[j].proportion > 0) {
-                  sources2.push(sources[j]);
-                }
-              }
-              // setSources(sources2);
-            } else {
-              protocolQuote.name = protocolsList[i];
-            }
-            protocolQuote.price = response.data.price;
-            protocolQuote.minPrice = response.data.guaranteedPrice;
-            protocolQuote.TokenToAmount = (
-              parseFloat(response.data.buyAmount) * Math.pow(10, -TokenTo.decimals)
-            )
-              .toFixed(2)
-              .toString();
-            const ethPrice = 10000;
-            protocolQuote.gas = (
-              parseFloat(response.data.gas) *
-              parseFloat(response.data.gasPrice) *
-              Math.pow(10, -18) *
-              ethPrice
-            ).toFixed(2);
-            // console.log('dollar value of token', tokenToDollarValue);
-            protocolQuote.receivedValueInDollar = (
-              parseFloat(response.data.buyAmount) *
-              Math.pow(10, -TokenTo.decimals) *
-              tokenToDollarValue
-            ).toFixed(2);
-            protocolQuote.netReceived =
-              parseFloat(protocolQuote.receivedValueInDollar) - parseFloat(protocolQuote.gas);
-            protocolQuote.transactObject = response.data;
-            // protocolQuote.image = `../../generalAssets/icons/${protocolsList[i]}.webp`;
-            if (protocolsList[i] === 'Bancor') {
-              protocolQuote.image =
-                'https://assets.coingecko.com/coins/images/14053/small/bancorvbnt_32.png?1614048819';
-            }
-            if (protocolsList[i] === 'Uniswap') {
-              protocolQuote.image =
-                'https://assets.coingecko.com/coins/images/12504/small/uniswap-uni.png?1600306604';
-            }
-            if (protocolsList[i] === 'Curve') {
-              protocolQuote.image =
-                'https://assets.coingecko.com/markets/images/538/small/Curve.png?1591605481';
-            }
-            if (protocolsList[i] === 'SushiSwap') {
-              protocolQuote.image =
-                'https://assets.coingecko.com/markets/images/576/small/2048x2048_Logo.png?1609208464';
-            }
-            if (protocolsList[i] === 'Balancer') {
-              protocolQuote.image =
-                'https://assets.coingecko.com/coins/images/11683/small/Balancer.png?1592792958';
-            }
-            if (protocolsList[i] === '') {
-              protocolQuote.image =
-                'https://assets.coingecko.com/markets/images/565/small/0x-protocol.png?1596623034';
-            }
-            differentQuoteList.push(protocolQuote);
-          } catch (err) {
-            // console.log(`error come for ${protocolsList[i]}`, err);
-          }
-        }
-        differentQuoteList.sort((a, b) => b.netReceived - a.netReceived);
-        // setselectedRate(differentQuoteList[0]);
-        // console.log('differentQuoteList[0].name', differentQuoteList);
-        // setselectedExchangeName(differentQuoteList[0].name);
-        // setprotocolsRateList(differentQuoteList);
-        // console.log('different rates we have::', differentQuoteList);
-      }
-    }
-  };
-
   const selectTokenForExchange = (rawSelectedToken, flag) => {
     // // console.log('flag', flag.isSendTokenChosen);
 
@@ -879,7 +786,7 @@ export default function SwapComponent() {
 
   const filterAmountInputFunction = (e, flag) => {
     let test = e.currentTarget.value.replace(/[^\d.-]/g, '').replace(/[^\w.]|_/g, '');
-    console.log('regex test', test);
+    // console.log('regex test', test);
 
     if (flag.isSendTokenSwapped === true) {
       setSendTokenForExchangeAmount(test);
@@ -889,22 +796,13 @@ export default function SwapComponent() {
   };
 
   const selectNewExchanger = (selectedNewExchanger) => {
-    // console.log('selectedNewExchanger', selectedNewExchanger);
-
     const chosenExchanger = { ...selectedNewExchanger, isExchangerSelected: true };
-    // console.log('selectedNewExchanger first', chosenExchanger);
-
     let notSelectedExchangersList = exchangersOfferedList.filter((el) => {
       return chosenExchanger.routerAddress !== el.routerAddress;
     });
-
-    // console.log('selectedNewExchanger second', notSelectedExchangersList);
-
     notSelectedExchangersList = notSelectedExchangersList.map((el) => {
       return { ...el, isExchangerSelected: false };
     });
-
-    // console.log('selectedNewExchanger third', notSelectedExchangersList);
     notSelectedExchangersList.unshift(chosenExchanger);
     setActiveExchanger(chosenExchanger);
     setExchangersOfferedList(notSelectedExchangersList);
@@ -995,6 +893,7 @@ export default function SwapComponent() {
                               height: '18px',
                             },
                           },
+
                           classes: { notchedOutline: classes.noBorder },
                         }}
                         isLightTheme={isLightTheme}
@@ -1571,15 +1470,15 @@ export default function SwapComponent() {
                                 ))}
                               </TransactionSpeedGridLayout>
 
-                              <div
-                                style={{
-                                  display: 'flex',
-                                  justifyContent: 'center',
-                                }}>
-                                <AdvancedSettingsButton isLightTheme={isLightTheme}>
-                                  Advanced settings
-                                </AdvancedSettingsButton>
-                              </div>
+                              {/*<div*/}
+                              {/*  style={{*/}
+                              {/*    display: 'flex',*/}
+                              {/*    justifyContent: 'center',*/}
+                              {/*  }}>*/}
+                              {/*  <AdvancedSettingsButton isLightTheme={isLightTheme}>*/}
+                              {/*    Advanced settings*/}
+                              {/*  </AdvancedSettingsButton>*/}
+                              {/*</div>*/}
 
                               <SlippageToleranceLabel isLightTheme={isLightTheme}>
                                 Slippage Tolerance
@@ -1592,7 +1491,34 @@ export default function SwapComponent() {
                                   3%
                                 </StablePercentChooseToleranceBtn>
                                 <FloatPercentChooseToleranceBtn isLightTheme={isLightTheme}>
-                                  %
+                                  <TextField
+                                    InputProps={{
+                                      inputProps: {
+                                        style: {
+                                          textAlign: 'center',
+                                          fontWeight: 600,
+                                          color: isLightTheme ? 'black' : 'white',
+                                        },
+                                      },
+                                      endAdornment: (
+                                        <span
+                                          style={{
+                                            fontWeight: 'bold',
+                                            color: isLightTheme ? 'black' : 'white',
+                                          }}>
+                                          %
+                                        </span>
+                                      ),
+                                      classes: {
+                                        notchedOutline: classes.noBorder,
+                                        input: classes.input,
+                                      },
+                                    }}
+                                    InputLabelProps={{
+                                      style: { textAlign: 'center' },
+                                    }}
+                                    placeholder="%"
+                                  />
                                 </FloatPercentChooseToleranceBtn>
                               </SlippageToleranceBtnsLayout>
 
