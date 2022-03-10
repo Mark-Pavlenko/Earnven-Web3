@@ -31,7 +31,7 @@ export default function Ethereum2Staking({ accountAddress }) {
     const getEth2StakeData = async () => {
       try {
         dispatch({
-          type: actionTypes.GET_ETH2_STAKE_DATA,
+          type: actionTypes.SET_ETH2_STAKE_DATA,
           payload: userAccountAddress,
         });
       } catch (error) {

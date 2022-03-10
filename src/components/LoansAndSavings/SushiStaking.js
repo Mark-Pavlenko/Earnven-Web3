@@ -30,7 +30,7 @@ export default function SushiStaking({ accountAddress }) {
       const sushiStakingObjects = { accountAddress: accountAddress, epocDate: epocDate };
       try {
         dispatch({
-          type: actionTypes.GET_SLP_STAKE_DATA,
+          type: actionTypes.SET_SLP_STAKE_DATA,
           payload: sushiStakingObjects,
         });
       } catch (error) {

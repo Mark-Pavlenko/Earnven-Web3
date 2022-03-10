@@ -4,7 +4,7 @@ import * as actions from './actions';
 import actionTypes from '../../constants/actionTypes';
 
 export function* getETH2StakeSagaWatcher() {
-  yield takeEvery(actionTypes.GET_ETH2_STAKE_DATA, eth2StakeSagaWorker);
+  yield takeEvery(actionTypes.SET_ETH2_STAKE_DATA, eth2StakeSagaWorker);
 }
 
 function* eth2StakeSagaWorker(userAccountAddress) {
