@@ -198,7 +198,7 @@ export default function SwapComponent() {
   const [isOfferedByPopoverActivated, setisOfferedByPopoverActivated] = useState(true);
   const [exchangersOfferedList, setExchangersOfferedList] = useState([
     {
-      name: 'UniSwap',
+      name: 'Uniswap_V2',
       routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
       receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
       gasFee: '$10.03',
@@ -217,6 +217,7 @@ export default function SwapComponent() {
     },
   ]);
   const [activeExchanger, setActiveExchanger] = useState(exchangersOfferedList[0]);
+  const [isTokensSwappingActive, setIsTokensSwappingActive] = useState(false);
 
   //---OLD states
 
@@ -789,6 +790,7 @@ export default function SwapComponent() {
   // console.log('selectedNewExchanger chosen one', activeExchanger);
 
   const makeSwappedTokensOperation = async (swappedTokensData) => {
+    setIsTokensSwappingActive(true);
     await loadWeb3();
     const web3 = window.web3;
     const metaMaskWalletAddress = await web3.eth.getAccounts();
@@ -797,8 +799,9 @@ export default function SwapComponent() {
     // console.log('single swap tokens operation walletData', walletData);
     console.log('single swap tokens operation raw data object', swappedTokensData);
 
+    //As exchanger - UniSwap_V3 by default
     const response = await axios.get(
-      `https://api.0x.org/swap/v1/quote?buyToken=${swappedTokensData.buyToken}&sellToken=${swappedTokensData.sellToken}&sellAmount=${swappedTokensData.sellAmount}`
+      `https://api.0x.org/swap/v1/quote?buyToken=${swappedTokensData.buyToken}&sellToken=${swappedTokensData.sellToken}&sellAmount=${swappedTokensData.sellAmount}&includedSources=${swappedTokensData.includedSources}`
     );
 
     //from: walletData.address
@@ -811,8 +814,10 @@ export default function SwapComponent() {
     try {
       await web3.eth.sendTransaction(totalObject);
       console.log('single swap tokens operation - transaction in progress');
+      setIsTokensSwappingActive(false);
     } catch (err) {
       console.log('single swap tokens operation - tx failed::', err);
+      setIsTokensSwappingActive(false);
     }
   };
 
@@ -1606,7 +1611,8 @@ export default function SwapComponent() {
                     sendTokenForExchangeAmount === '0' ||
                     sendTokenForExchangeAmount === 0 ||
                     sendTokenForExchangeAmount?.length === 0 ||
-                    isAbleToReplaceTokensInSingleSwap === false
+                    isAbleToReplaceTokensInSingleSwap === false ||
+                    isTokensSwappingActive === true
                   }
                   onClick={() => {
                     // calculateToAmount(initSendTokenSwap);
@@ -1617,9 +1623,10 @@ export default function SwapComponent() {
                       sendTokenAddress: initSendTokenSwap.address,
                       receiveTokenAddress: initReceiveFirstTokenSwap.address,
                       gasPrice: selectedGasPrice ? selectedGasPrice : proposeGasPrice,
+                      includedSources: activeExchanger.name,
                     });
                   }}>
-                  Exchange
+                  {isTokensSwappingActive ? 'Executing...' : 'Exchange'}
                 </Button>
               </SwapBlockExchangeLayout>
             </SwapTokensMainSubBlock>
