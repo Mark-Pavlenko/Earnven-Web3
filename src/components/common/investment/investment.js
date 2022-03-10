@@ -296,7 +296,8 @@ const Investment = ({
                 item !== 'image' &&
                 item != 'token0Image' &&
                 item != 'token1Image' &&
-                item != 'totalValue'
+                item != 'totalValue' &&
+                item != 'poolDetails'
             )
             .map((el) => {
               return (

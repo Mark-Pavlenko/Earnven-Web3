@@ -149,13 +149,13 @@ export default function index({ accountAddress }) {
   const issnowSwapIsLoading = useSelector((state) => state.snowSwap.snowSwapIsLoading);
 
   //CreamIronBank
-  const creamIronBankData = useSelector((state) => state.creamIronBank.creamIronBankData);
-  const creamIronBankTotal = useSelector((state) => state.creamIronBank.creamIronBankTotal);
-  const iscreamIronBankIsLoading = useSelector(
-    (state) => state.creamIronBank.creamIronBankIsLoading
-  );
-  const creamImageUrl =
-    'https://assets.coingecko.com/coins/images/11976/thumb/Cream.png?1596593418';
+  // const creamIronBankData = useSelector((state) => state.creamIronBank.creamIronBankData);
+  // const creamIronBankTotal = useSelector((state) => state.creamIronBank.creamIronBankTotal);
+  // const iscreamIronBankIsLoading = useSelector(
+  //   (state) => state.creamIronBank.creamIronBankIsLoading
+  // );
+  // const creamImageUrl =
+  //   'https://assets.coingecko.com/coins/images/11976/thumb/Cream.png?1596593418';
 
   //balancer V2
   //balancerV2
@@ -510,7 +510,7 @@ export default function index({ accountAddress }) {
               CrvStakingTokenData.length > 0 ||
               AaveStakingData.length > 0 ||
               convexStakeData.length > 0 ||
-              creamIronBankData.length > 0 ||
+              // creamIronBankData.length > 0 ||
               sushiStakeData.length > 0 ||
               uniswapV2stake.length > 0,
           }}>
@@ -531,7 +531,7 @@ export default function index({ accountAddress }) {
                       parseFloat(eth2StakeTotal) +
                       parseFloat(compTotalValue) +
                       parseFloat(convexStakeTotal) +
-                      parseFloat(creamIronBankTotal) +
+                      // parseFloat(creamIronBankTotal) +
                       parseFloat(sushiStakeTotal) +
                       parseFloat(uniswapV2stakeTotal)
                   ).toFixed(2)
@@ -768,7 +768,7 @@ export default function index({ accountAddress }) {
           )}
 
           {/* CreamIronBank Protocol */}
-          {iscreamIronBankIsLoading == true ? (
+          {/* {iscreamIronBankIsLoading == true ? (
             <PortocolLoadingBlock isLightTheme={theme}>
               <LoadingSpinner>
                 <CircularProgress size={22} />
@@ -807,7 +807,7 @@ export default function index({ accountAddress }) {
                 ''
               )}
             </>
-          )}
+          )} */}
 
           {/* Sushi Staking */}
           {issushiStakeIsLoading == true ? (
@@ -1151,7 +1151,7 @@ export default function index({ accountAddress }) {
           )}
         </PoolsBlock>
         {/*==================================Yield Farming======================================>*/}
-        <PoolsBlock //third
+        {/* <PoolsBlock //third
           isLightTheme={theme}
           style={{
             display: snowSwapData.length > 0,
@@ -1163,16 +1163,11 @@ export default function index({ accountAddress }) {
           <div style={{ padding: '0 29px 20px 26px', marginBottom: '20px' }}>
             <TotalValueField isLightTheme={theme}>
               <TotalTitle isLightTheme={theme}>{'Total Value'}</TotalTitle>
-              <TotalValue isLightTheme={theme}>
-                {/* $
-              {numberWithCommas(
-                parseFloat(parseFloat(liquityTokenTotal) + parseFloat(snowSwapTotal)).toFixed(2)
-              )} */}
-              </TotalValue>
+              <TotalValue isLightTheme={theme}></TotalValue>
             </TotalValueField>
           </div>
           {isFarmingOpen && <React.Fragment></React.Fragment>}
-        </PoolsBlock>
+        </PoolsBlock> */}
       </InvestmentWrapper>
     </>
   );

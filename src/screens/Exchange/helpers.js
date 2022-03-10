@@ -3,11 +3,40 @@ import ERC20ABI from '../../abi/ERC20.json';
 import OneClickLiquidity from '../../abi/UniV2PoolsOneClick.json';
 import Addresses from '../../contractAddresses';
 
+export const initFilteringModalTokensList = (
+  searchTokensData,
+  initSendMultiSwapToken,
+  initReceiveMultiSwapTokensList
+) => {
+  let copyTokensList = searchTokensData.tokensList.filter(function (obj) {
+    return obj.address !== initSendMultiSwapToken.address;
+  });
+
+  let test;
+
+  for (let i = copyTokensList.length - 1; i >= 0; i--) {
+    for (let j = 0; j < initReceiveMultiSwapTokensList.length; j++) {
+      if (
+        copyTokensList[i] &&
+        copyTokensList[i].address === initReceiveMultiSwapTokensList[j].address
+      ) {
+        test = copyTokensList.splice(i, 1);
+      }
+    }
+  }
+  copyTokensList.filter(function (obj) {
+    return obj !== test;
+  });
+
+  return copyTokensList;
+  // test;
+};
+
 export const filteredTokensByName = (event, searchTokensData) => {
   console.log('searched tokens Data', searchTokensData);
 
   let lowerCase = event.target.value.toLowerCase();
-  return searchTokensData.tokensList.filter((el) => {
+  return searchTokensData.filter((el) => {
     if (lowerCase.input === '') {
       return el;
     }
@@ -22,19 +51,20 @@ export const filteredTokensByName = (event, searchTokensData) => {
 };
 
 export const convertSendTokenToUSDCurrencyHelper = (tokenData) => {
-  console.log('send tokenData helper', tokenData);
+  console.log('send tokenData single swap helper', tokenData);
   // console.log('send tokenData helper parseInt(tokenData.amount)', parseInt(tokenData.amount));
 
   if (tokenData.amount === '') {
     tokenData.amount = '0';
   }
 
-  if (tokenData.USDCurrency !== undefined) {
+  if (tokenData.USDCurrency !== undefined && tokenData.USDCurrency !== '$0.00') {
     return `$${(tokenData.USDCurrency * parseFloat(tokenData.amount)).toFixed(2)}`;
+  } else if (tokenData.USDCurrency === '$0.00') {
+    return 'Not able to count';
   } else {
     return 'Price not available';
   }
-  // }
 };
 
 export const checkIfExchangedTokenLimitIsExceeded = (chosenTokenAmount, totalTokensBalance) => {

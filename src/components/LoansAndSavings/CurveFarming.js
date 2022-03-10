@@ -10,6 +10,7 @@ import { useWeb3React } from '@web3-react/core';
 import actionTypes from '../../constants/actionTypes';
 import { useDispatch, useSelector } from 'react-redux';
 import CurveLpImage from './CurveLpImage';
+import loadWeb3 from '../../utils/loadWeb3';
 
 export default function CurveFarming({ accountAddress }) {
   const [CrvStakingTokenContent, setCrvStakingTokenContent] = useState([]); //cvx data content
@@ -17,8 +18,13 @@ export default function CurveFarming({ accountAddress }) {
   const { account, activate, active, chainId, connector, deactivate, error, provider, setError } =
     useWeb3React();
   async function getWeb3() {
-    const provider = await connector.getProvider();
-    const web3 = await new Web3(provider);
+    let web3;
+    try {
+      const provider = active ? await connector.getProvider() : await loadWeb3();
+      web3 = new Web3(provider);
+    } catch (err) {
+      console.log('Web3 is not connected, check the Metamask connectivity!!');
+    }
     return web3;
   }
 
@@ -33,15 +39,16 @@ export default function CurveFarming({ accountAddress }) {
   useEffect(() => {
     const getCurveStakingData = async () => {
       const web3 = await getWeb3();
-
-      const curveStakingAttributes = { accountAddress: accountAddress, web3: web3 };
-      try {
-        dispatch({
-          type: actionTypes.SET_CRV_STKCLM_DATA,
-          payload: curveStakingAttributes,
-        });
-      } catch (error) {
-        console.log('Curve Staking process error', error.message);
+      if (web3 != undefined) {
+        const curveStakingAttributes = { accountAddress: accountAddress, web3: web3 };
+        try {
+          dispatch({
+            type: actionTypes.SET_CRV_STKCLM_DATA,
+            payload: curveStakingAttributes,
+          });
+        } catch (error) {
+          console.log('Curve Staking process error', error.message);
+        }
       }
     };
     getCurveStakingData();

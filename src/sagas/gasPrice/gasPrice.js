@@ -25,7 +25,7 @@ function* getGasPriceWorker() {
     ];
     const gasPriceData = yield call(API.getGasPriceData);
     const { result } = gasPriceData.data;
-    console.log('resultSaga', result);
+    //console.log('resultSaga', result);
     gasType[0].value = result.FastGasPrice;
     gasType[1].value = result.ProposeGasPrice;
     gasType[2].value = result.SafeGasPrice;

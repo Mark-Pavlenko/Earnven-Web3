@@ -26,27 +26,9 @@ import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import { useDispatch, useSelector } from 'react-redux';
 import actionTypes from '../../constants/actionTypes';
+import loadWeb3 from '../../utils/loadWeb3';
 
 export default function AaveStaking({ accountAddress }) {
-  //varaible for AaveV2
-  // const [AaveV2BalanceAmt, setAaveV2BalanceAmt] = useState();
-  // const [AaveV2UsdPrice, setAaveV2UsdPrice] = useState();
-  // const [AaveAmountUSD, setAaveAmountUSD] = useState(0);
-  // const [AaveV2ClaimableAmt, setAaveV2ClaimableAmt] = useState(0);
-  // const [AaveV2ClaimableValue, setAaveV2ClaimableValue] = useState(0);
-
-  // //variable for stkABPT - balancer LP
-  // const [AaveStkABPTBalanceAmt, setAaveStkABPTBalanceAmt] = useState();
-  // const [AaveStkABPTPrice, setAaveStkABPTPrice] = useState();
-  // const [AaveStkABPTAmountUSD, setAaveStkABPTAmountUSD] = useState(0);
-  // const [AaveStkABPTClaimableAmt, setAaveStkABPTClaimableAmt] = useState(0);
-  // const [AaveStkABPTClaimableValue, setAaveStkABPTClaimableValue] = useState(0);
-
-  // //to get the total staking value Aave v2 + stkABPT + claimable
-  // const [AaveStakingTotal, setAaveStakingTotal] = useState();
-  // const [AaveLiquidityEth, setAaveLiquidityEth] = useState();
-  // const [AaveStkABPTImage, setAaveStkABPTImage] = useState();
-
   const dispatch = useDispatch();
 
   //get useWeb3React hook
@@ -55,20 +37,26 @@ export default function AaveStaking({ accountAddress }) {
 
   //logic implementing for web3 provider connection using web3 React hook
   async function getWeb3() {
-    const provider = active ? await connector.getProvider() : ethers.getDefaultProvider();
-    const web3 = await new Web3(provider);
+    let web3;
+    try {
+      const provider = active ? await connector.getProvider() : await loadWeb3();
+      web3 = new Web3(provider);
+    } catch (err) {
+      console.log('Web3 is not connected, check the Metamask connectivity!!');
+    }
     return web3;
   }
   //dispatch the action to saga
   useEffect(() => {
     const getAaveData = async () => {
       const web3 = await getWeb3();
-      const aaveStakeAttributes = { accountAddress: accountAddress, web3: web3 };
-
-      dispatch({
-        type: actionTypes.SET_AAVE_TOKEN_DATA,
-        payload: aaveStakeAttributes,
-      });
+      if (web3 != undefined) {
+        const aaveStakeAttributes = { accountAddress: accountAddress, web3: web3 };
+        dispatch({
+          type: actionTypes.SET_AAVE_TOKEN_DATA,
+          payload: aaveStakeAttributes,
+        });
+      }
     };
     getAaveData();
   }, [accountAddress]);
