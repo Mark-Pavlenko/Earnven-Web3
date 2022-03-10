@@ -258,7 +258,10 @@ export default function SwapComponent() {
       dispatch(getWalletDataSaga(address));
 
       let ifSendTokenAvailableForSwap = finalReceiveTokensList.some((el) => {
-        if (el.address === initSendTokenSwap.address) {
+        if (
+          el.address === initSendTokenSwap.address &&
+          initSendTokenSwap.address !== finalReceiveTokensList[0].address
+        ) {
           return true;
         }
       });
