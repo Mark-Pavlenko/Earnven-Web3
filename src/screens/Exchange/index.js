@@ -228,7 +228,7 @@ export default function SwapComponent() {
   ]);
   const [activeExchanger, setActiveExchanger] = useState(exchangersOfferedList[0]);
   const [isTokensSwappingActive, setIsTokensSwappingActive] = useState(false);
-  const [slippageTolerance, setSlippageTolerance] = useState(3);
+  const [slippageTolerance, setSlippageTolerance] = useState(0.03);
 
   //---OLD states
 
@@ -812,7 +812,7 @@ export default function SwapComponent() {
 
     //As exchanger - UniSwap_V3 by default
     const response = await axios.get(
-      `https://api.0x.org/swap/v1/quote?buyToken=${swappedTokensData.buyToken}&sellToken=${swappedTokensData.sellToken}&sellAmount=${swappedTokensData.sellAmount}&includedSources=${swappedTokensData.includedSources}`
+      `https://api.0x.org/swap/v1/quote?buyToken=${swappedTokensData.buyToken}&sellToken=${swappedTokensData.sellToken}&sellAmount=${swappedTokensData.sellAmount}&includedSources=${swappedTokensData.includedSources}&slippagePercentage=${swappedTokensData.slippagePercentage}`
     );
 
     //from: walletData.address
@@ -867,13 +867,13 @@ export default function SwapComponent() {
   const staticSlippageToleranceValueHandler = (slippageToleranceValue) => {
     console.log('slippageToleranceValue', slippageToleranceValue);
 
-    setSlippageTolerance(slippageToleranceValue);
+    setSlippageTolerance(slippageToleranceValue / 100);
 
     setAnchorEl(null);
   };
 
   const personalSlippageToleranceValueHandler = (slippageToleranceValue) => {
-    setSlippageTolerance(slippageToleranceValue);
+    setSlippageTolerance(slippageToleranceValue / 100);
     console.log('slippageToleranceValue', slippageToleranceValue);
 
     // setAnchorEl(null);
@@ -1550,13 +1550,13 @@ export default function SwapComponent() {
                               </SlippageToleranceLabel>
                               <SlippageToleranceBtnsLayout>
                                 <StablePercentChooseToleranceBtn
-                                  disabled={slippageTolerance === 1}
+                                  disabled={slippageTolerance === 0.01}
                                   isLightTheme={isLightTheme}
                                   onClick={() => staticSlippageToleranceValueHandler(1)}>
                                   1%
                                 </StablePercentChooseToleranceBtn>
                                 <StablePercentChooseToleranceBtn
-                                  disabled={slippageTolerance === 3}
+                                  disabled={slippageTolerance === 0.03}
                                   isLightTheme={isLightTheme}
                                   onClick={() => staticSlippageToleranceValueHandler(3)}>
                                   3%
@@ -1625,7 +1625,7 @@ export default function SwapComponent() {
                         openExchangersListPopover(event, { isOfferedByPopoverActivated: false })
                       }
                       style={{ cursor: 'pointer' }}>
-                      {`${slippageTolerance}%`}
+                      {`${slippageTolerance * 100}%`}
                     </span>
                   </AdditionalOptionsSwapTokensSubBlock>
                 </LabelsBlockSubBlock>
@@ -1657,10 +1657,11 @@ export default function SwapComponent() {
                       buyToken: initReceiveFirstTokenSwap.symbol,
                       sellToken: initSendTokenSwap.symbol,
                       sellAmount: sendTokenForExchangeAmount * Math.pow(10, 18).toString(),
+                      includedSources: activeExchanger.name,
+                      slippagePercentage: slippageTolerance,
                       sendTokenAddress: initSendTokenSwap.address,
                       receiveTokenAddress: initReceiveFirstTokenSwap.address,
                       gasPrice: selectedGasPrice ? selectedGasPrice : proposeGasPrice,
-                      includedSources: activeExchanger.name,
                     });
                   }}>
                   {isTokensSwappingActive ? 'Executing...' : 'Exchange'}
