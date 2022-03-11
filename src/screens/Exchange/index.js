@@ -228,6 +228,9 @@ export default function SwapComponent() {
   ]);
   const [activeExchanger, setActiveExchanger] = useState(exchangersOfferedList[0]);
   const [isTokensSwappingActive, setIsTokensSwappingActive] = useState(false);
+  const [slippageTolerance, setSlippageTolerance] = useState(0);
+  const [rawPersonalSlippageTolerance, setRawPersonalSlippageTolerance] = useState(0);
+  const [personalSlippageTolerance, setPersonalSlippageTolerance] = useState(0);
 
   //---OLD states
 
@@ -254,6 +257,8 @@ export default function SwapComponent() {
 
   const handleClose = () => {
     setAnchorEl(null);
+    setPersonalSlippageTolerance(0);
+    setRawPersonalSlippageTolerance(0);
   };
 
   const open = Boolean(anchorEl);
@@ -865,17 +870,10 @@ export default function SwapComponent() {
   // console.log('isAbleToReplaceTokensInSingleSwap test', isAbleToReplaceTokensInSingleSwap);
 
   const staticSlippageToleranceValueHandler = (slippageToleranceValue) => {
-    // console.log('slippageToleranceValue', slippageToleranceValue);
-
     setSlippageTolerance(slippageToleranceValue / 100);
 
     setAnchorEl(null);
   };
-
-  const [slippageTolerance, setSlippageTolerance] = useState(0);
-  const [rawPersonalSlippageTolerance, setRawPersonalSlippageTolerance] = useState(0);
-  const [personalSlippageTolerance, setPersonalSlippageTolerance] = useState(0);
-  // const [totalPersonalSlippageTolerance, setTotalPersonalSlippageTolerance] = useState(0);
 
   const personalSlippageToleranceValueHandler = (slippageToleranceValue) => {
     // console.log('slippageToleranceValue before', slippageToleranceValue);
