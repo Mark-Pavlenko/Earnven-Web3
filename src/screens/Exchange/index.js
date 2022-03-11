@@ -228,6 +228,7 @@ export default function SwapComponent() {
   ]);
   const [activeExchanger, setActiveExchanger] = useState(exchangersOfferedList[0]);
   const [isTokensSwappingActive, setIsTokensSwappingActive] = useState(false);
+  const [slippageTolerance, setSlippageTolerance] = useState(3);
 
   //---OLD states
 
@@ -862,6 +863,21 @@ export default function SwapComponent() {
   }
 
   console.log('isAbleToReplaceTokensInSingleSwap test', isAbleToReplaceTokensInSingleSwap);
+
+  const staticSlippageToleranceValueHandler = (slippageToleranceValue) => {
+    console.log('slippageToleranceValue', slippageToleranceValue);
+
+    setSlippageTolerance(slippageToleranceValue);
+
+    setAnchorEl(null);
+  };
+
+  const personalSlippageToleranceValueHandler = (slippageToleranceValue) => {
+    setSlippageTolerance(slippageToleranceValue);
+    console.log('slippageToleranceValue', slippageToleranceValue);
+
+    // setAnchorEl(null);
+  };
 
   return (
     <>
@@ -1533,14 +1549,23 @@ export default function SwapComponent() {
                                 Slippage Tolerance
                               </SlippageToleranceLabel>
                               <SlippageToleranceBtnsLayout>
-                                <StablePercentChooseToleranceBtn isLightTheme={isLightTheme}>
+                                <StablePercentChooseToleranceBtn
+                                  disabled={slippageTolerance === 1}
+                                  isLightTheme={isLightTheme}
+                                  onClick={() => staticSlippageToleranceValueHandler(1)}>
                                   1%
                                 </StablePercentChooseToleranceBtn>
-                                <StablePercentChooseToleranceBtn isLightTheme={isLightTheme}>
+                                <StablePercentChooseToleranceBtn
+                                  disabled={slippageTolerance === 3}
+                                  isLightTheme={isLightTheme}
+                                  onClick={() => staticSlippageToleranceValueHandler(3)}>
                                   3%
                                 </StablePercentChooseToleranceBtn>
                                 <FloatPercentChooseToleranceBtn isLightTheme={isLightTheme}>
                                   <TextField
+                                    onChange={(e) =>
+                                      personalSlippageToleranceValueHandler(e.target.value)
+                                    }
                                     InputProps={{
                                       inputProps: {
                                         style: {
@@ -1566,7 +1591,7 @@ export default function SwapComponent() {
                                     InputLabelProps={{
                                       style: { textAlign: 'center' },
                                     }}
-                                    placeholder="%"
+                                    // placeholder="%"
                                   />
                                 </FloatPercentChooseToleranceBtn>
                               </SlippageToleranceBtnsLayout>
@@ -1600,7 +1625,7 @@ export default function SwapComponent() {
                         openExchangersListPopover(event, { isOfferedByPopoverActivated: false })
                       }
                       style={{ cursor: 'pointer' }}>
-                      1%
+                      {`${slippageTolerance}%`}
                     </span>
                   </AdditionalOptionsSwapTokensSubBlock>
                 </LabelsBlockSubBlock>
