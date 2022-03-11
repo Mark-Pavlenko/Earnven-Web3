@@ -520,7 +520,7 @@ export default function MultiSwapComponent() {
       </SecondColumnTitleBlock>
       <SwapTokensMainSubBlock
         isLightTheme={isLightTheme}
-        style={{ marginTop: '0', height: '600px' }}>
+        style={{ marginTop: '0', height: 'auto' }}>
         {/*Choose send tokens block*/}
         <SendReceiveSubBlock>
           <SendBlockLabels isLightTheme={isLightTheme} style={{ margin: '32px 20px 0px 20px' }}>
@@ -975,6 +975,12 @@ export default function MultiSwapComponent() {
           style={{ marginTop: '20px', padding: '20 27px 16px 20px' }}>
           <div style={{ padding: '0 27px 16px 20px' }}>
             <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+              <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                Offered by
+              </LabelsBlockSubBlockSpan>
+            </LabelsBlockSubBlock>
+
+            <LabelsBlockSubBlock isLightTheme={isLightTheme}>
               <LabelsBlockImportantSpan isLightTheme={isLightTheme}>
                 Slippage Tolerance
               </LabelsBlockImportantSpan>
@@ -992,7 +998,7 @@ export default function MultiSwapComponent() {
             </LabelsBlockSubBlock>
           </div>
         </DownDelimiterLabelsBlock>
-        <SwapBlockExchangeLayout isLightTheme={isLightTheme}>
+        <SwapBlockExchangeLayout isLightTheme={isLightTheme} style={{ marginBottom: '40px' }}>
           <Button
             onClick={() => exchange()}
             disabled={

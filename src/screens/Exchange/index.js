@@ -215,6 +215,16 @@ export default function SwapComponent() {
       logoIcon: sushiSwapExchangerIcon,
       isExchangerSelected: false,
     },
+    //if wrong Exchanger name/router address - Uniswap_V3 by default of 0x API
+    // {
+    //   name: 'testName',
+    //   routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997DDD',
+    //   receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
+    //   gasFee: '$10.03',
+    //   isBestRate: false,
+    //   logoIcon: fastSpeedIcon,
+    //   isExchangerSelected: false,
+    // },
   ]);
   const [activeExchanger, setActiveExchanger] = useState(exchangersOfferedList[0]);
   const [isTokensSwappingActive, setIsTokensSwappingActive] = useState(false);
