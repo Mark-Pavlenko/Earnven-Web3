@@ -194,7 +194,7 @@ export default function SwapComponent() {
   const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
   const [toggleExchangedTokens, setToggleExchangedTokens] = useState(false);
   const [initConvertReceiveTokenAmount, setInitConvertReceiveTokenAmount] = useState(0);
-  const [isAbleToReplaceTokensInSingleSwap, setIsAbleToReplaceTokensInSingleSwap] = useState();
+  const [isAbleToReplaceTokensInSingleSwap, setIsAbleToReplaceTokensInSingleSwap] = useState(true);
   const [isOfferedByPopoverActivated, setisOfferedByPopoverActivated] = useState(true);
   const [exchangersOfferedList, setExchangersOfferedList] = useState([
     {
@@ -256,39 +256,40 @@ export default function SwapComponent() {
       dispatch({ type: actionTypes.SET_RECEIVE_TOKENS_LIST });
       dispatch(getTokenDataSaga(initReceiveFirstTokenSwap.id));
       dispatch(getWalletDataSaga(address));
-
-      let ifSendTokenAvailableForSwap = finalReceiveTokensList.some((el) => {
-        if (
-          el.address === initSendTokenSwap.address &&
-          initSendTokenSwap.address !== finalReceiveTokensList[0].address
-        ) {
-          return true;
-        }
-      });
-
-      let ifReceiveTokenAvailableForSwap = finalSendTokensList.some((el) => {
-        if (el.address === initReceiveFirstTokenSwap.address) {
-          return true;
-        }
-      });
-
-      // // console.log('is send token in receive list 111', ifSendTokenAvailableForSwap);
-      // // console.log('is receive token in list 111 send', ifReceiveTokenAvailableForSwap);
-
-      if (ifSendTokenAvailableForSwap === true && ifReceiveTokenAvailableForSwap === true) {
-        setIsAbleToReplaceTokensInSingleSwap(true);
-      } else if (
-        ifSendTokenAvailableForSwap === false ||
-        ifReceiveTokenAvailableForSwap === false
-      ) {
-        setIsAbleToReplaceTokensInSingleSwap(false);
-      }
     } catch (error) {
-      // console.log(error);
+      console.log('err swap init load', error);
     }
   }, []);
 
   useEffect(() => {
+    let ifSendTokenAvailableForSwap = finalReceiveTokensList.some((el) => {
+      if (el.address === initSendTokenSwap.address) {
+        return true;
+      }
+    });
+
+    let ifReceiveTokenAvailableForSwap = finalSendTokensList.some((el) => {
+      if (el.address === initReceiveFirstTokenSwap.address) {
+        return true;
+      }
+    });
+
+    if (ifSendTokenAvailableForSwap === true && ifReceiveTokenAvailableForSwap === true) {
+      setIsAbleToReplaceTokensInSingleSwap(true);
+    } else if (ifSendTokenAvailableForSwap === false || ifReceiveTokenAvailableForSwap === false) {
+      setIsAbleToReplaceTokensInSingleSwap(false);
+    }
+
+    // console.log(
+    //   'isAbleToReplaceTokensInSingleSwap test do ifSendTokenAvailableForSwap',
+    //   ifSendTokenAvailableForSwap
+    // );
+    // console.log(
+    //   ' isAbleToReplaceTokensInSingleSwap test do ifReceiveTokenAvailableForSwap',
+    //   ifReceiveTokenAvailableForSwap
+    // );
+
+    //init format receive token - add token amount to it
     let formattedReceiveToken;
     if (initReceiveFirstTokenSwap.balance === undefined) {
       let foundSendTokenListItem = finalSendTokensList.find((el) => {
@@ -303,13 +304,11 @@ export default function SwapComponent() {
       formattedReceiveToken = initReceiveFirstTokenSwap;
     }
 
-    // console.log('init test formattedReceiveToken', formattedReceiveToken);
-
     dispatch({
       type: actionTypes.SET_INIT_RECEIVE_FIRST_TOKEN_SWAP,
       payload: formattedReceiveToken,
     });
-  }, [initReceiveFirstTokenSwap]);
+  }, [initSendTokenSwap, initReceiveFirstTokenSwap]);
 
   useEffect(() => {
     let filteredSendTokensList = finalSendTokensList.filter(
@@ -760,8 +759,6 @@ export default function SwapComponent() {
     }
   };
 
-  // // console.log('isAbleToReplaceTokensInSingleSwap', isAbleToReplaceTokensInSingleSwap);
-
   const filterAmountInputFunction = (e, flag) => {
     let test = e.currentTarget.value.replace(/[^\d.-]/g, '').replace(/[^\w.]|_/g, '');
     // console.log('regex test', test);
@@ -853,6 +850,8 @@ export default function SwapComponent() {
       alert('Please Fill All fields');
     }
   }
+
+  console.log('isAbleToReplaceTokensInSingleSwap test', isAbleToReplaceTokensInSingleSwap);
 
   return (
     <>
