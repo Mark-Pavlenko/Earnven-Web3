@@ -12,8 +12,7 @@ import crvLiquidityGauge from '../../../../contractAddress/CRVLiquidityGaugeAddL
 //curveLpToken data
 import Curve3CrvPoolABI from '../../../../abi/CurveLpContracts/Curve3CrvPool.json';
 import CurvePoolRegistryABI from '../../../../abi/CurveLpContracts/CurveRegistry.json';
-//import CurvePoolRegAddress from '../../contractAddresses';
-import getCoingeckoData from '../../../../utils/getCoingeckoAPIData.js';
+import BatchCall from 'web3-batch-call';
 
 //get yearn finance token price
 export const getCurveTokenPriceData = async (contractAddress) => {
@@ -201,12 +200,46 @@ export const fetchCurveLpTokenVirtualPrice = async (contractAddress, web3) => {
 };
 //call the below function to get connect with smart contract and get curve token balance
 export const getCurveLpData = async (accountAddress, contractAddress, web3) => {
-  const Curve3CrvPoolContract = new web3.eth.Contract(Curve3CrvPoolABI, contractAddress);
-  let Curve3CrvBalance = await Curve3CrvPoolContract.methods.balanceOf(accountAddress).call();
-  let Curve3CrvName = await Curve3CrvPoolContract.methods.name().call();
+  //Set contract configuration for batchcall
+  const contracts = [
+    {
+      namespace: 'CurveLiquidity',
+      addresses: [contractAddress],
+      abi: Curve3CrvPoolABI,
+      allReadMethods: false,
+      readMethods: [
+        {
+          name: 'balanceOf', //method name
+          args: [accountAddress], //list of args that method need/expecting - here its userAddress
+        },
+        {
+          name: 'name',
+          args: [],
+        },
+        {
+          name: 'totalSupply',
+          args: [],
+        },
+        {
+          name: 'symbol',
+          args: [],
+        },
+      ],
+    },
+  ];
+
+  //--------set the batch call request-----------------------//
+  const instance = {
+    web3: web3,
+  };
+  const batchCall = new BatchCall(instance);
+  const result = await batchCall.execute(contracts);
+
+  let Curve3CrvBalance = result[0].balanceOf[0].value;
+  let Curve3CrvName = result[0].name[0].value;
+  let curveLpTokenTotal = result[0].totalSupply[0].value;
+  let curveTokenSymbol = result[0].symbol[0].value;
   let CurveLpTokenVirtualPrice = await fetchCurveLpTokenVirtualPrice(contractAddress, web3);
-  let curveLpTokenTotal = await Curve3CrvPoolContract.methods.totalSupply().call();
-  let curveTokenSymbol = await Curve3CrvPoolContract.methods.symbol().call();
 
   return {
     curveLpTokenPrice: CurveLpTokenVirtualPrice, // pool virtual price
@@ -216,6 +249,7 @@ export const getCurveLpData = async (accountAddress, contractAddress, web3) => {
     curveLpTokenLiquidity: curveLpTokenTotal, //pool Liquidity
   };
 };
+
 //call the below url to get the user releated information that holds the curveLp tokens
 export const getAddressInfo = async (accountAddress) => {
   const response = await axios.get(

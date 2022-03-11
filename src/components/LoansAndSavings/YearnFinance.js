@@ -37,7 +37,8 @@ export default function YearnFinance({ accountAddress }) {
 
   const dispatch = useDispatch();
 
-  //------Yearn.Finanace yVault data process-----------------//
+  //------Yearn.Finanace ------//
+  //this dipatch event is for yearnFinance token
   const yearnAccountAddress = { accountAddress: accountAddress };
   useEffect(() => {
     const getYearnUserData = async () => {
@@ -53,5 +54,22 @@ export default function YearnFinance({ accountAddress }) {
     getYearnUserData();
   }, [accountAddress]);
 
+  //------yVault data process--------------//
+  //this dipatch event is for yToken on yearnFinance
+  useEffect(() => {
+    const getYearnYTokenData = async () => {
+      const web3 = await getWeb3();
+      const yearnTokenAttributes = { accountAddress: accountAddress, web3: web3 };
+      try {
+        dispatch({
+          type: actionTypes.SET_YTOKEN_DATA,
+          payload: yearnTokenAttributes,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getYearnYTokenData();
+  }, [accountAddress]);
   return <></>;
 }

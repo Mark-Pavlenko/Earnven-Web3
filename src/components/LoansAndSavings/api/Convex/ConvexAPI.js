@@ -1,19 +1,63 @@
 import axios from 'axios';
 import ConvexContractABI from '../../../../abi/ConvexCVXContract.json';
 import ConvexStakingContractABI from '../../../../abi/ConvexStakingContract.json';
-import { ComingSoonLabel } from '../../../networkDropDown/styles';
+import BatchCall from 'web3-batch-call';
 
 //this function is used to get the stake amount for given contract address by calling
 //the respective contract methods
 export const getConvexStakes = async (accountAddress, contractAddress, web3) => {
-  //ConvexCvxStaking contract
-  const ConvexCVXStakingContract = new web3.eth.Contract(ConvexContractABI, contractAddress);
+  //batch-call process starts
+  //configuration
+  //set the request scheme with array of objects
+  const contracts = [
+    {
+      namespace: 'convexStaking', //Namespace will be used to group contract results
+      // list of contract address that need to look
+      addresses: [contractAddress],
+      // Specify an ABI to use for all addresses in this contract config
+      abi: ConvexContractABI,
+      allReadMethods: false,
+      // set the read methods/Array of methods with custom arguments
+      readMethods: [
+        {
+          name: 'balanceOf', //method name
+          args: [accountAddress], //list of args that method need/expecting - here its userAddress
+        },
+        {
+          name: 'earned',
+          args: [accountAddress],
+        },
+        {
+          name: 'rewardToken',
+          args: [],
+        },
+        {
+          name: 'stakingToken',
+          args: [],
+        },
+        {
+          name: 'totalSupply',
+          args: [],
+        },
+      ],
+    },
+  ];
+  //--------set the batch call request-----------------------//
+  //get the web3 instance provider
+  const instance = {
+    web3: web3,
+  };
+  // call the batchcall by passing the args with web3 instance
+  const batchCall = new BatchCall(instance);
+  //exeucte the batchCall by passing configure contracts to get the result of it
+  const result = await batchCall.execute(contracts);
+
   //call the CVX contract to get the balance of CVX token staking value
-  let ConvexBalaceAmount = await ConvexCVXStakingContract.methods.balanceOf(accountAddress).call();
-  let ConvexEarnedBalance = await ConvexCVXStakingContract.methods.earned(accountAddress).call();
-  let ConvexRewardTokenAddress = await ConvexCVXStakingContract.methods.rewardToken().call();
-  let ConvexStakingTokenAddress = await ConvexCVXStakingContract.methods.stakingToken().call();
-  let ConvexTotalSupply = await ConvexCVXStakingContract.methods.totalSupply().call();
+  let ConvexBalaceAmount = result[0].balanceOf[0].value;
+  let ConvexEarnedBalance = result[0].earned[0].value;
+  let ConvexRewardTokenAddress = result[0].rewardToken[0].value;
+  let ConvexStakingTokenAddress = result[0].stakingToken[0].value;
+  let ConvexTotalSupply = result[0].totalSupply[0].value;
 
   //retrun the value as object
   return {

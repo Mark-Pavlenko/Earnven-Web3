@@ -1,6 +1,7 @@
 import axios from 'axios';
 import YearnTokenContract from '../../../abi/YearnTokenContract.json';
 import addresses from '../../../contractAddresses';
+import BatchCall from 'web3-batch-call';
 
 //for eth2.0 protocol section
 export const getEth2StakeData = async (stakeUserAccount) => {
@@ -225,13 +226,56 @@ export const getYearnTokenPrice = async (contractAddress) => {
 //get yearn.Finanace contract data
 
 export const getYearnTokenData = async (accountAddress, tokenAddress, web3) => {
-  const yTokenContract = new web3.eth.Contract(YearnTokenContract, tokenAddress);
-  let yTokenBalance = await yTokenContract.methods.balanceOf(accountAddress).call();
-  let yTokenName = await yTokenContract.methods.name().call();
-  let yTokenSymbol = await yTokenContract.methods.symbol().call();
-  let yTokenDecimals = await yTokenContract.methods.decimals().call();
-  let yTokenUnderlyingToken = await yTokenContract.methods.token().call();
-  let yTokenTotalSupply = await yTokenContract.methods.totalSupply().call();
+  const contracts = [
+    {
+      namespace: 'yearnYToken',
+      addresses: [tokenAddress],
+      abi: YearnTokenContract,
+      allReadMethods: false,
+      readMethods: [
+        {
+          name: 'balanceOf', //method name
+          args: [accountAddress], //list of args that method need/expecting - here its userAddress
+        },
+        {
+          name: 'name',
+          args: [],
+        },
+        {
+          name: 'symbol',
+          args: [],
+        },
+        {
+          name: 'decimals',
+          args: [],
+        },
+        {
+          name: 'token',
+          args: [],
+        },
+        {
+          name: 'totalSupply',
+          args: [],
+        },
+      ],
+    },
+  ];
+  //--------set the batch call request-----------------------//
+  //get the web3 instance provider
+  const instance = {
+    web3: web3,
+  };
+  // call the batchcall by passing the args with web3 instance
+  const batchCall = new BatchCall(instance);
+  //exeucte the batchCall by passing configure contracts to get the result of it
+  const result = await batchCall.execute(contracts);
+
+  let yTokenBalance = result[0].balanceOf[0].value;
+  let yTokenName = result[0].name[0].value;
+  let yTokenSymbol = result[0].symbol[0].value;
+  let yTokenDecimals = result[0].decimals[0].value;
+  let yTokenUnderlyingToken = result[0].token[0].value;
+  let yTokenTotalSupply = result[0].totalSupply[0].value;
 
   return {
     yTokenBalance: yTokenBalance, // yToken Balance
