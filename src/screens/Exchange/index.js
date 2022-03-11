@@ -228,7 +228,6 @@ export default function SwapComponent() {
   ]);
   const [activeExchanger, setActiveExchanger] = useState(exchangersOfferedList[0]);
   const [isTokensSwappingActive, setIsTokensSwappingActive] = useState(false);
-  const [slippageTolerance, setSlippageTolerance] = useState(0.03);
 
   //---OLD states
 
@@ -267,6 +266,7 @@ export default function SwapComponent() {
       dispatch({ type: actionTypes.SET_RECEIVE_TOKENS_LIST });
       dispatch(getTokenDataSaga(initReceiveFirstTokenSwap.id));
       dispatch(getWalletDataSaga(address));
+      setSlippageTolerance(0.03);
     } catch (error) {
       console.log('err swap init load', error);
     }
@@ -862,21 +862,48 @@ export default function SwapComponent() {
     }
   }
 
-  console.log('isAbleToReplaceTokensInSingleSwap test', isAbleToReplaceTokensInSingleSwap);
+  // console.log('isAbleToReplaceTokensInSingleSwap test', isAbleToReplaceTokensInSingleSwap);
 
   const staticSlippageToleranceValueHandler = (slippageToleranceValue) => {
-    console.log('slippageToleranceValue', slippageToleranceValue);
+    // console.log('slippageToleranceValue', slippageToleranceValue);
 
     setSlippageTolerance(slippageToleranceValue / 100);
 
     setAnchorEl(null);
   };
 
+  const [slippageTolerance, setSlippageTolerance] = useState(0);
+  const [rawPersonalSlippageTolerance, setRawPersonalSlippageTolerance] = useState(0);
+  const [personalSlippageTolerance, setPersonalSlippageTolerance] = useState(0);
+  // const [totalPersonalSlippageTolerance, setTotalPersonalSlippageTolerance] = useState(0);
+
   const personalSlippageToleranceValueHandler = (slippageToleranceValue) => {
-    setSlippageTolerance(slippageToleranceValue / 100);
-    console.log('slippageToleranceValue', slippageToleranceValue);
+    // console.log('slippageToleranceValue before', slippageToleranceValue);
+    slippageToleranceValue = slippageToleranceValue
+      .replace(/[^\d.-]/g, '')
+      .replace(/[^\w.]|_/g, '');
+
+    // console.log('slippageToleranceValue after', slippageToleranceValue);
+    // console.log('slippageToleranceValue after length', slippageToleranceValue.length);
+    let totalSlippageTolerance;
+    if (slippageToleranceValue.length !== 0) {
+      totalSlippageTolerance = slippageToleranceValue / 100;
+    } else {
+      totalSlippageTolerance = 0;
+    }
+    console.log('totalSlippageTolerance 1 totalSlipageTolerance', totalSlippageTolerance);
+    setRawPersonalSlippageTolerance(slippageToleranceValue);
+    setPersonalSlippageTolerance(totalSlippageTolerance);
 
     // setAnchorEl(null);
+  };
+
+  // console.log('slippageToleranceValue final', slippageTolerance);
+  // console.log('totalSlippageTolerance pesonal', personalSlippageTolerance);
+
+  const rewriteSlippageTolerance = (value) => {
+    setSlippageTolerance(value);
+    setAnchorEl(null);
   };
 
   return (
@@ -1591,6 +1618,7 @@ export default function SwapComponent() {
                                     InputLabelProps={{
                                       style: { textAlign: 'center' },
                                     }}
+                                    value={rawPersonalSlippageTolerance}
                                     // placeholder="%"
                                   />
                                 </FloatPercentChooseToleranceBtn>
@@ -1602,7 +1630,14 @@ export default function SwapComponent() {
                                   justifyContent: 'center',
                                   marginTop: '13px',
                                 }}>
-                                <AdvancedSettingsButton isLightTheme={isLightTheme}>
+                                <AdvancedSettingsButton
+                                  isLightTheme={isLightTheme}
+                                  disabled={
+                                    personalSlippageTolerance <= 0 || personalSlippageTolerance >= 1
+                                  }
+                                  onClick={() => {
+                                    rewriteSlippageTolerance(personalSlippageTolerance);
+                                  }}>
                                   Save
                                 </AdvancedSettingsButton>
                               </div>

@@ -975,12 +975,6 @@ export default function MultiSwapComponent() {
           style={{ marginTop: '20px', padding: '20 27px 16px 20px' }}>
           <div style={{ padding: '0 27px 16px 20px' }}>
             <LabelsBlockSubBlock isLightTheme={isLightTheme}>
-              <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                Offered by
-              </LabelsBlockSubBlockSpan>
-            </LabelsBlockSubBlock>
-
-            <LabelsBlockSubBlock isLightTheme={isLightTheme}>
               <LabelsBlockImportantSpan isLightTheme={isLightTheme}>
                 Slippage Tolerance
               </LabelsBlockImportantSpan>
