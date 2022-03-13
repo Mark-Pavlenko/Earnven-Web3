@@ -272,6 +272,13 @@ export default function SwapComponent() {
       dispatch(getTokenDataSaga(initReceiveFirstTokenSwap.id));
       dispatch(getWalletDataSaga(address));
       setSlippageTolerance(0.03);
+
+      convertExchangeTokensCourse({
+        sendTokenForExchangeAddress: initSendTokenSwap.address,
+        receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
+        tokenAmount: 1,
+        inputId: 'firstPageLoad',
+      });
     } catch (error) {
       console.log('err swap init load', error);
     }
@@ -979,11 +986,14 @@ export default function SwapComponent() {
                               paddingRight: 0,
                               width: '200px',
                               fontWeight: 600,
-                              color: isLightTheme ? 'black' : 'white',
+                              color: isTokensLimitExceeded
+                                ? 'red'
+                                : isLightTheme
+                                ? 'black'
+                                : 'white',
                               height: '18px',
                             },
                           },
-
                           classes: { notchedOutline: classes.noBorder },
                         }}
                         isLightTheme={isLightTheme}
