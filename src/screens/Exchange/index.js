@@ -193,7 +193,7 @@ export default function SwapComponent() {
   const [isSendTokensModalVisible, setIsSendTokensModalVisible] = useState(false);
   const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
   const [toggleExchangedTokens, setToggleExchangedTokens] = useState(false);
-  const [initConvertReceiveTokenAmount, setInitConvertReceiveTokenAmount] = useState(0);
+  const [initConvertReceiveTokenAmount, setInitConvertReceiveTokenAmount] = useState('Loading...');
   const [isAbleToReplaceTokensInSingleSwap, setIsAbleToReplaceTokensInSingleSwap] = useState(true);
   const [isOfferedByPopoverActivated, setisOfferedByPopoverActivated] = useState(true);
   const [exchangersOfferedList, setExchangersOfferedList] = useState([
@@ -272,13 +272,6 @@ export default function SwapComponent() {
       dispatch(getTokenDataSaga(initReceiveFirstTokenSwap.id));
       dispatch(getWalletDataSaga(address));
       setSlippageTolerance(0.03);
-
-      // convertExchangeTokensCourse({
-      //   sendTokenForExchangeAddress: initSendTokenSwap.address,
-      //   receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
-      //   tokenAmount: 1,
-      //   inputId: 'firstPageLoad',
-      // });
     } catch (error) {
       console.log('err swap init load', error);
     }
@@ -667,12 +660,11 @@ export default function SwapComponent() {
           .call();
 
         let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
-        setInitConvertReceiveTokenAmount(countedTokenAmount.toFixed(5));
-
-        // convertReceiveTokenToUSDCurrency({
-        //   amount: countedTokenAmount,
-        //   address: convertTokensData.receiveTokenForExchangeAddress,
-        // });
+        setInitConvertReceiveTokenAmount(
+          `1 ${initSendTokenSwap.symbol} =  ${countedTokenAmount.toFixed(5)} ${
+            initReceiveFirstTokenSwap.symbol
+          }`
+        );
       } else if (convertTokensData.inputId === 'chooseSendToken') {
         let convertedValue = await NewContract.methods
           .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
@@ -683,7 +675,13 @@ export default function SwapComponent() {
 
         let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
 
-        setInitConvertReceiveTokenAmount(countedTokenAmount.toFixed(3));
+        // setInitConvertReceiveTokenAmount(countedTokenAmount.toFixed(3));
+
+        setInitConvertReceiveTokenAmount(
+          `1 ${initSendTokenSwap.symbol} =  ${countedTokenAmount.toFixed(5)} ${
+            initReceiveFirstTokenSwap.symbol
+          }`
+        );
       }
 
       //
@@ -701,7 +699,7 @@ export default function SwapComponent() {
 
         convertReceiveTokenToUSDCurrency({
           amount: countedTokenAmount,
-          address: convertTokensData.receiveTokenForExchangeAddress,
+          address: convertTokensData.sendTokenForExchangeAddress,
         });
       } else if (convertTokensData.inputId === 'receiveInput') {
         let convertedValue = await NewContract.methods
@@ -740,13 +738,13 @@ export default function SwapComponent() {
 
     if (chosenTokenType.isSendTokenSwapped === true) {
       setSendTokenForExchangeAmount(value);
-
       setTimeout(
         convertExchangeTokensCourse({
           inputId: 'sendInput',
           tokenAmount: parseFloat(value),
           sendTokenForExchangeAddress: initSendTokenSwap.address,
           receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
+          routerAddress: activeExchanger.routerAddress,
         }),
         10000
       );
@@ -763,13 +761,13 @@ export default function SwapComponent() {
       setIsTokensLimitExceeded(isLimitExceeded);
     } else if (chosenTokenType.isSendTokenSwapped === false) {
       setReceiveTokenForExchangeAmount(value);
-
       setTimeout(
         convertExchangeTokensCourse({
           inputId: 'receiveInput',
           tokenAmount: parseFloat(value),
           sendTokenForExchangeAddress: initSendTokenSwap.address,
           receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
+          routerAddress: activeExchanger.routerAddress,
         }),
         10000
       );
@@ -1144,7 +1142,7 @@ export default function SwapComponent() {
                                       (token) => token.symbol !== object.symbol
                                     )
                                   );
-
+                                  setInitConvertReceiveTokenAmount('Loading...');
                                   setTimeout(
                                     convertExchangeTokensCourse({
                                       inputId: 'chooseSendToken',
@@ -1152,6 +1150,7 @@ export default function SwapComponent() {
                                       sendTokenForExchangeAddress: initSendTokenSwap.address,
                                       receiveTokenForExchangeAddress:
                                         initReceiveFirstTokenSwap.address,
+                                      routerAddress: activeExchanger.routerAddress,
                                     }),
                                     10000
                                   );
@@ -1382,6 +1381,7 @@ export default function SwapComponent() {
                                 key={object.symbol}
                                 onClick={() => {
                                   setFilteredReceiveTokensListData(finalReceiveTokensList);
+                                  setInitConvertReceiveTokenAmount('Loading...');
                                   setTimeout(
                                     convertExchangeTokensCourse({
                                       inputId: 'chooseSendToken',
@@ -1389,6 +1389,7 @@ export default function SwapComponent() {
                                       sendTokenForExchangeAddress: initSendTokenSwap.address,
                                       receiveTokenForExchangeAddress:
                                         initReceiveFirstTokenSwap.address,
+                                      routerAddress: activeExchanger.routerAddress,
                                     }),
                                     10000
                                   );
@@ -1463,7 +1464,7 @@ export default function SwapComponent() {
                     Rate
                   </LabelsBlockSubBlockSpan>
                   <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                    {`1 ${initSendTokenSwap.symbol} =  ${initConvertReceiveTokenAmount} ${initReceiveFirstTokenSwap.symbol}`}
+                    {initConvertReceiveTokenAmount}
                   </LabelsBlockSubBlockSpan>
                 </LabelsBlockSubBlock>
 
