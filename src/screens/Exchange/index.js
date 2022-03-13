@@ -273,12 +273,12 @@ export default function SwapComponent() {
       dispatch(getWalletDataSaga(address));
       setSlippageTolerance(0.03);
 
-      convertExchangeTokensCourse({
-        sendTokenForExchangeAddress: initSendTokenSwap.address,
-        receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
-        tokenAmount: 1,
-        inputId: 'firstPageLoad',
-      });
+      // convertExchangeTokensCourse({
+      //   sendTokenForExchangeAddress: initSendTokenSwap.address,
+      //   receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
+      //   tokenAmount: 1,
+      //   inputId: 'firstPageLoad',
+      // });
     } catch (error) {
       console.log('err swap init load', error);
     }
@@ -331,6 +331,14 @@ export default function SwapComponent() {
       type: actionTypes.SET_INIT_RECEIVE_FIRST_TOKEN_SWAP,
       payload: formattedReceiveToken,
     });
+
+    if (
+      initSendTokenSwap.address !== undefined &&
+      initReceiveFirstTokenSwap.address !== undefined
+    ) {
+      console.log('effect init SendTokenSwap', initSendTokenSwap);
+      console.log('effect init ReceiveFirstTokenSwap', initReceiveFirstTokenSwap);
+    }
   }, [initSendTokenSwap, initReceiveFirstTokenSwap]);
 
   useEffect(() => {

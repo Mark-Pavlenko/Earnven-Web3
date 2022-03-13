@@ -4,15 +4,12 @@ import actionTypes from '../../constants/actionTypes';
 import * as actions from './actions';
 import ethImage from '../../assets/icons/eth.png';
 import CoinGeckoMockTokensList from './CoinGecko.json';
-import UniSwapTokensList from './UniSwapTokensList.json';
 import { setInitReceiveMultiSwapTokensListLoading } from './actions';
-
-// const sendTokensList = (state) => state.tokensListReducer.sendTokensList;
 
 export function* getSendTokensListSagaWatcher() {
   yield takeLatest(actionTypes.SET_SEND_TOKENS_LIST, getSendTokensListSagaWorker);
 }
-//
+
 function* getSendTokensListSagaWorker(accountAddress) {
   const addressInfoData = yield call(API.getAddressInfo, accountAddress.payload);
   // console.log('only addressInfoData sagas', addressInfoData.data);
@@ -127,3 +124,7 @@ function* getReceiveTokensListSagaWorker() {
 
   yield put(setInitReceiveMultiSwapTokensListLoading(false));
 }
+
+export function* getInitConvertedExchangeTokensCourseSagaWatcher() {}
+
+function* getInitConvertedExchangeTokensCourseSagaWorker() {}
