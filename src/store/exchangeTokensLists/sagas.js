@@ -1,10 +1,13 @@
-import { call, put, select, takeEvery, takeLatest } from 'redux-saga/effects';
+import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
 import * as API from '../../api/api';
 import actionTypes from '../../constants/actionTypes';
 import * as actions from './actions';
+import { setInitReceiveMultiSwapTokensListLoading } from './actions';
 import ethImage from '../../assets/icons/eth.png';
 import CoinGeckoMockTokensList from './CoinGecko.json';
-import { setInitReceiveMultiSwapTokensListLoading } from './actions';
+import Web3 from 'web3';
+import TOKENDECIMALSABI from '../../abi/TokenDecomals.json';
+import ROUTERABI from '../../abi/UniRouterV2.json';
 
 export function* getSendTokensListSagaWatcher() {
   yield takeLatest(actionTypes.SET_SEND_TOKENS_LIST, getSendTokensListSagaWorker);
@@ -67,8 +70,8 @@ function* getSendTokensListSagaWorker(accountAddress) {
   // console.log('sagas exchange finalWalletTokensList', finalWalletTokensList);
 
   yield put(actions.getSendTokensList(walletTokensList));
-  yield put(actions.setInitSendTokenSwap(walletTokensList[0]));
-  yield put(actions.setInitSendTokenMultiSwap(walletTokensList[0]));
+  yield put(actions.setInitSendTokenSwap(walletTokensList[1]));
+  yield put(actions.setInitSendTokenMultiSwap(walletTokensList[1]));
 }
 
 export function* getReceiveTokensListSagaWatcher() {
@@ -116,7 +119,7 @@ function* getReceiveTokensListSagaWorker() {
 
   console.log('sagas filter finalReceiveTokensList', finalList);
 
-  yield put(actions.setInitReceiveFirstTokenSwap(finalList[4]));
+  yield put(actions.setInitReceiveFirstTokenSwap(finalList[5]));
   yield put(actions.getReceiveTokensList(finalList));
   yield put(actions.setInitReceiveSecondTokenSwap(finalList[2]));
 
@@ -125,6 +128,130 @@ function* getReceiveTokensListSagaWorker() {
   yield put(setInitReceiveMultiSwapTokensListLoading(false));
 }
 
-export function* getInitConvertedExchangeTokensCourseSagaWatcher() {}
+// old sagas - to count tokens amount convertation (det pending err - left in front-end code)
+export function* getInitConvertedExchangeTokensCourseSagaWatcher() {
+  yield takeEvery(
+    actionTypes.GET_INIT_CONVERTED_EXCHANGE_TOKENS_COURSE,
+    getInitConvertedExchangeTokensCourseSagaWorker
+  );
+}
 
-function* getInitConvertedExchangeTokensCourseSagaWorker() {}
+const loadWeb3 = async () => {
+  if (window.ethereum) {
+    window.web3 = new Web3(window.ethereum);
+    await window.ethereum.enable();
+  } else if (window.web3) {
+    window.web3 = new Web3(window.web3.currentProvider);
+  } else {
+    window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
+  }
+};
+
+function* getInitConvertedExchangeTokensCourseSagaWorker(data) {
+  let convertTokensData = data.payload;
+
+  console.log('convertTokensData data sagas', convertTokensData);
+
+  loadWeb3();
+  const web3 = window.web3;
+
+  const tokenDecimal = new web3.eth.Contract(
+    TOKENDECIMALSABI,
+    convertTokensData.sendTokenForExchangeAddress
+  ).methods
+    .decimals()
+    .call()
+    .then((res) => {
+      return res;
+    });
+
+  console.log('data sagas tokenDecimal', tokenDecimal());
+
+  // const tokenDecimal1 = async () => {
+  //   let a = await tokenDecimalsHelper(convertTokensData.sendTokenForExchangeAddress);
+  //   return a;
+  // };
+  // const tokenDecimal2 = async () => {
+  //   return await tokenDecimalsHelper(convertTokensData.sendTokenForExchangeAddress);
+  // };
+  //
+  // console.log('data sagas tokenDecimal1', tokenDecimal1());
+  // console.log('data sagas tokenDecimal2', tokenDecimal2());
+
+  const NewContract = new web3.eth.Contract(
+    ROUTERABI,
+    //Sushiswap contract address - should be changed dynamically
+    convertTokensData.routerAddress
+  );
+
+  console.log('NewContract data sagas', NewContract);
+
+  if (convertTokensData.inputId === 'firstPageLoad') {
+    let convertedValue = NewContract.methods
+      .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
+        convertTokensData.sendTokenForExchangeAddress,
+        convertTokensData.receiveTokenForExchangeAddress,
+      ])
+      .call();
+
+    let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
+    console.log('countedTokenAmount data sagas', countedTokenAmount);
+
+    // convertReceiveTokenToUSDCurrency({
+    //   amount: countedTokenAmount,
+    //   address: convertTokensData.receiveTokenForExchangeAddress,
+    // });
+  }
+  // else if (convertTokensData.inputId === 'chooseSendToken') {
+  //   let convertedValue =  NewContract.methods
+  //     .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
+  //       convertTokensData.sendTokenForExchangeAddress,
+  //       convertTokensData.receiveTokenForExchangeAddress,
+  //     ])
+  //     .call();
+  //
+  //   let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
+  //
+  //   setInitConvertReceiveTokenAmount(countedTokenAmount.toFixed(3));
+  // }
+  //
+  // //
+  // else if (convertTokensData.inputId === 'sendInput') {
+  //   let convertedValue =  NewContract.methods
+  //     .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
+  //       convertTokensData.sendTokenForExchangeAddress,
+  //       convertTokensData.receiveTokenForExchangeAddress,
+  //     ])
+  //     .call();
+  //
+  //   let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
+  //
+  //   setReceiveTokenForExchangeAmount(countedTokenAmount);
+  //
+  //   convertReceiveTokenToUSDCurrency({
+  //     amount: countedTokenAmount,
+  //     address: convertTokensData.receiveTokenForExchangeAddress,
+  //   });
+  // } else if (convertTokensData.inputId === 'receiveInput') {
+  //   let convertedValue =  NewContract.methods
+  //     .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
+  //       convertTokensData.receiveTokenForExchangeAddress,
+  //       convertTokensData.sendTokenForExchangeAddress,
+  //     ])
+  //     .call();
+  //
+  //   let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
+  //
+  //   // // console.log('single swap 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', countedTokenAmount);
+  //
+  //   setSendTokenForExchangeAmount(countedTokenAmount);
+  //
+  //   convertSendTokenToUSDCurrency({
+  //     amount: countedTokenAmount,
+  //     address: convertTokensData.receiveTokenForExchangeAddress,
+  //     USDCurrency: initSendTokenSwap.USDCurrency,
+  //   });
+  // }
+
+  yield put('data');
+}

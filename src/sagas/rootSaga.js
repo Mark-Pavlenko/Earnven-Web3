@@ -27,6 +27,7 @@ import { getcompoundTokenSagaWatcher } from './compoundFinance';
 import { getGasPriceWatcher } from './gasPrice/gasPrice';
 import { getCurrentTokenDataSagaWatcher } from './currentTokenData';
 import {
+  getInitConvertedExchangeTokensCourseSagaWatcher,
   getReceiveTokensListSagaWatcher,
   getSendTokensListSagaWatcher,
 } from '../store/exchangeTokensLists/sagas';
@@ -43,6 +44,7 @@ export default function* watchRootSaga() {
   yield all([
     call(getAccountBalanceSagaWatcher),
     call(getSendTokensListSagaWatcher),
+    call(getInitConvertedExchangeTokensCourseSagaWatcher),
     call(getReceiveTokensListSagaWatcher),
     call(getTwitterPostsSagaWatcher),
     call(getALlTokensSagaWatcher),

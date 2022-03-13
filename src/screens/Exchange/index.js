@@ -338,6 +338,25 @@ export default function SwapComponent() {
     ) {
       console.log('effect init SendTokenSwap', initSendTokenSwap);
       console.log('effect init ReceiveFirstTokenSwap', initReceiveFirstTokenSwap);
+
+      convertExchangeTokensCourse({
+        sendTokenForExchangeAddress: initSendTokenSwap.address,
+        receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
+        tokenAmount: 1,
+        inputId: 'firstPageLoad',
+        routerAddress: activeExchanger.routerAddress,
+      });
+
+      // dispatch({
+      //   type: actionTypes.GET_INIT_CONVERTED_EXCHANGE_TOKENS_COURSE,
+      //   payload: {
+      //     sendTokenForExchangeAddress: initSendTokenSwap.address,
+      //     receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
+      //     tokenAmount: 1,
+      //     inputId: 'firstPageLoad',
+      //     routerAddress: activeExchanger.routerAddress,
+      //   },
+      // });
     }
   }, [initSendTokenSwap, initReceiveFirstTokenSwap]);
 
@@ -635,7 +654,7 @@ export default function SwapComponent() {
     const NewContract = new web3.eth.Contract(
       ROUTERABI,
       //Sushiswap contract address - should be changed dynamically
-      activeExchanger.routerAddress
+      convertTokensData.routerAddress
     );
 
     if (convertTokensData.tokenAmount !== 0 && !isNaN(convertTokensData.tokenAmount)) {
@@ -648,11 +667,12 @@ export default function SwapComponent() {
           .call();
 
         let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
+        setInitConvertReceiveTokenAmount(countedTokenAmount.toFixed(5));
 
-        convertReceiveTokenToUSDCurrency({
-          amount: countedTokenAmount,
-          address: convertTokensData.receiveTokenForExchangeAddress,
-        });
+        // convertReceiveTokenToUSDCurrency({
+        //   amount: countedTokenAmount,
+        //   address: convertTokensData.receiveTokenForExchangeAddress,
+        // });
       } else if (convertTokensData.inputId === 'chooseSendToken') {
         let convertedValue = await NewContract.methods
           .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
