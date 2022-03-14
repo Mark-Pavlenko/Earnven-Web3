@@ -118,20 +118,23 @@ function* aaveStakeSagaWorker(aaveStakeAttributes) {
           chain: 'Ethereum',
           tokens: [
             {
-              symbol: 'AAVE',
-              balance: AaveV2Balance,
+              symbol: 'Aave',
+              balance: AaveV2Balance ? AaveV2Balance : 0,
               value: parseFloat(AaveV2USDValue.toFixed(2)).toLocaleString(),
               claimable: AaveV2ClaimableValue.toFixed(2),
               price: parseFloat(AaveV2UsdPrice).toFixed(2),
+              tokenImage: aaveLogo,
             },
             {
               symbol: 'stkABPT',
-              balance: stkABPTBalance,
+              balance: stkABPTBalance ? stkABPTBalance : 0,
               value: stkABPTUSDValue.toLocaleString(),
               claimable: stkABPTClaimableValue.toFixed(2),
               price: parseFloat(stkABPTUsdPrice).toFixed(2),
+              tokenImage: stkABPTImageUrl,
             },
           ],
+
           imageData: [stkABPTImageUrl, aaveLogo],
         },
       ];

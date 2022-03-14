@@ -79,6 +79,7 @@ export const getuniswapV2data = async (attributes) => {
             res[i].pair.reserveUSD
           ).toFixed(2);
           object.price = parseFloat(object.value / res[i].liquidityTokenBalance).toFixed(4);
+          //object.tokenName = object.symbol;
           try {
             await axios
               .get(

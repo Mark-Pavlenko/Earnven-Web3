@@ -53,9 +53,9 @@ export const ContentRightWrapper = styled.div`
   color: ${(props) => (props.isLightTheme ? '#1E1E20' : 'white')};
 `;
 
+//margin-left: ${(props) => (props.firstElement !== 0 ? '-10px' : '0')};
 export const TokenImage = styled.img`
   display: flex;
-  margin-left: ${(props) => (props.firstElement !== 0 ? '-10px' : '0')};
   max-width: 21px;
   max-height: 21px;
   border-radius: 50%;
@@ -92,4 +92,13 @@ export const ContentWrapper = styled.div`
   padding: 0 32px 11px 26px;
   font-weight: 600;
   font-size: 10px;
+`;
+
+export const ProtocolTitle = styled.div`
+  color: ${(props) => (props.isLightTheme ? '#1E1E20' : 'white')};
+  display: flex;
+  align-items: left;
+  justify-content: left;
+  font-weight: 200;
+  font-size: 15px;
 `;
