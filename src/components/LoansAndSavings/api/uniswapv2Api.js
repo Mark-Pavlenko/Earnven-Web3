@@ -79,35 +79,36 @@ export const getuniswapV2data = async (attributes) => {
             res[i].pair.reserveUSD
           ).toFixed(2);
           object.price = parseFloat(object.value / res[i].liquidityTokenBalance).toFixed(4);
-          try {
-            await axios
-              .get(
-                `https://api.coingecko.com/api/v3/coins/ethereum/contract/${res[i].pair.token0.id}`
-              )
-              .then(async ({ data }) => {
-                Images.push(data.image.large);
-              })
-              .catch((err) => {
-                console.log('Data is not found for given token from Uniswap v2');
-              });
-          } catch (err) {
-            console.log('Data not found for the given token');
-          }
-          try {
-            await axios
-              .get(
-                `https://api.coingecko.com/api/v3/coins/ethereum/contract/${res[i].pair.token1.id}`
-              )
-              .then(async ({ data }) => {
-                Images.push(data.image.large);
-              })
-              .catch((err) => {
-                console.log('Data is not found for given token from Uniswap v2');
-              });
-          } catch (err) {
-            console.log('Data is not found for the given token');
-          }
-          object.imageData = Images;
+          object.tokenName = object.symbol;
+          // try {
+          //   await axios
+          //     .get(
+          //       `https://api.coingecko.com/api/v3/coins/ethereum/contract/${res[i].pair.token0.id}`
+          //     )
+          //     .then(async ({ data }) => {
+          //       Images.push(data.image.large);
+          //     })
+          //     .catch((err) => {
+          //       console.log('Data is not found for given token from Uniswap v2');
+          //     });
+          // } catch (err) {
+          //   console.log('Data not found for the given token');
+          // }
+          // try {
+          //   await axios
+          //     .get(
+          //       `https://api.coingecko.com/api/v3/coins/ethereum/contract/${res[i].pair.token1.id}`
+          //     )
+          //     .then(async ({ data }) => {
+          //       Images.push(data.image.large);
+          //     })
+          //     .catch((err) => {
+          //       console.log('Data is not found for given token from Uniswap v2');
+          //     });
+          // } catch (err) {
+          //   console.log('Data is not found for the given token');
+          // }
+          // object.imageData = Images;
           if (object.value > 0) {
             pools.push(object);
           }

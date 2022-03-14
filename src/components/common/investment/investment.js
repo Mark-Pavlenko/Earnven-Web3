@@ -59,7 +59,7 @@ const Investment = ({
   let protocolLogo;
 
   if (protocolName === 'Sushiswap') {
-    protocol.symbol = protocol.token0Symbol + '-' + protocol.token1Symbol;
+    protocol.symbol = protocol.token0Symbol + '/' + protocol.token1Symbol;
     protocolLogo = SushiSwapLogo;
   }
 
@@ -110,7 +110,9 @@ const Investment = ({
                     </React.Fragment>
                   ) : (
                     <>
-                      {protocolName === 'Curve Staking' || protocolName === 'UniswapV2 Staking' ? (
+                      {protocolName === 'Curve Staking' ||
+                      protocolName === 'UniswapV2 Staking' ||
+                      protocolName === 'UniswapV2' ? (
                         <>
                           <CurveLpImage lpToken={protocol.tokenName} />
                         </>

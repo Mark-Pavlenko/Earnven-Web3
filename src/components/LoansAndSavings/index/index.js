@@ -513,7 +513,7 @@ export default function index({ accountAddress }) {
                                     <Investment
                                       protocol={object}
                                       protocolName={'UniswapV2'}
-                                      logoImage={object.imageData}
+                                      logoImage={object.tokenName}
                                     />
                                   </React.Fragment>
                                 );
