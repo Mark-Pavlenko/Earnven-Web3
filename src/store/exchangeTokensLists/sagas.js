@@ -2,7 +2,10 @@ import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
 import * as API from '../../api/api';
 import actionTypes from '../../constants/actionTypes';
 import * as actions from './actions';
-import { setInitReceiveMultiSwapTokensListLoading } from './actions';
+import {
+  setInitReceiveMultiSwapTokensListLoading,
+  setInitSendMultiSwapTokensListLoading,
+} from './actions';
 import ethImage from '../../assets/icons/eth.png';
 import CoinGeckoMockTokensList from './CoinGecko.json';
 import Web3 from 'web3';
@@ -72,6 +75,8 @@ function* getSendTokensListSagaWorker(accountAddress) {
   yield put(actions.getSendTokensList(walletTokensList));
   yield put(actions.setInitSendTokenSwap(walletTokensList[1]));
   yield put(actions.setInitSendTokenMultiSwap(walletTokensList[1]));
+
+  yield put(setInitSendMultiSwapTokensListLoading(false));
 }
 
 export function* getReceiveTokensListSagaWatcher() {

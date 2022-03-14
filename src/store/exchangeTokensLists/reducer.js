@@ -8,13 +8,21 @@ const initialState = {
   initReceiveFirstTokenSwap: {},
   initReceiveSecondTokenSwap: {},
   initReceiveMultiSwapTokensList: [],
+  isSendMultiSwapTokensListLoading: true,
   isReceiveMultiSwapTokensListLoading: true,
+
   // isReceiveMultiSwapUSDCurrencyLoading: true,
 };
 //takes two arguments: The current state and the action and returns the new state.
 export const tokensListReducer = (state = initialState, action) => {
   // console.log('action payload tokens list reducer', state);
   switch (action.type) {
+    case actionTypes.SET_INIT_SEND_MULTISWAP_TOKENS_LIST_LOADING:
+      return {
+        ...state,
+        isSendMultiSwapTokensListLoading: action?.payload,
+      };
+
     case actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING:
       return {
         ...state,

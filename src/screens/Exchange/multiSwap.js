@@ -127,6 +127,12 @@ export default function MultiSwapComponent() {
 
   let textInput = useRef(null);
 
+  const isLoadingSendTokensList = useSelector(
+    (state) => state.tokensListReducer.isSendMultiSwapTokensListLoading
+  );
+
+  console.log('isLoadingSendTokensList', isLoadingSendTokensList);
+
   const isLoadingReceiveTokensList = useSelector(
     (state) => state.tokensListReducer.isReceiveMultiSwapTokensListLoading
   );
@@ -183,8 +189,6 @@ export default function MultiSwapComponent() {
   };
 
   let convertReceiveTokenToUSDCurrency = async (amount, tokenData) => {
-    // dispatch({ type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING, payload: true });
-
     if (amount === '') {
       amount = '0';
     }
@@ -240,8 +244,6 @@ export default function MultiSwapComponent() {
       type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST,
       payload: receiveTokensListCopy,
     });
-
-    // dispatch({ type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING, payload: false });
 
     console.log('multiswap receive USD total', initReceiveMultiSwapTokensList);
 
@@ -527,86 +529,95 @@ export default function MultiSwapComponent() {
           <SendBlockLabels isLightTheme={isLightTheme} style={{ margin: '32px 20px 0px 20px' }}>
             <span>Send</span>
           </SendBlockLabels>
-          <MultiSwapSendTokensChooseBlock isLightTheme={isLightTheme}>
-            {/* SEND block */}
 
-            <MultiSwapChooseBtnTokenBlock>
-              <div
-                onClick={() =>
-                  openModalHelper({ tokensList: finalSendTokensList, isSendModalOpen: true })
-                }>
-                {initSendMultiSwapToken.logoURI !== null ? (
-                  <SendTokenImg
-                    alt="token_img"
-                    src={initSendMultiSwapToken.logoURI}
-                    style={{ marginLeft: '0px' }}
+          {isLoadingSendTokensList ? (
+            <div>LOADING...</div>
+          ) : (
+            <MultiSwapSendTokensChooseBlock isLightTheme={isLightTheme}>
+              {/* SEND block */}
+
+              <MultiSwapChooseBtnTokenBlock>
+                <div
+                  onClick={() =>
+                    openModalHelper({ tokensList: finalSendTokensList, isSendModalOpen: true })
+                  }>
+                  {initSendMultiSwapToken.logoURI !== null ? (
+                    <SendTokenImg
+                      alt="token_img"
+                      src={initSendMultiSwapToken.logoURI}
+                      style={{ marginLeft: '0px' }}
+                    />
+                  ) : (
+                    <MultiSwapTokenAvatar
+                      name={initSendMultiSwapToken.avatarIcon}
+                      round={true}
+                      size="21"
+                      textSizeRatio={1}
+                    />
+                  )}
+                  <ChosenTokenLabel isLightTheme={isLightTheme}>
+                    {initSendMultiSwapToken.symbol === 'ethereum'
+                      ? 'ETH'
+                      : initSendMultiSwapToken.symbol}
+                  </ChosenTokenLabel>
+                  <img
+                    src={isLightTheme ? chevronDownBlack : chevronDownLight}
+                    alt="chevron_icon"
                   />
-                ) : (
-                  <MultiSwapTokenAvatar
-                    name={initSendMultiSwapToken.avatarIcon}
-                    round={true}
-                    size="21"
-                    textSizeRatio={1}
-                  />
-                )}
-                <ChosenTokenLabel isLightTheme={isLightTheme}>
-                  {initSendMultiSwapToken.symbol === 'ethereum'
-                    ? 'ETH'
-                    : initSendMultiSwapToken.symbol}
-                </ChosenTokenLabel>
-                <img src={isLightTheme ? chevronDownBlack : chevronDownLight} alt="chevron_icon" />
-              </div>
-              <USDCurrencySendInputBlock>
-                <ChosenMultiSwapSendReceiveTokenValueInput
-                  // disabled={true}
-                  style={{ marginRight: '0px' }}
-                  InputProps={{
-                    inputProps: {
-                      style: {
-                        marginTop: '4px',
-                        textAlign: 'right',
-                        padding: 0,
-                        width: '200px',
-                        fontWeight: 600,
-                        color: isLightTheme ? 'black' : 'white',
+                </div>
+                <USDCurrencySendInputBlock>
+                  <ChosenMultiSwapSendReceiveTokenValueInput
+                    // disabled={true}
+                    style={{ marginRight: '0px' }}
+                    InputProps={{
+                      inputProps: {
+                        style: {
+                          marginTop: '4px',
+                          textAlign: 'right',
+                          padding: 0,
+                          width: '200px',
+                          fontWeight: 600,
+                          color: isLightTheme ? 'black' : 'white',
+                        },
                       },
-                    },
-                    classes: { notchedOutline: classes.noBorder },
-                  }}
-                  isLightTheme={isLightTheme}
-                  placeholder="0.0"
-                  value={sendTokenForExchangeAmount}
-                  onChange={(e) => {
-                    setSendTokenForExchangeAmount(e.target.value);
-                    convertSendTokenToUSDCurrency({
-                      amount: e.target.value,
-                      ...initSendMultiSwapToken,
-                    });
+                      classes: { notchedOutline: classes.noBorder },
+                    }}
+                    isLightTheme={isLightTheme}
+                    placeholder="0.0"
+                    value={sendTokenForExchangeAmount}
+                    onChange={(e) => {
+                      setSendTokenForExchangeAmount(e.target.value);
+                      convertSendTokenToUSDCurrency({
+                        amount: e.target.value,
+                        ...initSendMultiSwapToken,
+                      });
 
-                    // convertReceiveTokenToUSDCurrency
+                      // convertReceiveTokenToUSDCurrency
 
-                    const isLimitExceeded = checkIfExchangedTokenLimitIsExceeded(
-                      e.target.value,
-                      initSendMultiSwapToken.balance
-                    );
-                    setIsTokensLimitExceeded(isLimitExceeded);
-                  }}
-                />
-              </USDCurrencySendInputBlock>
-            </MultiSwapChooseBtnTokenBlock>
+                      const isLimitExceeded = checkIfExchangedTokenLimitIsExceeded(
+                        e.target.value,
+                        initSendMultiSwapToken.balance
+                      );
+                      setIsTokensLimitExceeded(isLimitExceeded);
+                    }}
+                  />
+                </USDCurrencySendInputBlock>
+              </MultiSwapChooseBtnTokenBlock>
 
-            <MultiSwapSendValueLabelsLayout
-            // style={{ backgroundColor: 'red' }}
-            >
-              <MultiSwapSendValueLabel isLightTheme={isLightTheme} style={{ marginLeft: '30px' }}>
-                {initSendMultiSwapToken.balance} {initSendMultiSwapToken.symbol}
-              </MultiSwapSendValueLabel>
+              <MultiSwapSendValueLabelsLayout
+              // style={{ backgroundColor: 'red' }}
+              >
+                <MultiSwapSendValueLabel isLightTheme={isLightTheme} style={{ marginLeft: '30px' }}>
+                  {initSendMultiSwapToken.balance} {initSendMultiSwapToken.symbol}
+                </MultiSwapSendValueLabel>
 
-              <MultiSwapSendValueLabel isLightTheme={isLightTheme}>
-                {tokenSendUSDCurrency}
-              </MultiSwapSendValueLabel>
-            </MultiSwapSendValueLabelsLayout>
-          </MultiSwapSendTokensChooseBlock>
+                <MultiSwapSendValueLabel isLightTheme={isLightTheme}>
+                  {tokenSendUSDCurrency}
+                </MultiSwapSendValueLabel>
+              </MultiSwapSendValueLabelsLayout>
+            </MultiSwapSendTokensChooseBlock>
+          )}
+
           {isTokensLimitExceeded && (
             <ExceededAmountTokensLimitWarning style={{ marginRight: '30px', marginTop: '-10px' }}>
               Insufficient funds
