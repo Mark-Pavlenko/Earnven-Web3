@@ -32,40 +32,6 @@ export default function Index({ accountAddress }) {
   //console.log('TestComp load from protocols index');
   return (
     <React.Fragment>
-      {/* <Synthetix accountAddress={accountAddress} onSynthetixTokenValue={getSynthetixTokenData} />
-        <br />
-        <YearnFinance accountAddress={accountAddress} onYearnTokenValue={getYearnTokenValue} />
-        <br />
-        <CreamIronBank totalSavings={setIronBankSavings} accountAddress={accountAddress} />
-        <br />
-        <SushiLPToken accountAddress={accountAddress} />
-        <br />
-        <Ethereum2Staking accountAddress={accountAddress} />
-        <br />
-        <AaveStaking accountAddress={accountAddress} />
-        <br />
-        <SushiStaking accountAddress={accountAddress} />
-        <br />
-        <UniStaking accountAddress={accountAddress} />
-        <br />
-        <LiquityStaking accountAddress={accountAddress} />
-        <br />
-        <ConvexStaking accountAddress={accountAddress} />
-        <br />
-        <SnowSwapStaking accountAddress={accountAddress} />
-        <br />
-        <CurveToken accountAddress={accountAddress} />
-        <br />
-        <CurveLpToken accountAddress={accountAddress} onCurveLptoken={getCurveLpToken} />
-        <br />
-        <CurveFarming accountAddress={accountAddress} />
-        <br />
-        <Liquity accountAddress={accountAddress} />
-        <br />
-        <UniswapV2 accountAddress={accountAddress} />
-        <br />
-        <OlympusStaking accountAddress={accountAddress} />
-        <br /> */}
       <Ethereum2Staking accountAddress={accountAddress} />
       <AaveStaking accountAddress={accountAddress} />
       <CurveLpToken accountAddress={accountAddress} />
@@ -79,7 +45,7 @@ export default function Index({ accountAddress }) {
       <Synthetix accountAddress={accountAddress} />
       <ConvexStaking accountAddress={accountAddress} />
       <SnowSwapStaking accountAddress={accountAddress} />
-      <CreamIronBank accountAddress={accountAddress} getTotal={() => {}} />
+      {/* <CreamIronBank accountAddress={accountAddress} getTotal={() => {}} /> */}
       <BalancerV2 accountAddress={accountAddress} />
       <PickleDill accountAddress={accountAddress} />
       <UniswapV2 accountAddress={accountAddress} />

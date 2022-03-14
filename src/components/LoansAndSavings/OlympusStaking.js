@@ -18,6 +18,8 @@ import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import { useDispatch, useSelector } from 'react-redux';
 import actionTypes from '../../constants/actionTypes';
+import loadWeb3 from '../../utils/loadWeb3';
+
 export default function OlympusStaking({ accountAddress }) {
   const [TokenContent, setTokenContent] = useState([]);
   //get useWeb3React hook
@@ -26,8 +28,13 @@ export default function OlympusStaking({ accountAddress }) {
 
   //logic implementing for web3 provider connection using web3 React hook
   async function getWeb3() {
-    const provider = await connector.getProvider();
-    const web3 = await new Web3(provider);
+    let web3;
+    try {
+      const provider = active ? await connector.getProvider() : await loadWeb3();
+      web3 = new Web3(provider);
+    } catch (err) {
+      console.log('Web3 is not connected, check the Metamask connectivity!!');
+    }
     return web3;
   }
 
@@ -36,14 +43,16 @@ export default function OlympusStaking({ accountAddress }) {
   useEffect(() => {
     const getOHMTokenData = async () => {
       const web3 = await getWeb3();
-      const olympusTokenAttributes = { accountAddress: accountAddress, web3: web3 };
-      try {
-        dispatch({
-          type: actionTypes.SET_OHM_TOKEN_DATA,
-          payload: olympusTokenAttributes,
-        });
-      } catch (err) {
-        console.log('Dispatch error in olympus process', err.message);
+      if (web3 != undefined) {
+        const olympusTokenAttributes = { accountAddress: accountAddress, web3: web3 };
+        try {
+          dispatch({
+            type: actionTypes.SET_OHM_TOKEN_DATA,
+            payload: olympusTokenAttributes,
+          });
+        } catch (err) {
+          console.log('Dispatch error in olympus process', err.message);
+        }
       }
     };
     getOHMTokenData();

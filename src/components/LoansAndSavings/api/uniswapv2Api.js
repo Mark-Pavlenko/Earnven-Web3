@@ -79,26 +79,34 @@ export const getuniswapV2data = async (attributes) => {
             res[i].pair.reserveUSD
           ).toFixed(2);
           object.price = parseFloat(object.value / res[i].liquidityTokenBalance).toFixed(4);
-          await axios
-            .get(
-              `https://api.coingecko.com/api/v3/coins/ethereum/contract/${res[i].pair.token0.id}`
-            )
-            .then(async ({ data }) => {
-              Images.push(data.image.large);
-            })
-            .catch((err) => {
-              console.log('error in fetching Uniswap v2', err);
-            });
-          await axios
-            .get(
-              `https://api.coingecko.com/api/v3/coins/ethereum/contract/${res[i].pair.token1.id}`
-            )
-            .then(async ({ data }) => {
-              Images.push(data.image.large);
-            })
-            .catch((err) => {
-              console.log('error in fetching Uniswap v2', err);
-            });
+          try {
+            await axios
+              .get(
+                `https://api.coingecko.com/api/v3/coins/ethereum/contract/${res[i].pair.token0.id}`
+              )
+              .then(async ({ data }) => {
+                Images.push(data.image.large);
+              })
+              .catch((err) => {
+                console.log('Data is not found for given token from Uniswap v2');
+              });
+          } catch (err) {
+            console.log('Data not found for the given token');
+          }
+          try {
+            await axios
+              .get(
+                `https://api.coingecko.com/api/v3/coins/ethereum/contract/${res[i].pair.token1.id}`
+              )
+              .then(async ({ data }) => {
+                Images.push(data.image.large);
+              })
+              .catch((err) => {
+                console.log('Data is not found for given token from Uniswap v2');
+              });
+          } catch (err) {
+            console.log('Data is not found for the given token');
+          }
           object.imageData = Images;
           if (object.value > 0) {
             pools.push(object);
@@ -157,7 +165,6 @@ export const getuniswapV2stakedata = async (attributes) => {
   const batchCall = new BatchCall(instance);
   //exeucte the batchCall by passing configure contracts to get the result of it
   const result = await batchCall.execute(contracts);
-  console.log('TestUni batch call result', result);
   //variable to store balanceOf the user
   let USDTAmount = 0;
   let DAIAmount = 0;

@@ -20,6 +20,7 @@ import { setCreamIronBankTotal } from '../../store/creamIronBank/actions';
 import { ethers } from 'ethers';
 import { useWeb3React } from '@web3-react/core';
 import actionTypes from '../../constants/actionTypes';
+import loadWeb3 from '../../utils/loadWeb3';
 
 export default function CreamIronBank({ accountAddress, getTotal }) {
   const dispatch = useDispatch();
@@ -27,23 +28,29 @@ export default function CreamIronBank({ accountAddress, getTotal }) {
     useWeb3React();
   //logic implementing for web3 provider connection using web3 React hook
   async function getWeb3() {
-    const provider = active ? await connector.getProvider() : ethers.getDefaultProvider();
-    const web3 = new Web3(provider);
+    let web3;
+    try {
+      const provider = active ? await connector.getProvider() : await loadWeb3();
+      web3 = new Web3(provider);
+    } catch (err) {
+      console.log('Web3 is not connected, check the Metamask connectivity!!');
+    }
     return web3;
   }
 
   useEffect(() => {
     const getCreamIronBankData = async () => {
       const web3 = await getWeb3();
-
-      const creamIronAttributes = { accountAddress: accountAddress, web3: web3 };
-      try {
-        dispatch({
-          type: actionTypes.SET_CREAM_IRON_DATA,
-          payload: creamIronAttributes,
-        });
-      } catch (error) {
-        console.log('Dispatch error on Cream Iron Staking process error', error.message);
+      if (web3 != undefined) {
+        const creamIronAttributes = { accountAddress: accountAddress, web3: web3 };
+        try {
+          dispatch({
+            type: actionTypes.SET_CREAM_IRON_DATA,
+            payload: creamIronAttributes,
+          });
+        } catch (error) {
+          console.log('Dispatch error on Cream Iron Staking process error', error.message);
+        }
       }
     };
     getCreamIronBankData();
@@ -56,24 +63,26 @@ export default function CreamIronBank({ accountAddress, getTotal }) {
     coingecko_contract_address
   ) {
     const web3 = await getWeb3();
-    const IronBankContract = new web3.eth.Contract(CreamABI, CreamIronBankAddress);
-    const IronBankAmount = await IronBankContract.methods.balanceOf(accountAddress).call();
-    const CreamSymbol = await IronBankContract.methods.symbol().call();
-    const CreamDecimal = await IronBankContract.methods.decimals().call();
-    const CreamTokenName = await IronBankContract.methods.name().call();
-    let decimals;
+    if (web3 != undefined) {
+      const IronBankContract = new web3.eth.Contract(CreamABI, CreamIronBankAddress);
+      const IronBankAmount = await IronBankContract.methods.balanceOf(accountAddress).call();
+      const CreamSymbol = await IronBankContract.methods.symbol().call();
+      const CreamDecimal = await IronBankContract.methods.decimals().call();
+      const CreamTokenName = await IronBankContract.methods.name().call();
+      let decimals;
 
-    const tokenAmount = IronBankAmount / CreamDecimal;
-    if (tokenAmount > 0) {
-      await axios
-        .get(`${coingecko_contract_address}`, {}, {})
-        .then(async ({ data }) => {
-          const tokenPrice = data.market_data.current_price.usd;
-          const IronBankUSDPrice = (tokenAmount * tokenPrice).toFixed(2);
-        })
-        .catch((err) => {
-          console.log('Error Message message', err);
-        });
+      const tokenAmount = IronBankAmount / CreamDecimal;
+      if (tokenAmount > 0) {
+        await axios
+          .get(`${coingecko_contract_address}`, {}, {})
+          .then(async ({ data }) => {
+            const tokenPrice = data.market_data.current_price.usd;
+            const IronBankUSDPrice = (tokenAmount * tokenPrice).toFixed(2);
+          })
+          .catch((err) => {
+            console.log('Error Message message', err);
+          });
+      }
     }
   }
 

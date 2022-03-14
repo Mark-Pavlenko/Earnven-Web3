@@ -14,7 +14,6 @@ export function* getYearnFinanceSagaWatcher() {
 function* yearnFinanceSagaWorker(yearnAccountAddress) {
   const yearnUserAccount = yearnAccountAddress.payload;
   //accountAddress
-  console.log('TestPrabhaYToken account from saga', yearnUserAccount.accountAddress);
   //below API call is used to get yVault tokens based on the listed yVault tokens
   const response = yield call(API.getYearnUserData, yearnUserAccount.accountAddress);
 
@@ -82,7 +81,7 @@ function* yearnFinanceYTokenSagaWorker(yearnTokenAttributes) {
   const response = yield call(API.getUserAccountInfo, yTokenUserAccount.accountAddress);
   const data = response.data;
 
-  if (response.data) {
+  if (data.tokens != undefined) {
     for (let i = 0; i < data.tokens.length; i++) {
       const yearnTokenData = data.tokens[i];
       const tokenAddress = yearnTokenData.tokenInfo.address.toLowerCase();
@@ -107,12 +106,12 @@ function* yearnFinanceYTokenSagaWorker(yearnTokenAttributes) {
         yearnTokenImageUrl = yearnTokenDataPrice.data.image.thumb;
 
         if (yearnTokenDataPoint) {
-          object.yTokenBalance = yearnTokenDataPoint.yTokenBalance;
+          let yTokenBalance = yearnTokenDataPoint.yTokenBalance;
           object.yTokenDecimals = yearnTokenDataPoint.yTokenDecimals;
-          let yTokenBalanceValue = object.yTokenBalance / 10 ** object.yTokenDecimals;
+          let yTokenBalanceValue = yTokenBalance / 10 ** object.yTokenDecimals;
           object.balance =
             parseInt(yTokenBalanceValue.toString().split('e-')[1]) > 0 ? 0 : yTokenBalanceValue;
-          object.yUnderlyingToken = yearnTokenDataPoint.yTokenUnderlyingToken;
+          //object.yUnderlyingToken = yearnTokenDataPoint.yTokenUnderlyingToken;
           object.price = yearnTokenPrice;
           object.tokenImage = yearnTokenImageUrl;
           //object.yTokenValue = yTokenValue;

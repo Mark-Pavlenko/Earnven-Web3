@@ -70,7 +70,10 @@ export const SwapTokensMainSubBlock = styled.div`
   }
 `;
 
-export const SendReceiveSubBlock = styled.div``;
+export const SendReceiveSubBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 export const SendBlockLabels = styled.div`
   display: flex;
@@ -82,10 +85,17 @@ export const SendBlockLabels = styled.div`
   }
 `;
 
+export const MultiSwapSendValueLabelsLayout = styled.div`
+  display: flex;
+  justify-content: space-between;
+  //background-color: red;
+`;
+
 export const MultiSwapSendValueLabel = styled.span`
-  margin-left: 35px;
-  padding-left: 5px;
+  //margin-left: 42px;
+  //padding-left: 5px;
   font-size: 12px;
+  line-height: 19px;
   color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#FFFFFF')};
   opacity: ${(props) => (props.isLightTheme ? 0.5 : 0.8)};
 `;
@@ -131,12 +141,12 @@ export const ExceededAmountTokensLimitWarning = styled.span`
 
 export const MultiSwapSendTokensChooseBlock = styled.div`
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+  //align-items: center;
   width: 475px;
   height: 60px;
-  margin-top: -3px;
-  margin: 32px 27px 16px 20px;
+  margin: 7px 27px 16px 20px;
+  padding: 6px 20px 7px 12px;
   color: black;
   background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
   box-shadow: ${(props) =>
@@ -157,12 +167,12 @@ export const MultiSwapSendTokensChooseBlock = styled.div`
 
 export const SubLayoutReceiveTokensBlock = styled.div`
   overflow: auto;
-  height: 275px;
+  height: 265px;
   //background-color: blue;
   padding-left: 20px;
   //margin: 0 27px 16px 20px;
-  padding-top: 5px;
-  overflow-x: hidden;
+  //padding-top: 5px;
+  //overflow-x: hidden;
 `;
 
 export const MultiSwapReceiveTokensBlock = styled.div`
@@ -171,7 +181,7 @@ export const MultiSwapReceiveTokensBlock = styled.div`
   width: 475px;
   height: 115px;
   margin-top: -3px;
-  margin-bottom: 23px;
+  margin-bottom: 20px;
   color: black;
   background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
   box-shadow: ${(props) =>
@@ -211,9 +221,9 @@ export const ChooseBtnTokenBlock = styled.div`
 
 export const MultiSwapChooseBtnTokenBlock = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  margin-left: 8px;
 
   div {
     display: flex;
@@ -242,12 +252,21 @@ export const ChosenSendReceiveTokenValueInput = styled(TextField)`
   }
 `;
 
+export const USDCurrencySendInputBlock = styled.div`
+  //display: flex;
+  //flex-direction: column;
+  //height: 50px;
+  //margin-left: auto;
+  //gap: 3px;
+`;
+
 export const USDCurrencyInputBlock = styled.div`
   display: flex;
   flex-direction: column;
   height: 50px;
   margin-left: auto;
   gap: 3px;
+  //background-color: pink;
 `;
 
 export const ChosenMultiSwapSendReceiveTokenValueInput = styled(TextField)`
@@ -375,7 +394,7 @@ export const AdditionalOptionsSwapTokensSubBlock = styled.div`
 
 export const SingleSwapTokensOfferedBySubBlock = styled.div`
   width: 525px;
-  height: 515px;
+  height: 490px;
   background-color: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#4453AD1A')};
   box-shadow: ${(props) =>
     props.isLightTheme
@@ -406,7 +425,6 @@ export const OfferedByLayoutLabelBlock = styled.div`
   padding-top: 20px;
   padding-left: 20px;
   cursor: pointer;
-  width: 180px;
 
   img {
     transform: rotate(90deg);
@@ -421,6 +439,37 @@ export const OfferedByLayoutLabelBlock = styled.div`
 `;
 
 export const ExchangersLayout = styled.div``;
+
+export const TransactionSpeedGridLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+export const TransactionSpeedGridLayoutItem = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 336px;
+  margin: 26px 99px 0 89px;
+  font-size: 14px;
+  cursor: pointer;
+
+  span {
+    color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#FFFFFF')};
+  }
+`;
+
+export const GridLayoutItemIconSubBlock = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  div {
+    display: grid;
+    grid-template-columns: 32px 60px;
+  }
+`;
 
 export const ExchangersMainListLayout = styled.div`
   height: 310px;
@@ -584,6 +633,77 @@ export const SwapBlockExchangeLayout = styled.div`
   }
 `;
 
+export const AdvancedSettingsButton = styled(Button)`
+  width: 150px;
+  height: 40px;
+  margin-top: 21px;
+  color: ${(props) => (props.isLightTheme ? '#4453AD' : '#FFFFFF')};
+  background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
+  box-shadow: ${(props) =>
+    props.isLightTheme
+      ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+      : '7px 21px 22px -15px rgba(51, 78, 131, 0.17)'};
+  border-radius: 10px;
+
+  :hover {
+    background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
+  }
+
+  @media (max-width: 540px) {
+    width: 345px;
+  }
+`;
+
+export const SlippageToleranceLabel = styled.span`
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 25px;
+  color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#FFFFFF')};
+`;
+
+export const SlippageToleranceBtnsLayout = styled.div`
+  width: 340px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+  margin-top: 20px;
+`;
+
+export const StablePercentChooseToleranceBtn = styled(Button)`
+  width: 55px;
+  height: 45px;
+  color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#FFFFFF')};
+  background: ${(props) => (props.isLightTheme ? '#ffffff29' : '#1F265C3D')};
+  mix-blend-mode: normal;
+  box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(35px);
+  border-radius: 10px;
+
+  :hover {
+    background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
+  }
+`;
+
+export const FloatPercentChooseToleranceBtn = styled(Button)`
+  width: 120px;
+  height: 45px;
+  color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#FFFFFF')};
+  background: ${(props) => (props.isLightTheme ? '#ffffff29' : '#1F265C3D')};
+  mix-blend-mode: normal;
+  box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(35px);
+  border-radius: 10px;
+
+  :hover {
+    background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
+  }
+`;
+
 export const SwapSecondColumn = styled.div`
   width: 540px;
   height: 585px;
@@ -724,7 +844,7 @@ export const SendTokenImg = styled.img`
   height: 21px;
   border-radius: 50%;
   background-color: #e5e5e5;
-  margin-right: 12px;
+  margin-right: 10px;
   margin-left: 12px;
 `;
 

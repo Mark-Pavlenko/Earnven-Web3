@@ -35,27 +35,9 @@ import { useDispatch } from 'react-redux';
 //   setConvexStakingTotal,
 // } from '../../store/convexStake/actions';
 import actionTypes from '../../constants/actionTypes';
+import loadWeb3 from '../../utils/loadWeb3';
 
 export default function ConvexStaking({ accountAddress }) {
-  // const [ConvexCVXAmount, setConvexCVXAmount] = useState(0);
-  // const [ConvexCVXUsdPrice, setConvexCVXUsdPrice] = useState();
-  // const [ConvexCVXStakeAmt, setConvexCVXStakeAmt] = useState();
-  // const [ConvexCVXImage, setConvexCVXImage] = useState();
-  // const [ConvexCvxCRVAmount, setConvexCvxCRVAmount] = useState();
-  // const [ConvexCvxCRVUsdPrice, setConvexCvxCRVUsdPrice] = useState();
-  // const [ConvexCvxCRVStakeAmt, setConvexCvxCRVStakeAmt] = useState();
-
-  // //State varaibles added for claimable and for additional fields
-  // const [convexStakingBalance, setconvexStakingBalance] = useState();
-  // const [earnedClaimbale, setearnedClaimbale] = useState();
-  // const [rewardTokenAddress, setrewardTokenAddress] = useState();
-  // const [stakingTokenAddress, setstakingTokenAddress] = useState();
-  // const [stakingContent, setstakingContent] = useState([0]);
-  // const [cvxStakingDataAttributes, setcvxStakingDataAttributes] = useState([]);
-  // const [cvxStakingTotalAmount, setcvxStakingTotalAmount] = useState(0);
-  // const [CVXTokenImage, setCVXTokenImage] = useState(0);
-  // const [CvxTotalSupply, setCvxTotalSupply] = useState();
-
   //get useWeb3React hook
   const { account, activate, active, chainId, connector, deactivate, error, provider, setError } =
     useWeb3React();
@@ -65,8 +47,13 @@ export default function ConvexStaking({ accountAddress }) {
 
   //logic implementing for web3 provider connection using web3 React hook
   async function getWeb3() {
-    const provider = active ? await connector.getProvider() : ethers.getDefaultProvider();
-    const web3 = await new Web3(provider);
+    let web3;
+    try {
+      const provider = active ? await connector.getProvider() : await loadWeb3();
+      web3 = new Web3(provider);
+    } catch (err) {
+      console.log('Web3 is not connected, check the Metamask connectivity!!');
+    }
     return web3;
   }
 
@@ -77,14 +64,16 @@ export default function ConvexStaking({ accountAddress }) {
     const getConvexStakingData = async () => {
       const web3 = await getWeb3();
 
-      const convexStakingAttributes = { accountAddress: accountAddress, web3: web3 };
-      try {
-        dispatch({
-          type: actionTypes.SET_CVX_TOKEN_DATA,
-          payload: convexStakingAttributes,
-        });
-      } catch (error) {
-        console.log('Dispatch error on Convex Staking process error', error.message);
+      if (web3 != undefined) {
+        const convexStakingAttributes = { accountAddress: accountAddress, web3: web3 };
+        try {
+          dispatch({
+            type: actionTypes.SET_CVX_TOKEN_DATA,
+            payload: convexStakingAttributes,
+          });
+        } catch (error) {
+          console.log('Dispatch error on Convex Staking process error', error.message);
+        }
       }
     };
     getConvexStakingData();

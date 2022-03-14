@@ -22,52 +22,53 @@ function* synthetixSagaWorker(synthetixAttributes) {
 
   try {
     const data = yield call(API.getUserAddressInfo, synthetixParams.accountAddress);
+    if (data.tokens != undefined) {
+      for (let i = 0; i < data.tokens.length; i++) {
+        const synthetixData = data.tokens[i];
+        const tokenAddress = synthetixData.tokenInfo.address.toLowerCase();
 
-    for (let i = 0; i < data.tokens.length; i++) {
-      const synthetixData = data.tokens[i];
-      const tokenAddress = synthetixData.tokenInfo.address.toLowerCase();
+        if (SnxTokenAddressList.indexOf(tokenAddress) != -1) {
+          let object = {};
 
-      if (SnxTokenAddressList.indexOf(tokenAddress) != -1) {
-        let object = {};
+          //use the below function to get the snxToken data points
+          snxTokenDataPoint = yield call(
+            API.getSnxTokenData,
+            synthetixParams.accountAddress,
+            tokenAddress,
+            synthetixParams.web3
+          );
+          //send the Collateral contract address to get collateral balance value for the usr
+          snxTokenPriceData = yield call(API.getSnxPrice, tokenAddress);
 
-        //use the below function to get the snxToken data points
-        snxTokenDataPoint = yield call(
-          API.getSnxTokenData,
-          synthetixParams.accountAddress,
-          tokenAddress,
-          synthetixParams.web3
-        );
-        //send the Collateral contract address to get collateral balance value for the usr
-        snxTokenPriceData = yield call(API.getSnxPrice, tokenAddress);
+          let valueCheck = [];
+          valueCheck = parseFloat(snxTokenDataPoint.snxTokenBalanceAmt) / 10 ** 18;
+          //check balanace value is returning exponentiation since some of the account is not
+          //having valid data example the balance is returning value as '195' or '165'
+          var e = parseInt(valueCheck.toString().split('e-')[1]);
+          if (e > 0) {
+            snxTokenDataPoint.snxTokenBalanceAmt = 0;
+          }
 
-        let valueCheck = [];
-        valueCheck = parseFloat(snxTokenDataPoint.snxTokenBalanceAmt) / 10 ** 18;
-        //check balanace value is returning exponentiation since some of the account is not
-        //having valid data example the balance is returning value as '195' or '165'
-        var e = parseInt(valueCheck.toString().split('e-')[1]);
-        if (e > 0) {
-          snxTokenDataPoint.snxTokenBalanceAmt = 0;
-        }
+          //get the token market usd price from coingecko API
+          if (snxTokenDataPoint.snxTokenBalanceAmt > 0) {
+            try {
+              object.balance = parseFloat(snxTokenDataPoint.snxTokenBalanceAmt) / 10 ** 18;
 
-        //get the token market usd price from coingecko API
-        if (snxTokenDataPoint.snxTokenBalanceAmt > 0) {
-          try {
-            object.balance = parseFloat(snxTokenDataPoint.snxTokenBalanceAmt) / 10 ** 18;
-
-            object.price = snxTokenPriceData.snxPrice;
-            object.value = object.balance * object.price;
-            object.symbol = snxTokenDataPoint.snxTokenSymbol;
-            object.imageData = [snxTokenPriceData.snxImageUrl];
-            object.protocol = 'Synthetix';
-            object.chain = 'Ethereum';
-            svxTokenTotalValue += object.value;
-            snxDataSet.push(object);
-          } catch (err) {
-            console.log('SNX Token', err.message);
+              object.price = snxTokenPriceData.snxPrice;
+              object.value = object.balance * object.price;
+              object.symbol = snxTokenDataPoint.snxTokenSymbol;
+              object.imageData = [snxTokenPriceData.snxImageUrl];
+              object.protocol = 'Synthetix';
+              object.chain = 'Ethereum';
+              svxTokenTotalValue += object.value;
+              snxDataSet.push(object);
+            } catch (err) {
+              console.log('SNX Token', err.message);
+            }
           }
         }
-      }
-    } //end of for loop
+      } //end of for loop
+    }
 
     if (svxTokenTotalValue > 0) {
       yield put(actions.getSythetixTokenData(snxDataSet));
@@ -76,7 +77,7 @@ function* synthetixSagaWorker(synthetixAttributes) {
     yield put(actions.setSynthetixIsLoading(false));
     //need this log to varify the data output for now
   } catch (err) {
-    console.log('SNX Token - No token holding for this user', accountAddress);
+    console.log('SNX Token - No token holding for this user', synthetixParams.accountAddress);
   }
 
   //-----------------------SNX Collateral----------------------------//

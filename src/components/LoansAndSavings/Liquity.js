@@ -18,6 +18,7 @@ import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import { useDispatch, useSelector } from 'react-redux';
 import actionTypes from '../../constants/actionTypes';
+import loadWeb3 from '../../utils/loadWeb3';
 
 export default function Liquity({ accountAddress, onSynthetixTokenValue }) {
   const [LqtyTokenContent, setLqtyTokenContent] = useState([]);
@@ -27,8 +28,13 @@ export default function Liquity({ accountAddress, onSynthetixTokenValue }) {
     useWeb3React();
 
   async function getWeb3() {
-    const provider = await connector.getProvider();
-    const web3 = await new Web3(provider);
+    let web3;
+    try {
+      const provider = active ? await connector.getProvider() : await loadWeb3();
+      web3 = new Web3(provider);
+    } catch (err) {
+      console.log('Web3 is not connected, check the Metamask connectivity!!');
+    }
     return web3;
   }
 
@@ -43,16 +49,16 @@ export default function Liquity({ accountAddress, onSynthetixTokenValue }) {
   useEffect(() => {
     const getLiquityTokenData = async () => {
       const web3 = await getWeb3();
-
-      const liquityTokenAttributes = { accountAddress: accountAddress, web3: web3 };
-
-      try {
-        dispatch({
-          type: actionTypes.SET_LQTY_TOKEN_DATA,
-          payload: liquityTokenAttributes,
-        });
-      } catch (error) {
-        console.log('Liquity Protocol error in dispatch', error.message);
+      if (web3 != undefined) {
+        const liquityTokenAttributes = { accountAddress: accountAddress, web3: web3 };
+        try {
+          dispatch({
+            type: actionTypes.SET_LQTY_TOKEN_DATA,
+            payload: liquityTokenAttributes,
+          });
+        } catch (error) {
+          console.log('Liquity Protocol error in dispatch', error.message);
+        }
       }
     };
     getLiquityTokenData();

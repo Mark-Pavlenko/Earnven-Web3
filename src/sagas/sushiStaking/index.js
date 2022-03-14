@@ -4,7 +4,7 @@ import * as actions from './actions';
 import actionTypes from '../../constants/actionTypes';
 
 export function* getSushiStakeSagaWatcher() {
-  yield takeEvery(actionTypes.GET_SLP_STAKE_DATA, sushiStakeSagaWorker);
+  yield takeEvery(actionTypes.SET_SLP_STAKE_DATA, sushiStakeSagaWorker);
 }
 
 //below generator function is used to get the sushistaking lp token data points

@@ -158,3 +158,12 @@ export const LoadingSpinner = styled.div`
   margin: theme.spacing(1);
   position: relative;
 `;
+
+export const ProtocolTitle = styled.div`
+  color: ${(props) => (props.isLightTheme ? '#1E1E20' : 'white')};
+  display: flex;
+  align-items: left;
+  justify-content: left;
+  font-weight: 200;
+  font-size: 15px;
+`;
