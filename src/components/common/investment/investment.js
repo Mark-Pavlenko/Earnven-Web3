@@ -9,6 +9,7 @@ import {
   MockTokenImage,
   ContentWrapper,
   ContentRightWrapper,
+  ProtocolTitle,
 } from './styledComponents';
 import { useSelector } from 'react-redux';
 import { numberWithCommas } from '../../../commonFunctions/commonFunctions';
@@ -110,9 +111,7 @@ const Investment = ({
                     </React.Fragment>
                   ) : (
                     <>
-                      {protocolName === 'Curve Staking' ||
-                      protocolName === 'UniswapV2 Staking' ||
-                      protocolName === 'UniswapV2' ? (
+                      {protocolName === 'Curve Staking' || protocolName === 'UniswapV2 Staking' ? (
                         <>
                           <CurveLpImage lpToken={protocol.tokenName} />
                         </>
@@ -170,59 +169,169 @@ const Investment = ({
             tokens.map((token) => {
               return (
                 <>
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      fontWeight: '600',
-                      padding: '0 32px 11px 26px',
-                    }}>
-                    <div style={{ fontSize: '10px' }}>balance {token.symbol}</div>
-                    <div style={{ fontSize: '10px' }}>
-                      {numberWithCommas(parseFloat(token.balance).toFixed(2))}
-                    </div>
-                  </div>
-                  {token.price && (
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        fontWeight: '600',
-                        padding: '0 32px 11px 26px',
-                      }}>
-                      <div style={{ fontSize: '10px' }}>price {token.symbol}</div>
-                      <div style={{ fontSize: '10px' }}>
-                        {`$${numberWithCommas(parseFloat(token.price).toFixed(2))}`}
-                      </div>
-                    </div>
+                  {token.symbol == 'Aave' ? (
+                    <>
+                      {parseFloat(token.balance) > 0 ? (
+                        <>
+                          <ProtocolTitle isLightTheme={theme}>
+                            <img
+                              src={token.tokenImage}
+                              style={{
+                                height: '20px',
+                                marginTop: '',
+                                marginLeft: '15px',
+                                display: 'inline-block',
+                              }}
+                              alt=""
+                            />
+                            Aave
+                          </ProtocolTitle>
+                          {parseFloat(token.balance) > 0 && (
+                            <div
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                fontWeight: '600',
+                                padding: '0 32px 11px 26px',
+                              }}>
+                              <div style={{ fontSize: '10px' }}>balance</div>
+                              <div style={{ fontSize: '10px' }}>
+                                {numberWithCommas(parseFloat(token.balance).toFixed(4))}
+                              </div>
+                            </div>
+                          )}
+                          {parseFloat(token.price) > 0 && (
+                            <div
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                fontWeight: '600',
+                                padding: '0 32px 11px 26px',
+                              }}>
+                              <div style={{ fontSize: '10px' }}>price</div>
+                              <div style={{ fontSize: '10px' }}>
+                                {`$${numberWithCommas(parseFloat(token.price).toFixed(2))}`}
+                              </div>
+                            </div>
+                          )}
+                          {parseFloat(token.value) > 0 && (
+                            <div
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                fontWeight: '600',
+                                padding: '0 32px 11px 26px',
+                              }}>
+                              <div style={{ fontSize: '10px' }}>value</div>
+                              <div style={{ fontSize: '10px' }}>
+                                {`$${numberWithCommas(parseFloat(token.value).toFixed(2))}`}
+                              </div>
+                            </div>
+                          )}
+                          {parseFloat(token.claimable) > 0 && (
+                            <div
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                fontWeight: '600',
+                                padding: '0 32px 11px 26px',
+                              }}>
+                              <div style={{ fontSize: '10px' }}>claimable </div>
+                              <div style={{ fontSize: '10px' }}>
+                                {`$${numberWithCommas(parseFloat(token.claimable).toFixed(2))}`}
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        ''
+                      )}{' '}
+                    </>
+                  ) : (
+                    ''
                   )}
-                  {token.value && (
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        fontWeight: '600',
-                        padding: '0 32px 11px 26px',
-                      }}>
-                      <div style={{ fontSize: '10px' }}>value {token.symbol}</div>
-                      <div style={{ fontSize: '10px' }}>
-                        {`$${numberWithCommas(parseFloat(token.value).toFixed(2))}`}
-                      </div>
-                    </div>
-                  )}
-                  {token.claimable && (
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        fontWeight: '600',
-                        padding: '0 32px 11px 26px',
-                      }}>
-                      <div style={{ fontSize: '10px' }}>claimable {token.symbol}</div>
-                      <div style={{ fontSize: '10px' }}>
-                        {`$${numberWithCommas(parseFloat(token.claimable).toFixed(2))}`}
-                      </div>
-                    </div>
+
+                  {/* for stkABPT aave token */}
+                  {token.symbol == 'stkABPT' ? (
+                    <>
+                      {parseFloat(token.balance) > 0 ? (
+                        <>
+                          <ProtocolTitle isLightTheme={theme}>
+                            <img
+                              src={token.tokenImage}
+                              style={{
+                                height: '20px',
+                                marginTop: '',
+                                marginLeft: '15px',
+                                display: 'inline-block',
+                              }}
+                              alt=""
+                            />
+                            stkABPT
+                          </ProtocolTitle>
+                          {parseFloat(token.balance) > 0 && (
+                            <div
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                fontWeight: '600',
+                                padding: '0 32px 11px 26px',
+                              }}>
+                              <div style={{ fontSize: '10px' }}>balance</div>
+                              <div style={{ fontSize: '10px' }}>
+                                {numberWithCommas(parseFloat(token.balance).toFixed(4))}
+                              </div>
+                            </div>
+                          )}
+                          {parseFloat(token.price) > 0 && (
+                            <div
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                fontWeight: '600',
+                                padding: '0 32px 11px 26px',
+                              }}>
+                              <div style={{ fontSize: '10px' }}>price</div>
+                              <div style={{ fontSize: '10px' }}>
+                                {`$${numberWithCommas(parseFloat(token.price).toFixed(2))}`}
+                              </div>
+                            </div>
+                          )}
+                          {parseFloat(token.value) > 0 && (
+                            <div
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                fontWeight: '600',
+                                padding: '0 32px 11px 26px',
+                              }}>
+                              <div style={{ fontSize: '10px' }}>value</div>
+                              <div style={{ fontSize: '10px' }}>
+                                {`$${numberWithCommas(parseFloat(token.value).toFixed(2))}`}
+                              </div>
+                            </div>
+                          )}
+                          {parseFloat(token.claimable) > 0 && (
+                            <div
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                fontWeight: '600',
+                                padding: '0 32px 11px 26px',
+                              }}>
+                              <div style={{ fontSize: '10px' }}>claimable </div>
+                              <div style={{ fontSize: '10px' }}>
+                                {`$${numberWithCommas(parseFloat(token.claimable).toFixed(2))}`}
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        ''
+                      )}
+                    </>
+                  ) : (
+                    ''
                   )}
                 </>
               );
