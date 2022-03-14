@@ -178,6 +178,7 @@ export default function MultiSwapComponent() {
 
   let convertReceiveTokenToUSDCurrency = async (amount, tokenData) => {
     await getTokenUSDAmount({ amount, tokenData }).then((res) => {
+      console.log('res', res);
       let receiveTokensListCopy = [...initReceiveMultiSwapTokensList];
       const needIndex = receiveTokensListCopy.findIndex(
         (token) => token.address === tokenData.address
@@ -375,7 +376,7 @@ export default function MultiSwapComponent() {
         receiveTokensListCopy[needIndex] = {
           ...selectedSwapToken,
           receiveTokensListItem: true,
-          USDCurrency: '$ 0.00',
+          USDCurrency: (0.0).toFixed(5),
           // amount: 0,
         };
       }
