@@ -74,7 +74,7 @@ function* getSendTokensListSagaWorker(accountAddress) {
 
   yield put(actions.getSendTokensList(walletTokensList));
   yield put(actions.setInitSendTokenSwap(walletTokensList[1]));
-  yield put(actions.setInitSendTokenMultiSwap(walletTokensList[1]));
+  yield put(actions.setInitSendTokenMultiSwap([walletTokensList[1]]));
 
   yield put(setInitSendMultiSwapTokensListLoading(false));
 }
