@@ -447,11 +447,29 @@ export default function MultiSwapComponent() {
     });
 
     console.log('sendTokensListCopy toggle', sendTokensListCopy);
-    console.log('receiveTokensListCopy toggle', receiveTokensListCopy);
+    console.log('result toggle test receiveTokensListCopy toggle', receiveTokensListCopy);
+
+    let totalReceiveTokensArr = [];
+    finalSendTokensList
+      .filter((sendToken) =>
+        receiveTokensListCopy.some((receiveToken) => {
+          return sendToken.address === receiveToken.address;
+        })
+      )
+      .map((el1) =>
+        receiveTokensListCopy.map((el2) => {
+          if (el1.address === el2.address) {
+            // console.log('total toggle test', { ...el2, balance: el1.balance });
+            totalReceiveTokensArr.push({ ...el2, balance: el1.balance });
+          }
+        })
+      );
+
+    console.log('result toggle total', totalReceiveTokensArr);
 
     dispatch({
       type: actionTypes.SET_INIT_SEND_MULTISWAP_TOKEN,
-      payload: receiveTokensListCopy,
+      payload: totalReceiveTokensArr,
     });
     dispatch({
       type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST,
