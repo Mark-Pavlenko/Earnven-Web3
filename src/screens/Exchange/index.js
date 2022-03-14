@@ -139,11 +139,6 @@ const useStyles = makeStyles(() => ({
   noBorder: {
     border: 'none !important',
   },
-  input: {
-    // '&::placeholder': {
-    //   color: 'red',
-    // },
-  },
 }));
 
 export default function SwapComponent() {
@@ -170,18 +165,6 @@ export default function SwapComponent() {
     averageSpeedIcon,
     slowSpeedIcon
   );
-
-  // // console.log('addIconsGasPricesWithIcons exchange', addIconsGasPricesWithIcons);
-
-  // console.log('123', initSendTokenSwap);
-  // console.log('123 b', initReceiveFirstTokenSwap);
-
-  const walletData = useSelector((state) => state?.walletDataReducer.walletData);
-
-  // // console.log('finalSendTokensList 000', finalSendTokensList);
-  // // console.log('finalReceiveTokensList 000', finalReceiveTokensList);
-  // // console.log('initSendFirstTokenSwap 000', initSendTokenSwap);
-  // // console.log('initReceiveFirstTokenSwap 000', initReceiveFirstTokenSwap);
 
   const [filteredData, setFilteredData] = useState([]);
   const [filteredReceiveTokensListData, setFilteredReceiveTokensListData] = useState([]);
@@ -295,15 +278,6 @@ export default function SwapComponent() {
     } else if (ifSendTokenAvailableForSwap === false || ifReceiveTokenAvailableForSwap === false) {
       setIsAbleToReplaceTokensInSingleSwap(false);
     }
-
-    // // console.log(
-    //   'isAbleToReplaceTokensInSingleSwap test do ifSendTokenAvailableForSwap',
-    //   ifSendTokenAvailableForSwap
-    // );
-    // // console.log(
-    //   ' isAbleToReplaceTokensInSingleSwap test do ifReceiveTokenAvailableForSwap',
-    //   ifReceiveTokenAvailableForSwap
-    // );
 
     //init format receive token - add token amount to it
     let formattedReceiveToken;
@@ -878,8 +852,6 @@ export default function SwapComponent() {
       alert('Please Fill All fields');
     }
   }
-
-  // // console.log('isAbleToReplaceTokensInSingleSwap test', isAbleToReplaceTokensInSingleSwap);
 
   const staticSlippageToleranceValueHandler = (slippageToleranceValue) => {
     setSlippageTolerance(slippageToleranceValue / 100);

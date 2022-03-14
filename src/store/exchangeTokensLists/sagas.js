@@ -73,8 +73,8 @@ function* getSendTokensListSagaWorker(accountAddress) {
   // console.log('sagas exchange finalWalletTokensList', finalWalletTokensList);
 
   yield put(actions.getSendTokensList(walletTokensList));
-  yield put(actions.setInitSendTokenSwap(walletTokensList[1]));
-  yield put(actions.setInitSendTokenMultiSwap([walletTokensList[1]]));
+  yield put(actions.setInitSendTokenSwap(walletTokensList[0]));
+  yield put(actions.setInitSendTokenMultiSwap([walletTokensList[0]]));
 
   yield put(setInitSendMultiSwapTokensListLoading(false));
 }
@@ -126,7 +126,6 @@ function* getReceiveTokensListSagaWorker() {
 
   yield put(actions.setInitReceiveFirstTokenSwap(finalList[5]));
   yield put(actions.getReceiveTokensList(finalList));
-  yield put(actions.setInitReceiveSecondTokenSwap(finalList[2]));
 
   yield put(actions.setInitReceiveMultiSwapTokensList([finalList[2], finalList[4]]));
 

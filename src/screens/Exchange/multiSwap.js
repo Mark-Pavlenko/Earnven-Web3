@@ -117,13 +117,12 @@ export default function MultiSwapComponent() {
   const [tokenSendAmount, setTokenSendAmount] = useState();
   let [tokensListModal, setTokensListModal] = useState([]);
   const [sendTokenForExchangeAmount, setSendTokenForExchangeAmount] = useState();
-  const [receiveTokensRefsList, setReceiveTokensRefsList] = useState([]);
-  //
   let [oldTokenSwappedAddress, setOldTokenSwappedAddress] = useState();
   let [isSendTokenSelectedSwapped, setIsSendTokenSelectedSwapped] = useState(false);
   const [openTokensModal, setOpenTokensModal] = useState(false);
   const [isTokensLimitExceeded, setIsTokensLimitExceeded] = useState(false);
   let [isAddedReceiveTokensLimitExceeded, setIsAddedReceiveTokensLimitExceeded] = useState(false);
+  const [isAbleToReplaceTokens, setIsAbleToReplaceTokens] = useState(false);
 
   let textInput = useRef(null);
 
@@ -132,7 +131,6 @@ export default function MultiSwapComponent() {
   const isLoadingSendTokensList = useSelector(
     (state) => state.tokensListReducer.isSendMultiSwapTokensListLoading
   );
-
   const isLoadingReceiveTokensList = useSelector(
     (state) => state.tokensListReducer.isReceiveMultiSwapTokensListLoading
   );
@@ -248,22 +246,6 @@ export default function MultiSwapComponent() {
 
     await getAmountMulti();
   };
-
-  useEffect(() => {
-    setSendTokenForExchangeAmount(0);
-
-    // for (let i = 0; i < initReceiveMultiSwapTokensList.length; i++) {
-    //   if (
-    //     Object.keys(initSendMultiSwapTokenList[0]).length !== 0 &&
-    //     initReceiveMultiSwapTokensList[i].address !== undefined
-    //   )
-    //     convertExchangeTokensCourse({
-    //       sendTokenForExchangeAddress: initSendMultiSwapTokenList[0].address,
-    //       receiveTokenForExchangeAddress: initReceiveMultiSwapTokensList[i].address,
-    //       tokenAmount: 1,
-    //     });
-    // }
-  }, [initSendMultiSwapTokenList, initReceiveMultiSwapTokensList]);
 
   async function loadWeb3() {
     if (window.ethereum) {
@@ -508,6 +490,66 @@ export default function MultiSwapComponent() {
 
   console.log('isSendTokenSelectedSwapped', isSendTokenSelectedSwapped);
 
+  const toggleSwappedTokens = () => {
+    dispatch({
+      type: actionTypes.SET_INIT_SEND_MULTISWAP_TOKEN,
+      payload: initReceiveMultiSwapTokensList,
+    });
+    dispatch({
+      type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST,
+      payload: initSendMultiSwapTokenList,
+    });
+
+    // setTokenSendUSDCurrency('$0.00');
+    // setTokensReceiveUSDCurrency('$0.00');
+    // setSendTokenForExchangeAmount(0);
+    // setReceiveTokenForExchangeAmount(0);
+    // setIsTokensLimitExceeded(false);
+  };
+
+  useEffect(() => {
+    setSendTokenForExchangeAmount(0);
+
+    let ifSendTokenAvailableForSwap;
+
+    if (initSendMultiSwapTokenList[0] !== undefined && initSendMultiSwapTokenList.length !== 0) {
+      ifSendTokenAvailableForSwap = finalReceiveTokensList.some((el) => {
+        if (el.address === initSendMultiSwapTokenList[0].address) {
+          return true;
+        }
+      });
+
+      let availableNumOfReceiveTokensToSwap = finalSendTokensList
+        .map((x) =>
+          initReceiveMultiSwapTokensList.some((y) => {
+            if (y.address === x.address) return true;
+          })
+        )
+        .filter((value) => value === true).length;
+
+      if (
+        availableNumOfReceiveTokensToSwap === initReceiveMultiSwapTokensList.length &&
+        ifSendTokenAvailableForSwap === true
+      ) {
+        setIsAbleToReplaceTokens(true);
+      } else {
+        setIsAbleToReplaceTokens(false);
+      }
+    }
+
+    for (let i = 0; i < initReceiveMultiSwapTokensList.length; i++) {
+      if (
+        initSendMultiSwapTokenList[0] !== undefined &&
+        initReceiveMultiSwapTokensList[i].address !== undefined
+      )
+        convertExchangeTokensCourse({
+          sendTokenForExchangeAddress: initSendMultiSwapTokenList[0].address,
+          receiveTokenForExchangeAddress: initReceiveMultiSwapTokensList[i].address,
+          tokenAmount: 1,
+        });
+    }
+  }, [initSendMultiSwapTokenList, initReceiveMultiSwapTokensList]);
+
   return (
     <SecondColumnSwapSubBlock>
       <SecondColumnTitleBlock>
@@ -619,10 +661,20 @@ export default function MultiSwapComponent() {
                 Insufficient funds
               </ExceededAmountTokensLimitWarning>
             )}
-            <SwitchTokensBtn
-              src={isLightTheme ? switchTokensLight : switchTokensDark}
-              alt="switch_tokens_btn"
-            />
+
+            {isAbleToReplaceTokens ? (
+              <SwitchTokensBtn
+                onClick={toggleSwappedTokens}
+                src={isLightTheme ? switchTokensLight : switchTokensDark}
+                alt="switch_tokens_btn"
+              />
+            ) : (
+              <SwitchTokensBtn
+                style={{ opacity: 0.5 }}
+                src={isLightTheme ? switchTokensLight : switchTokensDark}
+                alt="switch_tokens_btn"
+              />
+            )}
           </SendReceiveSubBlock>
           {/* mapped received block */}
 

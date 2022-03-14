@@ -59,12 +59,6 @@ export const tokensListReducer = (state = initialState, action) => {
         initReceiveFirstTokenSwap: action?.payload,
       };
 
-    case actionTypes.SET_INIT_RECEIVE_SECOND_TOKEN_SWAP:
-      return {
-        ...state,
-        initReceiveSecondTokenSwap: action?.payload,
-      };
-
     case actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST:
       return {
         ...state,
