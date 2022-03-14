@@ -514,7 +514,7 @@ export default function SwapComponent() {
 
   const selectTokenForExchange = (rawSelectedToken, flag) => {
     // // console.log('flag', flag.isSendTokenChosen);
-
+    setInitConvertReceiveTokenAmount('Loading...');
     let selectedToken;
     if (rawSelectedToken.balance === undefined) {
       let foundSendTokenListItem = finalSendTokensList.find((el) => {
@@ -602,7 +602,7 @@ export default function SwapComponent() {
 
   const convertExchangeTokensCourse = async (convertTokensData) => {
     console.log('convertTokensData single swap helper', convertTokensData);
-    setInitConvertReceiveTokenAmount('Loading...');
+
     try {
       await loadWeb3();
       const web3 = window.web3;

@@ -251,16 +251,17 @@ export default function MultiSwapComponent() {
   useEffect(() => {
     setSendTokenForExchangeAmount(0);
 
-    // const timer = setTimeout(() => {
-    //   for (let i = 0; i < initReceiveMultiSwapTokensList.length; i++) {
-    //     convertExchangeTokensCourse({
-    //       sendTokenForExchangeAddress: initSendMultiSwapToken.address,
-    //       receiveTokenForExchangeAddress: initReceiveMultiSwapTokensList[i].address,
-    //       tokenAmount: 1,
-    //     });
-    //   }
-    // }, 1000);
-    // return () => clearTimeout(timer);
+    for (let i = 0; i < initReceiveMultiSwapTokensList.length; i++) {
+      if (
+        initSendMultiSwapToken.address !== undefined &&
+        initReceiveMultiSwapTokensList[i].address !== undefined
+      )
+        convertExchangeTokensCourse({
+          sendTokenForExchangeAddress: initSendMultiSwapToken.address,
+          receiveTokenForExchangeAddress: initReceiveMultiSwapTokensList[i].address,
+          tokenAmount: 1,
+        });
+    }
   }, [initSendMultiSwapToken, initReceiveMultiSwapTokensList]);
 
   async function loadWeb3() {
