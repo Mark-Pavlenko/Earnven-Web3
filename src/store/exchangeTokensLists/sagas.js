@@ -11,6 +11,7 @@ import CoinGeckoMockTokensList from './CoinGecko.json';
 import Web3 from 'web3';
 import TOKENDECIMALSABI from '../../abi/TokenDecomals.json';
 import ROUTERABI from '../../abi/UniRouterV2.json';
+import { getTokenUSDAmount } from '../../api/api';
 
 export function* getSendTokensListSagaWatcher() {
   yield takeLatest(actionTypes.SET_SEND_TOKENS_LIST, getSendTokensListSagaWorker);
@@ -105,10 +106,6 @@ function* getReceiveTokensListSagaWorker() {
     )
   );
 
-  // console.log('sagas filteredCoinGeckoTokensList', filteredCoinGeckoTokensList);
-  // const testSendTokensList = yield select(sendTokensList);
-  // console.log('sagas filteredCoinGeckoTokensList sendTokensList', testSendTokensList);
-
   let finalList = zeroAPISwapTokensList.map((token) => ({
     ...token,
     receiveTokensListItem: true,
@@ -118,17 +115,25 @@ function* getReceiveTokensListSagaWorker() {
     id: filteredCoinGeckoTokensList.find((x) => x.symbol === token.symbol.toLowerCase())
       ? filteredCoinGeckoTokensList.find((x) => x.symbol === token.symbol.toLowerCase()).id
       : null,
-    USDCurrency: '$0.00',
-    // amount: ' ',
+    USDCurrency: 0,
   }));
 
   console.log('sagas filter finalReceiveTokensList', finalList);
 
-  yield put(actions.setInitReceiveFirstTokenSwap(finalList[5]));
+  let initReceiveMultiSwapTokensList = [];
+  for (let i = 0; i < [finalList[2], finalList[4]].length; i++) {
+    initReceiveMultiSwapTokensList.push(
+      yield call(API.getTokenUSDAmount, {
+        amount: 1,
+        tokenData: [finalList[2], finalList[4]][i],
+      })
+    );
+  }
+
+  // console.log('sagas tokenUSDAmount', initReceiveMultiSwapTokensList);
   yield put(actions.getReceiveTokensList(finalList));
-
-  yield put(actions.setInitReceiveMultiSwapTokensList([finalList[2], finalList[4]]));
-
+  yield put(actions.setInitReceiveFirstTokenSwap(finalList[0]));
+  yield put(actions.setInitReceiveMultiSwapTokensList(initReceiveMultiSwapTokensList));
   yield put(setInitReceiveMultiSwapTokensListLoading(false));
 }
 

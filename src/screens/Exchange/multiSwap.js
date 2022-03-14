@@ -146,7 +146,7 @@ export default function MultiSwapComponent() {
 
   console.log('receive USD multi init state SendTokenSwap 12345', initSendMultiSwapTokenList);
   console.log(
-    ' receive USD multi init state ReceiveMultiSwapTokensList',
+    ' receive USD multi init state ReceiveMultiSwapTokensList 12345',
     initReceiveMultiSwapTokensList
   );
 
@@ -167,7 +167,7 @@ export default function MultiSwapComponent() {
 
   //working saga
   const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
-  console.log('multiswap finalSendTokensList 12345', finalSendTokensList);
+  // console.log('multiswap finalSendTokensList 12345', finalSendTokensList);
 
   // const finalReceiveTokensList = sendTokensMockList;
   let finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
@@ -186,65 +186,67 @@ export default function MultiSwapComponent() {
   };
 
   let convertReceiveTokenToUSDCurrency = async (amount, tokenData) => {
-    if (amount === '') {
-      amount = '0';
-    }
-
-    let tokenUSDCurrencyValue;
-    let finalUSDCurrencyValue;
-
-    if (tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
-      await axios
-        .get(
-          `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
-        )
-        .then(async (response) => {
-          tokenUSDCurrencyValue = response;
-        })
-        .catch((err) => {
-          console.log('err of usd currency receive token', err);
-        });
-
-      if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
-        finalUSDCurrencyValue = `$ ${(
-          tokenUSDCurrencyValue.data.price.rate * parseFloat(amount)
-        ).toFixed(2)}`;
-      } else {
-        finalUSDCurrencyValue = 'Price not available';
-      }
-    } else {
-      const ethDollarValue = await axios.get(
-        'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
-      );
-      finalUSDCurrencyValue = `$${(ethDollarValue.data.ethereum.usd * parseFloat(amount)).toFixed(
-        2
-      )}`;
-    }
-
-    console.log('multiswap receive USD finalUSDCurrencyValue', finalUSDCurrencyValue);
-
-    let receiveTokensListCopy = [...initReceiveMultiSwapTokensList];
-    console.log('receiveTokensListCopy', receiveTokensListCopy);
-
-    const needIndex = receiveTokensListCopy.findIndex(
-      (token) => token.address === tokenData.address
-    );
-
-    console.log('multiswap receive USD index', needIndex);
-
-    if (needIndex !== -1) {
-      receiveTokensListCopy[needIndex].USDCurrency = finalUSDCurrencyValue;
-      receiveTokensListCopy[needIndex].amount = amount;
-    }
-
-    dispatch({
-      type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST,
-      payload: receiveTokensListCopy,
-    });
-
-    console.log('multiswap receive USD total', initReceiveMultiSwapTokensList);
-
-    await getAmountMulti();
+    // console.log('USD receive tokenData', tokenData);
+    //
+    // if (amount === '') {
+    //   amount = '0';
+    // }
+    //
+    // let tokenUSDCurrencyValue;
+    // let finalUSDCurrencyValue;
+    //
+    // if (tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+    //   await axios
+    //     .get(
+    //       `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
+    //     )
+    //     .then(async (response) => {
+    //       tokenUSDCurrencyValue = response;
+    //     })
+    //     .catch((err) => {
+    //       console.log('err of usd currency receive token', err);
+    //     });
+    //
+    //   console.log('tokenUSDCurrencyValue res', tokenUSDCurrencyValue);
+    //
+    //   if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
+    //     finalUSDCurrencyValue =
+    //       tokenUSDCurrencyValue.data.price.rate * parseFloat(amount).toFixed(2);
+    //   } else {
+    //     finalUSDCurrencyValue = 'Price not available';
+    //   }
+    // } else {
+    //   const ethDollarValue = await axios.get(
+    //     'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
+    //   );
+    //   finalUSDCurrencyValue = ethDollarValue.data.ethereum.usd * parseFloat(amount).toFixed(2);
+    // }
+    //
+    // console.log('multiswap receive USD finalUSDCurrencyValue', finalUSDCurrencyValue);
+    // console.log('typeof multiswap receive USD finalUSDCurrencyValue', typeof finalUSDCurrencyValue);
+    //
+    // let receiveTokensListCopy = [...initReceiveMultiSwapTokensList];
+    // console.log('receiveTokensListCopy', receiveTokensListCopy);
+    //
+    // const needIndex = receiveTokensListCopy.findIndex(
+    //   (token) => token.address === tokenData.address
+    // );
+    //
+    // console.log('multiswap receive USD index', needIndex);
+    //
+    // if (needIndex !== -1) {
+    //   receiveTokensListCopy[needIndex].USDCurrency = finalUSDCurrencyValue;
+    //   receiveTokensListCopy[needIndex].amount = amount;
+    // }
+    //
+    // dispatch({
+    //   type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST,
+    //   payload: receiveTokensListCopy,
+    // });
+    //
+    // console.log('multiswap receive USD total', initReceiveMultiSwapTokensList);
+    //
+    // await getAmountMulti();
   };
 
   async function loadWeb3() {
@@ -401,10 +403,6 @@ export default function MultiSwapComponent() {
   };
 
   const selectTokenForSwap = async (selectedSwapToken, isSendTokenSelectedSwapped) => {
-    // console.log('copy multiswap send/receive selectedSwapToken', selectedSwapToken);
-
-    // await getAmountMulti(selectedSwapToken, isSendTokenSelectedSwapped);
-
     if (isSendTokenSelectedSwapped === true) {
       setSendTokenForExchangeAmount(0);
 
@@ -437,8 +435,6 @@ export default function MultiSwapComponent() {
         };
       }
 
-      //clear the old input value from token field
-      // should bee done for all tokens - do only for last by ref, should be done by keys
       textInput.current.value = '';
 
       dispatch({
@@ -510,10 +506,12 @@ export default function MultiSwapComponent() {
   useEffect(() => {
     setSendTokenForExchangeAmount(0);
 
-    let ifSendTokenAvailableForSwap;
-
     if (initSendMultiSwapTokenList[0] !== undefined && initSendMultiSwapTokenList.length !== 0) {
-      ifSendTokenAvailableForSwap = finalReceiveTokensList.some((el) => {
+      // for (let i = 0; i < initReceiveMultiSwapTokensList.length; i++) {
+      //   convertReceiveTokenToUSDCurrency(1, initReceiveMultiSwapTokensList[i]);
+      // }
+
+      let ifSendTokenAvailableForSwap = finalReceiveTokensList.some((el) => {
         if (el.address === initSendMultiSwapTokenList[0].address) {
           return true;
         }
@@ -760,7 +758,11 @@ export default function MultiSwapComponent() {
                         <MultiSwapSendValueLabel
                           isLightTheme={isLightTheme}
                           style={{ marginLeft: 'auto' }}>
-                          {receiveToken.USDCurrency}
+                          {receiveToken.USDCurrency !== -1 ? (
+                            <>${receiveToken.USDCurrency.toFixed(5)}</>
+                          ) : (
+                            <>Price not available</>
+                          )}
                         </MultiSwapSendValueLabel>
                       </div>
                     </USDCurrencyInputBlock>
