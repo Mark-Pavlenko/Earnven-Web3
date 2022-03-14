@@ -254,11 +254,11 @@ export default function MultiSwapComponent() {
 
     for (let i = 0; i < initReceiveMultiSwapTokensList.length; i++) {
       if (
-        initSendMultiSwapTokenList.address !== undefined &&
+        Object.keys(initSendMultiSwapTokenList[0]).length !== 0 &&
         initReceiveMultiSwapTokensList[i].address !== undefined
       )
         convertExchangeTokensCourse({
-          sendTokenForExchangeAddress: initSendMultiSwapTokenList.address,
+          sendTokenForExchangeAddress: initSendMultiSwapTokenList[0].address,
           receiveTokenForExchangeAddress: initReceiveMultiSwapTokensList[i].address,
           tokenAmount: 1,
         });
@@ -351,7 +351,6 @@ export default function MultiSwapComponent() {
   //----- convert token course (need to implement necessary network)
 
   let exchange = async () => {
-    // console.log('total MultiSwap sendToken initSendMultiSwapTokenList', initSendMultiSwapTokenList);
     // console.log('total MultiSwap sendToken object AMOUNT', tokenSendAmount);
     // console.log(
     //   'total MultiSwap receiveTokensList exchange object',
@@ -365,7 +364,7 @@ export default function MultiSwapComponent() {
     setOpenTokensModal(true);
     let removedInitTokenValuesList = initFilteringModalTokensList(
       payload,
-      initSendMultiSwapTokenList,
+      initSendMultiSwapTokenList[0],
       initReceiveMultiSwapTokensList
     );
     setTokensListModal(removedInitTokenValuesList);
@@ -377,7 +376,7 @@ export default function MultiSwapComponent() {
   const searchTokensHandler = (event, isSendTokenSelectedSwapped, searchTokensData) => {
     let removedInitTokenValuesList = initFilteringModalTokensList(
       searchTokensData,
-      initSendMultiSwapTokenList,
+      initSendMultiSwapTokenList[0],
       initReceiveMultiSwapTokensList
     );
     let filteredTokensList = filteredTokensByName(event, removedInitTokenValuesList);
@@ -394,7 +393,7 @@ export default function MultiSwapComponent() {
     const routers = exchangersOfferedList.map((i) => i.routerAddress);
     console.log('multiswap routers', routers);
 
-    let sendTokenAddress = initSendMultiSwapTokenList.address;
+    let sendTokenAddress = initSendMultiSwapTokenList[0].address;
 
     if (sendTokenAddress === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
       sendTokenAddress = '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270';
@@ -429,7 +428,7 @@ export default function MultiSwapComponent() {
 
       dispatch({
         type: actionTypes.SET_INIT_SEND_MULTISWAP_TOKEN,
-        payload: selectedSwapToken,
+        payload: [selectedSwapToken],
       });
 
       convertSendTokenToUSDCurrency({
@@ -489,7 +488,7 @@ export default function MultiSwapComponent() {
 
     let removedInitTokenValuesList = initFilteringModalTokensList(
       fullTokensList,
-      initSendMultiSwapTokenList,
+      initSendMultiSwapTokenList[0],
       initReceiveMultiSwapTokensList
     );
 
