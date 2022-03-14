@@ -521,18 +521,15 @@ export default function MultiSwapComponent() {
           Trade any token for many tokens or many tokens for a token in a single transaction
         </ColumnMainSubTitles>
       </SecondColumnTitleBlock>
-      <SwapTokensMainSubBlock
-        isLightTheme={isLightTheme}
-        style={{ marginTop: '0', height: 'auto' }}>
-        {/*Choose send tokens block*/}
-        <SendReceiveSubBlock>
-          <SendBlockLabels isLightTheme={isLightTheme} style={{ margin: '32px 20px 0px 20px' }}>
-            <span>Send</span>
-          </SendBlockLabels>
-
-          {isLoadingSendTokensList ? (
-            <div>LOADING...</div>
-          ) : (
+      {isLoadingSendTokensList === false && isLoadingReceiveTokensList === false ? (
+        <SwapTokensMainSubBlock
+          isLightTheme={isLightTheme}
+          style={{ marginTop: '0', height: 'auto' }}>
+          {/*Choose send tokens block*/}
+          <SendReceiveSubBlock>
+            <SendBlockLabels isLightTheme={isLightTheme} style={{ margin: '32px 20px 0px 20px' }}>
+              <span>Send</span>
+            </SendBlockLabels>
             <MultiSwapSendTokensChooseBlock isLightTheme={isLightTheme}>
               {/* SEND block */}
 
@@ -616,26 +613,19 @@ export default function MultiSwapComponent() {
                 </MultiSwapSendValueLabel>
               </MultiSwapSendValueLabelsLayout>
             </MultiSwapSendTokensChooseBlock>
-          )}
 
-          {isTokensLimitExceeded && (
-            <ExceededAmountTokensLimitWarning style={{ marginRight: '30px', marginTop: '-10px' }}>
-              Insufficient funds
-            </ExceededAmountTokensLimitWarning>
-          )}
+            {isTokensLimitExceeded && (
+              <ExceededAmountTokensLimitWarning style={{ marginRight: '30px', marginTop: '-10px' }}>
+                Insufficient funds
+              </ExceededAmountTokensLimitWarning>
+            )}
+            <SwitchTokensBtn
+              src={isLightTheme ? switchTokensLight : switchTokensDark}
+              alt="switch_tokens_btn"
+            />
+          </SendReceiveSubBlock>
+          {/* mapped received block */}
 
-          <SwitchTokensBtn
-            src={isLightTheme ? switchTokensLight : switchTokensDark}
-            alt="switch_tokens_btn"
-          />
-        </SendReceiveSubBlock>
-
-        {/* mapped received block */}
-        {isLoadingReceiveTokensList === true ? (
-          <span style={{ display: 'flex', justifyContent: 'center', fontWeight: 'bold' }}>
-            Loading...
-          </span>
-        ) : (
           <>
             <SendBlockLabels isLightTheme={isLightTheme} style={{ margin: '0px 20px 5px 20px' }}>
               <span>Receive</span>
@@ -979,45 +969,50 @@ export default function MultiSwapComponent() {
               </AddReceiveTokenMultiSwapBtn>
             )}
           </>
-        )}
-        <SwapBlockDelimiter isLightTheme={isLightTheme} style={{ margin: '20px  27px 0 20px' }} />
-        {/* Labels block*/}
-        <DownDelimiterLabelsBlock
-          isLightTheme={isLightTheme}
-          style={{ marginTop: '20px', padding: '20 27px 16px 20px' }}>
-          <div style={{ padding: '0 27px 16px 20px' }}>
-            <LabelsBlockSubBlock isLightTheme={isLightTheme}>
-              <LabelsBlockImportantSpan isLightTheme={isLightTheme}>
-                Slippage Tolerance
-              </LabelsBlockImportantSpan>
-              <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
-                <span>1%</span>
-              </AdditionalOptionsSwapTokensSubBlock>
-            </LabelsBlockSubBlock>
-            <LabelsBlockSubBlock isLightTheme={isLightTheme}>
-              <LabelsBlockImportantSpan isLightTheme={isLightTheme}>
-                Transaction speed
-              </LabelsBlockImportantSpan>
-              <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
-                <span>$20 ^ Average</span>
-              </AdditionalOptionsSwapTokensSubBlock>
-            </LabelsBlockSubBlock>
-          </div>
-        </DownDelimiterLabelsBlock>
-        <SwapBlockExchangeLayout isLightTheme={isLightTheme} style={{ marginBottom: '40px' }}>
-          <Button
-            onClick={() => exchange()}
-            disabled={
-              isTokensLimitExceeded ||
-              false ||
-              sendTokenForExchangeAmount === '0' ||
-              sendTokenForExchangeAmount === 0 ||
-              sendTokenForExchangeAmount?.length === 0
-            }>
-            Exchange
-          </Button>
-        </SwapBlockExchangeLayout>
-      </SwapTokensMainSubBlock>
+
+          <SwapBlockDelimiter isLightTheme={isLightTheme} style={{ margin: '20px  27px 0 20px' }} />
+          {/* Labels block*/}
+          <DownDelimiterLabelsBlock
+            isLightTheme={isLightTheme}
+            style={{ marginTop: '20px', padding: '20 27px 16px 20px' }}>
+            <div style={{ padding: '0 27px 16px 20px' }}>
+              <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+                <LabelsBlockImportantSpan isLightTheme={isLightTheme}>
+                  Slippage Tolerance
+                </LabelsBlockImportantSpan>
+                <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
+                  <span>1%</span>
+                </AdditionalOptionsSwapTokensSubBlock>
+              </LabelsBlockSubBlock>
+              <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+                <LabelsBlockImportantSpan isLightTheme={isLightTheme}>
+                  Transaction speed
+                </LabelsBlockImportantSpan>
+                <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
+                  <span>$20 ^ Average</span>
+                </AdditionalOptionsSwapTokensSubBlock>
+              </LabelsBlockSubBlock>
+            </div>
+          </DownDelimiterLabelsBlock>
+          <SwapBlockExchangeLayout isLightTheme={isLightTheme} style={{ marginBottom: '40px' }}>
+            <Button
+              onClick={() => exchange()}
+              disabled={
+                isTokensLimitExceeded ||
+                false ||
+                sendTokenForExchangeAmount === '0' ||
+                sendTokenForExchangeAmount === 0 ||
+                sendTokenForExchangeAmount?.length === 0
+              }>
+              Exchange
+            </Button>
+          </SwapBlockExchangeLayout>
+        </SwapTokensMainSubBlock>
+      ) : (
+        <span style={{ display: 'flex', justifyContent: 'center', fontWeight: 'bold' }}>
+          Loading...
+        </span>
+      )}
     </SecondColumnSwapSubBlock>
   );
 }
