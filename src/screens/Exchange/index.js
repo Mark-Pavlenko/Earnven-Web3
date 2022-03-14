@@ -124,7 +124,7 @@ const makeCall = async (callName, contract, args, metadata = {}) => {
     }
     return result;
   } else {
-    // console.log('no call of that name!');
+    // // console.log('no call of that name!');
   }
 };
 
@@ -171,17 +171,17 @@ export default function SwapComponent() {
     slowSpeedIcon
   );
 
-  // console.log('addIconsGasPricesWithIcons exchange', addIconsGasPricesWithIcons);
+  // // console.log('addIconsGasPricesWithIcons exchange', addIconsGasPricesWithIcons);
 
-  console.log('123', initSendTokenSwap);
-  console.log('123 b', initReceiveFirstTokenSwap);
+  // console.log('123', initSendTokenSwap);
+  // console.log('123 b', initReceiveFirstTokenSwap);
 
   const walletData = useSelector((state) => state?.walletDataReducer.walletData);
 
-  // console.log('finalSendTokensList 000', finalSendTokensList);
-  // console.log('finalReceiveTokensList 000', finalReceiveTokensList);
-  // console.log('initSendFirstTokenSwap 000', initSendTokenSwap);
-  // console.log('initReceiveFirstTokenSwap 000', initReceiveFirstTokenSwap);
+  // // console.log('finalSendTokensList 000', finalSendTokensList);
+  // // console.log('finalReceiveTokensList 000', finalReceiveTokensList);
+  // // console.log('initSendFirstTokenSwap 000', initSendTokenSwap);
+  // // console.log('initReceiveFirstTokenSwap 000', initReceiveFirstTokenSwap);
 
   const [filteredData, setFilteredData] = useState([]);
   const [filteredReceiveTokensListData, setFilteredReceiveTokensListData] = useState([]);
@@ -246,7 +246,7 @@ export default function SwapComponent() {
   const openExchangersListPopover = (event, flag) => {
     setAnchorEl(event.currentTarget);
 
-    console.log('flag isOfferedByPopoverActivated', flag.isOfferedByPopoverActivated);
+    // console.log('flag isOfferedByPopoverActivated', flag.isOfferedByPopoverActivated);
 
     if (flag.isOfferedByPopoverActivated === true) {
       setisOfferedByPopoverActivated(true);
@@ -273,7 +273,7 @@ export default function SwapComponent() {
       dispatch(getWalletDataSaga(address));
       setSlippageTolerance(0.03);
     } catch (error) {
-      console.log('err swap init load', error);
+      // console.log('err swap init load', error);
     }
   }, []);
 
@@ -296,11 +296,11 @@ export default function SwapComponent() {
       setIsAbleToReplaceTokensInSingleSwap(false);
     }
 
-    // console.log(
+    // // console.log(
     //   'isAbleToReplaceTokensInSingleSwap test do ifSendTokenAvailableForSwap',
     //   ifSendTokenAvailableForSwap
     // );
-    // console.log(
+    // // console.log(
     //   ' isAbleToReplaceTokensInSingleSwap test do ifReceiveTokenAvailableForSwap',
     //   ifReceiveTokenAvailableForSwap
     // );
@@ -329,8 +329,8 @@ export default function SwapComponent() {
       initSendTokenSwap.address !== undefined &&
       initReceiveFirstTokenSwap.address !== undefined
     ) {
-      console.log('effect init SendTokenSwap', initSendTokenSwap);
-      console.log('effect init ReceiveFirstTokenSwap', initReceiveFirstTokenSwap);
+      // console.log('effect init SendTokenSwap', initSendTokenSwap);
+      // console.log('effect init ReceiveFirstTokenSwap', initReceiveFirstTokenSwap);
 
       convertExchangeTokensCourse({
         sendTokenForExchangeAddress: initSendTokenSwap.address,
@@ -374,7 +374,7 @@ export default function SwapComponent() {
       payload: initSendTokenSwap,
     });
 
-    // // console.log('toggleButton balance send token', initSendTokenSwap.balance);
+    // // // console.log('toggleButton balance send token', initSendTokenSwap.balance);
 
     setTokenSendUSDCurrency('$0.00');
     setTokensReceiveUSDCurrency('$0.00');
@@ -384,7 +384,7 @@ export default function SwapComponent() {
   };
 
   const searchTokensHandler = (event, searchTokensData) => {
-    // // console.log('single search init data', searchTokensData.tokensList);
+    // // // console.log('single search init data', searchTokensData.tokensList);
 
     let removedInitTokenValuesList = initFilteringModalTokensList(
       searchTokensData,
@@ -394,7 +394,7 @@ export default function SwapComponent() {
 
     const result = filteredTokensByName(event, removedInitTokenValuesList);
 
-    // // console.log('single search result 111', result, searchTokensData);
+    // // // console.log('single search result 111', result, searchTokensData);
     if (searchTokensData.searchSendTokensList === true) {
       let middle = result.filter((token) => token.symbol !== initSendTokenSwap.symbol);
       setFilteredData(middle);
@@ -414,7 +414,7 @@ export default function SwapComponent() {
       });
     }
     if (tokenData.USDCurrency !== undefined && tokenData.USDCurrency !== '$0.00') {
-      // console.log('test activation');
+      // // console.log('test activation');
       //
       setTokenSendUSDCurrency(
         `$${(tokenData.USDCurrency * parseFloat(tokenData.amount)).toFixed(5)}`
@@ -431,7 +431,7 @@ export default function SwapComponent() {
             tokenUSDCurrencyValue = response;
           })
           .catch((err) => {
-            // console.log('err of usd currency receive token', err);
+            // // console.log('err of usd currency receive token', err);
           });
 
         if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
@@ -456,7 +456,7 @@ export default function SwapComponent() {
   };
 
   let convertReceiveTokenToUSDCurrency = async (tokenData) => {
-    // console.log('receive tokenData single swap helper', tokenData);
+    // // console.log('receive tokenData single swap helper', tokenData);
 
     if (tokenData.amount === '') {
       tokenData.amount = '0';
@@ -478,7 +478,7 @@ export default function SwapComponent() {
           tokenUSDCurrencyValue = response;
         })
         .catch((err) => {
-          // console.log('err of usd currency receive token', err);
+          // // console.log('err of usd currency receive token', err);
         });
 
       if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
@@ -513,7 +513,7 @@ export default function SwapComponent() {
   }
 
   const selectTokenForExchange = (rawSelectedToken, flag) => {
-    // // console.log('flag', flag.isSendTokenChosen);
+    // // // console.log('flag', flag.isSendTokenChosen);
     setInitConvertReceiveTokenAmount('Loading...');
     let selectedToken;
     if (rawSelectedToken.balance === undefined) {
@@ -529,7 +529,7 @@ export default function SwapComponent() {
       selectedToken = rawSelectedToken;
     }
 
-    // // console.log('selectToken total', selectedToken);
+    // // // console.log('selectToken total', selectedToken);
 
     if (flag.isSendTokenChosen === true) {
       let ifSendTokenAvailableForSwap = finalReceiveTokensList.some((el) => {
@@ -601,7 +601,7 @@ export default function SwapComponent() {
   };
 
   const convertExchangeTokensCourse = async (convertTokensData) => {
-    console.log('convertTokensData single swap helper', convertTokensData);
+    // console.log('convertTokensData single swap helper', convertTokensData);
 
     try {
       await loadWeb3();
@@ -673,7 +673,7 @@ export default function SwapComponent() {
 
           let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
 
-          console.log('countedTokenAmount', countedTokenAmount);
+          // console.log('countedTokenAmount', countedTokenAmount);
 
           setReceiveTokenForExchangeAmount(countedTokenAmount);
 
@@ -691,7 +691,7 @@ export default function SwapComponent() {
 
           let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
 
-          // // console.log('single swap 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', countedTokenAmount);
+          // // // console.log('single swap 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', countedTokenAmount);
 
           setSendTokenForExchangeAmount(countedTokenAmount);
 
@@ -702,7 +702,7 @@ export default function SwapComponent() {
           });
         }
       } else {
-        // console.log('convertTokensData null amount orNAN error!');
+        // // console.log('convertTokensData null amount orNAN error!');
 
         convertReceiveTokenToUSDCurrency({
           amount: 0,
@@ -710,15 +710,15 @@ export default function SwapComponent() {
         });
       }
     } catch (err) {
-      console.log('smth went wrong');
+      // console.log('smth went wrong');
       setInitConvertReceiveTokenAmount('An error was occured!');
     }
   };
 
   const triggerTokenInputHandler = (value, tokenForSwap, chosenTokenType) => {
-    // // console.log('chosenTokenType value', value);
-    // // console.log('chosenTokenType tokenForSwap', tokenForSwap);
-    // // console.log('chosenTokenType tokenForSwap send type', chosenTokenType.isSendTokenSwapped);
+    // // // console.log('chosenTokenType value', value);
+    // // // console.log('chosenTokenType tokenForSwap', tokenForSwap);
+    // // // console.log('chosenTokenType tokenForSwap send type', chosenTokenType.isSendTokenSwapped);
 
     if (chosenTokenType.isSendTokenSwapped === true) {
       setSendTokenForExchangeAmount(value);
@@ -759,8 +759,8 @@ export default function SwapComponent() {
   };
 
   const tokensListModalHelper = (listModalData) => {
-    // console.log('isSendTokensList', listModalData);
-    // console.log('isSendTokensListModalOpen', listModalData.isSendTokensListModalOpen);
+    // // console.log('isSendTokensList', listModalData);
+    // // console.log('isSendTokensListModalOpen', listModalData.isSendTokensListModalOpen);
 
     if (listModalData.isSendTokensListModalOpen === true) {
       let searchTokensData = { tokensList: finalSendTokensList };
@@ -789,7 +789,7 @@ export default function SwapComponent() {
 
   const filterAmountInputFunction = (e, flag) => {
     let test = e.currentTarget.value.replace(/[^\d.-]/g, '').replace(/[^\w.]|_/g, '');
-    // console.log('regex test', test);
+    // // console.log('regex test', test);
 
     if (flag.isSendTokenSwapped === true) {
       setSendTokenForExchangeAmount(test);
@@ -814,18 +814,18 @@ export default function SwapComponent() {
     setAnchorEl(false);
   };
 
-  // console.log('selectedNewExchanger List', exchangersOfferedList);
-  // console.log('selectedNewExchanger chosen one', activeExchanger);
+  // // console.log('selectedNewExchanger List', exchangersOfferedList);
+  // // console.log('selectedNewExchanger chosen one', activeExchanger);
 
   const makeSwappedTokensOperation = async (swappedTokensData) => {
     setIsTokensSwappingActive(true);
     await loadWeb3();
     const web3 = window.web3;
     const metaMaskWalletAddress = await web3.eth.getAccounts();
-    // console.log('single swap tokens operation accounts metaMaskWalletAddress', metaMaskWalletAddress);
+    // // console.log('single swap tokens operation accounts metaMaskWalletAddress', metaMaskWalletAddress);
 
-    // console.log('single swap tokens operation walletData', walletData);
-    console.log('single swap tokens operation raw data object', swappedTokensData);
+    // // console.log('single swap tokens operation walletData', walletData);
+    // console.log('single swap tokens operation raw data object', swappedTokensData);
 
     //As exchanger - UniSwap_V3 by default
     const response = await axios.get(
@@ -833,18 +833,18 @@ export default function SwapComponent() {
     );
 
     //from: walletData.address
-    // console.log('single swap tokens operation 0x API obj', response.data);
+    // // console.log('single swap tokens operation 0x API obj', response.data);
 
     let totalObject = { ...response.data, from: metaMaskWalletAddress[0] };
 
-    console.log('single swap tokens operation total obj', totalObject);
+    // console.log('single swap tokens operation total obj', totalObject);
 
     try {
       await web3.eth.sendTransaction(totalObject);
-      console.log('single swap tokens operation - transaction in progress');
+      // console.log('single swap tokens operation - transaction in progress');
       setIsTokensSwappingActive(false);
     } catch (err) {
-      console.log('single swap tokens operation - tx failed::', err);
+      // console.log('single swap tokens operation - tx failed::', err);
       setIsTokensSwappingActive(false);
     }
   };
@@ -853,7 +853,7 @@ export default function SwapComponent() {
     await loadWeb3();
     const web3 = window.web3;
     const accounts = await web3.eth.getAccounts();
-    // console.log('account selected is :::', accounts[0]);
+    // // console.log('account selected is :::', accounts[0]);
 
     //useState with null
 
@@ -871,7 +871,7 @@ export default function SwapComponent() {
         await web3.eth.sendTransaction(txObject);
         // settxSuccess(true);
       } catch (error) {
-        // console.log('tx failed::', error);
+        // // console.log('tx failed::', error);
         // settxFailure(true);
       }
     } else {
@@ -879,7 +879,7 @@ export default function SwapComponent() {
     }
   }
 
-  // console.log('isAbleToReplaceTokensInSingleSwap test', isAbleToReplaceTokensInSingleSwap);
+  // // console.log('isAbleToReplaceTokensInSingleSwap test', isAbleToReplaceTokensInSingleSwap);
 
   const staticSlippageToleranceValueHandler = (slippageToleranceValue) => {
     setSlippageTolerance(slippageToleranceValue / 100);
@@ -888,28 +888,28 @@ export default function SwapComponent() {
   };
 
   const personalSlippageToleranceValueHandler = (slippageToleranceValue) => {
-    // console.log('slippageToleranceValue before', slippageToleranceValue);
+    // // console.log('slippageToleranceValue before', slippageToleranceValue);
     slippageToleranceValue = slippageToleranceValue
       .replace(/[^\d.-]/g, '')
       .replace(/[^\w.]|_/g, '');
 
-    // console.log('slippageToleranceValue after', slippageToleranceValue);
-    // console.log('slippageToleranceValue after length', slippageToleranceValue.length);
+    // // console.log('slippageToleranceValue after', slippageToleranceValue);
+    // // console.log('slippageToleranceValue after length', slippageToleranceValue.length);
     let totalSlippageTolerance;
     if (slippageToleranceValue.length !== 0) {
       totalSlippageTolerance = slippageToleranceValue / 100;
     } else {
       totalSlippageTolerance = 0;
     }
-    console.log('totalSlippageTolerance 1 totalSlipageTolerance', totalSlippageTolerance);
+    // console.log('totalSlippageTolerance 1 totalSlipageTolerance', totalSlippageTolerance);
     setRawPersonalSlippageTolerance(slippageToleranceValue);
     setPersonalSlippageTolerance(totalSlippageTolerance);
 
     // setAnchorEl(null);
   };
 
-  // console.log('slippageToleranceValue final', slippageTolerance);
-  // console.log('totalSlippageTolerance pesonal', personalSlippageTolerance);
+  // // console.log('slippageToleranceValue final', slippageTolerance);
+  // // console.log('totalSlippageTolerance pesonal', personalSlippageTolerance);
 
   const rewriteSlippageTolerance = (value) => {
     setSlippageTolerance(value);
