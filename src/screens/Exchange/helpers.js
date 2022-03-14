@@ -78,30 +78,44 @@ export const checkIfExchangedTokenLimitIsExceeded = (chosenTokenAmount, totalTok
 };
 
 //sushiswapV2 single swap exchange function
-export const singleSushiSwapV2 = async (tokensData) => {
-  //we need to get as a parameter 'slippage'. It will be percent. We takes sendTokenAmount and subtract slippage
-  //(ExpectedAmountTokens - slippage) then we have amount below for this percent. This is protection from exchange rate
-  // fluctuations. Then we put this value to contract like this:
-  // const minAmountOut = ExpectedAmountTokens - slippage.
-  // minAmountOut we will send to contract.
-  // console.log('single swap sushiswapV2  sendTokenAddress', tokensData.sendTokenAddress);
-  // console.log('single swap sushiswapV2  sendTokenAmount', tokensData.sendTokenAmount);
-  // console.log('single swap sushiswapV2  firstReceiveToken', tokensData.receiveTokenAddress);
-  // console.log('single swap sushiswapV2 gasPrice', tokensData.gasPrice);
-  //liquidity pool functional - for couple of receive tokens
-  // await loadWeb3();
-  // const web3 = window.web3;
-  // const accounts = await web3.eth.getAccounts();
-  // var tokenContract = new web3.eth.Contract(ERC20ABI, sendTokenAddress);
-  // const oneClickContract = new web3.eth.Contract(
-  //   OneClickLiquidity,
-  //   Addresses.oneClickSushiV2Contract
-  // );
-  // await tokenContract.methods
-  //   .approve(Addresses.oneClickSushiV2Contract, sendTokenAmount)
-  //   .send({ from: accounts[0], gasPrice: web3.utils.toWei(gasPrice, 'gwei') });
-  // await oneClickContract.methods
-  //   //.addLiquidityOneClick(tokenA, tokenB, sendTokenAddress, sendTokenAmount, minAmountOut) //examle of sending minAmountOut to contract
-  //   .addLiquidityOneClick(tokenA, tokenB, sendTokenAddress, sendTokenAmount)
-  //   .send({ from: accounts[0], gasPrice: web3.utils.toWei(gasPrice, 'gwei') });
+export const singleSushiSwapV2 = async (tokensData) => {};
+
+export const getTokenUSDAmount = async (tokenData) => {
+  console.log('sagas USD receive tokenData', tokenData);
+
+  if (tokenData.amount === '') {
+    tokenData.amount = '0';
+  }
+
+  let tokenUSDCurrencyValue;
+  let finalUSDCurrencyValue;
+
+  if (tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+    await axios
+      .get(
+        `https://api.ethplorer.io/getTokenInfo/${tokenData.tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
+      )
+      .then(async (response) => {
+        tokenUSDCurrencyValue = response;
+      })
+      .catch((err) => {
+        console.log('err of usd currency receive token', err);
+      });
+
+    console.log('tokenUSDCurrencyValue.data.price.rate', tokenUSDCurrencyValue.data.price.rate);
+
+    if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
+      finalUSDCurrencyValue =
+        tokenUSDCurrencyValue.data.price.rate * parseFloat(tokenData.amount).toFixed(2);
+    } else {
+      finalUSDCurrencyValue = -1;
+    }
+  } else {
+    const ethDollarValue = await axios.get(
+      'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
+    );
+    finalUSDCurrencyValue = ethDollarValue.data.ethereum.usd * parseFloat(tokenData.amount);
+  }
+  finalUSDCurrencyValue = finalUSDCurrencyValue.toFixed(3);
+  return { ...tokenData.tokenData, USDCurrency: finalUSDCurrencyValue };
 };

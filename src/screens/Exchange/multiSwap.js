@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
+  AbsentFoundTokensBlock,
   AdditionalOptionsSwapTokensSubBlock,
   AddReceiveTokenMultiSwapBtn,
   ChosenMultiSwapSendReceiveTokenValueInput,
@@ -7,12 +8,18 @@ import {
   ColumnMainSubTitles,
   ColumnMainTitles,
   DownDelimiterLabelsBlock,
+  ExceededAmountTokensLimitWarning,
+  ExchangerBestRateSpan,
   ExchangerElementListItem,
+  ExchangerElementSpan,
+  ExchangerIcon,
+  ExchangerMainList,
   ExchangersLayout,
   ExchangersLayoutTitlesBlock,
+  ExchangersMainListLayout,
   ExchangersMainSubLayout,
-  ExchangerMainList,
   FirstSubLayoutMultiSwapReceiveTokensBlock,
+  GreenDotIcon,
   LabelsBlockImportantSpan,
   LabelsBlockSubBlock,
   LabelsBlockSubBlockSpan,
@@ -20,43 +27,35 @@ import {
   MultiSwapReceiveTokensBlock,
   MultiSwapSendTokensChooseBlock,
   MultiSwapSendValueLabel,
+  MultiSwapSendValueLabelsLayout,
   MultiSwapTokenAvatar,
   NewMultiSwapButton,
   OfferedByLayoutLabelBlock,
+  SaveSelectedExchangerButton,
+  SearchTokensModalTextField,
   SecondColumnSwapSubBlock,
   SecondColumnTitleBlock,
   SecondColumnTitleHeaderBlock,
   SecondSubLayoutMultiSwapReceiveTokensBlock,
+  SendBlockLabels,
   SendReceiveSubBlock,
+  SendTokenBalance,
+  SendTokenConvertedMeasures,
   SendTokenImg,
+  SendTokenLabelsBlock,
+  SendTokenModalListItem,
+  SendTokenName,
+  SendTokensModalList,
+  SubLayoutReceiveTokensBlock,
   SwapBlockDelimiter,
   SwapBlockExchangeLayout,
   SwapTokensMainSubBlock,
   SwapTokensOfferedBySubBlock,
   SwitchTokensBtn,
-  USDCurrencyInputBlock,
-  ExchangerElementSpan,
-  ExchangerBestRateSpan,
-  ExchangerIcon,
-  GreenDotIcon,
-  ExchangersMainListLayout,
-  SaveSelectedExchangerButton,
   TokensModalSubLayout,
-  SearchTokensModalTextField,
-  SendTokensModalList,
-  SendTokenModalListItem,
-  SendTokenLabelsBlock,
-  SendTokenName,
-  SendTokenConvertedMeasures,
-  SendTokenBalance,
-  AbsentFoundTokensBlock,
-  ExceededAmountTokensLimitWarning,
-  SubLayoutReceiveTokensBlock,
+  USDCurrencyInputBlock,
   USDCurrencySendInputBlock,
-  MultiSwapSendValueLabelsLayout,
-  SendBlockLabels,
 } from './styled';
-import EthIcon from '../../assets/icons/ethereum.svg';
 import chevronDownBlack from '../../assets/icons/chevronDownLightTheme.svg';
 import chevronDownLight from '../../assets/icons/chevronDownLight.svg';
 import switchTokensLight from '../../assets/icons/switchTokensLight.svg';
@@ -66,22 +65,14 @@ import plusIconDark from '../../assets/icons/plusIconDark.svg';
 import plusIconLight from '../../assets/icons/plusIconLight.svg';
 import { Button } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import daiICon from '../../assets/icons/daiIcon.svg';
 import { makeStyles } from '@material-ui/styles';
-import axios from 'axios';
 import actionTypes from '../../constants/actionTypes';
-import { getTokenDataSaga } from '../../store/currentTokenData/actions';
-import { useParams } from 'react-router-dom';
-import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
 import Popover from '@mui/material/Popover';
 import greenDot from '../../assets/icons/greenDot.svg';
-
 import paraSwapIcon from '../../assets/icons/exchangers/paraSwapExchangerIcon.svg';
-import uniswapExchangerIcon from '../../assets/icons/exchangers/uniswapExchangerIcon.svg';
 
 import exchangersOfferedList from './exchangersOfferedListPolygon.js';
 // import sendTokensMockList from './sendTokensMockList.json';
-import sendTokensMockList from './sendTokensMockListPolygon.js';
 import SelectTokensModalContainer from './selectTokensModal';
 import OutsideClickHandler from './outsideClickHandler';
 import { CloseButton, Header, ModalTitle } from './selectTokensModal/styles';
@@ -90,15 +81,14 @@ import closeModalIconDark from '../../assets/icons/closenftdark.svg';
 import searchTokensImportModalDark from '../../assets/icons/searchTokensInputModalDark.svg';
 import searchTokensImportModalLight from '../../assets/icons/searchTokensButtonMobileLight.svg';
 import Avatar from 'react-avatar';
-import Loader from 'react-loader-spinner';
 import {
   checkIfExchangedTokenLimitIsExceeded,
   convertSendTokenToUSDCurrencyHelper,
   filteredTokensByName,
+  getTokenUSDAmount,
   initFilteringModalTokensList,
 } from './helpers';
 import { useWeb3React } from '@web3-react/core';
-import { ethers } from 'ethers';
 import Web3 from 'web3';
 import multiCallAbi from '../../abi/MultiCall.json';
 import TOKENDECIMALSABI from '../../abi/TokenDecomals.json';
@@ -127,6 +117,10 @@ export default function MultiSwapComponent() {
   let textInput = useRef(null);
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
+
+  // let tokenWithUSDCurrencyAmount = useSelector(
+  //   (state) => state.tokensListReducer.tokenWithUSDCurrencyAmount
+  // );
 
   const isLoadingSendTokensList = useSelector(
     (state) => state.tokensListReducer.isSendMultiSwapTokensListLoading
@@ -173,80 +167,31 @@ export default function MultiSwapComponent() {
   let finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
 
   async function getWeb3() {
-    // const provider = active ? await connector.getProvider() : ethers.getDefaultProvider();
-    const web3 = await new Web3(window.ethereum);
-    return web3;
+    return new Web3(window.ethereum);
   }
 
   let convertSendTokenToUSDCurrency = (tokenData) => {
     let convertedToUSDValue = convertSendTokenToUSDCurrencyHelper(tokenData);
-    // console.log('multiswap convertedToUSDValue', convertedToUSDValue);
     setTokenSendUSDCurrency(convertedToUSDValue);
     setTokenSendAmount(tokenData.amount);
   };
 
   let convertReceiveTokenToUSDCurrency = async (amount, tokenData) => {
-    // console.log('USD receive tokenData', tokenData);
-    //
-    // if (amount === '') {
-    //   amount = '0';
-    // }
-    //
-    // let tokenUSDCurrencyValue;
-    // let finalUSDCurrencyValue;
-    //
-    // if (tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
-    //   await axios
-    //     .get(
-    //       `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
-    //     )
-    //     .then(async (response) => {
-    //       tokenUSDCurrencyValue = response;
-    //     })
-    //     .catch((err) => {
-    //       console.log('err of usd currency receive token', err);
-    //     });
-    //
-    //   console.log('tokenUSDCurrencyValue res', tokenUSDCurrencyValue);
-    //
-    //   if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
-    //     finalUSDCurrencyValue =
-    //       tokenUSDCurrencyValue.data.price.rate * parseFloat(amount).toFixed(2);
-    //   } else {
-    //     finalUSDCurrencyValue = 'Price not available';
-    //   }
-    // } else {
-    //   const ethDollarValue = await axios.get(
-    //     'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
-    //   );
-    //   finalUSDCurrencyValue = ethDollarValue.data.ethereum.usd * parseFloat(amount).toFixed(2);
-    // }
-    //
-    // console.log('multiswap receive USD finalUSDCurrencyValue', finalUSDCurrencyValue);
-    // console.log('typeof multiswap receive USD finalUSDCurrencyValue', typeof finalUSDCurrencyValue);
-    //
-    // let receiveTokensListCopy = [...initReceiveMultiSwapTokensList];
-    // console.log('receiveTokensListCopy', receiveTokensListCopy);
-    //
-    // const needIndex = receiveTokensListCopy.findIndex(
-    //   (token) => token.address === tokenData.address
-    // );
-    //
-    // console.log('multiswap receive USD index', needIndex);
-    //
-    // if (needIndex !== -1) {
-    //   receiveTokensListCopy[needIndex].USDCurrency = finalUSDCurrencyValue;
-    //   receiveTokensListCopy[needIndex].amount = amount;
-    // }
-    //
-    // dispatch({
-    //   type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST,
-    //   payload: receiveTokensListCopy,
-    // });
-    //
-    // console.log('multiswap receive USD total', initReceiveMultiSwapTokensList);
-    //
-    // await getAmountMulti();
+    await getTokenUSDAmount({ amount, tokenData }).then((res) => {
+      let receiveTokensListCopy = [...initReceiveMultiSwapTokensList];
+      const needIndex = receiveTokensListCopy.findIndex(
+        (token) => token.address === tokenData.address
+      );
+      if (needIndex !== -1) {
+        receiveTokensListCopy[needIndex].USDCurrency = res.USDCurrency;
+        receiveTokensListCopy[needIndex].amount = amount;
+      }
+      dispatch({
+        type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST,
+        payload: receiveTokensListCopy,
+      });
+    });
+    await getAmountMulti();
   };
 
   async function loadWeb3() {
@@ -507,10 +452,6 @@ export default function MultiSwapComponent() {
     setSendTokenForExchangeAmount(0);
 
     if (initSendMultiSwapTokenList[0] !== undefined && initSendMultiSwapTokenList.length !== 0) {
-      // for (let i = 0; i < initReceiveMultiSwapTokensList.length; i++) {
-      //   convertReceiveTokenToUSDCurrency(1, initReceiveMultiSwapTokensList[i]);
-      // }
-
       let ifSendTokenAvailableForSwap = finalReceiveTokensList.some((el) => {
         if (el.address === initSendMultiSwapTokenList[0].address) {
           return true;
@@ -625,8 +566,6 @@ export default function MultiSwapComponent() {
                           amount: e.target.value,
                           ...sendToken,
                         });
-
-                        // convertReceiveTokenToUSDCurrency
 
                         const isLimitExceeded = checkIfExchangedTokenLimitIsExceeded(
                           e.target.value,
@@ -758,10 +697,10 @@ export default function MultiSwapComponent() {
                         <MultiSwapSendValueLabel
                           isLightTheme={isLightTheme}
                           style={{ marginLeft: 'auto' }}>
-                          {receiveToken.USDCurrency !== -1 ? (
-                            <>${receiveToken.USDCurrency.toFixed(5)}</>
-                          ) : (
+                          {receiveToken.USDCurrency < 0 ? (
                             <>Price not available</>
+                          ) : (
+                            <>${receiveToken.USDCurrency}</>
                           )}
                         </MultiSwapSendValueLabel>
                       </div>

@@ -63,3 +63,10 @@ export const setInitReceiveMultiSwapTokensListLoading = (payload) => {
     payload,
   };
 };
+//unused
+export const getInitTokenWithUSDCurrencyAmount = (payload) => {
+  return {
+    type: actionType.SET_INIT_USD_CURRENCY_TOKEN_AMOUNT,
+    payload,
+  };
+};

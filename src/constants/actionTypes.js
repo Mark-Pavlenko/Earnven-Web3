@@ -1,5 +1,5 @@
-import { setInitialSendTokenSingleSwap } from '../store/exchangeTokensLists/actions';
-import { getInitConvertedExchangeTokensCourseSagaWatcher } from '../store/exchangeTokensLists/sagas';
+// import { setInitialSendTokenSingleSwap } from '../store/exchangeTokensLists/actions';
+// import { getInitUSDCurrencyAmountSagaWatcher } from '../store/exchangeTokensLists/sagas';
 
 export default {
   GET_ACCOUNT_BALANCE: 'ACCOUNT_BALANCE',
@@ -21,8 +21,8 @@ export default {
   SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_OVERWRITE:
     'SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_OVERWRITE',
 
-  GET_INIT_CONVERTED_EXCHANGE_TOKENS_COURSE: 'GET_INIT_CONVERTED_EXCHANGE_TOKENS_COURSE',
-  SET_INIT_CONVERTED_EXCHANGE_TOKENS_COURSE: 'SET_INIT_CONVERTED_EXCHANGE_TOKENS_COURSE',
+  GET_INIT_USD_CURRENCY_TOKEN_AMOUNT: 'GET_INIT_USD_CURRENCY_TOKEN_AMOUNT',
+  SET_INIT_USD_CURRENCY_TOKEN_AMOUNT: 'SET_INIT_USD_CURRENCY_TOKEN_AMOUNT',
 
   SET_ACCOUNT_LOADER: 'SET_ACCOUNT_LOADER',
   SET_TWITTER_DATA: 'SET_TWITTER_DATA',

@@ -6,7 +6,7 @@ const initialState = {
   initSendTokenSwap: {},
   initSendTokenMultiSwap: {},
   initReceiveFirstTokenSwap: {},
-  initReceiveSecondTokenSwap: {},
+  tokenWithUSDCurrencyAmount: {},
   initReceiveMultiSwapTokensList: [],
   isSendMultiSwapTokensListLoading: true,
   isReceiveMultiSwapTokensListLoading: true,
@@ -63,6 +63,12 @@ export const tokensListReducer = (state = initialState, action) => {
       return {
         ...state,
         initReceiveMultiSwapTokensList: action?.payload,
+      };
+    //unused
+    case actionTypes.SET_INIT_USD_CURRENCY_TOKEN_AMOUNT:
+      return {
+        ...state,
+        tokenWithUSDCurrencyAmount: action?.payload,
       };
 
     default:
