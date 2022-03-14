@@ -116,7 +116,7 @@ export const ChangeToken = styled.div`
   font-weight: 500;
   font-size: 16px;
   line-height: 25px;
-  color: #4453ad;
+  color: ${(props) => (props.isLightTheme ? '#4453ad !important' : '#8F86FF !important')};
   margin-bottom: 20px;
   position: relative;
   &:before {
@@ -124,7 +124,7 @@ export const ChangeToken = styled.div`
     width: 114px;
     height: 1px;
     position: absolute;
-    background-color: #1e1e20;
+    background-color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#ffffff')};
     opacity: 0.1;
     top: 14px;
     left: -159px;
@@ -134,7 +134,7 @@ export const ChangeToken = styled.div`
     width: 114px;
     height: 1px;
     position: absolute;
-    background-color: #1e1e20;
+    background-color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#ffffff')};
     opacity: 0.1;
     top: 14px;
     left: 73px;

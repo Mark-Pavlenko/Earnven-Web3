@@ -147,10 +147,10 @@ export const LiquidityTableItem = ({
           : state.menuIsOpen
           ? 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'
           : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-        // backdropFilter: 'blur(35px)',
+        backdropFilter: 'blur(35px)',
         // mixBlendMode: 'normal',
         border: 'none',
-        borderRadius: state.menuIsOpen ? '7px 7px 0 0' : '7px',
+        borderRadius: state.menuIsOpen ? '7px 7px 0 0' : '7px 7px 7px 7px',
         color: '#464C52',
         height: '60px',
         width: '100%',
@@ -397,6 +397,7 @@ export const LiquidityTableItem = ({
           <SelectWrapper isLightTheme={theme}>
             <SelectTitle isLightTheme={theme}>{'Supply a token'}</SelectTitle>
             <Select
+              //defaultMenuIsOpen
               defaultValue={selectInitialValue}
               styles={selectStyle}
               options={updatedOptions}
@@ -421,15 +422,17 @@ export const LiquidityTableItem = ({
                   setInputType('single');
                 }}
               />
-              <Balance isLightTheme={theme}>{`Balance: ${parseFloat(supplyTokenBalance).toFixed(
-                2
-              )}`}</Balance>
+              <Balance isLightTheme={theme}>{`Balance: ${
+                parseFloat(supplyTokenBalance) > 0
+                  ? parseFloat(supplyTokenBalance).toFixed(8)
+                  : '0.00'
+              }`}</Balance>
             </InputBlock>
             {/*<ButtonsBlock>*/}
             {/*  <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>*/}
             {/*</ButtonsBlock>*/}
             <ButtonsBlock>
-              <ChangeToken>{'Or'}</ChangeToken>
+              <ChangeToken isLightTheme={theme}>{'Or'}</ChangeToken>
             </ButtonsBlock>
             <SelectTitle isLightTheme={theme}>{'Supply a token'}</SelectTitle>
             {/*input-------------------->*/}

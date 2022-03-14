@@ -87,6 +87,7 @@ export const GasMenuItem = styled.div`
   height: 40px;
   margin-left: 13px;
   margin-right: 13px;
+  border-radius: 10px;
   padding-left: 12px;
   padding-right: 19px;
   color: ${(props) => (props.isLightTheme ? 'black' : 'white')};

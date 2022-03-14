@@ -457,15 +457,17 @@ export const InvestTableItem = ({
                   setInputType('single');
                 }}
               />
-              <Balance isLightTheme={theme}>{`Balance: ${parseFloat(supplyTokenBalance).toFixed(
-                2
-              )}`}</Balance>
+              <Balance isLightTheme={theme}>{`Balance: ${
+                parseFloat(supplyTokenBalance) > 0
+                  ? parseFloat(supplyTokenBalance).toFixed(8)
+                  : '0.00'
+              }`}</Balance>
             </InputBlock>
             {/*<ButtonsBlock>*/}
             {/*  <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>*/}
             {/*</ButtonsBlock>*/}
             <ButtonsBlock>
-              <ChangeToken>{'Or'}</ChangeToken>
+              <ChangeToken isLightTheme={theme}>{'Or'}</ChangeToken>
             </ButtonsBlock>
             <SelectTitle isLightTheme={theme}>{'Supply a token'}</SelectTitle>
             {/*input-------------------->*/}
@@ -672,7 +674,7 @@ export const InvestTableItem = ({
           </MyPoolsItemButton>
           {item.protocol === 'Sushiswap' ? (
             <Link
-              to={`/${address}/sushiswap/address/${item.poolDetails.token0Address}/${item.poolDetails.token1Address}`}>
+              to={`/${address}/sushiswap/address/${item.poolDetails.token0Address}/${item.poolDetails.token1Address}/${item.token0Symbol}/${item.token1Symbol}`}>
               <InfoButton style={{ gridArea: 'info' }} isLightTheme={theme}>
                 {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
               </InfoButton>

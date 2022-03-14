@@ -15,10 +15,8 @@ import { PoolDetails } from '../liquidityPoolDetails/poolDetails';
 
 export default function Index(props) {
   const navigate = useNavigate();
-  const { address, token0, token1 } = useParams();
+  const { address, token0, token1, token0Symbol, token1Symbol } = useParams();
 
-  console.log('Prabha pairToken0 - ', token0);
-  console.log('Prabha pairToken1 - ', token1);
   const [tokenid, setTokenPair] = useState();
   const [tokenA, setTokenA] = useState();
   const [tokenB, setTokenB] = useState();
@@ -81,7 +79,14 @@ export default function Index(props) {
 
   return (
     <div style={{ margin: 'auto' }}>
-      <PoolDetailsPage address={address} token0={token0} token1={token1} tokenid={tokenid} />
+      <PoolDetailsPage
+        address={address}
+        token0={token0}
+        token1={token1}
+        token0Symbol={token0Symbol}
+        token1Symbol={token1Symbol}
+        tokenid={tokenid}
+      />
       {/*{navigate(`/${address}/sushiswap/pair/${tokenid}`)}*/}
       {/*<Link to={`/${address}/sushiswap/pair/${tokenid}`} />*/}
     </div>
