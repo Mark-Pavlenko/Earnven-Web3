@@ -4,7 +4,7 @@ const initialState = {
   sendTokensList: [],
   receiveTokensList: [],
   initSendTokenSwap: {},
-  initSendTokenMultiSwap: {},
+  initSendTokenMultiSwap: [],
   initReceiveFirstTokenSwap: {},
   tokenWithUSDCurrencyAmount: {},
   initReceiveMultiSwapTokensList: [],

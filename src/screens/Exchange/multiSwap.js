@@ -179,6 +179,7 @@ export default function MultiSwapComponent() {
   let convertReceiveTokenToUSDCurrency = async (amount, tokenData) => {
     await getTokenUSDAmount({ amount, tokenData }).then((res) => {
       console.log('res', res);
+
       let receiveTokensListCopy = [...initReceiveMultiSwapTokensList];
       const needIndex = receiveTokensListCopy.findIndex(
         (token) => token.address === tokenData.address
@@ -376,8 +377,8 @@ export default function MultiSwapComponent() {
         receiveTokensListCopy[needIndex] = {
           ...selectedSwapToken,
           receiveTokensListItem: true,
-          USDCurrency: (0.0).toFixed(5),
-          // amount: 0,
+          USDCurrency: (0.0).toFixed(3),
+          amount: 0,
         };
       }
 
@@ -433,13 +434,28 @@ export default function MultiSwapComponent() {
   console.log('isSendTokenSelectedSwapped', isSendTokenSelectedSwapped);
 
   const toggleSwappedTokens = () => {
+    // [...initReceiveMultiSwapTokensList];
+    let sendTokensListCopy = initSendMultiSwapTokenList.map((obj) => {
+      return { ...obj, amount: 0, USDCurrency: (0.0).toFixed(3) };
+      // return obj;
+    });
+    let receiveTokensListCopy = initReceiveMultiSwapTokensList.map((obj) => {
+      if (Number(obj.amount) > 0) {
+        return { ...obj, amount: 0, USDCurrency: (0.0).toFixed(3) };
+      }
+      return obj;
+    });
+
+    console.log('sendTokensListCopy toggle', sendTokensListCopy);
+    console.log('receiveTokensListCopy toggle', receiveTokensListCopy);
+
     dispatch({
       type: actionTypes.SET_INIT_SEND_MULTISWAP_TOKEN,
-      payload: initReceiveMultiSwapTokensList,
+      payload: receiveTokensListCopy,
     });
     dispatch({
       type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST,
-      payload: initSendMultiSwapTokenList,
+      payload: sendTokensListCopy,
     });
 
     // setTokenSendUSDCurrency('$0.00');
