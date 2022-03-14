@@ -40,6 +40,7 @@ import {
   addIconsGasPrices,
   numberWithCommas,
 } from '../../../../../commonFunctions/commonFunctions';
+import Addresses from '../../../../../contractAddresses';
 import { SelectWrapper } from '../../../styledComponents';
 import ROUTERABI from '../../../../../abi/UniRouterV2.json';
 import actionTypes from '../../../../../constants/actionTypes';
@@ -47,15 +48,11 @@ import { GasMenuItem } from '../../../../gasDropDownMenu/styles';
 import { SvgComponent } from '../../../svgComponent/svgComponent';
 import TOKENDECIMALSABI from '../../../../../abi/TokenDecomals.json';
 import fastDice from '../../../../../assets/icons/fastDice-icon.svg';
-import fastDiceDark from '../../../../../assets/icons/fastDiceNight-icon.svg';
 import slowDice from '../../../../../assets/icons/slowDice-icon.svg';
-import slowDiceDark from '../../../../../assets/icons/slowDiceNight-icon.svg';
 import { SelectOptionsWithJSX } from '../../../HOC/selectOptionsWithJSX';
 import middleDice from '../../../../../assets/icons/middleDice-icon.svg';
-import middleDiceDark from '../../../../../assets/icons/middleDiceNight-icon.svg';
 import ModalContainer from '../../../../common/modalContainer/modalContainer';
 import { CommonSubmitButton } from '../../../../../screens/TokenPage/components/styledComponentsCommon';
-import Addresses from '../../../../../contractAddresses';
 
 export const LiquidityTableItem = ({
   item,
@@ -68,6 +65,7 @@ export const LiquidityTableItem = ({
 }) => {
   const dispatch = useDispatch();
   const address = useParams().address;
+  const currentWallet = JSON.parse(localStorage.getItem('mywallet'));
 
   const GasPrices = useSelector((state) => state.gesData.gasPriceData);
   const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
@@ -98,7 +96,7 @@ export const LiquidityTableItem = ({
     const getBalance = async () => {
       await loadWeb3();
       const web3 = window.web3;
-      const getBalance = await web3.eth.getBalance(tokenAddress);
+      const getBalance = await web3.eth.getBalance(currentWallet[0].address);
       const ethBalance = web3.utils.fromWei(getBalance, 'ether');
       setSupplyTokenBalance(ethBalance);
     };
@@ -523,7 +521,7 @@ export const LiquidityTableItem = ({
                   updateGasValue(option.value, option.label);
                 }}
                 sx={{ py: 1, px: 2.5 }}>
-                <GasMenuItem isLightTheme={theme}>
+                <GasMenuItem isLightTheme={theme} selected={option.label === selected}>
                   <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                     <img src={option.icon} alt="" />
                     <GasPriceLabel

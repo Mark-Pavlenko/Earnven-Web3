@@ -356,7 +356,6 @@ export default function Chart(props) {
     async function getData() {
       try {
         const response = await getPoolTokenImage(token0, token1);
-        // setToken1Image(response[0])
         setToken0Image(response.token0Image);
         setToken1Image(response.token1Image);
       } catch (err) {

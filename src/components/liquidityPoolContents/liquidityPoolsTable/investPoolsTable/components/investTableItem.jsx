@@ -74,6 +74,8 @@ export const InvestTableItem = ({
   const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
   const allTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
 
+  const currentWallet = JSON.parse(localStorage.getItem('mywallet'));
+
   const gasPricesWithIcons = addIconsGasPrices(GasPrices, fastDice, middleDice, slowDice, theme);
 
   const [isModalVisible, setIsModalVisible] = useState('');
@@ -105,7 +107,8 @@ export const InvestTableItem = ({
     const getBalance = async () => {
       await loadWeb3();
       const web3 = window.web3;
-      const getBalance = await web3.eth.getBalance(tokenAddress);
+      //const accounts = await web3.eth.getAccounts();
+      const getBalance = await web3.eth.getBalance(currentWallet[0].address);
       const ethBalance = web3.utils.fromWei(getBalance, 'ether');
       setSupplyTokenBalance(ethBalance);
     };
@@ -553,7 +556,7 @@ export const InvestTableItem = ({
                 }}
                 selected={option.label === selected}
                 sx={{ py: 1, px: 2.5 }}>
-                <GasMenuItem isLightTheme={theme}>
+                <GasMenuItem isLightTheme={theme} selected={option.label === selected}>
                   <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                     <img src={option.icon} alt="" />
                     <GasPriceLabel
