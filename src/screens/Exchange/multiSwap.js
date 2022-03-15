@@ -330,6 +330,7 @@ export default function MultiSwapComponent() {
       initSendMultiSwapTokenList[0],
       initReceiveMultiSwapTokensList
     );
+    console.log('removedInitTokenValuesList', removedInitTokenValuesList);
     setTokensListModal(removedInitTokenValuesList);
     setIsSendTokenSelectedSwapped(payload.isSendModalOpen);
   };
@@ -904,9 +905,7 @@ export default function MultiSwapComponent() {
                   }}>
                   <TokensModalSubLayout isLightTheme={isLightTheme}>
                     <Header>
-                      <ModalTitle isLightTheme={isLightTheme}>
-                        Select token for send multiswap
-                      </ModalTitle>
+                      <ModalTitle isLightTheme={isLightTheme}>Select token</ModalTitle>
                       <CloseButton
                         onClick={() => {
                           setOpenTokensModal(false);
@@ -992,11 +991,19 @@ export default function MultiSwapComponent() {
                                 <SendTokenName isLightTheme={isLightTheme}>
                                   {object.name}
                                 </SendTokenName>
-                                <SendTokenConvertedMeasures
-                                  isLightTheme={isLightTheme}
-                                  style={{ visibility: 'hidden' }}>
-                                  409,333 UNI · $19,18
-                                </SendTokenConvertedMeasures>
+                                {isSendTokenSelectedSwapped ? (
+                                  <SendTokenConvertedMeasures isLightTheme={isLightTheme}>
+                                    {`${object.balance} ${object.symbol} · 
+                                    $ ${object.singleTokenUSDCurrencyAmount.toFixed(5)} 
+                                    `}
+                                  </SendTokenConvertedMeasures>
+                                ) : (
+                                  <SendTokenConvertedMeasures
+                                    isLightTheme={isLightTheme}
+                                    style={{ visibility: 'hidden' }}>
+                                    409,333 UNI · $19,18
+                                  </SendTokenConvertedMeasures>
+                                )}
                               </div>
                             </SendTokenLabelsBlock>
                             <SendTokenBalance isLightTheme={isLightTheme}>
