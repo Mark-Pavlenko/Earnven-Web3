@@ -10,13 +10,13 @@ export const RootStyle = styled('div')`
       ? `url(${require(`./../assets/images/lightDashboard.jpg`).default})`
       : `#0B0E1D`};
   @media (min-width: 1921px) {
-    min-height: 100%;
-    height: auto;
-    background-repeat: no-repeat;
-    background-size: cover;
+    //min-height: 100%;
+    //height: auto;
+    //background-repeat: no-repeat;
+    //background-size: cover;
     background: ${(props) =>
       props.isLightTheme
-        ? `url(${require(`./../assets/images/lightDashboard.jpg`).default})`
+        ? `url(${require(`../assets/images/lightDashboardBig.jpg`).default})`
         : `#0B0E1D`};
   }
   @media (max-width: 480px) {
