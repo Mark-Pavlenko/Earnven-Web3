@@ -87,7 +87,7 @@ export const getTokenUSDAmount = async (tokenData) => {
     );
     finalUSDCurrencyValue = ethDollarValue.data.ethereum.usd * parseFloat(tokenData.amount);
   }
-  finalUSDCurrencyValue = finalUSDCurrencyValue.toFixed(3);
+  finalUSDCurrencyValue = finalUSDCurrencyValue.toFixed(2);
   return { ...tokenData.tokenData, USDCurrency: finalUSDCurrencyValue };
 };
 
