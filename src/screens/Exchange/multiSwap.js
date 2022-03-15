@@ -994,7 +994,10 @@ export default function MultiSwapComponent() {
                                 {isSendTokenSelectedSwapped ? (
                                   <SendTokenConvertedMeasures isLightTheme={isLightTheme}>
                                     {`${object.balance} ${object.symbol} · 
-                                    $ ${object.singleTokenUSDCurrencyAmount.toFixed(5)} 
+                                    $ ${
+                                      Math.round(object.singleTokenUSDCurrencyAmount * 100000) /
+                                      100000
+                                    } 
                                     `}
                                   </SendTokenConvertedMeasures>
                                 ) : (
@@ -1009,7 +1012,13 @@ export default function MultiSwapComponent() {
                             <SendTokenBalance isLightTheme={isLightTheme}>
                               {object.balance !== undefined && isSendTokenSelectedSwapped === true && (
                                 // <Loader type="Rings" color="#BB86FC" height={30} width={30} />
-                                <span>${object.balance}</span>
+                                <span>
+                                  {`$${
+                                    Math.round(
+                                      object.balance * object.singleTokenUSDCurrencyAmount * 100000
+                                    ) / 100000
+                                  }`}
+                                </span>
                               )}
                             </SendTokenBalance>
                           </SendTokenModalListItem>
