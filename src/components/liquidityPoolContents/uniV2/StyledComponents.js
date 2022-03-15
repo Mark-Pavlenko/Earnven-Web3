@@ -117,7 +117,6 @@ export const ChangeToken = styled.div`
   font-size: 16px;
   line-height: 25px;
   color: ${(props) => (props.isLightTheme ? '#4453ad !important' : '#8F86FF !important')};
-  margin-bottom: 20px;
   position: relative;
   &:before {
     content: '';
@@ -145,6 +144,16 @@ export const ButtonsBlock = styled.div`
   align-items: center;
   justify-content: center;
   margin: 11px 0;
+`;
+
+export const DividerBlock = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 57px 0;
+  @media (max-width: 375px) {
+    margin: 52px 0;
+  }
 `;
 
 export const LinksContainer = styled.div`

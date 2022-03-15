@@ -28,6 +28,7 @@ import {
   SelectTitle,
   BlockTokens,
   ButtonsBlock,
+  DividerBlock,
   LinksContainer,
   ModalLinkRight,
   BlockTokenName,
@@ -431,9 +432,9 @@ export const LiquidityTableItem = ({
             {/*<ButtonsBlock>*/}
             {/*  <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>*/}
             {/*</ButtonsBlock>*/}
-            <ButtonsBlock>
+            <DividerBlock>
               <ChangeToken isLightTheme={theme}>{'Or'}</ChangeToken>
-            </ButtonsBlock>
+            </DividerBlock>
             <SelectTitle isLightTheme={theme}>{'Supply a token'}</SelectTitle>
             {/*input-------------------->*/}
             <InputBlock>
@@ -466,6 +467,7 @@ export const LiquidityTableItem = ({
             {/*input-------------------->*/}
             {/*input-------------------->*/}
             <InputBlock>
+              <div style={{ height: '17px' }}></div>
               <BlockTokens>
                 <div>
                   <TokenImage src={`https://ethplorer.io${item.token1.image}`} />

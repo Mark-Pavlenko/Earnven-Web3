@@ -21,7 +21,7 @@ export const MainContent = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
-  padding: 18px 30px 47px 30px;
+  padding: 18px 30px 17px 30px;
   max-width: ${(props) => (props.modalType === 'slippageTolerance' ? '375px' : '830px')};
   height: fit-content;
   transform: translate(-50%, -50%);
@@ -55,6 +55,9 @@ export const Content = styled.div`
 
   @media (max-width: 525px) {
     width: 100%;
+  }
+  @media (max-width: 375px) {
+    margin: 25px 0 0 0;
   }
 `;
 
