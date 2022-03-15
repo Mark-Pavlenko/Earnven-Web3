@@ -111,7 +111,7 @@ function* convexStakingDataSagaWorker(convexStakingAttributes) {
               object.imageData = [CvxTokenImageUrl];
               object.balance = ConvexStakedData.convexStakingBalance / 10 ** 18;
               object.chain = 'Ethereum';
-              object.protocol = stakingTokenSymbol;
+              object.protocol = 'Convex';
               object.liquidity = cvxTotalSupplyAmt;
               object.value = parseFloat(object.stakingAmt + parseFloat(object.claimable));
               totalValue += object.stakingAmt + parseFloat(object.claimable);

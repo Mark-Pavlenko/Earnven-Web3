@@ -57,6 +57,7 @@ export const ContentRightWrapper = styled.div`
 export const TokenImage = styled.img`
   display: flex;
   max-width: 21px;
+  margin-left: ${(props) => (props.firstElement !== 0 ? '-10px' : '0')};
   max-height: 21px;
   border-radius: 50%;
   border: 2px solid orange;

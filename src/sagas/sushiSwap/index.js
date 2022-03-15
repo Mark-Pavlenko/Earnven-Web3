@@ -13,7 +13,6 @@ function* sushiSwapLPSagaWorker(sushiSwapObjects) {
   const attributes = sushiSwapObjects.payload;
 
   const response = yield call(API.getSushiV2SubgraphData, attributes.accountAddress);
-  console.log('sushiSwapLPSagaWorker', response.data.data);
   if (response.data.data) {
     if (response.data.data.users[0]) {
       let totalValue = 0;
@@ -33,11 +32,12 @@ function* sushiSwapLPSagaWorker(sushiSwapObjects) {
           let tokenSymbolPair = res[i].pair.token0.symbol + '/' + res[i].pair.token1.symbol;
           tokenData = yield call(API.getSushiLpTokenImage, tokenSymbolPair);
           object.token0Image = tokenData[0].logoURI; //token0Data.tokenImage;
-          object.token0Symbol = res[i].pair.token0.symbol;
-          object.token0Id = res[i].pair.token0.id;
           object.token1Image = tokenData[1].logoURI; //token1Data.tokenImage;
-          object.token1Symbol = res[i].pair.token1.symbol;
-          object.token1Id = res[i].pair.token1.id;
+          object.symbol = tokenSymbolPair;
+          //object.token0Symbol = res[i].pair.token0.symbol;
+          //object.token0Id = res[i].pair.token0.id;
+          //object.token1Symbol = res[i].pair.token1.symbol;
+          //object.token1Id = res[i].pair.token1.id;
           //other attributes
           object.volume = parseFloat(res[i].pair.volumeUSD).toFixed(2);
           object.balance = parseFloat(res[i].liquidityTokenBalance).toFixed(4);
@@ -50,14 +50,16 @@ function* sushiSwapLPSagaWorker(sushiSwapObjects) {
           object.chain = 'Ethereum';
           object.protocol = 'Sushiswap';
           totalValue += parseFloat(object.value);
-          //push the value only when value is not zeros (ex:0.00000000..)
+          //push the value only when value is not zeros (ex:0.000100000..)
           if (parseFloat(object.value) > 0.001) {
             pools.push(object);
           }
         }
         pools.sort((a, b) => parseFloat(b.value) - parseFloat(a.value));
-        yield put(actions.getSushiSwapLPData(pools));
-        yield put(actions.getSushiSwapLPTotalValue(parseFloat(totalValue).toFixed(2)));
+        if (pools.length > 0) {
+          yield put(actions.getSushiSwapLPData(pools));
+          yield put(actions.getSushiSwapLPTotalValue(parseFloat(totalValue).toFixed(2)));
+        }
       } catch (err) {
         console.log(err);
       }

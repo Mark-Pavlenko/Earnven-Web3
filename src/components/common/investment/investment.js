@@ -59,10 +59,10 @@ const Investment = ({
   //setup value based on the protocols
   let protocolLogo;
 
-  if (protocolName === 'Sushiswap') {
-    protocol.symbol = protocol.token0Symbol + '/' + protocol.token1Symbol;
-    protocolLogo = SushiSwapLogo;
-  }
+  // if (protocolName === 'Sushiswap') {
+  //   protocol.symbol = protocol.token0Symbol + '/' + protocol.token1Symbol;
+  //   protocolLogo = SushiSwapLogo;
+  // }
 
   if (protocolName === 'Curve Staking' || protocolName === 'UniswapV2 Staking') {
     protocol.symbol = protocol.tokenName;
@@ -106,8 +106,8 @@ const Investment = ({
                 <React.Fragment>
                   {protocolName === 'Sushiswap' ? (
                     <React.Fragment>
-                      <MockTokenImage src={protocol.token0Image} />
-                      <MockTokenImage src={protocol.token1Image} />
+                      <TokenImage src={protocol.token0Image} />
+                      <TokenImage src={protocol.token1Image} />
                     </React.Fragment>
                   ) : (
                     <>
@@ -116,7 +116,7 @@ const Investment = ({
                           <CurveLpImage lpToken={protocol.tokenName} />
                         </>
                       ) : (
-                        <MockTokenImage src={protocol.tokenImage} />
+                        <TokenImage src={protocol.tokenImage} />
                       )}
                     </>
                   )}
@@ -402,7 +402,7 @@ const Investment = ({
                 item !== 'tokenAddress' &&
                 item !== 'contractAddress' &&
                 item !== 'tokenDecimal' &&
-                item !== 'protocol' &&
+                //item !== 'protocol' &&
                 item !== 'yTokenDecimals' &&
                 item !== 'image' &&
                 item != 'token0Image' &&

@@ -61,7 +61,7 @@ export const getuniswapV2data = async (attributes) => {
           object.tokenSupply = res[i].pair.totalSupply;
           // object.token0name = res[i].pair.token0.name;
           // object.token1name = res[i].pair.token1.name;
-          object.name = res[i].pair.token0.name + '-' + res[i].pair.token1.name;
+          //object.name = res[i].pair.token0.name + '-' + res[i].pair.token1.name;
           let token0Symbol = res[i].pair.token0.symbol;
           let token1Symbol = res[i].pair.token1.symbol;
           //object.symbol = res[i].pair.token0.symbol + '-' + res[i].pair.token1.symbol;
@@ -71,7 +71,7 @@ export const getuniswapV2data = async (attributes) => {
             token1Symbol.replace('yDAI+yUSDC+yUSDT+yTUSD', 'Y Curve');
           object.liquidity = res[i].pair.reserveUSD;
           object.volume = res[i].pair.volumeUSD;
-          object.protocol = 'Uniswap V2';
+          object.protocol = 'Uniswap';
           object.chain = 'Ethereum';
           let Images = [];
           object.value = (
