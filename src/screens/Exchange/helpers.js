@@ -120,7 +120,7 @@ export const getTokenUSDAmount = async (tokenData) => {
     finalUSDCurrencyValue = ethDollarValue.data.ethereum.usd * parseFloat(tokenData.amount);
   }
 
-  finalUSDCurrencyValue = finalUSDCurrencyValue.toFixed(3);
+  finalUSDCurrencyValue = Math.round(finalUSDCurrencyValue * 100) / 100;
 
   // console.log('total helper finalUSDCurrencyValue', finalUSDCurrencyValue);
   return {

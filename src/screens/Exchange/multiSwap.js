@@ -410,7 +410,7 @@ export default function MultiSwapComponent() {
         receiveTokensListCopy[needIndex] = {
           ...selectedSwapToken,
           receiveTokensListItem: true,
-          USDCurrency: (0.0).toFixed(3),
+          USDCurrency: 0,
           amount: 0,
         };
       }
@@ -508,12 +508,6 @@ export default function MultiSwapComponent() {
       type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST,
       payload: sendTokensListCopy,
     });
-
-    // setTokenSendUSDCurrency('$0.00');
-    // setTokensReceiveUSDCurrency('$0.00');
-    // setSendTokenForExchangeAmount(0);
-    // setReceiveTokenForExchangeAmount(0);
-    // setIsTokensLimitExceeded(false);
   };
 
   useEffect(() => {
