@@ -74,6 +74,8 @@ export const InvestTableItem = ({
   const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
   const allTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
 
+  const currentWallet = JSON.parse(localStorage.getItem('mywallet'));
+
   const gasPricesWithIcons = addIconsGasPrices(GasPrices, fastDice, middleDice, slowDice, theme);
 
   const [isModalVisible, setIsModalVisible] = useState('');
@@ -105,7 +107,8 @@ export const InvestTableItem = ({
     const getBalance = async () => {
       await loadWeb3();
       const web3 = window.web3;
-      const getBalance = await web3.eth.getBalance(tokenAddress);
+      //const accounts = await web3.eth.getAccounts();
+      const getBalance = await web3.eth.getBalance(currentWallet[0].address);
       const ethBalance = web3.utils.fromWei(getBalance, 'ether');
       setSupplyTokenBalance(ethBalance);
     };
@@ -428,7 +431,6 @@ export const InvestTableItem = ({
           <SelectWrapper isLightTheme={theme}>
             <SelectTitle isLightTheme={theme}>{'Supply a token'}</SelectTitle>
             <Select
-              defaultMenuIsOpen
               defaultValue={selectInitialValue}
               styles={selectStyle}
               options={updatedOptions}
@@ -455,15 +457,17 @@ export const InvestTableItem = ({
                   setInputType('single');
                 }}
               />
-              <Balance isLightTheme={theme}>{`Balance: ${parseFloat(supplyTokenBalance).toFixed(
-                2
-              )}`}</Balance>
+              <Balance isLightTheme={theme}>{`Balance: ${
+                parseFloat(supplyTokenBalance) > 0
+                  ? parseFloat(supplyTokenBalance).toFixed(8)
+                  : '0.00'
+              }`}</Balance>
             </InputBlock>
             {/*<ButtonsBlock>*/}
             {/*  <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>*/}
             {/*</ButtonsBlock>*/}
             <ButtonsBlock>
-              <ChangeToken>{'Or'}</ChangeToken>
+              <ChangeToken isLightTheme={theme}>{'Or'}</ChangeToken>
             </ButtonsBlock>
             <SelectTitle isLightTheme={theme}>{'Supply a token'}</SelectTitle>
             {/*input-------------------->*/}
@@ -554,7 +558,7 @@ export const InvestTableItem = ({
                 }}
                 selected={option.label === selected}
                 sx={{ py: 1, px: 2.5 }}>
-                <GasMenuItem isLightTheme={theme}>
+                <GasMenuItem isLightTheme={theme} selected={option.label === selected}>
                   <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                     <img src={option.icon} alt="" />
                     <GasPriceLabel
@@ -670,7 +674,7 @@ export const InvestTableItem = ({
           </MyPoolsItemButton>
           {item.protocol === 'Sushiswap' ? (
             <Link
-              to={`/${address}/sushiswap/address/${item.poolDetails.token0Address}/${item.poolDetails.token1Address}`}>
+              to={`/${address}/sushiswap/address/${item.poolDetails.token0Address}/${item.poolDetails.token1Address}/${item.token0Symbol}/${item.token1Symbol}`}>
               <InfoButton style={{ gridArea: 'info' }} isLightTheme={theme}>
                 {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
               </InfoButton>

@@ -9,6 +9,7 @@ const initialState = {
 export const accountBalance = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.GET_ACCOUNT_BALANCE:
+      console.log('GET_ACCOUNT_BALANCE', action?.payload);
       return {
         ...state,
         ...state.accountBalance,

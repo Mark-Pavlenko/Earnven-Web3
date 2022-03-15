@@ -23,7 +23,7 @@ export const MainContent = styled.div`
   left: 50%;
   padding: 18px 30px 47px 30px;
   max-width: ${(props) => (props.modalType === 'slippageTolerance' ? '375px' : '830px')};
-  height: ${(props) => (props.modalType === 'slippageTolerance' ? 'fit-content' : '800px')};
+  height: fit-content;
   transform: translate(-50%, -50%);
   background: ${(props) =>
     props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)'};

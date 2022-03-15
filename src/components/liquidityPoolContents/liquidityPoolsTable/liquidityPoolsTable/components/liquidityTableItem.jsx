@@ -40,6 +40,7 @@ import {
   addIconsGasPrices,
   numberWithCommas,
 } from '../../../../../commonFunctions/commonFunctions';
+import Addresses from '../../../../../contractAddresses';
 import { SelectWrapper } from '../../../styledComponents';
 import ROUTERABI from '../../../../../abi/UniRouterV2.json';
 import actionTypes from '../../../../../constants/actionTypes';
@@ -47,15 +48,11 @@ import { GasMenuItem } from '../../../../gasDropDownMenu/styles';
 import { SvgComponent } from '../../../svgComponent/svgComponent';
 import TOKENDECIMALSABI from '../../../../../abi/TokenDecomals.json';
 import fastDice from '../../../../../assets/icons/fastDice-icon.svg';
-import fastDiceDark from '../../../../../assets/icons/fastDiceNight-icon.svg';
 import slowDice from '../../../../../assets/icons/slowDice-icon.svg';
-import slowDiceDark from '../../../../../assets/icons/slowDiceNight-icon.svg';
 import { SelectOptionsWithJSX } from '../../../HOC/selectOptionsWithJSX';
 import middleDice from '../../../../../assets/icons/middleDice-icon.svg';
-import middleDiceDark from '../../../../../assets/icons/middleDiceNight-icon.svg';
 import ModalContainer from '../../../../common/modalContainer/modalContainer';
 import { CommonSubmitButton } from '../../../../../screens/TokenPage/components/styledComponentsCommon';
-import Addresses from '../../../../../contractAddresses';
 
 export const LiquidityTableItem = ({
   item,
@@ -68,6 +65,7 @@ export const LiquidityTableItem = ({
 }) => {
   const dispatch = useDispatch();
   const address = useParams().address;
+  const currentWallet = JSON.parse(localStorage.getItem('mywallet'));
 
   const GasPrices = useSelector((state) => state.gesData.gasPriceData);
   const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
@@ -98,7 +96,7 @@ export const LiquidityTableItem = ({
     const getBalance = async () => {
       await loadWeb3();
       const web3 = window.web3;
-      const getBalance = await web3.eth.getBalance(tokenAddress);
+      const getBalance = await web3.eth.getBalance(currentWallet[0].address);
       const ethBalance = web3.utils.fromWei(getBalance, 'ether');
       setSupplyTokenBalance(ethBalance);
     };
@@ -149,10 +147,10 @@ export const LiquidityTableItem = ({
           : state.menuIsOpen
           ? 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'
           : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-        // backdropFilter: 'blur(35px)',
+        backdropFilter: 'blur(35px)',
         // mixBlendMode: 'normal',
         border: 'none',
-        borderRadius: state.menuIsOpen ? '7px 7px 0 0' : '7px',
+        borderRadius: state.menuIsOpen ? '7px 7px 0 0' : '7px 7px 7px 7px',
         color: '#464C52',
         height: '60px',
         width: '100%',
@@ -399,7 +397,7 @@ export const LiquidityTableItem = ({
           <SelectWrapper isLightTheme={theme}>
             <SelectTitle isLightTheme={theme}>{'Supply a token'}</SelectTitle>
             <Select
-              defaultMenuIsOpen
+              //defaultMenuIsOpen
               defaultValue={selectInitialValue}
               styles={selectStyle}
               options={updatedOptions}
@@ -424,15 +422,17 @@ export const LiquidityTableItem = ({
                   setInputType('single');
                 }}
               />
-              <Balance isLightTheme={theme}>{`Balance: ${parseFloat(supplyTokenBalance).toFixed(
-                2
-              )}`}</Balance>
+              <Balance isLightTheme={theme}>{`Balance: ${
+                parseFloat(supplyTokenBalance) > 0
+                  ? parseFloat(supplyTokenBalance).toFixed(8)
+                  : '0.00'
+              }`}</Balance>
             </InputBlock>
             {/*<ButtonsBlock>*/}
             {/*  <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>*/}
             {/*</ButtonsBlock>*/}
             <ButtonsBlock>
-              <ChangeToken>{'Or'}</ChangeToken>
+              <ChangeToken isLightTheme={theme}>{'Or'}</ChangeToken>
             </ButtonsBlock>
             <SelectTitle isLightTheme={theme}>{'Supply a token'}</SelectTitle>
             {/*input-------------------->*/}
@@ -524,7 +524,7 @@ export const LiquidityTableItem = ({
                   updateGasValue(option.value, option.label);
                 }}
                 sx={{ py: 1, px: 2.5 }}>
-                <GasMenuItem isLightTheme={theme}>
+                <GasMenuItem isLightTheme={theme} selected={option.label === selected}>
                   <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                     <img src={option.icon} alt="" />
                     <GasPriceLabel
