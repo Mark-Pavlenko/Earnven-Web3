@@ -8,6 +8,10 @@ export const initFilteringModalTokensList = (
   initSendMultiSwapToken,
   initReceiveMultiSwapTokensList
 ) => {
+  console.log('helper searchTokensData', searchTokensData);
+  console.log('helper initSendMultiSwapToken', initSendMultiSwapToken);
+  console.log('helper initReceiveMultiSwapTokensList', initReceiveMultiSwapTokensList);
+
   let copyTokensList = searchTokensData.tokensList.filter(function (obj) {
     return obj.address !== initSendMultiSwapToken.address;
   });
@@ -90,32 +94,33 @@ export const getTokenUSDAmount = async (tokenData) => {
   let tokenUSDCurrencyValue;
   let finalUSDCurrencyValue;
 
-  if (tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
-    await axios
-      .get(
-        `https://api.ethplorer.io/getTokenInfo/${tokenData.tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
-      )
-      .then(async (response) => {
-        tokenUSDCurrencyValue = response;
-      })
-      .catch((err) => {
-        console.log('err of usd currency receive token', err);
-      });
+  if (tokenData.tokenData.USDCurrency)
+    if (tokenData.tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+      await axios
+        .get(
+          `https://api.ethplorer.io/getTokenInfo/${tokenData.tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
+        )
+        .then(async (response) => {
+          tokenUSDCurrencyValue = response;
+        })
+        .catch((err) => {
+          console.log('err of usd currency receive token', err);
+        });
 
-    console.log('tokenUSDCurrencyValue.data.price.rate', tokenUSDCurrencyValue.data.price.rate);
+      // console.log('tokenUSDCurrencyValue.data.price.rate', tokenUSDCurrencyValue.data.price.rate);
 
-    if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
-      finalUSDCurrencyValue =
-        tokenUSDCurrencyValue.data.price.rate * parseFloat(tokenData.amount).toFixed(2);
+      if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
+        finalUSDCurrencyValue =
+          tokenUSDCurrencyValue.data.price.rate * parseFloat(tokenData.amount).toFixed(2);
+      } else {
+        finalUSDCurrencyValue = -1;
+      }
     } else {
-      finalUSDCurrencyValue = -1;
+      const ethDollarValue = await axios.get(
+        'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
+      );
+      finalUSDCurrencyValue = ethDollarValue.data.ethereum.usd * parseFloat(tokenData.amount);
     }
-  } else {
-    const ethDollarValue = await axios.get(
-      'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
-    );
-    finalUSDCurrencyValue = ethDollarValue.data.ethereum.usd * parseFloat(tokenData.amount);
-  }
   finalUSDCurrencyValue = finalUSDCurrencyValue.toFixed(3);
   return { ...tokenData.tokenData, USDCurrency: finalUSDCurrencyValue };
 };

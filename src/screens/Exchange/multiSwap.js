@@ -193,7 +193,7 @@ export default function MultiSwapComponent() {
         payload: receiveTokensListCopy,
       });
     });
-    await getAmountMulti();
+    // await getAmountMulti();
   };
 
   async function loadWeb3() {
@@ -377,7 +377,7 @@ export default function MultiSwapComponent() {
         receiveTokensListCopy[needIndex] = {
           ...selectedSwapToken,
           receiveTokensListItem: true,
-          USDCurrency: (0.0).toFixed(3),
+          USDCurrency: (0.0).toFixed(2),
           amount: 0,
         };
       }
@@ -436,12 +436,12 @@ export default function MultiSwapComponent() {
   const toggleSwappedTokens = () => {
     // [...initReceiveMultiSwapTokensList];
     let sendTokensListCopy = initSendMultiSwapTokenList.map((obj) => {
-      return { ...obj, amount: 0, USDCurrency: (0.0).toFixed(3) };
+      return { ...obj, amount: 0, USDCurrency: (0.0).toFixed(2) };
       // return obj;
     });
     let receiveTokensListCopy = initReceiveMultiSwapTokensList.map((obj) => {
       if (Number(obj.amount) > 0) {
-        return { ...obj, amount: 0, USDCurrency: (0.0).toFixed(3) };
+        return { ...obj, amount: 0, USDCurrency: (0.0).toFixed(2) };
       }
       return obj;
     });
@@ -511,17 +511,17 @@ export default function MultiSwapComponent() {
       }
     }
 
-    for (let i = 0; i < initReceiveMultiSwapTokensList.length; i++) {
-      if (
-        initSendMultiSwapTokenList[0] !== undefined &&
-        initReceiveMultiSwapTokensList[i].address !== undefined
-      )
-        convertExchangeTokensCourse({
-          sendTokenForExchangeAddress: initSendMultiSwapTokenList[0].address,
-          receiveTokenForExchangeAddress: initReceiveMultiSwapTokensList[i].address,
-          tokenAmount: 1,
-        });
-    }
+    // for (let i = 0; i < initReceiveMultiSwapTokensList.length; i++) {
+    //   if (
+    //     initSendMultiSwapTokenList[0] !== undefined &&
+    //     initReceiveMultiSwapTokensList[i].address !== undefined
+    //   )
+    //     convertExchangeTokensCourse({
+    //       sendTokenForExchangeAddress: initSendMultiSwapTokenList[0].address,
+    //       receiveTokenForExchangeAddress: initReceiveMultiSwapTokensList[i].address,
+    //       tokenAmount: 1,
+    //     });
+    // }
   }, [initSendMultiSwapTokenList, initReceiveMultiSwapTokensList]);
 
   return (
@@ -703,7 +703,6 @@ export default function MultiSwapComponent() {
                     </MultiSwapChooseBtnTokenBlock>
                     <USDCurrencyInputBlock>
                       <ChosenMultiSwapSendReceiveTokenValueInput
-                        // inputRef={(ref) => (receiveTokensRefsList[key] = ref)}
                         InputProps={{
                           inputProps: {
                             style: {
