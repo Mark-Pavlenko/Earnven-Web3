@@ -172,9 +172,9 @@ export default function MultiSwapComponent() {
   }
 
   let convertSendTokenToUSDCurrency = async (amount, tokenData) => {
-    let formattedAmount = Number(amount.replace(/[^\d.-]/g, '').replace(/[^\w.]|_/g, ''));
+    let formattedAmount = amount.replace(/[^\d.-]/g, '').replace(/[^\w.]|_/g, '');
 
-    // console.log('res amount tokenData send ', tokenData);
+    console.log('res amount tokenData send amount', amount);
     // console.log('res amount send formattedAmount', formattedAmount);
     // console.log('res amount send formattedAmount typeof', typeof formattedAmount);
 
@@ -199,7 +199,7 @@ export default function MultiSwapComponent() {
   };
 
   let convertReceiveTokenToUSDCurrency = async (amount, tokenData) => {
-    let formattedAmount = Number(amount.replace(/[^\d.-]/g, '').replace(/[^\w.]|_/g, ''));
+    let formattedAmount = amount.replace(/[^\d.-]/g, '').replace(/[^\w.]|_/g, '');
 
     console.log('res amount tokenData receive', tokenData);
     console.log('res amount formattedAmount', formattedAmount);
@@ -390,11 +390,11 @@ export default function MultiSwapComponent() {
         payload: [selectedSwapToken],
       });
 
-      convertSendTokenToUSDCurrency({
-        amount: 0,
-        ...selectedSwapToken,
-        address: selectedSwapToken.address,
-      });
+      // convertSendTokenToUSDCurrency({
+      //   amount: 0,
+      //   ...selectedSwapToken,
+      //   address: selectedSwapToken.address,
+      // });
     } else if (selectedSwapToken.receiveTokensListItem === true) {
       dispatch({ type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING, payload: true });
 
@@ -468,12 +468,12 @@ export default function MultiSwapComponent() {
   const toggleSwappedTokens = () => {
     // [...initReceiveMultiSwapTokensList];
     let sendTokensListCopy = initSendMultiSwapTokenList.map((obj) => {
-      return { ...obj, amount: 0, USDCurrency: (0.0).toFixed(3) };
+      return { ...obj, amount: 0, USDCurrency: 0 };
       // return obj;
     });
     let receiveTokensListCopy = initReceiveMultiSwapTokensList.map((obj) => {
       if (Number(obj.amount) > 0) {
-        return { ...obj, amount: 0, USDCurrency: (0.0).toFixed(3) };
+        return { ...obj, amount: 0, USDCurrency: 0 };
       }
       return obj;
     });
