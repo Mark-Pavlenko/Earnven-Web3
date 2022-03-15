@@ -86,7 +86,7 @@ import {
   convertSendTokenToUSDCurrencyHelper,
   filteredTokensByName,
   getTokenUSDAmount,
-  initFilteringModalTokensList,
+  initFilteringModalTokensListMultiSwap,
 } from './helpers';
 import { useWeb3React } from '@web3-react/core';
 import Web3 from 'web3';
@@ -322,23 +322,22 @@ export default function MultiSwapComponent() {
   };
 
   const openModalHelper = (payload) => {
-    // console.log('modal payload value', payload);
+    console.log('modal helper payload value', payload);
     setTokensListModal([]);
     setOpenTokensModal(true);
-    let removedInitTokenValuesList = initFilteringModalTokensList(
-      payload,
-      initSendMultiSwapTokenList[0],
-      initReceiveMultiSwapTokensList
-    );
-    console.log('removedInitTokenValuesList', removedInitTokenValuesList);
-    setTokensListModal(removedInitTokenValuesList);
+    let removedInitTokensList = initFilteringModalTokensListMultiSwap(payload.tokensList, [
+      ...initSendMultiSwapTokenList,
+      ...initReceiveMultiSwapTokensList,
+    ]);
+    console.log('removedInitTokenValuesList', removedInitTokensList);
+    setTokensListModal(removedInitTokensList);
     setIsSendTokenSelectedSwapped(payload.isSendModalOpen);
   };
 
   // console.log('tokensListModal modal', tokensListModal);
 
   const searchTokensHandler = (event, isSendTokenSelectedSwapped, searchTokensData) => {
-    let removedInitTokenValuesList = initFilteringModalTokensList(
+    let removedInitTokenValuesList = initFilteringModalTokensListMultiSwap(
       searchTokensData,
       initSendMultiSwapTokenList[0],
       initReceiveMultiSwapTokensList
@@ -442,7 +441,8 @@ export default function MultiSwapComponent() {
     }
   };
 
-  console.log('finalReceiveTokensList multiswap', finalReceiveTokensList);
+  console.log('finalSendTokensList multiswap init saga list', finalSendTokensList);
+  console.log('finalReceiveTokensList multiswap init saga list', finalReceiveTokensList);
   console.log(
     'finalReceiveTokensList initReceiveMultiSwapTokensList multiswap',
     initReceiveMultiSwapTokensList
@@ -457,7 +457,7 @@ export default function MultiSwapComponent() {
     // searchTokensData.tokensList
     // console.log('add receive token handler fullTokensList init', fullTokensList);
 
-    let removedInitTokenValuesList = initFilteringModalTokensList(
+    let removedInitTokenValuesList = initFilteringModalTokensListMultiSwap(
       fullTokensList,
       initSendMultiSwapTokenList[0],
       initReceiveMultiSwapTokensList
@@ -711,7 +711,6 @@ export default function MultiSwapComponent() {
                           {
                             tokensList: finalReceiveTokensList,
                             isSendModalOpen: false,
-                            receiveToken,
                           },
                           key
                         );
@@ -793,7 +792,8 @@ export default function MultiSwapComponent() {
                         Exchange rate
                       </LabelsBlockSubBlockSpan>
 
-                      {receiveToken.singleAmountSendTokenConvert !== 0 ? (
+                      {receiveToken.singleAmountSendTokenConvert !== 0 &&
+                      initSendMultiSwapTokenList[0].symbol !== undefined ? (
                         <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
                           1 {initSendMultiSwapTokenList[0].symbol} ={' '}
                           {receiveToken.singleAmountSendTokenConvert} {receiveToken.symbol}

@@ -33,7 +33,24 @@ export const initFilteringModalTokensList = (
   });
 
   return copyTokensList;
-  // test;
+};
+
+export const initFilteringModalTokensListMultiSwap = (tokensList, tokensListForRemoving) => {
+  console.log('filter helper searchTokensData init', tokensList);
+  console.log('filter helper tokensListForRemoving', tokensListForRemoving);
+
+  let test = [...tokensList];
+  for (let i = tokensList.length - 1; i >= 0; i--) {
+    for (let j = 0; j < tokensListForRemoving.length; j++) {
+      if (tokensList[i].address === tokensListForRemoving[j].address) {
+        test.splice(i, 1);
+      }
+    }
+  }
+
+  console.log('filter helper test filtered', test);
+
+  return test;
 };
 
 export const filteredTokensByName = (event, searchTokensData) => {

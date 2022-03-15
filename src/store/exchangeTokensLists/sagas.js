@@ -70,7 +70,12 @@ function* getSendTokensListSagaWorker(accountAddress) {
 
   yield put(actions.getSendTokensList(walletTokensList));
   yield put(actions.setInitSendTokenSwap(walletTokensList[0]));
-  yield put(actions.setInitSendTokenMultiSwap([{ ...walletTokensList[0], amount: 0 }]));
+  yield put(
+    actions.setInitSendTokenMultiSwap([
+      { ...walletTokensList[0], amount: 0 },
+      // { ...walletTokensList[1], amount: 0 },
+    ])
+  );
 
   yield put(setInitSendMultiSwapTokensListLoading(false));
 }
