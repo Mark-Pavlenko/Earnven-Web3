@@ -192,7 +192,7 @@ export default function MultiSwapComponent() {
 
       // console.log('res amount send list total', sendTokensListCopy);
       dispatch({
-        type: actionTypes.SET_INIT_SEND_MULTISWAP_TOKEN,
+        type: actionTypes.SET_INIT_SEND_MULTISWAP_TOKENS_LIST,
         payload: sendTokensListCopy,
       });
     });
@@ -384,18 +384,33 @@ export default function MultiSwapComponent() {
 
   const selectTokenForSwap = async (selectedSwapToken, isSendTokenSelectedSwapped) => {
     if (isSendTokenSelectedSwapped === true) {
-      setSendTokenForExchangeAmount(0);
+      console.log('send selectedSwapToken', selectedSwapToken);
+
+      // setSendTokenForExchangeAmount(0);
+
+      let sendTokensListCopy = [...initSendMultiSwapTokenList];
+
+      const needIndex = sendTokensListCopy.findIndex(
+        (token) => token.address === oldTokenSwappedAddress
+      );
+
+      // console.log('send selectedSwapToken needIndex', needIndex);
+
+      if (needIndex !== -1) {
+        sendTokensListCopy[needIndex] = {
+          ...selectedSwapToken,
+          receiveTokensListItem: false,
+          USDCurrency: 0,
+          amount: 0,
+        };
+      }
+
+      // console.log('send selectedSwapToken sendTokensListCopy total', sendTokensListCopy);
 
       dispatch({
-        type: actionTypes.SET_INIT_SEND_MULTISWAP_TOKEN,
-        payload: [selectedSwapToken],
+        type: actionTypes.SET_INIT_SEND_MULTISWAP_TOKENS_LIST,
+        payload: sendTokensListCopy,
       });
-
-      // convertSendTokenToUSDCurrency({
-      //   amount: 0,
-      //   ...selectedSwapToken,
-      //   address: selectedSwapToken.address,
-      // });
     } else if (selectedSwapToken.receiveTokensListItem === true) {
       dispatch({ type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING, payload: true });
 
@@ -414,8 +429,6 @@ export default function MultiSwapComponent() {
           amount: 0,
         };
       }
-
-      textInput.current.value = '';
 
       dispatch({
         type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST,
@@ -501,7 +514,7 @@ export default function MultiSwapComponent() {
     console.log('result toggle total', totalReceiveTokensArr);
 
     dispatch({
-      type: actionTypes.SET_INIT_SEND_MULTISWAP_TOKEN,
+      type: actionTypes.SET_INIT_SEND_MULTISWAP_TOKENS_LIST,
       payload: totalReceiveTokensArr,
     });
     dispatch({
@@ -577,9 +590,10 @@ export default function MultiSwapComponent() {
               <MultiSwapSendTokensChooseBlock isLightTheme={isLightTheme}>
                 <MultiSwapChooseBtnTokenBlock>
                   <div
-                    onClick={() =>
-                      openModalHelper({ tokensList: finalSendTokensList, isSendModalOpen: true })
-                    }>
+                    onClick={() => {
+                      setOldTokenSwappedAddress(sendToken.address);
+                      openModalHelper({ tokensList: finalSendTokensList, isSendModalOpen: true });
+                    }}>
                     {sendToken.logoURI !== null ? (
                       <SendTokenImg
                         alt="token_img"

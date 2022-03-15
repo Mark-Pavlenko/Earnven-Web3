@@ -17,7 +17,7 @@ const initialState = {
 export const tokensListReducer = (state = initialState, action) => {
   // console.log('action payload tokens list reducer', state);
   switch (action.type) {
-    case actionTypes.SET_INIT_SEND_MULTISWAP_TOKENS_LIST_LOADING:
+    case actionTypes.SET_INIT_SEND_MULTISWAP_TOKENS_LISTS_LIST_LOADING:
       return {
         ...state,
         isSendMultiSwapTokensListLoading: action?.payload,
@@ -47,7 +47,7 @@ export const tokensListReducer = (state = initialState, action) => {
         initSendTokenSwap: action?.payload,
       };
 
-    case actionTypes.SET_INIT_SEND_MULTISWAP_TOKEN:
+    case actionTypes.SET_INIT_SEND_MULTISWAP_TOKENS_LIST:
       return {
         ...state,
         initSendTokenMultiSwap: action?.payload,
