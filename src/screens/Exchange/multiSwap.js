@@ -322,26 +322,21 @@ export default function MultiSwapComponent() {
   };
 
   const openModalHelper = (payload) => {
-    console.log('modal helper payload value', payload);
     setTokensListModal([]);
     setOpenTokensModal(true);
     let removedInitTokensList = initFilteringModalTokensListMultiSwap(payload.tokensList, [
       ...initSendMultiSwapTokenList,
       ...initReceiveMultiSwapTokensList,
     ]);
-    console.log('removedInitTokenValuesList', removedInitTokensList);
     setTokensListModal(removedInitTokensList);
     setIsSendTokenSelectedSwapped(payload.isSendModalOpen);
   };
 
-  // console.log('tokensListModal modal', tokensListModal);
-
   const searchTokensHandler = (event, isSendTokenSelectedSwapped, searchTokensData) => {
-    let removedInitTokenValuesList = initFilteringModalTokensListMultiSwap(
-      searchTokensData,
-      initSendMultiSwapTokenList[0],
-      initReceiveMultiSwapTokensList
-    );
+    let removedInitTokenValuesList = initFilteringModalTokensListMultiSwap(searchTokensData, [
+      ...initSendMultiSwapTokenList,
+      ...initReceiveMultiSwapTokensList,
+    ]);
     let filteredTokensList = filteredTokensByName(event, removedInitTokenValuesList);
     setTokensListModal(filteredTokensList);
   };
@@ -930,12 +925,16 @@ export default function MultiSwapComponent() {
                       isLightTheme={isLightTheme}
                       onChange={(event) => {
                         isSendTokenSelectedSwapped
-                          ? searchTokensHandler(event, isSendTokenSelectedSwapped, {
-                              tokensList: finalSendTokensList,
-                            })
-                          : searchTokensHandler(event, isSendTokenSelectedSwapped, {
-                              tokensList: finalReceiveTokensList,
-                            });
+                          ? searchTokensHandler(
+                              event,
+                              isSendTokenSelectedSwapped,
+                              finalSendTokensList
+                            )
+                          : searchTokensHandler(
+                              event,
+                              isSendTokenSelectedSwapped,
+                              finalReceiveTokensList
+                            );
                       }}
                       InputProps={{
                         endAdornment: (
