@@ -9,6 +9,7 @@ import {
 } from './actions';
 import ethImage from '../../assets/icons/eth.png';
 import CoinGeckoMockTokensList from './CoinGecko.json';
+import uniswapV2ExchangerIcon from '../../assets/icons/exchangers/uniswapV2ExchangerIcon.svg';
 
 const initReceiveMultiSwapTokensList = (state) =>
   state.tokensListReducer.initReceiveMultiSwapTokensList;
@@ -36,7 +37,14 @@ function* getSendTokensListSagaWorker(accountAddress) {
     tempObj.USDCurrency = 0;
     tempObj.singleTokenUSDCurrencyAmount = Number(addressInfoData.data.ETH.price.rate);
     tempObj.sendTokensListItem = true;
-
+    //mock exchanger
+    tempObj.chosenExchanger = {
+      name: 'Uniswap_V2',
+      routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
+      isBestRate: true,
+      logoIcon: uniswapV2ExchangerIcon,
+      isExchangerSelected: true,
+    };
     walletTokensList.push(tempObj);
   }
   let tokens = addressInfoData.data.tokens;
@@ -55,12 +63,19 @@ function* getSendTokensListSagaWorker(accountAddress) {
       );
       tempObj.singleTokenUSDCurrencyAmount = Number(tokens[i].tokenInfo.price.rate);
       tempObj.sendTokensListItem = true;
-
       if (tokens[i].tokenInfo.image !== undefined) {
         tempObj.logoURI = `https://ethplorer.io${tokens[i].tokenInfo.image}`;
       } else {
         tempObj.logoURI = null;
       }
+      //mock exchanger
+      tempObj.chosenExchanger = {
+        name: 'Uniswap_V2',
+        routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
+        isBestRate: true,
+        logoIcon: uniswapV2ExchangerIcon,
+        isExchangerSelected: true,
+      };
       walletTokensList.push(tempObj);
     }
   }
@@ -117,6 +132,13 @@ function* getReceiveTokensListSagaWorker() {
       : null,
     USDCurrency: 0,
     amount: 0,
+    chosenExchanger: {
+      name: 'Uniswap_V2',
+      routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
+      isBestRate: true,
+      logoIcon: uniswapV2ExchangerIcon,
+      isExchangerSelected: true,
+    },
   }));
 
   console.log('sagas filter finalReceiveTokensList', finalList);

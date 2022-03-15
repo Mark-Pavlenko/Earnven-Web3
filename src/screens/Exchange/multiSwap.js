@@ -71,7 +71,7 @@ import Popover from '@mui/material/Popover';
 import greenDot from '../../assets/icons/greenDot.svg';
 import paraSwapIcon from '../../assets/icons/exchangers/paraSwapExchangerIcon.svg';
 
-import exchangersOfferedList from './exchangersOfferedListPolygon.js';
+// import exchangersOfferedList from './exchangersOfferedListPolygon.js';
 // import sendTokensMockList from './sendTokensMockList.json';
 import SelectTokensModalContainer from './selectTokensModal';
 import OutsideClickHandler from './outsideClickHandler';
@@ -94,6 +94,9 @@ import multiCallAbi from '../../abi/MultiCall.json';
 import TOKENDECIMALSABI from '../../abi/TokenDecomals.json';
 import ROUTERABI from '../../abi/UniRouterV2.json';
 import { send } from 'eth-permit/dist/rpc';
+import uniswapV2ExchangerIcon from '../../assets/icons/exchangers/uniswapV2ExchangerIcon.svg';
+import sushiSwapExchangerIcon from '../../assets/icons/exchangers/sushiSwapExchangerIcon.svg';
+import swerveExchangerIcon from '../../assets/icons/exchangers/swerveExchangerIcon.png';
 
 const useStyles = makeStyles((theme) => ({
   noBorder: {
@@ -104,24 +107,46 @@ const useStyles = makeStyles((theme) => ({
 export default function MultiSwapComponent() {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const [tokenSendUSDCurrency, setTokenSendUSDCurrency] = useState('$0.00');
-  const [tokenSendAmount, setTokenSendAmount] = useState();
   let [tokensListModal, setTokensListModal] = useState([]);
-  const [sendTokenForExchangeAmount, setSendTokenForExchangeAmount] = useState();
   let [oldTokenSwappedAddress, setOldTokenSwappedAddress] = useState();
   let [isSendTokenSelectedSwapped, setIsSendTokenSelectedSwapped] = useState(false);
   const [openTokensModal, setOpenTokensModal] = useState(false);
   const [isTokensLimitExceeded, setIsTokensLimitExceeded] = useState(false);
   let [isAddedReceiveTokensLimitExceeded, setIsAddedReceiveTokensLimitExceeded] = useState(false);
   const [isAbleToReplaceTokens, setIsAbleToReplaceTokens] = useState(false);
+  const [exchangersOfferedList, setExchangersOfferedList] = useState([
+    {
+      name: 'Uniswap_V2',
+      routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
+      receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
+      gasFee: '$10.03',
+      isBestRate: true,
+      logoIcon: uniswapV2ExchangerIcon,
+      isExchangerSelected: true,
+    },
+    {
+      name: 'Swerve',
+      routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
+      receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
+      gasFee: '$10.03',
+      isBestRate: false,
+      logoIcon: swerveExchangerIcon,
+      isExchangerSelected: false,
+    },
+    {
+      name: 'SushiSwap',
+      routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
+      receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
+      gasFee: '$10.03',
+      isBestRate: false,
+      logoIcon: sushiSwapExchangerIcon,
+      isExchangerSelected: false,
+    },
+  ]);
 
   let textInput = useRef(null);
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
-
-  // let tokenWithUSDCurrencyAmount = useSelector(
-  //   (state) => state.tokensListReducer.tokenWithUSDCurrencyAmount
-  // );
 
   const isLoadingSendTokensList = useSelector(
     (state) => state.tokensListReducer.isSendMultiSwapTokensListLoading
@@ -129,8 +154,6 @@ export default function MultiSwapComponent() {
   const isLoadingReceiveTokensList = useSelector(
     (state) => state.tokensListReducer.isReceiveMultiSwapTokensListLoading
   );
-
-  // console.log('isLoadingSendTokensList', isLoadingSendTokensList);
 
   const initSendMultiSwapTokenList = useSelector(
     (state) => state.tokensListReducer.initSendTokenMultiSwap
@@ -314,11 +337,8 @@ export default function MultiSwapComponent() {
   //----- convert token course (need to implement necessary network)
 
   let exchange = async () => {
-    // console.log('total MultiSwap sendToken object AMOUNT', tokenSendAmount);
-    // console.log(
-    //   'total MultiSwap receiveTokensList exchange object',
-    //   initReceiveMultiSwapTokensList
-    // );
+    console.log('exchange data initSendMultiSwapTokenList', initSendMultiSwapTokenList);
+    console.log('exchange data initReceiveMultiSwapTokensList', initReceiveMultiSwapTokensList);
   };
 
   const openModalHelper = (payload) => {
@@ -379,8 +399,6 @@ export default function MultiSwapComponent() {
   const selectTokenForSwap = async (selectedSwapToken, isSendTokenSelectedSwapped) => {
     if (isSendTokenSelectedSwapped === true) {
       console.log('send selectedSwapToken', selectedSwapToken);
-
-      // setSendTokenForExchangeAmount(0);
 
       let sendTokensListCopy = [...initSendMultiSwapTokenList];
 
@@ -513,9 +531,27 @@ export default function MultiSwapComponent() {
   };
 
   useEffect(() => {
-    setSendTokenForExchangeAmount(0);
-
     if (initSendMultiSwapTokenList[0] !== undefined && initSendMultiSwapTokenList.length !== 0) {
+      //functionality to add best exchanger to final send/receive tokens lists - should be done in sagas
+      let bestRateExchanger = exchangersOfferedList.find((el) => {
+        return el.isBestRate === true;
+      });
+
+      console.log('bestRateExchanger', bestRateExchanger);
+
+      let test1 = initSendMultiSwapTokenList.map((sendToken) => {
+        return { ...sendToken, chosenExchanger: bestRateExchanger };
+      });
+
+      let test2 = initReceiveMultiSwapTokensList.map((receiveToken) => {
+        return { ...receiveToken, chosenExchanger: bestRateExchanger };
+      });
+
+      console.log('bestRateExchanger test1', test1);
+      console.log('bestRateExchanger test2', test2);
+
+      ///-------------
+
       let ifSendTokenAvailableForSwap = finalReceiveTokensList.some((el) => {
         if (el.address === initSendMultiSwapTokenList[0].address) {
           return true;
@@ -786,8 +822,8 @@ export default function MultiSwapComponent() {
                         Offered by
                       </LabelsBlockSubBlockSpan>
                       <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
-                        <img src={paraSwapIcon} alt="paraSwapIcon" />
-                        <span onClick={handleClick}>ParaSwap</span>
+                        <img src={receiveToken.chosenExchanger.logoIcon} alt="paraSwapIcon" />
+                        <span onClick={handleClick}>{receiveToken.chosenExchanger.name}</span>
                         <Popover
                           open={open}
                           anchorEl={anchorEl}
@@ -1066,11 +1102,12 @@ export default function MultiSwapComponent() {
             <Button
               onClick={() => exchange()}
               disabled={
-                isTokensLimitExceeded ||
-                false ||
-                sendTokenForExchangeAmount === '0' ||
-                sendTokenForExchangeAmount === 0 ||
-                sendTokenForExchangeAmount?.length === 0
+                isTokensLimitExceeded
+                // ||
+                // false ||
+                // sendTokenForExchangeAmount === '0' ||
+                // sendTokenForExchangeAmount === 0 ||
+                // sendTokenForExchangeAmount?.length === 0
               }>
               Exchange
             </Button>
