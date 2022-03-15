@@ -215,14 +215,7 @@ export default function SwapComponent() {
   const [rawPersonalSlippageTolerance, setRawPersonalSlippageTolerance] = useState(0);
   const [personalSlippageTolerance, setPersonalSlippageTolerance] = useState(0);
 
-  //---OLD states
-
-  const [TokenTo, setTokenTo] = useState('');
-
-  // const [Slippage, setSlippage] = useState(2);
-  // const [selectedRate, setselectedRate] = useState(null);
-
-  //------
+  console.log('filteredData', filteredData);
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -788,15 +781,14 @@ export default function SwapComponent() {
     setAnchorEl(false);
   };
 
-  // // console.log('selectedNewExchanger List', exchangersOfferedList);
-  // // console.log('selectedNewExchanger chosen one', activeExchanger);
-
   const makeSwappedTokensOperation = async (swappedTokensData) => {
+    // console.log('single swap tokens operation swappedTokensData', swappedTokensData);
+
     setIsTokensSwappingActive(true);
     await loadWeb3();
     const web3 = window.web3;
     const metaMaskWalletAddress = await web3.eth.getAccounts();
-    // // console.log('single swap tokens operation accounts metaMaskWalletAddress', metaMaskWalletAddress);
+    // //
 
     // // console.log('single swap tokens operation walletData', walletData);
     // console.log('single swap tokens operation raw data object', swappedTokensData);
@@ -1125,23 +1117,27 @@ export default function SwapComponent() {
                                       {object.name}
                                     </SendTokenName>
                                     <SendTokenConvertedMeasures isLightTheme={isLightTheme}>
-                                      {object.balance} ·{' '}
-                                      {object.USDCurrency !== undefined
-                                        ? `$${object.USDCurrency.toFixed(3)}`
-                                        : 'Price is not available'}
+                                      {`${object.balance} ${object.symbol} · 
+                                    $ ${
+                                      Math.round(object.singleTokenUSDCurrencyAmount * 100000) /
+                                      100000
+                                    } 
+                                    `}
                                     </SendTokenConvertedMeasures>
                                   </div>
                                 </SendTokenLabelsBlock>
                                 <SendTokenBalance isLightTheme={isLightTheme}>
                                   {object.balance !== undefined &&
                                     object.USDCurrency !== undefined && (
-                                      <span>{`$${
-                                        object.balance > 0
-                                          ? (
-                                              object.balance * object.USDCurrency.toFixed(5)
-                                            ).toFixed(3)
-                                          : object.balance * object.USDCurrency
-                                      }`}</span>
+                                      <span>
+                                        {`$${
+                                          Math.round(
+                                            object.balance *
+                                              object.singleTokenUSDCurrencyAmount *
+                                              100000
+                                          ) / 100000
+                                        }`}
+                                      </span>
                                     )}
                                 </SendTokenBalance>
                               </SendTokenModalListItem>

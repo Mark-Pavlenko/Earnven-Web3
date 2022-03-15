@@ -32,7 +32,8 @@ function* getSendTokensListSagaWorker(accountAddress) {
     tempObj.symbol = 'ETH';
     tempObj.balance = parseFloat(addressInfoData.data.ETH.balance.toFixed(3));
     tempObj.logoURI = ethImage;
-    tempObj.USDCurrency = 0;
+    // tempObj.USDCurrency = Math.round(addressInfoData.data.ETH.price.rate * 100) / 100;
+    // tempObj.USDCurrency = 0;
     tempObj.singleTokenUSDCurrencyAmount = Number(addressInfoData.data.ETH.price.rate);
     tempObj.sendTokensListItem = true;
 
@@ -47,7 +48,8 @@ function* getSendTokensListSagaWorker(accountAddress) {
       tempObj.address = tokens[i].tokenInfo.address;
       tempObj.name = tokens[i].tokenInfo.name;
       tempObj.symbol = tokens[i].tokenInfo.symbol;
-      tempObj.USDCurrency = 0;
+      // tempObj.USDCurrency = Math.round(tokens[i].tokenInfo.price.rate * 100) / 100;
+      // tempObj.USDCurrency = 0;
       tempObj.balance = parseFloat(
         (tokens[i].balance * Math.pow(10, -parseInt(tokens[i].tokenInfo.decimals))).toFixed(5)
       );
@@ -134,7 +136,7 @@ function* getReceiveTokensListSagaWorker() {
 
   // console.log('sagas tokenUSDAmount', initReceiveMultiSwapTokensList);
   yield put(actions.getReceiveTokensList(finalList));
-  yield put(actions.setInitReceiveFirstTokenSwap(finalList[0]));
+  yield put(actions.setInitReceiveFirstTokenSwap(finalList[1]));
   yield put(actions.setInitReceiveMultiSwapTokensList(initReceiveMultiSwapTokensList));
   yield put(setInitReceiveMultiSwapTokensListLoading(false));
 }
