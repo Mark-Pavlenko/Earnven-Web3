@@ -49,7 +49,7 @@ function* getSendTokensListSagaWorker(accountAddress) {
       tempObj.symbol = tokens[i].tokenInfo.symbol;
       tempObj.USDCurrency = 0;
       tempObj.balance = parseFloat(
-        (tokens[i].balance * Math.pow(10, -parseInt(tokens[i].tokenInfo.decimals))).toFixed(3)
+        (tokens[i].balance * Math.pow(10, -parseInt(tokens[i].tokenInfo.decimals))).toFixed(5)
       );
       tempObj.singleTokenUSDCurrencyAmount = Number(tokens[i].tokenInfo.price.rate);
       tempObj.sendTokensListItem = true;
