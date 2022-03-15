@@ -93,6 +93,7 @@ import Web3 from 'web3';
 import multiCallAbi from '../../abi/MultiCall.json';
 import TOKENDECIMALSABI from '../../abi/TokenDecomals.json';
 import ROUTERABI from '../../abi/UniRouterV2.json';
+import { send } from 'eth-permit/dist/rpc';
 
 const useStyles = makeStyles((theme) => ({
   noBorder: {
@@ -171,14 +172,22 @@ export default function MultiSwapComponent() {
   }
 
   let convertSendTokenToUSDCurrency = (tokenData) => {
-    let convertedToUSDValue = convertSendTokenToUSDCurrencyHelper(tokenData);
-    setTokenSendUSDCurrency(convertedToUSDValue);
-    setTokenSendAmount(tokenData.amount);
+    console.log('send token tokenData', tokenData);
+    // let convertedToUSDValue = convertSendTokenToUSDCurrencyHelper(tokenData);
+    // setTokenSendUSDCurrency(convertedToUSDValue);
+    // setTokenSendAmount(tokenData.amount);
   };
 
   let convertReceiveTokenToUSDCurrency = async (amount, tokenData) => {
-    await getTokenUSDAmount({ amount, tokenData }).then((res) => {
-      console.log('res', res);
+    let formattedAmount = Number(amount.replace(/[^\d.-]/g, '').replace(/[^\w.]|_/g, ''));
+
+    console.log('res amount formattedAmount', formattedAmount);
+    console.log('res amount formattedAmount typeof', typeof formattedAmount);
+
+    await getTokenUSDAmount({ amount: formattedAmount, tokenData }).then((res) => {
+      console.log('res amount middle', res);
+
+      // console.log('res amount formatted', formattedAmount);
 
       let receiveTokensListCopy = [...initReceiveMultiSwapTokensList];
       const needIndex = receiveTokensListCopy.findIndex(
@@ -186,8 +195,10 @@ export default function MultiSwapComponent() {
       );
       if (needIndex !== -1) {
         receiveTokensListCopy[needIndex].USDCurrency = res.USDCurrency;
-        receiveTokensListCopy[needIndex].amount = amount;
+        receiveTokensListCopy[needIndex].amount = formattedAmount;
       }
+
+      console.log('res amount total', receiveTokensListCopy[needIndex]);
       dispatch({
         type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST,
         payload: receiveTokensListCopy,
@@ -377,7 +388,7 @@ export default function MultiSwapComponent() {
         receiveTokensListCopy[needIndex] = {
           ...selectedSwapToken,
           receiveTokensListItem: true,
-          USDCurrency: (0.0).toFixed(2),
+          USDCurrency: (0.0).toFixed(3),
           amount: 0,
         };
       }
@@ -436,12 +447,12 @@ export default function MultiSwapComponent() {
   const toggleSwappedTokens = () => {
     // [...initReceiveMultiSwapTokensList];
     let sendTokensListCopy = initSendMultiSwapTokenList.map((obj) => {
-      return { ...obj, amount: 0, USDCurrency: (0.0).toFixed(2) };
+      return { ...obj, amount: 0, USDCurrency: (0.0).toFixed(3) };
       // return obj;
     });
     let receiveTokensListCopy = initReceiveMultiSwapTokensList.map((obj) => {
       if (Number(obj.amount) > 0) {
-        return { ...obj, amount: 0, USDCurrency: (0.0).toFixed(2) };
+        return { ...obj, amount: 0, USDCurrency: (0.0).toFixed(3) };
       }
       return obj;
     });
@@ -524,6 +535,20 @@ export default function MultiSwapComponent() {
     // }
   }, [initSendMultiSwapTokenList, initReceiveMultiSwapTokensList]);
 
+  const filterAmountInputFunction = (e, flag) => {
+    let test = e.currentTarget.value.replace(/[^\d.-]/g, '').replace(/[^\w.]|_/g, '');
+    // // console.log('regex test', test);
+
+    if (flag.isSendTokenSwapped === true) {
+      // setSendTokenForExchangeAmount(test);
+      console.log('sendToken InputFilter', test);
+      // initSendMultiSwapTokenList
+    } else {
+      console.log('receiveToken InputFilter', test);
+      // initReceiveMultiSwapTokensList
+    }
+  };
+
   return (
     <SecondColumnSwapSubBlock>
       <SecondColumnTitleBlock>
@@ -594,14 +619,14 @@ export default function MultiSwapComponent() {
                       }}
                       isLightTheme={isLightTheme}
                       placeholder="0.0"
-                      value={sendTokenForExchangeAmount}
+                      value={sendToken.amount}
                       onChange={(e) => {
-                        setSendTokenForExchangeAmount(e.target.value);
+                        // setSendTokenForExchangeAmount(e.target.value);
                         convertSendTokenToUSDCurrency({
-                          amount: e.target.value,
+                          amount: Number(e.target.value),
                           ...sendToken,
                         });
-
+                        filterAmountInputFunction(e, { isSendTokenSwapped: true });
                         const isLimitExceeded = checkIfExchangedTokenLimitIsExceeded(
                           e.target.value,
                           sendToken.balance
@@ -724,6 +749,7 @@ export default function MultiSwapComponent() {
                           convertReceiveTokenToUSDCurrency(e.target.value, {
                             ...receiveToken,
                           });
+                          filterAmountInputFunction(e, { isSendTokenSwapped: false });
                         }}
                       />
 

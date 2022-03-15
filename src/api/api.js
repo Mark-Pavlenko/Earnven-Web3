@@ -77,7 +77,7 @@ export const getTokenUSDAmount = async (tokenData) => {
 
     if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
       finalUSDCurrencyValue =
-        tokenUSDCurrencyValue.data.price.rate * parseFloat(tokenData.amount).toFixed(2);
+        tokenUSDCurrencyValue.data.price.rate * parseFloat(tokenData.amount).toFixed(3);
     } else {
       finalUSDCurrencyValue = -1;
     }
@@ -87,8 +87,8 @@ export const getTokenUSDAmount = async (tokenData) => {
     );
     finalUSDCurrencyValue = ethDollarValue.data.ethereum.usd * parseFloat(tokenData.amount);
   }
-  finalUSDCurrencyValue = finalUSDCurrencyValue.toFixed(2);
-  return { ...tokenData.tokenData, USDCurrency: finalUSDCurrencyValue };
+  finalUSDCurrencyValue = finalUSDCurrencyValue.toFixed(3);
+  return { ...tokenData.tokenData, USDCurrency: Number(finalUSDCurrencyValue) };
 };
 
 export const getCoinGeckoTokenUSDCurrency = async (tokenId) => {
