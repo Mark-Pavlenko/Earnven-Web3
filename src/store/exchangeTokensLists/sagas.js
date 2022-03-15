@@ -65,21 +65,12 @@ function* getSendTokensListSagaWorker(accountAddress) {
     }
   }
 
-  // let finalWalletTokensList;
-  // if (walletTokensList.length > 1) {
-  //   finalWalletTokensList = walletTokensList.filter(
-  //     (token) => token.symbol !== walletTokensList[0].symbol
-  //   );
-  // } else {
-  //   finalWalletTokensList = walletTokensList;
-  // }
-
   console.log('sagas exchange walletTokensList', walletTokensList);
   // console.log('sagas exchange finalWalletTokensList', finalWalletTokensList);
 
   yield put(actions.getSendTokensList(walletTokensList));
   yield put(actions.setInitSendTokenSwap(walletTokensList[0]));
-  yield put(actions.setInitSendTokenMultiSwap([walletTokensList[0]]));
+  yield put(actions.setInitSendTokenMultiSwap([{ ...walletTokensList[0], amount: 0 }]));
 
   yield put(setInitSendMultiSwapTokensListLoading(false));
 }
@@ -120,6 +111,7 @@ function* getReceiveTokensListSagaWorker() {
       ? filteredCoinGeckoTokensList.find((x) => x.symbol === token.symbol.toLowerCase()).id
       : null,
     USDCurrency: 0,
+    amount: 0,
   }));
 
   console.log('sagas filter finalReceiveTokensList', finalList);
@@ -128,8 +120,8 @@ function* getReceiveTokensListSagaWorker() {
   for (let i = 0; i < [finalList[2], finalList[4]].length; i++) {
     initReceiveMultiSwapTokensList.push(
       yield call(API.getTokenUSDAmount, {
-        amount: 0,
         tokenData: [finalList[2], finalList[4]][i],
+        amount: 0,
       })
     );
   }
