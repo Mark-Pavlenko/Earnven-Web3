@@ -103,3 +103,13 @@ export const ProtocolTitle = styled.div`
   font-weight: 200;
   font-size: 15px;
 `;
+
+export const Title = styled.div`
+  display: flex;
+  align-items: left;
+  justify-content: left;
+  color: ${(props) => (props.isLightTheme ? '#1E1E20' : 'white')};
+  font-weight: 500;
+  font-size: 15px;
+  margin-left: 10px;
+`;
