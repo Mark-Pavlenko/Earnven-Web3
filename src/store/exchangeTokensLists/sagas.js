@@ -33,7 +33,7 @@ function* getSendTokensListSagaWorker(accountAddress) {
     tempObj.balance = parseFloat(addressInfoData.data.ETH.balance.toFixed(3));
     tempObj.logoURI = ethImage;
     // tempObj.USDCurrency = Math.round(addressInfoData.data.ETH.price.rate * 100) / 100;
-    // tempObj.USDCurrency = 0;
+    tempObj.USDCurrency = 0;
     tempObj.singleTokenUSDCurrencyAmount = Number(addressInfoData.data.ETH.price.rate);
     tempObj.sendTokensListItem = true;
 
@@ -49,7 +49,7 @@ function* getSendTokensListSagaWorker(accountAddress) {
       tempObj.name = tokens[i].tokenInfo.name;
       tempObj.symbol = tokens[i].tokenInfo.symbol;
       // tempObj.USDCurrency = Math.round(tokens[i].tokenInfo.price.rate * 100) / 100;
-      // tempObj.USDCurrency = 0;
+      tempObj.USDCurrency = 0;
       tempObj.balance = parseFloat(
         (tokens[i].balance * Math.pow(10, -parseInt(tokens[i].tokenInfo.decimals))).toFixed(5)
       );
