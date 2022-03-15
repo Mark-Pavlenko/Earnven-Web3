@@ -1,17 +1,23 @@
 import { experimentalStyled as styled } from '@material-ui/core/styles';
 
 export const RootStyle = styled('div')`
-  background: ${(props) =>
+  min-height: 100%;
+  height: auto;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: ${(props) =>
     props.isLightTheme
       ? `url(${require(`./../assets/images/lightDashboard.jpg`).default})`
       : `#0B0E1D`};
-  background-size: cover;
   @media (min-width: 1921px) {
+    min-height: 100%;
+    height: auto;
+    background-repeat: no-repeat;
+    background-size: cover;
     background: ${(props) =>
       props.isLightTheme
-        ? `url(${require(`../assets/images/lightDashboardBig.jpg`).default})`
+        ? `url(${require(`./../assets/images/lightDashboard.jpg`).default})`
         : `#0B0E1D`};
-    background-size: cover;
   }
   @media (max-width: 480px) {
     background: ${(props) =>
@@ -39,7 +45,7 @@ export const RootStyle = styled('div')`
 export const MainStyle = styled('div')`
   flex-grow: 1;
   background-color: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};
-  //height: 100vh; This makes background wrong!
+  //height: 100vh;
 
   @media (min-width: 1930px) {
     background-color: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};

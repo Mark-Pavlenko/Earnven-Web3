@@ -93,7 +93,7 @@ export const SupplyTokenButton = styled.div`
   font-weight: 500;
   font-size: 14px;
   line-height: 22px;
-  color: ${(props) => (props.isLightTheme ? '#4453ad' : '#ffffff')};
+  color: ${(props) => (props.isLightTheme ? '#4453ad !important' : '#ffffff !important')};
   cursor: pointer;
   margin-bottom: 20px;
   @media (min-width: 175px) and (max-width: 520px) {
