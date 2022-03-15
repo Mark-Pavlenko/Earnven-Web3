@@ -107,6 +107,8 @@ function* curveStakingClaimDataSagaWorker(curveStakingAttributes) {
           object.balance = crvStakeTokenData.originalBalance / 10 ** 18;
           object.price = parseFloat(crvStakeTokenData.gauge.pool.virtualPrice).toFixed(2);
           object.value = object.balance * object.price;
+          object.chain = 'Ethereum';
+          object.protocol = 'Curve';
           crvStakingTotalValue += object.value;
           crvStakingArrayOfData.push(object);
         }

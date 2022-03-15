@@ -53,7 +53,7 @@ function* olympusTokenSagaWorker(olympusTokenAttributes) {
     object.protocol = 'Olympus';
     totalValue = object.value;
   }
-  if (Object.keys(object).length) {
+  if (object.value > 0) {
     ArrayOfData.push(object);
   }
   yield put(actions.getOHMTokenData(ArrayOfData));

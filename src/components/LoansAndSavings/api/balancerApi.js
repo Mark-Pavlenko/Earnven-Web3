@@ -85,7 +85,7 @@ export const getbalancerV2data = async (attributes) => {
             object.currentPrice = CurrentPrice;
             object.tokenPoolPrice = TokenPoolPrice;
             object.chain = 'Ethereum';
-            object.protocol = 'Balancer-V2';
+            object.protocol = 'Balancer';
             object.priceSum = sum;
             tot += object.priceSum;
           }

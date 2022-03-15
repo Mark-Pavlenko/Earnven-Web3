@@ -80,11 +80,13 @@ function* sushiStakeSagaWorker(sushiStakingObjects) {
         object.volume = parseFloat(slpTokenVolume).toFixed(2);
         object.liquidity = parseInt(slpTokenLiquidity).toFixed(2);
 
-        object.protocol = 'Ethereum';
-        object.chain = 'SushiSwap';
+        object.protocol = 'SushiSwap';
+        object.chain = 'Ethereum';
 
         totalValue += parseFloat(object.value);
-        sushiStaking.push(object);
+        if (object.value > 0) {
+          sushiStaking.push(object);
+        }
       }
     } //end of for loop
 

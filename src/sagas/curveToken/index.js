@@ -30,7 +30,7 @@ function* curveTokenSagaWorker(curveTokenAttributes) {
     object.price = cvxTokenApiData.cvxTokenPrice; //for timing hard coded;
     object.value = object.balance * object.price;
     object.imageData = [cvxTokenApiData.cvxImageUrl];
-    object.tokens = [{ symbol: 'CRV', balance: object.balance }];
+    //object.tokens = [{ symbol: 'CRV', balance: object.balance }];
     object.protocol = 'Curve';
     object.chain = 'Ethereum';
     object.symbol = 'CRV';

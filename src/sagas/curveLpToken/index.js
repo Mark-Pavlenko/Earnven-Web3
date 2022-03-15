@@ -46,20 +46,23 @@ function* curveLPTokenSagaWorker(curveLpTokenAttributes) {
         object.value = (curveLpDataPoint.curveLpTokenBalance / 10 ** 18) * tokenPrice;
         object.price = tokenPrice;
         object.chain = 'Ethereum';
+        object.protocol = 'Curve';
         object.liquidity = parseFloat(
           (curveLpDataPoint.curveLpTokenLiquidity / 10 ** 18) * tokenPrice
         ).toFixed(2);
         //object.liquidity = (curveLpDataPoint.curveLpTokenLiquidity / 10 ** 18) * tokenPrice;
         object.symbol = curveLpDataPoint.curveLpTokenSymbol;
-        object.protocol = curveLpDataPoint.curveLpTokenSymbol;
         curveLpTokenTotalValue += object.value;
-        staking.push(object);
+
+        if (object.value > 0.001) {
+          staking.push(object);
+        }
       }
     } //end of for loop
   }
   // setCurveLpTokenTotal(parseFloat(curveLpTokenTotalValue).toFixed(2));
   // setCurveLpTokenData(staking);
-  if (curveLpTokenTotalValue > 0) {
+  if (staking.length > 0) {
     yield put(actions.getCurveLPTokenData(staking));
     yield put(actions.getCurveLPTokenTotal(parseFloat(curveLpTokenTotalValue).toFixed(2)));
   }
