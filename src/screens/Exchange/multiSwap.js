@@ -449,16 +449,10 @@ export default function MultiSwapComponent() {
       payload: true,
     });
 
-    // searchTokensData.tokensList
-    // console.log('add receive token handler fullTokensList init', fullTokensList);
-
-    let removedInitTokenValuesList = initFilteringModalTokensListMultiSwap(
-      fullTokensList,
-      initSendMultiSwapTokenList[0],
-      initReceiveMultiSwapTokensList
-    );
-
-    // console.log('add receive token handler finalReceiveTokensList ', removedInitTokenValuesList);
+    let removedInitTokenValuesList = initFilteringModalTokensListMultiSwap(fullTokensList, [
+      ...initSendMultiSwapTokenList,
+      ...initReceiveMultiSwapTokensList,
+    ]);
 
     if (removedInitTokenValuesList.length !== 0) {
       initReceiveMultiSwapTokensList.push(removedInitTokenValuesList[0]);
@@ -545,18 +539,6 @@ export default function MultiSwapComponent() {
         setIsAbleToReplaceTokens(false);
       }
     }
-
-    // for (let i = 0; i < initReceiveMultiSwapTokensList.length; i++) {
-    //   if (
-    //     initSendMultiSwapTokenList[0] !== undefined &&
-    //     initReceiveMultiSwapTokensList[i].address !== undefined
-    //   )
-    //     convertExchangeTokensCourse({
-    //       sendTokenForExchangeAddress: initSendMultiSwapTokenList[0].address,
-    //       receiveTokenForExchangeAddress: initReceiveMultiSwapTokensList[i].address,
-    //       tokenAmount: 1,
-    //     });
-    // }
   }, [initSendMultiSwapTokenList, initReceiveMultiSwapTokensList]);
 
   return (
@@ -1046,7 +1028,7 @@ export default function MultiSwapComponent() {
                 style={{ marginTop: '20px' }}
                 isLightTheme={isLightTheme}
                 onClick={() => {
-                  addReceiveTokensHandler({ tokensList: finalReceiveTokensList });
+                  addReceiveTokensHandler(finalReceiveTokensList);
                 }}>
                 <img
                   src={isLightTheme ? plusIconDark : plusIconLight}
