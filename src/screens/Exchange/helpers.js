@@ -85,7 +85,7 @@ export const checkIfExchangedTokenLimitIsExceeded = (chosenTokenAmount, totalTok
 export const singleSushiSwapV2 = async (tokensData) => {};
 
 export const getTokenUSDAmount = async (tokenData) => {
-  console.log('res amount helper init', tokenData);
+  // console.log('res amount helper init', tokenData);
 
   if (tokenData.amount === '') {
     tokenData.amount = '0';
@@ -94,7 +94,6 @@ export const getTokenUSDAmount = async (tokenData) => {
   let tokenUSDCurrencyValue;
   let finalUSDCurrencyValue;
 
-  // if (tokenData.tokenData.USDCurrency)
   if (tokenData.tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
     await axios
       .get(
@@ -110,8 +109,7 @@ export const getTokenUSDAmount = async (tokenData) => {
     console.log('tokenUSDCurrencyValue.data.price.rate', tokenUSDCurrencyValue.data.price.rate);
 
     if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
-      finalUSDCurrencyValue =
-        tokenUSDCurrencyValue.data.price.rate * parseFloat(tokenData.amount).toFixed(2);
+      finalUSDCurrencyValue = tokenUSDCurrencyValue.data.price.rate * parseFloat(tokenData.amount);
     } else {
       finalUSDCurrencyValue = -1;
     }
@@ -121,7 +119,10 @@ export const getTokenUSDAmount = async (tokenData) => {
     );
     finalUSDCurrencyValue = ethDollarValue.data.ethereum.usd * parseFloat(tokenData.amount);
   }
+
   finalUSDCurrencyValue = finalUSDCurrencyValue.toFixed(3);
+
+  // console.log('total helper finalUSDCurrencyValue', finalUSDCurrencyValue);
   return {
     ...tokenData.tokenData,
     USDCurrency: Number(finalUSDCurrencyValue),

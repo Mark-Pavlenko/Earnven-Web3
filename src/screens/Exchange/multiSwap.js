@@ -162,7 +162,7 @@ export default function MultiSwapComponent() {
 
   //working saga
   const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
-  // console.log('multiswap finalSendTokensList 12345', finalSendTokensList);
+  console.log('multiswap finalSendTokensList 12345', finalSendTokensList);
 
   // const finalReceiveTokensList = sendTokensMockList;
   let finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
@@ -171,16 +171,37 @@ export default function MultiSwapComponent() {
     return new Web3(window.ethereum);
   }
 
-  let convertSendTokenToUSDCurrency = (tokenData) => {
-    console.log('send token tokenData', tokenData);
-    // let convertedToUSDValue = convertSendTokenToUSDCurrencyHelper(tokenData);
-    // setTokenSendUSDCurrency(convertedToUSDValue);
-    // setTokenSendAmount(tokenData.amount);
+  let convertSendTokenToUSDCurrency = async (amount, tokenData) => {
+    let formattedAmount = Number(amount.replace(/[^\d.-]/g, '').replace(/[^\w.]|_/g, ''));
+
+    // console.log('res amount tokenData send ', tokenData);
+    // console.log('res amount send formattedAmount', formattedAmount);
+    // console.log('res amount send formattedAmount typeof', typeof formattedAmount);
+
+    await getTokenUSDAmount({ amount: formattedAmount, tokenData }).then((res) => {
+      // console.log('res amount send middle', res);
+
+      let sendTokensListCopy = [...initSendMultiSwapTokenList];
+      const needIndex = sendTokensListCopy.findIndex(
+        (token) => token.address === tokenData.address
+      );
+      if (needIndex !== -1) {
+        sendTokensListCopy[needIndex].USDCurrency = res.USDCurrency;
+        sendTokensListCopy[needIndex].amount = formattedAmount;
+      }
+
+      // console.log('res amount send list total', sendTokensListCopy);
+      dispatch({
+        type: actionTypes.SET_INIT_SEND_MULTISWAP_TOKEN,
+        payload: sendTokensListCopy,
+      });
+    });
   };
 
   let convertReceiveTokenToUSDCurrency = async (amount, tokenData) => {
     let formattedAmount = Number(amount.replace(/[^\d.-]/g, '').replace(/[^\w.]|_/g, ''));
 
+    console.log('res amount tokenData receive', tokenData);
     console.log('res amount formattedAmount', formattedAmount);
     console.log('res amount formattedAmount typeof', typeof formattedAmount);
 
@@ -535,20 +556,6 @@ export default function MultiSwapComponent() {
     // }
   }, [initSendMultiSwapTokenList, initReceiveMultiSwapTokensList]);
 
-  const filterAmountInputFunction = (e, flag) => {
-    let test = e.currentTarget.value.replace(/[^\d.-]/g, '').replace(/[^\w.]|_/g, '');
-    // // console.log('regex test', test);
-
-    if (flag.isSendTokenSwapped === true) {
-      // setSendTokenForExchangeAmount(test);
-      console.log('sendToken InputFilter', test);
-      // initSendMultiSwapTokenList
-    } else {
-      console.log('receiveToken InputFilter', test);
-      // initReceiveMultiSwapTokensList
-    }
-  };
-
   return (
     <SecondColumnSwapSubBlock>
       <SecondColumnTitleBlock>
@@ -612,7 +619,7 @@ export default function MultiSwapComponent() {
                             padding: 0,
                             width: '200px',
                             fontWeight: 600,
-                            color: isLightTheme ? 'black' : 'white',
+                            color: isTokensLimitExceeded ? 'red' : isLightTheme ? 'black' : 'white',
                           },
                         },
                         classes: { notchedOutline: classes.noBorder },
@@ -621,12 +628,10 @@ export default function MultiSwapComponent() {
                       placeholder="0.0"
                       value={sendToken.amount}
                       onChange={(e) => {
-                        // setSendTokenForExchangeAmount(e.target.value);
-                        convertSendTokenToUSDCurrency({
-                          amount: Number(e.target.value),
+                        convertSendTokenToUSDCurrency(e.target.value, {
                           ...sendToken,
                         });
-                        filterAmountInputFunction(e, { isSendTokenSwapped: true });
+
                         const isLimitExceeded = checkIfExchangedTokenLimitIsExceeded(
                           e.target.value,
                           sendToken.balance
@@ -646,8 +651,14 @@ export default function MultiSwapComponent() {
                     {sendToken.balance} {sendToken.symbol}
                   </MultiSwapSendValueLabel>
 
-                  <MultiSwapSendValueLabel isLightTheme={isLightTheme}>
-                    {tokenSendUSDCurrency}
+                  <MultiSwapSendValueLabel
+                    isLightTheme={isLightTheme}
+                    style={{ marginLeft: 'auto' }}>
+                    {sendToken.USDCurrency < 0 ? (
+                      <>Price not available</>
+                    ) : (
+                      <>${sendToken.USDCurrency}</>
+                    )}
                   </MultiSwapSendValueLabel>
                 </MultiSwapSendValueLabelsLayout>
               </MultiSwapSendTokensChooseBlock>
@@ -749,7 +760,6 @@ export default function MultiSwapComponent() {
                           convertReceiveTokenToUSDCurrency(e.target.value, {
                             ...receiveToken,
                           });
-                          filterAmountInputFunction(e, { isSendTokenSwapped: false });
                         }}
                       />
 
