@@ -642,12 +642,13 @@ export default function MultiSwapComponent() {
           {/*{isTokensToggled}*/}
 
           {/*Choose send tokens block*/}
-          <SendReceiveSubBlock>
+          <SendReceiveSubBlock style={{ backgroundColor: 'red' }}>
             <SendBlockLabels isLightTheme={isLightTheme} style={{ margin: '32px 20px 7px 20px' }}>
               <span>Send</span>
             </SendBlockLabels>
 
             {/* SEND block */}
+
             <>
               {initSendMultiSwapTokenList.map((sendToken, key) => (
                 <MultiSwapSendTokensChooseBlock isLightTheme={isLightTheme}>
@@ -765,7 +766,7 @@ export default function MultiSwapComponent() {
             )}
           </SendReceiveSubBlock>
           {/* mapped received block */}
-          <>
+          <SendReceiveSubBlock style={{ backgroundColor: 'green' }}>
             <SendBlockLabels isLightTheme={isLightTheme} style={{ margin: '0px 20px 5px 20px' }}>
               <span>Receive</span>
             </SendBlockLabels>
@@ -1182,7 +1183,7 @@ export default function MultiSwapComponent() {
                 />
               </AddReceiveTokenMultiSwapBtn>
             )}
-          </>
+          </SendReceiveSubBlock>
 
           <SwapBlockDelimiter isLightTheme={isLightTheme} style={{ margin: '20px  27px 0 20px' }} />
           {/* Labels block*/}
