@@ -114,22 +114,13 @@ export default function MultiSwapComponent() {
   const [isTokensLimitExceeded, setIsTokensLimitExceeded] = useState(false);
   let [isAddedReceiveTokensLimitExceeded, setIsAddedReceiveTokensLimitExceeded] = useState(false);
   const [isAbleToReplaceTokens, setIsAbleToReplaceTokens] = useState(false);
-  const [exchangersOfferedList, setExchangersOfferedList] = useState([
+  const exchangersOfferedList = [
     {
       name: 'Uniswap_V2',
       routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
       receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
       gasFee: '$10.03',
       logoIcon: uniswapV2ExchangerIcon,
-      isExchangerSelected: true,
-    },
-    {
-      name: 'Swerve',
-      routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
-      receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
-      gasFee: '$10.03',
-      logoIcon: swerveExchangerIcon,
-      isExchangerSelected: false,
     },
     {
       name: 'SushiSwap',
@@ -137,9 +128,15 @@ export default function MultiSwapComponent() {
       receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
       gasFee: '$10.03',
       logoIcon: sushiSwapExchangerIcon,
-      isExchangerSelected: false,
     },
-  ]);
+    {
+      name: 'Swerve',
+      routerAddress: 'THIS_IS_FAKE_ROUTER_ADDRESS',
+      receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
+      gasFee: '$10.03',
+      logoIcon: swerveExchangerIcon,
+    },
+  ];
   const [anchorEl, setAnchorEl] = useState(null);
   const [chosenNewExchangerToken, setChosenNewExchangerToken] = useState({});
 
@@ -936,6 +933,7 @@ export default function MultiSwapComponent() {
                                         <ExchangerElementSpan isLightTheme={isLightTheme}>
                                           {exchanger.gasFee}
                                         </ExchangerElementSpan>
+
                                         {chosenNewExchangerToken &&
                                           Object.keys(chosenNewExchangerToken).length !== 0 && (
                                             <>
