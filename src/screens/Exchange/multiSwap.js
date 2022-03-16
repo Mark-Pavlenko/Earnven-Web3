@@ -643,7 +643,7 @@ export default function MultiSwapComponent() {
 
           {/*Choose send tokens block*/}
           <SendReceiveSubBlock>
-            <SendBlockLabels isLightTheme={isLightTheme} style={{ margin: '32px 20px 0px 20px' }}>
+            <SendBlockLabels isLightTheme={isLightTheme} style={{ margin: '32px 20px 7px 20px' }}>
               <span>Send</span>
             </SendBlockLabels>
 

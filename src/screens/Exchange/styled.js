@@ -145,7 +145,7 @@ export const MultiSwapSendTokensChooseBlock = styled.div`
   //align-items: center;
   width: 475px;
   height: 60px;
-  margin: 7px 27px 16px 20px;
+  margin: 0px 27px 16px 20px;
   padding: 6px 20px 7px 12px;
   color: black;
   background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
