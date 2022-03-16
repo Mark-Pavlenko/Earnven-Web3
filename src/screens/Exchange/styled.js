@@ -180,7 +180,6 @@ export const MultiSwapReceiveTokensBlock = styled.div`
   flex-direction: column;
   width: 475px;
   height: 115px;
-  margin-top: -3px;
   margin-bottom: 20px;
   color: black;
   background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
