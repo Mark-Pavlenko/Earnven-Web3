@@ -1066,17 +1066,17 @@ export default function MultiSwapComponent() {
                               Exchange rate
                             </LabelsBlockSubBlockSpan>
 
-                            {receiveToken.singleAmountSendTokenConvert !== 0 &&
-                            initSendMultiSwapTokenList[0].symbol !== undefined ? (
-                              <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                                1 {initSendMultiSwapTokenList[0].symbol} ={' '}
-                                {receiveToken.singleAmountSendTokenConvert} {receiveToken.symbol}
-                              </LabelsBlockSubBlockSpan>
-                            ) : (
-                              <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                                Unavailable
-                              </LabelsBlockSubBlockSpan>
-                            )}
+                            {/*{receiveToken.singleAmountSendTokenConvert !== 0 &&*/}
+                            {/*initSendMultiSwapTokenList[0].symbol !== undefined ? (*/}
+                            {/*  <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>*/}
+                            {/*    1 {initSendMultiSwapTokenList[0].symbol} ={' '}*/}
+                            {/*    {receiveToken.singleAmountSendTokenConvert} {receiveToken.symbol}*/}
+                            {/*  </LabelsBlockSubBlockSpan>*/}
+                            {/*) : (*/}
+                            <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                              Unavailable
+                            </LabelsBlockSubBlockSpan>
+                            {/*)}*/}
                           </LabelsBlockSubBlock>
 
                           {/* add checking*/}
