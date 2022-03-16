@@ -596,7 +596,7 @@ export default function MultiSwapComponent() {
     };
     // console.log('tokenWithChosenExchanger multiswap', tokenWithChosenExchanger);
 
-    let test1 = chosenExchangerTokensList.map((token) => {
+    let formattedReceiveTokensList = chosenExchangerTokensList.map((token) => {
       if (token.address === tokenWithChosenExchanger.address) {
         return {
           ...token,
@@ -609,7 +609,16 @@ export default function MultiSwapComponent() {
       };
     });
 
-    console.log('tokenWithChosenExchanger multiswap test1', test1);
+    console.log('tokenWithChosenExchanger multiswap test1', formattedReceiveTokensList);
+
+    dispatch({
+      type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST,
+      payload: formattedReceiveTokensList,
+    });
+
+    setChosenExchangerTokensList([]);
+    setChosenNewExchangerToken({});
+    setAnchorEl(false);
   };
 
   return (
