@@ -52,7 +52,7 @@ import {
 import { Button } from '@mui/material';
 
 export default function Account({ address, name, global_wallet, setTheme }) {
-  console.log('global_wallet', global_wallet);
+  // console.log('global_wallet', global_wallet);
   const dispatch = useDispatch();
   const themeType = useSelector((state) => state.themeReducer.isLightTheme);
   const selectedAccount = localStorage.getItem('selected-account');

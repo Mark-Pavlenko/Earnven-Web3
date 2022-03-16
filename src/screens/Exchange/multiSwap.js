@@ -143,6 +143,8 @@ export default function MultiSwapComponent() {
       isExchangerSelected: false,
     },
   ]);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [chosenNewExchangerToken, setChosenNewExchangerToken] = useState({});
 
   let textInput = useRef(null);
 
@@ -170,11 +172,16 @@ export default function MultiSwapComponent() {
 
   //popover open/close
 
-  const [anchorEl, setAnchorEl] = useState(null);
-  const handleClick = (event) => {
+  let [chosenExchangerTokensList, setChosenExchangerTokensList] = useState([]);
+
+  const openExchangersModal = (event, tokensList, chosenToken) => {
+    console.log('openExchangersModal chosenReceiveToken', chosenToken);
+    setChosenExchangerTokensList(tokensList);
+    setChosenNewExchangerToken(chosenToken);
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+
+  const closeExchangersModal = () => {
     setAnchorEl(null);
   };
   const open = Boolean(anchorEl);
@@ -577,6 +584,34 @@ export default function MultiSwapComponent() {
     }
   }, [initSendMultiSwapTokenList, initReceiveMultiSwapTokensList]);
 
+  const selectNewExchanger = (
+    selectedNewExchanger,
+    chosenExchangerTokensList,
+    chosenNewExchangerToken
+  ) => {
+    // console.log('tokenWithChosenExchanger multiswap selectedNewExchanger', selectedNewExchanger);
+    const tokenWithChosenExchanger = {
+      ...chosenNewExchangerToken,
+      chosenExchanger: { ...selectedNewExchanger, isExchangerSelected: true },
+    };
+    // console.log('tokenWithChosenExchanger multiswap', tokenWithChosenExchanger);
+
+    let test1 = chosenExchangerTokensList.map((token) => {
+      if (token.address === tokenWithChosenExchanger.address) {
+        return {
+          ...token,
+          chosenExchanger: { ...selectedNewExchanger, isExchangerSelected: true },
+        };
+      }
+      return {
+        ...token,
+        chosenExchanger: { ...token.chosenExchanger, isExchangerSelected: false },
+      };
+    });
+
+    console.log('tokenWithChosenExchanger multiswap test1', test1);
+  };
+
   return (
     <SecondColumnSwapSubBlock>
       <SecondColumnTitleBlock>
@@ -823,11 +858,19 @@ export default function MultiSwapComponent() {
                       </LabelsBlockSubBlockSpan>
                       <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
                         <img src={receiveToken.chosenExchanger.logoIcon} alt="paraSwapIcon" />
-                        <span onClick={handleClick}>{receiveToken.chosenExchanger.name}</span>
+                        <span
+                          onClick={(event) =>
+                            openExchangersModal(event, initReceiveMultiSwapTokensList, receiveToken)
+                          }>
+                          {receiveToken.chosenExchanger.name}
+                        </span>
+                        {/* Offered by popover*/}
                         <Popover
                           open={open}
                           anchorEl={anchorEl}
-                          onClose={handleClose}
+                          chosenNewExchangerToken={chosenNewExchangerToken}
+                          chosenExchangerTokensList={chosenExchangerTokensList}
+                          onClose={closeExchangersModal}
                           anchorOrigin={{
                             vertical: 'center',
                             horizontal: 'right',
@@ -852,7 +895,7 @@ export default function MultiSwapComponent() {
                             <ExchangersMainSubLayout>
                               <OfferedByLayoutLabelBlock
                                 isLightTheme={isLightTheme}
-                                onClick={handleClose}>
+                                onClick={closeExchangersModal}>
                                 <img
                                   src={isLightTheme ? chevronDownBlack : chevronDownLight}
                                   alt="chevron_icon"
@@ -867,7 +910,15 @@ export default function MultiSwapComponent() {
                                 <ExchangersMainListLayout isLightTheme={isLightTheme}>
                                   <ExchangerMainList>
                                     {exchangersOfferedList.map((exchanger) => (
-                                      <ExchangerElementListItem isLightTheme={isLightTheme}>
+                                      <ExchangerElementListItem
+                                        isLightTheme={isLightTheme}
+                                        onClick={() =>
+                                          selectNewExchanger(
+                                            exchanger,
+                                            chosenExchangerTokensList,
+                                            chosenNewExchangerToken
+                                          )
+                                        }>
                                         <ExchangerElementSpan
                                           isLightTheme={isLightTheme}
                                           style={{ marginRight: '36px' }}>
