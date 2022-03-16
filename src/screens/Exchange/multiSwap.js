@@ -121,6 +121,7 @@ export default function MultiSwapComponent() {
       receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
       gasFee: '$10.03',
       logoIcon: uniswapV2ExchangerIcon,
+      isBestRate: true,
     },
     {
       name: 'SushiSwap',
@@ -128,6 +129,7 @@ export default function MultiSwapComponent() {
       receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
       gasFee: '$10.03',
       logoIcon: sushiSwapExchangerIcon,
+      isBestRate: false,
     },
     {
       name: 'Swerve',
@@ -135,6 +137,7 @@ export default function MultiSwapComponent() {
       receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
       gasFee: '$10.03',
       logoIcon: swerveExchangerIcon,
+      isBestRate: false,
     },
   ];
   const [anchorEl, setAnchorEl] = useState(null);
@@ -937,15 +940,24 @@ export default function MultiSwapComponent() {
                                         {chosenNewExchangerToken &&
                                           Object.keys(chosenNewExchangerToken).length !== 0 && (
                                             <>
+                                              {exchanger.isBestRate ? (
+                                                <ExchangerBestRateSpan
+                                                  isLightTheme={isLightTheme}
+                                                  style={{}}>
+                                                  Best rate
+                                                </ExchangerBestRateSpan>
+                                              ) : (
+                                                <ExchangerBestRateSpan
+                                                  isLightTheme={isLightTheme}
+                                                  style={{ visibility: 'hidden' }}>
+                                                  Best rate
+                                                </ExchangerBestRateSpan>
+                                              )}
+
                                               {exchanger.routerAddress ===
                                               chosenNewExchangerToken.chosenExchanger
                                                 .routerAddress ? (
                                                 <>
-                                                  <ExchangerBestRateSpan
-                                                    isLightTheme={isLightTheme}
-                                                    style={{}}>
-                                                    Best rate
-                                                  </ExchangerBestRateSpan>
                                                   <ExchangerIcon
                                                     src={exchanger.logoIcon}
                                                     alt="icon"
@@ -954,11 +966,6 @@ export default function MultiSwapComponent() {
                                                 </>
                                               ) : (
                                                 <>
-                                                  <ExchangerBestRateSpan
-                                                    isLightTheme={isLightTheme}
-                                                    style={{ visibility: 'hidden' }}>
-                                                    Best rate
-                                                  </ExchangerBestRateSpan>
                                                   <ExchangerIcon
                                                     src={exchanger.logoIcon}
                                                     alt="icon"
