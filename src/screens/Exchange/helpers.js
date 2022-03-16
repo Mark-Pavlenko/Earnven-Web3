@@ -126,7 +126,9 @@ export const getTokenUSDAmount = async (tokenData) => {
     console.log('tokenUSDCurrencyValue.data.price.rate', tokenUSDCurrencyValue.data.price.rate);
 
     if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
-      finalUSDCurrencyValue = tokenUSDCurrencyValue.data.price.rate * parseFloat(tokenData.amount);
+      finalUSDCurrencyValue = (
+        tokenUSDCurrencyValue.data.price.rate * parseFloat(tokenData.amount)
+      ).toFixed(3);
     } else {
       finalUSDCurrencyValue = -1;
     }
@@ -137,7 +139,7 @@ export const getTokenUSDAmount = async (tokenData) => {
     finalUSDCurrencyValue = ethDollarValue.data.ethereum.usd * parseFloat(tokenData.amount);
   }
 
-  finalUSDCurrencyValue = Math.round(finalUSDCurrencyValue * 100) / 100;
+  // finalUSDCurrencyValue = Math.round(finalUSDCurrencyValue * 100) / 100;
 
   // console.log('total helper finalUSDCurrencyValue', finalUSDCurrencyValue);
   return {
