@@ -135,7 +135,7 @@ export default function Dashboard({ test, changeTheme }) {
   }, []);
 
   return (
-    <Box sx={{ width: '100%', mt: 3 }}>
+    <Box sx={{ width: '100%' }}>
       <Protocols accountAddress={address} />
       <DashboardTabsLayout>
         <DashboardTabs isLightTheme={theme} toggleTabsHandler={handleChange} />

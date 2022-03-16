@@ -39,6 +39,7 @@ import {
   Balance,
   BlockTokenName,
   BlockTokens,
+  DividerBlock,
 } from '../../../uniV2/StyledComponents';
 import Select from 'react-select';
 import { Link, useParams } from 'react-router-dom';
@@ -466,9 +467,9 @@ export const InvestTableItem = ({
             {/*<ButtonsBlock>*/}
             {/*  <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>*/}
             {/*</ButtonsBlock>*/}
-            <ButtonsBlock>
+            <DividerBlock>
               <ChangeToken isLightTheme={theme}>{'Or'}</ChangeToken>
-            </ButtonsBlock>
+            </DividerBlock>
             <SelectTitle isLightTheme={theme}>{'Supply a token'}</SelectTitle>
             {/*input-------------------->*/}
             <InputBlock>
