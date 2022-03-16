@@ -19,7 +19,7 @@ export const setInitSendTokenSwap = (payload) => {
 export const setInitSendTokenMultiSwap = (payload) => {
   console.log('InitialSendTokenMultiSwap', payload);
   return {
-    type: actionType.SET_INIT_SEND_MULTISWAP_TOKEN,
+    type: actionType.SET_INIT_SEND_MULTISWAP_TOKENS_LIST,
     payload,
   };
 };
@@ -40,14 +40,6 @@ export const setInitReceiveFirstTokenSwap = (payload) => {
   };
 };
 
-export const setInitReceiveSecondTokenSwap = (payload) => {
-  // console.log('InitialReceiveSecondTokenSwap', payload);
-  return {
-    type: actionType.SET_INIT_RECEIVE_SECOND_TOKEN_SWAP,
-    payload,
-  };
-};
-
 export const setInitReceiveMultiSwapTokensList = (payload) => {
   // console.log('set InitialReceive MULTISWAP Tokens list', payload);
   return {
@@ -56,10 +48,25 @@ export const setInitReceiveMultiSwapTokensList = (payload) => {
   };
 };
 
+export const setInitSendMultiSwapTokensListLoading = (payload) => {
+  // console.log('set InitialReceive MULTISWAP Tokens list loading', payload);
+  return {
+    type: actionType.SET_INIT_SEND_MULTISWAP_TOKENS_LISTS_LIST_LOADING,
+    payload,
+  };
+};
+
 export const setInitReceiveMultiSwapTokensListLoading = (payload) => {
   // console.log('set InitialReceive MULTISWAP Tokens list loading', payload);
   return {
     type: actionType.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING,
+    payload,
+  };
+};
+//unused
+export const getInitTokenWithUSDCurrencyAmount = (payload) => {
+  return {
+    type: actionType.SET_INIT_USD_CURRENCY_TOKEN_AMOUNT,
     payload,
   };
 };

@@ -11,7 +11,7 @@ import ERC20ABI from '../../abi/ERC20.json';
 import closeModalIcon from '../../assets/icons/close_nft.svg';
 import closeModalIconDark from '../../assets/icons/closenftdark.svg';
 import OutsideClickHandler from './outsideClickHandler';
-import { Box, Button } from '@material-ui/core';
+import { Box, Button, TextField } from '@material-ui/core';
 import Uniswap from '../../assets/icons/Uniswap.webp';
 import Balancer from '../../assets/icons/balancer.png';
 import { ethers } from 'ethers';
@@ -104,12 +104,6 @@ import {
 import { getTokenDataSaga } from '../../store/currentTokenData/actions';
 import Popover from '@mui/material/Popover';
 
-const useStyles = makeStyles((theme) => ({
-  noBorder: {
-    border: 'none !important',
-  },
-}));
-
 const erc20Abi = [
   'function balanceOf(address owner) view returns (uint256)',
   'function approve(address _spender, uint256 _value) public returns (bool success)',
@@ -130,7 +124,7 @@ const makeCall = async (callName, contract, args, metadata = {}) => {
     }
     return result;
   } else {
-    // console.log('no call of that name!');
+    // // console.log('no call of that name!');
   }
 };
 
@@ -139,10 +133,19 @@ import ROUTERABI from '../../abi/UniRouterV2.json';
 // import exchangersOfferedList from './exchangersOfferedList';
 import greenDot from '../../assets/icons/greenDot.svg';
 import { singleSushiSwapV2 } from './helpers';
+import { getWalletDataSaga } from '../../store/currentWalletData/actions';
+
+const useStyles = makeStyles(() => ({
+  noBorder: {
+    border: 'none !important',
+  },
+}));
 
 export default function SwapComponent() {
+  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
+
   const dispatch = useDispatch();
-  const classes = useStyles();
+  const classes = useStyles(isLightTheme);
   const { address } = useParams();
 
   //work saga
@@ -163,16 +166,6 @@ export default function SwapComponent() {
     slowSpeedIcon
   );
 
-  // console.log('addIconsGasPricesWithIcons exchange', addIconsGasPricesWithIcons);
-
-  console.log('123', initSendTokenSwap);
-  console.log('123 b', initReceiveFirstTokenSwap);
-
-  // console.log('finalSendTokensList 000', finalSendTokensList);
-  // console.log('finalReceiveTokensList 000', finalReceiveTokensList);
-  // console.log('initSendFirstTokenSwap 000', initSendTokenSwap);
-  // console.log('initReceiveFirstTokenSwap 000', initReceiveFirstTokenSwap);
-
   const [filteredData, setFilteredData] = useState([]);
   const [filteredReceiveTokensListData, setFilteredReceiveTokensListData] = useState([]);
   const [tokenSendUSDCurrency, setTokenSendUSDCurrency] = useState('$0.00');
@@ -183,12 +176,12 @@ export default function SwapComponent() {
   const [isSendTokensModalVisible, setIsSendTokensModalVisible] = useState(false);
   const [isReceiveTokensModalVisible, setIsReceiveTokensModalVisible] = useState(false);
   const [toggleExchangedTokens, setToggleExchangedTokens] = useState(false);
-  const [initConvertReceiveTokenAmount, setInitConvertReceiveTokenAmount] = useState(0);
-  const [isAbleToReplaceTokensInSingleSwap, setIsAbleToReplaceTokensInSingleSwap] = useState();
+  const [initConvertReceiveTokenAmount, setInitConvertReceiveTokenAmount] = useState('Loading...');
+  const [isAbleToReplaceTokensInSingleSwap, setIsAbleToReplaceTokensInSingleSwap] = useState(true);
   const [isOfferedByPopoverActivated, setisOfferedByPopoverActivated] = useState(true);
   const [exchangersOfferedList, setExchangersOfferedList] = useState([
     {
-      name: 'UniSwap',
+      name: 'Uniswap_V2',
       routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
       receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
       gasFee: '$10.03',
@@ -205,26 +198,31 @@ export default function SwapComponent() {
       logoIcon: sushiSwapExchangerIcon,
       isExchangerSelected: false,
     },
+    //if wrong Exchanger name/router address - Uniswap_V3 by default of 0x API
+    // {
+    //   name: 'testName',
+    //   routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997DDD',
+    //   receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
+    //   gasFee: '$10.03',
+    //   isBestRate: false,
+    //   logoIcon: fastSpeedIcon,
+    //   isExchangerSelected: false,
+    // },
   ]);
   const [activeExchanger, setActiveExchanger] = useState(exchangersOfferedList[0]);
+  const [isTokensSwappingActive, setIsTokensSwappingActive] = useState(false);
+  const [slippageTolerance, setSlippageTolerance] = useState(0);
+  const [rawPersonalSlippageTolerance, setRawPersonalSlippageTolerance] = useState(0);
+  const [personalSlippageTolerance, setPersonalSlippageTolerance] = useState(0);
 
-  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
-
-  //---OLD states
-
-  const [TokenTo, setTokenTo] = useState('');
-
-  // const [Slippage, setSlippage] = useState(2);
-  // const [selectedRate, setselectedRate] = useState(null);
-
-  //------
+  console.log('filteredData', filteredData);
 
   const [anchorEl, setAnchorEl] = useState(null);
 
   const openExchangersListPopover = (event, flag) => {
     setAnchorEl(event.currentTarget);
 
-    console.log('flag isOfferedByPopoverActivated', flag.isOfferedByPopoverActivated);
+    // console.log('flag isOfferedByPopoverActivated', flag.isOfferedByPopoverActivated);
 
     if (flag.isOfferedByPopoverActivated === true) {
       setisOfferedByPopoverActivated(true);
@@ -235,6 +233,8 @@ export default function SwapComponent() {
 
   const handleClose = () => {
     setAnchorEl(null);
+    setPersonalSlippageTolerance(0);
+    setRawPersonalSlippageTolerance(0);
   };
 
   const open = Boolean(anchorEl);
@@ -246,36 +246,33 @@ export default function SwapComponent() {
       dispatch({ type: actionTypes.SET_SEND_TOKENS_LIST, payload: address });
       dispatch({ type: actionTypes.SET_RECEIVE_TOKENS_LIST });
       dispatch(getTokenDataSaga(initReceiveFirstTokenSwap.id));
-
-      let ifSendTokenAvailableForSwap = finalReceiveTokensList.some((el) => {
-        if (el.address === initSendTokenSwap.address) {
-          return true;
-        }
-      });
-
-      let ifReceiveTokenAvailableForSwap = finalSendTokensList.some((el) => {
-        if (el.address === initReceiveFirstTokenSwap.address) {
-          return true;
-        }
-      });
-
-      // // console.log('is send token in receive list 111', ifSendTokenAvailableForSwap);
-      // // console.log('is receive token in list 111 send', ifReceiveTokenAvailableForSwap);
-
-      if (ifSendTokenAvailableForSwap === true && ifReceiveTokenAvailableForSwap === true) {
-        setIsAbleToReplaceTokensInSingleSwap(true);
-      } else if (
-        ifSendTokenAvailableForSwap === false ||
-        ifReceiveTokenAvailableForSwap === false
-      ) {
-        setIsAbleToReplaceTokensInSingleSwap(false);
-      }
+      dispatch(getWalletDataSaga(address));
+      setSlippageTolerance(0.03);
     } catch (error) {
-      // console.log(error);
+      // console.log('err swap init load', error);
     }
   }, []);
 
   useEffect(() => {
+    let ifSendTokenAvailableForSwap = finalReceiveTokensList.some((el) => {
+      if (el.address === initSendTokenSwap.address) {
+        return true;
+      }
+    });
+
+    let ifReceiveTokenAvailableForSwap = finalSendTokensList.some((el) => {
+      if (el.address === initReceiveFirstTokenSwap.address) {
+        return true;
+      }
+    });
+
+    if (ifSendTokenAvailableForSwap === true && ifReceiveTokenAvailableForSwap === true) {
+      setIsAbleToReplaceTokensInSingleSwap(true);
+    } else if (ifSendTokenAvailableForSwap === false || ifReceiveTokenAvailableForSwap === false) {
+      setIsAbleToReplaceTokensInSingleSwap(false);
+    }
+
+    //init format receive token - add token amount to it
     let formattedReceiveToken;
     if (initReceiveFirstTokenSwap.balance === undefined) {
       let foundSendTokenListItem = finalSendTokensList.find((el) => {
@@ -290,13 +287,27 @@ export default function SwapComponent() {
       formattedReceiveToken = initReceiveFirstTokenSwap;
     }
 
-    // console.log('init test formattedReceiveToken', formattedReceiveToken);
-
     dispatch({
       type: actionTypes.SET_INIT_RECEIVE_FIRST_TOKEN_SWAP,
       payload: formattedReceiveToken,
     });
-  }, [initReceiveFirstTokenSwap]);
+
+    if (
+      initSendTokenSwap.address !== undefined &&
+      initReceiveFirstTokenSwap.address !== undefined
+    ) {
+      // console.log('effect init SendTokenSwap', initSendTokenSwap);
+      // console.log('effect init ReceiveFirstTokenSwap', initReceiveFirstTokenSwap);
+
+      convertExchangeTokensCourse({
+        sendTokenForExchangeAddress: initSendTokenSwap.address,
+        receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
+        tokenAmount: 1,
+        inputId: 'firstPageLoad',
+        routerAddress: activeExchanger.routerAddress,
+      });
+    }
+  }, [initSendTokenSwap, initReceiveFirstTokenSwap]);
 
   useEffect(() => {
     let filteredSendTokensList = finalSendTokensList.filter(
@@ -317,10 +328,6 @@ export default function SwapComponent() {
     setTokensReceiveUSDCurrency('$0.00');
   }, [finalSendTokensList, finalReceiveTokensList]);
 
-  console.log('activeExchanger', activeExchanger);
-
-  //function of dynamic converting of token value to USD Currency
-
   const toggleSwappedTokens = () => {
     setToggleExchangedTokens(!toggleExchangedTokens);
 
@@ -334,7 +341,7 @@ export default function SwapComponent() {
       payload: initSendTokenSwap,
     });
 
-    // // console.log('toggleButton balance send token', initSendTokenSwap.balance);
+    // // // console.log('toggleButton balance send token', initSendTokenSwap.balance);
 
     setTokenSendUSDCurrency('$0.00');
     setTokensReceiveUSDCurrency('$0.00');
@@ -344,7 +351,7 @@ export default function SwapComponent() {
   };
 
   const searchTokensHandler = (event, searchTokensData) => {
-    // // console.log('single search init data', searchTokensData.tokensList);
+    // // // console.log('single search init data', searchTokensData.tokensList);
 
     let removedInitTokenValuesList = initFilteringModalTokensList(
       searchTokensData,
@@ -354,7 +361,7 @@ export default function SwapComponent() {
 
     const result = filteredTokensByName(event, removedInitTokenValuesList);
 
-    // // console.log('single search result 111', result, searchTokensData);
+    // // // console.log('single search result 111', result, searchTokensData);
     if (searchTokensData.searchSendTokensList === true) {
       let middle = result.filter((token) => token.symbol !== initSendTokenSwap.symbol);
       setFilteredData(middle);
@@ -374,14 +381,12 @@ export default function SwapComponent() {
       });
     }
     if (tokenData.USDCurrency !== undefined && tokenData.USDCurrency !== '$0.00') {
-      // console.log('test activation');
+      // // console.log('test activation');
       //
       setTokenSendUSDCurrency(
-        `$${(tokenData.USDCurrency * parseFloat(tokenData.amount)).toFixed(2)}`
+        `$${(tokenData.USDCurrency * parseFloat(tokenData.amount)).toFixed(5)}`
       );
     } else if (tokenData.USDCurrency === '$0.00') {
-      // setTokenSendUSDCurrency('Loading');
-
       let tokenUSDCurrencyValue;
 
       if (tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
@@ -393,12 +398,12 @@ export default function SwapComponent() {
             tokenUSDCurrencyValue = response;
           })
           .catch((err) => {
-            // console.log('err of usd currency receive token', err);
+            // // console.log('err of usd currency receive token', err);
           });
 
         if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
           setTokenSendUSDCurrency(
-            `$ ${(tokenUSDCurrencyValue.data.price.rate * tokenData.amount).toFixed(2)}`
+            `$ ${(tokenUSDCurrencyValue.data.price.rate * tokenData.amount).toFixed(5)}`
           );
         } else {
           setTokenSendUSDCurrency('Price not available');
@@ -409,7 +414,7 @@ export default function SwapComponent() {
         );
 
         setTokenSendUSDCurrency(
-          `$${(ethDollarValue.data.ethereum.usd * tokenData.amount).toFixed(2)}`
+          `$${(ethDollarValue.data.ethereum.usd * tokenData.amount).toFixed(5)}`
         );
       }
     } else {
@@ -418,9 +423,7 @@ export default function SwapComponent() {
   };
 
   let convertReceiveTokenToUSDCurrency = async (tokenData) => {
-    // setTokensReceiveUSDCurrency('Loading');
-
-    // console.log('receive tokenData single swap helper', tokenData);
+    // // console.log('receive tokenData single swap helper', tokenData);
 
     if (tokenData.amount === '') {
       tokenData.amount = '0';
@@ -442,12 +445,12 @@ export default function SwapComponent() {
           tokenUSDCurrencyValue = response;
         })
         .catch((err) => {
-          // console.log('err of usd currency receive token', err);
+          // // console.log('err of usd currency receive token', err);
         });
 
       if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
         setTokensReceiveUSDCurrency(
-          `$ ${(tokenUSDCurrencyValue.data.price.rate * tokenData.amount).toFixed(2)}`
+          `$ ${(tokenUSDCurrencyValue.data.price.rate * tokenData.amount).toFixed(5)}`
         );
       } else {
         setTokensReceiveUSDCurrency('Price not available');
@@ -458,7 +461,7 @@ export default function SwapComponent() {
       );
 
       setTokensReceiveUSDCurrency(
-        `$${(ethDollarValue.data.ethereum.usd * tokenData.amount).toFixed(2)}`
+        `$${(ethDollarValue.data.ethereum.usd * tokenData.amount).toFixed(5)}`
       );
     }
   };
@@ -476,137 +479,9 @@ export default function SwapComponent() {
     }
   }
 
-  async function transact() {
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    // console.log('account selected is :::', accounts[0]);
-
-    //useState with null
-
-    if (selectedRate !== null) {
-      let txObject = selectedRate.transactObject;
-      txObject.gas = parseFloat(txObject.gas) + 100000;
-      txObject.from = accounts[0];
-      if (initSendTokenSwap.symbol !== 'ETH') {
-        const ERC20contract = new web3.eth.Contract(ERC20ABI, txObject.sellTokenAddress);
-        await ERC20contract.methods
-          .approve(txObject.allowanceTarget, txObject.sellAmount)
-          .send({ from: accounts[0] });
-      }
-      try {
-        await web3.eth.sendTransaction(txObject);
-        // settxSuccess(true);
-      } catch (error) {
-        // console.log('tx failed::', error);
-        // settxFailure(true);
-      }
-    } else {
-      alert('Please Fill All fields');
-    }
-  }
-
-  const calculateToAmount = async (tokenFromAmount) => {
-    // console.log('calculate method called with ammount::', tokenFromAmount);
-    // console.log('value of Tokenfromamount::', sendTokenForExchangeAmount);
-    // console.log('value of tokenfrom object::', initSendTokenSwap);
-    // console.log('value of tokenTo::', TokenTo);
-    if (tokenFromAmount > 0) {
-      // // console.log("calculate amount is called")
-      if (initSendTokenSwap.symbol !== '' && TokenTo !== '') {
-        let differentQuoteList = [];
-        const protocolsList = ['', 'Uniswap', 'Curve', 'SushiSwap', 'Bancor', 'Balancer'];
-        let amount = parseFloat(tokenFromAmount) * Math.pow(10, 18);
-        const tokenToDollarValue = await dollarValueOfToken(TokenTo.address);
-
-        for (let i = 0; i < protocolsList.length; i++) {
-          try {
-            let protocolQuote = {};
-            const response = await axios.get(
-              `https://ropsten.api.0x.org/swap/v1/quote?buyToken=${TokenTo.symbol}&sellToken=${initSendTokenSwap.symbol}&sellAmount=${amount}&feeRecipient=0xE609192618aD9aC825B981fFECf3Dfd5E92E3cFB&buyTokenPercentageFee=0.02&includedSources=${protocolsList[i]}`
-            );
-            // console.log(`response for all ${protocolsList[i]}`, response.data);
-
-            if (protocolsList[i] === '') {
-              protocolQuote.name = '0x Index';
-              var sources = response.data.sources;
-              sources.sort((a, b) => parseFloat(b.proportion) - parseFloat(a.proportion));
-              var sources2 = [];
-              for (var j = 0; j < sources.length; j++) {
-                if (sources[j].proportion > 0) {
-                  sources2.push(sources[j]);
-                }
-              }
-              // setSources(sources2);
-            } else {
-              protocolQuote.name = protocolsList[i];
-            }
-            protocolQuote.price = response.data.price;
-            protocolQuote.minPrice = response.data.guaranteedPrice;
-            protocolQuote.TokenToAmount = (
-              parseFloat(response.data.buyAmount) * Math.pow(10, -TokenTo.decimals)
-            )
-              .toFixed(2)
-              .toString();
-            const ethPrice = 10000;
-            protocolQuote.gas = (
-              parseFloat(response.data.gas) *
-              parseFloat(response.data.gasPrice) *
-              Math.pow(10, -18) *
-              ethPrice
-            ).toFixed(2);
-            // console.log('dollar value of token', tokenToDollarValue);
-            protocolQuote.receivedValueInDollar = (
-              parseFloat(response.data.buyAmount) *
-              Math.pow(10, -TokenTo.decimals) *
-              tokenToDollarValue
-            ).toFixed(2);
-            protocolQuote.netReceived =
-              parseFloat(protocolQuote.receivedValueInDollar) - parseFloat(protocolQuote.gas);
-            protocolQuote.transactObject = response.data;
-            // protocolQuote.image = `../../generalAssets/icons/${protocolsList[i]}.webp`;
-            if (protocolsList[i] === 'Bancor') {
-              protocolQuote.image =
-                'https://assets.coingecko.com/coins/images/14053/small/bancorvbnt_32.png?1614048819';
-            }
-            if (protocolsList[i] === 'Uniswap') {
-              protocolQuote.image =
-                'https://assets.coingecko.com/coins/images/12504/small/uniswap-uni.png?1600306604';
-            }
-            if (protocolsList[i] === 'Curve') {
-              protocolQuote.image =
-                'https://assets.coingecko.com/markets/images/538/small/Curve.png?1591605481';
-            }
-            if (protocolsList[i] === 'SushiSwap') {
-              protocolQuote.image =
-                'https://assets.coingecko.com/markets/images/576/small/2048x2048_Logo.png?1609208464';
-            }
-            if (protocolsList[i] === 'Balancer') {
-              protocolQuote.image =
-                'https://assets.coingecko.com/coins/images/11683/small/Balancer.png?1592792958';
-            }
-            if (protocolsList[i] === '') {
-              protocolQuote.image =
-                'https://assets.coingecko.com/markets/images/565/small/0x-protocol.png?1596623034';
-            }
-            differentQuoteList.push(protocolQuote);
-          } catch (err) {
-            // console.log(`error come for ${protocolsList[i]}`, err);
-          }
-        }
-        differentQuoteList.sort((a, b) => b.netReceived - a.netReceived);
-        // setselectedRate(differentQuoteList[0]);
-        // console.log('differentQuoteList[0].name', differentQuoteList);
-        // setselectedExchangeName(differentQuoteList[0].name);
-        // setprotocolsRateList(differentQuoteList);
-        // console.log('different rates we have::', differentQuoteList);
-      }
-    }
-  };
-
   const selectTokenForExchange = (rawSelectedToken, flag) => {
-    // // console.log('flag', flag.isSendTokenChosen);
-
+    // // // console.log('flag', flag.isSendTokenChosen);
+    setInitConvertReceiveTokenAmount('Loading...');
     let selectedToken;
     if (rawSelectedToken.balance === undefined) {
       let foundSendTokenListItem = finalSendTokensList.find((el) => {
@@ -621,7 +496,7 @@ export default function SwapComponent() {
       selectedToken = rawSelectedToken;
     }
 
-    // // console.log('selectToken total', selectedToken);
+    // // // console.log('selectToken total', selectedToken);
 
     if (flag.isSendTokenChosen === true) {
       let ifSendTokenAvailableForSwap = finalReceiveTokensList.some((el) => {
@@ -695,131 +570,137 @@ export default function SwapComponent() {
   const convertExchangeTokensCourse = async (convertTokensData) => {
     // console.log('convertTokensData single swap helper', convertTokensData);
 
-    await loadWeb3();
-    const web3 = window.web3;
+    try {
+      await loadWeb3();
+      const web3 = window.web3;
+      let tokenDecimal1, tokenDecimal2;
 
-    const tokenDecimal1 = await new web3.eth.Contract(
-      TOKENDECIMALSABI,
-      convertTokensData.sendTokenForExchangeAddress
-    ).methods
-      .decimals()
-      .call()
-      .then((res) => {
-        return res;
-      });
-    const tokenDecimal2 = await new web3.eth.Contract(
-      TOKENDECIMALSABI,
-      convertTokensData.receiveTokenForExchangeAddress
-    ).methods
-      .decimals()
-      .call()
-      .then((res) => {
-        return res;
-      });
+      tokenDecimal1 = await new web3.eth.Contract(
+        TOKENDECIMALSABI,
+        convertTokensData.sendTokenForExchangeAddress
+      ).methods
+        .decimals()
+        .call()
+        .then((res) => {
+          return res;
+        });
 
-    const NewContract = new web3.eth.Contract(
-      ROUTERABI,
-      //Sushiswap contract address - should be changed dynamically
-      activeExchanger.routerAddress
-    );
+      tokenDecimal2 = await new web3.eth.Contract(
+        TOKENDECIMALSABI,
+        convertTokensData.receiveTokenForExchangeAddress
+      ).methods
+        .decimals()
+        .call()
+        .then((res) => {
+          return res;
+        });
 
-    if (convertTokensData.tokenAmount !== 0 && !isNaN(convertTokensData.tokenAmount)) {
-      if (convertTokensData.inputId === 'firstPageLoad') {
-        let convertedValue = await NewContract.methods
-          .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
-            convertTokensData.sendTokenForExchangeAddress,
-            convertTokensData.receiveTokenForExchangeAddress,
-          ])
-          .call();
+      const NewContract = new web3.eth.Contract(
+        ROUTERABI,
+        //Sushiswap contract address - should be changed dynamically
+        convertTokensData.routerAddress
+      );
 
-        let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
+      if (convertTokensData.tokenAmount !== 0 && !isNaN(convertTokensData.tokenAmount)) {
+        if (convertTokensData.inputId === 'firstPageLoad') {
+          let convertedValue = await NewContract.methods
+            .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
+              convertTokensData.sendTokenForExchangeAddress,
+              convertTokensData.receiveTokenForExchangeAddress,
+            ])
+            .call();
+
+          let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
+          setInitConvertReceiveTokenAmount(
+            `1 ${initSendTokenSwap.symbol} =  ${countedTokenAmount.toFixed(5)} ${
+              initReceiveFirstTokenSwap.symbol
+            }`
+          );
+        } else if (convertTokensData.inputId === 'chooseSendToken') {
+          let convertedValue = await NewContract.methods
+            .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
+              convertTokensData.sendTokenForExchangeAddress,
+              convertTokensData.receiveTokenForExchangeAddress,
+            ])
+            .call();
+
+          let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
+          setInitConvertReceiveTokenAmount(
+            `1 ${initSendTokenSwap.symbol} =  ${countedTokenAmount.toFixed(5)} ${
+              initReceiveFirstTokenSwap.symbol
+            }`
+          );
+        } else if (convertTokensData.inputId === 'sendInput') {
+          let convertedValue = await NewContract.methods
+            .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
+              convertTokensData.sendTokenForExchangeAddress,
+              convertTokensData.receiveTokenForExchangeAddress,
+            ])
+            .call();
+
+          let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
+
+          // console.log('countedTokenAmount', countedTokenAmount);
+
+          setReceiveTokenForExchangeAmount(countedTokenAmount);
+
+          convertReceiveTokenToUSDCurrency({
+            amount: countedTokenAmount,
+            address: convertTokensData.sendTokenForExchangeAddress,
+          });
+        } else if (convertTokensData.inputId === 'receiveInput') {
+          let convertedValue = await NewContract.methods
+            .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal2).toString(), [
+              convertTokensData.receiveTokenForExchangeAddress,
+              convertTokensData.sendTokenForExchangeAddress,
+            ])
+            .call();
+
+          let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
+
+          // // // console.log('single swap 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', countedTokenAmount);
+
+          setSendTokenForExchangeAmount(countedTokenAmount);
+
+          convertSendTokenToUSDCurrency({
+            amount: countedTokenAmount,
+            address: convertTokensData.receiveTokenForExchangeAddress,
+            USDCurrency: initSendTokenSwap.USDCurrency,
+          });
+        }
+      } else {
+        // // console.log('convertTokensData null amount orNAN error!');
 
         convertReceiveTokenToUSDCurrency({
-          amount: countedTokenAmount,
+          amount: 0,
           address: convertTokensData.receiveTokenForExchangeAddress,
-        });
-      } else if (convertTokensData.inputId === 'chooseSendToken') {
-        let convertedValue = await NewContract.methods
-          .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
-            convertTokensData.sendTokenForExchangeAddress,
-            convertTokensData.receiveTokenForExchangeAddress,
-          ])
-          .call();
-
-        let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
-
-        setInitConvertReceiveTokenAmount(countedTokenAmount.toFixed(3));
-      }
-
-      //
-      else if (convertTokensData.inputId === 'sendInput') {
-        let convertedValue = await NewContract.methods
-          .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
-            convertTokensData.sendTokenForExchangeAddress,
-            convertTokensData.receiveTokenForExchangeAddress,
-          ])
-          .call();
-
-        let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
-
-        setReceiveTokenForExchangeAmount(countedTokenAmount);
-
-        convertReceiveTokenToUSDCurrency({
-          amount: countedTokenAmount,
-          address: convertTokensData.receiveTokenForExchangeAddress,
-        });
-      } else if (convertTokensData.inputId === 'receiveInput') {
-        let convertedValue = await NewContract.methods
-          .getAmountsOut((convertTokensData.tokenAmount * 10 ** tokenDecimal1).toString(), [
-            convertTokensData.receiveTokenForExchangeAddress,
-            convertTokensData.sendTokenForExchangeAddress,
-          ])
-          .call();
-
-        let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
-
-        // // console.log('single swap 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', countedTokenAmount);
-
-        setSendTokenForExchangeAmount(countedTokenAmount);
-
-        convertSendTokenToUSDCurrency({
-          amount: countedTokenAmount,
-          address: convertTokensData.receiveTokenForExchangeAddress,
-          USDCurrency: initSendTokenSwap.USDCurrency,
         });
       }
-    } else {
-      // console.log('convertTokensData null amount orNAN error!');
-
-      convertReceiveTokenToUSDCurrency({
-        amount: 0,
-        address: convertTokensData.receiveTokenForExchangeAddress,
-      });
+    } catch (err) {
+      // console.log('smth went wrong');
+      setInitConvertReceiveTokenAmount('An error was occured!');
     }
   };
 
   const triggerTokenInputHandler = (value, tokenForSwap, chosenTokenType) => {
-    // // console.log('chosenTokenType value', value);
-    // // console.log('chosenTokenType tokenForSwap', tokenForSwap);
-    // // console.log('chosenTokenType tokenForSwap send type', chosenTokenType.isSendTokenSwapped);
+    // // // console.log('chosenTokenType value', value);
+    // // // console.log('chosenTokenType tokenForSwap', tokenForSwap);
+    // // // console.log('chosenTokenType tokenForSwap send type', chosenTokenType.isSendTokenSwapped);
 
     if (chosenTokenType.isSendTokenSwapped === true) {
       setSendTokenForExchangeAmount(value);
 
-      setTimeout(
-        convertExchangeTokensCourse({
-          inputId: 'sendInput',
-          tokenAmount: parseFloat(value),
-          sendTokenForExchangeAddress: initSendTokenSwap.address,
-          receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
-        }),
-        10000
-      );
-
-      convertSendTokenToUSDCurrency({
-        amount: value,
-        ...tokenForSwap,
-      });
+      convertExchangeTokensCourse({
+        inputId: 'sendInput',
+        tokenAmount: parseFloat(value),
+        sendTokenForExchangeAddress: initSendTokenSwap.address,
+        receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
+        routerAddress: activeExchanger.routerAddress,
+      }),
+        convertSendTokenToUSDCurrency({
+          amount: value,
+          ...tokenForSwap,
+        });
 
       const isLimitExceeded = checkIfExchangedTokenLimitIsExceeded(
         value,
@@ -829,15 +710,13 @@ export default function SwapComponent() {
     } else if (chosenTokenType.isSendTokenSwapped === false) {
       setReceiveTokenForExchangeAmount(value);
 
-      setTimeout(
-        convertExchangeTokensCourse({
-          inputId: 'receiveInput',
-          tokenAmount: parseFloat(value),
-          sendTokenForExchangeAddress: initSendTokenSwap.address,
-          receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
-        }),
-        10000
-      );
+      convertExchangeTokensCourse({
+        inputId: 'receiveInput',
+        tokenAmount: parseFloat(value),
+        sendTokenForExchangeAddress: initSendTokenSwap.address,
+        receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
+        routerAddress: activeExchanger.routerAddress,
+      });
 
       convertReceiveTokenToUSDCurrency({
         amount: value,
@@ -847,8 +726,8 @@ export default function SwapComponent() {
   };
 
   const tokensListModalHelper = (listModalData) => {
-    // console.log('isSendTokensList', listModalData);
-    // console.log('isSendTokensListModalOpen', listModalData.isSendTokensListModalOpen);
+    // // console.log('isSendTokensList', listModalData);
+    // // console.log('isSendTokensListModalOpen', listModalData.isSendTokensListModalOpen);
 
     if (listModalData.isSendTokensListModalOpen === true) {
       let searchTokensData = { tokensList: finalSendTokensList };
@@ -875,11 +754,9 @@ export default function SwapComponent() {
     }
   };
 
-  // // console.log('isAbleToReplaceTokensInSingleSwap', isAbleToReplaceTokensInSingleSwap);
-
   const filterAmountInputFunction = (e, flag) => {
     let test = e.currentTarget.value.replace(/[^\d.-]/g, '').replace(/[^\w.]|_/g, '');
-    console.log('regex test', test);
+    // // console.log('regex test', test);
 
     if (flag.isSendTokenSwapped === true) {
       setSendTokenForExchangeAmount(test);
@@ -889,22 +766,13 @@ export default function SwapComponent() {
   };
 
   const selectNewExchanger = (selectedNewExchanger) => {
-    // console.log('selectedNewExchanger', selectedNewExchanger);
-
     const chosenExchanger = { ...selectedNewExchanger, isExchangerSelected: true };
-    // console.log('selectedNewExchanger first', chosenExchanger);
-
     let notSelectedExchangersList = exchangersOfferedList.filter((el) => {
       return chosenExchanger.routerAddress !== el.routerAddress;
     });
-
-    // console.log('selectedNewExchanger second', notSelectedExchangersList);
-
     notSelectedExchangersList = notSelectedExchangersList.map((el) => {
       return { ...el, isExchangerSelected: false };
     });
-
-    // console.log('selectedNewExchanger third', notSelectedExchangersList);
     notSelectedExchangersList.unshift(chosenExchanger);
     setActiveExchanger(chosenExchanger);
     setExchangersOfferedList(notSelectedExchangersList);
@@ -913,8 +781,104 @@ export default function SwapComponent() {
     setAnchorEl(false);
   };
 
-  // console.log('selectedNewExchanger List', exchangersOfferedList);
-  // console.log('selectedNewExchanger chosen one', activeExchanger);
+  const makeSwappedTokensOperation = async (swappedTokensData) => {
+    // console.log('single swap tokens operation swappedTokensData', swappedTokensData);
+
+    setIsTokensSwappingActive(true);
+    await loadWeb3();
+    const web3 = window.web3;
+    const metaMaskWalletAddress = await web3.eth.getAccounts();
+    // //
+
+    // // console.log('single swap tokens operation walletData', walletData);
+    // console.log('single swap tokens operation raw data object', swappedTokensData);
+
+    //As exchanger - UniSwap_V3 by default
+    const response = await axios.get(
+      `https://api.0x.org/swap/v1/quote?buyToken=${swappedTokensData.buyToken}&sellToken=${swappedTokensData.sellToken}&sellAmount=${swappedTokensData.sellAmount}&includedSources=${swappedTokensData.includedSources}&slippagePercentage=${swappedTokensData.slippagePercentage}`
+    );
+
+    //from: walletData.address
+    // // console.log('single swap tokens operation 0x API obj', response.data);
+
+    let totalObject = { ...response.data, from: metaMaskWalletAddress[0] };
+
+    // console.log('single swap tokens operation total obj', totalObject);
+
+    try {
+      await web3.eth.sendTransaction(totalObject);
+      // console.log('single swap tokens operation - transaction in progress');
+      setIsTokensSwappingActive(false);
+    } catch (err) {
+      // console.log('single swap tokens operation - tx failed::', err);
+      setIsTokensSwappingActive(false);
+    }
+  };
+
+  async function transact() {
+    await loadWeb3();
+    const web3 = window.web3;
+    const accounts = await web3.eth.getAccounts();
+    // // console.log('account selected is :::', accounts[0]);
+
+    //useState with null
+
+    if (selectedRate !== null) {
+      let txObject = selectedRate.transactObject;
+      txObject.gas = parseFloat(txObject.gas) + 100000;
+      txObject.from = accounts[0];
+      if (initSendTokenSwap.symbol !== 'ETH') {
+        const ERC20contract = new web3.eth.Contract(ERC20ABI, txObject.sellTokenAddress);
+        await ERC20contract.methods
+          .approve(txObject.allowanceTarget, txObject.sellAmount)
+          .send({ from: accounts[0] });
+      }
+      try {
+        await web3.eth.sendTransaction(txObject);
+        // settxSuccess(true);
+      } catch (error) {
+        // // console.log('tx failed::', error);
+        // settxFailure(true);
+      }
+    } else {
+      alert('Please Fill All fields');
+    }
+  }
+
+  const staticSlippageToleranceValueHandler = (slippageToleranceValue) => {
+    setSlippageTolerance(slippageToleranceValue / 100);
+
+    setAnchorEl(null);
+  };
+
+  const personalSlippageToleranceValueHandler = (slippageToleranceValue) => {
+    // // console.log('slippageToleranceValue before', slippageToleranceValue);
+    slippageToleranceValue = slippageToleranceValue
+      .replace(/[^\d.-]/g, '')
+      .replace(/[^\w.]|_/g, '');
+
+    // // console.log('slippageToleranceValue after', slippageToleranceValue);
+    // // console.log('slippageToleranceValue after length', slippageToleranceValue.length);
+    let totalSlippageTolerance;
+    if (slippageToleranceValue.length !== 0) {
+      totalSlippageTolerance = slippageToleranceValue / 100;
+    } else {
+      totalSlippageTolerance = 0;
+    }
+    // console.log('totalSlippageTolerance 1 totalSlipageTolerance', totalSlippageTolerance);
+    setRawPersonalSlippageTolerance(slippageToleranceValue);
+    setPersonalSlippageTolerance(totalSlippageTolerance);
+
+    // setAnchorEl(null);
+  };
+
+  // // console.log('slippageToleranceValue final', slippageTolerance);
+  // // console.log('totalSlippageTolerance pesonal', personalSlippageTolerance);
+
+  const rewriteSlippageTolerance = (value) => {
+    setSlippageTolerance(value);
+    setAnchorEl(null);
+  };
 
   return (
     <>
@@ -991,7 +955,11 @@ export default function SwapComponent() {
                               paddingRight: 0,
                               width: '200px',
                               fontWeight: 600,
-                              color: isLightTheme ? 'black' : 'white',
+                              color: isTokensLimitExceeded
+                                ? 'red'
+                                : isLightTheme
+                                ? 'black'
+                                : 'white',
                               height: '18px',
                             },
                           },
@@ -1118,16 +1086,14 @@ export default function SwapComponent() {
                                     )
                                   );
 
-                                  setTimeout(
-                                    convertExchangeTokensCourse({
-                                      inputId: 'chooseSendToken',
-                                      tokenAmount: 1,
-                                      sendTokenForExchangeAddress: initSendTokenSwap.address,
-                                      receiveTokenForExchangeAddress:
-                                        initReceiveFirstTokenSwap.address,
-                                    }),
-                                    10000
-                                  );
+                                  convertExchangeTokensCourse({
+                                    inputId: 'chooseSendToken',
+                                    tokenAmount: 1,
+                                    sendTokenForExchangeAddress: initSendTokenSwap.address,
+                                    receiveTokenForExchangeAddress:
+                                      initReceiveFirstTokenSwap.address,
+                                    routerAddress: activeExchanger.routerAddress,
+                                  });
                                 }}
                                 isLightTheme={isLightTheme}>
                                 <SendTokenLabelsBlock>
@@ -1151,23 +1117,27 @@ export default function SwapComponent() {
                                       {object.name}
                                     </SendTokenName>
                                     <SendTokenConvertedMeasures isLightTheme={isLightTheme}>
-                                      {object.balance} ·{' '}
-                                      {object.USDCurrency !== undefined
-                                        ? `$${object.USDCurrency.toFixed(3)}`
-                                        : 'Price is not available'}
+                                      {`${object.balance} ${object.symbol} · 
+                                    $ ${
+                                      Math.round(object.singleTokenUSDCurrencyAmount * 100000) /
+                                      100000
+                                    } 
+                                    `}
                                     </SendTokenConvertedMeasures>
                                   </div>
                                 </SendTokenLabelsBlock>
                                 <SendTokenBalance isLightTheme={isLightTheme}>
                                   {object.balance !== undefined &&
                                     object.USDCurrency !== undefined && (
-                                      <span>{`$${
-                                        object.balance > 0
-                                          ? (
-                                              object.balance * object.USDCurrency.toFixed(2)
-                                            ).toFixed(3)
-                                          : object.balance * object.USDCurrency
-                                      }`}</span>
+                                      <span>
+                                        {`$${
+                                          Math.round(
+                                            object.balance *
+                                              object.singleTokenUSDCurrencyAmount *
+                                              100000
+                                          ) / 100000
+                                        }`}
+                                      </span>
                                     )}
                                 </SendTokenBalance>
                               </SendTokenModalListItem>
@@ -1355,16 +1325,15 @@ export default function SwapComponent() {
                                 key={object.symbol}
                                 onClick={() => {
                                   setFilteredReceiveTokensListData(finalReceiveTokensList);
-                                  setTimeout(
-                                    convertExchangeTokensCourse({
-                                      inputId: 'chooseSendToken',
-                                      tokenAmount: 1,
-                                      sendTokenForExchangeAddress: initSendTokenSwap.address,
-                                      receiveTokenForExchangeAddress:
-                                        initReceiveFirstTokenSwap.address,
-                                    }),
-                                    10000
-                                  );
+
+                                  convertExchangeTokensCourse({
+                                    inputId: 'chooseSendToken',
+                                    tokenAmount: 1,
+                                    sendTokenForExchangeAddress: initSendTokenSwap.address,
+                                    receiveTokenForExchangeAddress:
+                                      initReceiveFirstTokenSwap.address,
+                                    routerAddress: activeExchanger.routerAddress,
+                                  });
                                   selectTokenForExchange(object, {
                                     isSendTokenChosen: false,
                                   });
@@ -1436,7 +1405,7 @@ export default function SwapComponent() {
                     Rate
                   </LabelsBlockSubBlockSpan>
                   <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                    {`1 ${initSendTokenSwap.symbol} =  ${initConvertReceiveTokenAmount} ${initReceiveFirstTokenSwap.symbol}`}
+                    {initConvertReceiveTokenAmount}
                   </LabelsBlockSubBlockSpan>
                 </LabelsBlockSubBlock>
 
@@ -1571,28 +1540,65 @@ export default function SwapComponent() {
                                 ))}
                               </TransactionSpeedGridLayout>
 
-                              <div
-                                style={{
-                                  display: 'flex',
-                                  justifyContent: 'center',
-                                }}>
-                                <AdvancedSettingsButton isLightTheme={isLightTheme}>
-                                  Advanced settings
-                                </AdvancedSettingsButton>
-                              </div>
+                              {/*<div*/}
+                              {/*  style={{*/}
+                              {/*    display: 'flex',*/}
+                              {/*    justifyContent: 'center',*/}
+                              {/*  }}>*/}
+                              {/*  <AdvancedSettingsButton isLightTheme={isLightTheme}>*/}
+                              {/*    Advanced settings*/}
+                              {/*  </AdvancedSettingsButton>*/}
+                              {/*</div>*/}
 
                               <SlippageToleranceLabel isLightTheme={isLightTheme}>
                                 Slippage Tolerance
                               </SlippageToleranceLabel>
                               <SlippageToleranceBtnsLayout>
-                                <StablePercentChooseToleranceBtn isLightTheme={isLightTheme}>
+                                <StablePercentChooseToleranceBtn
+                                  disabled={slippageTolerance === 0.01}
+                                  isLightTheme={isLightTheme}
+                                  onClick={() => staticSlippageToleranceValueHandler(1)}>
                                   1%
                                 </StablePercentChooseToleranceBtn>
-                                <StablePercentChooseToleranceBtn isLightTheme={isLightTheme}>
+                                <StablePercentChooseToleranceBtn
+                                  disabled={slippageTolerance === 0.03}
+                                  isLightTheme={isLightTheme}
+                                  onClick={() => staticSlippageToleranceValueHandler(3)}>
                                   3%
                                 </StablePercentChooseToleranceBtn>
                                 <FloatPercentChooseToleranceBtn isLightTheme={isLightTheme}>
-                                  %
+                                  <TextField
+                                    onChange={(e) =>
+                                      personalSlippageToleranceValueHandler(e.target.value)
+                                    }
+                                    InputProps={{
+                                      inputProps: {
+                                        style: {
+                                          textAlign: 'center',
+                                          fontWeight: 600,
+                                          color: isLightTheme ? 'black' : 'white',
+                                        },
+                                      },
+                                      endAdornment: (
+                                        <span
+                                          style={{
+                                            fontWeight: 'bold',
+                                            color: isLightTheme ? 'black' : 'white',
+                                          }}>
+                                          %
+                                        </span>
+                                      ),
+                                      classes: {
+                                        notchedOutline: classes.noBorder,
+                                        input: classes.input,
+                                      },
+                                    }}
+                                    InputLabelProps={{
+                                      style: { textAlign: 'center' },
+                                    }}
+                                    value={rawPersonalSlippageTolerance}
+                                    // placeholder="%"
+                                  />
                                 </FloatPercentChooseToleranceBtn>
                               </SlippageToleranceBtnsLayout>
 
@@ -1602,7 +1608,14 @@ export default function SwapComponent() {
                                   justifyContent: 'center',
                                   marginTop: '13px',
                                 }}>
-                                <AdvancedSettingsButton isLightTheme={isLightTheme}>
+                                <AdvancedSettingsButton
+                                  isLightTheme={isLightTheme}
+                                  disabled={
+                                    personalSlippageTolerance <= 0 || personalSlippageTolerance >= 1
+                                  }
+                                  onClick={() => {
+                                    rewriteSlippageTolerance(personalSlippageTolerance);
+                                  }}>
                                   Save
                                 </AdvancedSettingsButton>
                               </div>
@@ -1625,7 +1638,7 @@ export default function SwapComponent() {
                         openExchangersListPopover(event, { isOfferedByPopoverActivated: false })
                       }
                       style={{ cursor: 'pointer' }}>
-                      1%
+                      {`${slippageTolerance * 100}%`}
                     </span>
                   </AdditionalOptionsSwapTokensSubBlock>
                 </LabelsBlockSubBlock>
@@ -1648,25 +1661,22 @@ export default function SwapComponent() {
                     sendTokenForExchangeAmount === '0' ||
                     sendTokenForExchangeAmount === 0 ||
                     sendTokenForExchangeAmount?.length === 0 ||
-                    receiveTokenForExchangeAmount === '0' ||
-                    receiveTokenForExchangeAmount === 0 ||
-                    receiveTokenForExchangeAmount?.length === 0
+                    isTokensSwappingActive === true
                   }
                   onClick={() => {
-                    calculateToAmount(initSendTokenSwap);
-
-                    //token single swap
-                    // sushiswap exchanger only
-                    // also should be send exchanger address in order to chosen exchanger
-                    //now, by default, sushiswap v2 hardcode only
-                    singleSushiSwapV2({
+                    // calculateToAmount(initSendTokenSwap);
+                    makeSwappedTokensOperation({
+                      buyToken: initReceiveFirstTokenSwap.symbol,
+                      sellToken: initSendTokenSwap.symbol,
+                      sellAmount: sendTokenForExchangeAmount * Math.pow(10, 18).toString(),
+                      includedSources: activeExchanger.name,
+                      slippagePercentage: slippageTolerance,
                       sendTokenAddress: initSendTokenSwap.address,
-                      sendTokenAmount: sendTokenForExchangeAmount,
                       receiveTokenAddress: initReceiveFirstTokenSwap.address,
                       gasPrice: selectedGasPrice ? selectedGasPrice : proposeGasPrice,
                     });
                   }}>
-                  Exchange
+                  {isTokensSwappingActive ? 'Executing...' : 'Exchange'}
                 </Button>
               </SwapBlockExchangeLayout>
             </SwapTokensMainSubBlock>

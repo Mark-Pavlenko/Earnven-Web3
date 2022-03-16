@@ -2,20 +2,25 @@ import { call, put, select, takeEvery, takeLatest } from 'redux-saga/effects';
 import * as API from '../../api/api';
 import actionTypes from '../../constants/actionTypes';
 import * as actions from './actions';
+import {
+  getInitTokenWithUSDCurrencyAmount,
+  setInitReceiveMultiSwapTokensListLoading,
+  setInitSendMultiSwapTokensListLoading,
+} from './actions';
 import ethImage from '../../assets/icons/eth.png';
 import CoinGeckoMockTokensList from './CoinGecko.json';
-import UniSwapTokensList from './UniSwapTokensList.json';
-import { setInitReceiveMultiSwapTokensListLoading } from './actions';
+import uniswapV2ExchangerIcon from '../../assets/icons/exchangers/uniswapV2ExchangerIcon.svg';
 
-// const sendTokensList = (state) => state.tokensListReducer.sendTokensList;
+const initReceiveMultiSwapTokensList = (state) =>
+  state.tokensListReducer.initReceiveMultiSwapTokensList;
 
 export function* getSendTokensListSagaWatcher() {
   yield takeLatest(actionTypes.SET_SEND_TOKENS_LIST, getSendTokensListSagaWorker);
 }
-//
+
 function* getSendTokensListSagaWorker(accountAddress) {
   const addressInfoData = yield call(API.getAddressInfo, accountAddress.payload);
-  // console.log('only addressInfoData sagas', addressInfoData.data);
+  console.log('only addressInfoData sagas', addressInfoData.data);
 
   const zeroAPISwapTokensList = yield call(API.getZeroAPITokensList);
   // console.log('sagas zeroAPITokensList', zeroAPISwapTokensList);
@@ -28,9 +33,18 @@ function* getSendTokensListSagaWorker(accountAddress) {
     tempObj.symbol = 'ETH';
     tempObj.balance = parseFloat(addressInfoData.data.ETH.balance.toFixed(3));
     tempObj.logoURI = ethImage;
-    tempObj.USDCurrency = addressInfoData.data.ETH.price.rate;
+    // tempObj.USDCurrency = Math.round(addressInfoData.data.ETH.price.rate * 100) / 100;
+    tempObj.USDCurrency = 0;
+    tempObj.singleTokenUSDCurrencyAmount = Number(addressInfoData.data.ETH.price.rate);
     tempObj.sendTokensListItem = true;
-
+    //mock exchanger
+    tempObj.chosenExchanger = {
+      name: 'Uniswap_V2',
+      routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
+      isBestRate: true,
+      logoIcon: uniswapV2ExchangerIcon,
+      isExchangerSelected: true,
+    };
     walletTokensList.push(tempObj);
   }
   let tokens = addressInfoData.data.tokens;
@@ -42,36 +56,43 @@ function* getSendTokensListSagaWorker(accountAddress) {
       tempObj.address = tokens[i].tokenInfo.address;
       tempObj.name = tokens[i].tokenInfo.name;
       tempObj.symbol = tokens[i].tokenInfo.symbol;
-      tempObj.USDCurrency = tokens[i].tokenInfo.price.rate;
+      // tempObj.USDCurrency = Math.round(tokens[i].tokenInfo.price.rate * 100) / 100;
+      tempObj.USDCurrency = 0;
       tempObj.balance = parseFloat(
-        (tokens[i].balance * Math.pow(10, -parseInt(tokens[i].tokenInfo.decimals))).toFixed(3)
+        (tokens[i].balance * Math.pow(10, -parseInt(tokens[i].tokenInfo.decimals))).toFixed(5)
       );
+      tempObj.singleTokenUSDCurrencyAmount = Number(tokens[i].tokenInfo.price.rate);
       tempObj.sendTokensListItem = true;
-
       if (tokens[i].tokenInfo.image !== undefined) {
         tempObj.logoURI = `https://ethplorer.io${tokens[i].tokenInfo.image}`;
       } else {
         tempObj.logoURI = null;
       }
+      //mock exchanger
+      tempObj.chosenExchanger = {
+        name: 'Uniswap_V2',
+        routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
+        isBestRate: true,
+        logoIcon: uniswapV2ExchangerIcon,
+        isExchangerSelected: true,
+      };
       walletTokensList.push(tempObj);
     }
   }
-
-  // let finalWalletTokensList;
-  // if (walletTokensList.length > 1) {
-  //   finalWalletTokensList = walletTokensList.filter(
-  //     (token) => token.symbol !== walletTokensList[0].symbol
-  //   );
-  // } else {
-  //   finalWalletTokensList = walletTokensList;
-  // }
 
   console.log('sagas exchange walletTokensList', walletTokensList);
   // console.log('sagas exchange finalWalletTokensList', finalWalletTokensList);
 
   yield put(actions.getSendTokensList(walletTokensList));
   yield put(actions.setInitSendTokenSwap(walletTokensList[0]));
-  yield put(actions.setInitSendTokenMultiSwap(walletTokensList[0]));
+  yield put(
+    actions.setInitSendTokenMultiSwap([
+      { ...walletTokensList[0], amount: 0 },
+      // { ...walletTokensList[1], amount: 0 },
+    ])
+  );
+
+  yield put(setInitSendMultiSwapTokensListLoading(false));
 }
 
 export function* getReceiveTokensListSagaWatcher() {
@@ -100,10 +121,6 @@ function* getReceiveTokensListSagaWorker() {
     )
   );
 
-  // console.log('sagas filteredCoinGeckoTokensList', filteredCoinGeckoTokensList);
-  // const testSendTokensList = yield select(sendTokensList);
-  // console.log('sagas filteredCoinGeckoTokensList sendTokensList', testSendTokensList);
-
   let finalList = zeroAPISwapTokensList.map((token) => ({
     ...token,
     receiveTokensListItem: true,
@@ -113,17 +130,63 @@ function* getReceiveTokensListSagaWorker() {
     id: filteredCoinGeckoTokensList.find((x) => x.symbol === token.symbol.toLowerCase())
       ? filteredCoinGeckoTokensList.find((x) => x.symbol === token.symbol.toLowerCase()).id
       : null,
-    USDCurrency: '$0.00',
-    // amount: ' ',
+    USDCurrency: 0,
+    amount: 0,
+    chosenExchanger: {
+      name: 'Uniswap_V2',
+      routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
+      isBestRate: true,
+      logoIcon: uniswapV2ExchangerIcon,
+      isExchangerSelected: true,
+    },
   }));
 
   console.log('sagas filter finalReceiveTokensList', finalList);
 
-  yield put(actions.setInitReceiveFirstTokenSwap(finalList[4]));
+  let initReceiveMultiSwapTokensList = [];
+  for (let i = 0; i < [finalList[2], finalList[4]].length; i++) {
+    initReceiveMultiSwapTokensList.push(
+      yield call(API.getTokenUSDAmount, {
+        tokenData: [finalList[2], finalList[4]][i],
+        amount: 0,
+      })
+    );
+  }
+
+  // console.log('sagas tokenUSDAmount', initReceiveMultiSwapTokensList);
   yield put(actions.getReceiveTokensList(finalList));
-  yield put(actions.setInitReceiveSecondTokenSwap(finalList[2]));
-
-  yield put(actions.setInitReceiveMultiSwapTokensList([finalList[2], finalList[4]]));
-
+  yield put(actions.setInitReceiveFirstTokenSwap(finalList[1]));
+  yield put(actions.setInitReceiveMultiSwapTokensList(initReceiveMultiSwapTokensList));
   yield put(setInitReceiveMultiSwapTokensListLoading(false));
 }
+
+// unused - redux doesn`t return object by the first time
+// export function* getInitUSDCurrencyAmountSagaWatcher() {
+//   yield takeEvery(
+//     actionTypes.GET_INIT_USD_CURRENCY_TOKEN_AMOUNT,
+//     getInitUSDCurrencyAmountSagaWorker
+//   );
+// }
+//
+// function* getInitUSDCurrencyAmountSagaWorker(data) {
+//   console.log('data.payload', data.payload);
+//
+//   let receiveTokenUSDCurrencyObject = yield call(API.getTokenUSDAmount, data.payload);
+//   console.log('USDCurrencyAmountTokensData tokenUSDCurrency', receiveTokenUSDCurrencyObject);
+//
+//   yield put(actions.getInitTokenWithUSDCurrencyAmount(receiveTokenUSDCurrencyObject));
+//   // let receiveTokensListCopy = [...(yield select(initReceiveMultiSwapTokensList))];
+//   // console.log('receiveTokensListCopy sagas', receiveTokensListCopy);
+//   //
+//   // const needIndex = receiveTokensListCopy.findIndex(
+//   //   (token) => token.address === receiveTokenUSDCurrencyObject.address
+//   // );
+//
+//   // if (needIndex !== -1) {
+//   //   receiveTokensListCopy[needIndex].USDCurrency = receiveTokenUSDCurrencyObject.USDCurrency;
+//   // }
+//   //
+//   // console.log('receiveTokensListCopy sagas total', receiveTokensListCopy);
+//   // yield put(actions.setInitReceiveMultiSwapTokensList(receiveTokensListCopy));
+//   // yield put('data');
+// }

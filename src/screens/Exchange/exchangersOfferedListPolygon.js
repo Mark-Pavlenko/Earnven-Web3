@@ -13,7 +13,7 @@ import swerveExchangerIcon from '../../assets/icons/exchangers/swerveExchangerIc
 import uniswapV2ExchangerIcon from '../../assets/icons/exchangers/uniswapV2ExchangerIcon.svg';
 import zeroExchangeIcon from '../../assets/icons/exchangers/0xExchangerIcon.svg';
 
-const exchangersOfferedList = [
+let exchangersOfferedList = [
   // {
   //   // router address
   //   receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
@@ -87,28 +87,31 @@ const exchangersOfferedList = [
   //   greenDotIcon: true,
   // },
   {
-    routerAddress: '0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff',
+    name: 'Uniswap_V2',
+    routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
     receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
     gasFee: '$10.03',
-    isBestRate: false,
-    logoIcon: sushiSwapExchangerIcon,
-    greenDotIcon: true,
+    isBestRate: true,
+    logoIcon: uniswapV2ExchangerIcon,
+    isExchangerSelected: true,
   },
   {
+    name: 'Swerve',
     routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
     receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
     gasFee: '$10.03',
     isBestRate: false,
     logoIcon: swerveExchangerIcon,
-    greenDotIcon: true,
+    isExchangerSelected: false,
   },
   {
-    routerAddress: '0x5C6EC38fb0e2609672BDf628B1fD605A523E5923',
+    name: 'SushiSwap',
+    routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
     receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
     gasFee: '$10.03',
     isBestRate: false,
-    logoIcon: uniswapV2ExchangerIcon,
-    greenDotIcon: true,
+    logoIcon: sushiSwapExchangerIcon,
+    isExchangerSelected: false,
   },
 
   // {

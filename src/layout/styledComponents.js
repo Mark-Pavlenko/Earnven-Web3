@@ -21,6 +21,7 @@ export const RootStyle = styled('div')`
         ? `url(${require(`./../assets/images/bgMobile_375x3201.jpg`).default})`
         : `#0B0E1D`};
     background-size: cover;
+    height: 100vh;
   }
   @media (max-width: 480px) {
     background: ${(props) =>
@@ -28,6 +29,7 @@ export const RootStyle = styled('div')`
         ? `url(${require(`./../assets/images/bgMobile_375x3201.jpg`).default})`
         : `#0B0E1D`};
     background-size: cover;
+    height: 100vh;
   }
   @media (max-width: 480px) {
     background: ${(props) =>
@@ -35,6 +37,7 @@ export const RootStyle = styled('div')`
         ? `url(${require(`./../assets/images/bgMobile_375x3201.jpg`).default})`
         : `#0B0E1D`};
     background-size: cover;
+    height: 100vh;
   }
 `;
 

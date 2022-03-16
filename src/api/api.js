@@ -51,6 +51,46 @@ export const getZeroAPITokensList = async () => {
   return rawZeroAPITokensList.data.records;
 };
 
+export const getTokenUSDAmount = async (tokenData) => {
+  console.log('sagas USD receive tokenData', tokenData);
+
+  if (tokenData.amount === '') {
+    tokenData.amount = '0';
+  }
+
+  let tokenUSDCurrencyValue;
+  let finalUSDCurrencyValue;
+
+  if (tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+    await axios
+      .get(
+        `https://api.ethplorer.io/getTokenInfo/${tokenData.tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
+      )
+      .then(async (response) => {
+        tokenUSDCurrencyValue = response;
+      })
+      .catch((err) => {
+        console.log('err of usd currency receive token', err);
+      });
+
+    console.log('tokenUSDCurrencyValue.data.price.rate', tokenUSDCurrencyValue.data.price.rate);
+
+    if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
+      finalUSDCurrencyValue =
+        tokenUSDCurrencyValue.data.price.rate * parseFloat(tokenData.amount).toFixed(3);
+    } else {
+      finalUSDCurrencyValue = -1;
+    }
+  } else {
+    const ethDollarValue = await axios.get(
+      'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
+    );
+    finalUSDCurrencyValue = ethDollarValue.data.ethereum.usd * parseFloat(tokenData.amount);
+  }
+  finalUSDCurrencyValue = finalUSDCurrencyValue.toFixed(3);
+  return { ...tokenData.tokenData, USDCurrency: Number(finalUSDCurrencyValue) };
+};
+
 export const getCoinGeckoTokenUSDCurrency = async (tokenId) => {
   return await axios.get(
     `https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=usd`

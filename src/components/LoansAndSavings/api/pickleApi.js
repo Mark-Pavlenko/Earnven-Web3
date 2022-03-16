@@ -128,7 +128,7 @@ export async function fetchBalanceDill(attributes) {
       object.chain = 'Ethereum';
       object.icon = pickleIcon;
       object.symbol = 'DILL';
-      //object.total = object.value;
+      object.total = object.value;
       asset.push(object);
     })
     .catch((err) => {
