@@ -166,8 +166,8 @@ export const MultiSwapSendTokensChooseBlock = styled.div`
 `;
 
 export const SubLayoutReceiveTokensBlock = styled.div`
-  overflow: auto;
-  height: 265px;
+  //overflow: auto;
+  height: auto;
   //background-color: blue;
   padding-left: 20px;
   //margin: 0 27px 16px 20px;

@@ -6,12 +6,13 @@ export const RootStyle = styled('div')`
       ? `url(${require(`./../assets/images/lightDashboard.jpg`).default})`
       : `#0B0E1D`};
   background-size: cover;
-  @media (min-width: 1921px) {
+  height: 100vh @media (min-width: 1921px) {
     background: ${(props) =>
       props.isLightTheme
         ? `url(${require(`../assets/images/lightDashboardBig.jpg`).default})`
         : `#0B0E1D`};
     background-size: cover;
+    height: 100vh;
   }
   @media (max-width: 480px) {
     background: ${(props) =>
@@ -19,6 +20,7 @@ export const RootStyle = styled('div')`
         ? `url(${require(`./../assets/images/bgMobile_375x3201.jpg`).default})`
         : `#0B0E1D`};
     background-size: cover;
+    height: 100vh;
   }
   @media (max-width: 480px) {
     background: ${(props) =>
@@ -26,6 +28,7 @@ export const RootStyle = styled('div')`
         ? `url(${require(`./../assets/images/bgMobile_375x3201.jpg`).default})`
         : `#0B0E1D`};
     background-size: cover;
+    height: 100vh;
   }
   @media (max-width: 480px) {
     background: ${(props) =>
@@ -33,6 +36,7 @@ export const RootStyle = styled('div')`
         ? `url(${require(`./../assets/images/bgMobile_375x3201.jpg`).default})`
         : `#0B0E1D`};
     background-size: cover;
+    height: 100vh;
   }
 `;
 

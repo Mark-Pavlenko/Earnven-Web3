@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
+  AbsentFoundTokensBlock,
   AdditionalOptionsSwapTokensSubBlock,
   AddReceiveTokenMultiSwapBtn,
   ChosenMultiSwapSendReceiveTokenValueInput,
@@ -7,12 +8,18 @@ import {
   ColumnMainSubTitles,
   ColumnMainTitles,
   DownDelimiterLabelsBlock,
+  ExceededAmountTokensLimitWarning,
+  ExchangerBestRateSpan,
   ExchangerElementListItem,
+  ExchangerElementSpan,
+  ExchangerIcon,
+  ExchangerMainList,
   ExchangersLayout,
   ExchangersLayoutTitlesBlock,
+  ExchangersMainListLayout,
   ExchangersMainSubLayout,
-  ExchangerMainList,
   FirstSubLayoutMultiSwapReceiveTokensBlock,
+  GreenDotIcon,
   LabelsBlockImportantSpan,
   LabelsBlockSubBlock,
   LabelsBlockSubBlockSpan,
@@ -20,43 +27,35 @@ import {
   MultiSwapReceiveTokensBlock,
   MultiSwapSendTokensChooseBlock,
   MultiSwapSendValueLabel,
+  MultiSwapSendValueLabelsLayout,
   MultiSwapTokenAvatar,
   NewMultiSwapButton,
   OfferedByLayoutLabelBlock,
+  SaveSelectedExchangerButton,
+  SearchTokensModalTextField,
   SecondColumnSwapSubBlock,
   SecondColumnTitleBlock,
   SecondColumnTitleHeaderBlock,
   SecondSubLayoutMultiSwapReceiveTokensBlock,
+  SendBlockLabels,
   SendReceiveSubBlock,
+  SendTokenBalance,
+  SendTokenConvertedMeasures,
   SendTokenImg,
+  SendTokenLabelsBlock,
+  SendTokenModalListItem,
+  SendTokenName,
+  SendTokensModalList,
+  SubLayoutReceiveTokensBlock,
   SwapBlockDelimiter,
   SwapBlockExchangeLayout,
   SwapTokensMainSubBlock,
   SwapTokensOfferedBySubBlock,
   SwitchTokensBtn,
-  USDCurrencyInputBlock,
-  ExchangerElementSpan,
-  ExchangerBestRateSpan,
-  ExchangerIcon,
-  GreenDotIcon,
-  ExchangersMainListLayout,
-  SaveSelectedExchangerButton,
   TokensModalSubLayout,
-  SearchTokensModalTextField,
-  SendTokensModalList,
-  SendTokenModalListItem,
-  SendTokenLabelsBlock,
-  SendTokenName,
-  SendTokenConvertedMeasures,
-  SendTokenBalance,
-  AbsentFoundTokensBlock,
-  ExceededAmountTokensLimitWarning,
-  SubLayoutReceiveTokensBlock,
+  USDCurrencyInputBlock,
   USDCurrencySendInputBlock,
-  MultiSwapSendValueLabelsLayout,
-  SendBlockLabels,
 } from './styled';
-import EthIcon from '../../assets/icons/ethereum.svg';
 import chevronDownBlack from '../../assets/icons/chevronDownLightTheme.svg';
 import chevronDownLight from '../../assets/icons/chevronDownLight.svg';
 import switchTokensLight from '../../assets/icons/switchTokensLight.svg';
@@ -66,22 +65,14 @@ import plusIconDark from '../../assets/icons/plusIconDark.svg';
 import plusIconLight from '../../assets/icons/plusIconLight.svg';
 import { Button } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import daiICon from '../../assets/icons/daiIcon.svg';
 import { makeStyles } from '@material-ui/styles';
-import axios from 'axios';
 import actionTypes from '../../constants/actionTypes';
-import { getTokenDataSaga } from '../../store/currentTokenData/actions';
-import { useParams } from 'react-router-dom';
-import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
 import Popover from '@mui/material/Popover';
 import greenDot from '../../assets/icons/greenDot.svg';
-
 import paraSwapIcon from '../../assets/icons/exchangers/paraSwapExchangerIcon.svg';
-import uniswapExchangerIcon from '../../assets/icons/exchangers/uniswapExchangerIcon.svg';
 
-import exchangersOfferedList from './exchangersOfferedListPolygon.js';
+// import exchangersOfferedList from './exchangersOfferedListPolygon.js';
 // import sendTokensMockList from './sendTokensMockList.json';
-import sendTokensMockList from './sendTokensMockListPolygon.js';
 import SelectTokensModalContainer from './selectTokensModal';
 import OutsideClickHandler from './outsideClickHandler';
 import { CloseButton, Header, ModalTitle } from './selectTokensModal/styles';
@@ -90,19 +81,22 @@ import closeModalIconDark from '../../assets/icons/closenftdark.svg';
 import searchTokensImportModalDark from '../../assets/icons/searchTokensInputModalDark.svg';
 import searchTokensImportModalLight from '../../assets/icons/searchTokensButtonMobileLight.svg';
 import Avatar from 'react-avatar';
-import Loader from 'react-loader-spinner';
 import {
   checkIfExchangedTokenLimitIsExceeded,
   convertSendTokenToUSDCurrencyHelper,
   filteredTokensByName,
-  initFilteringModalTokensList,
+  getTokenUSDAmount,
+  initFilteringModalTokensListMultiSwap,
 } from './helpers';
 import { useWeb3React } from '@web3-react/core';
-import { ethers } from 'ethers';
 import Web3 from 'web3';
 import multiCallAbi from '../../abi/MultiCall.json';
 import TOKENDECIMALSABI from '../../abi/TokenDecomals.json';
 import ROUTERABI from '../../abi/UniRouterV2.json';
+import { send } from 'eth-permit/dist/rpc';
+import uniswapV2ExchangerIcon from '../../assets/icons/exchangers/uniswapV2ExchangerIcon.svg';
+import sushiSwapExchangerIcon from '../../assets/icons/exchangers/sushiSwapExchangerIcon.svg';
+import swerveExchangerIcon from '../../assets/icons/exchangers/swerveExchangerIcon.png';
 
 const useStyles = makeStyles((theme) => ({
   noBorder: {
@@ -113,37 +107,64 @@ const useStyles = makeStyles((theme) => ({
 export default function MultiSwapComponent() {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const [tokenSendUSDCurrency, setTokenSendUSDCurrency] = useState('$0.00');
-  const [tokenSendAmount, setTokenSendAmount] = useState();
   let [tokensListModal, setTokensListModal] = useState([]);
-  const [sendTokenForExchangeAmount, setSendTokenForExchangeAmount] = useState();
-  const [receiveTokensRefsList, setReceiveTokensRefsList] = useState([]);
-  //
   let [oldTokenSwappedAddress, setOldTokenSwappedAddress] = useState();
   let [isSendTokenSelectedSwapped, setIsSendTokenSelectedSwapped] = useState(false);
   const [openTokensModal, setOpenTokensModal] = useState(false);
   const [isTokensLimitExceeded, setIsTokensLimitExceeded] = useState(false);
   let [isAddedReceiveTokensLimitExceeded, setIsAddedReceiveTokensLimitExceeded] = useState(false);
+  const [isAbleToReplaceTokens, setIsAbleToReplaceTokens] = useState(false);
+  const [exchangersOfferedList, setExchangersOfferedList] = useState([
+    {
+      name: 'Uniswap_V2',
+      routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
+      receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
+      gasFee: '$10.03',
+      isBestRate: true,
+      logoIcon: uniswapV2ExchangerIcon,
+      isExchangerSelected: true,
+    },
+    {
+      name: 'Swerve',
+      routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
+      receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
+      gasFee: '$10.03',
+      isBestRate: false,
+      logoIcon: swerveExchangerIcon,
+      isExchangerSelected: false,
+    },
+    {
+      name: 'SushiSwap',
+      routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
+      receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
+      gasFee: '$10.03',
+      isBestRate: false,
+      logoIcon: sushiSwapExchangerIcon,
+      isExchangerSelected: false,
+    },
+  ]);
 
   let textInput = useRef(null);
 
+  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
+
+  const isLoadingSendTokensList = useSelector(
+    (state) => state.tokensListReducer.isSendMultiSwapTokensListLoading
+  );
   const isLoadingReceiveTokensList = useSelector(
     (state) => state.tokensListReducer.isReceiveMultiSwapTokensListLoading
   );
 
-  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
-
-  const initSendMultiSwapToken = useSelector(
+  const initSendMultiSwapTokenList = useSelector(
     (state) => state.tokensListReducer.initSendTokenMultiSwap
   );
   const initReceiveMultiSwapTokensList = useSelector(
     (state) => state.tokensListReducer.initReceiveMultiSwapTokensList
   );
 
-  console.log('receive USD multi init state SendTokenSwap 12345', initSendMultiSwapToken);
-  // console.log('receive USD token send Amount', tokenSendAmount);
+  console.log('receive USD multi init state SendTokenSwap 12345', initSendMultiSwapTokenList);
   console.log(
-    ' receive USD multi init state ReceiveMultiSwapTokensList',
+    ' receive USD multi init state ReceiveMultiSwapTokensList 12345',
     initReceiveMultiSwapTokensList
   );
 
@@ -170,98 +191,65 @@ export default function MultiSwapComponent() {
   let finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
 
   async function getWeb3() {
-    // const provider = active ? await connector.getProvider() : ethers.getDefaultProvider();
-    const web3 = await new Web3(window.ethereum);
-    return web3;
+    return new Web3(window.ethereum);
   }
 
-  let convertSendTokenToUSDCurrency = (tokenData) => {
-    let convertedToUSDValue = convertSendTokenToUSDCurrencyHelper(tokenData);
-    // console.log('multiswap convertedToUSDValue', convertedToUSDValue);
-    setTokenSendUSDCurrency(convertedToUSDValue);
-    setTokenSendAmount(tokenData.amount);
+  let convertSendTokenToUSDCurrency = async (amount, tokenData) => {
+    let formattedAmount = amount.replace(/[^\d.-]/g, '').replace(/[^\w.]|_/g, '');
+
+    console.log('res amount tokenData send amount', amount);
+    // console.log('res amount send formattedAmount', formattedAmount);
+    // console.log('res amount send formattedAmount typeof', typeof formattedAmount);
+
+    await getTokenUSDAmount({ amount: formattedAmount, tokenData }).then((res) => {
+      // console.log('res amount send middle', res);
+
+      let sendTokensListCopy = [...initSendMultiSwapTokenList];
+      const needIndex = sendTokensListCopy.findIndex(
+        (token) => token.address === tokenData.address
+      );
+      if (needIndex !== -1) {
+        sendTokensListCopy[needIndex].USDCurrency = res.USDCurrency;
+        sendTokensListCopy[needIndex].amount = formattedAmount;
+      }
+
+      // console.log('res amount send list total', sendTokensListCopy);
+      dispatch({
+        type: actionTypes.SET_INIT_SEND_MULTISWAP_TOKENS_LIST,
+        payload: sendTokensListCopy,
+      });
+    });
   };
 
   let convertReceiveTokenToUSDCurrency = async (amount, tokenData) => {
-    // dispatch({ type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING, payload: true });
+    let formattedAmount = amount.replace(/[^\d.-]/g, '').replace(/[^\w.]|_/g, '');
 
-    if (amount === '') {
-      amount = '0';
-    }
+    console.log('res amount tokenData receive', tokenData);
+    console.log('res amount formattedAmount', formattedAmount);
+    console.log('res amount formattedAmount typeof', typeof formattedAmount);
 
-    let tokenUSDCurrencyValue;
-    let finalUSDCurrencyValue;
+    await getTokenUSDAmount({ amount: formattedAmount, tokenData }).then((res) => {
+      console.log('res amount middle', res);
 
-    if (tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
-      await axios
-        .get(
-          `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
-        )
-        .then(async (response) => {
-          tokenUSDCurrencyValue = response;
-        })
-        .catch((err) => {
-          console.log('err of usd currency receive token', err);
-        });
+      // console.log('res amount formatted', formattedAmount);
 
-      if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
-        finalUSDCurrencyValue = `$ ${(
-          tokenUSDCurrencyValue.data.price.rate * parseFloat(amount)
-        ).toFixed(2)}`;
-      } else {
-        finalUSDCurrencyValue = 'Price not available';
-      }
-    } else {
-      const ethDollarValue = await axios.get(
-        'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
+      let receiveTokensListCopy = [...initReceiveMultiSwapTokensList];
+      const needIndex = receiveTokensListCopy.findIndex(
+        (token) => token.address === tokenData.address
       );
-      finalUSDCurrencyValue = `$${(ethDollarValue.data.ethereum.usd * parseFloat(amount)).toFixed(
-        2
-      )}`;
-    }
-
-    console.log('multiswap receive USD finalUSDCurrencyValue', finalUSDCurrencyValue);
-
-    let receiveTokensListCopy = [...initReceiveMultiSwapTokensList];
-    console.log('receiveTokensListCopy', receiveTokensListCopy);
-
-    const needIndex = receiveTokensListCopy.findIndex(
-      (token) => token.address === tokenData.address
-    );
-
-    console.log('multiswap receive USD index', needIndex);
-
-    if (needIndex !== -1) {
-      receiveTokensListCopy[needIndex].USDCurrency = finalUSDCurrencyValue;
-      receiveTokensListCopy[needIndex].amount = amount;
-    }
-
-    dispatch({
-      type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST,
-      payload: receiveTokensListCopy,
-    });
-
-    // dispatch({ type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING, payload: false });
-
-    console.log('multiswap receive USD total', initReceiveMultiSwapTokensList);
-
-    await getAmountMulti();
-  };
-
-  useEffect(() => {
-    setSendTokenForExchangeAmount(0);
-
-    const timer = setTimeout(() => {
-      for (let i = 0; i < initReceiveMultiSwapTokensList.length; i++) {
-        convertExchangeTokensCourse({
-          sendTokenForExchangeAddress: initSendMultiSwapToken.address,
-          receiveTokenForExchangeAddress: initReceiveMultiSwapTokensList[i].address,
-          tokenAmount: 1,
-        });
+      if (needIndex !== -1) {
+        receiveTokensListCopy[needIndex].USDCurrency = res.USDCurrency;
+        receiveTokensListCopy[needIndex].amount = formattedAmount;
       }
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, [initSendMultiSwapToken, initReceiveMultiSwapTokensList]);
+
+      console.log('res amount total', receiveTokensListCopy[needIndex]);
+      dispatch({
+        type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST,
+        payload: receiveTokensListCopy,
+      });
+    });
+    // await getAmountMulti();
+  };
 
   async function loadWeb3() {
     if (window.ethereum) {
@@ -349,35 +337,26 @@ export default function MultiSwapComponent() {
   //----- convert token course (need to implement necessary network)
 
   let exchange = async () => {
-    console.log('total MultiSwap sendToken initSendMultiSwapToken', initSendMultiSwapToken);
-    console.log('total MultiSwap sendToken object AMOUNT', tokenSendAmount);
-    console.log(
-      'total MultiSwap receiveTokensList exchange object',
-      initReceiveMultiSwapTokensList
-    );
+    console.log('exchange data initSendMultiSwapTokenList', initSendMultiSwapTokenList);
+    console.log('exchange data initReceiveMultiSwapTokensList', initReceiveMultiSwapTokensList);
   };
 
   const openModalHelper = (payload) => {
-    // console.log('modal payload value', payload);
     setTokensListModal([]);
     setOpenTokensModal(true);
-    let removedInitTokenValuesList = initFilteringModalTokensList(
-      payload,
-      initSendMultiSwapToken,
-      initReceiveMultiSwapTokensList
-    );
-    setTokensListModal(removedInitTokenValuesList);
+    let removedInitTokensList = initFilteringModalTokensListMultiSwap(payload.tokensList, [
+      ...initSendMultiSwapTokenList,
+      ...initReceiveMultiSwapTokensList,
+    ]);
+    setTokensListModal(removedInitTokensList);
     setIsSendTokenSelectedSwapped(payload.isSendModalOpen);
   };
 
-  // console.log('tokensListModal modal', tokensListModal);
-
   const searchTokensHandler = (event, isSendTokenSelectedSwapped, searchTokensData) => {
-    let removedInitTokenValuesList = initFilteringModalTokensList(
-      searchTokensData,
-      initSendMultiSwapToken,
-      initReceiveMultiSwapTokensList
-    );
+    let removedInitTokenValuesList = initFilteringModalTokensListMultiSwap(searchTokensData, [
+      ...initSendMultiSwapTokenList,
+      ...initReceiveMultiSwapTokensList,
+    ]);
     let filteredTokensList = filteredTokensByName(event, removedInitTokenValuesList);
     setTokensListModal(filteredTokensList);
   };
@@ -392,7 +371,7 @@ export default function MultiSwapComponent() {
     const routers = exchangersOfferedList.map((i) => i.routerAddress);
     console.log('multiswap routers', routers);
 
-    let sendTokenAddress = initSendMultiSwapToken.address;
+    let sendTokenAddress = initSendMultiSwapTokenList[0].address;
 
     if (sendTokenAddress === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
       sendTokenAddress = '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270';
@@ -418,22 +397,31 @@ export default function MultiSwapComponent() {
   };
 
   const selectTokenForSwap = async (selectedSwapToken, isSendTokenSelectedSwapped) => {
-    // console.log('copy multiswap send/receive selectedSwapToken', selectedSwapToken);
-
-    // await getAmountMulti(selectedSwapToken, isSendTokenSelectedSwapped);
-
     if (isSendTokenSelectedSwapped === true) {
-      setSendTokenForExchangeAmount(0);
+      console.log('send selectedSwapToken', selectedSwapToken);
+
+      let sendTokensListCopy = [...initSendMultiSwapTokenList];
+
+      const needIndex = sendTokensListCopy.findIndex(
+        (token) => token.address === oldTokenSwappedAddress
+      );
+
+      // console.log('send selectedSwapToken needIndex', needIndex);
+
+      if (needIndex !== -1) {
+        sendTokensListCopy[needIndex] = {
+          ...selectedSwapToken,
+          receiveTokensListItem: false,
+          USDCurrency: 0,
+          amount: 0,
+        };
+      }
+
+      // console.log('send selectedSwapToken sendTokensListCopy total', sendTokensListCopy);
 
       dispatch({
-        type: actionTypes.SET_INIT_SEND_MULTISWAP_TOKEN,
-        payload: selectedSwapToken,
-      });
-
-      convertSendTokenToUSDCurrency({
-        amount: 0,
-        ...selectedSwapToken,
-        address: selectedSwapToken.address,
+        type: actionTypes.SET_INIT_SEND_MULTISWAP_TOKENS_LIST,
+        payload: sendTokensListCopy,
       });
     } else if (selectedSwapToken.receiveTokensListItem === true) {
       dispatch({ type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING, payload: true });
@@ -449,14 +437,10 @@ export default function MultiSwapComponent() {
         receiveTokensListCopy[needIndex] = {
           ...selectedSwapToken,
           receiveTokensListItem: true,
-          USDCurrency: '$ 0.00',
-          // amount: 0,
+          USDCurrency: 0,
+          amount: 0,
         };
       }
-
-      //clear the old input value from token field
-      // should bee done for all tokens - do only for last by ref, should be done by keys
-      textInput.current.value = '';
 
       dispatch({
         type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST,
@@ -470,7 +454,8 @@ export default function MultiSwapComponent() {
     }
   };
 
-  console.log('finalReceiveTokensList multiswap', finalReceiveTokensList);
+  console.log('finalSendTokensList multiswap init saga list', finalSendTokensList);
+  console.log('finalReceiveTokensList multiswap init saga list', finalReceiveTokensList);
   console.log(
     'finalReceiveTokensList initReceiveMultiSwapTokensList multiswap',
     initReceiveMultiSwapTokensList
@@ -482,16 +467,10 @@ export default function MultiSwapComponent() {
       payload: true,
     });
 
-    // searchTokensData.tokensList
-    // console.log('add receive token handler fullTokensList init', fullTokensList);
-
-    let removedInitTokenValuesList = initFilteringModalTokensList(
-      fullTokensList,
-      initSendMultiSwapToken,
-      initReceiveMultiSwapTokensList
-    );
-
-    // console.log('add receive token handler finalReceiveTokensList ', removedInitTokenValuesList);
+    let removedInitTokenValuesList = initFilteringModalTokensListMultiSwap(fullTokensList, [
+      ...initSendMultiSwapTokenList,
+      ...initReceiveMultiSwapTokensList,
+    ]);
 
     if (removedInitTokenValuesList.length !== 0) {
       initReceiveMultiSwapTokensList.push(removedInitTokenValuesList[0]);
@@ -507,6 +486,97 @@ export default function MultiSwapComponent() {
 
   console.log('isSendTokenSelectedSwapped', isSendTokenSelectedSwapped);
 
+  const toggleSwappedTokens = () => {
+    // [...initReceiveMultiSwapTokensList];
+    let sendTokensListCopy = initSendMultiSwapTokenList.map((obj) => {
+      return { ...obj, amount: 0, USDCurrency: 0 };
+      // return obj;
+    });
+    let receiveTokensListCopy = initReceiveMultiSwapTokensList.map((obj) => {
+      if (Number(obj.amount) > 0) {
+        return { ...obj, amount: 0, USDCurrency: 0 };
+      }
+      return obj;
+    });
+
+    console.log('sendTokensListCopy toggle', sendTokensListCopy);
+    console.log('result toggle test receiveTokensListCopy toggle', receiveTokensListCopy);
+
+    let totalReceiveTokensArr = [];
+    finalSendTokensList
+      .filter((sendToken) =>
+        receiveTokensListCopy.some((receiveToken) => {
+          return sendToken.address === receiveToken.address;
+        })
+      )
+      .map((el1) =>
+        receiveTokensListCopy.map((el2) => {
+          if (el1.address === el2.address) {
+            // console.log('total toggle test', { ...el2, balance: el1.balance });
+            totalReceiveTokensArr.push({ ...el2, balance: el1.balance });
+          }
+        })
+      );
+
+    console.log('result toggle total', totalReceiveTokensArr);
+
+    dispatch({
+      type: actionTypes.SET_INIT_SEND_MULTISWAP_TOKENS_LIST,
+      payload: totalReceiveTokensArr,
+    });
+    dispatch({
+      type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST,
+      payload: sendTokensListCopy,
+    });
+  };
+
+  useEffect(() => {
+    if (initSendMultiSwapTokenList[0] !== undefined && initSendMultiSwapTokenList.length !== 0) {
+      //functionality to add best exchanger to final send/receive tokens lists - should be done in sagas
+      let bestRateExchanger = exchangersOfferedList.find((el) => {
+        return el.isBestRate === true;
+      });
+
+      console.log('bestRateExchanger', bestRateExchanger);
+
+      let test1 = initSendMultiSwapTokenList.map((sendToken) => {
+        return { ...sendToken, chosenExchanger: bestRateExchanger };
+      });
+
+      let test2 = initReceiveMultiSwapTokensList.map((receiveToken) => {
+        return { ...receiveToken, chosenExchanger: bestRateExchanger };
+      });
+
+      console.log('bestRateExchanger test1', test1);
+      console.log('bestRateExchanger test2', test2);
+
+      ///-------------
+
+      let ifSendTokenAvailableForSwap = finalReceiveTokensList.some((el) => {
+        if (el.address === initSendMultiSwapTokenList[0].address) {
+          return true;
+        }
+      });
+
+      let availableNumOfReceiveTokensToSwap = finalSendTokensList
+        .map((x) =>
+          initReceiveMultiSwapTokensList.some((y) => {
+            if (y.address === x.address) return true;
+          })
+        )
+        .filter((value) => value === true).length;
+
+      if (
+        availableNumOfReceiveTokensToSwap === initReceiveMultiSwapTokensList.length &&
+        ifSendTokenAvailableForSwap === true
+      ) {
+        setIsAbleToReplaceTokens(true);
+      } else {
+        setIsAbleToReplaceTokens(false);
+      }
+    }
+  }, [initSendMultiSwapTokenList, initReceiveMultiSwapTokensList]);
+
   return (
     <SecondColumnSwapSubBlock>
       <SecondColumnTitleBlock>
@@ -518,112 +588,126 @@ export default function MultiSwapComponent() {
           Trade any token for many tokens or many tokens for a token in a single transaction
         </ColumnMainSubTitles>
       </SecondColumnTitleBlock>
-      <SwapTokensMainSubBlock
-        isLightTheme={isLightTheme}
-        style={{ marginTop: '0', height: '600px' }}>
-        {/*Choose send tokens block*/}
-        <SendReceiveSubBlock>
-          <SendBlockLabels isLightTheme={isLightTheme} style={{ margin: '32px 20px 0px 20px' }}>
-            <span>Send</span>
-          </SendBlockLabels>
-          <MultiSwapSendTokensChooseBlock isLightTheme={isLightTheme}>
+      {isLoadingSendTokensList === false && isLoadingReceiveTokensList === false ? (
+        <SwapTokensMainSubBlock
+          isLightTheme={isLightTheme}
+          style={{ marginTop: '0', height: 'auto' }}>
+          {/*Choose send tokens block*/}
+          <SendReceiveSubBlock>
+            <SendBlockLabels isLightTheme={isLightTheme} style={{ margin: '32px 20px 0px 20px' }}>
+              <span>Send</span>
+            </SendBlockLabels>
+
             {/* SEND block */}
+            {initSendMultiSwapTokenList.map((sendToken, key) => (
+              <MultiSwapSendTokensChooseBlock isLightTheme={isLightTheme}>
+                <MultiSwapChooseBtnTokenBlock>
+                  <div
+                    onClick={() => {
+                      setOldTokenSwappedAddress(sendToken.address);
+                      openModalHelper({ tokensList: finalSendTokensList, isSendModalOpen: true });
+                    }}>
+                    {sendToken.logoURI !== null ? (
+                      <SendTokenImg
+                        alt="token_img"
+                        src={sendToken.logoURI}
+                        style={{ marginLeft: '0px' }}
+                      />
+                    ) : (
+                      <MultiSwapTokenAvatar
+                        name={sendToken.avatarIcon}
+                        round={true}
+                        size="21"
+                        textSizeRatio={1}
+                      />
+                    )}
+                    <ChosenTokenLabel isLightTheme={isLightTheme}>
+                      {sendToken.symbol === 'ethereum' ? 'ETH' : sendToken.symbol}
+                    </ChosenTokenLabel>
+                    <img
+                      src={isLightTheme ? chevronDownBlack : chevronDownLight}
+                      alt="chevron_icon"
+                    />
+                  </div>
+                  <USDCurrencySendInputBlock>
+                    <ChosenMultiSwapSendReceiveTokenValueInput
+                      // disabled={true}
+                      style={{ marginRight: '0px' }}
+                      InputProps={{
+                        inputProps: {
+                          style: {
+                            marginTop: '4px',
+                            textAlign: 'right',
+                            padding: 0,
+                            width: '200px',
+                            fontWeight: 600,
+                            color: isTokensLimitExceeded ? 'red' : isLightTheme ? 'black' : 'white',
+                          },
+                        },
+                        classes: { notchedOutline: classes.noBorder },
+                      }}
+                      isLightTheme={isLightTheme}
+                      placeholder="0.0"
+                      value={sendToken.amount}
+                      onChange={(e) => {
+                        convertSendTokenToUSDCurrency(e.target.value, {
+                          ...sendToken,
+                        });
 
-            <MultiSwapChooseBtnTokenBlock>
-              <div
-                onClick={() =>
-                  openModalHelper({ tokensList: finalSendTokensList, isSendModalOpen: true })
-                }>
-                {initSendMultiSwapToken.logoURI !== null ? (
-                  <SendTokenImg
-                    alt="token_img"
-                    src={initSendMultiSwapToken.logoURI}
-                    style={{ marginLeft: '0px' }}
-                  />
-                ) : (
-                  <MultiSwapTokenAvatar
-                    name={initSendMultiSwapToken.avatarIcon}
-                    round={true}
-                    size="21"
-                    textSizeRatio={1}
-                  />
-                )}
-                <ChosenTokenLabel isLightTheme={isLightTheme}>
-                  {initSendMultiSwapToken.symbol === 'ethereum'
-                    ? 'ETH'
-                    : initSendMultiSwapToken.symbol}
-                </ChosenTokenLabel>
-                <img src={isLightTheme ? chevronDownBlack : chevronDownLight} alt="chevron_icon" />
-              </div>
-              <USDCurrencySendInputBlock>
-                <ChosenMultiSwapSendReceiveTokenValueInput
-                  // disabled={true}
-                  style={{ marginRight: '0px' }}
-                  InputProps={{
-                    inputProps: {
-                      style: {
-                        marginTop: '4px',
-                        textAlign: 'right',
-                        padding: 0,
-                        width: '200px',
-                        fontWeight: 600,
-                        color: isLightTheme ? 'black' : 'white',
-                      },
-                    },
-                    classes: { notchedOutline: classes.noBorder },
-                  }}
-                  isLightTheme={isLightTheme}
-                  placeholder="0.0"
-                  value={sendTokenForExchangeAmount}
-                  onChange={(e) => {
-                    setSendTokenForExchangeAmount(e.target.value);
-                    convertSendTokenToUSDCurrency({
-                      amount: e.target.value,
-                      ...initSendMultiSwapToken,
-                    });
+                        const isLimitExceeded = checkIfExchangedTokenLimitIsExceeded(
+                          e.target.value,
+                          sendToken.balance
+                        );
+                        setIsTokensLimitExceeded(isLimitExceeded);
+                      }}
+                    />
+                  </USDCurrencySendInputBlock>
+                </MultiSwapChooseBtnTokenBlock>
 
-                    // convertReceiveTokenToUSDCurrency
+                <MultiSwapSendValueLabelsLayout
+                // style={{ backgroundColor: 'red' }}
+                >
+                  <MultiSwapSendValueLabel
+                    isLightTheme={isLightTheme}
+                    style={{ marginLeft: '30px' }}>
+                    {sendToken.balance} {sendToken.symbol}
+                  </MultiSwapSendValueLabel>
 
-                    const isLimitExceeded = checkIfExchangedTokenLimitIsExceeded(
-                      e.target.value,
-                      initSendMultiSwapToken.balance
-                    );
-                    setIsTokensLimitExceeded(isLimitExceeded);
-                  }}
-                />
-              </USDCurrencySendInputBlock>
-            </MultiSwapChooseBtnTokenBlock>
+                  <MultiSwapSendValueLabel
+                    isLightTheme={isLightTheme}
+                    style={{ marginLeft: 'auto' }}>
+                    {sendToken.USDCurrency < 0 ? (
+                      <>Price not available</>
+                    ) : (
+                      <>${sendToken.USDCurrency}</>
+                    )}
+                  </MultiSwapSendValueLabel>
+                </MultiSwapSendValueLabelsLayout>
+              </MultiSwapSendTokensChooseBlock>
+            ))}
 
-            <MultiSwapSendValueLabelsLayout
-            // style={{ backgroundColor: 'red' }}
-            >
-              <MultiSwapSendValueLabel isLightTheme={isLightTheme} style={{ marginLeft: '30px' }}>
-                {initSendMultiSwapToken.balance} {initSendMultiSwapToken.symbol}
-              </MultiSwapSendValueLabel>
+            {isTokensLimitExceeded && (
+              <ExceededAmountTokensLimitWarning style={{ marginRight: '30px', marginTop: '-10px' }}>
+                Insufficient funds
+              </ExceededAmountTokensLimitWarning>
+            )}
 
-              <MultiSwapSendValueLabel isLightTheme={isLightTheme}>
-                {tokenSendUSDCurrency}
-              </MultiSwapSendValueLabel>
-            </MultiSwapSendValueLabelsLayout>
-          </MultiSwapSendTokensChooseBlock>
-          {isTokensLimitExceeded && (
-            <ExceededAmountTokensLimitWarning style={{ marginRight: '30px', marginTop: '-10px' }}>
-              Insufficient funds
-            </ExceededAmountTokensLimitWarning>
-          )}
+            {isAbleToReplaceTokens ? (
+              <SwitchTokensBtn
+                onClick={toggleSwappedTokens}
+                src={isLightTheme ? switchTokensLight : switchTokensDark}
+                alt="switch_tokens_btn"
+              />
+            ) : (
+              <SwitchTokensBtn
+                style={{ opacity: 0.5 }}
+                src={isLightTheme ? switchTokensLight : switchTokensDark}
+                alt="switch_tokens_btn"
+              />
+            )}
+          </SendReceiveSubBlock>
+          {/* mapped received block */}
 
-          <SwitchTokensBtn
-            src={isLightTheme ? switchTokensLight : switchTokensDark}
-            alt="switch_tokens_btn"
-          />
-        </SendReceiveSubBlock>
-
-        {/* mapped received block */}
-        {isLoadingReceiveTokensList === true ? (
-          <span style={{ display: 'flex', justifyContent: 'center', fontWeight: 'bold' }}>
-            Loading...
-          </span>
-        ) : (
           <>
             <SendBlockLabels isLightTheme={isLightTheme} style={{ margin: '0px 20px 5px 20px' }}>
               <span>Receive</span>
@@ -640,7 +724,6 @@ export default function MultiSwapComponent() {
                           {
                             tokensList: finalReceiveTokensList,
                             isSendModalOpen: false,
-                            receiveToken,
                           },
                           key
                         );
@@ -677,7 +760,6 @@ export default function MultiSwapComponent() {
                     </MultiSwapChooseBtnTokenBlock>
                     <USDCurrencyInputBlock>
                       <ChosenMultiSwapSendReceiveTokenValueInput
-                        // inputRef={(ref) => (receiveTokensRefsList[key] = ref)}
                         InputProps={{
                           inputProps: {
                             style: {
@@ -706,7 +788,11 @@ export default function MultiSwapComponent() {
                         <MultiSwapSendValueLabel
                           isLightTheme={isLightTheme}
                           style={{ marginLeft: 'auto' }}>
-                          {receiveToken.USDCurrency}
+                          {receiveToken.USDCurrency < 0 ? (
+                            <>Price not available</>
+                          ) : (
+                            <>${receiveToken.USDCurrency}</>
+                          )}
                         </MultiSwapSendValueLabel>
                       </div>
                     </USDCurrencyInputBlock>
@@ -719,9 +805,10 @@ export default function MultiSwapComponent() {
                         Exchange rate
                       </LabelsBlockSubBlockSpan>
 
-                      {receiveToken.singleAmountSendTokenConvert !== 0 ? (
+                      {receiveToken.singleAmountSendTokenConvert !== 0 &&
+                      initSendMultiSwapTokenList[0].symbol !== undefined ? (
                         <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                          1 {initSendMultiSwapToken.symbol} ={' '}
+                          1 {initSendMultiSwapTokenList[0].symbol} ={' '}
                           {receiveToken.singleAmountSendTokenConvert} {receiveToken.symbol}
                         </LabelsBlockSubBlockSpan>
                       ) : (
@@ -735,8 +822,8 @@ export default function MultiSwapComponent() {
                         Offered by
                       </LabelsBlockSubBlockSpan>
                       <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
-                        <img src={paraSwapIcon} alt="paraSwapIcon" />
-                        <span onClick={handleClick}>ParaSwap</span>
+                        <img src={receiveToken.chosenExchanger.logoIcon} alt="paraSwapIcon" />
+                        <span onClick={handleClick}>{receiveToken.chosenExchanger.name}</span>
                         <Popover
                           open={open}
                           anchorEl={anchorEl}
@@ -839,9 +926,7 @@ export default function MultiSwapComponent() {
                   }}>
                   <TokensModalSubLayout isLightTheme={isLightTheme}>
                     <Header>
-                      <ModalTitle isLightTheme={isLightTheme}>
-                        Select token for send multiswap
-                      </ModalTitle>
+                      <ModalTitle isLightTheme={isLightTheme}>Select token</ModalTitle>
                       <CloseButton
                         onClick={() => {
                           setOpenTokensModal(false);
@@ -858,12 +943,16 @@ export default function MultiSwapComponent() {
                       isLightTheme={isLightTheme}
                       onChange={(event) => {
                         isSendTokenSelectedSwapped
-                          ? searchTokensHandler(event, isSendTokenSelectedSwapped, {
-                              tokensList: finalSendTokensList,
-                            })
-                          : searchTokensHandler(event, isSendTokenSelectedSwapped, {
-                              tokensList: finalReceiveTokensList,
-                            });
+                          ? searchTokensHandler(
+                              event,
+                              isSendTokenSelectedSwapped,
+                              finalSendTokensList
+                            )
+                          : searchTokensHandler(
+                              event,
+                              isSendTokenSelectedSwapped,
+                              finalReceiveTokensList
+                            );
                       }}
                       InputProps={{
                         endAdornment: (
@@ -927,17 +1016,34 @@ export default function MultiSwapComponent() {
                                 <SendTokenName isLightTheme={isLightTheme}>
                                   {object.name}
                                 </SendTokenName>
-                                <SendTokenConvertedMeasures
-                                  isLightTheme={isLightTheme}
-                                  style={{ visibility: 'hidden' }}>
-                                  409,333 UNI · $19,18
-                                </SendTokenConvertedMeasures>
+                                {isSendTokenSelectedSwapped ? (
+                                  <SendTokenConvertedMeasures isLightTheme={isLightTheme}>
+                                    {`${object.balance} ${object.symbol} · 
+                                    $ ${
+                                      Math.round(object.singleTokenUSDCurrencyAmount * 100000) /
+                                      100000
+                                    } 
+                                    `}
+                                  </SendTokenConvertedMeasures>
+                                ) : (
+                                  <SendTokenConvertedMeasures
+                                    isLightTheme={isLightTheme}
+                                    style={{ visibility: 'hidden' }}>
+                                    409,333 UNI · $19,18
+                                  </SendTokenConvertedMeasures>
+                                )}
                               </div>
                             </SendTokenLabelsBlock>
                             <SendTokenBalance isLightTheme={isLightTheme}>
                               {object.balance !== undefined && isSendTokenSelectedSwapped === true && (
                                 // <Loader type="Rings" color="#BB86FC" height={30} width={30} />
-                                <span>${object.balance}</span>
+                                <span>
+                                  {`$${
+                                    Math.round(
+                                      object.balance * object.singleTokenUSDCurrencyAmount * 100000
+                                    ) / 100000
+                                  }`}
+                                </span>
                               )}
                             </SendTokenBalance>
                           </SendTokenModalListItem>
@@ -958,7 +1064,7 @@ export default function MultiSwapComponent() {
                 style={{ marginTop: '20px' }}
                 isLightTheme={isLightTheme}
                 onClick={() => {
-                  addReceiveTokensHandler({ tokensList: finalReceiveTokensList });
+                  addReceiveTokensHandler(finalReceiveTokensList);
                 }}>
                 <img
                   src={isLightTheme ? plusIconDark : plusIconLight}
@@ -967,45 +1073,51 @@ export default function MultiSwapComponent() {
               </AddReceiveTokenMultiSwapBtn>
             )}
           </>
-        )}
-        <SwapBlockDelimiter isLightTheme={isLightTheme} style={{ margin: '20px  27px 0 20px' }} />
-        {/* Labels block*/}
-        <DownDelimiterLabelsBlock
-          isLightTheme={isLightTheme}
-          style={{ marginTop: '20px', padding: '20 27px 16px 20px' }}>
-          <div style={{ padding: '0 27px 16px 20px' }}>
-            <LabelsBlockSubBlock isLightTheme={isLightTheme}>
-              <LabelsBlockImportantSpan isLightTheme={isLightTheme}>
-                Slippage Tolerance
-              </LabelsBlockImportantSpan>
-              <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
-                <span>1%</span>
-              </AdditionalOptionsSwapTokensSubBlock>
-            </LabelsBlockSubBlock>
-            <LabelsBlockSubBlock isLightTheme={isLightTheme}>
-              <LabelsBlockImportantSpan isLightTheme={isLightTheme}>
-                Transaction speed
-              </LabelsBlockImportantSpan>
-              <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
-                <span>$20 ^ Average</span>
-              </AdditionalOptionsSwapTokensSubBlock>
-            </LabelsBlockSubBlock>
-          </div>
-        </DownDelimiterLabelsBlock>
-        <SwapBlockExchangeLayout isLightTheme={isLightTheme}>
-          <Button
-            onClick={() => exchange()}
-            disabled={
-              isTokensLimitExceeded ||
-              false ||
-              sendTokenForExchangeAmount === '0' ||
-              sendTokenForExchangeAmount === 0 ||
-              sendTokenForExchangeAmount?.length === 0
-            }>
-            Exchange
-          </Button>
-        </SwapBlockExchangeLayout>
-      </SwapTokensMainSubBlock>
+
+          <SwapBlockDelimiter isLightTheme={isLightTheme} style={{ margin: '20px  27px 0 20px' }} />
+          {/* Labels block*/}
+          <DownDelimiterLabelsBlock
+            isLightTheme={isLightTheme}
+            style={{ marginTop: '20px', padding: '20 27px 16px 20px' }}>
+            <div style={{ padding: '0 27px 16px 20px' }}>
+              <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+                <LabelsBlockImportantSpan isLightTheme={isLightTheme}>
+                  Slippage Tolerance
+                </LabelsBlockImportantSpan>
+                <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
+                  <span>1%</span>
+                </AdditionalOptionsSwapTokensSubBlock>
+              </LabelsBlockSubBlock>
+              <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+                <LabelsBlockImportantSpan isLightTheme={isLightTheme}>
+                  Transaction speed
+                </LabelsBlockImportantSpan>
+                <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
+                  <span>$20 ^ Average</span>
+                </AdditionalOptionsSwapTokensSubBlock>
+              </LabelsBlockSubBlock>
+            </div>
+          </DownDelimiterLabelsBlock>
+          <SwapBlockExchangeLayout isLightTheme={isLightTheme} style={{ marginBottom: '40px' }}>
+            <Button
+              onClick={() => exchange()}
+              disabled={
+                isTokensLimitExceeded
+                // ||
+                // false ||
+                // sendTokenForExchangeAmount === '0' ||
+                // sendTokenForExchangeAmount === 0 ||
+                // sendTokenForExchangeAmount?.length === 0
+              }>
+              Exchange
+            </Button>
+          </SwapBlockExchangeLayout>
+        </SwapTokensMainSubBlock>
+      ) : (
+        <span style={{ display: 'flex', justifyContent: 'center', fontWeight: 'bold' }}>
+          Loading...
+        </span>
+      )}
     </SecondColumnSwapSubBlock>
   );
 }
