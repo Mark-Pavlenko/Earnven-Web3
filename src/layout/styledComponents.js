@@ -1,8 +1,7 @@
 import { experimentalStyled as styled } from '@material-ui/core/styles';
 
 export const RootStyle = styled('div')`
-  min-height: 100%;
-  height: auto;
+  height: fit-content;
   background-repeat: no-repeat;
   background-size: cover;
   background-image: ${(props) =>
@@ -21,7 +20,6 @@ export const RootStyle = styled('div')`
         ? `url(${require(`./../assets/images/bgMobile_375x3201.jpg`).default})`
         : `#0B0E1D`};
     background-size: cover;
-    height: 100vh;
   }
   @media (max-width: 480px) {
     background: ${(props) =>
@@ -29,7 +27,6 @@ export const RootStyle = styled('div')`
         ? `url(${require(`./../assets/images/bgMobile_375x3201.jpg`).default})`
         : `#0B0E1D`};
     background-size: cover;
-    height: 100vh;
   }
   @media (max-width: 480px) {
     background: ${(props) =>
@@ -37,14 +34,14 @@ export const RootStyle = styled('div')`
         ? `url(${require(`./../assets/images/bgMobile_375x3201.jpg`).default})`
         : `#0B0E1D`};
     background-size: cover;
-    height: 100vh;
   }
 `;
 
 export const MainStyle = styled('div')`
+  min-height: 100vh;
+  height: 100%;
   flex-grow: 1;
   background-color: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};
-  //height: 100vh;
 
   @media (min-width: 1930px) {
     background-color: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};
