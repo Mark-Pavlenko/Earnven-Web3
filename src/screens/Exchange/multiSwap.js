@@ -120,7 +120,6 @@ export default function MultiSwapComponent() {
       routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
       receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
       gasFee: '$10.03',
-      isBestRate: true,
       logoIcon: uniswapV2ExchangerIcon,
       isExchangerSelected: true,
     },
@@ -129,7 +128,6 @@ export default function MultiSwapComponent() {
       routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
       receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
       gasFee: '$10.03',
-      isBestRate: false,
       logoIcon: swerveExchangerIcon,
       isExchangerSelected: false,
     },
@@ -138,7 +136,6 @@ export default function MultiSwapComponent() {
       routerAddress: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506',
       receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
       gasFee: '$10.03',
-      isBestRate: false,
       logoIcon: sushiSwapExchangerIcon,
       isExchangerSelected: false,
     },
@@ -175,7 +172,6 @@ export default function MultiSwapComponent() {
   let [chosenExchangerTokensList, setChosenExchangerTokensList] = useState([]);
 
   const openExchangersModal = (event, tokensList, chosenToken) => {
-    console.log('openExchangersModal chosenReceiveToken', chosenToken);
     setChosenExchangerTokensList(tokensList);
     setChosenNewExchangerToken(chosenToken);
     setAnchorEl(event.currentTarget);
@@ -183,6 +179,8 @@ export default function MultiSwapComponent() {
 
   const closeExchangersModal = () => {
     setAnchorEl(null);
+    setChosenExchangerTokensList([]);
+    setChosenNewExchangerToken({});
   };
   const open = Boolean(anchorEl);
   //-------------
@@ -621,6 +619,8 @@ export default function MultiSwapComponent() {
     setAnchorEl(false);
   };
 
+  console.log('chosenNewExchangerToken openExchangersModal', chosenNewExchangerToken);
+
   return (
     <SecondColumnSwapSubBlock>
       <SecondColumnTitleBlock>
@@ -936,22 +936,46 @@ export default function MultiSwapComponent() {
                                         <ExchangerElementSpan isLightTheme={isLightTheme}>
                                           {exchanger.gasFee}
                                         </ExchangerElementSpan>
-                                        <ExchangerBestRateSpan
-                                          isLightTheme={isLightTheme}
-                                          style={{
-                                            visibility: exchanger.isBestRate === false && 'hidden',
-                                          }}>
-                                          Best rate
-                                        </ExchangerBestRateSpan>
-                                        <ExchangerIcon src={exchanger.logoIcon} alt="icon" />
-                                        <GreenDotIcon
-                                          src={greenDot}
-                                          alt="green_dot"
-                                          style={{
-                                            visibility:
-                                              exchanger.greenDotIcon === false && 'hidden',
-                                          }}
-                                        />
+                                        {chosenNewExchangerToken &&
+                                          Object.keys(chosenNewExchangerToken).length !== 0 && (
+                                            <>
+                                              {exchanger.routerAddress ===
+                                              chosenNewExchangerToken.chosenExchanger
+                                                .routerAddress ? (
+                                                <>
+                                                  <ExchangerBestRateSpan
+                                                    isLightTheme={isLightTheme}
+                                                    style={{}}>
+                                                    Best rate
+                                                  </ExchangerBestRateSpan>
+                                                  <ExchangerIcon
+                                                    src={exchanger.logoIcon}
+                                                    alt="icon"
+                                                  />
+                                                  <GreenDotIcon src={greenDot} alt="green_dot" />
+                                                </>
+                                              ) : (
+                                                <>
+                                                  <ExchangerBestRateSpan
+                                                    isLightTheme={isLightTheme}
+                                                    style={{ visibility: 'hidden' }}>
+                                                    Best rate
+                                                  </ExchangerBestRateSpan>
+                                                  <ExchangerIcon
+                                                    src={exchanger.logoIcon}
+                                                    alt="icon"
+                                                  />
+                                                  <GreenDotIcon
+                                                    src={greenDot}
+                                                    alt="green_dot"
+                                                    style={{
+                                                      visibility: 'hidden',
+                                                    }}
+                                                  />
+                                                </>
+                                              )}
+                                            </>
+                                          )}
                                       </ExchangerElementListItem>
                                     ))}
                                   </ExchangerMainList>
