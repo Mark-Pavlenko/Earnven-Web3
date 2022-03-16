@@ -649,7 +649,7 @@ export default function MultiSwapComponent() {
 
             {/* SEND block */}
 
-            <>
+            <div style={{ backgroundColor: 'lightgray' }}>
               {initSendMultiSwapTokenList.map((sendToken, key) => (
                 <MultiSwapSendTokensChooseBlock isLightTheme={isLightTheme}>
                   <MultiSwapChooseBtnTokenBlock>
@@ -743,7 +743,7 @@ export default function MultiSwapComponent() {
                   </MultiSwapSendValueLabelsLayout>
                 </MultiSwapSendTokensChooseBlock>
               ))}
-            </>
+            </div>
 
             {isTokensLimitExceeded && (
               <ExceededAmountTokensLimitWarning style={{ marginRight: '30px', marginTop: '-10px' }}>
@@ -770,406 +770,412 @@ export default function MultiSwapComponent() {
             <SendBlockLabels isLightTheme={isLightTheme} style={{ margin: '0px 20px 5px 20px' }}>
               <span>Receive</span>
             </SendBlockLabels>
-            <SubLayoutReceiveTokensBlock>
-              {initReceiveMultiSwapTokensList.map((receiveToken, key) => (
-                <MultiSwapReceiveTokensBlock isLightTheme={isLightTheme}>
-                  <FirstSubLayoutMultiSwapReceiveTokensBlock>
-                    <MultiSwapChooseBtnTokenBlock
-                      style={{ marginTop: '-15px', marginLeft: '8px' }}
-                      onClick={() => {
-                        setOldTokenSwappedAddress(receiveToken.address);
-                        openModalHelper(
-                          {
-                            tokensList: finalReceiveTokensList,
-                            isSendModalOpen: false,
-                          },
-                          key
-                        );
-                      }}>
-                      <div>
-                        {receiveToken.logoURI !== null ? (
-                          <SendTokenImg
-                            alt="token_img"
-                            src={receiveToken.logoURI}
-                            style={{ marginLeft: '4px' }}
-                          />
-                        ) : (
-                          <Avatar
-                            style={{
-                              marginRight: '12px',
-                              height: '21px',
-                              width: '21px',
-                              marginLeft: '5px',
-                            }}
-                            name={receiveToken.name}
-                            round={true}
-                            size="21"
-                            textSizeRatio={1}
-                          />
-                        )}
-                        <ChosenTokenLabel isLightTheme={isLightTheme}>
-                          {receiveToken.symbol === 'ethereum' ? 'ETH' : receiveToken.symbol}
-                        </ChosenTokenLabel>
-                        <img
-                          src={isLightTheme ? chevronDownBlack : chevronDownLight}
-                          alt="chevron_icon"
-                        />
-                      </div>
-                    </MultiSwapChooseBtnTokenBlock>
-                    <USDCurrencyInputBlock>
-                      <ChosenMultiSwapSendReceiveTokenValueInput
-                        InputProps={{
-                          inputProps: {
-                            style: {
-                              marginTop: '4px',
-                              textAlign: 'right',
-                              padding: 0,
-                              width: '200px',
-                              fontWeight: 600,
-                              color: isLightTheme ? 'black' : 'white',
+            <div style={{ backgroundColor: 'lightgray' }}>
+              <SubLayoutReceiveTokensBlock>
+                {initReceiveMultiSwapTokensList.map((receiveToken, key) => (
+                  <MultiSwapReceiveTokensBlock isLightTheme={isLightTheme}>
+                    <FirstSubLayoutMultiSwapReceiveTokensBlock>
+                      <MultiSwapChooseBtnTokenBlock
+                        style={{ marginTop: '-15px', marginLeft: '8px' }}
+                        onClick={() => {
+                          setOldTokenSwappedAddress(receiveToken.address);
+                          openModalHelper(
+                            {
+                              tokensList: finalReceiveTokensList,
+                              isSendModalOpen: false,
                             },
-                          },
-                          classes: { notchedOutline: classes.noBorder },
-                        }}
-                        isLightTheme={isLightTheme}
-                        placeholder="0.0"
-                        inputRef={textInput}
-                        value={receiveToken.amount}
-                        onChange={(e) => {
-                          convertReceiveTokenToUSDCurrency(e.target.value, {
-                            ...receiveToken,
-                          });
-                        }}
-                      />
-
-                      <div style={{ display: 'flex', marginRight: '20px' }}>
-                        <MultiSwapSendValueLabel
-                          isLightTheme={isLightTheme}
-                          style={{ marginLeft: 'auto' }}>
-                          {receiveToken.USDCurrency < 0 ? (
-                            <>Price not available</>
+                            key
+                          );
+                        }}>
+                        <div>
+                          {receiveToken.logoURI !== null ? (
+                            <SendTokenImg
+                              alt="token_img"
+                              src={receiveToken.logoURI}
+                              style={{ marginLeft: '4px' }}
+                            />
                           ) : (
-                            <>${receiveToken.USDCurrency}</>
+                            <Avatar
+                              style={{
+                                marginRight: '12px',
+                                height: '21px',
+                                width: '21px',
+                                marginLeft: '5px',
+                              }}
+                              name={receiveToken.name}
+                              round={true}
+                              size="21"
+                              textSizeRatio={1}
+                            />
                           )}
-                        </MultiSwapSendValueLabel>
-                      </div>
-                    </USDCurrencyInputBlock>
-                  </FirstSubLayoutMultiSwapReceiveTokensBlock>
-                  <SecondSubLayoutMultiSwapReceiveTokensBlock>
-                    <LabelsBlockSubBlock
-                      isLightTheme={isLightTheme}
-                      style={{ marginBottom: '3px' }}>
-                      <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                        Exchange rate
-                      </LabelsBlockSubBlockSpan>
-
-                      {receiveToken.singleAmountSendTokenConvert !== 0 &&
-                      initSendMultiSwapTokenList[0].symbol !== undefined ? (
-                        <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                          1 {initSendMultiSwapTokenList[0].symbol} ={' '}
-                          {receiveToken.singleAmountSendTokenConvert} {receiveToken.symbol}
-                        </LabelsBlockSubBlockSpan>
-                      ) : (
-                        <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                          Unavailable
-                        </LabelsBlockSubBlockSpan>
-                      )}
-                    </LabelsBlockSubBlock>
-
-                    {/* add checking*/}
-                    {isTokensToggled === false && (
-                      <LabelsBlockSubBlock isLightTheme={isLightTheme}>
-                        <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                          Offered by
-                        </LabelsBlockSubBlockSpan>
-                        <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
-                          <img src={receiveToken.chosenExchanger.logoIcon} alt="paraSwapIcon" />
-                          <span
-                            onClick={(event) =>
-                              openExchangersModal(
-                                event,
-                                initReceiveMultiSwapTokensList,
-                                receiveToken
-                              )
-                            }>
-                            {receiveToken.chosenExchanger.name}
-                          </span>
-                          {/* Offered by popover*/}
-                          <Popover
-                            open={open}
-                            anchorEl={anchorEl}
-                            chosenNewExchangerToken={chosenNewExchangerToken}
-                            chosenExchangerTokensList={chosenExchangerTokensList}
-                            onClose={closeExchangersModal}
-                            anchorOrigin={{
-                              vertical: 'center',
-                              horizontal: 'right',
-                            }}
-                            transformOrigin={{
-                              vertical: 'center',
-                              horizontal: 'right',
-                            }}
-                            PaperProps={{
-                              sx: {
-                                marginLeft: '49px',
-                                width: '525px',
-                                height: '480px',
-                                backgroundColor: isLightTheme ? '#FFFFFF29' : '#4453AD1A',
-                                boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-                                backdropFilter: 'blur(35px)',
-                                mixBlendMode: 'normal',
-                                borderRadius: '10px',
+                          <ChosenTokenLabel isLightTheme={isLightTheme}>
+                            {receiveToken.symbol === 'ethereum' ? 'ETH' : receiveToken.symbol}
+                          </ChosenTokenLabel>
+                          <img
+                            src={isLightTheme ? chevronDownBlack : chevronDownLight}
+                            alt="chevron_icon"
+                          />
+                        </div>
+                      </MultiSwapChooseBtnTokenBlock>
+                      <USDCurrencyInputBlock>
+                        <ChosenMultiSwapSendReceiveTokenValueInput
+                          InputProps={{
+                            inputProps: {
+                              style: {
+                                marginTop: '4px',
+                                textAlign: 'right',
+                                padding: 0,
+                                width: '200px',
+                                fontWeight: 600,
+                                color: isLightTheme ? 'black' : 'white',
                               },
-                            }}>
-                            <SwapTokensOfferedBySubBlock isLightTheme={isLightTheme}>
-                              <ExchangersMainSubLayout>
-                                <OfferedByLayoutLabelBlock
-                                  isLightTheme={isLightTheme}
-                                  onClick={closeExchangersModal}>
-                                  <img
-                                    src={isLightTheme ? chevronDownBlack : chevronDownLight}
-                                    alt="chevron_icon"
-                                  />
-                                  <span>Offered by</span>
-                                </OfferedByLayoutLabelBlock>
-                                <ExchangersLayout isLightTheme={isLightTheme}>
-                                  <ExchangersLayoutTitlesBlock isLightTheme={isLightTheme}>
-                                    <span>Receive</span>
-                                    <span>Gas fee</span>
-                                  </ExchangersLayoutTitlesBlock>
-                                  <ExchangersMainListLayout isLightTheme={isLightTheme}>
-                                    <ExchangerMainList>
-                                      {exchangersOfferedList.map((exchanger) => (
-                                        <ExchangerElementListItem
-                                          isLightTheme={isLightTheme}
-                                          onClick={() =>
-                                            selectNewExchanger(
-                                              exchanger,
-                                              chosenExchangerTokensList,
-                                              chosenNewExchangerToken
-                                            )
-                                          }>
-                                          <ExchangerElementSpan
-                                            isLightTheme={isLightTheme}
-                                            style={{ marginRight: '36px' }}>
-                                            {exchanger.receiveTokenUSDCurrencyCourse}
-                                          </ExchangerElementSpan>
-                                          <ExchangerElementSpan isLightTheme={isLightTheme}>
-                                            {exchanger.gasFee}
-                                          </ExchangerElementSpan>
+                            },
+                            classes: { notchedOutline: classes.noBorder },
+                          }}
+                          isLightTheme={isLightTheme}
+                          placeholder="0.0"
+                          inputRef={textInput}
+                          value={receiveToken.amount}
+                          onChange={(e) => {
+                            convertReceiveTokenToUSDCurrency(e.target.value, {
+                              ...receiveToken,
+                            });
+                          }}
+                        />
 
-                                          {chosenNewExchangerToken &&
-                                            Object.keys(chosenNewExchangerToken).length !== 0 && (
-                                              <>
-                                                {exchanger.isBestRate ? (
-                                                  <ExchangerBestRateSpan
-                                                    isLightTheme={isLightTheme}
-                                                    style={{}}>
-                                                    Best rate
-                                                  </ExchangerBestRateSpan>
-                                                ) : (
-                                                  <ExchangerBestRateSpan
-                                                    isLightTheme={isLightTheme}
-                                                    style={{ visibility: 'hidden' }}>
-                                                    Best rate
-                                                  </ExchangerBestRateSpan>
-                                                )}
+                        <div style={{ display: 'flex', marginRight: '20px' }}>
+                          <MultiSwapSendValueLabel
+                            isLightTheme={isLightTheme}
+                            style={{ marginLeft: 'auto' }}>
+                            {receiveToken.USDCurrency < 0 ? (
+                              <>Price not available</>
+                            ) : (
+                              <>${receiveToken.USDCurrency}</>
+                            )}
+                          </MultiSwapSendValueLabel>
+                        </div>
+                      </USDCurrencyInputBlock>
+                    </FirstSubLayoutMultiSwapReceiveTokensBlock>
+                    <SecondSubLayoutMultiSwapReceiveTokensBlock>
+                      <LabelsBlockSubBlock
+                        isLightTheme={isLightTheme}
+                        style={{ marginBottom: '3px' }}>
+                        <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                          Exchange rate
+                        </LabelsBlockSubBlockSpan>
 
-                                                {exchanger.routerAddress ===
-                                                chosenNewExchangerToken.chosenExchanger
-                                                  .routerAddress ? (
-                                                  <>
-                                                    <ExchangerIcon
-                                                      src={exchanger.logoIcon}
-                                                      alt="icon"
-                                                    />
-                                                    <GreenDotIcon src={greenDot} alt="green_dot" />
-                                                  </>
-                                                ) : (
-                                                  <>
-                                                    <ExchangerIcon
-                                                      src={exchanger.logoIcon}
-                                                      alt="icon"
-                                                    />
-                                                    <GreenDotIcon
-                                                      src={greenDot}
-                                                      alt="green_dot"
-                                                      style={{
-                                                        visibility: 'hidden',
-                                                      }}
-                                                    />
-                                                  </>
-                                                )}
-                                              </>
-                                            )}
-                                        </ExchangerElementListItem>
-                                      ))}
-                                    </ExchangerMainList>
-                                  </ExchangersMainListLayout>
-                                  <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                    <SaveSelectedExchangerButton isLightTheme={isLightTheme}>
-                                      Save
-                                    </SaveSelectedExchangerButton>
-                                  </div>
-                                </ExchangersLayout>
-                              </ExchangersMainSubLayout>
-                            </SwapTokensOfferedBySubBlock>
-                          </Popover>
-                        </AdditionalOptionsSwapTokensSubBlock>
+                        {receiveToken.singleAmountSendTokenConvert !== 0 &&
+                        initSendMultiSwapTokenList[0].symbol !== undefined ? (
+                          <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                            1 {initSendMultiSwapTokenList[0].symbol} ={' '}
+                            {receiveToken.singleAmountSendTokenConvert} {receiveToken.symbol}
+                          </LabelsBlockSubBlockSpan>
+                        ) : (
+                          <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                            Unavailable
+                          </LabelsBlockSubBlockSpan>
+                        )}
                       </LabelsBlockSubBlock>
-                    )}
-                  </SecondSubLayoutMultiSwapReceiveTokensBlock>
-                </MultiSwapReceiveTokensBlock>
-              ))}
-            </SubLayoutReceiveTokensBlock>
 
-            {/* choose send/receive tokens modal*/}
-            {openTokensModal && (
-              <SelectTokensModalContainer
-                theme={isLightTheme}
-                isOpen={openTokensModal}
-                onClose={() => {
-                  setOpenTokensModal(false);
-                }}>
-                <OutsideClickHandler
-                  onOutsideClick={() => {
+                      {/* add checking*/}
+                      {isTokensToggled === false && (
+                        <LabelsBlockSubBlock isLightTheme={isLightTheme}>
+                          <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
+                            Offered by
+                          </LabelsBlockSubBlockSpan>
+                          <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
+                            <img src={receiveToken.chosenExchanger.logoIcon} alt="paraSwapIcon" />
+                            <span
+                              onClick={(event) =>
+                                openExchangersModal(
+                                  event,
+                                  initReceiveMultiSwapTokensList,
+                                  receiveToken
+                                )
+                              }>
+                              {receiveToken.chosenExchanger.name}
+                            </span>
+                            {/* Offered by popover*/}
+                            <Popover
+                              open={open}
+                              anchorEl={anchorEl}
+                              chosenNewExchangerToken={chosenNewExchangerToken}
+                              chosenExchangerTokensList={chosenExchangerTokensList}
+                              onClose={closeExchangersModal}
+                              anchorOrigin={{
+                                vertical: 'center',
+                                horizontal: 'right',
+                              }}
+                              transformOrigin={{
+                                vertical: 'center',
+                                horizontal: 'right',
+                              }}
+                              PaperProps={{
+                                sx: {
+                                  marginLeft: '49px',
+                                  width: '525px',
+                                  height: '480px',
+                                  backgroundColor: isLightTheme ? '#FFFFFF29' : '#4453AD1A',
+                                  boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+                                  backdropFilter: 'blur(35px)',
+                                  mixBlendMode: 'normal',
+                                  borderRadius: '10px',
+                                },
+                              }}>
+                              <SwapTokensOfferedBySubBlock isLightTheme={isLightTheme}>
+                                <ExchangersMainSubLayout>
+                                  <OfferedByLayoutLabelBlock
+                                    isLightTheme={isLightTheme}
+                                    onClick={closeExchangersModal}>
+                                    <img
+                                      src={isLightTheme ? chevronDownBlack : chevronDownLight}
+                                      alt="chevron_icon"
+                                    />
+                                    <span>Offered by</span>
+                                  </OfferedByLayoutLabelBlock>
+                                  <ExchangersLayout isLightTheme={isLightTheme}>
+                                    <ExchangersLayoutTitlesBlock isLightTheme={isLightTheme}>
+                                      <span>Receive</span>
+                                      <span>Gas fee</span>
+                                    </ExchangersLayoutTitlesBlock>
+                                    <ExchangersMainListLayout isLightTheme={isLightTheme}>
+                                      <ExchangerMainList>
+                                        {exchangersOfferedList.map((exchanger) => (
+                                          <ExchangerElementListItem
+                                            isLightTheme={isLightTheme}
+                                            onClick={() =>
+                                              selectNewExchanger(
+                                                exchanger,
+                                                chosenExchangerTokensList,
+                                                chosenNewExchangerToken
+                                              )
+                                            }>
+                                            <ExchangerElementSpan
+                                              isLightTheme={isLightTheme}
+                                              style={{ marginRight: '36px' }}>
+                                              {exchanger.receiveTokenUSDCurrencyCourse}
+                                            </ExchangerElementSpan>
+                                            <ExchangerElementSpan isLightTheme={isLightTheme}>
+                                              {exchanger.gasFee}
+                                            </ExchangerElementSpan>
+
+                                            {chosenNewExchangerToken &&
+                                              Object.keys(chosenNewExchangerToken).length !== 0 && (
+                                                <>
+                                                  {exchanger.isBestRate ? (
+                                                    <ExchangerBestRateSpan
+                                                      isLightTheme={isLightTheme}
+                                                      style={{}}>
+                                                      Best rate
+                                                    </ExchangerBestRateSpan>
+                                                  ) : (
+                                                    <ExchangerBestRateSpan
+                                                      isLightTheme={isLightTheme}
+                                                      style={{ visibility: 'hidden' }}>
+                                                      Best rate
+                                                    </ExchangerBestRateSpan>
+                                                  )}
+
+                                                  {exchanger.routerAddress ===
+                                                  chosenNewExchangerToken.chosenExchanger
+                                                    .routerAddress ? (
+                                                    <>
+                                                      <ExchangerIcon
+                                                        src={exchanger.logoIcon}
+                                                        alt="icon"
+                                                      />
+                                                      <GreenDotIcon
+                                                        src={greenDot}
+                                                        alt="green_dot"
+                                                      />
+                                                    </>
+                                                  ) : (
+                                                    <>
+                                                      <ExchangerIcon
+                                                        src={exchanger.logoIcon}
+                                                        alt="icon"
+                                                      />
+                                                      <GreenDotIcon
+                                                        src={greenDot}
+                                                        alt="green_dot"
+                                                        style={{
+                                                          visibility: 'hidden',
+                                                        }}
+                                                      />
+                                                    </>
+                                                  )}
+                                                </>
+                                              )}
+                                          </ExchangerElementListItem>
+                                        ))}
+                                      </ExchangerMainList>
+                                    </ExchangersMainListLayout>
+                                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                      <SaveSelectedExchangerButton isLightTheme={isLightTheme}>
+                                        Save
+                                      </SaveSelectedExchangerButton>
+                                    </div>
+                                  </ExchangersLayout>
+                                </ExchangersMainSubLayout>
+                              </SwapTokensOfferedBySubBlock>
+                            </Popover>
+                          </AdditionalOptionsSwapTokensSubBlock>
+                        </LabelsBlockSubBlock>
+                      )}
+                    </SecondSubLayoutMultiSwapReceiveTokensBlock>
+                  </MultiSwapReceiveTokensBlock>
+                ))}
+              </SubLayoutReceiveTokensBlock>
+              {/* choose send/receive tokens modal*/}
+              {openTokensModal && (
+                <SelectTokensModalContainer
+                  theme={isLightTheme}
+                  isOpen={openTokensModal}
+                  onClose={() => {
                     setOpenTokensModal(false);
                   }}>
-                  <TokensModalSubLayout isLightTheme={isLightTheme}>
-                    <Header>
-                      <ModalTitle isLightTheme={isLightTheme}>Select token</ModalTitle>
-                      <CloseButton
-                        onClick={() => {
-                          setOpenTokensModal(false);
-                        }}
-                        isLightTheme={isLightTheme}>
-                        <img
-                          src={isLightTheme ? closeModalIcon : closeModalIconDark}
-                          alt="close_modal_btn"
-                        />
-                      </CloseButton>
-                    </Header>
-
-                    <SearchTokensModalTextField
-                      isLightTheme={isLightTheme}
-                      onChange={(event) => {
-                        isSendTokenSelectedSwapped
-                          ? searchTokensHandler(
-                              event,
-                              isSendTokenSelectedSwapped,
-                              finalSendTokensList
-                            )
-                          : searchTokensHandler(
-                              event,
-                              isSendTokenSelectedSwapped,
-                              finalReceiveTokensList
-                            );
-                      }}
-                      InputProps={{
-                        endAdornment: (
+                  <OutsideClickHandler
+                    onOutsideClick={() => {
+                      setOpenTokensModal(false);
+                    }}>
+                    <TokensModalSubLayout isLightTheme={isLightTheme}>
+                      <Header>
+                        <ModalTitle isLightTheme={isLightTheme}>Select token</ModalTitle>
+                        <CloseButton
+                          onClick={() => {
+                            setOpenTokensModal(false);
+                          }}
+                          isLightTheme={isLightTheme}>
                           <img
-                            src={
-                              isLightTheme
-                                ? searchTokensImportModalDark
-                                : searchTokensImportModalLight
-                            }
-                            alt="search_icon"
+                            src={isLightTheme ? closeModalIcon : closeModalIconDark}
+                            alt="close_modal_btn"
                           />
-                        ),
-                        classes: { notchedOutline: classes.noBorder },
-                        sx: {
-                          color: isLightTheme ? '#1E1E20' : '#FFFFFF',
-                          paddingRight: '20px',
-                          fontSize: 14,
-                        },
-                      }}
-                      id="filled-search"
-                      variant="outlined"
-                      label="Search tokens..."
-                      InputLabelProps={{
-                        style: {
-                          color: isLightTheme ? 'black' : 'white',
-                          fontSize: 14,
-                          fontWeight: 400,
-                          opacity: 0.5,
-                          lineHeight: '22px',
-                        },
-                      }}
-                      size="small"
-                    />
+                        </CloseButton>
+                      </Header>
 
-                    {tokensListModal.length !== 0 ? (
-                      <SendTokensModalList isLightTheme={isLightTheme}>
-                        {tokensListModal.map((object) => (
-                          <SendTokenModalListItem
-                            onClick={() => {
-                              setOpenTokensModal(false);
-                              selectTokenForSwap(object, isSendTokenSelectedSwapped);
-                            }}
-                            isLightTheme={isLightTheme}>
-                            <SendTokenLabelsBlock>
-                              {object.logoURI !== null ? (
-                                <SendTokenImg alt="token_img" src={object.logoURI} />
-                              ) : (
-                                <Avatar
-                                  style={{
-                                    marginLeft: '12px',
-                                    marginRight: '12px',
-                                    marginTop: '2px',
-                                  }}
-                                  name={object.name}
-                                  round={true}
-                                  size="21"
-                                  textSizeRatio={1}
-                                />
-                              )}
-                              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                <SendTokenName isLightTheme={isLightTheme}>
-                                  {object.name}
-                                </SendTokenName>
-                                {isSendTokenSelectedSwapped ? (
-                                  <SendTokenConvertedMeasures isLightTheme={isLightTheme}>
-                                    {`${object.balance} ${object.symbol} · 
+                      <SearchTokensModalTextField
+                        isLightTheme={isLightTheme}
+                        onChange={(event) => {
+                          isSendTokenSelectedSwapped
+                            ? searchTokensHandler(
+                                event,
+                                isSendTokenSelectedSwapped,
+                                finalSendTokensList
+                              )
+                            : searchTokensHandler(
+                                event,
+                                isSendTokenSelectedSwapped,
+                                finalReceiveTokensList
+                              );
+                        }}
+                        InputProps={{
+                          endAdornment: (
+                            <img
+                              src={
+                                isLightTheme
+                                  ? searchTokensImportModalDark
+                                  : searchTokensImportModalLight
+                              }
+                              alt="search_icon"
+                            />
+                          ),
+                          classes: { notchedOutline: classes.noBorder },
+                          sx: {
+                            color: isLightTheme ? '#1E1E20' : '#FFFFFF',
+                            paddingRight: '20px',
+                            fontSize: 14,
+                          },
+                        }}
+                        id="filled-search"
+                        variant="outlined"
+                        label="Search tokens..."
+                        InputLabelProps={{
+                          style: {
+                            color: isLightTheme ? 'black' : 'white',
+                            fontSize: 14,
+                            fontWeight: 400,
+                            opacity: 0.5,
+                            lineHeight: '22px',
+                          },
+                        }}
+                        size="small"
+                      />
+
+                      {tokensListModal.length !== 0 ? (
+                        <SendTokensModalList isLightTheme={isLightTheme}>
+                          {tokensListModal.map((object) => (
+                            <SendTokenModalListItem
+                              onClick={() => {
+                                setOpenTokensModal(false);
+                                selectTokenForSwap(object, isSendTokenSelectedSwapped);
+                              }}
+                              isLightTheme={isLightTheme}>
+                              <SendTokenLabelsBlock>
+                                {object.logoURI !== null ? (
+                                  <SendTokenImg alt="token_img" src={object.logoURI} />
+                                ) : (
+                                  <Avatar
+                                    style={{
+                                      marginLeft: '12px',
+                                      marginRight: '12px',
+                                      marginTop: '2px',
+                                    }}
+                                    name={object.name}
+                                    round={true}
+                                    size="21"
+                                    textSizeRatio={1}
+                                  />
+                                )}
+                                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                  <SendTokenName isLightTheme={isLightTheme}>
+                                    {object.name}
+                                  </SendTokenName>
+                                  {isSendTokenSelectedSwapped ? (
+                                    <SendTokenConvertedMeasures isLightTheme={isLightTheme}>
+                                      {`${object.balance} ${object.symbol} · 
                                     $ ${
                                       Math.round(object.singleTokenUSDCurrencyAmount * 100000) /
                                       100000
                                     } 
                                     `}
-                                  </SendTokenConvertedMeasures>
-                                ) : (
-                                  <SendTokenConvertedMeasures
-                                    isLightTheme={isLightTheme}
-                                    style={{ visibility: 'hidden' }}>
-                                    409,333 UNI · $19,18
-                                  </SendTokenConvertedMeasures>
-                                )}
-                              </div>
-                            </SendTokenLabelsBlock>
-                            <SendTokenBalance isLightTheme={isLightTheme}>
-                              {object.balance !== undefined && isSendTokenSelectedSwapped === true && (
-                                // <Loader type="Rings" color="#BB86FC" height={30} width={30} />
-                                <span>
-                                  {`$${
-                                    Math.round(
-                                      object.balance * object.singleTokenUSDCurrencyAmount * 100000
-                                    ) / 100000
-                                  }`}
-                                </span>
-                              )}
-                            </SendTokenBalance>
-                          </SendTokenModalListItem>
-                        ))}
-                      </SendTokensModalList>
-                    ) : (
-                      <AbsentFoundTokensBlock isLightTheme={isLightTheme}>
-                        <p>No tokens were found</p>
-                      </AbsentFoundTokensBlock>
-                    )}
-                  </TokensModalSubLayout>
-                </OutsideClickHandler>
-              </SelectTokensModalContainer>
-            )}
-
+                                    </SendTokenConvertedMeasures>
+                                  ) : (
+                                    <SendTokenConvertedMeasures
+                                      isLightTheme={isLightTheme}
+                                      style={{ visibility: 'hidden' }}>
+                                      409,333 UNI · $19,18
+                                    </SendTokenConvertedMeasures>
+                                  )}
+                                </div>
+                              </SendTokenLabelsBlock>
+                              <SendTokenBalance isLightTheme={isLightTheme}>
+                                {object.balance !== undefined &&
+                                  isSendTokenSelectedSwapped === true && (
+                                    // <Loader type="Rings" color="#BB86FC" height={30} width={30} />
+                                    <span>
+                                      {`$${
+                                        Math.round(
+                                          object.balance *
+                                            object.singleTokenUSDCurrencyAmount *
+                                            100000
+                                        ) / 100000
+                                      }`}
+                                    </span>
+                                  )}
+                              </SendTokenBalance>
+                            </SendTokenModalListItem>
+                          ))}
+                        </SendTokensModalList>
+                      ) : (
+                        <AbsentFoundTokensBlock isLightTheme={isLightTheme}>
+                          <p>No tokens were found</p>
+                        </AbsentFoundTokensBlock>
+                      )}
+                    </TokensModalSubLayout>
+                  </OutsideClickHandler>
+                </SelectTokensModalContainer>
+              )}
+            </div>
             {isAddedReceiveTokensLimitExceeded === false && (
               <AddReceiveTokenMultiSwapBtn
                 style={{ marginTop: '20px' }}
