@@ -38,13 +38,13 @@ function* getSendTokensListSagaWorker(accountAddress) {
     tempObj.singleTokenUSDCurrencyAmount = Number(addressInfoData.data.ETH.price.rate);
     tempObj.sendTokensListItem = true;
     //mock exchanger
-    tempObj.chosenExchanger = {
-      name: 'Uniswap_V2',
-      routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
-      isBestRate: true,
-      logoIcon: uniswapV2ExchangerIcon,
-      isExchangerSelected: true,
-    };
+    // tempObj.chosenExchanger = {
+    //   name: 'Uniswap_V2',
+    //   routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
+    //   isBestRate: true,
+    //   logoIcon: uniswapV2ExchangerIcon,
+    //   isExchangerSelected: true,
+    // };
     walletTokensList.push(tempObj);
   }
   let tokens = addressInfoData.data.tokens;
@@ -69,13 +69,13 @@ function* getSendTokensListSagaWorker(accountAddress) {
         tempObj.logoURI = null;
       }
       //mock exchanger
-      tempObj.chosenExchanger = {
-        name: 'Uniswap_V2',
-        routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
-        isBestRate: true,
-        logoIcon: uniswapV2ExchangerIcon,
-        isExchangerSelected: true,
-      };
+      // tempObj.chosenExchanger = {
+      //   name: 'Uniswap_V2',
+      //   routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
+      //   isBestRate: true,
+      //   logoIcon: uniswapV2ExchangerIcon,
+      //   isExchangerSelected: true,
+      // };
       walletTokensList.push(tempObj);
     }
   }
@@ -132,6 +132,7 @@ function* getReceiveTokensListSagaWorker() {
       : null,
     USDCurrency: 0,
     amount: 0,
+    //mock exchanger
     chosenExchanger: {
       name: 'Uniswap_V2',
       routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
