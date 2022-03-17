@@ -371,70 +371,16 @@ export default function SwapComponent() {
   };
 
   let convertSendTokenToUSDCurrency = async (tokenData) => {
+    console.log('single amount convertSendTokenToUSDCurrency', tokenData);
     if (tokenData.amount === '') {
       tokenData.amount = '0';
-      // setSendTokenForExchangeAmount(0);
       setReceiveTokenForExchangeAmount(0);
-      convertReceiveTokenToUSDCurrency({
+
+      convertReceiveTokenToUSDCurrency(0, {
         amount: 0,
         ...initReceiveFirstTokenSwap,
       });
     }
-    if (tokenData.USDCurrency !== undefined && tokenData.USDCurrency !== '$0.00') {
-      // // console.log('test activation');
-      //
-      setTokenSendUSDCurrency(
-        `$${(tokenData.USDCurrency * parseFloat(tokenData.amount)).toFixed(5)}`
-      );
-    } else if (tokenData.USDCurrency === '$0.00') {
-      let tokenUSDCurrencyValue;
-
-      if (tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
-        await axios
-          .get(
-            `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
-          )
-          .then(async (response) => {
-            tokenUSDCurrencyValue = response;
-          })
-          .catch((err) => {
-            // // console.log('err of usd currency receive token', err);
-          });
-
-        if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
-          setTokenSendUSDCurrency(
-            `$ ${(tokenUSDCurrencyValue.data.price.rate * tokenData.amount).toFixed(5)}`
-          );
-        } else {
-          setTokenSendUSDCurrency('Price not available');
-        }
-      } else {
-        const ethDollarValue = await axios.get(
-          'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
-        );
-
-        setTokenSendUSDCurrency(
-          `$${(ethDollarValue.data.ethereum.usd * tokenData.amount).toFixed(5)}`
-        );
-      }
-    } else {
-      setTokenSendUSDCurrency('Price not available');
-    }
-  };
-
-  let convertReceiveTokenToUSDCurrency = async (tokenData) => {
-    // // console.log('receive tokenData single swap helper', tokenData);
-
-    if (tokenData.amount === '') {
-      tokenData.amount = '0';
-      setSendTokenForExchangeAmount(0);
-      convertSendTokenToUSDCurrency({
-        amount: 0,
-        ...initSendTokenSwap,
-      });
-    }
-
-    let tokenUSDCurrencyValue;
 
     if (tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
       await axios
@@ -442,27 +388,72 @@ export default function SwapComponent() {
           `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
         )
         .then(async (response) => {
-          tokenUSDCurrencyValue = response;
+          if (response.data.price.rate !== undefined) {
+            setTokenSendUSDCurrency(
+              `$ ${(response.data.price.rate * tokenData.amount).toFixed(3)}`
+            );
+          } else {
+            setTokenSendUSDCurrency('Price not available');
+          }
         })
         .catch((err) => {
-          // // console.log('err of usd currency receive token', err);
+          console.log('err of usd currency receive token', err);
+          setTokenSendUSDCurrency('Price not available');
         });
-
-      if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
-        setTokensReceiveUSDCurrency(
-          `$ ${(tokenUSDCurrencyValue.data.price.rate * tokenData.amount).toFixed(5)}`
-        );
-      } else {
-        setTokensReceiveUSDCurrency('Price not available');
-      }
     } else {
-      const ethDollarValue = await axios.get(
-        'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
-      );
+      await axios
+        .get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd')
+        .then(async (response) => {
+          setTokenSendUSDCurrency(`$${(response.data.ethereum.usd * tokenData.amount).toFixed(3)}`);
+        })
+        .catch((err) => {
+          console.log('err of usd currency receive token', err);
+          setTokenSendUSDCurrency('Price not available');
+        });
+    }
+  };
 
-      setTokensReceiveUSDCurrency(
-        `$${(ethDollarValue.data.ethereum.usd * tokenData.amount).toFixed(5)}`
-      );
+  let convertReceiveTokenToUSDCurrency = async (amount, tokenData) => {
+    console.log('convertReceiveTokenToUSDCurrency amount', amount);
+    console.log('convertReceiveTokenToUSDCurrency tokenData', tokenData);
+
+    if (tokenData.amount === '') {
+      tokenData.amount = '0';
+      setSendTokenForExchangeAmount(0);
+
+      convertSendTokenToUSDCurrency({
+        amount: 0,
+        ...initSendTokenSwap,
+      });
+    }
+
+    if (tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+      await axios
+        .get(
+          `https://api.ethplorer.io/getTokenInfo/${tokenData.address}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
+        )
+        .then(async (response) => {
+          // console.log('convertReceiveTokenToUSDCurrency res', response);
+          if (response.data.price.rate !== undefined) {
+            setTokensReceiveUSDCurrency(`$ ${(response.data.price.rate * amount).toFixed(3)}`);
+          } else {
+            setTokensReceiveUSDCurrency('Price not available');
+          }
+        })
+        .catch((err) => {
+          console.log('err of usd currency receive token', err);
+          setTokensReceiveUSDCurrency('Price not available');
+        });
+    } else {
+      await axios
+        .get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd')
+        .then(async (response) => {
+          setTokensReceiveUSDCurrency(`$${(response.data.ethereum.usd * amount).toFixed(3)}`);
+        })
+        .catch((err) => {
+          console.log('err of usd currency receive token', err);
+          setTokensReceiveUSDCurrency('Price not available');
+        });
     }
   };
 
@@ -640,11 +631,11 @@ export default function SwapComponent() {
 
           let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
 
-          // console.log('countedTokenAmount', countedTokenAmount);
+          console.log('convertReceiveTokenToUSDCurrency countedTokenAmount', countedTokenAmount);
 
           setReceiveTokenForExchangeAmount(countedTokenAmount);
 
-          convertReceiveTokenToUSDCurrency({
+          convertReceiveTokenToUSDCurrency(countedTokenAmount, {
             amount: countedTokenAmount,
             address: convertTokensData.sendTokenForExchangeAddress,
           });
@@ -671,7 +662,7 @@ export default function SwapComponent() {
       } else {
         // // console.log('convertTokensData null amount orNAN error!');
 
-        convertReceiveTokenToUSDCurrency({
+        convertReceiveTokenToUSDCurrency(0, {
           amount: 0,
           address: convertTokensData.receiveTokenForExchangeAddress,
         });
@@ -696,11 +687,12 @@ export default function SwapComponent() {
         sendTokenForExchangeAddress: initSendTokenSwap.address,
         receiveTokenForExchangeAddress: initReceiveFirstTokenSwap.address,
         routerAddress: activeExchanger.routerAddress,
-      }),
-        convertSendTokenToUSDCurrency({
-          amount: value,
-          ...tokenForSwap,
-        });
+      });
+
+      convertSendTokenToUSDCurrency({
+        amount: value,
+        ...tokenForSwap,
+      });
 
       const isLimitExceeded = checkIfExchangedTokenLimitIsExceeded(
         value,
@@ -718,7 +710,8 @@ export default function SwapComponent() {
         routerAddress: activeExchanger.routerAddress,
       });
 
-      convertReceiveTokenToUSDCurrency({
+      // console.log('convertReceiveTokenToUSDCurrency triggered', value);
+      convertReceiveTokenToUSDCurrency(value, {
         amount: value,
         ...tokenForSwap,
       });
@@ -794,23 +787,30 @@ export default function SwapComponent() {
     // console.log('single swap tokens operation raw data object', swappedTokensData);
 
     //As exchanger - UniSwap_V3 by default
-    const response = await axios.get(
-      `https://api.0x.org/swap/v1/quote?buyToken=${swappedTokensData.buyToken}&sellToken=${swappedTokensData.sellToken}&sellAmount=${swappedTokensData.sellAmount}&includedSources=${swappedTokensData.includedSources}&slippagePercentage=${swappedTokensData.slippagePercentage}`
-    );
-
-    //from: walletData.address
-    // // console.log('single swap tokens operation 0x API obj', response.data);
-
-    let totalObject = { ...response.data, from: metaMaskWalletAddress[0] };
-
-    // console.log('single swap tokens operation total obj', totalObject);
-
+    let response;
     try {
-      await web3.eth.sendTransaction(totalObject);
-      // console.log('single swap tokens operation - transaction in progress');
-      setIsTokensSwappingActive(false);
+      response = await axios.get(
+        `https://api.0x.org/swap/v1/quote?buyToken=${swappedTokensData.buyToken}&sellToken=${swappedTokensData.sellToken}&sellAmount=${swappedTokensData.sellAmount}&includedSources=${swappedTokensData.includedSources}&slippagePercentage=${swappedTokensData.slippagePercentage}`
+      );
+
+      //from: walletData.address
+      // // console.log('single swap tokens operation 0x API obj', response.data);
+
+      let totalObject = { ...response.data, from: metaMaskWalletAddress[0] };
+
+      // console.log('single swap tokens operation total obj', totalObject);
+
+      try {
+        await web3.eth.sendTransaction(totalObject);
+        // console.log('single swap tokens operation - transaction in progress');
+        setIsTokensSwappingActive(false);
+      } catch (err) {
+        // console.log('single swap tokens operation - tx failed::', err);
+        setIsTokensSwappingActive(false);
+      }
     } catch (err) {
-      // console.log('single swap tokens operation - tx failed::', err);
+      alert('An error was occured!');
+      console.log('err 0X API data', err);
       setIsTokensSwappingActive(false);
     }
   };

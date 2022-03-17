@@ -975,7 +975,7 @@ export default function MultiSwapComponent() {
           // style={{ backgroundColor: 'green' }}
           >
             <SendBlockLabels isLightTheme={isLightTheme} style={{ margin: '0px 20px 5px 20px' }}>
-              <span>Receive 235</span>
+              <span>Receive</span>
             </SendBlockLabels>
             <div
             // style={{ backgroundColor: 'lightgray' }}
