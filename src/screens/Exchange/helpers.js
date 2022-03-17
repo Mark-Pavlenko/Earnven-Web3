@@ -113,7 +113,9 @@ export const checkIfExchangedMultiSwapTokenLimitIsExceeded = (inputTokenData, to
 
   // console.log('result helper formattedTokensList', formattedTokensList);
 
-  let isLimitNotExceeded = formattedTokensList.every((item) => item.balance > Number(item.amount));
+  let isLimitNotExceeded = formattedTokensList.every(
+    (item) => item.balance > Number(item.amount) && Number(inputTokenData.amount) !== 0
+  );
   console.log('result helper isLimitNotExceeded', isLimitNotExceeded);
   return isLimitNotExceeded;
 };
