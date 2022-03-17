@@ -57,11 +57,8 @@ function* getSendTokensListSagaWorker(accountAddress) {
       tempObj.address = tokens[i].tokenInfo.address;
       tempObj.name = tokens[i].tokenInfo.name;
       tempObj.symbol = tokens[i].tokenInfo.symbol;
-      // tempObj.USDCurrency = Math.round(tokens[i].tokenInfo.price.rate * 100) / 100;
       tempObj.USDCurrency = 0;
-      tempObj.balance = parseFloat(
-        (tokens[i].balance * Math.pow(10, -parseInt(tokens[i].tokenInfo.decimals))).toFixed(5)
-      );
+      tempObj.balance = Number((tokens[i].balance / 10 ** 18).toFixed(5));
       tempObj.singleTokenUSDCurrencyAmount = Number(tokens[i].tokenInfo.price.rate);
       tempObj.sendTokensListItem = true;
       if (tokens[i].tokenInfo.image !== undefined) {
@@ -69,7 +66,6 @@ function* getSendTokensListSagaWorker(accountAddress) {
       } else {
         tempObj.logoURI = null;
       }
-      //mock exchanger
       tempObj.chosenExchanger = {
         name: 'Uniswap_V2',
         routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
@@ -81,11 +77,20 @@ function* getSendTokensListSagaWorker(accountAddress) {
     }
   }
 
-  console.log('sagas exchange walletTokensList', walletTokensList);
+  // console.log('sagas exchange walletTokensList', walletTokensList);
   // console.log('sagas exchange finalWalletTokensList', finalWalletTokensList);
 
-  yield put(actions.getSendTokensList(walletTokensList));
-  yield put(actions.setInitSendTokenSwap(walletTokensList[0]));
+  let filteredZeroBalanceTokensList = [];
+  walletTokensList.filter((el) => {
+    if (Number(el.balance) !== 0) {
+      filteredZeroBalanceTokensList.push(el);
+    }
+  });
+
+  // console.log('sagas exchange testArr2', filteredZeroBalanceTokensList);
+
+  yield put(actions.getSendTokensList(filteredZeroBalanceTokensList));
+  yield put(actions.setInitSendTokenSwap(filteredZeroBalanceTokensList[0]));
   yield put(
     actions.setInitSendTokenMultiSwap([
       { ...walletTokensList[0], amount: 0 },

@@ -144,14 +144,24 @@ export const checkIfExchangedMultiSwapTokenLimitIsExceeded = (inputTokenData, to
     formattedTokensList
   );
 
-  let isLimitNotExceeded = formattedTokensList.every(
-    (item) => item.balance > item.amount && Number(inputTokenData.amount) !== 0
-  );
-  console.log(
-    'checkIfExchangedMultiSwapTokenLimitIsExceeded isLimitNotExceeded',
-    isLimitNotExceeded
-  );
-  return isLimitNotExceeded;
+  // let isLimitNotExceeded = formattedTokensList.every(
+  //   (item) => Number(item.balance) > Number(item.amount) && Number(inputTokenData.amount) !== 0
+  // );
+
+  let flag;
+  formattedTokensList.map((item) => {
+    if (inputTokenData.address === item.address) {
+      console.log('checkIfExchangedMultiSwapTokenLimitIsExceeded item', item);
+      if (item.balance > Number(inputTokenData.amount) && Number(inputTokenData.amount) !== 0) {
+        flag = true;
+      } else {
+        flag = false;
+      }
+    }
+  });
+
+  console.log('checkIfExchangedMultiSwapTokenLimitIsExceeded isLimitNotExceeded', flag);
+  return flag;
 };
 
 //sushiswapV2 single swap exchange function

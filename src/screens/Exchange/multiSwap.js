@@ -730,6 +730,11 @@ export default function MultiSwapComponent() {
                             initSendMultiSwapTokenList
                           );
 
+                          console.log(
+                            'checkIfExchangedMultiSwapTokenLimitIsExceeded main',
+                            isLimitNotExceeded
+                          );
+
                           convertSendTokenToUSDCurrency(e.target.value, {
                             ...sendToken,
                             isLimitNotExceeded,
