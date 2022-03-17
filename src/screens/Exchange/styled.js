@@ -133,8 +133,8 @@ export const SendTokensChooseButton = styled.div`
 
 export const ExceededAmountTokensLimitWarning = styled.span`
   margin-left: auto;
-  margin-top: 5px;
-  margin-right: 3px;
+  margin-top: 10px;
+  margin-right: -20px;
   font-size: 12px;
   color: #ec3d3d;
 `;

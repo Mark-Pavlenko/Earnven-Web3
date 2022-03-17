@@ -83,7 +83,6 @@ import searchTokensImportModalLight from '../../assets/icons/searchTokensButtonM
 import Avatar from 'react-avatar';
 import {
   checkIfExchangedMultiSwapTokenLimitIsExceeded,
-  convertSendTokenToUSDCurrencyHelper,
   filteredTokensByName,
   getTokenUSDAmount,
   initFilteringModalTokensListMultiSwap,
@@ -112,7 +111,7 @@ export default function MultiSwapComponent() {
   let [oldTokenSwappedAddress, setOldTokenSwappedAddress] = useState();
   let [isSendTokenSelectedSwapped, setIsSendTokenSelectedSwapped] = useState(false);
   const [openTokensModal, setOpenTokensModal] = useState(false);
-  const [isTokensLimitExceeded, setIsTokensLimitExceeded] = useState(false);
+  const [isTokensLimitNotExceeded, setIsTokensLimitNotExceeded] = useState(false);
   let [isAddedReceiveTokensLimitExceeded, setIsAddedReceiveTokensLimitExceeded] = useState(false);
   const [isAbleToReplaceTokens, setIsAbleToReplaceTokens] = useState(false);
   const exchangersOfferedList = [
@@ -218,6 +217,8 @@ export default function MultiSwapComponent() {
         sendTokensListCopy[needIndex].amount = formattedAmount;
         sendTokensListCopy[needIndex].isExchangeIsAllowed = tokenData.isLimitNotExceeded;
       }
+
+      setIsTokensLimitNotExceeded(tokenData.isLimitNotExceeded);
 
       // console.log('res amount send list total', sendTokensListCopy);
       dispatch({
@@ -365,41 +366,6 @@ export default function MultiSwapComponent() {
     ]);
     let filteredTokensList = filteredTokensByName(event, removedInitTokenValuesList);
     setTokensListModal(filteredTokensList);
-  };
-
-  const getAmountMulti = async () => {
-    const web3 = await getWeb3();
-    const multiCallContract = new web3.eth.Contract(
-      multiCallAbi,
-      '0xFe2C75Fdd496792c8684F2e1168362E2f9e7c56f'
-    );
-
-    const routers = exchangersOfferedList.map((i) => i.routerAddress);
-    console.log('multiswap routers', routers);
-
-    let sendTokenAddress = initSendMultiSwapTokenList[0].address;
-
-    if (sendTokenAddress === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
-      sendTokenAddress = '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270';
-    }
-
-    console.log('multiswap receiveTokensList', initReceiveMultiSwapTokensList);
-
-    for (let i = 0; i < initReceiveMultiSwapTokensList.length; i++) {
-      const item = initReceiveMultiSwapTokensList[i];
-      console.log('multiswap item111111111', item);
-      if (item.amount && item.amount > 0) {
-        // const decimals = web3.utils.toBN(item.decimals);
-        const amount = item.amount * 10 ** item.decimals;
-        console.log('multiswap amount', amount.toString());
-        initReceiveMultiSwapTokensList[i].swap = await multiCallContract.methods
-          .getAmountsIn(routers, sendTokenAddress, item.address, amount.toString())
-          .call();
-      }
-    }
-
-    console.log(initReceiveMultiSwapTokensList, 'multiswap receiveTokensList111111111111');
-    return true;
   };
 
   const selectTokenForSwap = async (selectedSwapToken, isSendTokenSelectedSwapped) => {
@@ -663,7 +629,11 @@ export default function MultiSwapComponent() {
               {initSendMultiSwapTokenList.map((sendToken, key) => (
                 <MultiSwapSendTokensChooseBlock
                   isLightTheme={isLightTheme}
-                  style={{ backgroundColor: 'lightyellow', height: isTokensToggled && '115px' }}>
+                  style={{
+                    backgroundColor: 'lightyellow',
+                    height: isTokensToggled && '115px',
+                    marginBottom: isTokensToggled && '30px',
+                  }}>
                   <MultiSwapChooseBtnTokenBlock style={{ backgroundColor: 'pink' }}>
                     <div
                       onClick={() => {
@@ -707,11 +677,12 @@ export default function MultiSwapComponent() {
                               padding: 0,
                               width: '200px',
                               fontWeight: 600,
-                              color: isTokensLimitExceeded
-                                ? 'red'
-                                : isLightTheme
-                                ? 'black'
-                                : 'white',
+                              color:
+                                sendToken.isExchangeIsAllowed === false
+                                  ? 'red'
+                                  : isLightTheme
+                                  ? 'black'
+                                  : 'white',
                             },
                           },
                           classes: { notchedOutline: classes.noBorder },
@@ -729,9 +700,6 @@ export default function MultiSwapComponent() {
                             ...sendToken,
                             isLimitNotExceeded,
                           });
-
-                          // console.log('result helper isLimitNotExceeded main', isLimitNotExceeded);
-                          // setIsTokensLimitExceeded(!isLimitNotExceeded);
                         }}
                       />
                     </USDCurrencySendInputBlock>
@@ -935,16 +903,17 @@ export default function MultiSwapComponent() {
                       </LabelsBlockSubBlock>
                     </>
                   )}
+                  {sendToken.isExchangeIsAllowed === false && (
+                    <ExceededAmountTokensLimitWarning
+                      style={{ marginTop: isTokensToggled && '14px' }}>
+                      Insufficient funds
+                    </ExceededAmountTokensLimitWarning>
+                  )}
                 </MultiSwapSendTokensChooseBlock>
               ))}
             </div>
 
             {/* Better will be done for every individual token*/}
-            {isTokensLimitExceeded && (
-              <ExceededAmountTokensLimitWarning style={{ marginRight: '30px', marginTop: '-10px' }}>
-                Insufficient funds
-              </ExceededAmountTokensLimitWarning>
-            )}
 
             {isAbleToReplaceTokens ? (
               <SwitchTokensBtn
@@ -1472,7 +1441,7 @@ export default function MultiSwapComponent() {
             </div>
           </DownDelimiterLabelsBlock>
           <SwapBlockExchangeLayout isLightTheme={isLightTheme} style={{ marginBottom: '40px' }}>
-            <Button onClick={() => exchange()} disabled={isTokensLimitExceeded}>
+            <Button onClick={() => exchange()} disabled={!isTokensLimitNotExceeded}>
               Exchange
             </Button>
           </SwapBlockExchangeLayout>

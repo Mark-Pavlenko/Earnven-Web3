@@ -124,9 +124,6 @@ export const isTokensCanBeToggledMultiSwap = (
 };
 
 export const checkIfExchangedMultiSwapTokenLimitIsExceeded = (inputTokenData, tokensList) => {
-  // console.log('result helper inputTokenAmount', inputTokenData);
-  // console.log('result helper tokensList', tokensList);
-
   let formattedTokensList = tokensList.map((token) => {
     if (token.address === inputTokenData.address) {
       return {
