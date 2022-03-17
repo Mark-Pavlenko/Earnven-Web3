@@ -161,11 +161,8 @@ export default function MultiSwapComponent() {
     (state) => state.tokensListReducer.initReceiveMultiSwapTokensList
   );
 
-  console.log('receive USD multi init state SendTokenSwap 12345', initSendMultiSwapTokenList);
-  console.log(
-    ' receive USD multi init state ReceiveMultiSwapTokensList 12345',
-    initReceiveMultiSwapTokensList
-  );
+  console.log(' init state SendTokenSwap 12345', initSendMultiSwapTokenList);
+  console.log('init state ReceiveMultiSwapTokensList 12345', initReceiveMultiSwapTokensList);
 
   //popover open/close
 
@@ -466,7 +463,7 @@ export default function MultiSwapComponent() {
     initReceiveMultiSwapTokensList
   );
 
-  const addReceiveTokensHandler = (fullTokensList) => {
+  const addNewTokenHandler = (fullTokensList) => {
     dispatch({
       type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING,
       payload: true,
@@ -477,10 +474,26 @@ export default function MultiSwapComponent() {
       ...initReceiveMultiSwapTokensList,
     ]);
 
-    if (removedInitTokenValuesList.length !== 0) {
-      initReceiveMultiSwapTokensList.push(removedInitTokenValuesList[0]);
+    //choose best exchanger
+    let bestRateExchanger = exchangersOfferedList.find((el) => {
+      return el.isBestRate === true;
+    });
+
+    if (!isTokensToggled) {
+      if (removedInitTokenValuesList.length !== 0) {
+        initReceiveMultiSwapTokensList.push(removedInitTokenValuesList[0]);
+      } else {
+        setIsAddedReceiveTokensLimitExceeded(true);
+      }
     } else {
-      setIsAddedReceiveTokensLimitExceeded(true);
+      if (removedInitTokenValuesList.length !== 0) {
+        initSendMultiSwapTokenList.push({
+          ...removedInitTokenValuesList[0],
+          chosenExchanger: bestRateExchanger,
+        });
+      } else {
+        setIsAddedReceiveTokensLimitExceeded(true);
+      }
     }
 
     dispatch({
@@ -1381,17 +1394,33 @@ export default function MultiSwapComponent() {
               )}
             </div>
             {isAddedReceiveTokensLimitExceeded === false && (
-              <AddReceiveTokenMultiSwapBtn
-                style={{ marginTop: '20px' }}
-                isLightTheme={isLightTheme}
-                onClick={() => {
-                  addReceiveTokensHandler(finalReceiveTokensList);
-                }}>
-                <img
-                  src={isLightTheme ? plusIconDark : plusIconLight}
-                  alt="add_receive_multiswap_token"
-                />
-              </AddReceiveTokenMultiSwapBtn>
+              <>
+                {!isTokensToggled ? (
+                  <AddReceiveTokenMultiSwapBtn
+                    style={{ marginTop: '20px' }}
+                    isLightTheme={isLightTheme}
+                    onClick={() => {
+                      addNewTokenHandler(finalReceiveTokensList);
+                    }}>
+                    <img
+                      src={isLightTheme ? plusIconDark : plusIconLight}
+                      alt="add_receive_multiswap_token"
+                    />
+                  </AddReceiveTokenMultiSwapBtn>
+                ) : (
+                  <AddReceiveTokenMultiSwapBtn
+                    style={{ marginTop: '20px' }}
+                    isLightTheme={isLightTheme}
+                    onClick={() => {
+                      addNewTokenHandler(finalSendTokensList);
+                    }}>
+                    <img
+                      src={isLightTheme ? plusIconDark : plusIconLight}
+                      alt="add_receive_multiswap_token"
+                    />
+                  </AddReceiveTokenMultiSwapBtn>
+                )}
+              </>
             )}
           </SendReceiveSubBlock>
 
