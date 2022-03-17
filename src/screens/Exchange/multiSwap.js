@@ -625,10 +625,17 @@ export default function MultiSwapComponent() {
 
     console.log('tokenWithChosenExchanger multiswap test1', formattedReceiveTokensList);
 
-    dispatch({
-      type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST,
-      payload: formattedReceiveTokensList,
-    });
+    if (!isTokensToggled) {
+      dispatch({
+        type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST,
+        payload: formattedReceiveTokensList,
+      });
+    } else {
+      dispatch({
+        type: actionTypes.SET_INIT_SEND_MULTISWAP_TOKENS_LIST,
+        payload: formattedReceiveTokensList,
+      });
+    }
 
     setChosenExchangerTokensList([]);
     setChosenNewExchangerToken({});
@@ -784,12 +791,27 @@ export default function MultiSwapComponent() {
                         </LabelsBlockSubBlockSpan>
                         <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
                           <img src={sendToken.chosenExchanger.logoIcon} alt="paraSwapIcon" />
-                          <span
-                            onClick={(event) =>
-                              openExchangersModal(event, initReceiveMultiSwapTokensList, sendToken)
-                            }>
-                            {sendToken.chosenExchanger.name}
-                          </span>
+
+                          {!isTokensToggled ? (
+                            <span
+                              onClick={(event) =>
+                                openExchangersModal(
+                                  event,
+                                  initReceiveMultiSwapTokensList,
+                                  sendToken
+                                )
+                              }>
+                              {sendToken.chosenExchanger.name}
+                            </span>
+                          ) : (
+                            <span
+                              onClick={(event) =>
+                                openExchangersModal(event, initSendMultiSwapTokenList, sendToken)
+                              }>
+                              {sendToken.chosenExchanger.name}
+                            </span>
+                          )}
+
                           {/* Offered by popover*/}
                           <Popover
                             open={open}
