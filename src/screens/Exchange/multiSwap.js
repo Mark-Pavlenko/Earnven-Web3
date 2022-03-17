@@ -665,6 +665,7 @@ export default function MultiSwapComponent() {
                     // backgroundColor: 'lightyellow',
                     height: isTokensToggled && '115px',
                     marginBottom: isTokensToggled && '30px',
+                    marginTop: isTokensToggled && '10px',
                   }}>
                   <MultiSwapChooseBtnTokenBlock
                   // style={{ backgroundColor: 'pink' }}
@@ -947,7 +948,8 @@ export default function MultiSwapComponent() {
                   )}
                   {sendToken.isExchangeIsAllowed === false && (
                     <ExceededAmountTokensLimitWarning
-                      style={{ marginTop: isTokensToggled && '14px' }}>
+                    // style={{ marginTop: isTokensToggled && '14px' }}
+                    >
                       Insufficient funds
                     </ExceededAmountTokensLimitWarning>
                   )}
