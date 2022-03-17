@@ -95,6 +95,34 @@ export const checkIfExchangedTokenLimitIsExceeded = (chosenTokenAmount, totalTok
   }
 };
 
+export const isTokensCanBeToggledMultiSwap = (
+  initSendMultiSwapTokenList,
+  initReceiveMultiSwapTokensList,
+  finalSendTokensList,
+  finalReceiveTokensList
+) => {
+  let availableNumOfSendTokensToSwap = finalReceiveTokensList
+    .map((x) =>
+      initSendMultiSwapTokenList.some((y) => {
+        if (y.address === x.address) return true;
+      })
+    )
+    .filter((value) => value === true).length;
+
+  let availableNumOfReceiveTokensToSwap = finalSendTokensList
+    .map((x) =>
+      initReceiveMultiSwapTokensList.some((y) => {
+        if (y.address === x.address) return true;
+      })
+    )
+    .filter((value) => value === true).length;
+
+  return (
+    availableNumOfSendTokensToSwap === initSendMultiSwapTokenList.length &&
+    availableNumOfReceiveTokensToSwap === initReceiveMultiSwapTokensList.length
+  );
+};
+
 export const checkIfExchangedMultiSwapTokenLimitIsExceeded = (inputTokenData, tokensList) => {
   // console.log('result helper inputTokenAmount', inputTokenData);
   // console.log('result helper tokensList', tokensList);

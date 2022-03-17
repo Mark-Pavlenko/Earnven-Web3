@@ -87,6 +87,7 @@ import {
   filteredTokensByName,
   getTokenUSDAmount,
   initFilteringModalTokensListMultiSwap,
+  isTokensCanBeToggledMultiSwap,
 } from './helpers';
 import { useWeb3React } from '@web3-react/core';
 import Web3 from 'web3';
@@ -199,6 +200,8 @@ export default function MultiSwapComponent() {
   let convertSendTokenToUSDCurrency = async (amount, tokenData) => {
     let formattedAmount = amount.replace(/[^\d.-]/g, '').replace(/[^\w.]|_/g, '');
 
+    console.log('res amount tokenData isExchangeIsAllowed main', tokenData.isLimitNotExceeded);
+
     console.log('res amount tokenData send amount', amount);
     // console.log('res amount send formattedAmount', formattedAmount);
     // console.log('res amount send formattedAmount typeof', typeof formattedAmount);
@@ -213,6 +216,7 @@ export default function MultiSwapComponent() {
       if (needIndex !== -1) {
         sendTokensListCopy[needIndex].USDCurrency = res.USDCurrency;
         sendTokensListCopy[needIndex].amount = formattedAmount;
+        sendTokensListCopy[needIndex].isExchangeIsAllowed = tokenData.isLimitNotExceeded;
       }
 
       // console.log('res amount send list total', sendTokensListCopy);
@@ -496,6 +500,17 @@ export default function MultiSwapComponent() {
       }
     }
 
+    let isAbleToBeToggled = isTokensCanBeToggledMultiSwap(
+      initSendMultiSwapTokenList,
+      initReceiveMultiSwapTokensList,
+      finalSendTokensList,
+      finalReceiveTokensList
+    );
+
+    console.log('addToken isAbleToBeToggled', isAbleToBeToggled);
+
+    setIsAbleToReplaceTokens(isAbleToBeToggled);
+
     dispatch({
       type: actionTypes.SET_INIT_RECEIVE_MULTISWAP_TOKENS_LIST_LOADING,
       payload: false,
@@ -553,48 +568,14 @@ export default function MultiSwapComponent() {
 
   useEffect(() => {
     if (initSendMultiSwapTokenList[0] !== undefined && initSendMultiSwapTokenList.length !== 0) {
-      //functionality to add best exchanger to final send/receive tokens lists - should be done in sagas
-      let bestRateExchanger = exchangersOfferedList.find((el) => {
-        return el.isBestRate === true;
-      });
+      let isAbleToBeToggled = isTokensCanBeToggledMultiSwap(
+        initSendMultiSwapTokenList,
+        initReceiveMultiSwapTokensList,
+        finalSendTokensList,
+        finalReceiveTokensList
+      );
 
-      console.log('bestRateExchanger', bestRateExchanger);
-
-      let test1 = initSendMultiSwapTokenList.map((sendToken) => {
-        return { ...sendToken, chosenExchanger: bestRateExchanger };
-      });
-
-      let test2 = initReceiveMultiSwapTokensList.map((receiveToken) => {
-        return { ...receiveToken, chosenExchanger: bestRateExchanger };
-      });
-
-      console.log('bestRateExchanger test1', test1);
-      console.log('bestRateExchanger test2', test2);
-
-      ///-------------
-
-      let ifSendTokenAvailableForSwap = finalReceiveTokensList.some((el) => {
-        if (el.address === initSendMultiSwapTokenList[0].address) {
-          return true;
-        }
-      });
-
-      let availableNumOfReceiveTokensToSwap = finalSendTokensList
-        .map((x) =>
-          initReceiveMultiSwapTokensList.some((y) => {
-            if (y.address === x.address) return true;
-          })
-        )
-        .filter((value) => value === true).length;
-
-      if (
-        availableNumOfReceiveTokensToSwap === initReceiveMultiSwapTokensList.length &&
-        ifSendTokenAvailableForSwap === true
-      ) {
-        setIsAbleToReplaceTokens(true);
-      } else {
-        setIsAbleToReplaceTokens(false);
-      }
+      setIsAbleToReplaceTokens(isAbleToBeToggled);
     }
   }, [initSendMultiSwapTokenList, initReceiveMultiSwapTokensList]);
 
@@ -739,17 +720,18 @@ export default function MultiSwapComponent() {
                         placeholder="0.0"
                         value={sendToken.amount}
                         onChange={(e) => {
-                          convertSendTokenToUSDCurrency(e.target.value, {
-                            ...sendToken,
-                          });
-
                           const isLimitNotExceeded = checkIfExchangedMultiSwapTokenLimitIsExceeded(
                             { address: sendToken.address, amount: e.target.value },
                             initSendMultiSwapTokenList
                           );
 
-                          console.log('result helper isLimitNotExceeded main', isLimitNotExceeded);
-                          setIsTokensLimitExceeded(!isLimitNotExceeded);
+                          convertSendTokenToUSDCurrency(e.target.value, {
+                            ...sendToken,
+                            isLimitNotExceeded,
+                          });
+
+                          // console.log('result helper isLimitNotExceeded main', isLimitNotExceeded);
+                          // setIsTokensLimitExceeded(!isLimitNotExceeded);
                         }}
                       />
                     </USDCurrencySendInputBlock>
@@ -957,6 +939,7 @@ export default function MultiSwapComponent() {
               ))}
             </div>
 
+            {/* Better will be done for every individual token*/}
             {isTokensLimitExceeded && (
               <ExceededAmountTokensLimitWarning style={{ marginRight: '30px', marginTop: '-10px' }}>
                 Insufficient funds

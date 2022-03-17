@@ -132,6 +132,7 @@ function* getReceiveTokensListSagaWorker() {
       : null,
     USDCurrency: 0,
     amount: 0,
+    isExchangeIsAllowed: false,
     //mock exchanger
     chosenExchanger: {
       name: 'Uniswap_V2',
