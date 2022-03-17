@@ -199,7 +199,7 @@ export default function MultiSwapComponent() {
   let convertSendTokenToUSDCurrency = async (amount, tokenData) => {
     let formattedAmount = amount.replace(/[^\d.-]/g, '').replace(/[^\w.]|_/g, '');
 
-    console.log('res amount tokenData isExchangeIsAllowed main', tokenData.isLimitNotExceeded);
+    console.log('send token convert tokenData.isLimitNotExceeded ', tokenData.isLimitNotExceeded);
 
     console.log('res amount tokenData send amount', amount);
     // console.log('res amount send formattedAmount', formattedAmount);
@@ -207,8 +207,14 @@ export default function MultiSwapComponent() {
 
     await getTokenUSDAmount({ amount: formattedAmount, tokenData }).then((res) => {
       // console.log('res amount send middle', res);
-
       let sendTokensListCopy = [...initSendMultiSwapTokenList];
+
+      //check if in every element we have .isExchangeIsAllowed = true
+      //then - set to true
+      let isLimitNotExceeded = sendTokensListCopy.every(
+        (item) => item.isExchangeIsAllowed === true
+      );
+
       const needIndex = sendTokensListCopy.findIndex(
         (token) => token.address === tokenData.address
       );
@@ -218,13 +224,13 @@ export default function MultiSwapComponent() {
         sendTokensListCopy[needIndex].isExchangeIsAllowed = tokenData.isLimitNotExceeded;
       }
 
-      setIsTokensLimitNotExceeded(tokenData.isLimitNotExceeded);
-
       // console.log('res amount send list total', sendTokensListCopy);
       dispatch({
         type: actionTypes.SET_INIT_SEND_MULTISWAP_TOKENS_LIST,
         payload: sendTokensListCopy,
       });
+
+      setIsTokensLimitNotExceeded(isLimitNotExceeded);
     });
   };
 
@@ -369,6 +375,11 @@ export default function MultiSwapComponent() {
   };
 
   const selectTokenForSwap = async (selectedSwapToken, isSendTokenSelectedSwapped) => {
+    //choose best exchanger
+    let bestRateExchanger = exchangersOfferedList.find((el) => {
+      return el.isBestRate === true;
+    });
+
     if (isSendTokenSelectedSwapped === true) {
       console.log('send selectedSwapToken', selectedSwapToken);
 
@@ -386,10 +397,15 @@ export default function MultiSwapComponent() {
           receiveTokensListItem: false,
           USDCurrency: 0,
           amount: 0,
+          chosenExchanger: bestRateExchanger,
         };
       }
 
-      // console.log('send selectedSwapToken sendTokensListCopy total', sendTokensListCopy);
+      let isLimitNotExceeded = sendTokensListCopy.every(
+        (item) => item.isExchangeIsAllowed === true
+      );
+
+      setIsTokensLimitNotExceeded(isLimitNotExceeded);
 
       dispatch({
         type: actionTypes.SET_INIT_SEND_MULTISWAP_TOKENS_LIST,
@@ -411,6 +427,7 @@ export default function MultiSwapComponent() {
           receiveTokensListItem: true,
           USDCurrency: 0,
           amount: 0,
+          chosenExchanger: bestRateExchanger,
         };
       }
 
@@ -457,9 +474,18 @@ export default function MultiSwapComponent() {
       }
     } else {
       if (removedInitTokenValuesList.length !== 0) {
+        //if we can exchange
+        let isLimitNotExceeded = initSendMultiSwapTokenList.every(
+          (item) => item.isExchangeIsAllowed === true
+        );
+
+        setIsTokensLimitNotExceeded(isLimitNotExceeded);
+        //if we can exchange---
+
         initSendMultiSwapTokenList.push({
           ...removedInitTokenValuesList[0],
           chosenExchanger: bestRateExchanger,
+          isExchangeIsAllowed: isLimitNotExceeded,
         });
       } else {
         setIsAddedReceiveTokensLimitExceeded(true);
@@ -542,6 +568,12 @@ export default function MultiSwapComponent() {
       );
 
       setIsAbleToReplaceTokens(isAbleToBeToggled);
+
+      let isLimitNotExceeded = initSendMultiSwapTokenList.every(
+        (item) => item.isExchangeIsAllowed === true
+      );
+
+      setIsTokensLimitNotExceeded(isLimitNotExceeded);
     }
   }, [initSendMultiSwapTokenList, initReceiveMultiSwapTokensList]);
 
@@ -630,11 +662,13 @@ export default function MultiSwapComponent() {
                 <MultiSwapSendTokensChooseBlock
                   isLightTheme={isLightTheme}
                   style={{
-                    backgroundColor: 'lightyellow',
+                    // backgroundColor: 'lightyellow',
                     height: isTokensToggled && '115px',
                     marginBottom: isTokensToggled && '30px',
                   }}>
-                  <MultiSwapChooseBtnTokenBlock style={{ backgroundColor: 'pink' }}>
+                  <MultiSwapChooseBtnTokenBlock
+                  // style={{ backgroundColor: 'pink' }}
+                  >
                     <div
                       onClick={() => {
                         setOldTokenSwappedAddress(sendToken.address);
@@ -704,7 +738,9 @@ export default function MultiSwapComponent() {
                       />
                     </USDCurrencySendInputBlock>
                   </MultiSwapChooseBtnTokenBlock>
-                  <MultiSwapSendValueLabelsLayout style={{ backgroundColor: 'lightblue' }}>
+                  <MultiSwapSendValueLabelsLayout
+                  // style={{ backgroundColor: 'lightblue' }}
+                  >
                     <MultiSwapSendValueLabel
                       isLightTheme={isLightTheme}
                       style={{ marginLeft: '30px' }}>
@@ -930,16 +966,20 @@ export default function MultiSwapComponent() {
             )}
           </SendReceiveSubBlock>
           {/* mapped received block */}
-          <SendReceiveSubBlock style={{ backgroundColor: 'green' }}>
+          <SendReceiveSubBlock
+          // style={{ backgroundColor: 'green' }}
+          >
             <SendBlockLabels isLightTheme={isLightTheme} style={{ margin: '0px 20px 5px 20px' }}>
               <span>Receive 235</span>
             </SendBlockLabels>
-            <div style={{ backgroundColor: 'lightgray' }}>
+            <div
+            // style={{ backgroundColor: 'lightgray' }}
+            >
               <SubLayoutReceiveTokensBlock>
                 {initReceiveMultiSwapTokensList.map((receiveToken, key) => (
                   <MultiSwapReceiveTokensBlock
                     isLightTheme={isLightTheme}
-                    style={{ backgroundColor: 'lightyellow', height: isTokensToggled && '60px' }}>
+                    style={{ height: isTokensToggled && '60px' }}>
                     <FirstSubLayoutMultiSwapReceiveTokensBlock
                       style={{
                         flexDirection: isTokensToggled && 'column',
@@ -1022,7 +1062,7 @@ export default function MultiSwapComponent() {
                             style={{
                               display: 'flex',
                               marginRight: '20px',
-                              backgroundColor: 'lightblue',
+                              // backgroundColor: 'lightblue',
                             }}>
                             <MultiSwapSendValueLabel
                               isLightTheme={isLightTheme}
