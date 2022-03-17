@@ -977,7 +977,11 @@ export default function MultiSwapComponent() {
                         flexDirection: isTokensToggled && 'column',
                       }}>
                       <MultiSwapChooseBtnTokenBlock
-                        style={{ marginTop: !isTokensToggled && '-15px', marginLeft: '8px' }}
+                        style={{
+                          // marginTop:
+                          marginLeft: '8px',
+                          marginTop: !isTokensToggled ? '-15px' : '-2px',
+                        }}
                         onClick={() => {
                           setOldTokenSwappedAddress(receiveToken.address);
                           openModalHelper(
@@ -1067,8 +1071,9 @@ export default function MultiSwapComponent() {
                       {isTokensToggled && (
                         <MultiSwapSendValueLabelsLayout
                           style={{
-                            backgroundColor: 'lightgreen',
-                            padding: '0px 20px 0px 41px',
+                            // backgroundColor: 'lightgreen',
+                            padding: '0px 20px 0px 43px',
+                            marginTop: '-2px',
                             // width: '443px',
                             // marginLeft: '-30px',
                           }}>
