@@ -1,9 +1,15 @@
 import actionTypes from '../../constants/actionTypes';
 
 export const getalchemixVaults = (payload) => {
-  console.log('alchemix payload');
   return {
-    type: actionTypes.GET_ALCHEMIX_VAULT,
+    type: actionTypes.GET_ALX_DATA,
+    payload,
+  };
+};
+
+export const getalchemixTotal = (payload) => {
+  return {
+    type: actionTypes.GET_ALX_TOTAL,
     payload,
   };
 };

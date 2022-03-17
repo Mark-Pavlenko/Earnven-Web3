@@ -192,6 +192,11 @@ export default function index({ accountAddress }) {
   const mStableLogo =
     'https://assets.coingecko.com/coins/images/11846/thumb/mStable.png?1594950533';
 
+  //alchemix Finance
+  const alxFinanceData = useSelector((state) => state.alchemixVaults.alchemixVaults);
+  const alxFinanceTotal = useSelector((state) => state.alchemixVaults.alchemixTotal);
+  const alxLogo = 'https://assets.coingecko.com/coins/images/14113/thumb/Alchemix.png?1614409874';
+
   //get the total value of uniSwapV2
   useEffect(() => {
     function getUniSwapV2Total() {
@@ -548,7 +553,8 @@ export default function index({ accountAddress }) {
         convexStakeData.length == 0 &&
         sushiStakeData.length == 0 &&
         uniswapV2stake.length == 0 &&
-        mStablesStaking.length == 0 ? (
+        mStablesStaking.length == 0 &&
+        alxFinanceData.length == 0 ? (
           <PoolsBlock isLightTheme={theme}>
             <Header>
               <Title isLightTheme={theme}>{'Saving/Loans'}</Title>
@@ -574,7 +580,8 @@ export default function index({ accountAddress }) {
                 // creamIronBankData.length > 0 ||
                 sushiStakeData.length > 0 ||
                 uniswapV2stake.length > 0 ||
-                mStablesStaking.length > 0,
+                mStablesStaking.length > 0 ||
+                alxFinanceData.length > 0,
             }}>
             <Header>
               <Title isLightTheme={theme}>{'Saving/Loans'}</Title>
@@ -987,6 +994,38 @@ export default function index({ accountAddress }) {
             )}
 
             {/* End of mStable staking section */}
+            {/*Alchemix Finance */}
+            {alxFinanceData.length > 0 ? (
+              <React.Fragment>
+                <ProtocolTitle isLightTheme={theme}>
+                  <img
+                    src={alxLogo}
+                    style={{
+                      height: '20px',
+                      marginTop: '',
+                      marginLeft: '15px',
+                      display: 'inline-block',
+                    }}
+                    alt=""
+                  />
+                  Alchemix
+                </ProtocolTitle>
+                {alxFinanceData
+                  ? alxFinanceData.map((object) => {
+                      return (
+                        <Investment
+                          protocol={object}
+                          protocolName={'alchemix'}
+                          logoImage={object.tokenImage}
+                        />
+                      );
+                    })
+                  : ''}
+              </React.Fragment>
+            ) : (
+              ''
+            )}
+            {/*End of Alchemix Finance section*/}
           </PoolsBlock>
         )}
 

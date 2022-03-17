@@ -28,6 +28,7 @@ import BalancerV2 from '../LiqudityPools/BalancerV2';
 import PickleDill from '../Vaults/PickleDill';
 import UniswapV2 from '../LiqudityPools/UniswapV2';
 import MStableStaking from '../MStableStaking';
+import Alchemix from '../Alchemix';
 
 export default function Index({ accountAddress }) {
   //console.log('TestComp load from protocols index');
@@ -53,6 +54,7 @@ export default function Index({ accountAddress }) {
       <SushiStaking accountAddress={accountAddress} />
       <UniStaking accountAddress={accountAddress} />
       <MStableStaking accountAddress={accountAddress} />
+      <Alchemix accountAddress={accountAddress} />
     </React.Fragment>
   );
 }
