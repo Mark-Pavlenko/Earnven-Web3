@@ -185,6 +185,13 @@ export default function index({ accountAddress }) {
     (state) => state.uniswapV2stake.uniswapStakeIsLoading
   );
 
+  //mStable staking
+  const mStablesStaking = useSelector((state) => state.mStableStaking.mStableStakingData);
+  const mStableTotal = useSelector((state) => state.mStableStaking.mStableTotal);
+  const ismStableIsLoading = useSelector((state) => state.mStableStaking.mStableStakingIsLoading);
+  const mStableLogo =
+    'https://assets.coingecko.com/coins/images/11846/thumb/mStable.png?1594950533';
+
   //get the total value of uniSwapV2
   useEffect(() => {
     function getUniSwapV2Total() {
@@ -540,7 +547,8 @@ export default function index({ accountAddress }) {
         AaveStakingData.length == 0 &&
         convexStakeData.length == 0 &&
         sushiStakeData.length == 0 &&
-        uniswapV2stake.length == 0 ? (
+        uniswapV2stake.length == 0 &&
+        mStablesStaking.length == 0 ? (
           <PoolsBlock isLightTheme={theme}>
             <Header>
               <Title isLightTheme={theme}>{'Saving/Loans'}</Title>
@@ -565,7 +573,8 @@ export default function index({ accountAddress }) {
                 convexStakeData.length > 0 ||
                 // creamIronBankData.length > 0 ||
                 sushiStakeData.length > 0 ||
-                uniswapV2stake.length > 0,
+                uniswapV2stake.length > 0 ||
+                mStablesStaking.length > 0,
             }}>
             <Header>
               <Title isLightTheme={theme}>{'Saving/Loans'}</Title>
@@ -945,6 +954,39 @@ export default function index({ accountAddress }) {
             )}
 
             {/* ------------end of UniSwapV2--------- */}
+            {/* mStable staking */}
+            {mStablesStaking.length > 0 ? (
+              <React.Fragment>
+                <ProtocolTitle isLightTheme={theme}>
+                  <img
+                    src={mStableLogo}
+                    style={{
+                      height: '20px',
+                      marginTop: '',
+                      marginLeft: '15px',
+                      display: 'inline-block',
+                    }}
+                    alt=""
+                  />
+                  mStable
+                </ProtocolTitle>
+                {mStablesStaking
+                  ? mStablesStaking.map((object) => {
+                      return (
+                        <Investment
+                          protocol={object}
+                          protocolName={'mStable'}
+                          logoImage={object.tokenImage}
+                        />
+                      );
+                    })
+                  : ''}
+              </React.Fragment>
+            ) : (
+              ''
+            )}
+
+            {/* End of mStable staking section */}
           </PoolsBlock>
         )}
 

@@ -20,7 +20,7 @@ import { getLiquityTokenSagaWatcher } from './liquityToken';
 import { getOlympusTokenSagaWatcher } from './olympusStaking';
 import { getethApiSagaWatcher } from './ethExplorerApi';
 import { getmStableSagaWatcher } from './mStable';
-import { getmStableFarmSagaWatcher, getmStablePoolsSagaWatcher } from './mStable';
+//import { getmStableFarmSagaWatcher, getmStablePoolsSagaWatcher } from './mStable';
 import { getSushiSwapLPSagaWatcher } from './sushiSwap';
 import { getalchemixVaultsSagaWatcher } from './alchemix';
 import { getcompoundTokenSagaWatcher } from './compoundFinance';
@@ -64,8 +64,8 @@ export default function* watchRootSaga() {
     call(getOlympusTokenSagaWatcher),
     call(getethApiSagaWatcher),
     call(getmStableSagaWatcher),
-    call(getmStableFarmSagaWatcher),
-    call(getmStablePoolsSagaWatcher),
+    // call(getmStableFarmSagaWatcher),
+    // call(getmStablePoolsSagaWatcher),
     call(getSushiSwapLPSagaWatcher),
     call(getalchemixVaultsSagaWatcher),
     call(getcompoundTokenSagaWatcher),

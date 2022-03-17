@@ -26,8 +26,8 @@ import { creamIronBank } from './creamIronBank/reducer';
 import { cream } from './cream/reducer';
 import { olympusStaking } from './olympusStaking/reducer';
 import { ethExplorerApi } from './ethExplorerApi/reducer';
-import { mStableSavings } from './mStable/reducer';
-import { mStableSavingsFarm, mStableSavingsPool } from './mStable/reducer';
+import { mStableStaking } from './mStable/reducer';
+//import { mStableSavingsFarm, mStableSavingsPool } from './mStable/reducer';
 import { sushiSwap } from './sushiSwap/reducer';
 import { initSidebarValuesReducer } from './initSidebarValues/reducer';
 import { alchemixVaults } from './alchemix/reducer';
@@ -70,9 +70,9 @@ export const rootReducer = combineReducers({
   cream,
   olympusStaking,
   ethExplorerApi,
-  mStableSavings,
-  mStableSavingsFarm,
-  mStableSavingsPool,
+  mStableStaking,
+  // mStableSavingsFarm,
+  // mStableSavingsPool,
   sushiSwap,
   initSidebarValuesReducer,
   alchemixVaults,
