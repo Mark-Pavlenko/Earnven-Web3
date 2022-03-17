@@ -1,7 +1,4 @@
 import axios from 'axios';
-import ERC20ABI from '../../abi/ERC20.json';
-import OneClickLiquidity from '../../abi/UniV2PoolsOneClick.json';
-import Addresses from '../../contractAddresses';
 
 export const initFilteringModalTokensList = (
   searchTokensData,
@@ -96,6 +93,29 @@ export const checkIfExchangedTokenLimitIsExceeded = (chosenTokenAmount, totalTok
     console.log('limit is not exceeded');
     return false;
   }
+};
+
+export const checkIfExchangedMultiSwapTokenLimitIsExceeded = (inputTokenData, tokensList) => {
+  // console.log('result helper inputTokenAmount', inputTokenData);
+  // console.log('result helper tokensList', tokensList);
+
+  let formattedTokensList = tokensList.map((token) => {
+    if (token.address === inputTokenData.address) {
+      return {
+        ...token,
+        amount: Number(inputTokenData.amount),
+      };
+    }
+    return {
+      ...token,
+    };
+  });
+
+  // console.log('result helper formattedTokensList', formattedTokensList);
+
+  let isLimitNotExceeded = formattedTokensList.every((item) => item.balance > Number(item.amount));
+  console.log('result helper isLimitNotExceeded', isLimitNotExceeded);
+  return isLimitNotExceeded;
 };
 
 //sushiswapV2 single swap exchange function

@@ -82,7 +82,7 @@ import searchTokensImportModalDark from '../../assets/icons/searchTokensInputMod
 import searchTokensImportModalLight from '../../assets/icons/searchTokensButtonMobileLight.svg';
 import Avatar from 'react-avatar';
 import {
-  checkIfExchangedTokenLimitIsExceeded,
+  checkIfExchangedMultiSwapTokenLimitIsExceeded,
   convertSendTokenToUSDCurrencyHelper,
   filteredTokensByName,
   getTokenUSDAmount,
@@ -644,6 +644,11 @@ export default function MultiSwapComponent() {
 
   console.log('chosenNewExchangerToken openExchangersModal', chosenNewExchangerToken);
 
+  const ConsoleLog = ({ children }) => {
+    console.log('console.log debugger', children);
+    return false;
+  };
+
   return (
     <SecondColumnSwapSubBlock>
       <SecondColumnTitleBlock>
@@ -662,14 +667,18 @@ export default function MultiSwapComponent() {
           {/*{isTokensToggled}*/}
 
           {/*Choose send tokens block*/}
-          <SendReceiveSubBlock style={{ backgroundColor: 'red' }}>
+          <SendReceiveSubBlock
+          // style={{ backgroundColor: 'red' }}
+          >
             <SendBlockLabels isLightTheme={isLightTheme} style={{ margin: '32px 20px 7px 20px' }}>
               <span>Send</span>
             </SendBlockLabels>
 
             {/* SEND block */}
 
-            <div style={{ backgroundColor: 'lightgray' }}>
+            <div
+            // style={{ backgroundColor: 'lightgray' }}
+            >
               {initSendMultiSwapTokenList.map((sendToken, key) => (
                 <MultiSwapSendTokensChooseBlock
                   isLightTheme={isLightTheme}
@@ -734,16 +743,18 @@ export default function MultiSwapComponent() {
                             ...sendToken,
                           });
 
-                          const isLimitExceeded = checkIfExchangedTokenLimitIsExceeded(
-                            e.target.value,
-                            sendToken.balance
+                          const isLimitNotExceeded = checkIfExchangedMultiSwapTokenLimitIsExceeded(
+                            { address: sendToken.address, amount: e.target.value },
+                            initSendMultiSwapTokenList
                           );
-                          setIsTokensLimitExceeded(isLimitExceeded);
+
+                          console.log('result helper isLimitNotExceeded main', isLimitNotExceeded);
+                          setIsTokensLimitExceeded(!isLimitNotExceeded);
                         }}
                       />
                     </USDCurrencySendInputBlock>
                   </MultiSwapChooseBtnTokenBlock>
-                  <MultiSwapSendValueLabelsLayout style={{ backgroundColor: 'lightgreen' }}>
+                  <MultiSwapSendValueLabelsLayout style={{ backgroundColor: 'lightblue' }}>
                     <MultiSwapSendValueLabel
                       isLightTheme={isLightTheme}
                       style={{ marginLeft: '30px' }}>
@@ -790,7 +801,12 @@ export default function MultiSwapComponent() {
                           Offered by 123
                         </LabelsBlockSubBlockSpan>
                         <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
-                          <img src={sendToken.chosenExchanger.logoIcon} alt="paraSwapIcon" />
+                          <ConsoleLog>{sendToken.chosenExchanger.logoIcon}</ConsoleLog>
+                          {sendToken.chosenExchanger.logoIcon &&
+                            Object.keys(sendToken).length !== 0 && (
+                              // {sendToken.chosenExchanger.logoIcon !== undefined && (
+                              <img src={sendToken.chosenExchanger.logoIcon} alt="paraSwapIcon" />
+                            )}
 
                           {!isTokensToggled ? (
                             <span
@@ -1054,7 +1070,7 @@ export default function MultiSwapComponent() {
                             style={{
                               display: 'flex',
                               marginRight: '20px',
-                              backgroundColor: 'lightgreen',
+                              backgroundColor: 'lightblue',
                             }}>
                             <MultiSwapSendValueLabel
                               isLightTheme={isLightTheme}
@@ -1071,11 +1087,8 @@ export default function MultiSwapComponent() {
                       {isTokensToggled && (
                         <MultiSwapSendValueLabelsLayout
                           style={{
-                            // backgroundColor: 'lightgreen',
                             padding: '0px 20px 0px 43px',
                             marginTop: '-2px',
-                            // width: '443px',
-                            // marginLeft: '-30px',
                           }}>
                           <MultiSwapSendValueLabel isLightTheme={isLightTheme}>
                             {receiveToken.balance} {receiveToken.symbol}
