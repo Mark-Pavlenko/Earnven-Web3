@@ -684,11 +684,12 @@ export default function MultiSwapComponent() {
                           style={{ marginLeft: '0px' }}
                         />
                       ) : (
-                        <MultiSwapTokenAvatar
-                          name={sendToken.avatarIcon}
+                        <Avatar
+                          name={sendToken.symbol}
                           round={true}
                           size="21"
                           textSizeRatio={1}
+                          style={{ marginRight: '10px', width: '21px', height: '21px' }}
                         />
                       )}
                       <ChosenTokenLabel isLightTheme={isLightTheme}>
@@ -754,7 +755,7 @@ export default function MultiSwapComponent() {
 
                     <MultiSwapSendValueLabel
                       isLightTheme={isLightTheme}
-                      style={{ marginLeft: 'auto' }}>
+                      style={{ marginLeft: 'auto', marginBottom: isTokensToggled && '5px' }}>
                       {sendToken.USDCurrency < 0 ? (
                         <>Price not available</>
                       ) : (
@@ -789,10 +790,10 @@ export default function MultiSwapComponent() {
                       </LabelsBlockSubBlock>
                       <LabelsBlockSubBlock isLightTheme={isLightTheme}>
                         <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                          Offered by 123
+                          Offered by
                         </LabelsBlockSubBlockSpan>
                         <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
-                          <ConsoleLog>{sendToken.chosenExchanger.logoIcon}</ConsoleLog>
+                          {/*<ConsoleLog>{sendToken.chosenExchanger.logoIcon}</ConsoleLog>*/}
                           {sendToken.chosenExchanger.logoIcon &&
                             Object.keys(sendToken).length !== 0 && (
                               // {sendToken.chosenExchanger.logoIcon !== undefined && (
