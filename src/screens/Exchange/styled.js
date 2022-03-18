@@ -29,6 +29,10 @@ export const SwapFirstColumn = styled.div`
     display: flex;
     justify-content: center;
   }
+
+  @media (max-width: 550px) {
+    width: auto;
+  }
 `;
 
 export const FirstColumnSwapSubBlock = styled.div`
@@ -72,8 +76,8 @@ export const SwapTokensMainSubBlock = styled.div`
   border-radius: 10px;
 
   @media (max-width: 550px) {
-    width: 375px;
-    padding: ${(props) => props.isMultiSwap === false && '32px 15px 27px 15px'};
+    width: ${(props) => props.isMultiSwap === false && 'auto'};
+    // padding: ${(props) => props.isMultiSwap === false && '32px 15px 27px 15px'};
   }
 
   @media (min-width: 541px) and(max-width: 1199px) {
@@ -419,6 +423,10 @@ export const SingleSwapTokensOfferedBySubBlock = styled.div`
       : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
   backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
   border-radius: 10px;
+
+  @media (max-width: 550px) {
+    width: auto;
+  }
 `;
 
 export const SwapTokensOfferedBySubBlock = styled.div`
@@ -431,6 +439,10 @@ export const SwapTokensOfferedBySubBlock = styled.div`
       : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
   backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
   border-radius: 10px;
+
+  @media (max-width: 550px) {
+    width: auto;
+  }
 `;
 
 export const ExchangersMainSubLayout = styled.div``;
@@ -728,6 +740,10 @@ export const SwapSecondColumn = styled.div`
     display: flex;
     justify-content: center;
     margin-top: 40px;
+  }
+
+  @media (max-width: 550px) {
+    width: auto;
   }
 `;
 
