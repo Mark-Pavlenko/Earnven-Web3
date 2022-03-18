@@ -12,6 +12,7 @@ export const ExchangeMainLayout = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    grid-template-columns: 100%;
   }
 `;
 
@@ -24,8 +25,9 @@ export const SwapFirstColumn = styled.div`
   width: 525px;
   height: 585px;
 
-  @media (max-width: 540px) {
-    width: 375px;
+  @media (max-width: 1200px) {
+    display: flex;
+    justify-content: center;
   }
 `;
 
@@ -48,25 +50,34 @@ export const ColumnMainTitles = styled.p`
 `;
 
 export const FirstColumnTitleHeaderBlock = styled.div`
-  @media (max-width: 540px) {
+  @media (max-width: 550px) {
     padding-left: 15px;
   }
+`;
+
+export const MultiSwapLayout = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
 export const SwapTokensMainSubBlock = styled.div`
   width: 525px;
   height: 515px;
+  padding: ${(props) => props.isMultiSwap === false && '32px 15px 27px 15px'};
   margin-top: 20px;
-
   background: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#1F265C3D')};
   mix-blend-mode: normal;
   box-shadow: 2px 2px 4px 0 #ffffff1a inset;
   backdrop-filter: blur(35px);
   border-radius: 10px;
 
-  @media (max-width: 540px) {
+  @media (max-width: 550px) {
     width: 375px;
-    padding: 37px 15px 27px 15px;
+    padding: ${(props) => props.isMultiSwap === false && '32px 15px 27px 15px'};
+  }
+
+  @media (min-width: 541px) and(max-width: 1199px) {
+    padding: 32px 27px 16px 20px;
   }
 `;
 
@@ -126,7 +137,7 @@ export const SendTokensChooseButton = styled.div`
     cursor: pointer;
   }
 
-  @media (max-width: 540px) {
+  @media (max-width: 550px) {
     width: 345px;
   }
 `;
@@ -139,13 +150,19 @@ export const ExceededAmountTokensLimitWarning = styled.span`
   color: #ec3d3d;
 `;
 
+export const MultiSwapSendTokensChooseBlockLayout = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
 export const MultiSwapSendTokensChooseBlock = styled.div`
   display: flex;
   flex-direction: column;
-  //align-items: center;
+  justify-content: center;
   width: 475px;
   height: 60px;
-  margin: 0px 27px 16px 20px;
+  margin-bottom: 16px;
+  //margin: 0px 27px 16px 20px;
   padding: 6px 20px 7px 12px;
   color: black;
   background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
@@ -160,16 +177,17 @@ export const MultiSwapSendTokensChooseBlock = styled.div`
     cursor: pointer;
   }
 
-  @media (max-width: 540px) {
+  @media (max-width: 550px) {
     width: 345px;
   }
 `;
 
 export const SubLayoutReceiveTokensBlock = styled.div`
   //overflow: auto;
+
   height: auto;
   //background-color: blue;
-  padding-left: 20px;
+  //padding-left: 20px;
   //margin: 0 27px 16px 20px;
   //padding-top: 5px;
   //overflow-x: hidden;
@@ -194,7 +212,7 @@ export const MultiSwapReceiveTokensBlock = styled.div`
     cursor: pointer;
   }
 
-  @media (max-width: 540px) {
+  @media (max-width: 550px) {
     width: 345px;
   }
 `;
@@ -286,7 +304,7 @@ export const SwitchTokensBtn = styled.img`
   margin: 0 auto;
   cursor: pointer;
 
-  @media (max-width: 540px) {
+  @media (max-width: 550px) {
     margin-bottom: -10px;
   }
 `;
@@ -321,7 +339,7 @@ export const ColumnMainSubTitles = styled.p`
   line-height: 22px;
   letter-spacing: 0;
 
-  @media (max-width: 540px) {
+  @media (max-width: 550px) {
     margin-top: 20px;
   }
 `;
@@ -522,7 +540,7 @@ export const SaveSelectedExchangerButton = styled(Button)`
     background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
   }
 
-  @media (max-width: 540px) {
+  @media (max-width: 550px) {
     width: 345px;
   }
 `;
@@ -626,7 +644,7 @@ export const SwapBlockExchangeLayout = styled.div`
       background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
     }
 
-    @media (max-width: 540px) {
+    @media (max-width: 550px) {
       width: 345px;
     }
   }
@@ -648,7 +666,7 @@ export const AdvancedSettingsButton = styled(Button)`
     background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
   }
 
-  @media (max-width: 540px) {
+  @media (max-width: 550px) {
     width: 345px;
   }
 `;
@@ -707,11 +725,9 @@ export const SwapSecondColumn = styled.div`
   width: 540px;
   height: 585px;
   @media (max-width: 1200px) {
+    display: flex;
+    justify-content: center;
     margin-top: 40px;
-  }
-
-  @media (max-width: 540px) {
-    width: 375px;
   }
 `;
 
@@ -719,7 +735,7 @@ export const SecondColumnSwapSubBlock = styled.div`
   width: 540px;
   height: 585px;
   //background-color: gray;
-  @media (max-width: 540px) {
+  @media (max-width: 550px) {
     width: 375px;
   }
 `;
