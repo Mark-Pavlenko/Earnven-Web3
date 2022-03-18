@@ -55,7 +55,7 @@ export const ColumnMainTitles = styled.p`
 
 export const FirstColumnTitleHeaderBlock = styled.div`
   @media (max-width: 550px) {
-    padding-left: 15px;
+    padding-left: 9px;
   }
 `;
 
@@ -761,7 +761,7 @@ export const SecondColumnTitleBlock = styled.div`
   //background-color: violet;
   @media (max-width: 1200px) {
     width: 340px;
-    padding-left: 15px;
+    padding-left: 10px;
     margin-bottom: 20px;
   }
 `;
@@ -783,12 +783,11 @@ export const TokensModalSubLayout = styled.div`
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
   mix-blend-mode: normal;
   border-radius: 10px;
-`;
 
-// background-color: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#4453AD1A')};
-// background: ${(props) =>
-//     props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)'};
-// backdrop-filter: blur(35px);
+  @media (max-width: 550px) {
+    width: 375px;
+  }
+`;
 
 export const SearchTokensModalTextField = styled(TextField)`
   display: flex;
@@ -805,6 +804,10 @@ export const SearchTokensModalTextField = styled(TextField)`
   mix-blend-mode: normal;
   backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
   border-radius: 10px;
+
+  @media (max-width: 550px) {
+    width: 335px;
+  }
 `;
 
 export const SendTokensModalList = styled(List)`
@@ -850,11 +853,13 @@ export const SendTokenModalListItem = styled(ListItem)`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  //background-color: blue;
   padding: 0 !important;
   margin-bottom: 10px;
   width: 445px;
-  //height: 57px;
+
+  @media (max-width: 550px) {
+    width: 350px;
+  }
 
   :hover {
     cursor: pointer;
@@ -910,6 +915,10 @@ export const SendTokenConvertedMeasures = styled.span`
   letter-spacing: 0;
   text-align: center;
   margin-right: auto;
+
+  @media (max-width: 550px) {
+    font-size: 12px;
+  }
 `;
 
 export const SendTokenBalance = styled.div`
@@ -922,6 +931,10 @@ export const SendTokenBalance = styled.div`
     font-style: normal;
     font-weight: 600;
     line-height: 25px;
+
+    @media (max-width: 550px) {
+      font-size: 14px;
+    }
   }
 `;
 

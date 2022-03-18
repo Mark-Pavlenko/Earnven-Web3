@@ -24,6 +24,10 @@ export const MainContent = styled.div`
   z-index: 1201;
   border-radius: 10px;
 
+  @media (max-width: 550px) {
+    width: 350px;
+  }
+
   @media (max-width: 768px) {
     //padding: 18px 15px 30px 15px;
   }

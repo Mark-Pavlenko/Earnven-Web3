@@ -646,7 +646,7 @@ export default function MultiSwapComponent() {
           <SwapTokensMainSubBlock
             isLightTheme={isLightTheme}
             isMultiSwap={true}
-            style={{ marginTop: '0', height: 'auto', backgroundColor: 'red' }}>
+            style={{ marginTop: '0', height: 'auto' }}>
             {/*{isTokensToggled}*/}
 
             {/*Choose send tokens block*/}

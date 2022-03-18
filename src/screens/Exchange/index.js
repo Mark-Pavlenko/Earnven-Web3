@@ -1116,8 +1116,6 @@ export default function SwapComponent() {
                                     $ ${
                                       Math.round(object.singleTokenUSDCurrencyAmount * 100000) /
                                       100000
-
-                                      // (object.singleTokenUSDCurrencyAmount * 100000).toString()
                                     } 
                                     `}
                                     </SendTokenConvertedMeasures>
