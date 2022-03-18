@@ -384,8 +384,12 @@ export default function SwapComponent() {
       });
     }
 
-    let filteredTokenDataAmount = tokenData.amount.replace(/[^\d.-]/g, '').replace(/[^\w.]|_/g, '');
-
+    let filteredTokenDataAmount;
+    if (typeof tokenData.amount === 'string') {
+      filteredTokenDataAmount = tokenData.amount.replace(/[^\d.-]/g, '').replace(/[^\w.]|_/g, '');
+    } else {
+      filteredTokenDataAmount = tokenData.amount;
+    }
     try {
       setTokenSendUSDCurrency(
         `$ ${(tokenData.singleTokenUSDCurrencyAmount * filteredTokenDataAmount).toFixed(3)}`
@@ -409,7 +413,12 @@ export default function SwapComponent() {
       });
     }
 
-    let filteredTokenDataAmount = amount.replace(/[^\d.-]/g, '').replace(/[^\w.]|_/g, '');
+    let filteredTokenDataAmount;
+    if (typeof amount === 'string') {
+      filteredTokenDataAmount = amount.replace(/[^\d.-]/g, '').replace(/[^\w.]|_/g, '');
+    } else {
+      filteredTokenDataAmount = amount;
+    }
 
     if (tokenData.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
       await axios

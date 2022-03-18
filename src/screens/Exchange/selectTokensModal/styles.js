@@ -25,7 +25,7 @@ export const MainContent = styled.div`
   border-radius: 10px;
 
   @media (max-width: 768px) {
-    padding: 18px 15px 30px 15px;
+    //padding: 18px 15px 30px 15px;
   }
 
   @media (max-width: 525px) {
