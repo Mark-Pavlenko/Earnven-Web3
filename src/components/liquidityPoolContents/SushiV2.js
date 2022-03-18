@@ -10,14 +10,12 @@ import AmountInput from '../../components/amountInput';
 import Web3 from 'web3';
 import TransparentButton from '../../components/TransparentButton';
 import ERC20ABI from '../../abi/ERC20.json';
-import ROUTERABI from '../../abi/UniRouterV2.json';
 import FACTORYABI from '../../abi/UniFactoryV2.json';
 
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import tokenURIs from '../../screens/Exchange/tokenURIs';
 import Addresses from '../../contractAddresses';
 
 import PropTypes from 'prop-types';
@@ -34,7 +32,6 @@ import {LiquidityPoolsTable} from "./liquidityPoolsTable/liquidityPoolsTable/liq
 import {AddNewGroupButton} from "./uniV2/StyledComponents";
 import {useSelector} from "react-redux";
 import {addLiquidityNormal, addLiquidity} from "../../screens/liquidityPools/helpers";
-import mockTokenImage from '../../assets/icons/ethereum.svg';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
