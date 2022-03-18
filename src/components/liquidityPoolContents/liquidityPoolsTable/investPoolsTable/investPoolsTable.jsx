@@ -26,6 +26,8 @@ export const InvestPoolsTable = ({
 }) => {
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
 
+  // console.log('LP data', data);
+
   return (
     <TableWrapper isLightTheme={theme}>
       <TableItem isLightTheme={theme}>

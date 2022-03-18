@@ -159,7 +159,7 @@ export default function SwapComponent() {
   const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
   const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
 
-  console.log('initSendTokenSwap', initSendTokenSwap);
+  console.log('finalSendTokensList', finalSendTokensList);
 
   const addIconsGasPricesWithIcons = addIconsGasPrices(
     gasPrices,
@@ -591,7 +591,7 @@ export default function SwapComponent() {
 
           let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
           setInitConvertReceiveTokenAmount(
-            `1 ${initSendTokenSwap.symbol} =  ${countedTokenAmount.toFixed(5)} ${
+            `1 ${initSendTokenSwap.symbol} =  ${countedTokenAmount.toFixed(3)} ${
               initReceiveFirstTokenSwap.symbol
             }`
           );
@@ -605,7 +605,7 @@ export default function SwapComponent() {
 
           let countedTokenAmount = +convertedValue[1] / 10 ** tokenDecimal2;
           setInitConvertReceiveTokenAmount(
-            `1 ${initSendTokenSwap.symbol} =  ${countedTokenAmount.toFixed(5)} ${
+            `1 ${initSendTokenSwap.symbol} =  ${countedTokenAmount.toFixed(3)} ${
               initReceiveFirstTokenSwap.symbol
             }`
           );
@@ -1109,6 +1109,8 @@ export default function SwapComponent() {
                                     $ ${
                                       Math.round(object.singleTokenUSDCurrencyAmount * 100000) /
                                       100000
+
+                                      // (object.singleTokenUSDCurrencyAmount * 100000).toString()
                                     } 
                                     `}
                                     </SendTokenConvertedMeasures>
