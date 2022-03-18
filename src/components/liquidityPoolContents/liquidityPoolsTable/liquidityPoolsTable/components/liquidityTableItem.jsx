@@ -75,10 +75,6 @@ export const LiquidityTableItem = ({
 
   const gasPricesWithIcons = addIconsGasPrices(GasPrices, fastDice, middleDice, slowDice, theme);
 
-  // const [modalType, setModalType] = useState('');
-  // //''
-  // //addLiquidity
-  // //slippageTolerance
   const [inValue, setInValue] = useState('');
   const [outValue, setOutValue] = useState('');
   const [selected, setSelected] = useState('');
@@ -90,6 +86,7 @@ export const LiquidityTableItem = ({
   const [addLiquidityNormalTokenA, setAddLiquidityNormalTokenA] = useState('');
   const [addLiquidityNormalTokenB, setAddLiquidityNormalTokenB] = useState('');
   const [tokenAddress, setTokenAddress] = useState('0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+  const [tokenSwapError, setTokenSwapError] = useState(false);
 
   const updatedOptions = SelectOptionsWithJSX(allTokensList);
 
@@ -253,7 +250,6 @@ export const LiquidityTableItem = ({
         const convertedValue = await NewContract.methods
           .getAmountsOut((value * 10 ** tokenDecimal1).toString(), [token1, token2])
           .call();
-
         setAddLiquidityNormalTokenA((value * 10 ** tokenDecimal1).toString());
         setAddLiquidityNormalTokenB(convertedValue[1]);
 
@@ -264,7 +260,6 @@ export const LiquidityTableItem = ({
         const convertedValue = await NewContract.methods
           .getAmountsIn((value * 10 ** tokenDecimal2).toString(), [token1, token2])
           .call();
-
         setAddLiquidityNormalTokenA(convertedValue[0]);
         setAddLiquidityNormalTokenB((value * 10 ** tokenDecimal2).toString());
 
@@ -312,12 +307,18 @@ export const LiquidityTableItem = ({
       ROUTERABI,
       item.protocol === 'Sushiswap' ? Addresses.sushiRouter : Addresses.uniRouter
     );
+
     if (tokenAddress !== token1) {
       const convertedValue1 = await NewContract.methods
         .getAmountsOut((tokenValueHalf * 10 ** tokenDecimal).toString(), [tokenAddress, token1])
-        .call();
-
-      setInValue(+convertedValue1[1] / 10 ** tokenDecimalPair1);
+        .call()
+        .catch((e) => {
+          setTokenSwapError(true);
+          console.log('njhukhuu1', e);
+        });
+      if (convertedValue1?.[1]?.length) {
+        setInValue(+convertedValue1[1] / 10 ** tokenDecimalPair1);
+      }
     } else {
       setInValue(tokenValueHalf.toString());
     }
@@ -325,9 +326,14 @@ export const LiquidityTableItem = ({
     if (tokenAddress !== token2) {
       const convertedValue2 = await NewContract.methods
         .getAmountsOut((tokenValueHalf * 10 ** tokenDecimal).toString(), [tokenAddress, token2])
-        .call();
-
-      setOutValue(+convertedValue2[1] / 10 ** tokenDecimalPair2);
+        .call()
+        .catch((e) => {
+          setTokenSwapError(true);
+          console.log('njhukhuu2', e);
+        });
+      if (convertedValue2?.[1]?.length) {
+        setOutValue(+convertedValue2[1] / 10 ** tokenDecimalPair2);
+      }
     } else {
       setOutValue(tokenValueHalf.toString());
     }
@@ -407,6 +413,7 @@ export const LiquidityTableItem = ({
                 setSingleTokenValue('');
                 setInValue('');
                 setOutValue('');
+                setTokenSwapError(false);
               }}
             />
             <InputBlock>
@@ -416,9 +423,13 @@ export const LiquidityTableItem = ({
                 id="inputBox"
                 type="number"
                 onChange={(e) => {
-                  addLiquidityToPair(item.token0.id, item.token1.id, e.target.value).then(
-                    (res) => res
-                  );
+                  if (e.target.value.length > 0 && e.target.value !== 0) {
+                    addLiquidityToPair(item.token0.id, item.token1.id, e.target.value).catch(
+                      (res) => res
+                    );
+                  } else {
+                    setTokenSwapError(false);
+                  }
                   setSingleTokenValue(e.target.value);
                   setInputType('single');
                 }}
@@ -429,6 +440,9 @@ export const LiquidityTableItem = ({
                   : '0.00'
               }`}</Balance>
             </InputBlock>
+            <div style={{ color: 'red' }}>
+              {tokenSwapError && 'Error: Returned error: execution reverted'}
+            </div>
             {/*<ButtonsBlock>*/}
             {/*  <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>*/}
             {/*</ButtonsBlock>*/}
@@ -507,8 +521,11 @@ export const LiquidityTableItem = ({
             </LinksContainer>
             <ButtonsBlock>
               <SupplyTokenButton
+                disabled={tokenSwapError}
                 isLightTheme={theme}
-                onClick={inputsHandler}>{`Supply tokens`}</SupplyTokenButton>
+                onClick={
+                  !tokenSwapError ? inputsHandler : () => {}
+                }>{`Supply tokens`}</SupplyTokenButton>
             </ButtonsBlock>
           </SelectWrapper>
         </ModalContainer>

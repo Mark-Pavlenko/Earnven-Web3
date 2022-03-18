@@ -77,6 +77,7 @@ export const Balance = styled.div`
 `;
 
 export const SupplyTokenButton = styled.div`
+  opacity: ${(props) => (props.disabled ? '0.3' : '1')};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -94,7 +95,7 @@ export const SupplyTokenButton = styled.div`
   font-size: 14px;
   line-height: 22px;
   color: ${(props) => (props.isLightTheme ? '#4453ad !important' : '#ffffff !important')};
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? 'auto' : 'pointer')};
   margin-bottom: 20px;
   @media (min-width: 175px) and (max-width: 520px) {
     width: 100%;
