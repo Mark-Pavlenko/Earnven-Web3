@@ -10,6 +10,8 @@ import {
 import ethImage from '../../assets/icons/eth.png';
 import CoinGeckoMockTokensList from './CoinGecko.json';
 import uniswapV2ExchangerIcon from '../../assets/icons/exchangers/uniswapV2ExchangerIcon.svg';
+import TOKENDECIMALSABI from '../../abi/TokenDecomals.json';
+import Web3 from 'web3';
 
 const initReceiveMultiSwapTokensList = (state) =>
   state.tokensListReducer.initReceiveMultiSwapTokensList;
@@ -18,9 +20,23 @@ export function* getSendTokensListSagaWatcher() {
   yield takeLatest(actionTypes.SET_SEND_TOKENS_LIST, getSendTokensListSagaWorker);
 }
 
+const loadWeb3 = async () => {
+  if (window.ethereum) {
+    window.web3 = new Web3(window.ethereum);
+    await window.ethereum.enable();
+  } else if (window.web3) {
+    window.web3 = new Web3(window.web3.currentProvider);
+  } else {
+    window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
+  }
+};
+
 function* getSendTokensListSagaWorker(accountAddress) {
+  loadWeb3();
+  const web3 = window.web3;
+
   const addressInfoData = yield call(API.getAddressInfo, accountAddress.payload);
-  console.log('only addressInfoData sagas', addressInfoData.data);
+  console.log('only addressInfoData sagas init data', addressInfoData.data);
 
   const zeroAPISwapTokensList = yield call(API.getZeroAPITokensList);
   // console.log('sagas zeroAPITokensList', zeroAPISwapTokensList);
@@ -48,17 +64,20 @@ function* getSendTokensListSagaWorker(accountAddress) {
     };
     walletTokensList.push(tempObj);
   }
+
   let tokens = addressInfoData.data.tokens;
 
   for (let i = 0; i < tokens.length; i++) {
     const tempObj = {};
+    //----
 
+    //----
     if (tokens[i].tokenInfo.price !== false && tokens[i].balance !== 0) {
       tempObj.address = tokens[i].tokenInfo.address;
       tempObj.name = tokens[i].tokenInfo.name;
       tempObj.symbol = tokens[i].tokenInfo.symbol;
       tempObj.USDCurrency = tokens[i].tokenInfo.price.rate.toFixed(5);
-      tempObj.balance = Number((tokens[i].balance / 10 ** 18).toFixed(5));
+      tempObj.balance = tokens[i].balance;
       tempObj.singleTokenUSDCurrencyAmount = Number(tokens[i].tokenInfo.price.rate);
       tempObj.sendTokensListItem = true;
       if (tokens[i].tokenInfo.image !== undefined) {
@@ -77,9 +96,6 @@ function* getSendTokensListSagaWorker(accountAddress) {
     }
   }
 
-  // console.log('sagas exchange walletTokensList', walletTokensList);
-  // console.log('sagas exchange finalWalletTokensList', finalWalletTokensList);
-
   let filteredZeroBalanceTokensList = [];
   walletTokensList.filter((el) => {
     if (Number(el.balance) !== 0) {
@@ -87,7 +103,34 @@ function* getSendTokensListSagaWorker(accountAddress) {
     }
   });
 
-  // console.log('sagas exchange testArr2', filteredZeroBalanceTokensList);
+  console.log(
+    'only addressInfoData sagas filteredZeroBalanceTokensList',
+    filteredZeroBalanceTokensList
+  );
+
+  // let tokenAddress = filteredZeroBalanceTokensList[3].address;
+  // let tokenBalance = filteredZeroBalanceTokensList[3].balance;
+
+  filteredZeroBalanceTokensList.map((token) => {
+    if (token.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+      new web3.eth.Contract(TOKENDECIMALSABI, token.address).methods
+        .decimals()
+        .call()
+        .then((tokenDecimals) => {
+          // console.log('only addressInfoData sagas tokenDecimal', tokenDecimals);
+          console.log(
+            'only addressInfoData sagas raw correct balance',
+            +token.balance / 10 ** tokenDecimals
+          );
+          console.log(
+            'only addressInfoData sagas formatted correct balance',
+            Number((+token.balance / 10 ** tokenDecimals).toString().slice(0, 7))
+          );
+
+          return tokenDecimals;
+        });
+    }
+  });
 
   yield put(actions.getSendTokensList(filteredZeroBalanceTokensList));
   yield put(actions.setInitSendTokenSwap(filteredZeroBalanceTokensList[0]));
