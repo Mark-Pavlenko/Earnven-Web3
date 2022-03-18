@@ -76,7 +76,8 @@ function* getSendTokensListSagaWorker(accountAddress) {
       tempObj.address = tokens[i].tokenInfo.address;
       tempObj.name = tokens[i].tokenInfo.name;
       tempObj.symbol = tokens[i].tokenInfo.symbol;
-      tempObj.USDCurrency = tokens[i].tokenInfo.price.rate.toFixed(5);
+      // tempObj.USDCurrency = tokens[i].tokenInfo.price.rate.toFixed(5);
+      tempObj.USDCurrency = 0;
       tempObj.balance = tokens[i].balance;
       tempObj.singleTokenUSDCurrencyAmount = Number(tokens[i].tokenInfo.price.rate);
       tempObj.sendTokensListItem = true;
@@ -97,9 +98,33 @@ function* getSendTokensListSagaWorker(accountAddress) {
   }
 
   let filteredZeroBalanceTokensList = [];
-  walletTokensList.filter((el) => {
-    if (Number(el.balance) !== 0) {
-      filteredZeroBalanceTokensList.push(el);
+  walletTokensList.filter((token) => {
+    if (
+      Number(token.balance) !== 0 &&
+      token.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+    ) {
+      new web3.eth.Contract(TOKENDECIMALSABI, token.address).methods
+        .decimals()
+        .call()
+        .then((tokenDecimals) => {
+          // console.log(
+          //   'only addressInfoData sagas raw correct balance',
+          //   +token.balance / 10 ** tokenDecimals
+          // );
+          console.log(
+            'only addressInfoData sagas formatted correct balance',
+            Number((+token.balance / 10 ** tokenDecimals).toString().slice(0, 7))
+          );
+
+          filteredZeroBalanceTokensList.push({
+            ...token,
+            balance: Number((+token.balance / 10 ** tokenDecimals).toString().slice(0, 7)),
+          });
+
+          // return tokenDecimals;
+        });
+    } else if (Number(token.balance) !== 0) {
+      filteredZeroBalanceTokensList.push(token);
     }
   });
 
@@ -108,26 +133,22 @@ function* getSendTokensListSagaWorker(accountAddress) {
     filteredZeroBalanceTokensList
   );
 
-  // let tokenAddress = filteredZeroBalanceTokensList[3].address;
-  // let tokenBalance = filteredZeroBalanceTokensList[3].balance;
-
   filteredZeroBalanceTokensList.map((token) => {
     if (token.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
       new web3.eth.Contract(TOKENDECIMALSABI, token.address).methods
         .decimals()
         .call()
         .then((tokenDecimals) => {
-          // console.log('only addressInfoData sagas tokenDecimal', tokenDecimals);
-          console.log(
-            'only addressInfoData sagas raw correct balance',
-            +token.balance / 10 ** tokenDecimals
-          );
+          // console.log(
+          //   'only addressInfoData sagas raw correct balance',
+          //   +token.balance / 10 ** tokenDecimals
+          // );
           console.log(
             'only addressInfoData sagas formatted correct balance',
             Number((+token.balance / 10 ** tokenDecimals).toString().slice(0, 7))
           );
 
-          return tokenDecimals;
+          // return tokenDecimals;
         });
     }
   });
