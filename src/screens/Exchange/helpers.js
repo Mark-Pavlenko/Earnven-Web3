@@ -1,7 +1,4 @@
 import axios from 'axios';
-import ERC20ABI from '../../abi/ERC20.json';
-import OneClickLiquidity from '../../abi/UniV2PoolsOneClick.json';
-import Addresses from '../../contractAddresses';
 
 export const initFilteringModalTokensList = (
   searchTokensData,
@@ -98,6 +95,75 @@ export const checkIfExchangedTokenLimitIsExceeded = (chosenTokenAmount, totalTok
   }
 };
 
+export const isTokensCanBeToggledMultiSwap = (
+  initSendMultiSwapTokenList,
+  initReceiveMultiSwapTokensList,
+  finalSendTokensList,
+  finalReceiveTokensList
+) => {
+  let availableNumOfSendTokensToSwap = finalReceiveTokensList
+    .map((x) =>
+      initSendMultiSwapTokenList.some((y) => {
+        if (y.address === x.address) return true;
+      })
+    )
+    .filter((value) => value === true).length;
+
+  let availableNumOfReceiveTokensToSwap = finalSendTokensList
+    .map((x) =>
+      initReceiveMultiSwapTokensList.some((y) => {
+        if (y.address === x.address) return true;
+      })
+    )
+    .filter((value) => value === true).length;
+
+  return (
+    availableNumOfSendTokensToSwap === initSendMultiSwapTokenList.length &&
+    availableNumOfReceiveTokensToSwap === initReceiveMultiSwapTokensList.length
+  );
+};
+
+export const checkIfExchangedMultiSwapTokenLimitIsExceeded = (inputTokenData, tokensList) => {
+  console.log('checkIfExchangedMultiSwapTokenLimitIsExceeded inputTokenData', inputTokenData);
+  console.log('checkIfExchangedMultiSwapTokenLimitIsExceeded inputTokenData', tokensList);
+
+  let formattedTokensList = tokensList.map((token) => {
+    if (token.address === inputTokenData.address) {
+      return {
+        ...token,
+        amount: Number(inputTokenData.amount),
+      };
+    }
+    return {
+      ...token,
+    };
+  });
+
+  console.log(
+    'checkIfExchangedMultiSwapTokenLimitIsExceeded formattedTokensList',
+    formattedTokensList
+  );
+
+  // let isLimitNotExceeded = formattedTokensList.every(
+  //   (item) => Number(item.balance) > Number(item.amount) && Number(inputTokenData.amount) !== 0
+  // );
+
+  let flag;
+  formattedTokensList.map((item) => {
+    if (inputTokenData.address === item.address) {
+      console.log('checkIfExchangedMultiSwapTokenLimitIsExceeded item', item);
+      if (item.balance > Number(inputTokenData.amount) && Number(inputTokenData.amount) !== 0) {
+        flag = true;
+      } else {
+        flag = false;
+      }
+    }
+  });
+
+  console.log('checkIfExchangedMultiSwapTokenLimitIsExceeded isLimitNotExceeded', flag);
+  return flag;
+};
+
 //sushiswapV2 single swap exchange function
 export const singleSushiSwapV2 = async (tokensData) => {};
 
@@ -126,7 +192,9 @@ export const getTokenUSDAmount = async (tokenData) => {
     console.log('tokenUSDCurrencyValue.data.price.rate', tokenUSDCurrencyValue.data.price.rate);
 
     if (tokenUSDCurrencyValue.data.price.rate !== undefined) {
-      finalUSDCurrencyValue = tokenUSDCurrencyValue.data.price.rate * parseFloat(tokenData.amount);
+      finalUSDCurrencyValue = (
+        tokenUSDCurrencyValue.data.price.rate * parseFloat(tokenData.amount)
+      ).toFixed(3);
     } else {
       finalUSDCurrencyValue = -1;
     }
@@ -137,7 +205,7 @@ export const getTokenUSDAmount = async (tokenData) => {
     finalUSDCurrencyValue = ethDollarValue.data.ethereum.usd * parseFloat(tokenData.amount);
   }
 
-  finalUSDCurrencyValue = Math.round(finalUSDCurrencyValue * 100) / 100;
+  // finalUSDCurrencyValue = Math.round(finalUSDCurrencyValue * 100) / 100;
 
   // console.log('total helper finalUSDCurrencyValue', finalUSDCurrencyValue);
   return {

@@ -12,6 +12,7 @@ export const ExchangeMainLayout = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    grid-template-columns: 100%;
   }
 `;
 
@@ -24,8 +25,13 @@ export const SwapFirstColumn = styled.div`
   width: 525px;
   height: 585px;
 
-  @media (max-width: 540px) {
-    width: 375px;
+  @media (max-width: 1200px) {
+    display: flex;
+    justify-content: center;
+  }
+
+  @media (max-width: 550px) {
+    width: auto;
   }
 `;
 
@@ -48,25 +54,34 @@ export const ColumnMainTitles = styled.p`
 `;
 
 export const FirstColumnTitleHeaderBlock = styled.div`
-  @media (max-width: 540px) {
-    padding-left: 15px;
+  @media (max-width: 550px) {
+    padding-left: 9px;
   }
+`;
+
+export const MultiSwapLayout = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
 export const SwapTokensMainSubBlock = styled.div`
   width: 525px;
   height: 515px;
+  padding: ${(props) => props.isMultiSwap === false && '32px 15px 27px 15px'};
   margin-top: 20px;
-
   background: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#1F265C3D')};
   mix-blend-mode: normal;
   box-shadow: 2px 2px 4px 0 #ffffff1a inset;
   backdrop-filter: blur(35px);
   border-radius: 10px;
 
-  @media (max-width: 540px) {
-    width: 375px;
-    padding: 37px 15px 27px 15px;
+  @media (max-width: 550px) {
+    width: ${(props) => props.isMultiSwap === false && 'auto'};
+    // padding: ${(props) => props.isMultiSwap === false && '32px 15px 27px 15px'};
+  }
+
+  @media (min-width: 541px) and(max-width: 1199px) {
+    padding: 32px 27px 16px 20px;
   }
 `;
 
@@ -126,26 +141,32 @@ export const SendTokensChooseButton = styled.div`
     cursor: pointer;
   }
 
-  @media (max-width: 540px) {
+  @media (max-width: 550px) {
     width: 345px;
   }
 `;
 
 export const ExceededAmountTokensLimitWarning = styled.span`
   margin-left: auto;
-  margin-top: 5px;
-  margin-right: 3px;
+  margin-top: 10px;
+  margin-right: -20px;
   font-size: 12px;
   color: #ec3d3d;
+`;
+
+export const MultiSwapSendTokensChooseBlockLayout = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
 export const MultiSwapSendTokensChooseBlock = styled.div`
   display: flex;
   flex-direction: column;
-  //align-items: center;
+  justify-content: center;
   width: 475px;
   height: 60px;
-  margin: 7px 27px 16px 20px;
+  margin-bottom: 16px;
+  //margin: 0px 27px 16px 20px;
   padding: 6px 20px 7px 12px;
   color: black;
   background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
@@ -160,16 +181,17 @@ export const MultiSwapSendTokensChooseBlock = styled.div`
     cursor: pointer;
   }
 
-  @media (max-width: 540px) {
+  @media (max-width: 550px) {
     width: 345px;
   }
 `;
 
 export const SubLayoutReceiveTokensBlock = styled.div`
   //overflow: auto;
+
   height: auto;
   //background-color: blue;
-  padding-left: 20px;
+  //padding-left: 20px;
   //margin: 0 27px 16px 20px;
   //padding-top: 5px;
   //overflow-x: hidden;
@@ -180,7 +202,6 @@ export const MultiSwapReceiveTokensBlock = styled.div`
   flex-direction: column;
   width: 475px;
   height: 115px;
-  margin-top: -3px;
   margin-bottom: 20px;
   color: black;
   background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
@@ -195,7 +216,7 @@ export const MultiSwapReceiveTokensBlock = styled.div`
     cursor: pointer;
   }
 
-  @media (max-width: 540px) {
+  @media (max-width: 550px) {
     width: 345px;
   }
 `;
@@ -287,7 +308,7 @@ export const SwitchTokensBtn = styled.img`
   margin: 0 auto;
   cursor: pointer;
 
-  @media (max-width: 540px) {
+  @media (max-width: 550px) {
     margin-bottom: -10px;
   }
 `;
@@ -322,7 +343,7 @@ export const ColumnMainSubTitles = styled.p`
   line-height: 22px;
   letter-spacing: 0;
 
-  @media (max-width: 540px) {
+  @media (max-width: 550px) {
     margin-top: 20px;
   }
 `;
@@ -402,6 +423,10 @@ export const SingleSwapTokensOfferedBySubBlock = styled.div`
       : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
   backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
   border-radius: 10px;
+
+  @media (max-width: 550px) {
+    width: auto;
+  }
 `;
 
 export const SwapTokensOfferedBySubBlock = styled.div`
@@ -414,6 +439,10 @@ export const SwapTokensOfferedBySubBlock = styled.div`
       : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
   backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
   border-radius: 10px;
+
+  @media (max-width: 550px) {
+    width: auto;
+  }
 `;
 
 export const ExchangersMainSubLayout = styled.div``;
@@ -523,7 +552,7 @@ export const SaveSelectedExchangerButton = styled(Button)`
     background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
   }
 
-  @media (max-width: 540px) {
+  @media (max-width: 550px) {
     width: 345px;
   }
 `;
@@ -627,7 +656,7 @@ export const SwapBlockExchangeLayout = styled.div`
       background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
     }
 
-    @media (max-width: 540px) {
+    @media (max-width: 550px) {
       width: 345px;
     }
   }
@@ -649,7 +678,7 @@ export const AdvancedSettingsButton = styled(Button)`
     background-color: ${(props) => (props.isLightTheme ? '#FFFFFF' : '#8F86FF')};
   }
 
-  @media (max-width: 540px) {
+  @media (max-width: 550px) {
     width: 345px;
   }
 `;
@@ -708,11 +737,13 @@ export const SwapSecondColumn = styled.div`
   width: 540px;
   height: 585px;
   @media (max-width: 1200px) {
+    display: flex;
+    justify-content: center;
     margin-top: 40px;
   }
 
-  @media (max-width: 540px) {
-    width: 375px;
+  @media (max-width: 550px) {
+    width: auto;
   }
 `;
 
@@ -720,7 +751,7 @@ export const SecondColumnSwapSubBlock = styled.div`
   width: 540px;
   height: 585px;
   //background-color: gray;
-  @media (max-width: 540px) {
+  @media (max-width: 550px) {
     width: 375px;
   }
 `;
@@ -730,7 +761,7 @@ export const SecondColumnTitleBlock = styled.div`
   //background-color: violet;
   @media (max-width: 1200px) {
     width: 340px;
-    padding-left: 15px;
+    padding-left: 10px;
     margin-bottom: 20px;
   }
 `;
@@ -752,12 +783,11 @@ export const TokensModalSubLayout = styled.div`
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
   mix-blend-mode: normal;
   border-radius: 10px;
-`;
 
-// background-color: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#4453AD1A')};
-// background: ${(props) =>
-//     props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)'};
-// backdrop-filter: blur(35px);
+  @media (max-width: 550px) {
+    width: 375px;
+  }
+`;
 
 export const SearchTokensModalTextField = styled(TextField)`
   display: flex;
@@ -774,6 +804,10 @@ export const SearchTokensModalTextField = styled(TextField)`
   mix-blend-mode: normal;
   backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
   border-radius: 10px;
+
+  @media (max-width: 550px) {
+    width: 335px;
+  }
 `;
 
 export const SendTokensModalList = styled(List)`
@@ -819,11 +853,13 @@ export const SendTokenModalListItem = styled(ListItem)`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  //background-color: blue;
   padding: 0 !important;
   margin-bottom: 10px;
   width: 445px;
-  //height: 57px;
+
+  @media (max-width: 550px) {
+    width: 350px;
+  }
 
   :hover {
     cursor: pointer;
@@ -879,6 +915,10 @@ export const SendTokenConvertedMeasures = styled.span`
   letter-spacing: 0;
   text-align: center;
   margin-right: auto;
+
+  @media (max-width: 550px) {
+    font-size: 12px;
+  }
 `;
 
 export const SendTokenBalance = styled.div`
@@ -891,6 +931,10 @@ export const SendTokenBalance = styled.div`
     font-style: normal;
     font-weight: 600;
     line-height: 25px;
+
+    @media (max-width: 550px) {
+      font-size: 14px;
+    }
   }
 `;
 

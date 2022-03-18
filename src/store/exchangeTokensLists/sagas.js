@@ -10,6 +10,8 @@ import {
 import ethImage from '../../assets/icons/eth.png';
 import CoinGeckoMockTokensList from './CoinGecko.json';
 import uniswapV2ExchangerIcon from '../../assets/icons/exchangers/uniswapV2ExchangerIcon.svg';
+import TOKENDECIMALSABI from '../../abi/TokenDecomals.json';
+import Web3 from 'web3';
 
 const initReceiveMultiSwapTokensList = (state) =>
   state.tokensListReducer.initReceiveMultiSwapTokensList;
@@ -18,9 +20,23 @@ export function* getSendTokensListSagaWatcher() {
   yield takeLatest(actionTypes.SET_SEND_TOKENS_LIST, getSendTokensListSagaWorker);
 }
 
+const loadWeb3 = async () => {
+  if (window.ethereum) {
+    window.web3 = new Web3(window.ethereum);
+    await window.ethereum.enable();
+  } else if (window.web3) {
+    window.web3 = new Web3(window.web3.currentProvider);
+  } else {
+    window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
+  }
+};
+
 function* getSendTokensListSagaWorker(accountAddress) {
+  loadWeb3();
+  const web3 = window.web3;
+
   const addressInfoData = yield call(API.getAddressInfo, accountAddress.payload);
-  console.log('only addressInfoData sagas', addressInfoData.data);
+  console.log('only addressInfoData sagas init data', addressInfoData.data);
 
   const zeroAPISwapTokensList = yield call(API.getZeroAPITokensList);
   // console.log('sagas zeroAPITokensList', zeroAPISwapTokensList);
@@ -37,6 +53,7 @@ function* getSendTokensListSagaWorker(accountAddress) {
     tempObj.USDCurrency = 0;
     tempObj.singleTokenUSDCurrencyAmount = Number(addressInfoData.data.ETH.price.rate);
     tempObj.sendTokensListItem = true;
+    // tempObj.isExchangeIsAllowed = false;
     //mock exchanger
     tempObj.chosenExchanger = {
       name: 'Uniswap_V2',
@@ -47,20 +64,21 @@ function* getSendTokensListSagaWorker(accountAddress) {
     };
     walletTokensList.push(tempObj);
   }
+
   let tokens = addressInfoData.data.tokens;
 
   for (let i = 0; i < tokens.length; i++) {
     const tempObj = {};
+    //----
 
+    //----
     if (tokens[i].tokenInfo.price !== false && tokens[i].balance !== 0) {
       tempObj.address = tokens[i].tokenInfo.address;
       tempObj.name = tokens[i].tokenInfo.name;
       tempObj.symbol = tokens[i].tokenInfo.symbol;
-      // tempObj.USDCurrency = Math.round(tokens[i].tokenInfo.price.rate * 100) / 100;
+      // tempObj.USDCurrency = tokens[i].tokenInfo.price.rate.toFixed(5);
       tempObj.USDCurrency = 0;
-      tempObj.balance = parseFloat(
-        (tokens[i].balance * Math.pow(10, -parseInt(tokens[i].tokenInfo.decimals))).toFixed(5)
-      );
+      tempObj.balance = tokens[i].balance;
       tempObj.singleTokenUSDCurrencyAmount = Number(tokens[i].tokenInfo.price.rate);
       tempObj.sendTokensListItem = true;
       if (tokens[i].tokenInfo.image !== undefined) {
@@ -68,7 +86,6 @@ function* getSendTokensListSagaWorker(accountAddress) {
       } else {
         tempObj.logoURI = null;
       }
-      //mock exchanger
       tempObj.chosenExchanger = {
         name: 'Uniswap_V2',
         routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
@@ -80,11 +97,53 @@ function* getSendTokensListSagaWorker(accountAddress) {
     }
   }
 
-  console.log('sagas exchange walletTokensList', walletTokensList);
-  // console.log('sagas exchange finalWalletTokensList', finalWalletTokensList);
+  let filteredZeroBalanceTokensList = [];
+  walletTokensList.filter((token) => {
+    if (
+      Number(token.balance) !== 0 &&
+      token.address !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+    ) {
+      new web3.eth.Contract(TOKENDECIMALSABI, token.address).methods
+        .decimals()
+        .call()
+        .then((tokenDecimals) => {
+          let formattedTokenBalanceValue = (+token.balance / 10 ** tokenDecimals).toString();
 
-  yield put(actions.getSendTokensList(walletTokensList));
-  yield put(actions.setInitSendTokenSwap(walletTokensList[0]));
+          if (formattedTokenBalanceValue.includes('e')) {
+            // console.log('only addressInfoData sagas pop split', {
+            //   address: token.address,
+            //   decimals:
+            //     formattedTokenBalanceValue.split('e')[0].slice(0, 7) +
+            //     'e' +
+            //     formattedTokenBalanceValue.split('e')[1],
+            // });
+
+            filteredZeroBalanceTokensList.push({
+              ...token,
+              balance:
+                formattedTokenBalanceValue.split('e')[0].slice(0, 7) +
+                'e' +
+                formattedTokenBalanceValue.split('e')[1],
+            });
+          } else {
+            filteredZeroBalanceTokensList.push({
+              ...token,
+              balance: Number(formattedTokenBalanceValue.slice(0, 7)),
+            });
+          }
+        });
+    } else if (Number(token.balance) !== 0) {
+      filteredZeroBalanceTokensList.push(token);
+    }
+  });
+
+  console.log(
+    'only addressInfoData sagas filteredZeroBalanceTokensList',
+    filteredZeroBalanceTokensList
+  );
+
+  yield put(actions.getSendTokensList(filteredZeroBalanceTokensList));
+  yield put(actions.setInitSendTokenSwap(filteredZeroBalanceTokensList[0]));
   yield put(
     actions.setInitSendTokenMultiSwap([
       { ...walletTokensList[0], amount: 0 },
@@ -132,6 +191,8 @@ function* getReceiveTokensListSagaWorker() {
       : null,
     USDCurrency: 0,
     amount: 0,
+    isExchangeIsAllowed: false,
+    //mock exchanger
     chosenExchanger: {
       name: 'Uniswap_V2',
       routerAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
