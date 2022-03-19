@@ -21,7 +21,6 @@ export const LiquidityPoolsTable = ({
   protocolType,
 }) => {
   const theme = useSelector((state) => state.themeReducer.isLightTheme);
-
   return (
     <TableWrapper isLightTheme={theme}>
       <TableItem isLightTheme={theme}>

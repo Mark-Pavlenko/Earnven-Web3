@@ -72,7 +72,6 @@ export const LiquidityTableItem = ({
   const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
   const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
   const allTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
-
   const gasPricesWithIcons = addIconsGasPrices(GasPrices, fastDice, middleDice, slowDice, theme);
 
   const [inValue, setInValue] = useState('');
@@ -245,10 +244,15 @@ export const LiquidityTableItem = ({
       //UNISWAP V2 contract address
       item.protocol === 'Sushiswap' ? Addresses.sushiRouter : Addresses.uniRouter
     );
+
     if (!isNaN(value)) {
       if (inputId === 'firstInput') {
+        let valueWithDecimal = `${BigInt(value * 10 ** tokenDecimal1)}`;
+        if (valueWithDecimal.length > 21) {
+          valueWithDecimal = valueWithDecimal.slice(0, 21);
+        }
         const convertedValue = await NewContract.methods
-          .getAmountsOut((value * 10 ** tokenDecimal1).toString(), [token1, token2])
+          .getAmountsOut(valueWithDecimal, [token1, token2])
           .call();
         setAddLiquidityNormalTokenA((value * 10 ** tokenDecimal1).toString());
         setAddLiquidityNormalTokenB(convertedValue[1]);
@@ -257,9 +261,14 @@ export const LiquidityTableItem = ({
         setInValue(value);
       }
       if (inputId === 'secondInput') {
+        let valueWithDecimal = `${BigInt(value * 10 ** tokenDecimal2)}`;
+        if (valueWithDecimal.length > 21) {
+          valueWithDecimal = valueWithDecimal.slice(0, 21);
+        }
         const convertedValue = await NewContract.methods
-          .getAmountsIn((value * 10 ** tokenDecimal2).toString(), [token1, token2])
+          .getAmountsIn(valueWithDecimal, [token1, token2])
           .call();
+
         setAddLiquidityNormalTokenA(convertedValue[0]);
         setAddLiquidityNormalTokenB((value * 10 ** tokenDecimal2).toString());
 
