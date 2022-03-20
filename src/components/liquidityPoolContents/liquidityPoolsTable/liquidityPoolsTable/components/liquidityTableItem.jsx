@@ -222,6 +222,43 @@ export const LiquidityTableItem = ({
     }
   }
 
+  const exponentialToDecimal = (exponential) => {
+    let decimal = exponential.toString().toLowerCase();
+    if (decimal.includes('e+')) {
+      const exponentialSplitted = decimal.split('e+');
+      let postfix = '';
+      for (
+        let i = 0;
+        i <
+        +exponentialSplitted[1] -
+          (exponentialSplitted[0].includes('.') ? exponentialSplitted[0].split('.')[1].length : 0);
+        i++
+      ) {
+        postfix += '0';
+      }
+      const addCommas = (text) => {
+        let j = 3;
+        let textLength = text.length;
+        while (j < textLength) {
+          text = `${text.slice(0, textLength - j)},${text.slice(textLength - j, textLength)}`;
+          textLength++;
+          j += 3 + 1;
+        }
+        return text;
+      };
+      decimal = addCommas(exponentialSplitted[0].replace('.', '') + postfix);
+    }
+    if (decimal.toLowerCase().includes('e-')) {
+      const exponentialSplitted = decimal.split('e-');
+      let prefix = '0.';
+      for (let i = 0; i < +exponentialSplitted[1] - 1; i++) {
+        prefix += '0';
+      }
+      decimal = prefix + exponentialSplitted[0].replace('.', '');
+    }
+    return decimal;
+  };
+
   const convertTokenPrice = async (inputId, value, token1, token2) => {
     await loadWeb3();
     const web3 = window.web3;
@@ -245,34 +282,37 @@ export const LiquidityTableItem = ({
       item.protocol === 'Sushiswap' ? Addresses.sushiRouter : Addresses.uniRouter
     );
 
-    if (!isNaN(value)) {
+    if (!isNaN(Number(value)) && value !== '') {
       if (inputId === 'firstInput') {
-        let valueWithDecimal = `${BigInt(value * 10 ** tokenDecimal1)}`;
-        if (valueWithDecimal.length > 21) {
-          valueWithDecimal = valueWithDecimal.slice(0, 21);
+        let valueWithDecimal = value;
+        for (let i = 0; i < tokenDecimal1; i++) {
+          valueWithDecimal += 0;
         }
         const convertedValue = await NewContract.methods
           .getAmountsOut(valueWithDecimal, [token1, token2])
-          .call();
+          .call()
+          .catch(() => {});
+        console.log('convertedValue1', convertedValue);
         setAddLiquidityNormalTokenA((value * 10 ** tokenDecimal1).toString());
         setAddLiquidityNormalTokenB(convertedValue[1]);
 
-        setOutValue(+convertedValue[1] / 10 ** tokenDecimal2);
+        setOutValue((+convertedValue[1]).toFixed(20) / 10 ** tokenDecimal2);
         setInValue(value);
       }
       if (inputId === 'secondInput') {
-        let valueWithDecimal = `${BigInt(value * 10 ** tokenDecimal2)}`;
-        if (valueWithDecimal.length > 21) {
-          valueWithDecimal = valueWithDecimal.slice(0, 21);
+        let valueWithDecimal = value;
+        for (let i = 0; i < tokenDecimal2; i++) {
+          valueWithDecimal += 0;
         }
         const convertedValue = await NewContract.methods
           .getAmountsIn(valueWithDecimal, [token1, token2])
-          .call();
-
+          .call()
+          .catch(() => {});
+        console.log('convertedValue2', convertedValue);
         setAddLiquidityNormalTokenA(convertedValue[0]);
         setAddLiquidityNormalTokenB((value * 10 ** tokenDecimal2).toString());
 
-        setInValue(+convertedValue[0] / 10 ** tokenDecimal1);
+        setInValue((+convertedValue[0]).toFixed(20) / 10 ** tokenDecimal1);
         setOutValue(value);
       }
     } else {
@@ -280,7 +320,9 @@ export const LiquidityTableItem = ({
       setOutValue('');
     }
   };
+  //==================>
 
+  //==================>
   const supplyTokenHandler = (value) => {
     setTokenAddress(value.address);
   };
@@ -471,12 +513,7 @@ export const LiquidityTableItem = ({
                 value={inValue}
                 isLightTheme={theme}
                 onChange={(e) => {
-                  convertTokenPrice(
-                    'firstInput',
-                    parseInt(e.target.value),
-                    item.token0.id,
-                    item.token1.id
-                  );
+                  convertTokenPrice('firstInput', e.target.value, item.token0.id, item.token1.id);
                   setInputType('pair');
                 }}
                 type="number"
@@ -501,12 +538,7 @@ export const LiquidityTableItem = ({
                 value={outValue}
                 isLightTheme={theme}
                 onChange={(e) => {
-                  convertTokenPrice(
-                    'secondInput',
-                    parseInt(e.target.value),
-                    item.token0.id,
-                    item.token1.id
-                  );
+                  convertTokenPrice('secondInput', e.target.value, item.token0.id, item.token1.id);
                   setInputType('pair');
                 }}
                 type="number"
