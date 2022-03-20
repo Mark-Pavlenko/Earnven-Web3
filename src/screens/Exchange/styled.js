@@ -417,8 +417,8 @@ export const AdditionalOptionsSwapTokensSubBlock = styled.div`
 `;
 
 export const SingleSwapTokensOfferedBySubBlock = styled.div`
-  width: ${(props) => (props.mobilePopover ? '375px' : '525px')};
-  height: 490px;
+  width: ${(props) => (props.mobilePopover ? '100%' : '525px')};
+  height: 515px;
   background-color: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#4453AD1A')};
   box-shadow: ${(props) =>
     props.isLightTheme
@@ -427,9 +427,9 @@ export const SingleSwapTokensOfferedBySubBlock = styled.div`
   backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
   border-radius: 10px;
 
-  @media (max-width: 550px) {
-    width: auto;
-  }
+  //@media (max-width: 550px) {
+  //  width: auto;
+  //}
 `;
 
 export const SwapTokensOfferedBySubBlock = styled.div`
@@ -585,7 +585,8 @@ export const ExchangerMainList = styled(List)`
   flex-direction: column;
   align-items: center;
   width: ${(props) => (props.mobilePopover ? '345px' : '488px')};
-  margin-left: 16px;
+  margin-left: ${(props) => (props.mobilePopover ? '0px' : '16px')};
+
   padding: 0;
   margin-top: 15px;
   //background: green;

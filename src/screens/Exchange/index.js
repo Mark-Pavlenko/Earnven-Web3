@@ -1407,19 +1407,20 @@ export default function SwapComponent() {
                       }}
                       transformOrigin={{
                         vertical: mobilePopover ? 'bottom' : 'center',
-                        horizontal: mobilePopover ? 'center' : 'right',
+                        horizontal: mobilePopover ? 'right' : 'right',
                       }}
                       PaperProps={{
                         sx: {
-                          marginTop: !mobilePopover && '-103px',
-                          marginLeft: !mobilePopover && '27px',
-                          width: mobilePopover ? '375px' : '525px',
-                          height: '490px',
+                          marginTop: !mobilePopover && '-90px',
+                          marginLeft: !mobilePopover && '15px',
+                          width: mobilePopover ? '100%' : '525px',
+                          height: '515px',
                           backgroundColor: isLightTheme ? '#FFFFFF29' : '#4453AD1A',
                           boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
                           backdropFilter: 'blur(35px)',
                           mixBlendMode: 'normal',
                           borderRadius: '10px',
+                          left: '0px',
                         },
                       }}>
                       {isOfferedByPopoverActivated ? (
