@@ -1241,12 +1241,7 @@ export default function SwapComponent() {
                     <OutsideClickHandler
                       onOutsideClick={() => {
                         setIsReceiveTokensModalVisible(false);
-                        setFilteredReceiveTokensListData(
-                          // finalReceiveTokensList.filter(
-                          //   (token) => token.symbol !== receiveTokenForExchange.symbol
-                          // )
-                          finalReceiveTokensList
-                        );
+                        setFilteredReceiveTokensListData(finalReceiveTokensList);
                       }}>
                       <TokensModalSubLayout isLightTheme={isLightTheme}>
                         <Header>
@@ -1254,12 +1249,7 @@ export default function SwapComponent() {
                           <CloseButton
                             onClick={() => {
                               setIsReceiveTokensModalVisible(false);
-                              setFilteredReceiveTokensListData(
-                                finalReceiveTokensList
-                                // finalReceiveTokensList.filter(
-                                //   (token) => token.symbol !== receiveTokenForExchange.symbol
-                                // )
-                              );
+                              setFilteredReceiveTokensListData(finalReceiveTokensList);
                             }}
                             isLightTheme={isLightTheme}>
                             <img

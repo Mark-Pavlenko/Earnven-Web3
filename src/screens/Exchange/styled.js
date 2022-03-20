@@ -51,11 +51,15 @@ export const ColumnMainTitles = styled.p`
   font-weight: 600;
   line-height: 31px;
   letter-spacing: 0;
+
+  @media (max-width: 550px) {
+    font-size: 26px;
+  }
 `;
 
 export const FirstColumnTitleHeaderBlock = styled.div`
   @media (max-width: 550px) {
-    padding-left: 9px;
+    padding-left: 15px;
   }
 `;
 
@@ -76,8 +80,8 @@ export const SwapTokensMainSubBlock = styled.div`
   border-radius: 10px;
 
   @media (max-width: 550px) {
-    width: ${(props) => props.isMultiSwap === false && '100vw'};
-    // padding: ${(props) => props.isMultiSwap === false && '32px 15px 27px 15px'};
+    width: ${(props) => props.isMultiSwap === false && '99vw'};
+    height: 505px;
   }
 
   @media (min-width: 541px) and(max-width: 1199px) {
@@ -182,12 +186,20 @@ export const MultiSwapSendTokensChooseBlock = styled.div`
   }
 
   @media (max-width: 550px) {
-    width: 345px;
+    width: 100%;
+    margin: 0 15px 0 15px;
   }
 `;
 
 export const SubLayoutReceiveTokensBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   height: auto;
+
+  @media (max-width: 550px) {
+    width: 100%;
+  }
 `;
 
 export const MultiSwapReceiveTokensBlock = styled.div`
@@ -210,7 +222,9 @@ export const MultiSwapReceiveTokensBlock = styled.div`
   }
 
   @media (max-width: 550px) {
-    width: 345px;
+    width: 92%;
+    margin: 0 auto;
+    margin-bottom: 20px;
   }
 `;
 
@@ -651,6 +665,7 @@ export const SwapBlockExchangeLayout = styled.div`
 
     @media (max-width: 550px) {
       width: 345px;
+      margin-top: 20px;
     }
   }
 `;
@@ -727,7 +742,7 @@ export const FloatPercentChooseToleranceBtn = styled(Button)`
 `;
 
 export const SwapSecondColumn = styled.div`
-  width: 540px;
+  width: 550px;
   height: 585px;
   @media (max-width: 1200px) {
     display: flex;
@@ -741,22 +756,27 @@ export const SwapSecondColumn = styled.div`
 `;
 
 export const SecondColumnSwapSubBlock = styled.div`
-  width: 540px;
+  width: 550px;
   height: 585px;
   //background-color: gray;
   @media (max-width: 550px) {
-    width: 375px;
+    width: 99vw;
+    margin-top: 15px;
   }
 `;
 
 export const SecondColumnTitleBlock = styled.div`
   ${ColumnsTitleBlocks};
-  //background-color: violet;
-  @media (max-width: 1200px) {
+
+  @media (max-width: 550px) {
     width: 340px;
-    padding-left: 10px;
     margin-bottom: 20px;
   }
+
+  //@media (max-width: 1200px) {
+  padding-left: 10px;
+
+  //}
 `;
 
 export const SecondColumnTitleHeaderBlock = styled.div`
