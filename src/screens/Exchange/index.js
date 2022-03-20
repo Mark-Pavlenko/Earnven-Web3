@@ -1,11 +1,8 @@
 /* eslint-disable */
 import React, { useEffect, useRef, useState } from 'react';
 import './exchange.css';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import { useMediaQuery } from '@material-ui/core';
 import axios from 'axios';
-import NumberFormat from 'react-number-format';
-import TransparentButton from '../../components/TransparentButton';
 import Web3 from 'web3';
 import ERC20ABI from '../../abi/ERC20.json';
 import closeModalIcon from '../../assets/icons/close_nft.svg';
@@ -84,6 +81,8 @@ import {
   FloatPercentChooseToleranceBtn,
   SlippageToleranceBtnsLayout,
   SendTokenImgExchanger,
+  ReceiveTokenModalListItem,
+  ReceiveSendTokenLabelsBlock,
 } from './styled';
 import { useDispatch, useSelector } from 'react-redux';
 import chevronDownBlack from '../../assets/icons/chevronDownLightTheme.svg';
@@ -143,6 +142,8 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function SwapComponent() {
+  const matches = useMediaQuery('(min-width: 551px)');
+
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
   const dispatch = useDispatch();
@@ -1096,7 +1097,7 @@ export default function SwapComponent() {
                                   ) : (
                                     <Avatar
                                       style={{
-                                        marginLeft: '12px',
+                                        marginLeft: matches && '12px',
                                         marginRight: '12px',
                                         marginTop: '2px',
                                       }}
@@ -1303,7 +1304,7 @@ export default function SwapComponent() {
                         {filteredReceiveTokensListData.length !== 0 ? (
                           <SendTokensModalList isLightTheme={isLightTheme}>
                             {filteredReceiveTokensListData.map((object) => (
-                              <SendTokenModalListItem
+                              <ReceiveTokenModalListItem
                                 key={object.symbol}
                                 onClick={() => {
                                   setFilteredReceiveTokensListData(finalReceiveTokensList);
@@ -1321,13 +1322,13 @@ export default function SwapComponent() {
                                   });
                                 }}
                                 isLightTheme={isLightTheme}>
-                                <SendTokenLabelsBlock>
+                                <ReceiveSendTokenLabelsBlock>
                                   {object.logoURI !== null ? (
                                     <SendTokenImgExchanger alt="token_img" src={object.logoURI} />
                                   ) : (
                                     <Avatar
                                       style={{
-                                        marginLeft: '12px',
+                                        marginLeft: matches && '12px',
                                         marginRight: '12px',
                                         marginTop: '2px',
                                       }}
@@ -1341,21 +1342,9 @@ export default function SwapComponent() {
                                     <SendTokenName isLightTheme={isLightTheme}>
                                       {object.name}
                                     </SendTokenName>
-                                    <SendTokenConvertedMeasures
-                                      isLightTheme={isLightTheme}
-                                      style={{ visibility: 'hidden' }}>
-                                      409,333 UNI · $19,18
-                                    </SendTokenConvertedMeasures>
                                   </div>
-                                </SendTokenLabelsBlock>
-                                {/*<SendTokenBalance isLightTheme={isLightTheme}>*/}
-                                {/*  {object.balance === undefined ? (*/}
-                                {/*    <Loader type="Rings" color="#BB86FC" height={30} width={30} />*/}
-                                {/*  ) : (*/}
-                                {/*    <span>${object.balance}</span>*/}
-                                {/*  )}*/}
-                                {/*</SendTokenBalance>*/}
-                              </SendTokenModalListItem>
+                                </ReceiveSendTokenLabelsBlock>
+                              </ReceiveTokenModalListItem>
                             ))}
                           </SendTokensModalList>
                         ) : (

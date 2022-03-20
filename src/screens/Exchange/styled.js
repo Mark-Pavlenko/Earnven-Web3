@@ -119,17 +119,11 @@ export const MultiSwapSendValueLabel = styled.span`
   opacity: ${(props) => (props.isLightTheme ? 0.5 : 0.8)};
 `;
 
-export const MultiSwapTokenAvatar = styled(Avatar)`
-  margin-right: 12px;
-  margin-left: 12px;
-  margin-top: 2px;
-`;
-
 export const SendTokensChooseButton = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  width: 475px;
+  //width: 475px;
   height: 60px;
   margin-top: 5px;
   color: black;
@@ -170,7 +164,7 @@ export const MultiSwapSendTokensChooseBlock = styled.div`
   width: 475px;
   height: 60px;
   margin-bottom: 16px;
-  //margin: 0px 27px 16px 20px;
+
   padding: 6px 20px 7px 12px;
   color: black;
   background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
@@ -873,8 +867,37 @@ export const SendTokenModalListItem = styled(ListItem)`
   align-items: center;
   justify-content: space-between;
   padding: 0 !important;
+  //margin-left: 15px;
   margin-bottom: 10px;
   width: 445px;
+  height: 55px;
+
+  @media (max-width: 550px) {
+    width: 370px;
+  }
+
+  :hover {
+    cursor: pointer;
+    background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D !important')};
+    border-radius: 10px;
+    box-shadow: ${(props) =>
+      props.isLightTheme
+        ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+        : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+    mix-blend-mode: ${(props) => (props.isLightTheme ? 'none' : 'normal')};
+    backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
+  }
+`;
+
+export const ReceiveTokenModalListItem = styled(ListItem)`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 !important;
+  //margin-left: 10px;
+  margin-bottom: 10px;
+  width: 445px;
+  height: 40px;
 
   @media (max-width: 550px) {
     width: 360px;
@@ -890,7 +913,6 @@ export const SendTokenModalListItem = styled(ListItem)`
         : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
     mix-blend-mode: ${(props) => (props.isLightTheme ? 'none' : 'normal')};
     backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
-    //width: 445px;
   }
 `;
 
@@ -919,7 +941,20 @@ export const SendTokenImgExchanger = styled.img`
 export const SendTokenLabelsBlock = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-left: 10px;
+  //margin-left: 10px;
+
+  img {
+    margin-top: 3px;
+  }
+`;
+
+export const ReceiveSendTokenLabelsBlock = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  @media (max-width: 550px) {
+    margin-left: 10px;
+  }
 
   img {
     margin-top: 3px;
@@ -927,7 +962,6 @@ export const SendTokenLabelsBlock = styled.div`
 `;
 
 export const SendTokenName = styled.span`
-  max-width: 200px;
   color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#FFFFFF')};
   font-family: 'Saira', sans-serif;
   font-size: 16px;

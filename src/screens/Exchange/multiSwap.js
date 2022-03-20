@@ -30,7 +30,6 @@ import {
   MultiSwapSendTokensChooseBlockLayout,
   MultiSwapSendValueLabel,
   MultiSwapSendValueLabelsLayout,
-  MultiSwapTokenAvatar,
   NewMultiSwapButton,
   OfferedByLayoutLabelBlock,
   SaveSelectedExchangerButton,
@@ -1366,6 +1365,9 @@ export default function MultiSwapComponent() {
                         />
 
                         {tokensListModal.length !== 0 ? (
+                          // isSendTokenSelectedSwapped
+                          //ReceiveTokenModalListItem
+
                           <SendTokensModalList isLightTheme={isLightTheme}>
                             {tokensListModal.map((object) => (
                               <SendTokenModalListItem
