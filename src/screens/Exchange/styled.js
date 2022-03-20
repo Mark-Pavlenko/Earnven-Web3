@@ -76,7 +76,7 @@ export const SwapTokensMainSubBlock = styled.div`
   border-radius: 10px;
 
   @media (max-width: 550px) {
-    width: ${(props) => props.isMultiSwap === false && 'auto'};
+    width: ${(props) => props.isMultiSwap === false && '100vw'};
     // padding: ${(props) => props.isMultiSwap === false && '32px 15px 27px 15px'};
   }
 
@@ -142,7 +142,7 @@ export const SendTokensChooseButton = styled.div`
   }
 
   @media (max-width: 550px) {
-    width: 345px;
+    width: 100%;
   }
 `;
 
@@ -801,8 +801,8 @@ export const SearchTokensModalTextField = styled(TextField)`
   border-radius: 10px;
 
   @media (max-width: 550px) {
-    width: 340px;
-    margin-left: 25px;
+    width: 95%;
+    margin-left: 10px;
   }
 `;
 

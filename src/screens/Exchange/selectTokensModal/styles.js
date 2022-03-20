@@ -46,7 +46,6 @@ export const Header = styled.div`
 
 export const ModalTitle = styled.div`
   font-style: normal;
-  font-weight: 600;
   font-size: 20px;
   line-height: 41px;
   color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#ffffff')};
