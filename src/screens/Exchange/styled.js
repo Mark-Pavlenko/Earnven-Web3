@@ -417,7 +417,7 @@ export const AdditionalOptionsSwapTokensSubBlock = styled.div`
 `;
 
 export const SingleSwapTokensOfferedBySubBlock = styled.div`
-  width: 525px;
+  width: ${(props) => (props.mobilePopover ? '375px' : '525px')};
   height: 490px;
   background-color: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#4453AD1A')};
   box-shadow: ${(props) =>
@@ -584,7 +584,7 @@ export const ExchangerMainList = styled(List)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 488px;
+  width: ${(props) => (props.mobilePopover ? '345px' : '488px')};
   margin-left: 16px;
   padding: 0;
   margin-top: 15px;
@@ -595,7 +595,7 @@ export const ExchangerElementListItem = styled(ListItem)`
   display: flex;
   flex-direction: row;
   align-items: center;
-  width: 488px;
+  width: ${(props) => (props.mobilePopover ? '345px' : '488px')};
   height: 40px;
   padding: 0;
   padding-left: 14px;
@@ -619,7 +619,8 @@ export const ExchangerElementSpan = styled.span`
 `;
 
 export const ExchangerBestRateSpan = styled.span`
-  margin-left: 84px;
+  margin-left: ${(props) => (props.mobilePopover ? '0px' : '84px')};
+
   font-size: 10px;
   color: ${(props) => (props.isLightTheme ? '#4453AD' : '#8F86FF')};
   font-weight: ${(props) => (props.isLightTheme ? '500' : '800')};

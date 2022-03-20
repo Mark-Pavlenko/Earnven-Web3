@@ -143,6 +143,7 @@ const useStyles = makeStyles(() => ({
 
 export default function SwapComponent() {
   const matches = useMediaQuery('(min-width: 551px)');
+  const mobilePopover = useMediaQuery('(max-width: 600px)');
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
@@ -1401,18 +1402,18 @@ export default function SwapComponent() {
                       anchorEl={anchorEl}
                       onClose={handleClose}
                       anchorOrigin={{
-                        vertical: 'center',
-                        horizontal: 'right',
+                        vertical: mobilePopover ? 'top' : 'center',
+                        horizontal: mobilePopover ? 'left' : 'right',
                       }}
                       transformOrigin={{
-                        vertical: 'center',
-                        horizontal: 'right',
+                        vertical: mobilePopover ? 'bottom' : 'center',
+                        horizontal: mobilePopover ? 'center' : 'right',
                       }}
                       PaperProps={{
                         sx: {
-                          marginTop: '-103px',
-                          marginLeft: '27px',
-                          width: '525px',
+                          marginTop: !mobilePopover && '-103px',
+                          marginLeft: !mobilePopover && '27px',
+                          width: mobilePopover ? '375px' : '525px',
                           height: '490px',
                           backgroundColor: isLightTheme ? '#FFFFFF29' : '#4453AD1A',
                           boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
@@ -1422,7 +1423,9 @@ export default function SwapComponent() {
                         },
                       }}>
                       {isOfferedByPopoverActivated ? (
-                        <SingleSwapTokensOfferedBySubBlock isLightTheme={isLightTheme}>
+                        <SingleSwapTokensOfferedBySubBlock
+                          isLightTheme={isLightTheme}
+                          mobilePopover={mobilePopover}>
                           <ExchangersMainSubLayout>
                             <OfferedByLayoutLabelBlock
                               isLightTheme={isLightTheme}
@@ -1439,9 +1442,10 @@ export default function SwapComponent() {
                                 <span>Gas fee</span>
                               </ExchangersLayoutTitlesBlock>
                               <ExchangersMainListLayout isLightTheme={isLightTheme}>
-                                <ExchangerMainList>
+                                <ExchangerMainList mobilePopover={mobilePopover}>
                                   {exchangersOfferedList.map((exchanger) => (
                                     <ExchangerElementListItem
+                                      mobilePopover={mobilePopover}
                                       isLightTheme={isLightTheme}
                                       onClick={() =>
                                         exchanger.routerAddress !== activeExchanger.routerAddress &&
@@ -1456,6 +1460,7 @@ export default function SwapComponent() {
                                         {exchanger.gasFee}
                                       </ExchangerElementSpan>
                                       <ExchangerBestRateSpan
+                                        mobilePopover={mobilePopover}
                                         isLightTheme={isLightTheme}
                                         style={{
                                           visibility: exchanger.isBestRate === false && 'hidden',

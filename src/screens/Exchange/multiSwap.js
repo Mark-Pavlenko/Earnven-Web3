@@ -1166,7 +1166,7 @@ export default function MultiSwapComponent() {
 
                             <LabelsBlockSubBlock isLightTheme={isLightTheme}>
                               <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                                Offered by 123
+                                Offered by
                               </LabelsBlockSubBlockSpan>
                               <AdditionalOptionsSwapTokensSubBlock isLightTheme={isLightTheme}>
                                 <img
