@@ -769,7 +769,7 @@ export const SecondColumnTitleBlock = styled.div`
   ${ColumnsTitleBlocks};
 
   @media (max-width: 550px) {
-    width: 340px;
+    width: auto;
     margin-bottom: 20px;
   }
 

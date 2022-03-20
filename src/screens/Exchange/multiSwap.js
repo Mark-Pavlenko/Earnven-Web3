@@ -1444,7 +1444,6 @@ export default function MultiSwapComponent() {
                 <>
                   {!isTokensToggled ? (
                     <AddReceiveTokenMultiSwapBtn
-                      style={{ marginTop: '20px' }}
                       isLightTheme={isLightTheme}
                       onClick={() => {
                         addNewTokenHandler(finalReceiveTokensList);
