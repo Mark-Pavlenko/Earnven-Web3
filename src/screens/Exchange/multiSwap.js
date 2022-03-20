@@ -108,6 +108,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MultiSwapComponent() {
   const matches = useMediaQuery('(max-width: 550px)');
+  const matchesMiddle = useMediaQuery('(min-width: 551px)');
   const dispatch = useDispatch();
   const classes = useStyles();
   let [tokensListModal, setTokensListModal] = useState([]);
@@ -660,7 +661,7 @@ export default function MultiSwapComponent() {
 
               {/* SEND block */}
 
-              <MultiSwapSendTokensChooseBlockLayout style={{ flexDirection: matches && 'column' }}>
+              <MultiSwapSendTokensChooseBlockLayout>
                 {initSendMultiSwapTokenList.map((sendToken, key) => (
                   <>
                     <MultiSwapSendTokensChooseBlock
@@ -963,17 +964,24 @@ export default function MultiSwapComponent() {
                           </LabelsBlockSubBlock>
                         </>
                       )}
-                      {sendToken.isExchangeIsAllowed === false && matches === false && (
-                        <ExceededAmountTokensLimitWarning
-                        // style={{ marginTop: isTokensToggled && '14px' }}
-                        >
-                          Insufficient funds
-                        </ExceededAmountTokensLimitWarning>
-                      )}
                     </MultiSwapSendTokensChooseBlock>
-                    {sendToken.isExchangeIsAllowed === false && matches && isTokensToggled && (
+
+                    {sendToken.isExchangeIsAllowed === false && !isTokensToggled && (
                       <ExceededAmountTokensLimitWarning
-                        style={{ marginTop: '-10px', marginRight: '20px' }}>
+                        style={{
+                          marginTop: !matches && '-5px',
+                          marginRight: !matches ? '30px' : '20px',
+                        }}>
+                        Insufficient funds
+                      </ExceededAmountTokensLimitWarning>
+                    )}
+
+                    {sendToken.isExchangeIsAllowed === false && isTokensToggled && (
+                      <ExceededAmountTokensLimitWarning
+                        style={{
+                          marginTop: '-10px',
+                          marginRight: matches ? '20px' : '30px',
+                        }}>
                         Insufficient funds
                       </ExceededAmountTokensLimitWarning>
                     )}

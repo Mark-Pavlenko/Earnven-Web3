@@ -155,6 +155,7 @@ export const ExceededAmountTokensLimitWarning = styled.span`
 export const MultiSwapSendTokensChooseBlockLayout = styled.div`
   display: flex;
   justify-content: center;
+  flex-direction: column;
 `;
 
 export const MultiSwapSendTokensChooseBlock = styled.div`
@@ -164,7 +165,7 @@ export const MultiSwapSendTokensChooseBlock = styled.div`
   width: 475px;
   height: 60px;
   margin-bottom: 16px;
-
+  margin-left: 20px;
   padding: 6px 20px 7px 12px;
   color: black;
   background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
@@ -202,6 +203,7 @@ export const MultiSwapReceiveTokensBlock = styled.div`
   width: 475px;
   height: 115px;
   margin-bottom: 20px;
+  margin-left: 20px;
   color: black;
   background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
   box-shadow: ${(props) =>
