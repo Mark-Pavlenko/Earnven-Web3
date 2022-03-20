@@ -64,7 +64,7 @@ import switchTokensDark from '../../assets/icons/switchTokensDark.svg';
 
 import plusIconDark from '../../assets/icons/plusIconDark.svg';
 import plusIconLight from '../../assets/icons/plusIconLight.svg';
-import { Button } from '@material-ui/core';
+import { Button, useMediaQuery } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/styles';
 import actionTypes from '../../constants/actionTypes';
@@ -106,6 +106,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function MultiSwapComponent() {
+  const matches = useMediaQuery('(max-width: 550px)');
   const dispatch = useDispatch();
   const classes = useStyles();
   let [tokensListModal, setTokensListModal] = useState([]);
@@ -1375,8 +1376,9 @@ export default function MultiSwapComponent() {
                                   setOpenTokensModal(false);
                                   selectTokenForSwap(object, isSendTokenSelectedSwapped);
                                 }}
-                                isLightTheme={isLightTheme}>
-                                <SendTokenLabelsBlock>
+                                isLightTheme={isLightTheme}
+                                style={{ height: matches && '40px' }}>
+                                <SendTokenLabelsBlock style={{ height: matches && '25px' }}>
                                   {object.logoURI !== null ? (
                                     <SendTokenImg alt="token_img" src={object.logoURI} />
                                   ) : (

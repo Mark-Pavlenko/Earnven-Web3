@@ -867,7 +867,6 @@ export const SendTokenModalListItem = styled(ListItem)`
   align-items: center;
   justify-content: space-between;
   padding: 0 !important;
-  //margin-left: 15px;
   margin-bottom: 10px;
   width: 445px;
   height: 55px;
@@ -894,7 +893,6 @@ export const ReceiveTokenModalListItem = styled(ListItem)`
   align-items: center;
   justify-content: space-between;
   padding: 0 !important;
-  //margin-left: 10px;
   margin-bottom: 10px;
   width: 445px;
   height: 40px;
