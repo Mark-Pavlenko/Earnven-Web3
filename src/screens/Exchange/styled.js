@@ -187,14 +187,7 @@ export const MultiSwapSendTokensChooseBlock = styled.div`
 `;
 
 export const SubLayoutReceiveTokensBlock = styled.div`
-  //overflow: auto;
-
   height: auto;
-  //background-color: blue;
-  //padding-left: 20px;
-  //margin: 0 27px 16px 20px;
-  //padding-top: 5px;
-  //overflow-x: hidden;
 `;
 
 export const MultiSwapReceiveTokensBlock = styled.div`
@@ -785,7 +778,9 @@ export const TokensModalSubLayout = styled.div`
   border-radius: 10px;
 
   @media (max-width: 550px) {
-    width: 375px;
+    width: 100vw;
+    height: 100vh;
+    margin-top: 0;
   }
 `;
 
@@ -806,14 +801,14 @@ export const SearchTokensModalTextField = styled(TextField)`
   border-radius: 10px;
 
   @media (max-width: 550px) {
-    width: 335px;
+    width: 340px;
+    margin-left: 25px;
   }
 `;
 
 export const SendTokensModalList = styled(List)`
   margin-top: 20px;
   margin-left: 10px;
-  //width: 452px;
   height: 400px;
   overflow: auto;
   padding: 0;
@@ -847,6 +842,10 @@ export const SendTokensModalList = styled(List)`
     //background: #ffffff;
     cursor: pointer;
   }
+
+  @media (max-width: 550px) {
+    height: 680px;
+  }
 `;
 
 export const SendTokenModalListItem = styled(ListItem)`
@@ -858,7 +857,7 @@ export const SendTokenModalListItem = styled(ListItem)`
   width: 445px;
 
   @media (max-width: 550px) {
-    width: 350px;
+    width: 360px;
   }
 
   :hover {
@@ -882,6 +881,19 @@ export const SendTokenImg = styled.img`
   background-color: #e5e5e5;
   margin-right: 10px;
   margin-left: 12px;
+`;
+
+export const SendTokenImgExchanger = styled.img`
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  background-color: #e5e5e5;
+  margin-right: 10px;
+  margin-left: 12px;
+
+  @media (max-width: 550px) {
+    margin-left: 0;
+  }
 `;
 
 export const SendTokenLabelsBlock = styled.div`
@@ -916,14 +928,18 @@ export const SendTokenConvertedMeasures = styled.span`
   text-align: center;
   margin-right: auto;
 
-  @media (max-width: 550px) {
-    font-size: 12px;
-  }
+  //@media (max-width: 550px) {
+  //  font-size: 12px;
+  //}
 `;
 
 export const SendTokenBalance = styled.div`
   margin-right: 10px;
   margin-top: -20px;
+
+  @media (max-width: 550px) {
+    margin-right: 5px;
+  }
   span {
     color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#FFFFFF')};
     font-family: 'Saira', sans-serif;

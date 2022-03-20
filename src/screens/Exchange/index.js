@@ -83,6 +83,7 @@ import {
   StablePercentChooseToleranceBtn,
   FloatPercentChooseToleranceBtn,
   SlippageToleranceBtnsLayout,
+  SendTokenImgExchanger,
 } from './styled';
 import { useDispatch, useSelector } from 'react-redux';
 import chevronDownBlack from '../../assets/icons/chevronDownLightTheme.svg';
@@ -1006,9 +1007,7 @@ export default function SwapComponent() {
                       }}>
                       <TokensModalSubLayout isLightTheme={isLightTheme}>
                         <Header>
-                          <ModalTitle isLightTheme={isLightTheme}>
-                            Select token for sending
-                          </ModalTitle>
+                          <ModalTitle isLightTheme={isLightTheme}>Send</ModalTitle>
                           <CloseButton
                             onClick={() => {
                               setIsSendTokensModalVisible(false);
@@ -1093,7 +1092,7 @@ export default function SwapComponent() {
                                 isLightTheme={isLightTheme}>
                                 <SendTokenLabelsBlock>
                                   {object.logoURI !== null ? (
-                                    <SendTokenImg alt="token_img" src={object.logoURI} />
+                                    <SendTokenImgExchanger alt="token_img" src={object.logoURI} />
                                   ) : (
                                     <Avatar
                                       style={{
@@ -1251,9 +1250,7 @@ export default function SwapComponent() {
                       }}>
                       <TokensModalSubLayout isLightTheme={isLightTheme}>
                         <Header>
-                          <ModalTitle isLightTheme={isLightTheme}>
-                            Select token for receiving
-                          </ModalTitle>
+                          <ModalTitle isLightTheme={isLightTheme}>Receive</ModalTitle>
                           <CloseButton
                             onClick={() => {
                               setIsReceiveTokensModalVisible(false);
@@ -1336,7 +1333,7 @@ export default function SwapComponent() {
                                 isLightTheme={isLightTheme}>
                                 <SendTokenLabelsBlock>
                                   {object.logoURI !== null ? (
-                                    <SendTokenImg alt="token_img" src={object.logoURI} />
+                                    <SendTokenImgExchanger alt="token_img" src={object.logoURI} />
                                   ) : (
                                     <Avatar
                                       style={{
