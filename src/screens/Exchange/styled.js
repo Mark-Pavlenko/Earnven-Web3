@@ -147,7 +147,7 @@ export const SendTokensChooseButton = styled.div`
 export const ExceededAmountTokensLimitWarning = styled.span`
   margin-left: auto;
   margin-top: 10px;
-  margin-right: -20px;
+  //margin-right: -20px;
   font-size: 12px;
   color: #ec3d3d;
 `;
@@ -991,6 +991,7 @@ export const SendTokenBalance = styled.div`
 
   @media (max-width: 550px) {
     margin-right: 5px;
+    margin-top: 0;
   }
   span {
     color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#FFFFFF')};

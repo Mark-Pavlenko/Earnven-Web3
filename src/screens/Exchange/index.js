@@ -1367,7 +1367,8 @@ export default function SwapComponent() {
                     Min.Received
                   </LabelsBlockSubBlockSpan>
                   <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                    2829.673262 DA
+                    {/*2829.673262 DA*/}
+                    Unavailable
                   </LabelsBlockSubBlockSpan>
                 </LabelsBlockSubBlock>
 
