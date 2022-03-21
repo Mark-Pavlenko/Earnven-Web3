@@ -222,43 +222,6 @@ export const LiquidityTableItem = ({
     }
   }
 
-  const exponentialToDecimal = (exponential) => {
-    let decimal = exponential.toString().toLowerCase();
-    if (decimal.includes('e+')) {
-      const exponentialSplitted = decimal.split('e+');
-      let postfix = '';
-      for (
-        let i = 0;
-        i <
-        +exponentialSplitted[1] -
-          (exponentialSplitted[0].includes('.') ? exponentialSplitted[0].split('.')[1].length : 0);
-        i++
-      ) {
-        postfix += '0';
-      }
-      const addCommas = (text) => {
-        let j = 3;
-        let textLength = text.length;
-        while (j < textLength) {
-          text = `${text.slice(0, textLength - j)},${text.slice(textLength - j, textLength)}`;
-          textLength++;
-          j += 3 + 1;
-        }
-        return text;
-      };
-      decimal = addCommas(exponentialSplitted[0].replace('.', '') + postfix);
-    }
-    if (decimal.toLowerCase().includes('e-')) {
-      const exponentialSplitted = decimal.split('e-');
-      let prefix = '0.';
-      for (let i = 0; i < +exponentialSplitted[1] - 1; i++) {
-        prefix += '0';
-      }
-      decimal = prefix + exponentialSplitted[0].replace('.', '');
-    }
-    return decimal;
-  };
-
   const convertTokenPrice = async (inputId, value, token1, token2) => {
     await loadWeb3();
     const web3 = window.web3;
@@ -292,7 +255,6 @@ export const LiquidityTableItem = ({
           .getAmountsOut(valueWithDecimal, [token1, token2])
           .call()
           .catch(() => {});
-        console.log('convertedValue1', convertedValue);
         setAddLiquidityNormalTokenA((value * 10 ** tokenDecimal1).toString());
         setAddLiquidityNormalTokenB(convertedValue[1]);
 
@@ -308,7 +270,6 @@ export const LiquidityTableItem = ({
           .getAmountsIn(valueWithDecimal, [token1, token2])
           .call()
           .catch(() => {});
-        console.log('convertedValue2', convertedValue);
         if (convertedValue) {
           setAddLiquidityNormalTokenA(convertedValue[0]);
           setAddLiquidityNormalTokenB((value * 10 ** tokenDecimal2).toString());
@@ -322,9 +283,7 @@ export const LiquidityTableItem = ({
       setOutValue('');
     }
   };
-  //==================>
 
-  //==================>
   const supplyTokenHandler = (value) => {
     setTokenAddress(value.address);
   };
@@ -367,7 +326,6 @@ export const LiquidityTableItem = ({
         .call()
         .catch((e) => {
           setTokenSwapError(true);
-          console.log('njhukhuu1', e);
         });
       if (convertedValue1?.[1]?.length) {
         setInValue(+convertedValue1[1] / 10 ** tokenDecimalPair1);
@@ -382,7 +340,6 @@ export const LiquidityTableItem = ({
         .call()
         .catch((e) => {
           setTokenSwapError(true);
-          console.log('njhukhuu2', e);
         });
       if (convertedValue2?.[1]?.length) {
         setOutValue(+convertedValue2[1] / 10 ** tokenDecimalPair2);
