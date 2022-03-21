@@ -11,7 +11,9 @@ export function* getalchemixVaultsSagaWatcher() {
 function* AlchemixVaultsworker(alxAttributes) {
   const attributes = alxAttributes.payload;
   const dataResult = yield call(API.getAlxData, attributes);
-
-  yield put(actions.getalchemixVaults(dataResult));
-  yield put(actions.getalchemixTotal(dataResult[0].value));
+  //check and take action only when data exist
+  if (dataResult.length > 0) {
+    yield put(actions.getalchemixVaults(dataResult));
+    yield put(actions.getalchemixTotal(dataResult[0].value));
+  }
 }

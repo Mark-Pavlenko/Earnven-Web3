@@ -189,13 +189,18 @@ export const getLiquidityGaugeV3 = async (accountAddress, gaugeTokenAddress, web
 //-----------------------CurveLpToken process------------------------------
 //to get virtual price of the pool
 export const fetchCurveLpTokenVirtualPrice = async (contractAddress, web3) => {
+  let poolVirtualPrice = 0;
   const CurvePoolRegistryContract = new web3.eth.Contract(
     CurvePoolRegistryABI,
     addresses.CuvePoolRegistry
   );
-  let poolVirtualPrice = await CurvePoolRegistryContract.methods
-    .get_virtual_price_from_lp_token(contractAddress.toLowerCase())
-    .call();
+  try {
+    poolVirtualPrice = await CurvePoolRegistryContract.methods
+      .get_virtual_price_from_lp_token(contractAddress.toLowerCase())
+      .call();
+  } catch (err) {
+    console.log('Error log - In fetching CurveLp Token virtual price', err.message);
+  }
   return poolVirtualPrice;
 };
 //call the below function to get connect with smart contract and get curve token balance

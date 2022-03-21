@@ -4,7 +4,11 @@ import * as actions from './actions';
 import actionTypes from '../../constants/actionTypes';
 
 export function* getSushiSwapLPSagaWatcher() {
-  yield takeEvery(actionTypes.SET_SUSHILP_DATA, sushiSwapLPSagaWorker);
+  try {
+    yield takeEvery(actionTypes.SET_SUSHILP_DATA, sushiSwapLPSagaWorker);
+  } catch (err) {
+    console.log('Error log - In sushiswapLp token action in saga', err.message);
+  }
 }
 
 //below generator function is used to get the sushistaking lp token data points

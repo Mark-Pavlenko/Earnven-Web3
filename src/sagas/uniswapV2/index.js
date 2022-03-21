@@ -4,7 +4,11 @@ import actionTypes from '../../constants/actionTypes';
 import * as API_LP from '../../../src/components/LoansAndSavings/api/uniswapv2Api';
 
 export function* getuniswapV2SagaWatcher() {
-  yield takeEvery(actionTypes.SET_UNISWAPV2_LP, Uniswapv2worker);
+  try {
+    yield takeEvery(actionTypes.SET_UNISWAPV2_LP, Uniswapv2worker);
+  } catch (err) {
+    console.log('Error log - In uniswapV2LP action in saga');
+  }
 }
 
 function* Uniswapv2worker(data) {
@@ -17,7 +21,11 @@ function* Uniswapv2worker(data) {
 }
 
 export function* getuniswapV2StakeSagaWatcher() {
-  yield takeEvery(actionTypes.SET_UNISWAPV2_STAKE, Uniswapv2Stakeworker);
+  try {
+    yield takeEvery(actionTypes.SET_UNISWAPV2_STAKE, Uniswapv2Stakeworker);
+  } catch (err) {
+    console.log('Error message - In uniswapV2stake action at Saga', err.message);
+  }
 }
 
 function* Uniswapv2Stakeworker(data) {
@@ -30,8 +38,10 @@ function* Uniswapv2Stakeworker(data) {
     lp.map((object) => {
       uniSwapv2StakingTotal += parseFloat(object.value);
     });
-    yield put(actions.getuniswapV2stake(lp));
-    yield put(actions.getuniswapV2stakeTotal(uniSwapv2StakingTotal));
+    if (lp.length > 0) {
+      yield put(actions.getuniswapV2stake(lp));
+      yield put(actions.getuniswapV2stakeTotal(uniSwapv2StakingTotal));
+    }
   }
   yield put(actions.setUniswapStakingisLoading(false));
 }

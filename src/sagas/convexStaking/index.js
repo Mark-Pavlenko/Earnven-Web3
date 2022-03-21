@@ -103,7 +103,7 @@ function* convexStakingDataSagaWorker(convexStakingAttributes) {
             if (cvxCrvTokenPrice) {
               convexStakingBalanceValue =
                 (ConvexStakedData.convexStakingBalance / 10 ** 18) * cvxCrvTokenPrice;
-              object.claimable = (ConvexStakedData.earnedClaimbale / 10 ** 18) * cvxCrvTokenPrice;
+              object.claimable = (ConvexStakedData.earnedClaimbale / 10 ** 18) * convexTokenPrice;
               cvxTotalSupplyAmt = (ConvexStakedData.cvxTotalSupply / 10 ** 18) * cvxCrvTokenPrice;
               object.stakingAmt = convexStakingBalanceValue;
               object.price = cvxCrvTokenPrice;

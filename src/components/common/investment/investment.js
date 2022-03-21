@@ -150,7 +150,7 @@ const Investment = ({
           </div> */}
         </div>
         <ContentRightWrapper isLightTheme={theme}>
-          {protocolName === 'Aave' ? (
+          {protocolName === 'Aave' || protocolName === 'mStable' ? (
             <>
               $
               {numberWithCommas(

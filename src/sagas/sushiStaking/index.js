@@ -4,7 +4,11 @@ import * as actions from './actions';
 import actionTypes from '../../constants/actionTypes';
 
 export function* getSushiStakeSagaWatcher() {
-  yield takeEvery(actionTypes.SET_SLP_STAKE_DATA, sushiStakeSagaWorker);
+  try {
+    yield takeEvery(actionTypes.SET_SLP_STAKE_DATA, sushiStakeSagaWorker);
+  } catch (err) {
+    console.log('Error log - In sushiSLP stake data action in Saga', err.message);
+  }
 }
 
 //below generator function is used to get the sushistaking lp token data points

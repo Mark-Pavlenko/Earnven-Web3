@@ -55,14 +55,17 @@ function* yearnFinanceSagaWorker(yearnAccountAddress) {
             object.chain = 'Ethereum';
             object.protocol = 'Yearn';
             totalValue += parseFloat(object.value);
-            yearnDataArray.push(object);
+            if (object.value > 0) {
+              yearnDataArray.push(object);
+            }
           }
         }
       } //end of fist for loop
     } //enod of 2nd for loop
-
-    yield put(actions.getYearnFinaceTokenData(yearnDataArray));
-    yield put(actions.getYearnFinanceTokenTotal(parseFloat(totalValue).toFixed(2)));
+    if (yearnDataArray.length > 0) {
+      yield put(actions.getYearnFinaceTokenData(yearnDataArray));
+      yield put(actions.getYearnFinanceTokenTotal(parseFloat(totalValue).toFixed(2)));
+    }
   }
   yield put(actions.setYearnFinanceisLoading(false));
 }
@@ -131,8 +134,10 @@ function* yearnFinanceYTokenSagaWorker(yearnTokenAttributes) {
     } //end of for loop
     // console.log('TestPrabhaYToken yearnTokenPrice', yearnTokenDataSet);
     // console.log('TestPrabhaYToken yearnTokenTotalValue', yearnTokenTotalValue);
-    yield put(actions.getYTokenData(yearnTokenDataSet));
-    yield put(actions.getYTokenTotal(parseFloat(yearnTokenTotalValue).toFixed(2)));
+    if (yearnTokenDataSet.length > 0) {
+      yield put(actions.getYTokenData(yearnTokenDataSet));
+      yield put(actions.getYTokenTotal(parseFloat(yearnTokenTotalValue).toFixed(2)));
+    }
   }
   yield put(actions.setYearnFinanceisLoading(false));
 }
