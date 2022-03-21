@@ -1438,9 +1438,11 @@ export default function SwapComponent() {
                               <span>Offered by</span>
                             </OfferedByLayoutLabelBlock>
                             <ExchangersLayout isLightTheme={isLightTheme}>
-                              <ExchangersLayoutTitlesBlock isLightTheme={isLightTheme}>
+                              <ExchangersLayoutTitlesBlock
+                                isLightTheme={isLightTheme}
+                                mobilePopover={mobilePopover}>
                                 <span>Receive</span>
-                                <span>Gas fee</span>
+                                {!mobilePopover && <span>Gas fee</span>}
                               </ExchangersLayoutTitlesBlock>
                               <ExchangersMainListLayout isLightTheme={isLightTheme}>
                                 <ExchangerMainList mobilePopover={mobilePopover}>
@@ -1453,13 +1455,15 @@ export default function SwapComponent() {
                                         selectNewExchanger(exchanger)
                                       }>
                                       <ExchangerElementSpan
-                                        isLightTheme={isLightTheme}
-                                        style={{ marginRight: '36px' }}>
+                                        mobilePopover={mobilePopover}
+                                        isLightTheme={isLightTheme}>
                                         {exchanger.receiveTokenUSDCurrencyCourse}
                                       </ExchangerElementSpan>
-                                      <ExchangerElementSpan isLightTheme={isLightTheme}>
-                                        {exchanger.gasFee}
-                                      </ExchangerElementSpan>
+                                      {!mobilePopover && (
+                                        <ExchangerElementSpan isLightTheme={isLightTheme}>
+                                          {exchanger.gasFee}
+                                        </ExchangerElementSpan>
+                                      )}
                                       <ExchangerBestRateSpan
                                         mobilePopover={mobilePopover}
                                         isLightTheme={isLightTheme}
@@ -1468,8 +1472,13 @@ export default function SwapComponent() {
                                         }}>
                                         Best rate
                                       </ExchangerBestRateSpan>
-                                      <ExchangerIcon src={exchanger.logoIcon} alt="icon" />
+                                      <ExchangerIcon
+                                        src={exchanger.logoIcon}
+                                        alt="icon"
+                                        mobilePopover={mobilePopover}
+                                      />
                                       <GreenDotIcon
+                                        mobilePopover={mobilePopover}
                                         src={greenDot}
                                         alt="green_dot"
                                         style={{

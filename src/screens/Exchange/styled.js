@@ -565,10 +565,9 @@ export const ExchangersLayoutTitlesBlock = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  //background-color: green;
   width: 209px;
   margin-top: 20px;
-  margin-left: 30px;
+  margin-left: ${(props) => (props.mobilePopover ? '15px' : '30px')};
 
   span {
     font-style: normal;
@@ -597,10 +596,11 @@ export const ExchangerElementListItem = styled(ListItem)`
   flex-direction: row;
   align-items: center;
   width: ${(props) => (props.mobilePopover ? '345px' : '488px')};
+  margin-left: ${(props) => props.mobilePopover && '10px'};
   height: 40px;
   padding: 0;
-  padding-left: 14px;
-  margin-bottom: 10px;
+  padding-left: 10px;
+  margin-bottom: ${(props) => (props.mobilePopover ? '0px' : '10px')};
 
   :hover {
     background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
@@ -617,10 +617,11 @@ export const ExchangerElementListItem = styled(ListItem)`
 export const ExchangerElementSpan = styled.span`
   font-size: 14px;
   color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#FFFFFF')};
+  margin-right: ${(props) => (props.mobilePopover ? '0px' : '36px')};
 `;
 
 export const ExchangerBestRateSpan = styled.span`
-  margin-left: ${(props) => (props.mobilePopover ? '0px' : '84px')};
+  margin-left: ${(props) => (props.mobilePopover ? '69px' : '74px')};
 
   font-size: 10px;
   color: ${(props) => (props.isLightTheme ? '#4453AD' : '#8F86FF')};
@@ -630,13 +631,13 @@ export const ExchangerBestRateSpan = styled.span`
 export const ExchangerIcon = styled.img`
   width: 20px;
   height: 20px;
-  margin-left: 44px;
+  margin-left: ${(props) => (props.mobilePopover ? '34px' : '44px')};
 `;
 
 export const GreenDotIcon = styled.img`
   width: 10px;
   height: 10px;
-  margin-left: 35px;
+  margin-left: ${(props) => (props.mobilePopover ? '19px' : '35px')};
 `;
 
 //-------
