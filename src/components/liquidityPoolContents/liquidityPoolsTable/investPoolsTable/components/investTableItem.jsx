@@ -68,6 +68,7 @@ export const InvestTableItem = ({
   addLiquidityNormal,
   removeLiquidityNormal,
 }) => {
+  console.log('dsdsdds', item);
   const dispatch = useDispatch();
   const address = useParams().address;
   const GasPrices = useSelector((state) => state.gesData.gasPriceData);
