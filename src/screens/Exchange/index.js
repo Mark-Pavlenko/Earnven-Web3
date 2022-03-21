@@ -1476,6 +1476,7 @@ export default function SwapComponent() {
                                         src={exchanger.logoIcon}
                                         alt="icon"
                                         mobilePopover={mobilePopover}
+                                        // style={{ marginLeft: mobilePopover && '20px' }}
                                       />
                                       <GreenDotIcon
                                         mobilePopover={mobilePopover}

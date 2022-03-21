@@ -107,8 +107,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function MultiSwapComponent() {
+  const mobilePopover = useMediaQuery('(max-width: 600px)');
   const matches = useMediaQuery('(max-width: 550px)');
-  const matchesMiddle = useMediaQuery('(min-width: 551px)');
   const dispatch = useDispatch();
   const classes = useStyles();
   let [tokensListModal, setTokensListModal] = useState([]);
@@ -135,14 +135,14 @@ export default function MultiSwapComponent() {
       logoIcon: sushiSwapExchangerIcon,
       isBestRate: false,
     },
-    {
-      name: 'Swerve',
-      routerAddress: 'THIS_IS_FAKE_ROUTER_ADDRESS',
-      receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
-      gasFee: '$10.03',
-      logoIcon: swerveExchangerIcon,
-      isBestRate: false,
-    },
+    // {
+    //   name: 'Swerve',
+    //   routerAddress: 'THIS_IS_FAKE_ROUTER_ADDRESS',
+    //   receiveTokenUSDCurrencyCourse: '3510 DAI ($3510.03)',
+    //   gasFee: '$10.03',
+    //   logoIcon: swerveExchangerIcon,
+    //   isBestRate: false,
+    // },
   ];
   const [anchorEl, setAnchorEl] = useState(null);
   const [chosenNewExchangerToken, setChosenNewExchangerToken] = useState({});
@@ -1191,26 +1191,30 @@ export default function MultiSwapComponent() {
                                   chosenExchangerTokensList={chosenExchangerTokensList}
                                   onClose={closeExchangersModal}
                                   anchorOrigin={{
-                                    vertical: 'center',
-                                    horizontal: 'right',
+                                    vertical: mobilePopover ? 'top' : 'center',
+                                    horizontal: mobilePopover ? 'left' : 'right',
                                   }}
                                   transformOrigin={{
-                                    vertical: 'center',
-                                    horizontal: 'right',
+                                    vertical: mobilePopover ? 'bottom' : 'center',
+                                    horizontal: mobilePopover ? 'right' : 'right',
                                   }}
                                   PaperProps={{
                                     sx: {
-                                      marginLeft: '49px',
-                                      width: '525px',
-                                      height: '480px',
+                                      marginTop: !mobilePopover && '-90px',
+                                      marginLeft: !mobilePopover && '15px',
+                                      width: mobilePopover ? '100%' : '525px',
+                                      height: '515px',
                                       backgroundColor: isLightTheme ? '#FFFFFF29' : '#4453AD1A',
                                       boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
                                       backdropFilter: 'blur(35px)',
                                       mixBlendMode: 'normal',
                                       borderRadius: '10px',
+                                      left: '0px',
                                     },
                                   }}>
-                                  <SwapTokensOfferedBySubBlock isLightTheme={isLightTheme}>
+                                  <SwapTokensOfferedBySubBlock
+                                    isLightTheme={isLightTheme}
+                                    mobilePopover={mobilePopover}>
                                     <ExchangersMainSubLayout>
                                       <OfferedByLayoutLabelBlock
                                         isLightTheme={isLightTheme}
@@ -1222,15 +1226,18 @@ export default function MultiSwapComponent() {
                                         <span>Offered by</span>
                                       </OfferedByLayoutLabelBlock>
                                       <ExchangersLayout isLightTheme={isLightTheme}>
-                                        <ExchangersLayoutTitlesBlock isLightTheme={isLightTheme}>
+                                        <ExchangersLayoutTitlesBlock
+                                          isLightTheme={isLightTheme}
+                                          mobilePopover={mobilePopover}>
                                           <span>Receive</span>
-                                          <span>Gas fee</span>
+                                          {!mobilePopover && <span>Gas fee</span>}
                                         </ExchangersLayoutTitlesBlock>
                                         <ExchangersMainListLayout isLightTheme={isLightTheme}>
-                                          <ExchangerMainList>
+                                          <ExchangerMainList mobilePopover={mobilePopover}>
                                             {exchangersOfferedList.map((exchanger) => (
                                               <ExchangerElementListItem
                                                 isLightTheme={isLightTheme}
+                                                mobilePopover={mobilePopover}
                                                 onClick={() =>
                                                   selectNewExchanger(
                                                     exchanger,
@@ -1239,13 +1246,17 @@ export default function MultiSwapComponent() {
                                                   )
                                                 }>
                                                 <ExchangerElementSpan
-                                                  isLightTheme={isLightTheme}
-                                                  style={{ marginRight: '36px' }}>
+                                                  mobilePopover={mobilePopover}
+                                                  isLightTheme={isLightTheme}>
                                                   {exchanger.receiveTokenUSDCurrencyCourse}
                                                 </ExchangerElementSpan>
-                                                <ExchangerElementSpan isLightTheme={isLightTheme}>
-                                                  {exchanger.gasFee}
-                                                </ExchangerElementSpan>
+                                                {!mobilePopover && (
+                                                  <ExchangerElementSpan
+                                                    isLightTheme={isLightTheme}
+                                                    mobilePopover={mobilePopover}>
+                                                    {exchanger.gasFee}
+                                                  </ExchangerElementSpan>
+                                                )}
 
                                                 {chosenNewExchangerToken &&
                                                   Object.keys(chosenNewExchangerToken).length !==
@@ -1253,6 +1264,7 @@ export default function MultiSwapComponent() {
                                                     <>
                                                       {exchanger.isBestRate ? (
                                                         <ExchangerBestRateSpan
+                                                          mobilePopover={mobilePopover}
                                                           isLightTheme={isLightTheme}
                                                           style={{}}>
                                                           Best rate
@@ -1260,7 +1272,12 @@ export default function MultiSwapComponent() {
                                                       ) : (
                                                         <ExchangerBestRateSpan
                                                           isLightTheme={isLightTheme}
-                                                          style={{ visibility: 'hidden' }}>
+                                                          mobilePopover={mobilePopover}
+                                                          style={
+                                                            {
+                                                              // visibility: 'hidden',
+                                                            }
+                                                          }>
                                                           Best rate
                                                         </ExchangerBestRateSpan>
                                                       )}
@@ -1270,10 +1287,12 @@ export default function MultiSwapComponent() {
                                                         .routerAddress ? (
                                                         <>
                                                           <ExchangerIcon
+                                                            mobilePopover={mobilePopover}
                                                             src={exchanger.logoIcon}
                                                             alt="icon"
                                                           />
                                                           <GreenDotIcon
+                                                            mobilePopover={mobilePopover}
                                                             src={greenDot}
                                                             alt="green_dot"
                                                           />
