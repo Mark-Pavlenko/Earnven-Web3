@@ -26,6 +26,7 @@ export const MainContent = styled.div`
 
   @media (max-width: 550px) {
     width: 350px;
+    //top: 45%;
   }
 
   @media (max-width: 768px) {
@@ -45,7 +46,6 @@ export const Header = styled.div`
 
 export const ModalTitle = styled.div`
   font-style: normal;
-  font-weight: 600;
   font-size: 20px;
   line-height: 41px;
   color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#ffffff')};
@@ -76,12 +76,18 @@ export const Content = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
   border-radius: 10px;
 
+  @media (min-width: 769px) {
+    margin-top: 20px;
+  }
+
   @media (max-width: 768px) {
-    margin: 34px 0 0 0;
     width: 475px;
+  }
+
+  @media (min-width: 526px) and(min-width: 767px) {
+    margin: 34px 0 0 0;
   }
 
   @media (max-width: 525px) {

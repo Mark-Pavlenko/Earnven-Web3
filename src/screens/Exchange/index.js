@@ -1,11 +1,8 @@
 /* eslint-disable */
 import React, { useEffect, useRef, useState } from 'react';
 import './exchange.css';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import { useMediaQuery } from '@material-ui/core';
 import axios from 'axios';
-import NumberFormat from 'react-number-format';
-import TransparentButton from '../../components/TransparentButton';
 import Web3 from 'web3';
 import ERC20ABI from '../../abi/ERC20.json';
 import closeModalIcon from '../../assets/icons/close_nft.svg';
@@ -83,6 +80,9 @@ import {
   StablePercentChooseToleranceBtn,
   FloatPercentChooseToleranceBtn,
   SlippageToleranceBtnsLayout,
+  SendTokenImgExchanger,
+  ReceiveTokenModalListItem,
+  ReceiveSendTokenLabelsBlock,
 } from './styled';
 import { useDispatch, useSelector } from 'react-redux';
 import chevronDownBlack from '../../assets/icons/chevronDownLightTheme.svg';
@@ -142,6 +142,9 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function SwapComponent() {
+  const matches = useMediaQuery('(min-width: 551px)');
+  const mobilePopover = useMediaQuery('(max-width: 600px)');
+
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
   const dispatch = useDispatch();
@@ -1006,9 +1009,7 @@ export default function SwapComponent() {
                       }}>
                       <TokensModalSubLayout isLightTheme={isLightTheme}>
                         <Header>
-                          <ModalTitle isLightTheme={isLightTheme}>
-                            Select token for sending
-                          </ModalTitle>
+                          <ModalTitle isLightTheme={isLightTheme}>Send</ModalTitle>
                           <CloseButton
                             onClick={() => {
                               setIsSendTokensModalVisible(false);
@@ -1093,11 +1094,11 @@ export default function SwapComponent() {
                                 isLightTheme={isLightTheme}>
                                 <SendTokenLabelsBlock>
                                   {object.logoURI !== null ? (
-                                    <SendTokenImg alt="token_img" src={object.logoURI} />
+                                    <SendTokenImgExchanger alt="token_img" src={object.logoURI} />
                                   ) : (
                                     <Avatar
                                       style={{
-                                        marginLeft: '12px',
+                                        marginLeft: matches && '12px',
                                         marginRight: '12px',
                                         marginTop: '2px',
                                       }}
@@ -1242,27 +1243,15 @@ export default function SwapComponent() {
                     <OutsideClickHandler
                       onOutsideClick={() => {
                         setIsReceiveTokensModalVisible(false);
-                        setFilteredReceiveTokensListData(
-                          // finalReceiveTokensList.filter(
-                          //   (token) => token.symbol !== receiveTokenForExchange.symbol
-                          // )
-                          finalReceiveTokensList
-                        );
+                        setFilteredReceiveTokensListData(finalReceiveTokensList);
                       }}>
                       <TokensModalSubLayout isLightTheme={isLightTheme}>
                         <Header>
-                          <ModalTitle isLightTheme={isLightTheme}>
-                            Select token for receiving
-                          </ModalTitle>
+                          <ModalTitle isLightTheme={isLightTheme}>Receive</ModalTitle>
                           <CloseButton
                             onClick={() => {
                               setIsReceiveTokensModalVisible(false);
-                              setFilteredReceiveTokensListData(
-                                finalReceiveTokensList
-                                // finalReceiveTokensList.filter(
-                                //   (token) => token.symbol !== receiveTokenForExchange.symbol
-                                // )
-                              );
+                              setFilteredReceiveTokensListData(finalReceiveTokensList);
                             }}
                             isLightTheme={isLightTheme}>
                             <img
@@ -1316,7 +1305,7 @@ export default function SwapComponent() {
                         {filteredReceiveTokensListData.length !== 0 ? (
                           <SendTokensModalList isLightTheme={isLightTheme}>
                             {filteredReceiveTokensListData.map((object) => (
-                              <SendTokenModalListItem
+                              <ReceiveTokenModalListItem
                                 key={object.symbol}
                                 onClick={() => {
                                   setFilteredReceiveTokensListData(finalReceiveTokensList);
@@ -1334,13 +1323,13 @@ export default function SwapComponent() {
                                   });
                                 }}
                                 isLightTheme={isLightTheme}>
-                                <SendTokenLabelsBlock>
+                                <ReceiveSendTokenLabelsBlock>
                                   {object.logoURI !== null ? (
-                                    <SendTokenImg alt="token_img" src={object.logoURI} />
+                                    <SendTokenImgExchanger alt="token_img" src={object.logoURI} />
                                   ) : (
                                     <Avatar
                                       style={{
-                                        marginLeft: '12px',
+                                        marginLeft: matches && '12px',
                                         marginRight: '12px',
                                         marginTop: '2px',
                                       }}
@@ -1354,21 +1343,9 @@ export default function SwapComponent() {
                                     <SendTokenName isLightTheme={isLightTheme}>
                                       {object.name}
                                     </SendTokenName>
-                                    <SendTokenConvertedMeasures
-                                      isLightTheme={isLightTheme}
-                                      style={{ visibility: 'hidden' }}>
-                                      409,333 UNI · $19,18
-                                    </SendTokenConvertedMeasures>
                                   </div>
-                                </SendTokenLabelsBlock>
-                                {/*<SendTokenBalance isLightTheme={isLightTheme}>*/}
-                                {/*  {object.balance === undefined ? (*/}
-                                {/*    <Loader type="Rings" color="#BB86FC" height={30} width={30} />*/}
-                                {/*  ) : (*/}
-                                {/*    <span>${object.balance}</span>*/}
-                                {/*  )}*/}
-                                {/*</SendTokenBalance>*/}
-                              </SendTokenModalListItem>
+                                </ReceiveSendTokenLabelsBlock>
+                              </ReceiveTokenModalListItem>
                             ))}
                           </SendTokensModalList>
                         ) : (
@@ -1391,7 +1368,8 @@ export default function SwapComponent() {
                     Min.Received
                   </LabelsBlockSubBlockSpan>
                   <LabelsBlockSubBlockSpan isLightTheme={isLightTheme}>
-                    2829.673262 DA
+                    {/*2829.673262 DA*/}
+                    Unavailable
                   </LabelsBlockSubBlockSpan>
                 </LabelsBlockSubBlock>
 
@@ -1424,28 +1402,31 @@ export default function SwapComponent() {
                       anchorEl={anchorEl}
                       onClose={handleClose}
                       anchorOrigin={{
-                        vertical: 'center',
-                        horizontal: 'right',
+                        vertical: mobilePopover ? 'top' : 'center',
+                        horizontal: mobilePopover ? 'left' : 'right',
                       }}
                       transformOrigin={{
-                        vertical: 'center',
-                        horizontal: 'right',
+                        vertical: mobilePopover ? 'bottom' : 'center',
+                        horizontal: mobilePopover ? 'right' : 'right',
                       }}
                       PaperProps={{
                         sx: {
-                          marginTop: '-103px',
-                          marginLeft: '27px',
-                          width: '525px',
-                          height: '490px',
+                          marginTop: !mobilePopover && '-90px',
+                          marginLeft: !mobilePopover && '15px',
+                          width: mobilePopover ? '100%' : '525px',
+                          height: '515px',
                           backgroundColor: isLightTheme ? '#FFFFFF29' : '#4453AD1A',
                           boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
                           backdropFilter: 'blur(35px)',
                           mixBlendMode: 'normal',
                           borderRadius: '10px',
+                          left: '0px',
                         },
                       }}>
                       {isOfferedByPopoverActivated ? (
-                        <SingleSwapTokensOfferedBySubBlock isLightTheme={isLightTheme}>
+                        <SingleSwapTokensOfferedBySubBlock
+                          isLightTheme={isLightTheme}
+                          mobilePopover={mobilePopover}>
                           <ExchangersMainSubLayout>
                             <OfferedByLayoutLabelBlock
                               isLightTheme={isLightTheme}
@@ -1457,36 +1438,48 @@ export default function SwapComponent() {
                               <span>Offered by</span>
                             </OfferedByLayoutLabelBlock>
                             <ExchangersLayout isLightTheme={isLightTheme}>
-                              <ExchangersLayoutTitlesBlock isLightTheme={isLightTheme}>
+                              <ExchangersLayoutTitlesBlock
+                                isLightTheme={isLightTheme}
+                                mobilePopover={mobilePopover}>
                                 <span>Receive</span>
-                                <span>Gas fee</span>
+                                {!mobilePopover && <span>Gas fee</span>}
                               </ExchangersLayoutTitlesBlock>
                               <ExchangersMainListLayout isLightTheme={isLightTheme}>
-                                <ExchangerMainList>
+                                <ExchangerMainList mobilePopover={mobilePopover}>
                                   {exchangersOfferedList.map((exchanger) => (
                                     <ExchangerElementListItem
+                                      mobilePopover={mobilePopover}
                                       isLightTheme={isLightTheme}
                                       onClick={() =>
                                         exchanger.routerAddress !== activeExchanger.routerAddress &&
                                         selectNewExchanger(exchanger)
                                       }>
                                       <ExchangerElementSpan
-                                        isLightTheme={isLightTheme}
-                                        style={{ marginRight: '36px' }}>
+                                        mobilePopover={mobilePopover}
+                                        isLightTheme={isLightTheme}>
                                         {exchanger.receiveTokenUSDCurrencyCourse}
                                       </ExchangerElementSpan>
-                                      <ExchangerElementSpan isLightTheme={isLightTheme}>
-                                        {exchanger.gasFee}
-                                      </ExchangerElementSpan>
+                                      {!mobilePopover && (
+                                        <ExchangerElementSpan isLightTheme={isLightTheme}>
+                                          {exchanger.gasFee}
+                                        </ExchangerElementSpan>
+                                      )}
                                       <ExchangerBestRateSpan
+                                        mobilePopover={mobilePopover}
                                         isLightTheme={isLightTheme}
                                         style={{
                                           visibility: exchanger.isBestRate === false && 'hidden',
                                         }}>
                                         Best rate
                                       </ExchangerBestRateSpan>
-                                      <ExchangerIcon src={exchanger.logoIcon} alt="icon" />
+                                      <ExchangerIcon
+                                        src={exchanger.logoIcon}
+                                        alt="icon"
+                                        mobilePopover={mobilePopover}
+                                        // style={{ marginLeft: mobilePopover && '20px' }}
+                                      />
                                       <GreenDotIcon
+                                        mobilePopover={mobilePopover}
                                         src={greenDot}
                                         alt="green_dot"
                                         style={{
