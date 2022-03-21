@@ -119,17 +119,11 @@ export const MultiSwapSendValueLabel = styled.span`
   opacity: ${(props) => (props.isLightTheme ? 0.5 : 0.8)};
 `;
 
-export const MultiSwapTokenAvatar = styled(Avatar)`
-  margin-right: 12px;
-  margin-left: 12px;
-  margin-top: 2px;
-`;
-
 export const SendTokensChooseButton = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  width: 475px;
+  //width: 475px;
   height: 60px;
   margin-top: 5px;
   color: black;
@@ -153,7 +147,7 @@ export const SendTokensChooseButton = styled.div`
 export const ExceededAmountTokensLimitWarning = styled.span`
   margin-left: auto;
   margin-top: 10px;
-  margin-right: -20px;
+  //margin-right: -20px;
   font-size: 12px;
   color: #ec3d3d;
 `;
@@ -161,6 +155,7 @@ export const ExceededAmountTokensLimitWarning = styled.span`
 export const MultiSwapSendTokensChooseBlockLayout = styled.div`
   display: flex;
   justify-content: center;
+  flex-direction: column;
 `;
 
 export const MultiSwapSendTokensChooseBlock = styled.div`
@@ -170,7 +165,7 @@ export const MultiSwapSendTokensChooseBlock = styled.div`
   width: 475px;
   height: 60px;
   margin-bottom: 16px;
-  //margin: 0px 27px 16px 20px;
+  margin-left: 20px;
   padding: 6px 20px 7px 12px;
   color: black;
   background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
@@ -208,6 +203,7 @@ export const MultiSwapReceiveTokensBlock = styled.div`
   width: 475px;
   height: 115px;
   margin-bottom: 20px;
+  margin-left: 20px;
   color: black;
   background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
   box-shadow: ${(props) =>
@@ -421,8 +417,8 @@ export const AdditionalOptionsSwapTokensSubBlock = styled.div`
 `;
 
 export const SingleSwapTokensOfferedBySubBlock = styled.div`
-  width: 525px;
-  height: 490px;
+  width: ${(props) => (props.mobilePopover ? '100%' : '525px')};
+  height: 515px;
   background-color: ${(props) => (props.isLightTheme ? '#FFFFFF29' : '#4453AD1A')};
   box-shadow: ${(props) =>
     props.isLightTheme
@@ -431,9 +427,9 @@ export const SingleSwapTokensOfferedBySubBlock = styled.div`
   backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
   border-radius: 10px;
 
-  @media (max-width: 550px) {
-    width: auto;
-  }
+  //@media (max-width: 550px) {
+  //  width: auto;
+  //}
 `;
 
 export const SwapTokensOfferedBySubBlock = styled.div`
@@ -569,10 +565,9 @@ export const ExchangersLayoutTitlesBlock = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  //background-color: green;
   width: 209px;
   margin-top: 20px;
-  margin-left: 30px;
+  margin-left: ${(props) => (props.mobilePopover ? '15px' : '30px')};
 
   span {
     font-style: normal;
@@ -588,8 +583,9 @@ export const ExchangerMainList = styled(List)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 488px;
-  margin-left: 16px;
+  width: ${(props) => (props.mobilePopover ? '345px' : '488px')};
+  margin-left: ${(props) => (props.mobilePopover ? '0px' : '16px')};
+
   padding: 0;
   margin-top: 15px;
   //background: green;
@@ -599,11 +595,12 @@ export const ExchangerElementListItem = styled(ListItem)`
   display: flex;
   flex-direction: row;
   align-items: center;
-  width: 488px;
+  width: ${(props) => (props.mobilePopover ? '345px' : '488px')};
+  margin-left: ${(props) => props.mobilePopover && '10px'};
   height: 40px;
   padding: 0;
-  padding-left: 14px;
-  margin-bottom: 10px;
+  padding-left: 10px;
+  margin-bottom: ${(props) => (props.mobilePopover ? '0px' : '10px')};
 
   :hover {
     background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D')};
@@ -620,10 +617,12 @@ export const ExchangerElementListItem = styled(ListItem)`
 export const ExchangerElementSpan = styled.span`
   font-size: 14px;
   color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#FFFFFF')};
+  margin-right: ${(props) => (props.mobilePopover ? '0px' : '36px')};
 `;
 
 export const ExchangerBestRateSpan = styled.span`
-  margin-left: 84px;
+  margin-left: ${(props) => (props.mobilePopover ? '69px' : '74px')};
+
   font-size: 10px;
   color: ${(props) => (props.isLightTheme ? '#4453AD' : '#8F86FF')};
   font-weight: ${(props) => (props.isLightTheme ? '500' : '800')};
@@ -632,13 +631,13 @@ export const ExchangerBestRateSpan = styled.span`
 export const ExchangerIcon = styled.img`
   width: 20px;
   height: 20px;
-  margin-left: 44px;
+  margin-left: ${(props) => (props.mobilePopover ? '34px' : '44px')};
 `;
 
 export const GreenDotIcon = styled.img`
   width: 10px;
   height: 10px;
-  margin-left: 35px;
+  margin-left: ${(props) => (props.mobilePopover ? '19px' : '35px')};
 `;
 
 //-------
@@ -875,6 +874,33 @@ export const SendTokenModalListItem = styled(ListItem)`
   padding: 0 !important;
   margin-bottom: 10px;
   width: 445px;
+  height: 55px;
+
+  @media (max-width: 550px) {
+    width: 370px;
+  }
+
+  :hover {
+    cursor: pointer;
+    background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C3D !important')};
+    border-radius: 10px;
+    box-shadow: ${(props) =>
+      props.isLightTheme
+        ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
+        : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
+    mix-blend-mode: ${(props) => (props.isLightTheme ? 'none' : 'normal')};
+    backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
+  }
+`;
+
+export const ReceiveTokenModalListItem = styled(ListItem)`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 !important;
+  margin-bottom: 10px;
+  width: 445px;
+  height: 40px;
 
   @media (max-width: 550px) {
     width: 360px;
@@ -890,7 +916,6 @@ export const SendTokenModalListItem = styled(ListItem)`
         : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
     mix-blend-mode: ${(props) => (props.isLightTheme ? 'none' : 'normal')};
     backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
-    //width: 445px;
   }
 `;
 
@@ -919,7 +944,20 @@ export const SendTokenImgExchanger = styled.img`
 export const SendTokenLabelsBlock = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-left: 10px;
+  //margin-left: 10px;
+
+  img {
+    margin-top: 3px;
+  }
+`;
+
+export const ReceiveSendTokenLabelsBlock = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  @media (max-width: 550px) {
+    margin-left: 10px;
+  }
 
   img {
     margin-top: 3px;
@@ -927,7 +965,6 @@ export const SendTokenLabelsBlock = styled.div`
 `;
 
 export const SendTokenName = styled.span`
-  max-width: 200px;
   color: ${(props) => (props.isLightTheme ? '#1e1e20' : '#FFFFFF')};
   font-family: 'Saira', sans-serif;
   font-size: 16px;
@@ -959,6 +996,7 @@ export const SendTokenBalance = styled.div`
 
   @media (max-width: 550px) {
     margin-right: 5px;
+    margin-top: 0;
   }
   span {
     color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#FFFFFF')};
