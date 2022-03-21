@@ -296,7 +296,7 @@ export const LiquidityTableItem = ({
         setAddLiquidityNormalTokenA((value * 10 ** tokenDecimal1).toString());
         setAddLiquidityNormalTokenB(convertedValue[1]);
 
-        setOutValue((+convertedValue[1]).toFixed(20) / 10 ** tokenDecimal2);
+        setOutValue(+convertedValue[1] / 10 ** tokenDecimal2);
         setInValue(value);
       }
       if (inputId === 'secondInput') {
@@ -309,11 +309,13 @@ export const LiquidityTableItem = ({
           .call()
           .catch(() => {});
         console.log('convertedValue2', convertedValue);
-        setAddLiquidityNormalTokenA(convertedValue[0]);
-        setAddLiquidityNormalTokenB((value * 10 ** tokenDecimal2).toString());
+        if (convertedValue) {
+          setAddLiquidityNormalTokenA(convertedValue[0]);
+          setAddLiquidityNormalTokenB((value * 10 ** tokenDecimal2).toString());
 
-        setInValue((+convertedValue[0]).toFixed(20) / 10 ** tokenDecimal1);
-        setOutValue(value);
+          setInValue(+convertedValue[0] / 10 ** tokenDecimal1);
+          setOutValue(value);
+        }
       }
     } else {
       setInValue('');
@@ -448,6 +450,7 @@ export const LiquidityTableItem = ({
       {/*MODAL addLiquidity====================================>*/}
       {isModalVisible === 'addLiquidity' && (
         <ModalContainer
+          tokenSwapError={tokenSwapError}
           theme={theme}
           title={selectedModal}
           isOpen={isModalVisible}
@@ -491,9 +494,6 @@ export const LiquidityTableItem = ({
                   : '0.00'
               }`}</Balance>
             </InputBlock>
-            <div style={{ color: 'red' }}>
-              {tokenSwapError && 'Error: Returned error: execution reverted'}
-            </div>
             {/*<ButtonsBlock>*/}
             {/*  <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>*/}
             {/*</ButtonsBlock>*/}
@@ -520,6 +520,7 @@ export const LiquidityTableItem = ({
                 onFocus={() => {
                   setOutValue('');
                   setSingleTokenValue('');
+                  setTokenSwapError(false);
                 }}
               />
               {/*<Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>*/}
@@ -545,6 +546,7 @@ export const LiquidityTableItem = ({
                 onFocus={() => {
                   setInValue('');
                   setSingleTokenValue('');
+                  setTokenSwapError(false);
                 }}
               />
               {/*<Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>*/}

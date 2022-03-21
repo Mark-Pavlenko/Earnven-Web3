@@ -101,3 +101,14 @@ export const Title = styled.div`
     font-size: 20px;
   }
 `;
+
+export const ErrorMessage = styled.div`
+  display: flex;
+  color: #ec3d3d;
+  justify-content: center;
+  font-family: serif saira;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  margin-bottom: 10px;
+`;
