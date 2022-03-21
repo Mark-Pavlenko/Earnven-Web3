@@ -98,6 +98,7 @@ export const InvestTableItem = ({
 
   const [isWithdrawActive, setIsWithdrawActive] = useState(false);
   const [supplyTokenBalance, setSupplyTokenBalance] = useState('');
+  const [tokenSwapError, setTokenSwapError] = useState(false);
 
   const selectInitialValue = {
     label: 'Ethereum',
@@ -255,14 +256,20 @@ export const InvestTableItem = ({
     //------------------------------------->
     const NewContract = new web3.eth.Contract(
       ROUTERABI,
-      '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F'
+      //UNISWAP V2 contract address
+      item.protocol === 'Sushiswap' ? Addresses.sushiRouter : Addresses.uniRouter
     );
-    if (!isNaN(value)) {
-      if (inputId === 'firstInput') {
-        const convertedValue = await NewContract.methods
-          .getAmountsOut((value * 10 ** tokenDecimal1).toString(), [token1, token2])
-          .call();
 
+    if (!isNaN(Number(value)) && value !== '') {
+      if (inputId === 'firstInput') {
+        let valueWithDecimal = value;
+        for (let i = 0; i < tokenDecimal1; i++) {
+          valueWithDecimal += 0;
+        }
+        const convertedValue = await NewContract.methods
+          .getAmountsOut(valueWithDecimal, [token1, token2])
+          .call()
+          .catch(() => {});
         setAddLiquidityNormalTokenA((value * 10 ** tokenDecimal1).toString());
         setAddLiquidityNormalTokenB(convertedValue[1]);
 
@@ -270,15 +277,21 @@ export const InvestTableItem = ({
         setInValue(value);
       }
       if (inputId === 'secondInput') {
+        let valueWithDecimal = value;
+        for (let i = 0; i < tokenDecimal2; i++) {
+          valueWithDecimal += 0;
+        }
         const convertedValue = await NewContract.methods
-          .getAmountsIn((value * 10 ** tokenDecimal2).toString(), [token1, token2])
-          .call();
+          .getAmountsIn(valueWithDecimal, [token1, token2])
+          .call()
+          .catch(() => {});
+        if (convertedValue) {
+          setAddLiquidityNormalTokenA(convertedValue[0]);
+          setAddLiquidityNormalTokenB((value * 10 ** tokenDecimal2).toString());
 
-        setAddLiquidityNormalTokenA(convertedValue[0]);
-        setAddLiquidityNormalTokenB((value * 10 ** tokenDecimal2).toString());
-
-        setInValue(+convertedValue[0] / 10 ** tokenDecimal1);
-        setOutValue(value);
+          setInValue(+convertedValue[0] / 10 ** tokenDecimal1);
+          setOutValue(value);
+        }
       }
     } else {
       setInValue('');
@@ -324,7 +337,10 @@ export const InvestTableItem = ({
     if (tokenAddress !== token1) {
       const convertedValue1 = await NewContract.methods
         .getAmountsOut((tokenValueHalf * 10 ** tokenDecimal).toString(), [tokenAddress, token1])
-        .call();
+        .call()
+        .catch((e) => {
+          setTokenSwapError(true);
+        });
 
       setInValue(+convertedValue1[1] / 10 ** tokenDecimalPair1);
     } else {
@@ -334,7 +350,10 @@ export const InvestTableItem = ({
     if (tokenAddress !== token2) {
       const convertedValue2 = await NewContract.methods
         .getAmountsOut((tokenValueHalf * 10 ** tokenDecimal).toString(), [tokenAddress, token2])
-        .call();
+        .call()
+        .catch((e) => {
+          setTokenSwapError(true);
+        });
 
       setOutValue(+convertedValue2[1] / 10 ** tokenDecimalPair2);
     } else {
@@ -423,6 +442,7 @@ export const InvestTableItem = ({
       {/*MODAL addLiquidity====================================>*/}
       {isModalVisible === 'addLiquidity' && (
         <ModalContainer
+          tokenSwapError={tokenSwapError}
           theme={theme}
           title={selectedModal}
           modalType={'withdraw'}
@@ -440,6 +460,7 @@ export const InvestTableItem = ({
                 setSingleTokenValue('');
                 setInValue('');
                 setOutValue('');
+                setTokenSwapError(false);
               }}
             />
             <InputBlock>
@@ -449,11 +470,13 @@ export const InvestTableItem = ({
                 value={singleTokenValue}
                 type="number"
                 onChange={(e) => {
-                  addLiquidityToPair(
-                    item.poolDetails.token0Address,
-                    item.poolDetails.token1Address,
-                    e.target.value
-                  ).then((res) => res);
+                  if (e.target.value.length > 0 && e.target.value !== 0) {
+                    addLiquidityToPair(item.token0.id, item.token1.id, e.target.value).catch(
+                      (res) => res
+                    );
+                  } else {
+                    setTokenSwapError(false);
+                  }
                   setSingleTokenValue(e.target.value);
                   setInputType('single');
                 }}
@@ -495,6 +518,7 @@ export const InvestTableItem = ({
                 onFocus={() => {
                   setOutValue('');
                   setSingleTokenValue('');
+                  setTokenSwapError(false);
                 }}
               />
               {/*<Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>*/}
@@ -524,6 +548,7 @@ export const InvestTableItem = ({
                 onFocus={() => {
                   setInValue('');
                   setSingleTokenValue('');
+                  setTokenSwapError(false);
                 }}
               />
               {/*<Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>*/}
@@ -541,8 +566,11 @@ export const InvestTableItem = ({
             </LinksContainer>
             <ButtonsBlock>
               <SupplyTokenButton
+                disabled={tokenSwapError}
                 isLightTheme={theme}
-                onClick={inputsHandler}>{`Supply tokens`}</SupplyTokenButton>
+                onClick={
+                  !tokenSwapError ? inputsHandler : () => {}
+                }>{`Supply tokens`}</SupplyTokenButton>
             </ButtonsBlock>
           </SelectWrapper>
         </ModalContainer>

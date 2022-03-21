@@ -72,7 +72,6 @@ export const LiquidityTableItem = ({
   const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
   const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
   const allTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
-
   const gasPricesWithIcons = addIconsGasPrices(GasPrices, fastDice, middleDice, slowDice, theme);
 
   const [inValue, setInValue] = useState('');
@@ -245,11 +244,17 @@ export const LiquidityTableItem = ({
       //UNISWAP V2 contract address
       item.protocol === 'Sushiswap' ? Addresses.sushiRouter : Addresses.uniRouter
     );
-    if (!isNaN(value)) {
+
+    if (!isNaN(Number(value)) && value !== '') {
       if (inputId === 'firstInput') {
+        let valueWithDecimal = value;
+        for (let i = 0; i < tokenDecimal1; i++) {
+          valueWithDecimal += 0;
+        }
         const convertedValue = await NewContract.methods
-          .getAmountsOut((value * 10 ** tokenDecimal1).toString(), [token1, token2])
-          .call();
+          .getAmountsOut(valueWithDecimal, [token1, token2])
+          .call()
+          .catch(() => {});
         setAddLiquidityNormalTokenA((value * 10 ** tokenDecimal1).toString());
         setAddLiquidityNormalTokenB(convertedValue[1]);
 
@@ -257,14 +262,21 @@ export const LiquidityTableItem = ({
         setInValue(value);
       }
       if (inputId === 'secondInput') {
+        let valueWithDecimal = value;
+        for (let i = 0; i < tokenDecimal2; i++) {
+          valueWithDecimal += 0;
+        }
         const convertedValue = await NewContract.methods
-          .getAmountsIn((value * 10 ** tokenDecimal2).toString(), [token1, token2])
-          .call();
-        setAddLiquidityNormalTokenA(convertedValue[0]);
-        setAddLiquidityNormalTokenB((value * 10 ** tokenDecimal2).toString());
+          .getAmountsIn(valueWithDecimal, [token1, token2])
+          .call()
+          .catch(() => {});
+        if (convertedValue) {
+          setAddLiquidityNormalTokenA(convertedValue[0]);
+          setAddLiquidityNormalTokenB((value * 10 ** tokenDecimal2).toString());
 
-        setInValue(+convertedValue[0] / 10 ** tokenDecimal1);
-        setOutValue(value);
+          setInValue(+convertedValue[0] / 10 ** tokenDecimal1);
+          setOutValue(value);
+        }
       }
     } else {
       setInValue('');
@@ -314,7 +326,6 @@ export const LiquidityTableItem = ({
         .call()
         .catch((e) => {
           setTokenSwapError(true);
-          console.log('njhukhuu1', e);
         });
       if (convertedValue1?.[1]?.length) {
         setInValue(+convertedValue1[1] / 10 ** tokenDecimalPair1);
@@ -329,7 +340,6 @@ export const LiquidityTableItem = ({
         .call()
         .catch((e) => {
           setTokenSwapError(true);
-          console.log('njhukhuu2', e);
         });
       if (convertedValue2?.[1]?.length) {
         setOutValue(+convertedValue2[1] / 10 ** tokenDecimalPair2);
@@ -397,6 +407,7 @@ export const LiquidityTableItem = ({
       {/*MODAL addLiquidity====================================>*/}
       {isModalVisible === 'addLiquidity' && (
         <ModalContainer
+          tokenSwapError={tokenSwapError}
           theme={theme}
           title={selectedModal}
           isOpen={isModalVisible}
@@ -440,9 +451,6 @@ export const LiquidityTableItem = ({
                   : '0.00'
               }`}</Balance>
             </InputBlock>
-            <div style={{ color: 'red' }}>
-              {tokenSwapError && 'Error: Returned error: execution reverted'}
-            </div>
             {/*<ButtonsBlock>*/}
             {/*  <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>*/}
             {/*</ButtonsBlock>*/}
@@ -462,18 +470,14 @@ export const LiquidityTableItem = ({
                 value={inValue}
                 isLightTheme={theme}
                 onChange={(e) => {
-                  convertTokenPrice(
-                    'firstInput',
-                    parseInt(e.target.value),
-                    item.token0.id,
-                    item.token1.id
-                  );
+                  convertTokenPrice('firstInput', e.target.value, item.token0.id, item.token1.id);
                   setInputType('pair');
                 }}
                 type="number"
                 onFocus={() => {
                   setOutValue('');
                   setSingleTokenValue('');
+                  setTokenSwapError(false);
                 }}
               />
               {/*<Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>*/}
@@ -492,18 +496,14 @@ export const LiquidityTableItem = ({
                 value={outValue}
                 isLightTheme={theme}
                 onChange={(e) => {
-                  convertTokenPrice(
-                    'secondInput',
-                    parseInt(e.target.value),
-                    item.token0.id,
-                    item.token1.id
-                  );
+                  convertTokenPrice('secondInput', e.target.value, item.token0.id, item.token1.id);
                   setInputType('pair');
                 }}
                 type="number"
                 onFocus={() => {
                   setInValue('');
                   setSingleTokenValue('');
+                  setTokenSwapError(false);
                 }}
               />
               {/*<Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>*/}
