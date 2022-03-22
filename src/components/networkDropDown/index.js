@@ -32,6 +32,7 @@ export default function Index() {
         {(popupState) => (
           <div>
             <DesktopNetworkButton
+              fontWeight={300}
               isLightTheme={isLightTheme}
               startIcon={<img src={pyramidIcon} alt="pyramide_icon" />}
               endIcon={
@@ -70,6 +71,11 @@ export default function Index() {
                   Network
                 </InactiveDesktopListNetworkButton>
                 <DesktopNetworksList isLightTheme={isLightTheme}>
+                  <EthereumActiveNetwork isLightTheme={isLightTheme} style={{}}>
+                    <img src={ethIcon} alt={'network_icon'} />
+                    <span>Ethereum</span>
+                  </EthereumActiveNetwork>
+
                   <DesktopNetworksListItem>
                     <img src={arbitrumIcon} alt={'network_icon'} />
                     <DesktopNetworksListItemLabelsBlock>
@@ -77,11 +83,6 @@ export default function Index() {
                       <DesktopComingSoonLabel>Coming soon</DesktopComingSoonLabel>
                     </DesktopNetworksListItemLabelsBlock>
                   </DesktopNetworksListItem>
-
-                  <EthereumActiveNetwork isLightTheme={isLightTheme} style={{}}>
-                    <img src={ethIcon} alt={'network_icon'} />
-                    <span>Ethereum</span>
-                  </EthereumActiveNetwork>
 
                   <DesktopNetworksListItem>
                     <img src={AvalancheIcon} alt={'network_icon'} />

@@ -130,7 +130,7 @@ export class TestTokensSelect extends Component {
             style={{
               width: 250,
               height: 40,
-              backgroundColor: isLightTheme ? '#FFFFFF29' : '#10142c',
+              backgroundColor: isLightTheme ? '#ffffff' : '#10142c',
               boxShadow: isLightTheme
                 ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
                 : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',

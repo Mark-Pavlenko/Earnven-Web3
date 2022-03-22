@@ -8,8 +8,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
 import Popover from '@mui/material/Popover';
 import { useMediaQuery } from '@material-ui/core';
+import { useSelector } from 'react-redux';
 
-export default function SearchTokensMobile({ isLightTheme }) {
+export default function SearchTokensMobile() {
+  const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
   const navigate = useNavigate();
   const { address } = useParams();
   const smallScreenSize = useMediaQuery('(max-width:779px)');

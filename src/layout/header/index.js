@@ -79,16 +79,8 @@ function Header({ onOpenSidebar, onOpenMobileWalletsList, finalTitle }) {
           )}
         </HeaderFirstLayout>
         <HeaderItemsBlock>
-          {/*<SearchTokens />*/}
-
           {/*<SearchTokensLight parentCallback={callbackFunction} isLightTheme={isLightTheme} />*/}
           <SearchTokens parentCallback={callbackFunction} isLightTheme={isLightTheme} />
-
-          {/*search tokens mobile version*/}
-          {/*<SearchTokensMobile isLightTheme={isLightTheme} />*/}
-
-          {/*Old network select*/}
-          {/*<NetworkSelectHeader isLightTheme={isLightTheme} />*/}
 
           {/*Actual network select*/}
           <DesktopNetworkSelect />

@@ -44,13 +44,10 @@ export default function GasDropdownMenuHeader({ isLightTheme }) {
     // console.log('Updating Layout....')
     const content = addIconsGasPricesWithIcons.map((option) => (
       <div
-        // key={option.value}
-        selected={option.label === selected}
         onClick={() => {
           handleClose();
           updateGasValue(option.value, option.label);
-        }}
-        sx={{ py: 1, px: 2.5 }}>
+        }}>
         <GasMenuItem isLightTheme={isLightTheme}>
           <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
             <img src={option.icon} alt="" />

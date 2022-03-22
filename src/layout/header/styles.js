@@ -10,17 +10,17 @@ export const HeaderLayoutBig = styled.div`
     background: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};
   }
 
-  @media screen and (min-width: 711px) and (max-width: 1280px) {
-    display: grid;
-    grid-template-columns: 40% 60%;
-    margin-left: 0;
-  }
+  //@media screen and (min-width: 711px) and (max-width: 1280px) {
+  //  display: grid;
+  //  grid-template-columns: 40% 60%;
+  //  margin-left: 0;
+  //}
 
-  @media (max-width: 780px) {
+  @media (max-width: 1280px) {
     display: none;
   }
 
-  @media (min-width: 1280px) {
+  @media (min-width: 1281px) {
     display: grid;
     grid-template-columns: 40% 60%;
   }
@@ -43,7 +43,7 @@ export const HeaderLayoutMobile = styled.div`
   @media (min-width: 2100px) {
     background: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};
   }
-  @media (min-width: 781px) {
+  @media (min-width: 1281px) {
     display: none;
   }
 `;
@@ -77,7 +77,7 @@ export const HeaderTitle = styled.div`
     font-weight: 1000;
   }
 
-  @media (max-width: 780px) {
+  @media (max-width: 1280px) {
     margin-top: 23px;
     margin-left: 15px;
   }
@@ -93,21 +93,20 @@ export const HeaderTitle = styled.div`
 `;
 
 export const HeaderItemsBlock = styled.div`
-  @media screen and (min-width: 710px) and (max-width: 1280px) {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+  //@media screen and (min-width: 711px) and (max-width: 820px) {
+  //  display: flex;
+  //  justify-content: space-around;
+  //  align-items: center;
+  //}
+
+  @media (max-width: 1280px) {
+    display: none;
   }
 
-  @media screen and (min-width: 1281px) and (max-width: 1444px) {
+  @media (min-width: 1281px) {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  @media (min-width: 1445px) {
-    display: flex;
-    justify-content: space-between;
+    justify-content: end;
+    gap: 30px;
     align-items: center;
   }
 `;
@@ -126,15 +125,15 @@ export const BurgerSidebarIconButton = styled(IconButton)`
     }
   }
 
-  @media (max-width: 780px) {
+  @media (max-width: 1280px) {
     margin-left: auto;
   }
 
-  @media (min-width: 1024px) {
-    margin-left: 25px;
-  }
+  //@media (min-width: 1024px) {
+  //  margin-left: 25px;
+  //}
 
-  @media (min-width: 1280px) {
+  @media (min-width: 1281px) {
     display: none;
   }
 `;
@@ -166,7 +165,7 @@ export const ChangeThemeBtnHeader = styled(IconButton)`
     display: none;
   }
 
-  @media screen and (min-width: 1445px) and (max-width: 1920px) {
-    //margin-right: 25px;
+  @media screen and (min-width: 821px) and (max-width: 1920px) {
+    margin-left: -8px;
   }
 `;
