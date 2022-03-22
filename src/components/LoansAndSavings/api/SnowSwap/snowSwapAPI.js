@@ -25,9 +25,13 @@ export const checkSnowSwapClaimStake = async (accountAddress, web3) => {
 };
 
 export const getSnowTokenData = async () => {
-  const response = await axios.get(
-    `https://api.coingecko.com/api/v3/coins/ethereum/contract/0xfe9A29aB92522D14Fc65880d817214261D8479AE`
-  );
-
-  return response.data;
+  //let response;
+  try {
+    const response = await axios.get(
+      `https://api.coingecko.com/api/v3/coins/ethereum/contract/0xfe9A29aB92522D14Fc65880d817214261D8479AE`
+    );
+    return response.data;
+  } catch (err) {
+    console.log('Error log - In Snow swap fetch coingecko data', err.message);
+  }
 };

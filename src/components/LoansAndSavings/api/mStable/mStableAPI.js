@@ -108,6 +108,7 @@ export const getMStableStakedata = async (attributes) => {
       : 0;
     object.value = object.balance * parseFloat(object.price).toFixed(2);
     object.claimable = result[i].earned[0].value ? result[i].earned[0].value / 10 ** 18 : 0;
+    object.totalValue = parseFloat(object.value + object.claimable);
     object.chain = 'Ethereum';
     object.protocol = 'mStable';
 

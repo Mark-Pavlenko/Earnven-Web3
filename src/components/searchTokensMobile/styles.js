@@ -13,7 +13,7 @@ export const SearchTokensMobileButton = styled(IconButton)`
     }
   }
 
-  @media (min-width: 1000px) {
+  @media (min-width: 1281px) {
     display: none;
   }
 `;

@@ -11,14 +11,17 @@ export function* getmStableSagaWatcher() {
 
 function* mStableworker(mStableAttributes) {
   const attributes = mStableAttributes.payload;
-  let total = 0;
+
   const resultData = yield call(API.getMStableStakedata, attributes);
-  console.log('TestmStable from saga for mStable', resultData);
+
   //get the total value of the mStable staking token
   if (resultData.length > 0) {
+    let total = 0;
     resultData.map((object) => {
-      total += parseFloat(object.value) + parseFloat(object.claimable);
+      //let totalAsset = parseFloat(object.value + object.claimable);
+      total += parseFloat(object.value + object.claimable);
     });
+
     yield put(actions.getmStableStaking(resultData));
     yield put(actions.getmStableStakingTotal(total));
   }

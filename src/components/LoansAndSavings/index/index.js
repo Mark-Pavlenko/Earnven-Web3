@@ -67,6 +67,7 @@ export default function index({ accountAddress }) {
   const compTokenDataValue = useSelector((state) => state.compoundFinance.compTokenData);
   const compTotalValue = useSelector((state) => state.compoundFinance.compTokenTotal);
   const compTokenClaim = useSelector((state) => state.compoundFinance.compClaimValue);
+  const compClaimTotalValue = useSelector((state) => state.compoundFinance.compClaimTotal);
   const iscompoundFinanceIsLoading = useSelector(
     (state) => state.compoundFinance.compoundFinanceIsLoading
   );
@@ -150,15 +151,14 @@ export default function index({ accountAddress }) {
   const issnowSwapIsLoading = useSelector((state) => state.snowSwap.snowSwapIsLoading);
 
   //CreamIronBank
-  // const creamIronBankData = useSelector((state) => state.creamIronBank.creamIronBankData);
-  // const creamIronBankTotal = useSelector((state) => state.creamIronBank.creamIronBankTotal);
-  // const iscreamIronBankIsLoading = useSelector(
-  //   (state) => state.creamIronBank.creamIronBankIsLoading
-  // );
-  // const creamImageUrl =
-  //   'https://assets.coingecko.com/coins/images/11976/thumb/Cream.png?1596593418';
+  const creamIronBankData = useSelector((state) => state.creamIronBank.creamIronBankData);
+  const creamIronBankTotal = useSelector((state) => state.creamIronBank.creamIronBankTotal);
+  const iscreamIronBankIsLoading = useSelector(
+    (state) => state.creamIronBank.creamIronBankIsLoading
+  );
+  const creamImageUrl =
+    'https://assets.coingecko.com/coins/images/11976/thumb/Cream.png?1596593418';
 
-  //balancer V2
   //balancerV2
   const balancerV2lp = useSelector((state) => state.balancerV2lp.balancerV2lp); //saga
   const balancerV2tot = useSelector((state) => state.balancerV2lp.balancerV2tot); //saga
@@ -551,10 +551,12 @@ export default function index({ accountAddress }) {
         CrvStakingTokenData.length == 0 &&
         AaveStakingData.length == 0 &&
         convexStakeData.length == 0 &&
+        creamIronBankData.length == 0 &&
         sushiStakeData.length == 0 &&
         uniswapV2stake.length == 0 &&
         mStablesStaking.length == 0 &&
-        alxFinanceData.length == 0 ? (
+        alxFinanceData.length == 0 &&
+        compTokenClaim.length == 0 ? (
           <PoolsBlock isLightTheme={theme}>
             <Header>
               <Title isLightTheme={theme}>{'Saving/Loans'}</Title>
@@ -577,11 +579,12 @@ export default function index({ accountAddress }) {
                 CrvStakingTokenData.length > 0 ||
                 AaveStakingData.length > 0 ||
                 convexStakeData.length > 0 ||
-                // creamIronBankData.length > 0 ||
+                creamIronBankData.length > 0 ||
                 sushiStakeData.length > 0 ||
                 uniswapV2stake.length > 0 ||
                 mStablesStaking.length > 0 ||
-                alxFinanceData.length > 0,
+                alxFinanceData.length > 0 ||
+                compTokenClaim.length > 0,
             }}>
             <Header>
               <Title isLightTheme={theme}>{'Saving/Loans'}</Title>
@@ -600,9 +603,12 @@ export default function index({ accountAddress }) {
                         parseFloat(eth2StakeTotal) +
                         parseFloat(compTotalValue) +
                         parseFloat(convexStakeTotal) +
-                        // parseFloat(creamIronBankTotal) +
+                        parseFloat(creamIronBankTotal) +
                         parseFloat(sushiStakeTotal) +
-                        parseFloat(uniswapV2stakeTotal)
+                        parseFloat(uniswapV2stakeTotal) +
+                        parseFloat(mStableTotal) +
+                        parseFloat(alxFinanceTotal) +
+                        parseFloat(compClaimTotalValue)
                     ).toFixed(2)
                   )}
                 </TotalValue>
@@ -627,9 +633,9 @@ export default function index({ accountAddress }) {
                           <img
                             src={CompoundLogo}
                             style={{
-                              height: '20px',
+                              height: '25px',
                               marginTop: '',
-                              marginLeft: '15px',
+                              marginLeft: '5px',
                               display: 'inline-block',
                             }}
                             alt=""
@@ -652,6 +658,38 @@ export default function index({ accountAddress }) {
                       ''
                     )}
                   </>
+                )}
+
+                {/*Compound Claimable */}
+                {compTokenClaim.length > 0 ? (
+                  <React.Fragment>
+                    <ProtocolTitle isLightTheme={theme}>
+                      <img
+                        src={CompoundLogo}
+                        style={{
+                          height: '25px',
+                          marginTop: '',
+                          marginLeft: '5px',
+                          display: 'inline-block',
+                        }}
+                        alt=""
+                      />
+                      Compound Claimable
+                    </ProtocolTitle>
+                    {compTokenClaim
+                      ? compTokenClaim.map((object) => {
+                          return (
+                            <Investment
+                              protocol={object}
+                              protocolName={'Compound'}
+                              logoImage={object.tokenImage}
+                            />
+                          );
+                        })
+                      : ''}
+                  </React.Fragment>
+                ) : (
+                  ''
                 )}
 
                 {/*Ethereum 2.0 protocol */}
@@ -832,46 +870,46 @@ export default function index({ accountAddress }) {
             )}
 
             {/* CreamIronBank Protocol */}
-            {/* {iscreamIronBankIsLoading == true ? (
-            <PortocolLoadingBlock isLightTheme={theme}>
-              <LoadingSpinner>
-                <CircularProgress size={22} />
-              </LoadingSpinner>
-              <div>CreamIronBank</div>
-              <div>Data is fetching</div>
-            </PortocolLoadingBlock>
-          ) : (
-            <>
-              {creamIronBankData.length > 0 ? (
-                <React.Fragment>
-                  <img
-                    src={creamImageUrl}
-                    style={{
-                      height: '20px',
-                      marginTop: '',
-                      marginLeft: '15px',
-                      display: 'inline-block',
-                    }}
-                    alt=""
-                  />
-                  CreamIronBank
-                  {creamIronBankData
-                    ? creamIronBankData.map((object) => {
-                        return (
-                          <Investment
-                            protocol={object}
-                            protocolName={'Cream Iron Bank'}
-                            logoImage={object.tokenImage}
-                          />
-                        );
-                      })
-                    : ''}
-                </React.Fragment>
-              ) : (
-                ''
-              )}
-            </>
-          )} */}
+            {iscreamIronBankIsLoading == true ? (
+              <PortocolLoadingBlock isLightTheme={theme}>
+                <LoadingSpinner>
+                  <CircularProgress size={22} />
+                </LoadingSpinner>
+                <div>CreamIronBank</div>
+                <div>Data is fetching</div>
+              </PortocolLoadingBlock>
+            ) : (
+              <>
+                {creamIronBankData.length > 0 ? (
+                  <React.Fragment>
+                    <img
+                      src={creamImageUrl}
+                      style={{
+                        height: '20px',
+                        marginTop: '',
+                        marginLeft: '15px',
+                        display: 'inline-block',
+                      }}
+                      alt=""
+                    />
+                    CreamIronBank
+                    {creamIronBankData
+                      ? creamIronBankData.map((object) => {
+                          return (
+                            <Investment
+                              protocol={object}
+                              protocolName={'Cream Iron Bank'}
+                              logoImage={object.tokenImage}
+                            />
+                          );
+                        })
+                      : ''}
+                  </React.Fragment>
+                ) : (
+                  ''
+                )}
+              </>
+            )}
 
             {/* Sushi Staking */}
             {issushiStakeIsLoading == true ? (

@@ -4,7 +4,11 @@ import * as actions from './actions';
 import actionTypes from '../../constants/actionTypes';
 
 export function* getCurveTokenSagaWatcher() {
-  yield takeEvery(actionTypes.SET_CRV_TOKEN_DATA, curveTokenSagaWorker);
+  try {
+    yield takeEvery(actionTypes.SET_CRV_TOKEN_DATA, curveTokenSagaWorker);
+  } catch (err) {
+    console.log('Error log - In Curve Token action in Saga', err.message);
+  }
 }
 
 function* curveTokenSagaWorker(curveTokenAttributes) {
@@ -21,23 +25,23 @@ function* curveTokenSagaWorker(curveTokenAttributes) {
 
   //call the below function to get price of the Curve token
   const cvxTokenApiData = yield call(API.getCurveTokenPriceData);
-
-  const crvTokenBalanceAmount = curveTokenData.crvTokenBalanceValue;
-  if (crvTokenBalanceAmount > 0) {
-    let object = {};
-    //object.cvxBalanceAmt = crvTokenBalanceAmount;
-    object.balance = crvTokenBalanceAmount / 10 ** curveTokenData.crvTokenDecimals;
-    object.price = cvxTokenApiData.cvxTokenPrice; //for timing hard coded;
-    object.value = object.balance * object.price;
-    object.imageData = [cvxTokenApiData.cvxImageUrl];
-    //object.tokens = [{ symbol: 'CRV', balance: object.balance }];
-    object.protocol = 'Curve';
-    object.chain = 'Ethereum';
-    object.symbol = 'CRV';
-    cvxTokenTotal = object.value;
-    cvxArrayOfData.push(object);
+  if (cvxTokenApiData) {
+    const crvTokenBalanceAmount = curveTokenData.crvTokenBalanceValue;
+    if (crvTokenBalanceAmount > 0) {
+      let object = {};
+      //object.cvxBalanceAmt = crvTokenBalanceAmount;
+      object.balance = crvTokenBalanceAmount / 10 ** curveTokenData.crvTokenDecimals;
+      object.price = cvxTokenApiData.cvxTokenPrice; //for timing hard coded;
+      object.value = object.balance * object.price;
+      object.imageData = [cvxTokenApiData.cvxImageUrl];
+      //object.tokens = [{ symbol: 'CRV', balance: object.balance }];
+      object.protocol = 'Curve';
+      object.chain = 'Ethereum';
+      object.symbol = 'CRV';
+      cvxTokenTotal = object.value;
+      cvxArrayOfData.push(object);
+    }
   }
-
   yield put(actions.getCurveTokenData(cvxArrayOfData));
   yield put(actions.getCurveTokenTotal(cvxTokenTotal));
   yield put(actions.setCurveTokenIsLoading(false));

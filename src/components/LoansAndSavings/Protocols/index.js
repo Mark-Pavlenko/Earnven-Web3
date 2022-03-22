@@ -47,7 +47,7 @@ export default function Index({ accountAddress }) {
       <Synthetix accountAddress={accountAddress} />
       <ConvexStaking accountAddress={accountAddress} />
       <SnowSwapStaking accountAddress={accountAddress} />
-      {/* <CreamIronBank accountAddress={accountAddress} getTotal={() => {}} /> */}
+      <CreamIronBank accountAddress={accountAddress} getTotal={() => {}} />
       <BalancerV2 accountAddress={accountAddress} />
       <PickleDill accountAddress={accountAddress} />
       <UniswapV2 accountAddress={accountAddress} />
