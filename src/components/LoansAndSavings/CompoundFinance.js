@@ -19,6 +19,7 @@ import Web3 from 'web3';
 import { useWeb3React } from '@web3-react/core';
 import actionTypes from '../../constants/actionTypes';
 import { useDispatch, useSelector } from 'react-redux';
+import loadWeb3 from '../../utils/loadWeb3';
 
 export default function CompoundFinance({ accountAddress }) {
   const [compTokenContent, setcompTokenContent] = useState([]);
@@ -29,8 +30,13 @@ export default function CompoundFinance({ accountAddress }) {
 
   //logic implementing for web3 provider connection using web3 React hook
   async function getWeb3() {
-    const provider = await connector.getProvider();
-    const web3 = await new Web3(provider);
+    let web3;
+    try {
+      const provider = active ? await connector.getProvider() : await loadWeb3();
+      web3 = new Web3(provider);
+    } catch (err) {
+      console.log('Web3 is not connected, check the Metamask connectivity!!');
+    }
     return web3;
   }
 
@@ -38,14 +44,16 @@ export default function CompoundFinance({ accountAddress }) {
   useEffect(() => {
     const getCompTokenData = async () => {
       const web3 = await getWeb3();
-      const compTokenAttributes = { accountAddress: accountAddress, web3: web3 };
-      try {
-        dispatch({
-          type: actionTypes.SET_COMP_TOKEN_DATA,
-          payload: compTokenAttributes,
-        });
-      } catch (err) {
-        console.log('Dispatch error in compound protocol', err.message);
+      if (web3 != undefined) {
+        const compTokenAttributes = { accountAddress: accountAddress, web3: web3 };
+        try {
+          dispatch({
+            type: actionTypes.SET_COMP_TOKEN_DATA,
+            payload: compTokenAttributes,
+          });
+        } catch (err) {
+          console.log('Dispatch error in compound protocol', err.message);
+        }
       }
     };
 

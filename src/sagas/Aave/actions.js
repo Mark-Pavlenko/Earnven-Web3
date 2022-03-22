@@ -13,3 +13,10 @@ export const getAaveStakeTotalValue = (payload) => {
     payload,
   };
 };
+
+export const setAaveIsLoading = (payload) => {
+  return {
+    type: actionTypes.SET_AAVE_LOADING,
+    payload,
+  };
+};

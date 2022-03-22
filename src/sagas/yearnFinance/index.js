@@ -14,7 +14,6 @@ export function* getYearnFinanceSagaWatcher() {
 function* yearnFinanceSagaWorker(yearnAccountAddress) {
   const yearnUserAccount = yearnAccountAddress.payload;
   //accountAddress
-  console.log('TestPrabhaYToken account from saga', yearnUserAccount.accountAddress);
   //below API call is used to get yVault tokens based on the listed yVault tokens
   const response = yield call(API.getYearnUserData, yearnUserAccount.accountAddress);
 
@@ -56,23 +55,19 @@ function* yearnFinanceSagaWorker(yearnAccountAddress) {
             object.chain = 'Ethereum';
             object.protocol = 'Yearn';
             totalValue += parseFloat(object.value);
-            yearnDataArray.push(object);
+            if (object.value > 0) {
+              yearnDataArray.push(object);
+            }
           }
         }
       } //end of fist for loop
     } //enod of 2nd for loop
-
-    yield put(actions.getYearnFinaceTokenData(yearnDataArray));
-    yield put(actions.getYearnFinanceTokenTotal(parseFloat(totalValue).toFixed(2)));
-
-    // yield put(
-    //   actions.getYearnFinanceTokenTotal(parseFloat(totalValue.toFixed(2)).toLocaleString())
-    // );
-    //yield put(actions.getYearnFinaceData('Prabha Testing'));
-    //yield put(actions.getYearnFinanceTokenTotal(100));
-    //console.log('TestPrabhaYToken YearnFinance components data ', yearnDataArray);
+    if (yearnDataArray.length > 0) {
+      yield put(actions.getYearnFinaceTokenData(yearnDataArray));
+      yield put(actions.getYearnFinanceTokenTotal(parseFloat(totalValue).toFixed(2)));
+    }
   }
-  //below API call is used to get yTokens (yUSDC, yUSDT etc..) based on the listed yTokens from the address list
+  yield put(actions.setYearnFinanceisLoading(false));
 }
 
 //---------------------YToken process--------------------------
@@ -89,7 +84,7 @@ function* yearnFinanceYTokenSagaWorker(yearnTokenAttributes) {
   const response = yield call(API.getUserAccountInfo, yTokenUserAccount.accountAddress);
   const data = response.data;
 
-  if (response.data) {
+  if (data.tokens != undefined) {
     for (let i = 0; i < data.tokens.length; i++) {
       const yearnTokenData = data.tokens[i];
       const tokenAddress = yearnTokenData.tokenInfo.address.toLowerCase();
@@ -114,12 +109,12 @@ function* yearnFinanceYTokenSagaWorker(yearnTokenAttributes) {
         yearnTokenImageUrl = yearnTokenDataPrice.data.image.thumb;
 
         if (yearnTokenDataPoint) {
-          object.yTokenBalance = yearnTokenDataPoint.yTokenBalance;
+          let yTokenBalance = yearnTokenDataPoint.yTokenBalance;
           object.yTokenDecimals = yearnTokenDataPoint.yTokenDecimals;
-          let yTokenBalanceValue = object.yTokenBalance / 10 ** object.yTokenDecimals;
+          let yTokenBalanceValue = yTokenBalance / 10 ** object.yTokenDecimals;
           object.balance =
             parseInt(yTokenBalanceValue.toString().split('e-')[1]) > 0 ? 0 : yTokenBalanceValue;
-          object.yUnderlyingToken = yearnTokenDataPoint.yTokenUnderlyingToken;
+          //object.yUnderlyingToken = yearnTokenDataPoint.yTokenUnderlyingToken;
           object.price = yearnTokenPrice;
           object.tokenImage = yearnTokenImageUrl;
           //object.yTokenValue = yTokenValue;
@@ -139,8 +134,10 @@ function* yearnFinanceYTokenSagaWorker(yearnTokenAttributes) {
     } //end of for loop
     // console.log('TestPrabhaYToken yearnTokenPrice', yearnTokenDataSet);
     // console.log('TestPrabhaYToken yearnTokenTotalValue', yearnTokenTotalValue);
-    yield put(actions.getYTokenData(yearnTokenDataSet));
-    yield put(actions.getYTokenTotal(parseFloat(yearnTokenTotalValue).toFixed(2)));
+    if (yearnTokenDataSet.length > 0) {
+      yield put(actions.getYTokenData(yearnTokenDataSet));
+      yield put(actions.getYTokenTotal(parseFloat(yearnTokenTotalValue).toFixed(2)));
+    }
   }
-  //yield put(actions.getYTokenData('Prabha testing YToken Data'));
+  yield put(actions.setYearnFinanceisLoading(false));
 }

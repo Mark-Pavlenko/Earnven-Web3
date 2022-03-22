@@ -16,7 +16,14 @@ export const setpickleStakeTotal = (payload) => {
 
 export const setpickleDill = (payload) => {
   return {
-    type: actionTypes.SET_PICKLE_DILL,
+    type: actionTypes.GET_PICKLE_DILL,
+    payload,
+  };
+};
+
+export const setPickleDillIsLoading = (payload) => {
+  return {
+    type: actionTypes.SET_PICKLE_DILL_LOADING,
     payload,
   };
 };

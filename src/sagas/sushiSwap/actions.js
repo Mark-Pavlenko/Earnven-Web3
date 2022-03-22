@@ -13,3 +13,10 @@ export const getSushiSwapLPTotalValue = (payload) => {
     payload,
   };
 };
+
+export const setSushiSwapLpIsLoading = (payload) => {
+  return {
+    type: actionTypes.SET_SHUSHI_LP_LOADING,
+    payload,
+  };
+};

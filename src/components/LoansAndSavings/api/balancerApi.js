@@ -50,6 +50,7 @@ export const getbalancerV2data = async (attributes) => {
           object.totalValue = parseFloat(
             (res[i].poolId.totalLiquidity / res[i].poolId.totalShares) * res[i].balance
           ).toFixed(2);
+          object.value = object.totalValue;
           object.price = (object.totalValue / res[i].balance).toString();
           object.tokenList = res[i].poolId.tokensList;
           if (object.totalValue > 0) {
@@ -84,16 +85,16 @@ export const getbalancerV2data = async (attributes) => {
             object.currentPrice = CurrentPrice;
             object.tokenPoolPrice = TokenPoolPrice;
             object.chain = 'Ethereum';
-            object.protocol = 'Balancer-V2';
+            object.protocol = 'Balancer';
             object.priceSum = sum;
             tot += object.priceSum;
           }
         }
         pools.sort((a, b) => parseFloat(b.totalValue) - parseFloat(a.totalValue));
-        // setBalancerTotalv2(parseFloat(tot).toFixed(2));
-        // setBalancerPoolsDatav2(pools);
+
         let tot_float = parseFloat(tot).toFixed(2);
       }
     });
+
   return pools;
 };

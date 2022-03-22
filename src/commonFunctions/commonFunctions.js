@@ -10,7 +10,7 @@ export const numberWithCommas = (x) => {
   return x;
 };
 
-export const addIconsGasPrices = (array, fastIcon, middleIcon, slowIcon) => {
+export const addIconsGasPrices = (array, fastIcon, middleIcon, slowIcon, theme) => {
   return [
     {
       ...array[0],

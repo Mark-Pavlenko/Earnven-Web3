@@ -1,15 +1,19 @@
 import { put, call, select, takeEvery, putResolve, take } from 'redux-saga/effects';
-import * as API from '../../api/api';
+//import * as API from '../../api/api';
 import * as actions from './actions';
 import actionTypes from '../../constants/actionTypes';
-import * as API_LP from '../../../src/components/LoansAndSavings/api/alchemixApi';
+import * as API from '../../../src/components/LoansAndSavings/api/Alchemix/AlchemixAPI';
 
 export function* getalchemixVaultsSagaWatcher() {
-  yield takeEvery(actionTypes.SET_ALCHEMIX_VAULT, AlchemixVaultsworker);
+  yield takeEvery(actionTypes.SET_ALX_DATA, AlchemixVaultsworker);
 }
 
-function* AlchemixVaultsworker(data) {
-  const attributes = data.payload;
-  const lp = yield call(API_LP.getalchemixVaultsfunction, attributes);
-  yield put(actions.getalchemixVaults(lp));
+function* AlchemixVaultsworker(alxAttributes) {
+  const attributes = alxAttributes.payload;
+  const dataResult = yield call(API.getAlxData, attributes);
+  //check and take action only when data exist
+  if (dataResult.length > 0) {
+    yield put(actions.getalchemixVaults(dataResult));
+    yield put(actions.getalchemixTotal(dataResult[0].value));
+  }
 }

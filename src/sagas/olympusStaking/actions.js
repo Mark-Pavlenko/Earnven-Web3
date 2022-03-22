@@ -13,3 +13,10 @@ export const getOHMTokenTotal = (payload) => {
     payload,
   };
 };
+
+export const setOlympusIsLoading = (payload) => {
+  return {
+    type: actionTypes.SET_OHM_LOADING,
+    payload,
+  };
+};

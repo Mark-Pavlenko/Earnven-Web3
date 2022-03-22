@@ -18,6 +18,9 @@ export const Tab = styled(TabUnstyled)`
   display: flex;
   justify-content: flex-start;
   font-style: normal;
+  @media (max-width: 375px) {
+    margin: 6px 5px;
+  }
 
   &:hover {
     background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C')};

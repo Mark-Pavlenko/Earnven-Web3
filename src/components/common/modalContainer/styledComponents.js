@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import close from '../../../assets/icons/close_nft.svg';
+import closeMobile from '../../../assets/icons/crossClose_mobile.svg';
+import closeDark from '../../../assets/icons/close_nft_night.svg';
 
 export const ShadowBlock = styled.div`
   position: fixed;
@@ -19,16 +21,16 @@ export const MainContent = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
-  padding: 18px 30px 30px 30px;
+  padding: 18px 30px 17px 30px;
   max-width: ${(props) => (props.modalType === 'slippageTolerance' ? '375px' : '830px')};
-  height: ${(props) => (props.modalType === 'slippageTolerance' ? '491px' : '867px')};
+  height: fit-content;
   transform: translate(-50%, -50%);
   background: ${(props) =>
     props.isLightTheme ? 'rgba(255, 255, 255, 0.16)' : 'rgba(31, 38, 92, 0.24)'};
   box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
   mix-blend-mode: normal;
   z-index: 1201;
-  backdrop-filter: blur(35px);
+  //backdrop-filter: blur(5px);
   border-radius: 10px;
   @media (max-width: 768px) {
     padding: 18px 15px 30px 15px;
@@ -54,6 +56,9 @@ export const Content = styled.div`
   @media (max-width: 525px) {
     width: 100%;
   }
+  @media (max-width: 375px) {
+    margin: 25px 0 0 0;
+  }
 `;
 
 export const Header = styled.div`
@@ -66,7 +71,7 @@ export const CloseButton = styled.div`
   width: 40px;
   height: 40px;
   transform: ${(props) => (props.isOpen ? 'rotate(0deg)' : 'rotate(180deg)')};
-  background: url(${close}) no-repeat center center;
+  background: url(${(props) => (props.isLightTheme ? close : closeDark)}) no-repeat center center;
   margin-left: 9px;
   cursor: pointer;
   background-color: ${(props) => (props.isLightTheme ? '#ffffff' : 'rgba(68, 83, 173, 0.1)')};
@@ -77,6 +82,12 @@ export const CloseButton = styled.div`
   border-radius: 7px;
   mix-blend-mode: ${(props) => (props.isLightTheme ? 'none' : 'normal')};
   backdrop-filter: ${(props) => (props.isLightTheme ? 'none' : 'blur(35px)')};
+  @media (min-width: 175px) and (max-width: 520px) {
+    background: url(${(props) => (props.isLightTheme ? closeMobile : closeDark)}) no-repeat center
+      center;
+    background-color: transparent;
+    box-shadow: none;
+  }
 `;
 
 export const Title = styled.div`
@@ -86,4 +97,18 @@ export const Title = styled.div`
   font-size: 26px;
   line-height: 41px;
   color: ${(props) => (props.isLightTheme ? '#1E1E20' : '#ffffff')};
+  @media (min-width: 175px) and (max-width: 520px) {
+    font-size: 20px;
+  }
+`;
+
+export const ErrorMessage = styled.div`
+  display: flex;
+  color: #ec3d3d;
+  justify-content: center;
+  font-family: serif saira;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  margin-bottom: 10px;
 `;

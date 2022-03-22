@@ -44,7 +44,7 @@ export default function AppLayout() {
           global_wallet={localStorage.getItem('wallets')}
           themeType={themeType}
         />
-        <MainStyle isLightTheme={themeType} appBarMobile={64} appBarDesktop={92}>
+        <MainStyle isLightTheme={themeType}>
           <Outlet />
         </MainStyle>
       </RootStyle>

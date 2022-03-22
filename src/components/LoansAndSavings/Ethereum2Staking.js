@@ -31,7 +31,7 @@ export default function Ethereum2Staking({ accountAddress }) {
     const getEth2StakeData = async () => {
       try {
         dispatch({
-          type: actionTypes.GET_ETH2_STAKE_DATA,
+          type: actionTypes.SET_ETH2_STAKE_DATA,
           payload: userAccountAddress,
         });
       } catch (error) {
@@ -41,108 +41,5 @@ export default function Ethereum2Staking({ accountAddress }) {
     getEth2StakeData();
   }, [accountAddress]);
 
-  // //implementing below logic for ETH2.0 staking
-  // useEffect(() => {
-  //   if (Array.isArray(BeaconData) || BeaconData.length > 0) {
-  //     console.log('TestABC inside eth 2 implmentation', BeaconData);
-  //     try {
-  //       var content = BeaconData.map((object) => {
-  //         return (
-  //           <>
-  //             <Investment
-  //               protocol={object}
-  //               logoImage={ETHLogo}
-  //               stakedToken={'ETH'}
-  //               protocolName={'Ethereum'}
-  //               chain={'Ethereum'}
-  //               isStaked={true}
-  //             />
-  // {/*<Accordion*/}
-  // {/*  style={{*/}
-  // {/*    background: 'transparent',*/}
-  // {/*    marginRight: '1px',*/}
-  // {/*    color: 'black',*/}
-  // {/*    width: '100%',*/}
-  // {/*    border: '1px',*/}
-  // {/*    borderColor: 'black',*/}
-  // {/*    borderStyle: 'hidden', //solid*/}
-  // {/*  }}>*/}
-  // {/*  <AccordionSummary*/}
-  // {/*    expandIcon={<ExpandMoreIcon />}*/}
-  // {/*    aria-controls="panel1a-content"*/}
-  // {/*    id="panel1a-header">*/}
-  // {/*    <React.Fragment*/}
-  // {/*      style={{*/}
-  // {/*        display: 'inline-block',*/}
-  // {/*        width: '100%',*/}
-  // {/*        //textAlign: 'left',*/}
-  // {/*        wordBreak: 'break-all',*/}
-  // {/*      }}>*/}
-  // {/*      <React.Fragment>*/}
-  // {/*        <img*/}
-  // {/*          style={{*/}
-  // {/*            height: '20px',*/}
-  // {/*            width: '20px',*/}
-  // {/*            display: 'inline-block',*/}
-  // {/*          }}*/}
-  // {/*          src={ETHLogo}*/}
-  // {/*          alt=""*/}
-  // {/*        />*/}
-  // {/*      </React.Fragment>*/}
-  // {/*      ETH 2.0 &nbsp; ${parseFloat(object.totalInvestment).toLocaleString()}*/}
-  // {/*    </React.Fragment>*/}
-  // {/*  </AccordionSummary>*/}
-  // {/*  <AccordionDetails>*/}
-  // {/*    <div style={{ display: 'inline-block', width: '70%', fontSize: '15px' }}>*/}
-  // {/*      Staked Token &nbsp;&nbsp;&nbsp;&nbsp; ETH*/}
-  // {/*      <br />*/}
-  // {/*      Balance &nbsp; {parseFloat(object.totalDeposit).toLocaleString()}*/}
-  // {/*      <br />*/}
-  // {/*      Price &nbsp;&nbsp;&nbsp;&nbsp;${parseFloat(object.ethPrice).toFixed(2)}*/}
-  // {/*      <br />*/}
-  // {/*      Value &nbsp;&nbsp;$*/}
-  // {/*      {parseFloat(object.totalInvestment).toFixed(2).toLocaleString()}*/}
-  // {/*      <br />*/}
-  // {/*      Chain &nbsp;&nbsp;&nbsp;&nbsp; Ethereum*/}
-  // {/*      <br />*/}
-  // {/*      Protocol &nbsp;&nbsp; Ethereum*/}
-  // {/*    </div>*/}
-  // {/*  </AccordionDetails>*/}
-  // {/*</Accordion>*/}
-  //         </>
-  //       );
-  //     });
-  //   } catch (err) {
-  //     console.log('No Curve LP token data found');
-  //   }
-  // }
-
-  //   setBeaconContent(content);
-  // }, [BeaconData]);
-
-  return (
-    <React.Fragment>
-      {/*<h1>ETHEREUM</h1>*/}
-      {/*<div*/}
-      {/*  style={{*/}
-      {/*    fontSize: '15px',*/}
-      {/*    marginRight: '15px',*/}
-      {/*    display: BeaconData.length > 0 ? '' : 'none',*/}
-      {/*  }}>*/}
-      {/*  <img*/}
-      {/*    src={ETHLogo}*/}
-      {/*    style={{*/}
-      {/*      height: '30px',*/}
-      {/*      marginTop: '',*/}
-      {/*      marginLeft: '15px',*/}
-      {/*      display: 'inline-block',*/}
-      {/*    }}*/}
-      {/*    alt=""*/}
-      {/*  />*/}
-      {/*  Ethereum 2.0 staking -- ${BeaconTotal.toLocaleString()}*/}
-      {/*{BeaconContent}*/}
-      {/*</div>*/}
-      {/*<br />*/}
-    </React.Fragment>
-  );
+  return <></>;
 }

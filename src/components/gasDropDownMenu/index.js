@@ -24,40 +24,16 @@ export default function GasDropdownMenuHeader({ isLightTheme }) {
     GasPrices,
     FastGweiGasIcon,
     MiddleGweiGasIcon,
-    SlowGweiGasIcon
+    SlowGweiGasIcon,
+    FastGweiGasIcon,
+    MiddleGweiGasIcon,
+    SlowGweiGasIcon,
+    isLightTheme
   );
   const anchorRef = useRef(null);
   const [open, setopen] = useState(false);
   const [selected, setselected] = useState('Average');
-  // const [GasPrices, setGasPrices] = useState([]);
   const [GasPricesContent, setGasPricesContent] = useState([]);
-
-  // useEffect(() => {
-  //   async function getData() {
-  //     try {
-  //       const response = await axios.get(
-  //         'https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W'
-  //       );
-  //       const { result } = response.data;
-  //       gasType[0].value = result.FastGasPrice;
-  //       gasType[1].value = result.ProposeGasPrice;
-  //       gasType[2].value = result.SafeGasPrice;
-  //       data.gasSelected = result.ProposeGasPrice;
-  //       setGasPrices([...gasType]);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  //
-  //   getData();
-  //
-  //   const interval = setInterval(() => {
-  //     // console.log('Logs every 10 secs');
-  //     getData();
-  //   }, MINUTE_MS);
-  //
-  //   return () => clearInterval(interval);
-  // }, []);
 
   useEffect(() => {
     const updateGasValue = (val, label) => {
@@ -88,6 +64,9 @@ export default function GasDropdownMenuHeader({ isLightTheme }) {
     ));
 
     setGasPricesContent(content);
+
+    console.log('addIconsGasPricesWithIcons', addIconsGasPricesWithIcons);
+    console.log('GasPricesContent', GasPricesContent);
   }, [GasPrices]);
 
   const handleOpen = () => {

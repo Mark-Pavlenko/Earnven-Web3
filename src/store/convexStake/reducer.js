@@ -3,25 +3,26 @@ import actionTypes from '../../constants/actionTypes';
 const initialState = {
   convexStakeData: [],
   convexStakeTotal: 0,
-  convexStakingTokenImage: '',
+  convexStakingIsLoading: true,
+  //convexStakingTokenImage: '',
 };
 
 export const convexStake = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.SET_CONVEX_STAKE_DATA:
+    case actionTypes.GET_CVX_TOKEN_DATA:
       return {
         ...state,
         convexStakeData: action?.payload,
       };
-    case actionTypes.SET_CONVEX_STAKE_TOTAL:
+    case actionTypes.GET_CVX_TOKEN_TOTAL:
       return {
         ...state,
         convexStakeTotal: action?.payload,
       };
-    case actionTypes.SET_CONVEX_STAKE_TOKEN_IMAGE:
+    case actionTypes.SET_CONVEX_LOADING:
       return {
         ...state,
-        convexStakingTokenImage: action?.payload,
+        convexStakingIsLoading: action?.payload,
       };
     default:
       return state;

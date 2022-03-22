@@ -10,14 +10,12 @@ import AmountInput from '../../components/amountInput';
 import Web3 from 'web3';
 import TransparentButton from '../../components/TransparentButton';
 import ERC20ABI from '../../abi/ERC20.json';
-import ROUTERABI from '../../abi/UniRouterV2.json';
 import FACTORYABI from '../../abi/UniFactoryV2.json';
 
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import tokenURIs from '../../screens/Exchange/tokenURIs';
 import Addresses from '../../contractAddresses';
 
 import PropTypes from 'prop-types';
@@ -27,14 +25,13 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-// import AmountInput from '../components/amountInput'
 
 import { Button } from '@material-ui/core';
 import { Link, useParams } from 'react-router-dom';
-import {LiquidityPoolsTable} from "./liquidityPoolsTable/liquidityPoolsTable";
+import {LiquidityPoolsTable} from "./liquidityPoolsTable/liquidityPoolsTable/liquidityPoolsTable";
 import {AddNewGroupButton} from "./uniV2/StyledComponents";
 import {useSelector} from "react-redux";
-import {data} from "../../globalStore";
+import {addLiquidityNormal, addLiquidity} from "../../screens/liquidityPools/helpers";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -76,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function LiquidityPools({ inputValue }) {
+export default function LiquidityPools({ inputValue, AllTokens }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [Loading, setLoading] = useState(false);
@@ -90,8 +87,6 @@ export default function LiquidityPools({ inputValue }) {
 
   const [Data, setData] = useState([]); //UNI V2 Pools
   const [Content, setContent] = useState(''); //UNI V2 33Pools
-  const [TokenA, setTokenA] = useState('');
-  const [TokenB, setTokenB] = useState('');
   const [Page, setPage] = useState('');
   const [AmountTokenA, setAmountTokenA] = useState('');
   const [AmountTokenB, setAmountTokenB] = useState('');
@@ -101,88 +96,61 @@ export default function LiquidityPools({ inputValue }) {
   const [ReceiveToken, setReceiveToken] = useState('');
   const [LiquidityAmount, setLiquidityAmount] = useState('');
 
-
-
-  const [AllTokens, setAllTokens] = useState([]);
-
-  useEffect(() => {
-    async function getData() {
-      let fetchedTokens;
-      await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {}).then(async (response) => {
-        setAllTokens(response.data.records);
-        fetchedTokens = response.data.records;
-      });
-      await axios
-        .get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
-        .then(async (response) => {
-          let data = response.data.tokens;
-          let tokens = fetchedTokens.map((token) => ({
-            ...token,
-            logoURI: data.find((x) => x.address === token.address)
-              ? data.find((x) => x.address === token.address).logoURI
-              : tokenURIs.find((x) => x.address === token.address).logoURI,
-          }));
-          setAllTokens(tokens);
-        }).catch((res) => {
-            console.log('liquidity pools Sushiswap-V2 returns error', res)});
-    }
-    getData();
-  }, []);
-
   //worked useEffect
   useEffect(() => {
     var content = Data.map((object) => {
-      return (<>
-        <br />
-        <Accordion
-          style={{
-            background: 'transparent',
-            marginLeft: '40px',
-            color: 'white',
-            width: '90%',
-            border: '1px',
-            borderColor: 'white',
-            borderStyle: 'solid',
-          }}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header">
-            <div style={{ height: '60px', width: '100%' }}>
-              <div style={{ display: 'inline-block', width: '5%' }}></div>
+      return (
+        <>
+          <br />
+          <Accordion
+            style={{
+              background: 'transparent',
+              marginLeft: '40px',
+              color: 'white',
+              width: '90%',
+              border: '1px',
+              borderColor: 'white',
+              borderStyle: 'solid',
+            }}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header">
+              <div style={{ height: '60px', width: '100%' }}>
+                <div style={{ display: 'inline-block', width: '5%' }}></div>
 
-              <div style={{ display: 'inline-block', width: '25%' }}>
-                <br />
-                {object.token0.symbol} {object.token1.symbol}
-              </div>
+                <div style={{ display: 'inline-block', width: '25%' }}>
+                  <br />
+                  {object.token0.symbol} {object.token1.symbol}
+                </div>
 
-              <div style={{ display: 'inline-block', width: '30%' }}>
-                <br />
-                {parseFloat(object.reserveUSD).toFixed(2)} USD
-              </div>
+                <div style={{ display: 'inline-block', width: '30%' }}>
+                  <br />
+                  {parseFloat(object.reserveUSD).toFixed(2)} USD
+                </div>
 
-              <div
-                style={{
-                  display: 'inline-block',
-                  width: '30%',
-                  marginTop: '10px',
-                }}>
-                {(
-                  ((parseInt(object.volumeUSD) * 0.003) / parseInt(object.reserveUSD)) *
-                  100 *
-                  365
-                ).toFixed(2)}{' '}
-                % (Yearly)
-                <br />
-                {(
-                  ((parseInt(object.volumeUSD) * 0.003) / parseInt(object.reserveUSD)) *
-                  100 *
-                  7
-                ).toFixed(2)}{' '}
-                % (Weekly)
-              </div>
-              <Link to={`/${address}/sushiswap/address/${object.token0.id}/${object.token1.id}`}>
-                <Button
+                <div
+                  style={{
+                    display: 'inline-block',
+                    width: '30%',
+                    marginTop: '10px',
+                  }}>
+                  {(
+                    ((parseInt(object.volumeUSD) * 0.003) / parseInt(object.reserveUSD)) *
+                    100 *
+                    365
+                  ).toFixed(2)}{' '}
+                  % (Yearly)
+                  <br />
+                  {(
+                    ((parseInt(object.volumeUSD) * 0.003) / parseInt(object.reserveUSD)) *
+                    100 *
+                    7
+                  ).toFixed(2)}{' '}
+                  % (Weekly)
+                </div>
+                <Link to={`/${address}/sushiswap/address/${object.token0.id}/${object.token1.id}`}>
+                  <Button
                     color="primary"
                     sx={{
                       height: '0.1px',
@@ -191,63 +159,63 @@ export default function LiquidityPools({ inputValue }) {
                       fontSize: '13px',
                       // background: (theme) => theme.palette.gradients.custom,
                     }}>
-                  Details
-                </Button>
-              </Link>
-              <div style={{ display: 'inline-block', width: '10%' }}>
-                <img
-                  style={{
-                    height: '30px',
-                    width: '30px',
-                    display: 'inline-block',
-                  }}
-                  alt=""
-                  src={`https://ethplorer.io${object.token0.image}`}
-                />
-                &nbsp;&nbsp;&nbsp;
-                <img
-                  style={{
-                    height: '30px',
-                    width: '30px',
-                    display: 'inline-block',
-                  }}
-                  alt=""
-                  src={`https://ethplorer.io${object.token1.image}`}
-                />
+                    Details
+                  </Button>
+                </Link>
+                <div style={{ display: 'inline-block', width: '10%' }}>
+                  <img
+                    style={{
+                      height: '30px',
+                      width: '30px',
+                      display: 'inline-block',
+                    }}
+                    alt=""
+                    src={`https://ethplorer.io${object.token0.image}`}
+                  />
+                  &nbsp;&nbsp;&nbsp;
+                  <img
+                    style={{
+                      height: '30px',
+                      width: '30px',
+                      display: 'inline-block',
+                    }}
+                    alt=""
+                    src={`https://ethplorer.io${object.token1.image}`}
+                  />
+                </div>
               </div>
-            </div>
-          </AccordionSummary>
-          <AccordionDetails>
-            <div>
-              <center>
-                <AppBar position="static" style={{ width: '400px' }}>
-                  <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                    <Tab
-                      className={classes.root}
-                      style={{ width: '50%' }}
-                      label="Add Liquidity"
-                      {...a11yProps(0)}
-                    />
-                    <Tab
-                      className={classes.root}
-                      style={{ width: '50%' }}
-                      label="Remove Liquidity"
-                      {...a11yProps(1)}
-                    />
-                  </Tabs>
-                </AppBar>
-              </center>
+            </AccordionSummary>
+            <AccordionDetails>
+              <div>
+                <center>
+                  <AppBar position="static" style={{ width: '400px' }}>
+                    <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                      <Tab
+                        className={classes.root}
+                        style={{ width: '50%' }}
+                        label="Add Liquidity"
+                        {...a11yProps(0)}
+                      />
+                      <Tab
+                        className={classes.root}
+                        style={{ width: '50%' }}
+                        label="Remove Liquidity"
+                        {...a11yProps(1)}
+                      />
+                    </Tabs>
+                  </AppBar>
+                </center>
 
-              <TabPanel value={value} index={0}>
-                <br />
-                <br />
-                <div
-                  style={{
-                    width: '50%',
-                    display: 'inline-block',
-                  }}>
-                  <center>
-                    {/* <input
+                <TabPanel value={value} index={0}>
+                  <br />
+                  <br />
+                  <div
+                    style={{
+                      width: '50%',
+                      display: 'inline-block',
+                    }}>
+                    <center>
+                      {/* <input
             type='text'
             onChange={(e)=>{setSupplyToken(e.target.value)}}
             style={{background:'transparent',
@@ -257,173 +225,173 @@ export default function LiquidityPools({ inputValue }) {
                     height:'35px',
                     borderRadius:'10px',
                     color:'white',
-                    paddingLeft:'15px', 
+                    paddingLeft:'15px',
                     paddingRight:'15px',
                 }}
                 placeholder='Supply Token Address'
         >
         </input>  */}
-                    <FormControl variant="outlined" style={{ width: '130px' }}>
-                      <InputLabel id="demo-simple-select-label">Token</InputLabel>
-                      <Select
-                        style={{ height: '56px', color: 'white' }}
-                        displayEmpty
-                        // value={TokenTo}
-                        onChange={(e) => {
-                          setSupplyToken(e.target.value);
-                        }}
-                        inputProps={{ 'aria-label': 'Without label' }}
-                        sx={
-                          {
-                            // background: (theme) => theme.palette.gradients.custom,
-                          }
-                        }>
-                        <MenuItem
-                          value=""
-                          // sx={{
-                          //   background: (theme) =>
-                          //     // theme.palette.gradients.custom,
-                          // }}
-                        >
-                          <Typography>Select</Typography>
-                          {/*  <div className="logo-container">
+                      <FormControl variant="outlined" style={{ width: '130px' }}>
+                        <InputLabel id="demo-simple-select-label">Token</InputLabel>
+                        <Select
+                          style={{ height: '56px', color: 'white' }}
+                          displayEmpty
+                          // value={TokenTo}
+                          onChange={(e) => {
+                            setSupplyToken(e.target.value);
+                          }}
+                          inputProps={{ 'aria-label': 'Without label' }}
+                          sx={
+                            {
+                              // background: (theme) => theme.palette.gradients.custom,
+                            }
+                          }>
+                          <MenuItem
+                            value=""
+                            // sx={{
+                            //   background: (theme) =>
+                            //     // theme.palette.gradients.custom,
+                            // }}
+                          >
+                            <Typography>Select</Typography>
+                            {/*  <div className="logo-container">
                         <img src={AllTokens[4].logoURI} className="logo-uri" />
                     </div>
                     {AllTokens[4].symbol} */}
-                        </MenuItem>
-                        {AllTokens.map((object) => (
-                          <MenuItem
-                            value={object.address}
-                            sx={{
-                              backgroundColor: '#141a1e',
-                              // '&:hover': {
-                              //   background: (theme) =>
-                              //     // theme.palette.gradients.custom,
-                              // },
-                            }}>
-                            <div className="logo-container">
-                              <img src={object.logoURI} className="logo-uri" />
-                            </div>
-                            {object.symbol}
                           </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                          {AllTokens.map((object) => (
+                            <MenuItem
+                              value={object.address}
+                              sx={{
+                                backgroundColor: '#141a1e',
+                                // '&:hover': {
+                                //   background: (theme) =>
+                                //     // theme.palette.gradients.custom,
+                                // },
+                              }}>
+                              <div className="logo-container">
+                                <img src={object.logoURI} className="logo-uri" />
+                              </div>
+                              {object.symbol}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      <br />
+                      <br />
+                      Supply Token Amount : &nbsp;&nbsp;
+                      <AmountInput
+                        onChange={(e) => {
+                          setSupplyTokenAmount(e.target.value);
+                        }}
+                      />{' '}
+                      <br />
+                      <br />
+                      <TransparentButton
+                        // onClick={(e) => {
+                        //   addLiquidity(
+                        //     object.token0.id,
+                        //     object.token1.id,
+                        //     SupplyToken,
+                        //     (SupplyTokenAmount * 10 ** 18).toString()
+                        //   );
+                        // }}
+                        value="Add Liquidity with Supply Token"
+                      />
+                    </center>
+                  </div>
+                  {/* -OR- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */}
+                  <div
+                    style={{
+                      width: '50%',
+                      display: 'inline-block',
+                    }}>
+                    <center>
+                      {/* <input
+            type='text'
+            onChange={(e)=>{setSupplyToken(e.target.value)}}
+            style={{background:'transparent',
+                    borderColor:'#737373',
+                    borderStyle:'solid',
+                    borderWidth:'1px',
+                    height:'35px',
+                    borderRadius:'10px',
+                    color:'white',
+                    paddingLeft:'15px',
+                    paddingRight:'15px',
+                }}
+                placeholder='Supply Token Address'
+        >
+        </input>  */}
+                      Ether Amount : &nbsp;&nbsp;
+                      <AmountInput
+                        onChange={(e) => {
+                          setSupplyTokenAmount(e.target.value);
+                        }}
+                      />{' '}
+                      <br />
+                      <br />
+                      <TransparentButton
+                        onClick={(e) => {
+                          addLiquidityEth(object.token0.id, object.token1.id, SupplyTokenAmount);
+                        }}
+                        value="Add Liquidity with Ether"
+                      />
+                    </center>
+                  </div>
+                  <br />
+                  <br /> <br />
+                  <center>
+                    {' '}
+                    OR <br />
                     <br />
                     <br />
-                    Supply Token Amount : &nbsp;&nbsp;
+                    {/*Input with button for swap tokens just between pair -------------------->*/}
+                    {object.token0.name} Amount : &nbsp;&nbsp;
                     <AmountInput
                       onChange={(e) => {
-                        setSupplyTokenAmount(e.target.value);
+                        setAmountTokenA(e.target.value);
                       }}
-                    />{' '}
+                    />
+                    &nbsp;&nbsp;&nbsp;
+                    {object.token1.name} Amount : &nbsp;&nbsp;
+                    <AmountInput
+                      onChange={(e) => {
+                        setAmountTokenB(e.target.value);
+                      }}
+                    />
                     <br />
                     <br />
                     <TransparentButton
                       // onClick={(e) => {
-                      //   addLiquidity(
-                      //     object.token0.id,
-                      //     object.token1.id,
-                      //     SupplyToken,
-                      //     (SupplyTokenAmount * 10 ** 18).toString()
-                      //   );
+                      //   addLiquidityNormal(object.token0.id, object.token1.id, TokenA, TokenB);
                       // }}
-                      value="Add Liquidity with Supply Token"
+                      value="Add Liquidity Classic Method"
                     />
+                    {/*Input with button for swap tokens just between pair -------------------->*/}
                   </center>
-                </div>
-                {/* -OR- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */}
-                <div
-                  style={{
-                    width: '50%',
-                    display: 'inline-block',
-                  }}>
+                  <br />
+                  <br />
+                </TabPanel>
+                <TabPanel value={value} index={1}>
                   <center>
-                    {/* <input
-            type='text'
-            onChange={(e)=>{setSupplyToken(e.target.value)}}
-            style={{background:'transparent',
-                    borderColor:'#737373',
-                    borderStyle:'solid',
-                    borderWidth:'1px',
-                    height:'35px',
-                    borderRadius:'10px',
-                    color:'white',
-                    paddingLeft:'15px', 
-                    paddingRight:'15px',
-                }}
-                placeholder='Supply Token Address'
-        >
-        </input>  */}
-                    Ether Amount : &nbsp;&nbsp;
+                    <br />
+                    <br />
+                    Liquidity To Remove &nbsp; : &nbsp;{' '}
                     <AmountInput
                       onChange={(e) => {
-                        setSupplyTokenAmount(e.target.value);
+                        setLiquidityAmount(e.target.value);
+                        checkLiquidity(object.token0.id, object.token1.id);
                       }}
-                    />{' '}
-                    <br />
-                    <br />
-                    <TransparentButton
-                      onClick={(e) => {
-                        addLiquidityEth(object.token0.id, object.token1.id, SupplyTokenAmount);
-                      }}
-                      value="Add Liquidity with Ether"
                     />
-                  </center>
-                </div>
-                <br />
-                <br /> <br />
-                <center>
-                  {' '}
-                  OR <br />
-                  <br />
-                  <br />
-                  {/*Input with button for swap tokens just between pair -------------------->*/}
-                  {object.token0.name} Amount : &nbsp;&nbsp;
-                  <AmountInput
-                    onChange={(e) => {
-                      setAmountTokenA(e.target.value);
-                    }}
-                  />
-                  &nbsp;&nbsp;&nbsp;
-                  {object.token1.name} Amount : &nbsp;&nbsp;
-                  <AmountInput
-                    onChange={(e) => {
-                      setAmountTokenB(e.target.value);
-                    }}
-                  />
-                  <br />
-                  <br />
-                  <TransparentButton
-                    // onClick={(e) => {
-                    //   addLiquidityNormal(object.token0.id, object.token1.id, TokenA, TokenB);
-                    // }}
-                    value="Add Liquidity Classic Method"
-                  />
-                  {/*Input with button for swap tokens just between pair -------------------->*/}
-                </center>
-                <br />
-                <br />
-              </TabPanel>
-              <TabPanel value={value} index={1}>
-                <center>
-                  <br />
-                  <br />
-                  Liquidity To Remove &nbsp; : &nbsp;{' '}
-                  <AmountInput
-                    onChange={(e) => {
-                      setLiquidityAmount(e.target.value);
-                      checkLiquidity(object.token0.id, object.token1.id);
-                    }}
-                  />
-                  <br />
-                  <font style={{ fontSize: '10px' }}>
-                    Liquidity In Account &nbsp;: {AccountLiquidity}{' '}
-                  </font>
-                  <br />
-                  <br />
-                  <div style={{ display: 'inline-block', width: '40%' }}>
-                    {/* <input
+                    <br />
+                    <font style={{ fontSize: '10px' }}>
+                      Liquidity In Account &nbsp;: {AccountLiquidity}{' '}
+                    </font>
+                    <br />
+                    <br />
+                    <div style={{ display: 'inline-block', width: '40%' }}>
+                      {/* <input
                 type='text'
                 onChange={(e)=>{setReceiveToken(e.target.value)}}
                 style={{background:'transparent',
@@ -433,99 +401,100 @@ export default function LiquidityPools({ inputValue }) {
                         height:'35px',
                         borderRadius:'10px',
                         color:'white',
-                        paddingLeft:'15px', 
+                        paddingLeft:'15px',
                         paddingRight:'15px',
                     }}
                     placeholder='Receive Token Address'/>  */}
 
-                    <FormControl variant="outlined" style={{ width: '130px' }}>
-                      <InputLabel id="demo-simple-select-label">Token</InputLabel>
-                      <Select
-                        style={{ height: '56px', color: 'white' }}
-                        displayEmpty
-                        onChange={(e) => {
-                          setReceiveToken(e.target.value);
-                        }}
-                        inputProps={{ 'aria-label': 'Without label' }}
-                        sx={
-                          {
-                            // background: (theme) => theme.palette.gradients.custom,
-                          }
-                        }>
-                        <MenuItem
-                          value=""
-                          // sx={{
-                          //   background: (theme) =>
-                          //     // theme.palette.gradients.custom,
-                          // }}
-                        >
-                          <Typography>Select</Typography>
-                        </MenuItem>
-                        {AllTokens.map((object) => (
+                      <FormControl variant="outlined" style={{ width: '130px' }}>
+                        <InputLabel id="demo-simple-select-label">Token</InputLabel>
+                        <Select
+                          style={{ height: '56px', color: 'white' }}
+                          displayEmpty
+                          onChange={(e) => {
+                            setReceiveToken(e.target.value);
+                          }}
+                          inputProps={{ 'aria-label': 'Without label' }}
+                          sx={
+                            {
+                              // background: (theme) => theme.palette.gradients.custom,
+                            }
+                          }>
                           <MenuItem
-                            value={object.address}
-                            sx={{
-                              backgroundColor: '#141a1e',
-                              // '&:hover': {
-                              //   background: (theme) =>
-                              //     // theme.palette.gradients.custom,
-                              // },
-                            }}>
-                            <div className="logo-container">
-                              <img src={object.logoURI} className="logo-uri" />
-                            </div>
-                            {object.symbol}
+                            value=""
+                            // sx={{
+                            //   background: (theme) =>
+                            //     // theme.palette.gradients.custom,
+                            // }}
+                          >
+                            <Typography>Select</Typography>
                           </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                          {AllTokens.map((object) => (
+                            <MenuItem
+                              value={object.address}
+                              sx={{
+                                backgroundColor: '#141a1e',
+                                // '&:hover': {
+                                //   background: (theme) =>
+                                //     // theme.palette.gradients.custom,
+                                // },
+                              }}>
+                              <div className="logo-container">
+                                <img src={object.logoURI} className="logo-uri" />
+                              </div>
+                              {object.symbol}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      <br />
+                      <br />
+                      <TransparentButton
+                        value="Remove Liquidity In Tokens"
+                        onClick={(e) => {
+                          // removeLiquidity(
+                          //   object.token0.id,
+                          //   object.token1.id,
+                          //   ReceiveToken,
+                          //   (LiquidityAmount * 10 ** 18).toString()
+                          // );
+                        }}
+                      />
+                    </div>
+                    OR
+                    <div style={{ display: 'inline-block', width: '40%' }}>
+                      <TransparentButton
+                        value="Remove Liquidity in Ether"
+                        onClick={(e) => {
+                          removeLiquidityETH(
+                            object.token0.id,
+                            object.token1.id,
+                            (LiquidityAmount * 10 ** 18).toString()
+                          );
+                        }}
+                      />
+                    </div>
                     <br />
+                    <br /> <b>OR</b> <br />
                     <br />
                     <TransparentButton
-                      value="Remove Liquidity In Tokens"
+                      value="Remove Liquidity Classic"
                       onClick={(e) => {
-                        removeLiquidity(
-                          object.token0.id,
-                          object.token1.id,
-                          ReceiveToken,
-                          (LiquidityAmount * 10 ** 18).toString()
-                        );
+                        // removeLiquidityNormal(
+                        //   object.token0.id,
+                        //   object.token1.id,
+                        //   (LiquidityAmount * 10 ** 18).toString()
+                        // );
                       }}
                     />
-                  </div>
-                  OR
-                  <div style={{ display: 'inline-block', width: '40%' }}>
-                    <TransparentButton
-                      value="Remove Liquidity in Ether"
-                      onClick={(e) => {
-                        removeLiquidityETH(
-                          object.token0.id,
-                          object.token1.id,
-                          (LiquidityAmount * 10 ** 18).toString()
-                        );
-                      }}
-                    />
-                  </div>
-                  <br />
-                  <br /> <b>OR</b> <br />
-                  <br />
-                  <TransparentButton
-                    value="Remove Liquidity Classic"
-                    onClick={(e) => {
-                      removeLiquidityNormal(
-                        object.token0.id,
-                        object.token1.id,
-                        (LiquidityAmount * 10 ** 18).toString()
-                      );
-                    }}
-                  />
-                </center>
-              </TabPanel>
-            </div>
-          </AccordionDetails>
-        </Accordion>
-      </>)
-  });
+                  </center>
+                </TabPanel>
+              </div>
+            </AccordionDetails>
+          </Accordion>
+        </>
+      );
+    });
     setContent(content);
   }, [
     Data,
@@ -622,17 +591,6 @@ export default function LiquidityPools({ inputValue }) {
     setData([]);
   }, []);
 
-  async function loadWeb3() {
-    if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum);
-      await window.ethereum.enable();
-    } else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider);
-    } else {
-      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
-    }
-  }
-
   useEffect(() => {
     setData([]);
   }, []);
@@ -659,25 +617,29 @@ export default function LiquidityPools({ inputValue }) {
     setAccountLiquidity(qtty);
   }
 
-  async function removeLiquidity(tokenA, tokenB, receiveToken, liquidityAmount) {
-    // console.log(tokenA, tokenB, receiveToken, liquidityAmount)
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.sushiFactory);
-    var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call();
-    var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
-    const oneClickContract = new web3.eth.Contract(
-      OneClickLiquidity,
-      Addresses.oneClickSushiV2Contract
-    );
-    await PairContract.methods
-      .approve(Addresses.oneClickSushiV2Contract, liquidityAmount)
-      .send({ from: accounts[0] });
-    await oneClickContract.methods
-      .removeLiquidityOneClick(tokenA, tokenB, receiveToken, liquidityAmount)
-      .send({ from: accounts[0] });
-  }
+  // async function removeLiquidity(tokenA, tokenB, receiveToken, liquidityAmount) {
+  //   console.log('removeFunc tokenA', tokenA)
+  //   console.log('removeFunc tokenB', tokenB)
+  //   console.log('removeFunc receiveToken', receiveToken)
+  //   console.log('removeFunc liquidityAmount', liquidityAmount)
+  //   console.log('removeFunc removeLiquidity')
+  //   await loadWeb3();
+  //   const web3 = window.web3;
+  //   const accounts = await web3.eth.getAccounts();
+  //   var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.sushiFactory);
+  //   var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call();
+  //   var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
+  //   const oneClickContract = new web3.eth.Contract(
+  //     OneClickLiquidity,
+  //     Addresses.oneClickSushiV2Contract
+  //   );
+  //   await PairContract.methods
+  //     .approve(Addresses.oneClickSushiV2Contract, liquidityAmount)
+  //     .send({ from: accounts[0] });
+  //   await oneClickContract.methods
+  //     .removeLiquidityOneClick(tokenA, tokenB, receiveToken, liquidityAmount)
+  //     .send({ from: accounts[0] });
+  // }
 
   async function removeLiquidityETH(tokenA, tokenB, LiquidityAmount) {
     await loadWeb3();
@@ -698,71 +660,26 @@ export default function LiquidityPools({ inputValue }) {
       .send({ from: accounts[0] });
   }
 
-  async function removeLiquidityNormal(tokenA, tokenB, LiquidityAmount) {
-    const start = parseInt(Date.now() / 1000) + 180;
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.sushiFactory);
-    var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call();
-    var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
-    const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.sushiRouter);
-    await PairContract.methods
-      .approve(Addresses.sushiRouter, LiquidityAmount)
-      .send({ from: accounts[0] });
-    await UniRouter.methods
-      .removeLiquidity(tokenA, tokenB, LiquidityAmount, 0, 0, accounts[0], start.toString())
-      .send({ from: accounts[0] });
-  }
-
-  //*********first input value sends to smartContract
-  async function addLiquidity(tokenA, tokenB, supplyToken, supplyTokenQtty, gasPrice) {
-
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var tokenContract = new web3.eth.Contract(ERC20ABI, supplyToken); //maby web3.utils.toWei(gasPrice, 'gwei') should be here
-    const oneClickContract = new web3.eth.Contract(
-      OneClickLiquidity,
-      Addresses.oneClickSushiV2Contract
-    );
-    await tokenContract.methods
-      .approve(Addresses.oneClickSushiV2Contract, supplyTokenQtty)
-      .send({ from: accounts[0], gasPrice:  web3.utils.toWei(gasPrice, 'gwei')}); //not sure
-    await oneClickContract.methods
-      .addLiquidityOneClick(tokenA, tokenB, supplyToken, supplyTokenQtty)
-      .send({ from: accounts[0], gasPrice:  web3.utils.toWei(gasPrice, 'gwei') });  //not sure
-  }
-
-  //********two inputs value send to smartContract
-  async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB, gasPrice) {
-
-    const start = parseInt(Date.now() / 1000) + 180;
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var tokenAContract = new web3.eth.Contract(ERC20ABI, tokenA);
-    var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
-    await tokenAContract.methods
-        .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenA, 'ether'))
-        .send({ from: accounts[0], gasPrice:  web3.utils.toWei(gasPrice, 'gwei') });
-    await tokenBContract.methods
-        .approve(Addresses.sushiRouter, web3.utils.toWei(amountTokenB, 'ether'))
-        .send({ from: accounts[0], gasPrice:  web3.utils.toWei(gasPrice, 'gwei') });
-    const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.sushiRouter);
-    await UniRouter.methods
-        .addLiquidity(
-            tokenA,
-            tokenB,
-            web3.utils.toWei(amountTokenA, 'ether'),
-            web3.utils.toWei(amountTokenB, 'ether'),
-            0,
-            0,
-            accounts[0],
-            start.toString()
-        )
-        .send({ from: accounts[0] });
-  }
+  // async function removeLiquidityNormal(tokenA, tokenB, LiquidityAmount) {
+  //     console.log('removeFunc tokenA', tokenA)
+  //     console.log('removeFunc tokenB', tokenB)
+  //     console.log('removeFunc receiveToken', LiquidityAmount)
+  //
+  //   const start = parseInt(Date.now() / 1000) + 180;
+  //   await loadWeb3();
+  //   const web3 = window.web3;
+  //   const accounts = await web3.eth.getAccounts();
+  //   var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.sushiFactory);
+  //   var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call();
+  //   var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
+  //   const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.sushiRouter);
+  //   await PairContract.methods
+  //     .approve(Addresses.sushiRouter, LiquidityAmount)
+  //     .send({ from: accounts[0] });
+  //   await UniRouter.methods
+  //     .removeLiquidity(tokenA, tokenB, LiquidityAmount, 0, 0, accounts[0], start.toString())
+  //     .send({ from: accounts[0] });
+  // }
 
   async function addLiquidityEth(tokenA, tokenB, ethAmount) {
     await loadWeb3();
@@ -777,30 +694,36 @@ export default function LiquidityPools({ inputValue }) {
       .send({ from: accounts[0], value: web3.utils.toWei(ethAmount, 'ether') });
   }
 
-
   const filterData = (Data) => {
-    return Data.filter(d => d.id.includes(inputValue) || (d.token0.symbol + ' ' + d.token1.symbol).includes(inputValue.toUpperCase()) || d.token0.name.includes(inputValue) || d.token1.name.includes(inputValue));
-  }
+    return Data.filter(
+      (d) =>
+        d.id.includes(inputValue) ||
+        (d.token0.symbol + ' ' + d.token1.symbol).includes(inputValue.toUpperCase()) ||
+        d.token0.name.includes(inputValue) ||
+        d.token1.name.includes(inputValue)
+    );
+  };
 
   return (
     <div>
       <LiquidityPoolsTable
-          data={Data} type={'sushiswap'}
-          AllTokens={AllTokens}
-          addLiquidity={addLiquidity}
-          addLiquidityNormal={addLiquidityNormal}
+        data={filterData(Data)}
+        type={'sushiswap'}
+        AllTokens={AllTokens}
+        addLiquidity={addLiquidity}
+        addLiquidityNormal={addLiquidityNormal}
+        protocolType={'Sushiswap'}
       />
-      <br />
       <center>
         <AddNewGroupButton
-            isLightTheme={isLightTheme}
-            onClick={(e) => {
+          isLightTheme={isLightTheme}
+          onClick={(e) => {
             setPage(Page + 1);
           }}>
           {Loading ? 'Loading...' : 'More Pools'}
         </AddNewGroupButton>
       </center>
-      {Content}
+      {/*{Content}*/}
     </div>
   );
 }

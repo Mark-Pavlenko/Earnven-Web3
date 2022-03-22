@@ -72,6 +72,14 @@ export const SidebarMobileGasItemsBlock = styled.div`
 `;
 
 export const GasMenuItem = styled.div`
+  background-color: ${(props) =>
+    props.isLightTheme
+      ? props.selected
+        ? 'white'
+        : 'transparent'
+      : props.selected
+      ? '#1F265C'
+      : 'transparent'};
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -79,13 +87,14 @@ export const GasMenuItem = styled.div`
   height: 40px;
   margin-left: 13px;
   margin-right: 13px;
+  border-radius: 10px;
   padding-left: 12px;
   padding-right: 19px;
   color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
   font-family: 'Saira', sans-serif;
   font-size: 14px;
   font-style: normal;
-  font-weight: 400;
+  font-weight: ${(props) => (props.selected ? '500' : 'normal')};
 
   img {
     width: 24px;
@@ -96,8 +105,8 @@ export const GasMenuItem = styled.div`
   :hover {
     cursor: pointer;
     background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C')};
-    color: ${(props) => (props.isLightTheme ? '#4453AD' : '#8F86FF')};
-    font-weight: 600;
+    color: #4453ad;
+    font-weight: 500;
 
     @media (max-width: 1280px) {
       border-radius: 10px;

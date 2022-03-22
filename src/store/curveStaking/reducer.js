@@ -6,6 +6,7 @@ import actionTypes from '../../constants/actionTypes';
 const initialState = {
   curveStakingData: [],
   curveStakingTotal: 0,
+  curveStakingIsLoading: true,
 };
 //takes two arguments: The current state and the action and returns the new state.
 export const curveStaking = (state = initialState, action) => {
@@ -19,6 +20,11 @@ export const curveStaking = (state = initialState, action) => {
       return {
         ...state,
         curveStakingTotal: action?.payload,
+      };
+    case actionTypes.SET_CRV_STAKE_LOADING:
+      return {
+        ...state,
+        curveStakingIsLoading: action?.payload,
       };
     default:
       return state;

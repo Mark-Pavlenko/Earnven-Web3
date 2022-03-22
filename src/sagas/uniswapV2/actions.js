@@ -7,6 +7,13 @@ export const getuniswapV2 = (payload) => {
   };
 };
 
+export const setUniswapV2isLoading = (payload) => {
+  return {
+    type: actionTypes.SET_UNISWAPV2_PROTOCOL_LOADING,
+    payload,
+  };
+};
+
 export const getuniswapV2stake = (payload) => {
   return {
     type: actionTypes.GET_UNISWAPV2_STAKE,
@@ -17,6 +24,13 @@ export const getuniswapV2stake = (payload) => {
 export const getuniswapV2stakeTotal = (payload) => {
   return {
     type: actionTypes.GET_UNISWAPV2_STAKE_TOTAL,
+    payload,
+  };
+};
+
+export const setUniswapStakingisLoading = (payload) => {
+  return {
+    type: actionTypes.SET_UNISWAP_STAKE_LOADING,
     payload,
   };
 };

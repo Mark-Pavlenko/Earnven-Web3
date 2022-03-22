@@ -1,5 +1,4 @@
 import { SET_ALL_TOKENS, SET_CHOSEN_TOKENS_LIST } from './actions';
-import { act } from 'react-dom/test-utils';
 
 const initialState = {
   tokensList: [],

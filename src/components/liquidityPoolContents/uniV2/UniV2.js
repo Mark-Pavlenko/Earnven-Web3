@@ -53,10 +53,9 @@ import {
   ModalLink,
   ModalLinkRight,
 } from './StyledComponents';
-import { SelectOptionsWithJSX } from '../HOC/selectOptionsWithJSX';
-import { TokenButtonsBlock } from '../../../screens/dashboard/styledComponents';
-import { LiquidityPoolsTable } from '../liquidityPoolsTable/liquidityPoolsTable';
+import { LiquidityPoolsTable } from '../liquidityPoolsTable/liquidityPoolsTable/liquidityPoolsTable';
 import {useSelector} from "react-redux";
+import {addLiquidityNormal, addLiquidity} from "../../../screens/liquidityPools/helpers";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -98,7 +97,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function LiquidityPools({ inputValue }) {
+export default function LiquidityPools({ inputValue, AllTokens }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [Loading, setLoading] = useState(false);
@@ -120,45 +119,45 @@ export default function LiquidityPools({ inputValue }) {
   const [ReceiveToken, setReceiveToken] = useState('');
   const [LiquidityAmount, setLiquidityAmount] = useState('');
 
-  const [AllTokens, setAllTokens] = useState([]);
+  // const [AllTokens, setAllTokens] = useState([]);
   const [allTokensSelect, setAllTokensSelect] = useState([]);
 
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
-  useEffect(() => {
-    async function getData() {
-      let fetchedTokens;
-      await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {}).then(async (response) => {
-        const selectOptions = []
-        for (let i = 0; i < response.data.records.length; i++) {
-          let object = {};
-          object.name = response.data.records[i].name;
-          object.value = response.data.records[i].name;
-          object.address = response.data.records[i].address;
-          selectOptions.push(object)
-        }
-        setAllTokensSelect(selectOptions)
-        setAllTokens(response.data.records);
-        fetchedTokens = response.data.records;
-      });
-      await axios
-        .get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
-        .then(async (response) => {
-          let data = response.data.tokens;
-          let tokens = fetchedTokens.map((token) => ({
-            ...token,
-            logoURI: data.find((x) => x.address === token.address)
-              ? data.find((x) => x.address === token.address).logoURI
-              : tokenURIs.find((x) => x.address === token.address).logoURI,
-          }));
-          setAllTokens(tokens);
-        })
-        .catch((res) => {
-          console.log('liquidity pools Uniswap-V2 returns error', res);
-        });
-    }
-    getData();
-  }, []);
+  // useEffect(() => {
+  //   async function getData() {
+  //     let fetchedTokens;
+  //     await axios.get(`https://api.0x.org/swap/v1/tokens`, {}, {}).then(async (response) => {
+  //       const selectOptions = []
+  //       for (let i = 0; i < response.data.records.length; i++) {
+  //         let object = {};
+  //         object.name = response.data.records[i].name;
+  //         object.value = response.data.records[i].name;
+  //         object.address = response.data.records[i].address;
+  //         selectOptions.push(object)
+  //       }
+  //       setAllTokensSelect(selectOptions)
+  //       setAllTokens(response.data.records);
+  //       fetchedTokens = response.data.records;
+  //     });
+  //     await axios
+  //       .get(`https://tokens.coingecko.com/uniswap/all.json`, {}, {})
+  //       .then(async (response) => {
+  //         let data = response.data.tokens;
+  //         let tokens = fetchedTokens.map((token) => ({
+  //           ...token,
+  //           logoURI: data.find((x) => x.address === token.address)
+  //             ? data.find((x) => x.address === token.address).logoURI
+  //             : tokenURIs.find((x) => x.address === token.address).logoURI,
+  //         }));
+  //         setAllTokens(tokens);
+  //       })
+  //       .catch((res) => {
+  //         console.log('liquidity pools Uniswap-V2 returns error', res);
+  //       });
+  //   }
+  //   getData();
+  // }, []);
 
   useEffect(() => {
     var content = Data.map((object) => (
@@ -543,11 +542,11 @@ export default function LiquidityPools({ inputValue }) {
                   <TransparentButton
                     value="Remove Liquidity Classic"
                     onClick={(e) => {
-                      removeLiquidityNormal(
-                        object.token0.id,
-                        object.token1.id,
-                        (LiquidityAmount * 10 ** 18).toString()
-                      );
+                      // removeLiquidityNormal(
+                      //   object.token0.id,
+                      //   object.token1.id,
+                      //   (LiquidityAmount * 10 ** 18).toString()
+                      // );
                     }}
                   />
                 </center>
@@ -706,28 +705,30 @@ export default function LiquidityPools({ inputValue }) {
     setAccountLiquidity(qtty);
   }
 
-  //----->
-  //don't need anymore
-  async function removeLiquidity(tokenA, tokenB, receiveToken, liquidityAmount) {
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.uniFactory);
-    var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call();
-    var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
-    const oneClickContract = new web3.eth.Contract(
-      OneClickLiquidity,
-      Addresses.oneClickUniV2Contract
-    );
-    await PairContract.methods
-      .approve(Addresses.oneClickUniV2Contract, liquidityAmount)
-      .send({ from: accounts[0] });
-    await oneClickContract.methods
-      .removeLiquidityOneClick(tokenA, tokenB, receiveToken, liquidityAmount)
-      .send({ from: accounts[0] });
-  }
+  // async function removeLiquidity(tokenA, tokenB, receiveToken, liquidityAmount) {
+  //   console.log('removeFunc tokenA', tokenA)
+  //   console.log('removeFunc tokenB', tokenB)
+  //   console.log('removeFunc receiveToken', receiveToken)
+  //   console.log('removeFunc liquidityAmount', liquidityAmount)
+  //   console.log('removeFunc removeLiquidity')
+  //   await loadWeb3();
+  //   const web3 = window.web3;
+  //   const accounts = await web3.eth.getAccounts();
+  //   var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.uniFactory);
+  //   var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call();
+  //   var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
+  //   const oneClickContract = new web3.eth.Contract(
+  //     OneClickLiquidity,
+  //     Addresses.oneClickUniV2Contract
+  //   );
+  //   await PairContract.methods
+  //     .approve(Addresses.oneClickUniV2Contract, liquidityAmount)
+  //     .send({ from: accounts[0] });
+  //   await oneClickContract.methods
+  //     .removeLiquidityOneClick(tokenA, tokenB, receiveToken, liquidityAmount)
+  //     .send({ from: accounts[0] });
+  // }
 
-  //don't need anymore
   async function removeLiquidityETH(tokenA, tokenB, LiquidityAmount) {
     await loadWeb3();
     const web3 = window.web3;
@@ -747,44 +748,46 @@ export default function LiquidityPools({ inputValue }) {
       .send({ from: accounts[0] });
   }
 
-  //don't need anymore
-  async function removeLiquidityNormal(tokenA, tokenB, LiquidityAmount) {
-    const start = parseInt(Date.now() / 1000) + 180;
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.uniFactory);
-    var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call();
-    var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
-    const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.uniRouter);
-    await PairContract.methods
-      .approve(Addresses.uniRouter, LiquidityAmount)
-      .send({ from: accounts[0] });
-    await UniRouter.methods
-      .removeLiquidity(tokenA, tokenB, LiquidityAmount, 0, 0, accounts[0], start.toString())
-      .send({ from: accounts[0] });
-  }
+  // async function removeLiquidityNormal(tokenA, tokenB, LiquidityAmount) {
+  //     console.log('removeFunc tokenA', tokenA)
+  //     console.log('removeFunc tokenB', tokenB)
+  //     console.log('removeFunc receiveToken', LiquidityAmount)
+  //
+  //   const start = parseInt(Date.now() / 1000) + 180;
+  //   await loadWeb3();
+  //   const web3 = window.web3;
+  //   const accounts = await web3.eth.getAccounts();
+  //   var FactoryContract = new web3.eth.Contract(FACTORYABI, Addresses.uniFactory);
+  //   var pairAddress = await FactoryContract.methods.getPair(tokenA, tokenB).call();
+  //   var PairContract = new web3.eth.Contract(ERC20ABI, pairAddress);
+  //   const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.uniRouter);
+  //   await PairContract.methods
+  //     .approve(Addresses.uniRouter, LiquidityAmount)
+  //     .send({ from: accounts[0] });
+  //   await UniRouter.methods
+  //     .removeLiquidity(tokenA, tokenB, LiquidityAmount, 0, 0, accounts[0], start.toString())
+  //     .send({ from: accounts[0] });
+  // }
   //----->
 
   //*first input value sends to smartContract
-  async function addLiquidity(tokenA, tokenB, supplyToken, supplyTokenQtty) {
-    await loadWeb3();
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    var tokenContract = new web3.eth.Contract(ERC20ABI, supplyToken);
-    const oneClickContract = new web3.eth.Contract(
-      OneClickLiquidity,
-      Addresses.oneClickUniV2Contract
-    );
-    await tokenContract.methods
-      .approve(Addresses.oneClickUniV2Contract, supplyTokenQtty)
-      .send({ from: accounts[0] });
-    await oneClickContract.methods
-      .addLiquidityOneClick(tokenA, tokenB, supplyToken, supplyTokenQtty)
-      .send({ from: accounts[0] });
-  }
+  // async function addLiquidity(tokenA, tokenB, supplyToken, supplyTokenQtty) {
+  //   await loadWeb3();
+  //   const web3 = window.web3;
+  //   const accounts = await web3.eth.getAccounts();
+  //   var tokenContract = new web3.eth.Contract(ERC20ABI, supplyToken);
+  //   const oneClickContract = new web3.eth.Contract(
+  //     OneClickLiquidity,
+  //     Addresses.oneClickUniV2Contract
+  //   );
+  //   await tokenContract.methods
+  //     .approve(Addresses.oneClickUniV2Contract, supplyTokenQtty)
+  //     .send({ from: accounts[0] });
+  //   await oneClickContract.methods
+  //     .addLiquidityOneClick(tokenA, tokenB, supplyToken, supplyTokenQtty)
+  //     .send({ from: accounts[0] });
+  // }
 
-  //don't need anymore
   async function addLiquidityEth(tokenA, tokenB, ethAmount) {
     await loadWeb3();
     const web3 = window.web3;
@@ -798,69 +801,34 @@ export default function LiquidityPools({ inputValue }) {
       .send({ from: accounts[0], value: web3.utils.toWei(ethAmount, 'ether') });
   }
 
-  //*two inputs value send to smartContract
-  async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB) {
-    console.log('addLiquidityNormaltokenA', tokenA)
-    console.log('addLiquidityNormaltokenB', tokenB)
-    console.log('addLiquidityNormalsupplyToken', amountTokenA)
-    console.log('addLiquidityNormalsupplyTokenQtty', amountTokenB)
-
-    // const start = parseInt(Date.now() / 1000) + 180;
-    // await loadWeb3();
-    // const web3 = window.web3;
-    // const accounts = await web3.eth.getAccounts();
-    // var tokenAContract = new web3.eth.Contract(ERC20ABI, tokenA);
-    // var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
-    // await tokenAContract.methods
-    //   .approve(Addresses.uniRouter, web3.utils.toWei(amountTokenA, 'ether'))
-    //   .send({ from: accounts[0] });
-    // await tokenBContract.methods
-    //   .approve(Addresses.uniRouter, web3.utils.toWei(amountTokenB, 'ether'))
-    //   .send({ from: accounts[0] });
-    // const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.uniRouter);
-    // await UniRouter.methods
-    //   .addLiquidity(
-    //     tokenA,
-    //     tokenB,
-    //     web3.utils.toWei(amountTokenA, 'ether'),
-    //     web3.utils.toWei(amountTokenB, 'ether'),
-    //     0,
-    //     0,
-    //     accounts[0],
-    //     start.toString()
-    //   )
-    //   .send({ from: accounts[0] });
-  }
-
-  //useState for mamaging open/close modal
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // //options for select inside of modal
-  // const options = [
-  //   {
-  //     image: eth,
-  //     name: 'Ethereum',
-  //     value: '1',
-  //   },
-  //   {
-  //     image: uni,
-  //     name: 'Uniswap',
-  //     value: '2',
-  //   },
-  //   {
-  //     image: mkr,
-  //     name: 'Uniswap MKR Pool (v1)',
-  //     value: '3',
-  //   },
-  //   {
-  //     image: mkr,
-  //     name: 'Uniswap MKR Pool (v1)',
-  //     value: '4',
-  //   },
-  // ];
-
-  //this function turns array of options to JSX for modal select
- const updatedOptions = SelectOptionsWithJSX(allTokensSelect)
+  // //*two inputs value send to smartContract
+  // async function addLiquidityNormal(tokenA, tokenB, amountTokenA, amountTokenB) {
+  //   const start = parseInt(Date.now() / 1000) + 180;
+  //   await loadWeb3();
+  //   const web3 = window.web3;
+  //   const accounts = await web3.eth.getAccounts();
+  //   var tokenAContract = new web3.eth.Contract(ERC20ABI, tokenA);
+  //   var tokenBContract = new web3.eth.Contract(ERC20ABI, tokenB);
+  //   await tokenAContract.methods
+  //     .approve(Addresses.uniRouter, web3.utils.toWei(amountTokenA, 'ether'))
+  //     .send({ from: accounts[0] });
+  //   await tokenBContract.methods
+  //     .approve(Addresses.uniRouter, web3.utils.toWei(amountTokenB, 'ether'))
+  //     .send({ from: accounts[0] });
+  //   const UniRouter = new web3.eth.Contract(ROUTERABI, Addresses.uniRouter);
+  //   await UniRouter.methods
+  //     .addLiquidity(
+  //       tokenA,
+  //       tokenB,
+  //       web3.utils.toWei(amountTokenA, 'ether'),
+  //       web3.utils.toWei(amountTokenB, 'ether'),
+  //       0,
+  //       0,
+  //       accounts[0],
+  //       start.toString()
+  //     )
+  //     .send({ from: accounts[0] });
+  // }
 
   //select styles
   // const selectStyle = {
@@ -944,11 +912,6 @@ export default function LiquidityPools({ inputValue }) {
   //   },
   // };
 
-  const handler = (data) => {
-    console.log('vfvfvfv', data)
-  }
-
-
   const filterData = (Data) => {
     return Data.filter(d => d.id.includes(inputValue) || (d.token0.symbol + ' ' + d.token1.symbol).includes(inputValue.toUpperCase()) || d.token0.name.includes(inputValue) || d.token1.name.includes(inputValue));
   }
@@ -957,7 +920,14 @@ export default function LiquidityPools({ inputValue }) {
     <div>
       {/*<button onClick={() => {setIsModalOpen(true)}}>Open</button>*/}
       {/*{Content}*/}
-      <LiquidityPoolsTable data={filterData(Data)} type={'uniswap'} />
+      <LiquidityPoolsTable
+          data={Data}
+          type={'uniswap'}
+          AllTokens={AllTokens}
+          addLiquidity={addLiquidity}
+          addLiquidityNormal={addLiquidityNormal}
+          protocolType={'Unisvap V2'}
+      />
 
       <br />
       <center>
@@ -1011,7 +981,7 @@ export default function LiquidityPools({ inputValue }) {
        {/* </ModalContainer>*/}
         {/*Modal is here =====================================>*/}
       </center>
-      {Content}
+      {/*{Content}*/}
     </div>
   );
 }

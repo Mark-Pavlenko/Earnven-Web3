@@ -11,6 +11,7 @@ const initialState = {
 };
 
 export const currentTokenDataReducer = (state = initialState, action) => {
+  // console.log('action payload from redux', action?.payload);
   switch (action.type) {
     case GET_TOKEN_DATA:
       return { ...state, isLoading: true };

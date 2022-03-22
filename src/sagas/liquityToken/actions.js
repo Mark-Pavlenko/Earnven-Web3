@@ -13,3 +13,10 @@ export const getLiquityTokenTotal = (payload) => {
     payload,
   };
 };
+
+export const setLiquityTokenIsLoading = (payload) => {
+  return {
+    type: actionTypes.SET_LQTY_TOKEN_LOADING,
+    payload,
+  };
+};

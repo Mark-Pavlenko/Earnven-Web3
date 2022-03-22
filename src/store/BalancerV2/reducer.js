@@ -3,6 +3,7 @@ import actionTypes from '../../constants/actionTypes';
 const initialState = {
   balancerV2lp: [],
   balancerV2tot: 0,
+  balancerProtocolisLoading: true,
 };
 
 export const balancerV2lp = (state = initialState, action) => {
@@ -15,6 +16,11 @@ export const balancerV2lp = (state = initialState, action) => {
       return {
         ...state,
         balancerV2tot: action?.payload,
+      };
+    case actionTypes.SET_BALANCER_PROTOCOL_LOADING:
+      return {
+        ...state,
+        balancerProtocolisLoading: action?.payload,
       };
     default:
       return state;

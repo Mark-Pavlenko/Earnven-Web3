@@ -21,7 +21,7 @@ import Index from './components/WalletConnectionPage';
 import AllTokensApprovals from './screens/allTokensApprovals';
 import TokenApproval from './screens/tokenApproval';
 import CubicleGraphs from './screens/chartsCubicle';
-import LiquidityPools from './screens/liquidityPools';
+import LiquidityPools from './screens/liquidityPools/liquidityPools';
 import NFT from './screens/NFT';
 import NftDetails from './screens/NftDetail';
 import Home from './screens/Home';
@@ -64,7 +64,7 @@ export default function Router() {
     // { path: 'uniswap/pair/:tokenid', element: <UniswapPoolDetail /> },
     // { path: 'uniswap/pair/:tokenid', element: <PoolDetails /> },
     {
-      path: 'sushiswap/address/:token0/:token1',
+      path: 'sushiswap/address/:token0/:token1/:token0Symbol/:token1Symbol',
       element: <SushiwapLiquidityPool />,
     },
     { path: 'bridge', element: <Bridge /> },

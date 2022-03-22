@@ -69,6 +69,8 @@ function* compoundTokenSagaWorker(compTokenAttributes) {
             object.tokenImage = compCoinData.cTokenImageUrl;
             object.value = parseFloat(object.balance * object.price).toFixed(2);
             object.apy = parseFloat(underlyingTokenData.supply_rate.value * 100).toFixed(4);
+            object.chain = 'Ethereum';
+            object.protocol = 'Compound';
             totalValue += parseFloat(object.value);
             compArrayOfData.push(object);
           }
@@ -80,4 +82,5 @@ function* compoundTokenSagaWorker(compTokenAttributes) {
       }
     } //end of if condition
   }
+  yield put(actions.setCompoundFinanceIsLoading(false));
 }

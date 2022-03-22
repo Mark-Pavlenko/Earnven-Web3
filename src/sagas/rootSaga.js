@@ -20,21 +20,32 @@ import { getLiquityTokenSagaWatcher } from './liquityToken';
 import { getOlympusTokenSagaWatcher } from './olympusStaking';
 import { getethApiSagaWatcher } from './ethExplorerApi';
 import { getmStableSagaWatcher } from './mStable';
-import { getmStableFarmSagaWatcher, getmStablePoolsSagaWatcher } from './mStable';
+//import { getmStableFarmSagaWatcher, getmStablePoolsSagaWatcher } from './mStable';
 import { getSushiSwapLPSagaWatcher } from './sushiSwap';
 import { getalchemixVaultsSagaWatcher } from './alchemix';
 import { getcompoundTokenSagaWatcher } from './compoundFinance';
 import { getGasPriceWatcher } from './gasPrice/gasPrice';
 import { getCurrentTokenDataSagaWatcher } from './currentTokenData';
+import {
+  // getInitUSDCurrencyAmountSagaWatcher,
+  getReceiveTokensListSagaWatcher,
+  getSendTokensListSagaWatcher,
+} from '../store/exchangeTokensLists/sagas';
 import { getCurrentTokenTransactionsSagaWatcher } from './currentTokenTransactions';
 import { getWalletDataSagaWatcher } from './currentWalletData';
 import { getTokenPriceHistorySagaWatcher } from './currentTokenPriceHistory';
 import { getCurveLPTokenSagaWatcher } from './curveLpToken';
 import { getAaveStakeSagaWatcher } from './Aave';
 import { getSynthetixSagaWatcher } from './Synthetix';
+import { getConvexStakingSagaWatcher } from './convexStaking';
+import { getSnowSwapSagaWatcher } from './SnowSwap';
+import { getCreamIronTokenSagaWatcher } from './CreamIronBank';
 export default function* watchRootSaga() {
   yield all([
     call(getAccountBalanceSagaWatcher),
+    call(getSendTokensListSagaWatcher),
+    // call(getInitUSDCurrencyAmountSagaWatcher),
+    call(getReceiveTokensListSagaWatcher),
     call(getTwitterPostsSagaWatcher),
     call(getALlTokensSagaWatcher),
     call(getSearchedTokensSagaWatcher),
@@ -53,8 +64,8 @@ export default function* watchRootSaga() {
     call(getOlympusTokenSagaWatcher),
     call(getethApiSagaWatcher),
     call(getmStableSagaWatcher),
-    call(getmStableFarmSagaWatcher),
-    call(getmStablePoolsSagaWatcher),
+    // call(getmStableFarmSagaWatcher),
+    // call(getmStablePoolsSagaWatcher),
     call(getSushiSwapLPSagaWatcher),
     call(getalchemixVaultsSagaWatcher),
     call(getcompoundTokenSagaWatcher),
@@ -66,5 +77,8 @@ export default function* watchRootSaga() {
     call(getAaveStakeSagaWatcher),
     call(getGasPriceWatcher),
     call(getSynthetixSagaWatcher),
+    call(getConvexStakingSagaWatcher),
+    call(getSnowSwapSagaWatcher),
+    call(getCreamIronTokenSagaWatcher),
   ]);
 }

@@ -108,7 +108,6 @@ export async function fetchBalance(attributes) {
       return s + (v || 0);
     }, 0);
 
-    console.log('final object', pool);
     return [[...pool], commonTotal];
   } catch (err) {
     console.log('error in pickle staking', err);
@@ -124,12 +123,11 @@ export async function fetchBalanceDill(attributes) {
       object.price = data.dill.dillWeeks[data.dill.dillWeeks.length - 1].picklePriceUsd;
       object.liquidity = data.dill.dillWeeks[data.dill.dillWeeks.length - 1].totalDillAmount;
       object.value = object.price * attributes[1];
-      console.log('attributes', attributes);
       object.balance = attributes[1];
       object.protocol = 'Pickle Finance';
       object.chain = 'Ethereum';
       object.icon = pickleIcon;
-      object.tokenName = 'Dill';
+      object.symbol = 'DILL';
       object.total = object.value;
       asset.push(object);
     })

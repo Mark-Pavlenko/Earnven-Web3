@@ -13,3 +13,10 @@ export const getCurveStakingTotal = (payload) => {
     payload,
   };
 };
+
+export const setCurveStakingIsLoading = (payload) => {
+  return {
+    type: actionTypes.SET_CRV_STAKE_LOADING,
+    payload,
+  };
+};

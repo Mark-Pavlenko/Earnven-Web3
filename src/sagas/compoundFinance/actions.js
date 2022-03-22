@@ -20,3 +20,10 @@ export const getCompClaimValue = (payload) => {
     payload,
   };
 };
+
+export const setCompoundFinanceIsLoading = (payload) => {
+  return {
+    type: actionTypes.SET_COMP_LOADING,
+    payload,
+  };
+};

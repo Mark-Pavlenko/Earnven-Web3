@@ -13,3 +13,10 @@ export const getEth2StakeTotalValue = (payload) => {
     payload,
   };
 };
+
+export const setEth2IsLoading = (payload) => {
+  return {
+    type: actionTypes.SET_ETH2_LOADING,
+    payload,
+  };
+};

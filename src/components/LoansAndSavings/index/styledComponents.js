@@ -132,3 +132,38 @@ export const ContentWrapper = styled.div`
     display: block;
   }
 `;
+
+export const PortocolLoadingBlock = styled.div`
+  color: ${(props) => (props.isLightTheme ? '#1E1E20' : 'white')};
+  display: flex;
+  font-weight: 600;
+  font-family: Saira;
+  font-size: 12px;
+  align-items: center;
+  text-align: right;
+  justify-content: space-between;
+  padding: 0 32px 11px 26px;
+`;
+
+export const LoadingSpinner = styled.div`
+  color: ${(props) => (props.isLightTheme ? '#1E1E20' : 'white')};
+  width: 22px;
+  height: 22px;
+  display: flex;
+  background: rgba(255, 255, 255, 0.16);
+  mix-blend-mode: normal;
+  box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(35px);
+  border-radius: 10px;
+  margin: theme.spacing(1);
+  position: relative;
+`;
+
+export const ProtocolTitle = styled.div`
+  color: ${(props) => (props.isLightTheme ? '#1E1E20' : 'white')};
+  display: flex;
+  align-items: left;
+  justify-content: left;
+  font-weight: 200;
+  font-size: 15px;
+`;

@@ -37,10 +37,11 @@ const info =
   'SushiSwap enables the buying and selling of different cryptocurrencies between users. 0.3% in fees is charged for facilitating each swap, with 0.25% going to liquidity providers and 0.05% being converted to SUSHI and distributed to users holding the SUSHI token. SUSHI tokens also entitle their holders to continue earning a portion of fees, even after they’ve stopped actively providing liquidity. SushiSwap enables the buying and selling of different cryptocurrencies between users. 0.3% in fees is charged for facilitating each swap, with 0.25% going to liquidity providers and 0.05% being converted to SUSHI and distributed to users holding the SUSHI token. SUSHI tokens also entitle their holders to continue earning a portion of fees, even after they’ve stopped actively providing liquidity.';
 
 export default function Chart(props) {
+  console.log('Chart(props)', props);
   const [Data, setData] = useState([]); // UNI V2 Pools
   const [Loading, setLoading] = useState(false);
   const [Page, setPage] = useState('');
-  const { token0, token1 } = props;
+  const { token0, token1, token0Symbol, token1Symbol } = props;
   const [isHiddenText, setIsHiddenText] = useState(true);
 
   const hideText = () => {
@@ -65,8 +66,8 @@ export default function Chart(props) {
   // eslint-disable-next-line
   const [View, setView] = useState('Month View');
 
-  const [tokenASymbol, setToken0] = useState();
-  const [tokenBSymbol, setToken1] = useState();
+  const [tokenASymbol, setTokenASymbol] = useState();
+  const [tokenBSymbol, setTokenBSymbol] = useState();
   const [currentMarketCap, setMarketCap] = useState(0);
   const [totalVolume, setTotalVolume] = useState('');
   const [fullyDiluted, setfullyDiluted] = useState(0);
@@ -131,7 +132,7 @@ export default function Chart(props) {
       // call this util function to get uniswap graph data
       try {
         const response = await getUniswapGraphData(token0, token1, epoch);
-
+        console.log('getUniswapGraphData', response);
         // main derive code
         if (response.data.data) {
           const res = response.data.data.pairDayDatas;
@@ -150,8 +151,8 @@ export default function Chart(props) {
 
           // setSelection(Data)
           setLoading(false);
-          setToken0(token0);
-          setToken1(token1);
+          setTokenASymbol(token0);
+          setTokenBSymbol(token1);
           setMarketCap(parseInt(res[0].reserveUSD).toLocaleString());
           setfullyDiluted(parseInt(fullyDiluted).toLocaleString());
           setTotalVolume(parseFloat(totalVolume).toLocaleString());
@@ -356,7 +357,6 @@ export default function Chart(props) {
     async function getData() {
       try {
         const response = await getPoolTokenImage(token0, token1);
-        // setToken1Image(response[0])
         setToken0Image(response.token0Image);
         setToken1Image(response.token1Image);
       } catch (err) {
@@ -443,8 +443,8 @@ export default function Chart(props) {
                 type={'Sushiswap'}
                 logo1={token0Image}
                 logo2={token1Image}
-                symbol1={tokenASymbol}
-                symbol2={tokenBSymbol}
+                symbol1={token0Symbol}
+                symbol2={token1Symbol}
                 address={tokenPairId}
                 totalValue={'$' + currentMarketCap}
               />
@@ -455,8 +455,8 @@ export default function Chart(props) {
                 type={'Sushiswap'}
                 logo1={token0Image}
                 logo2={token1Image}
-                symbol1={tokenASymbol}
-                symbol2={tokenBSymbol}
+                symbol1={token0Symbol}
+                symbol2={token1Symbol}
                 address={tokenPairId}
                 totalValue={'$' + currentMarketCap}
               />
