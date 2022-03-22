@@ -3,18 +3,23 @@ import AaveStakingABI from '../../../../abi/AaveStakingContract.json';
 import addresses from '../../../../contractAddresses';
 import { useSelector } from 'react-redux';
 
-export const getCoinGeckoAPIData = () => {
-  const getApiData = useSelector((state) => state.CoingeckoAPI.aaveCoinGeckoData);
-  return getApiData;
-};
+// export const getCoinGeckoAPIData = () => {
+//   const getApiData = useSelector((state) => state.CoingeckoAPI.aaveCoinGeckoData);
+//   return getApiData;
+// };
 
 //get the stkABPT image
 export const getStakeBalancerImage = async (contractAddress) => {
-  const result = await axios.get(
-    `https://api.coingecko.com/api/v3/coins/ethereum/contract/${contractAddress}`,
-    {}
-  );
-  return result;
+  try {
+    const result = await axios.get(
+      `https://api.coingecko.com/api/v3/coins/ethereum/contract/${contractAddress}`,
+      {}
+    );
+    return result;
+  } catch (err) {
+    console.log('Error log - In Aave stake data fetch from coingecko API', err.message);
+    return false;
+  }
 };
 
 //this function is used to interact with aave deployed contract to get balanceOf

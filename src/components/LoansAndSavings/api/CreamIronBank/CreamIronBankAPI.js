@@ -2,10 +2,15 @@ import axios from 'axios';
 
 //call the below url to get the user releated information that holds the curveLp tokens
 export const getAddressInfo = async (accountAddress) => {
-  const response = await axios.get(
-    `https://api.ethplorer.io/getAddressInfo/${accountAddress}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
-  );
-  return response.data;
+  try {
+    const response = await axios.get(
+      `https://api.ethplorer.io/getAddressInfo/${accountAddress}?apiKey=EK-qSPda-W9rX7yJ-UY93y`
+    );
+    return response.data;
+  } catch (err) {
+    console.log('Error log - In CreamIronBank fetch from ethplorer API', err.message);
+    return false;
+  }
 };
 
 export const getCreamData = async (

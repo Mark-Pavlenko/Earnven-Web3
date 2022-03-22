@@ -53,31 +53,41 @@ export const getLqtyStakingData = async (accountAddress) => {
 //get the price logic for the Lqty Token and Lusd token
 //LQTY token data
 export const getLqtyTokenPrice = async () => {
-  const lqtyResult = await axios.get(
-    `https://api.coingecko.com/api/v3/coins/ethereum/contract/0x6dea81c8171d0ba574754ef6f8b412f2ed88c54d`,
-    {}
-  );
-  const lqtytokenPrice = lqtyResult.data.market_data.current_price.usd;
-  const lqtyImageUrl = lqtyResult.data.image.thumb;
+  try {
+    const lqtyResult = await axios.get(
+      `https://api.coingecko.com/api/v3/coins/ethereum/contract/0x6dea81c8171d0ba574754ef6f8b412f2ed88c54d`,
+      {}
+    );
+    const lqtytokenPrice = lqtyResult.data.market_data.current_price.usd;
+    const lqtyImageUrl = lqtyResult.data.image.thumb;
 
-  return {
-    lqtytokenPrice: lqtytokenPrice,
-    lqtyImageUrl: lqtyImageUrl,
-  };
+    return {
+      lqtytokenPrice: lqtytokenPrice,
+      lqtyImageUrl: lqtyImageUrl,
+    };
+  } catch (err) {
+    console.log('Error log - In liquity data fetching from coingecko', err.message);
+    return false;
+  }
 };
 //LUSD token  data
 export const getLusdTokenPrice = async () => {
-  const lusdResult = await axios.get(
-    `https://api.coingecko.com/api/v3/coins/ethereum/contract/0x5f98805a4e8be255a32880fdec7f6728c6568ba0`,
-    {}
-  );
-  const lusdtokenPrice = lusdResult.data.market_data.current_price.usd;
-  const lusdImageUrl = lusdResult.data.image.thumb;
+  try {
+    const lusdResult = await axios.get(
+      `https://api.coingecko.com/api/v3/coins/ethereum/contract/0x5f98805a4e8be255a32880fdec7f6728c6568ba0`,
+      {}
+    );
+    const lusdtokenPrice = lusdResult.data.market_data.current_price.usd;
+    const lusdImageUrl = lusdResult.data.image.thumb;
 
-  return {
-    lusdtokenPrice: lusdtokenPrice,
-    lusdImageUrl: lusdImageUrl,
-  };
+    return {
+      lusdtokenPrice: lusdtokenPrice,
+      lusdImageUrl: lusdImageUrl,
+    };
+  } catch (err) {
+    console.log('Error log - In Liquity fetch from coingecko API', err.message);
+    return false;
+  }
 };
 //Get ETH market price
 export const getEthTokenPrice = async () => {

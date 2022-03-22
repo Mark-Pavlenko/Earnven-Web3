@@ -91,6 +91,7 @@ export const getConvexTokenPrice = async (contractAddress) => {
     return result;
   } catch (err) {
     console.log('Error message from Convex staking process', err.message);
+    return false;
   }
 };
 

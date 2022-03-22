@@ -14,17 +14,22 @@ export const getCompClaim = async (accountAddress, web3) => {
 
 //get the price and token image for COMP token
 export const getCompCoinData = async (tokenAddress) => {
-  const result = await axios.get(
-    `https://api.coingecko.com/api/v3/coins/ethereum/contract/${tokenAddress}`,
-    {}
-  );
-  const cTokenImageUrl = result.data.image.thumb;
-  const cTokenPrice = result.data.market_data.current_price.usd;
+  try {
+    const result = await axios.get(
+      `https://api.coingecko.com/api/v3/coins/ethereum/contract/${tokenAddress}`,
+      {}
+    );
+    const cTokenImageUrl = result.data.image.thumb;
+    const cTokenPrice = result.data.market_data.current_price.usd;
 
-  return {
-    cTokenImageUrl: cTokenImageUrl,
-    cTokenPrice: cTokenPrice,
-  };
+    return {
+      cTokenImageUrl: cTokenImageUrl,
+      cTokenPrice: cTokenPrice,
+    };
+  } catch (err) {
+    console.log('Error log - In compound data fetch from coingecko API', err.message);
+    return false;
+  }
 };
 
 //call the below compound API to get the cToken data for the respective uer

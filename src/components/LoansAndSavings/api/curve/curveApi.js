@@ -16,17 +16,22 @@ import BatchCall from 'web3-batch-call';
 
 //get yearn finance token price
 export const getCurveTokenPriceData = async (contractAddress) => {
-  const result = await axios.get(
-    `https://api.coingecko.com/api/v3/coins/ethereum/contract/0xD533a949740bb3306d119CC777fa900bA034cd52`,
-    {}
-  );
-  const cvxImageUrl = result.data.image.thumb;
-  const cvxTokenPrice = result.data.market_data.current_price.usd;
+  try {
+    const result = await axios.get(
+      `https://api.coingecko.com/api/v3/coins/ethereum/contract/0xD533a949740bb3306d119CC777fa900bA034cd52`,
+      {}
+    );
+    const cvxImageUrl = result.data.image.thumb;
+    const cvxTokenPrice = result.data.market_data.current_price.usd;
 
-  return {
-    cvxTokenPrice: cvxTokenPrice,
-    cvxImageUrl: cvxImageUrl,
-  };
+    return {
+      cvxTokenPrice: cvxTokenPrice,
+      cvxImageUrl: cvxImageUrl,
+    };
+  } catch (err) {
+    console.log('Error log - In curve token data fetch from coingecko API', err.message);
+    return false;
+  }
 };
 
 export const getCurveContractData = async (accountAddress, web3) => {
