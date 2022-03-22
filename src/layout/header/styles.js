@@ -51,7 +51,7 @@ export const HeaderLayoutMobile = styled.div`
 export const MobileSubLayout = styled.div`
   display: flex;
   align-items: center;
-  padding-top: 20px;
+  padding-top: 12px;
   margin-left: 15px;
 `;
 
