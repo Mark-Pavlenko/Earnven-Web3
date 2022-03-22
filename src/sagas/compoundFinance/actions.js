@@ -21,6 +21,13 @@ export const getCompClaimValue = (payload) => {
   };
 };
 
+export const getCompClaimTotalValue = (payload) => {
+  return {
+    type: actionTypes.GET_COMP_CLAIM_TOTAL,
+    payload,
+  };
+};
+
 export const setCompoundFinanceIsLoading = (payload) => {
   return {
     type: actionTypes.SET_COMP_LOADING,

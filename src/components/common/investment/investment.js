@@ -499,8 +499,10 @@ const Investment = ({
                             el !== 'balance' &&
                             el !== 'poolPercentage' &&
                             el !== 'totalTokensBalance' &&
+                            el !== 'APY' &&
                             el !== 'cTokenBalance' && <span>$</span>}
                           {el === 'poolPercentage' && <span>%</span>}
+                          {el === 'APY' && <span>%</span>}
                           <span>
                             {isNumber(protocol[el])
                               ? numberWithCommas(parseFloat(protocol[el]).toFixed(2))

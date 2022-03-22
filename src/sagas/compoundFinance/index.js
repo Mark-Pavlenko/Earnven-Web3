@@ -5,7 +5,11 @@ import actionTypes from '../../constants/actionTypes';
 import addresses from '../../contractAddresses';
 
 export function* getcompoundTokenSagaWatcher() {
-  yield takeEvery(actionTypes.SET_COMP_TOKEN_DATA, compoundTokenSagaWorker);
+  try {
+    yield takeEvery(actionTypes.SET_COMP_TOKEN_DATA, compoundTokenSagaWorker);
+  } catch (err) {
+    console.log('Error log - In Compound action in Saga', err.message);
+  }
 }
 
 function* compoundTokenSagaWorker(compTokenAttributes) {
@@ -16,7 +20,9 @@ function* compoundTokenSagaWorker(compTokenAttributes) {
   let totalValue = 0;
   let underlyingTokenData;
   let compCoinData;
-  let decimals = 17;
+  let decimals = 18;
+  let object = {};
+  let compClaimData = [];
 
   //get Comp token price by sending the COMP token address
   let compTokenData = yield call(API.getCompCoinData, addresses.compTokenAddress);
@@ -28,15 +34,29 @@ function* compoundTokenSagaWorker(compTokenAttributes) {
     compTokenParams.web3
   );
   if (claimableAmt) {
-    let countNumbers = ('' + claimableAmt.claimComp).length;
+    //let countNumbers = ('' + claimableAmt.claimComp).length;
 
-    if (countNumbers >= 18) {
-      decimals = 18;
-    }
+    // if (countNumbers >= 18) {
+    //   decimals = 18;
+    // }
     let compClaim = parseFloat(
       (claimableAmt.claimComp / 10 ** decimals) * compTokenData.cTokenPrice
     ).toFixed(4);
-    yield put(actions.getCompClaimValue(compClaim));
+    object.balance = claimableAmt.claimComp / 10 ** decimals;
+    object.price = compTokenData.cTokenPrice;
+    object.value = compClaim;
+    object.totalValue = object.value;
+    object.symbol = 'COMP';
+    object.chain = 'Ethereum';
+    object.protocol = 'Compound';
+    object.tokenImage = compTokenData.cTokenImageUrl;
+    if (object.value > 0) {
+      compClaimData.push(object);
+    }
+    if (compClaimData.length > 0) {
+      yield put(actions.getCompClaimValue(compClaimData));
+      yield put(actions.getCompClaimTotalValue(compClaimData[0].totalValue));
+    }
   }
 
   //setcompTokenImageUrl(compTokenData.cTokenImageUrl);
@@ -68,7 +88,7 @@ function* compoundTokenSagaWorker(compTokenAttributes) {
             object.price = compCoinData.cTokenPrice;
             object.tokenImage = compCoinData.cTokenImageUrl;
             object.value = parseFloat(object.balance * object.price).toFixed(2);
-            object.apy = parseFloat(underlyingTokenData.supply_rate.value * 100).toFixed(4);
+            object.APY = parseFloat(underlyingTokenData.supply_rate.value * 100).toFixed(4);
             object.chain = 'Ethereum';
             object.protocol = 'Compound';
             totalValue += parseFloat(object.value);

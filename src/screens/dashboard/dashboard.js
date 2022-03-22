@@ -154,9 +154,7 @@ export default function Dashboard({ test, changeTheme }) {
             <MainBlocks>
               <LeftSideWrapper>
                 <PortfolioPerf address={address} totalValue={`$${totalValue}`} theme={theme} />
-                <Mobile>
-                  <AllAssets isLightTheme={theme} address={address} />
-                </Mobile>
+                <Mobile>{/* <AllAssets isLightTheme={theme} address={address} /> */}</Mobile>
                 <br />
                 {isLoading === true ? (
                   <PortocolLoadingBlock isLightTheme={theme}>
@@ -173,7 +171,7 @@ export default function Dashboard({ test, changeTheme }) {
                 {/* <LoansAndSavings accountAddress={address} /> */}
               </LeftSideWrapper>
               <RightSideWrapper>
-                <AllAssets isLightTheme={theme} address={address} />
+                {/* <AllAssets isLightTheme={theme} address={address} /> */}
               </RightSideWrapper>
             </MainBlocks>
           </Container>

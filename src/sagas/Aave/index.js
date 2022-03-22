@@ -32,7 +32,10 @@ function* aaveStakeSagaWorker(aaveStakeAttributes) {
 
   //get the image url for stkABPT
   const getUrl = yield call(API.getStakeBalancerImage, Addresses.aavestkABPT);
-  const stkABPTImageUrl = getUrl.data.image.thumb;
+  let stkABPTImageUrl;
+  if (getUrl) {
+    stkABPTImageUrl = getUrl.data.image.thumb;
+  }
 
   //Call the contract to get the value for staked Aave
   const AaveV2Data = yield call(

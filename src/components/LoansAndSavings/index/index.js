@@ -67,6 +67,7 @@ export default function index({ accountAddress }) {
   const compTokenDataValue = useSelector((state) => state.compoundFinance.compTokenData);
   const compTotalValue = useSelector((state) => state.compoundFinance.compTokenTotal);
   const compTokenClaim = useSelector((state) => state.compoundFinance.compClaimValue);
+  const compClaimTotalValue = useSelector((state) => state.compoundFinance.compClaimTotal);
   const iscompoundFinanceIsLoading = useSelector(
     (state) => state.compoundFinance.compoundFinanceIsLoading
   );
@@ -554,7 +555,8 @@ export default function index({ accountAddress }) {
         sushiStakeData.length == 0 &&
         uniswapV2stake.length == 0 &&
         mStablesStaking.length == 0 &&
-        alxFinanceData.length == 0 ? (
+        alxFinanceData.length == 0 &&
+        compTokenClaim.length == 0 ? (
           <PoolsBlock isLightTheme={theme}>
             <Header>
               <Title isLightTheme={theme}>{'Saving/Loans'}</Title>
@@ -581,7 +583,8 @@ export default function index({ accountAddress }) {
                 sushiStakeData.length > 0 ||
                 uniswapV2stake.length > 0 ||
                 mStablesStaking.length > 0 ||
-                alxFinanceData.length > 0,
+                alxFinanceData.length > 0 ||
+                compTokenClaim.length > 0,
             }}>
             <Header>
               <Title isLightTheme={theme}>{'Saving/Loans'}</Title>
@@ -603,7 +606,9 @@ export default function index({ accountAddress }) {
                         parseFloat(creamIronBankTotal) +
                         parseFloat(sushiStakeTotal) +
                         parseFloat(uniswapV2stakeTotal) +
-                        parseFloat(mStableTotal)
+                        parseFloat(mStableTotal) +
+                        parseFloat(alxFinanceTotal) +
+                        parseFloat(compClaimTotalValue)
                     ).toFixed(2)
                   )}
                 </TotalValue>
@@ -628,9 +633,9 @@ export default function index({ accountAddress }) {
                           <img
                             src={CompoundLogo}
                             style={{
-                              height: '20px',
+                              height: '25px',
                               marginTop: '',
-                              marginLeft: '15px',
+                              marginLeft: '5px',
                               display: 'inline-block',
                             }}
                             alt=""
@@ -653,6 +658,38 @@ export default function index({ accountAddress }) {
                       ''
                     )}
                   </>
+                )}
+
+                {/*Compound Claimable */}
+                {compTokenClaim.length > 0 ? (
+                  <React.Fragment>
+                    <ProtocolTitle isLightTheme={theme}>
+                      <img
+                        src={CompoundLogo}
+                        style={{
+                          height: '25px',
+                          marginTop: '',
+                          marginLeft: '5px',
+                          display: 'inline-block',
+                        }}
+                        alt=""
+                      />
+                      Compound Claimable
+                    </ProtocolTitle>
+                    {compTokenClaim
+                      ? compTokenClaim.map((object) => {
+                          return (
+                            <Investment
+                              protocol={object}
+                              protocolName={'Compound'}
+                              logoImage={object.tokenImage}
+                            />
+                          );
+                        })
+                      : ''}
+                  </React.Fragment>
+                ) : (
+                  ''
                 )}
 
                 {/*Ethereum 2.0 protocol */}
