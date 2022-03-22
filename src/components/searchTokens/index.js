@@ -70,10 +70,11 @@ export class TestTokensSelect extends Component {
         getOptionLabel={(option) => option.name}
         renderOption={(props, option) => (
           <TokensListBox
+            isLightTheme={isLightTheme}
             component="li"
             sx={{
               width: '221px',
-              marginLeft: '11px',
+              marginLeft: '6px',
               fontSize: '10px',
               '& > img': { mr: 2, flexShrink: 0 },
               '&:hover': {
@@ -88,11 +89,7 @@ export class TestTokensSelect extends Component {
               },
             }}
             {...props}
-            style={{
-              marginTop: '-8px',
-              backgroundColor: isLightTheme ? '#FFFFFF29' : '#11132C',
-              height: '20px !important',
-            }}>
+            style={{}}>
             <img loading="lazy" width="20" src={option.image.small} alt="" />
             <FoundTokenBlock isLightTheme={isLightTheme}>
               <span>{option.name}</span>
@@ -140,7 +137,6 @@ export class TestTokensSelect extends Component {
               mixBlendMode: isLightTheme ? 'normal' : 'normal',
               backdropFilter: isLightTheme ? 'blur(35px)' : 'blur(35px)',
               borderRadius: '10px',
-              // marginTop: '30px',
             }}
             size="small"
           />
