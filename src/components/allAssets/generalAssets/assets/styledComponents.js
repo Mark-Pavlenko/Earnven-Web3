@@ -11,7 +11,7 @@ export const Main = styled.div`
   padding: 20px;
   border-radius: 10px;
   @media (max-width: 1150px) {
-    padding: 0 29px 0 26px;
+    padding: 22px 29px 31px 26px;
   }
 `;
 
@@ -65,7 +65,6 @@ export const TotalValue = styled.div`
 export const Title = styled.div`
   color: ${(props) => (props.isLight ? '#1e1e20' : '#ffffff')};
   margin-top: 15px;
-  margin-left: 27px;
 `;
 
 export const EthereumTokenImage = styled.img`
@@ -101,7 +100,7 @@ export const TokenName = styled.div`
 export const TokenBalance = styled.div`
   font-family: Saira, sans-serif;
   font-style: normal;
-  color: ${(props) => (props.isLight ? '#80868F' : '#ffffff')};
+  color: ${(props) => (props.isLight ? '#81878f' : '#8a8b9b')};
   font-weight: normal;
   font-size: 14px;
   line-height: 22px;
@@ -112,9 +111,18 @@ export const NameWrapper = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  //height: 50px;
-  //float: left;
-  //text-align: initial;
+`;
+
+export const ApyColumn = styled.td`
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const ApyHeaderColumn = styled.td`
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 export const APYPercent = styled.div`
@@ -147,6 +155,9 @@ export const AddGroupButton = styled.button`
   line-height: 22px;
   box-shadow: 7px 21px 22px -15px rgba(51, 78, 131, 0.17);
   margin-top: 53px;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 export const AssetName = styled.div`
@@ -197,7 +208,7 @@ export const AssetDataRaw = styled.div`
   height: 50px;
   background: transparent;
   cursor: pointer;
-  line-height: 1;
+  //line-height: 5;
   margin-bottom: 5px;
   &:hover {
     background: ${(props) => (props.isLight ? '#ffffff' : 'rgba(31, 38, 92, 0.24)')};
@@ -223,6 +234,16 @@ export const AssetValue = styled.div`
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+`;
+
+export const AssetItemValue = styled.div`
+  color: ${(props) => (props.isLightTheme ? 'black' : '#ffffff')};
+  font-size: 14px;
+`;
+
+export const AssetItemPercent = styled.div`
+  font-size: 10px;
+  color: ${(props) => (props.isPositive ? '#03DAC6' : '#ff1f1f')};
 `;
 
 export const MainMobile = styled.div`
@@ -259,10 +280,6 @@ export const Part = styled.div`
   color: ${(props) => (props.isLight ? '#1E1E20' : '#ffffff')};
   margin-left: 5px;
   padding: 3px;
-  //&:hover {
-  //  background-color: #eceef7;
-  //  color: #1e1e20;
-  //}
 `;
 
 // =====================================>
@@ -279,6 +296,11 @@ export const FirstEl = styled.div`
 `;
 
 export const RowStyle = styled.tr`
+  td {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  border-radius: 10px;
   &:hover {
     background: ${(props) => (props.isLight ? '#ffffff' : 'rgba(31, 38, 92, 0.24)')};
     box-shadow: ${(props) =>
@@ -286,5 +308,10 @@ export const RowStyle = styled.tr`
         ? 'inset 0 5px 10px -6px rgba(51, 78, 131, 0.12)'
         : 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)'};
     border-radius: 10px;
+    ${Part} {
+      background-color: ${(props) => (props.isLight ? '#eceef7' : '#4453ad')};
+      //color: #1e1e20;
+      color: ${(props) => (props.isLight ? '#1e1e20' : '#ffffff')};
+    }
   }
 `;
