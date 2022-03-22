@@ -37,6 +37,13 @@ export const RootStyle = styled('div')`
   }
 `;
 
+export const MainStyleParentLayout = styled('div')`
+  @media (min-width: 1921px) {
+    display: flex;
+    justify-content: center;
+  }
+`;
+
 export const MainStyle = styled('div')`
   min-height: 100vh;
   height: 100%;
@@ -64,5 +71,6 @@ export const MainStyle = styled('div')`
 
   @media (min-width: 1445px) {
     margin-left: 314px;
+    max-width: 1606px;
   }
 `;

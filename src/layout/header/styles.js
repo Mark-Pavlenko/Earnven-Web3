@@ -3,18 +3,12 @@ import { IconButton } from '@material-ui/core';
 
 export const HeaderLayoutBig = styled.div`
   height: 102px;
-
+  padding-top: 35px;
   background: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};
 
   @media (min-width: 2100px) {
     background: ${(props) => (props.isLightTheme ? `transparent` : `#0B0E1D`)};
   }
-
-  //@media screen and (min-width: 711px) and (max-width: 1280px) {
-  //  display: grid;
-  //  grid-template-columns: 40% 60%;
-  //  margin-left: 0;
-  //}
 
   @media (max-width: 1280px) {
     display: none;
@@ -26,13 +20,12 @@ export const HeaderLayoutBig = styled.div`
   }
 
   @media screen and (max-width: 1445px) and (min-width: 1281px) {
-    margin-left: 150px;
+    //margin-left: 150px;
     max-width: 1770px;
   }
 
   @media (min-width: 1446px) {
-    margin-left: 314px;
-    max-width: 1605px;
+    //margin-left: 350px;
   }
 `;
 
@@ -52,7 +45,7 @@ export const MobileSubLayout = styled.div`
   display: flex;
   align-items: center;
   padding-top: 12px;
-  margin-left: 15px;
+  margin-left: 7px;
 `;
 
 export const HeaderFirstLayout = styled.div`
@@ -87,8 +80,7 @@ export const HeaderTitle = styled.div`
   }
 
   @media (min-width: 1280px) {
-    margin-top: 30px;
-    margin-left: 35px;
+    margin-top: 13px;
   }
 `;
 
@@ -167,5 +159,6 @@ export const ChangeThemeBtnHeader = styled(IconButton)`
 
   @media screen and (min-width: 821px) and (max-width: 1920px) {
     margin-left: -8px;
+    margin-right: -8px;
   }
 `;

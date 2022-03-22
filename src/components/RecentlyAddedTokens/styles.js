@@ -18,17 +18,14 @@ export const LoadingBlock = styled.div`
 
 export const MainBlock = styled(Box)`
   box-sizing: border-box;
-  margin-top: 30px;
   margin-bottom: 35px;
+  margin-top: -16px;
   border-radius: 10px;
   border: 5rem;
   width: auto;
 
   @media (max-width: 980px) {
     width: 100%;
-    //margin-left: 0px;
-    //padding-right: 10px;
-    //padding-left: 10px;
   }
 `;
 
