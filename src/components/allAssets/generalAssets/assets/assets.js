@@ -11,17 +11,15 @@ import {
   Title,
   Value,
   Header,
+  RowStyle,
   TokenName,
   AssetName,
   AssetValue,
-  AssetItemValue,
-  AssetItemPercent,
   TotalTitle,
   TotalValue,
   TokenImage,
   APYPercent,
   ApyColumn,
-  ApyHeaderColumn,
   Percentage,
   APYWrapper,
   MainMobile,
@@ -29,16 +27,18 @@ import {
   AssetsColumn,
   AssetDataRaw,
   TokenBalance,
+  AssetItemValue,
   TotalEmptyCell,
   AddGroupButton,
+  ApyHeaderColumn,
   TotalValueField,
+  AssetItemPercent,
   AssetImageMobile,
   AssetValueWrapper,
   EthereumTokenImage,
-  RowStyle,
 } from './styledComponents';
-import { ToggleButton } from '../../../styled/styledComponents';
 import { BrowserView, MobileView } from 'react-device-detect';
+import { ToggleButton } from '../../../styled/styledComponents';
 import { numberWithCommas } from '../../../../commonFunctions/commonFunctions';
 
 let contents = '';
@@ -464,7 +464,7 @@ export default class Assets extends Component {
                     width: '100%',
                     tableLayout: 'auto',
                     borderCollapse: 'separate',
-                    borderSpacing: '0 5px',
+                    // borderSpacing: '0 5px',
                   }}>
                   <tr>
                     <td colSpan="2">
