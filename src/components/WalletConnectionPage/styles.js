@@ -46,19 +46,6 @@ export const MainStyleFirstConnection = styled.div`
     padding-left: 15px;
     padding-right: 15px;
   }
-
-  @media screen and (max-width: 1445px) and (min-width: 1281px) {
-    margin-left: 150px;
-  }
-
-  @media (min-width: 1446px) {
-    margin-left: 315px;
-    max-width: 1605px;
-  }
-
-  @media screen and (max-width: 1445px) and (min-width: 1281px) {
-    max-width: 1770px;
-  }
 `;
 
 export const MainSubLayout = styled.div`

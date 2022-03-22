@@ -12,11 +12,6 @@ export default function AppLayout() {
 
   const themeType = useSelector((state) => state.themeReducer.isLightTheme);
   const title = useSelector((state) => state.headerTitlesReducer.currentRouteTitle);
-  const reduxWalletsList = useSelector((state) => state.initSidebarValuesReducer.walletsList);
-  const reduxMyWallet = useSelector((state) => state.initSidebarValuesReducer.myWallet);
-
-  // console.log('reduxWalletsList', reduxWalletsList);
-  // console.log('reduxMyWallet', reduxMyWallet);
 
   const isFirstConnection = localStorage.getItem('firstConnection');
 
