@@ -53,7 +53,7 @@ export const MainStyle = styled('div')`
     padding-left: 35px;
   }
 
-  @media (min-width: 1280px) {
+  @media (min-width: 1281px) {
     margin-left: 150px;
     margin-top: -24px;
   }
