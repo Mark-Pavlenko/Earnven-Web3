@@ -23,47 +23,10 @@ import {
   RightSideWrapper,
   Mobile,
   DashboardTabsLayout,
-  GridTable,
-  FirstEl,
-  ThirdEl,
-  Cell,
   PortocolLoadingBlock,
   LoadingSpinner,
 } from './styledComponents';
 import axios from 'axios';
-import {
-  AddGroupButton,
-  APYPercent,
-  APYWrapper,
-  AssetDataRaw,
-  AssetImageMobile,
-  AssetName,
-  AssetsColumn,
-  AssetValue,
-  AssetValueWrapper,
-  ColumnHeader,
-  EthereumTokenImage,
-  Header,
-  Main,
-  MainMobile,
-  NameWrapper,
-  Part,
-  Percentage,
-  Title,
-  TokenBalance,
-  TokenImage,
-  TokenName,
-  TotalEmptyCell,
-  TotalTitle,
-  TotalValue,
-  TotalValueField,
-  Value,
-} from '../../components/allAssets/generalAssets/assets/styledComponents';
-import { ToggleButton } from '../../components/styled/styledComponents';
-import { numberWithCommas } from '../../commonFunctions/commonFunctions';
-import { BrowserView, MobileView } from 'react-device-detect';
-import ethImage from '../../assets/icons/eth.png';
-import Avatar from 'react-avatar';
 import Protocols from '../../components/LoansAndSavings/Protocols/index';
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -195,7 +158,7 @@ export default function Dashboard({ test, changeTheme }) {
                   <AllAssets isLightTheme={theme} address={address} />
                 </Mobile>
                 <br />
-                {isLoading == true ? (
+                {isLoading === true ? (
                   <PortocolLoadingBlock isLightTheme={theme}>
                     <LoadingSpinner>
                       <CircularProgress size={22} />
