@@ -46,6 +46,11 @@ export const MobileSubLayout = styled.div`
   align-items: center;
   padding-top: 12px;
   margin-left: 7px;
+  //
+
+  @media (min-width: 1023px) {
+    margin-left: -10px;
+  }
 `;
 
 export const HeaderFirstLayout = styled.div`
@@ -75,8 +80,8 @@ export const HeaderTitle = styled.div`
     margin-left: 15px;
   }
 
-  @media screen and (min-width: 800px) and (max-width: 1279px) {
-    margin-left: 20px;
+  @media screen and (min-width: 1023px) {
+    margin-left: 0;
   }
 
   @media (min-width: 1280px) {
@@ -85,12 +90,6 @@ export const HeaderTitle = styled.div`
 `;
 
 export const HeaderItemsBlock = styled.div`
-  //@media screen and (min-width: 711px) and (max-width: 820px) {
-  //  display: flex;
-  //  justify-content: space-around;
-  //  align-items: center;
-  //}
-
   @media (max-width: 1280px) {
     display: none;
   }
@@ -104,9 +103,12 @@ export const HeaderItemsBlock = styled.div`
 `;
 
 export const BurgerSidebarIconButton = styled(IconButton)`
+  @media (min-width: 1023px) {
+    margin-right: -10px;
+  }
+
   :hover {
     background-color: transparent !important;
-    //border-radius: 10px;
   }
 
   img {
@@ -120,10 +122,6 @@ export const BurgerSidebarIconButton = styled(IconButton)`
   @media (max-width: 1280px) {
     margin-left: auto;
   }
-
-  //@media (min-width: 1024px) {
-  //  margin-left: 25px;
-  //}
 
   @media (min-width: 1281px) {
     display: none;
