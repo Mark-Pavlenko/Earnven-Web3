@@ -226,14 +226,32 @@ export default function Sidebar({
     setaccountList(jsonData);
     const myWallet = localStorage.getItem('mywallet');
     setMyWallet(JSON.parse(myWallet));
+
     // setmywallet(myWallet);
   }, [account, name, global_wallet]);
 
   const { pathname } = useLocation();
+
   let newSideBard = [];
   if (!setTheme || setTheme) {
     newSideBard = getRecall();
   }
+
+  // ------- choose correct title by router name -------
+  let navigationAddress = localStorage.getItem('setnavigation');
+
+  let chosenPageObj = newSideBard.find((el) => {
+    if (el.path === navigationAddress) {
+      return el.title;
+    }
+  });
+
+  console.log('chosenPageObj', chosenPageObj);
+  if (chosenPageObj !== undefined) {
+    dispatch({ type: 'SET_CURRENT_ROUTE_TITLE', payload: chosenPageObj.title });
+  }
+
+  // ------- choose correct title by router name -------
 
   function setDynamicTheme() {
     if (!isLightTheme) {

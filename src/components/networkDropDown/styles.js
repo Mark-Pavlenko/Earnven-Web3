@@ -33,11 +33,10 @@ export const DesktopNetworksListPopover = styled(Popover)``;
 export const DesktopNetworkButton = styled(Button)`
   width:153px;
   height: 40px;
+  font-weight: normal !important;
   font-size: 16px;
-  font-style: normal;
   border: none;
   border-radius: 10px;
-  font-weight: ${(props) => (props.isLightTheme ? ' 600' : '600')};
   color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
   background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#10142D')};
   box-shadow: ${(props) =>
@@ -61,7 +60,7 @@ export const InactiveDesktopListNetworkButton = styled(Button)`
   font-style: normal;
   border: none;
   border-radius: 10px;
-  font-weight: ${(props) => (props.isLightTheme ? ' 500' : '600')};
+  font-weight: 500;
   color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
   
   :hover {
