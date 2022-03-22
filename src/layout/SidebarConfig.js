@@ -35,12 +35,12 @@ let sidebarConfig = [];
 export const getRecall = () => {
   return [
     {
-      title: 'home',
+      title: 'Home',
       path: '/home',
       icon: localStorage.getItem('selectedTheme') == 'Day' ? getIcon(home) : getIcon(homeDark),
     },
     {
-      title: 'dashboard',
+      title: 'Dashboard',
       path: '/dashboard',
       icon:
         localStorage.getItem('selectedTheme') == 'Day'
@@ -48,7 +48,7 @@ export const getRecall = () => {
           : getIcon(dashboardDark),
     },
     {
-      title: 'send',
+      title: 'Send',
       path: '/send',
       icon:
         localStorage.getItem('selectedTheme') == 'Day'
@@ -56,7 +56,7 @@ export const getRecall = () => {
           : getIcon(navigationDark),
     },
     {
-      title: 'exchange',
+      title: 'Exchange',
       path: '/exchange',
       icon:
         localStorage.getItem('selectedTheme') == 'Day'
@@ -64,7 +64,7 @@ export const getRecall = () => {
           : getIcon(exchangeDark),
     },
     {
-      title: 'liquidity pools',
+      title: 'Liquidity pools',
       path: '/liquiditypools',
       icon:
         localStorage.getItem('selectedTheme') == 'Day'

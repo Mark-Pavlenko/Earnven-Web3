@@ -21,22 +21,25 @@ import { initSidebarValuesReducer } from '../../../store/initSidebarValues/reduc
 // active navigation element
 function NavItem({ item, active, address }) {
   const themeType = useSelector((state) => state.themeReducer.isLightTheme);
+  const dispatch = useDispatch();
 
   const { title, path, icon, info, children } = item;
   const isActiveRoot = active(`/${address}${path}`);
 
-  const isFirstConnection = localStorage.getItem('firstConnection');
+  // console.log('actual item.path', item);
+  // console.log('actual active', active);
+  // console.log('actual address', address);
+
+  // onClick={getRouteTitle()}
 
   function setNavigation() {
     localStorage.setItem('setnavigation', item.path);
+    dispatch({ type: 'SET_CURRENT_ROUTE_TITLE', payload: item.title });
   }
 
   return (
     <>
       <ListItemElement
-        // button
-        // disableGutters
-        // disabled
         isLightTheme={themeType}
         onClick={() => {
           setNavigation();
@@ -104,9 +107,11 @@ function FirstConnectionNavItemDisabled({ item, active, address }) {
 export default function NavSection({ navConfig, address, ...other }) {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch({ type: 'GET_HEADER_TITLES', payload: navConfig });
-  }, []);
+  // useEffect(() => {
+  //   // dispatch({ type: 'GET_HEADER_TITLES', payload: navConfig });
+  //
+  //   });
+  // }, []);
 
   const { pathname } = useLocation();
   const match = (path) => (path ? !!matchPath({ path, end: false }, pathname) : false);
@@ -116,7 +121,6 @@ export default function NavSection({ navConfig, address, ...other }) {
     dispatch({ type: 'SET_CURRENT_ROUTE_TITLE', payload: currentRouteTitle });
   };
 
-  const firstConnection = useSelector((state) => state.initSidebarValuesReducer.firstConnection);
   const reduxWalletsList = useSelector((state) => state.initSidebarValuesReducer.walletsList);
 
   return (
@@ -138,7 +142,7 @@ export default function NavSection({ navConfig, address, ...other }) {
                 item={item}
                 active={match}
                 address={address}
-                onClick={getRouteTitle()}
+                // onClick={getRouteTitle()}
               />
             );
           })}
@@ -155,7 +159,7 @@ export default function NavSection({ navConfig, address, ...other }) {
                 item={item}
                 active={match}
                 address={address}
-                onClick={getRouteTitle()}
+                // onClick={getRouteTitle()}
               />
             );
           })}

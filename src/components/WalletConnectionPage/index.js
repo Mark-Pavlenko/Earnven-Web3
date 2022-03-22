@@ -52,9 +52,6 @@ const useStyles = makeStyles((theme) => ({
   noBorder: {
     border: 'none !important',
   },
-  input: {
-    color: 'red',
-  },
 }));
 
 export default function WalletPageConnection() {
@@ -248,13 +245,6 @@ export default function WalletPageConnection() {
     <>
       {isFirstConnection === true ? (
         <RootStyleFirstConnection isLightTheme={themeType} isFirstConnection={isFirstConnection}>
-          {localStorage.getItem('wallets') === null && (
-            <Header
-              onOpenSidebar={() => setOpen(true)}
-              themeType={themeType}
-              finalTitle={'Connect to Earnven'}
-            />
-          )}
           <Sidebar
             isOpenSidebar={open}
             onCloseSidebar={() => setOpen(false)}
@@ -265,6 +255,11 @@ export default function WalletPageConnection() {
           />
           {localStorage.getItem('wallets') === null ? (
             <MainStyleFirstConnection isLightTheme={themeType}>
+              <Header
+                onOpenSidebar={() => setOpen(true)}
+                themeType={themeType}
+                finalTitle={'Connect to Earnven'}
+              />
               <MainSubLayout>
                 <MainSubLayoutTitle isLightTheme={themeType}>Connect a wallet</MainSubLayoutTitle>
                 <MetaMaskBtn
