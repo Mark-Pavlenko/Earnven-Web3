@@ -1,63 +1,62 @@
 import React, { useEffect, useState } from 'react';
-import {
-  TableItem,
-  ItemHeader,
-  InfoButton,
-  TokenImage,
-  ItemIndex,
-  TokenImages,
-  TokenNames,
-  AprBlock,
-  AprName,
-  ItemButtons,
-  APR,
-  AprValue,
-  LiquidityValue,
-  BalanceValue,
-  TokensValue,
-  ResetButton,
-  MenuPopoverBoxTitle,
-  MyPoolsItemButton,
-} from '../styledComponents';
-import { SvgComponent } from '../../../svgComponent/svgComponent';
+import Web3 from 'web3';
+import Select from 'react-select';
 import {
   addIconsGasPrices,
   numberWithCommas,
 } from '../../../../../commonFunctions/commonFunctions';
-import ModalContainer from '../../../../common/modalContainer/modalContainer';
 import { SelectWrapper } from '../../../styledComponents';
 import {
-  ButtonsBlock,
-  ChangeToken,
-  InputBlock,
-  LinksContainer,
-  ModalInput,
-  ModalLink,
-  ModalLinkRight,
-  SelectTitle,
-  SupplyTokenButton,
+  APR,
+  AprName,
+  AprBlock,
+  AprValue,
+  TableItem,
+  ItemIndex,
+  ItemHeader,
+  InfoButton,
+  TokenImage,
+  TokenNames,
+  TokenImages,
+  ItemButtons,
+  TokensValue,
+  ResetButton,
+  BalanceValue,
+  LiquidityValue,
+  MyPoolsItemButton,
+  MenuPopoverBoxTitle,
+} from '../styledComponents';
+import { SvgComponent } from '../../../svgComponent/svgComponent';
+import ModalContainer from '../../../../common/modalContainer/modalContainer';
+import {
   Balance,
-  BlockTokenName,
+  ModalLink,
+  ModalInput,
+  InputBlock,
+  ChangeToken,
+  SelectTitle,
   BlockTokens,
+  ButtonsBlock,
   DividerBlock,
+  LinksContainer,
+  ModalLinkRight,
+  BlockTokenName,
+  SupplyTokenButton,
 } from '../../../uniV2/StyledComponents';
-import Select from 'react-select';
-import { Link, useParams } from 'react-router-dom';
-
-import { SelectOptionsWithJSX } from '../../../HOC/selectOptionsWithJSX';
-import Web3 from 'web3';
-import ROUTERABI from '../../../../../abi/UniRouterV2.json';
-import Addresses from '../../../../../contractAddresses';
-import TOKENDECIMALSABI from '../../../../../abi/TokenDecomals.json';
-import { CommonSubmitButton } from '../../../../../screens/TokenPage/components/styledComponentsCommon';
-import { GasMenuItem } from '../../../../gasDropDownMenu/styles';
-import { useDispatch, useSelector } from 'react-redux';
 import { data } from '../../../../../globalStore';
-import fastDice from '../../../../../assets/icons/fastDice-icon.svg';
-import middleDice from '../../../../../assets/icons/middleDice-icon.svg';
-import slowDice from '../../../../../assets/icons/slowDice-icon.svg';
+import { Link, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import Addresses from '../../../../../contractAddresses';
+import ROUTERABI from '../../../../../abi/UniRouterV2.json';
 import actionTypes from '../../../../../constants/actionTypes';
+import { GasMenuItem } from '../../../../gasDropDownMenu/styles';
+import TOKENDECIMALSABI from '../../../../../abi/TokenDecomals.json';
+import fastDice from '../../../../../assets/icons/fastDice-icon.svg';
+import slowDice from '../../../../../assets/icons/slowDice-icon.svg';
+import { SelectOptionsWithJSX } from '../../../HOC/selectOptionsWithJSX';
+import middleDice from '../../../../../assets/icons/middleDice-icon.svg';
 import { GasPriceLabel } from '../../liquidityPoolsTable/styledComponents';
+import { CommonSubmitButton } from '../../../../../screens/TokenPage/components/styledComponentsCommon';
 
 export const InvestTableItem = ({
   item,
@@ -74,7 +73,7 @@ export const InvestTableItem = ({
   const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
   const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
   const allTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
-
+  console.log('InvestTableItem', item);
   const currentWallet = JSON.parse(localStorage.getItem('mywallet'));
 
   const gasPricesWithIcons = addIconsGasPrices(GasPrices, fastDice, middleDice, slowDice, theme);
@@ -470,9 +469,11 @@ export const InvestTableItem = ({
                 type="number"
                 onChange={(e) => {
                   if (e.target.value.length > 0 && e.target.value !== 0) {
-                    addLiquidityToPair(item.token0.id, item.token1.id, e.target.value).catch(
-                      (res) => res
-                    );
+                    addLiquidityToPair(
+                      item.poolDetails.token0Address,
+                      item.poolDetails.token1Address,
+                      e.target.value
+                    ).catch((res) => res);
                   } else {
                     setTokenSwapError(false);
                   }
@@ -486,9 +487,6 @@ export const InvestTableItem = ({
                   : '0.00'
               }`}</Balance>
             </InputBlock>
-            {/*<ButtonsBlock>*/}
-            {/*  <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>*/}
-            {/*</ButtonsBlock>*/}
             <DividerBlock>
               <ChangeToken isLightTheme={theme}>{'Or'}</ChangeToken>
             </DividerBlock>
@@ -520,7 +518,6 @@ export const InvestTableItem = ({
                   setTokenSwapError(false);
                 }}
               />
-              {/*<Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>*/}
             </InputBlock>
             {/*input-------------------->*/}
             {/*input-------------------->*/}
@@ -550,7 +547,6 @@ export const InvestTableItem = ({
                   setTokenSwapError(false);
                 }}
               />
-              {/*<Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>*/}
             </InputBlock>
             {/*input-------------------->*/}
             <LinksContainer>
@@ -560,8 +556,6 @@ export const InvestTableItem = ({
               <ModalLinkRight isLightTheme={theme} onClick={slippageHandler} href={'#'}>
                 {`${selectedGasPrice.length > 0 ? selectedGasPrice : proposeGasPrice} Gwei`}
               </ModalLinkRight>
-              {/*<ModalLink href={'#'}>{'Slippage Tolerance'}</ModalLink>*/}
-              {/*<ModalLinkRight href={'#'}>ddd</ModalLinkRight>*/}
             </LinksContainer>
             <ButtonsBlock>
               <SupplyTokenButton
@@ -601,36 +595,6 @@ export const InvestTableItem = ({
               </div>
             ))}
           </div>
-          {/*//TODO:slippageTolerance (doesn't implemented yet)*/}
-          {/*<div style={{ display: 'flex', justifyContent: 'center' }}>*/}
-          {/*  <CommonSubmitButton*/}
-          {/*    width={'189px'}*/}
-          {/*    isLightTheme={theme}*/}
-          {/*    // onClick={() => {*/}
-          {/*    //   setIsModalVisible('advancedSettings');*/}
-          {/*    // }}*/}
-          {/*  >*/}
-          {/*    {'Advanced settings'}*/}
-          {/*  </CommonSubmitButton>*/}
-          {/*</div>*/}
-          {/*<MenuPopoverBoxTitle isLightTheme={theme}>{'Slippage Tolerance'}</MenuPopoverBoxTitle>*/}
-          {/*<CommonHoverButtonTrans*/}
-          {/*  height={'45px'}*/}
-          {/*  width={'55px'}*/}
-          {/*  isLightTheme={theme}*/}
-          {/*  onClick={() => {}}>*/}
-          {/*  {'1%'}*/}
-          {/*</CommonHoverButtonTrans>*/}
-          {/*<CommonHoverButton height={'45px'} width={'55px'} isLightTheme={theme} onClick={() => {}}>*/}
-          {/*  {'3%'}*/}
-          {/*</CommonHoverButton>*/}
-          {/*<CommonHoverButtonTrans*/}
-          {/*  height={'45px'}*/}
-          {/*  width={'120px'}*/}
-          {/*  isLightTheme={theme}*/}
-          {/*  onClick={() => {}}>*/}
-          {/*  {'%'}*/}
-          {/*</CommonHoverButtonTrans>*/}
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <ResetButton isLightTheme={theme} onClick={resetButtonHandler}>
               {'Reset'}

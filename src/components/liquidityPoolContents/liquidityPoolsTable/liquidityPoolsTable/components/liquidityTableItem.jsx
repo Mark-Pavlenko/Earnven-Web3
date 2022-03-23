@@ -64,6 +64,7 @@ export const LiquidityTableItem = ({
   addLiquidity,
   addLiquidityNormal,
 }) => {
+  console.log('LiquidityTableItem', item);
   const dispatch = useDispatch();
   const address = useParams().address;
   const currentWallet = JSON.parse(localStorage.getItem('mywallet'));
