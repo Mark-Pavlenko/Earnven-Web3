@@ -5,10 +5,10 @@ import History from '../History';
 import DashboardTabs from './tabs/tabs';
 import Page from '../../components/Page';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Balance from '../../components/Balance';
 import sendIcon from '../../assets/icons/send-icon.svg';
-import { Box, Container, Grid } from '@material-ui/core';
+import { Box, Container, Grid, Typography } from '@material-ui/core';
 import AllAssets from '../../components/allAssets/generalAssets/assets/assets';
 import LoansAndSavings from '../../components/LoansAndSavings/index';
 import etherScanIcon from '../../assets/icons/etherScan-icon.svg';
@@ -53,7 +53,6 @@ export default function Dashboard({ test, changeTheme }) {
   const timer = React.useRef();
 
   const [totalValue, settotalValue] = useState('00.00');
-  console.log('totalValue', totalValue);
 
   function CommaFormatted(amount) {
     const delimiter = ','; // replace comma if desired
@@ -157,7 +156,7 @@ export default function Dashboard({ test, changeTheme }) {
                 <PortfolioPerf address={address} totalValue={`$${totalValue}`} theme={theme} />
                 <Mobile>{/* <AllAssets isLightTheme={theme} address={address} /> */}</Mobile>
                 <br />
-                {isLoading == true ? (
+                {isLoading === true ? (
                   <PortocolLoadingBlock isLightTheme={theme}>
                     <LoadingSpinner>
                       <CircularProgress size={22} />

@@ -82,7 +82,6 @@ export default function LiquidityPools() {
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
   const SushiPoolsData = useSelector((state) => state.sushiSwap.sushiSwapLPData);
   const accountAddress = useSelector((state) => state.initSidebarValuesReducer.selectedAddress);
-
   const dispatch = useDispatch();
 
   const [page, setPage] = useState(5);
