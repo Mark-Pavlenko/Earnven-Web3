@@ -38,10 +38,10 @@ function* sushiSwapLPSagaWorker(sushiSwapObjects) {
           object.token0Image = tokenData[0].logoURI; //token0Data.tokenImage;
           object.token1Image = tokenData[1].logoURI; //token1Data.tokenImage;
           object.symbol = tokenSymbolPair;
-          //object.token0Symbol = res[i].pair.token0.symbol;
-          //object.token0Id = res[i].pair.token0.id;
-          //object.token1Symbol = res[i].pair.token1.symbol;
-          //object.token1Id = res[i].pair.token1.id;
+          object.token0Symbol = res[i].pair.token0.symbol;
+          object.token0Id = res[i].pair.token0.id;
+          object.token1Symbol = res[i].pair.token1.symbol;
+          object.token1Id = res[i].pair.token1.id;
           //other attributes
           object.volume = parseFloat(res[i].pair.volumeUSD).toFixed(2);
           object.balance = parseFloat(res[i].liquidityTokenBalance).toFixed(4);

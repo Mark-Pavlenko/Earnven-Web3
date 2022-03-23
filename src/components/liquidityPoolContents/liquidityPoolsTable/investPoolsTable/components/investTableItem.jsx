@@ -73,7 +73,7 @@ export const InvestTableItem = ({
   const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
   const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
   const allTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
-
+  console.log('InvestTableItem', item);
   const currentWallet = JSON.parse(localStorage.getItem('mywallet'));
 
   const gasPricesWithIcons = addIconsGasPrices(GasPrices, fastDice, middleDice, slowDice, theme);
@@ -434,6 +434,7 @@ export const InvestTableItem = ({
       e.preventDefault();
     }
   });
+
   return (
     <>
       {/*MODAL addLiquidity====================================>*/}
@@ -468,9 +469,11 @@ export const InvestTableItem = ({
                 type="number"
                 onChange={(e) => {
                   if (e.target.value.length > 0 && e.target.value !== 0) {
-                    addLiquidityToPair(item.token0.id, item.token1.id, e.target.value).catch(
-                      (res) => res
-                    );
+                    addLiquidityToPair(
+                      item.poolDetails.token0Address,
+                      item.poolDetails.token1Address,
+                      e.target.value
+                    ).catch((res) => res);
                   } else {
                     setTokenSwapError(false);
                   }
