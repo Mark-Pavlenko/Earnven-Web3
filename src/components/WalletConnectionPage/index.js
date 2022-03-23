@@ -10,7 +10,6 @@ import { makeStyles } from '@material-ui/styles';
 import { Stack, Typography, TextField } from '@material-ui/core';
 import Header from '../../layout/header';
 import Sidebar from '../../layout/sidebar';
-import { useMediaQuery } from '@material-ui/core';
 import portisWalletLogo from '../../assets/icons/portisLogo.png';
 import torusWalletLogo from '../../assets/icons/torus.png';
 import fortmaticLogo from '../../assets/icons/fortmatic.png';
@@ -25,7 +24,6 @@ import ArrowRightDark from '../../assets/icons/arrowRightDark.svg';
 
 import metamaskWalletLogo from '../../assets/icons/metamask.svg';
 
-import { RootStyle, MainStyle, MainStyleParentLayout } from '../../layout/styledComponents';
 import {
   MainSubLayout,
   MainSubLayoutTitle,
@@ -42,15 +40,19 @@ import {
   RootStyleFirstConnection,
 } from './styles';
 
+import { RootStyle, MainStyle, MainStyleParentLayout } from '../../layout/styledComponents';
+
 //correct web3 connection
 import { useWeb3React } from '@web3-react/core';
 import { useSelector } from 'react-redux';
-import searchIcon from '../../assets/icons/searchIconLight.png';
 import { Outlet } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
   noBorder: {
     border: 'none !important',
+  },
+  input: {
+    color: 'red',
   },
 }));
 
@@ -242,15 +244,202 @@ export default function WalletPageConnection() {
   };
 
   return (
-    <RootStyle isLightTheme={themeType} isFirstConnection={isFirstConnection}>
-      <MainStyleParentLayout>
-        <MainStyle isLightTheme={themeType}>
-          <Header
-            onOpenSidebar={() => setOpen(true)}
-            themeType={themeType}
-            finalTitle={'Connect to Earnven'}
-          />
+    <>
+      {isFirstConnection === true ? (
+        <>
+          <RootStyle isLightTheme={themeType} isFirstConnection={isFirstConnection}>
+            <MainStyleParentLayout>
+              <MainStyle isLightTheme={themeType}>
+                <Header
+                  onOpenSidebar={() => setOpen(true)}
+                  themeType={themeType}
+                  finalTitle={'Connect to Earnven'}
+                />
+                <MainSubLayout>
+                  <MainSubLayoutTitle isLightTheme={themeType}>Connect a wallet</MainSubLayoutTitle>
+                  <MetaMaskBtn
+                    isLightTheme={themeType}
+                    onClick={connectMetamask}
+                    disableElevation
+                    fullWidth
+                    startIcon={<img src={metamaskWalletLogo} alt="" />}>
+                    Metamask
+                  </MetaMaskBtn>
+
+                  <WalletButtonsLayout>
+                    <WalletBtnConnect
+                      onClick={async () => await loadWalletConnect()}
+                      variant="outlined"
+                      isLightTheme={themeType}
+                      disabled
+                      startIcon={<WalletBtnConnectImg src={walletConnectLogo} alt="" />}>
+                      <div>
+                        <WalletBtnName>WalletConnect</WalletBtnName>
+                        <ComingSoonItem>Coming soon</ComingSoonItem>
+                      </div>
+                    </WalletBtnConnect>
+
+                    <WalletBtnConnect
+                      onClick={loadPortis}
+                      variant="outlined"
+                      isLightTheme={themeType}
+                      disabled
+                      startIcon={<WalletBtnConnectImg src={portisWalletLogo} alt="" />}>
+                      <div>
+                        <WalletBtnName>Portis</WalletBtnName>
+                        <ComingSoonItem>Coming soon</ComingSoonItem>
+                      </div>
+                    </WalletBtnConnect>
+
+                    <WalletBtnConnect
+                      variant="outlined"
+                      isLightTheme={themeType}
+                      disabled
+                      startIcon={<WalletBtnConnectImg src={coinbaseWalletIcon} alt="" />}>
+                      <div>
+                        <WalletBtnName> Coinbase Wallet</WalletBtnName>
+                        <ComingSoonItem>Coming soon</ComingSoonItem>
+                      </div>
+                    </WalletBtnConnect>
+
+                    <WalletBtnConnect
+                      onClick={loadFormatic}
+                      variant="outlined"
+                      isLightTheme={themeType}
+                      disabled
+                      startIcon={<WalletBtnConnectImg src={fortmaticLogo} alt="" />}>
+                      <div>
+                        <WalletBtnName> Fortmatic</WalletBtnName>
+                        <ComingSoonItem>Coming soon</ComingSoonItem>
+                      </div>
+                    </WalletBtnConnect>
+
+                    <WalletBtnConnect
+                      onClick={loadTorus}
+                      variant="outlined"
+                      isLightTheme={themeType}
+                      disabled
+                      startIcon={<WalletBtnConnectImg src={torusWalletLogo} alt="" />}>
+                      <div>
+                        <WalletBtnName> Torus Wallet</WalletBtnName>
+                        <ComingSoonItem>Coming soon</ComingSoonItem>
+                      </div>
+                    </WalletBtnConnect>
+
+                    <WalletBtnConnect
+                      variant="outlined"
+                      isLightTheme={themeType}
+                      disabled
+                      startIcon={<WalletBtnConnectImg src={exodusWalletIcon} alt="" />}>
+                      <div>
+                        <WalletBtnName> Exodus</WalletBtnName>
+                        <ComingSoonItem>Coming soon</ComingSoonItem>
+                      </div>
+                    </WalletBtnConnect>
+
+                    <WalletBtnConnect
+                      variant="outlined"
+                      isLightTheme={themeType}
+                      disabled
+                      startIcon={<WalletBtnConnectImg src={atomicWalletIcon} alt="" />}>
+                      <div>
+                        <WalletBtnName> Atomic</WalletBtnName>
+                        <ComingSoonItem>Coming soon</ComingSoonItem>
+                      </div>
+                    </WalletBtnConnect>
+
+                    <WalletBtnConnect
+                      variant="outlined"
+                      isLightTheme={themeType}
+                      disabled
+                      startIcon={<WalletBtnConnectImg src={ledgerWalletIcon} alt="" />}>
+                      <div>
+                        <WalletBtnName>Ledger</WalletBtnName>
+                        <ComingSoonItem>Coming soon</ComingSoonItem>
+                      </div>
+                    </WalletBtnConnect>
+
+                    <WalletBtnConnect
+                      variant="outlined"
+                      isLightTheme={themeType}
+                      disabled
+                      startIcon={<WalletBtnConnectImg src={trezorWalletIcon} alt="" />}>
+                      <div>
+                        <WalletBtnName> Trezor</WalletBtnName>
+                        <ComingSoonItem>Coming soon</ComingSoonItem>
+                      </div>
+                    </WalletBtnConnect>
+                  </WalletButtonsLayout>
+
+                  <EthereumAddressBlock>
+                    <MainSubLayoutTitle isLightTheme={themeType}>
+                      Track any address
+                    </MainSubLayoutTitle>
+                    <Stack direction="row" justifyContent="space-between">
+                      <EthereumAddressField
+                        isLightTheme={themeType}
+                        label="Track any ethereum address"
+                        onChange={addressUpdate}
+                        InputProps={{
+                          classes: { notchedOutline: classes.noBorder },
+                          sx: {
+                            color: themeType ? 'black' : 'white',
+                            paddingRight: '0px !important',
+                          },
+                        }}
+                        InputLabelProps={{
+                          style: {
+                            fontSize: 16,
+                            color: themeType ? '#8F8F8F' : '#878995',
+                          },
+                        }}
+                        style={{
+                          height: '60px',
+                        }}
+                      />
+                      <SubmitEthereumAddressBtn onClick={trackAddress} isLightTheme={themeType}>
+                        {themeType ? (
+                          <img src={ArrowRight} alt="arrow" />
+                        ) : (
+                          <img src={ArrowRightDark} alt="arrow" />
+                        )}
+                      </SubmitEthereumAddressBtn>
+                    </Stack>
+                    <ErrorComponent isWrongAddress={errorMsg} />
+                  </EthereumAddressBlock>
+                </MainSubLayout>
+              </MainStyle>
+            </MainStyleParentLayout>
+            <div>
+              <Sidebar
+                isOpenSidebar={open}
+                onCloseSidebar={() => setOpen(false)}
+                address={localStorage.getItem('selected-account')}
+                name={localStorage.getItem('selected-name')}
+                global_wallet={localStorage.getItem('wallets')}
+                themeType={themeType}
+              />
+            </div>
+          </RootStyle>
+        </>
+      ) : (
+        <RootStyle isLightTheme={themeType} isFirstConnection={false}>
           {localStorage.getItem('wallets') === null && (
+            <Header
+              onOpenSidebar={() => setOpen(true)}
+              themeType={themeType}
+              finalTitle={'Connect to Earnven'}
+            />
+          )}
+          <Sidebar
+            isOpenSidebar={open}
+            onCloseSidebar={() => setOpen(false)}
+            address={localStorage.getItem('selected-account')}
+            name={localStorage.getItem('selected-name')}
+            global_wallet={localStorage.getItem('wallets')}
+            themeType={themeType}
+          />
+          {localStorage.getItem('wallets') === null ? (
             <MainStyleFirstConnection isLightTheme={themeType}>
               <MainSubLayout>
                 <MainSubLayoutTitle isLightTheme={themeType}>Connect a wallet</MainSubLayoutTitle>
@@ -277,9 +466,9 @@ export default function WalletPageConnection() {
                   </WalletBtnConnect>
 
                   <WalletBtnConnect
-                    isLightTheme={themeType}
                     onClick={loadPortis}
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={portisWalletLogo} alt="" />}>
                     <div>
@@ -289,8 +478,8 @@ export default function WalletPageConnection() {
                   </WalletBtnConnect>
 
                   <WalletBtnConnect
-                    isLightTheme={themeType}
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={coinbaseWalletIcon} alt="" />}>
                     <div>
@@ -300,9 +489,9 @@ export default function WalletPageConnection() {
                   </WalletBtnConnect>
 
                   <WalletBtnConnect
-                    isLightTheme={themeType}
                     onClick={loadFormatic}
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={fortmaticLogo} alt="" />}>
                     <div>
@@ -312,9 +501,9 @@ export default function WalletPageConnection() {
                   </WalletBtnConnect>
 
                   <WalletBtnConnect
-                    isLightTheme={themeType}
                     onClick={loadTorus}
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={torusWalletLogo} alt="" />}>
                     <div>
@@ -324,8 +513,8 @@ export default function WalletPageConnection() {
                   </WalletBtnConnect>
 
                   <WalletBtnConnect
-                    isLightTheme={themeType}
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={exodusWalletIcon} alt="" />}>
                     <div>
@@ -335,8 +524,8 @@ export default function WalletPageConnection() {
                   </WalletBtnConnect>
 
                   <WalletBtnConnect
-                    isLightTheme={themeType}
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={atomicWalletIcon} alt="" />}>
                     <div>
@@ -346,8 +535,8 @@ export default function WalletPageConnection() {
                   </WalletBtnConnect>
 
                   <WalletBtnConnect
-                    isLightTheme={themeType}
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={ledgerWalletIcon} alt="" />}>
                     <div>
@@ -357,8 +546,8 @@ export default function WalletPageConnection() {
                   </WalletBtnConnect>
 
                   <WalletBtnConnect
-                    isLightTheme={themeType}
                     variant="outlined"
+                    isLightTheme={themeType}
                     disabled
                     startIcon={<WalletBtnConnectImg src={trezorWalletIcon} alt="" />}>
                     <div>
@@ -395,26 +584,177 @@ export default function WalletPageConnection() {
                       }}
                     />
                     <SubmitEthereumAddressBtn onClick={trackAddress} isLightTheme={themeType}>
-                      <img src={themeType ? ArrowRight : ArrowRightDark} alt="arrow" />
+                      {themeType ? (
+                        <img src={ArrowRight} alt="arrow" />
+                      ) : (
+                        <img src={ArrowRightDark} alt="arrow" />
+                      )}
                     </SubmitEthereumAddressBtn>
                   </Stack>
                   <ErrorComponent isWrongAddress={errorMsg} />
                 </EthereumAddressBlock>
               </MainSubLayout>
             </MainStyleFirstConnection>
+          ) : (
+            <MainStyle isLightTheme={themeType}>
+              <MainSubLayout>
+                <MainSubLayoutTitle isLightTheme={themeType}>Connect a wallet</MainSubLayoutTitle>
+                <MetaMaskBtn
+                  isLightTheme={themeType}
+                  onClick={connectMetamask}
+                  disableElevation
+                  fullWidth
+                  startIcon={<img src={metamaskWalletLogo} alt="" />}>
+                  Metamask
+                </MetaMaskBtn>
+
+                <WalletButtonsLayout>
+                  <WalletBtnConnect
+                    onClick={async () => await loadWalletConnect()}
+                    variant="outlined"
+                    isLightTheme={themeType}
+                    disabled
+                    startIcon={<WalletBtnConnectImg src={walletConnectLogo} alt="" />}>
+                    <div>
+                      <WalletBtnName>WalletConnect</WalletBtnName>
+                      <ComingSoonItem>Coming soon</ComingSoonItem>
+                    </div>
+                  </WalletBtnConnect>
+
+                  <WalletBtnConnect
+                    onClick={loadPortis}
+                    variant="outlined"
+                    isLightTheme={themeType}
+                    disabled
+                    startIcon={<WalletBtnConnectImg src={portisWalletLogo} alt="" />}>
+                    <div>
+                      <WalletBtnName>Portis</WalletBtnName>
+                      <ComingSoonItem>Coming soon</ComingSoonItem>
+                    </div>
+                  </WalletBtnConnect>
+
+                  <WalletBtnConnect
+                    variant="outlined"
+                    isLightTheme={themeType}
+                    disabled
+                    startIcon={<WalletBtnConnectImg src={coinbaseWalletIcon} alt="" />}>
+                    <div>
+                      <WalletBtnName> Coinbase Wallet</WalletBtnName>
+                      <ComingSoonItem>Coming soon</ComingSoonItem>
+                    </div>
+                  </WalletBtnConnect>
+
+                  <WalletBtnConnect
+                    onClick={loadFormatic}
+                    variant="outlined"
+                    isLightTheme={themeType}
+                    disabled
+                    startIcon={<WalletBtnConnectImg src={fortmaticLogo} alt="" />}>
+                    <div>
+                      <WalletBtnName> Fortmatic</WalletBtnName>
+                      <ComingSoonItem>Coming soon</ComingSoonItem>
+                    </div>
+                  </WalletBtnConnect>
+
+                  <WalletBtnConnect
+                    onClick={loadTorus}
+                    variant="outlined"
+                    isLightTheme={themeType}
+                    disabled
+                    startIcon={<WalletBtnConnectImg src={torusWalletLogo} alt="" />}>
+                    <div>
+                      <WalletBtnName> Torus Wallet</WalletBtnName>
+                      <ComingSoonItem>Coming soon</ComingSoonItem>
+                    </div>
+                  </WalletBtnConnect>
+
+                  <WalletBtnConnect
+                    variant="outlined"
+                    isLightTheme={themeType}
+                    disabled
+                    startIcon={<WalletBtnConnectImg src={exodusWalletIcon} alt="" />}>
+                    <div>
+                      <WalletBtnName> Exodus</WalletBtnName>
+                      <ComingSoonItem>Coming soon</ComingSoonItem>
+                    </div>
+                  </WalletBtnConnect>
+
+                  <WalletBtnConnect
+                    variant="outlined"
+                    isLightTheme={themeType}
+                    disabled
+                    startIcon={<WalletBtnConnectImg src={atomicWalletIcon} alt="" />}>
+                    <div>
+                      <WalletBtnName> Atomic</WalletBtnName>
+                      <ComingSoonItem>Coming soon</ComingSoonItem>
+                    </div>
+                  </WalletBtnConnect>
+
+                  <WalletBtnConnect
+                    variant="outlined"
+                    isLightTheme={themeType}
+                    disabled
+                    startIcon={<WalletBtnConnectImg src={ledgerWalletIcon} alt="" />}>
+                    <div>
+                      <WalletBtnName>Ledger</WalletBtnName>
+                      <ComingSoonItem>Coming soon</ComingSoonItem>
+                    </div>
+                  </WalletBtnConnect>
+
+                  <WalletBtnConnect
+                    variant="outlined"
+                    isLightTheme={themeType}
+                    disabled
+                    startIcon={<WalletBtnConnectImg src={trezorWalletIcon} alt="" />}>
+                    <div>
+                      <WalletBtnName> Trezor</WalletBtnName>
+                      <ComingSoonItem>Coming soon</ComingSoonItem>
+                    </div>
+                  </WalletBtnConnect>
+                </WalletButtonsLayout>
+
+                <EthereumAddressBlock>
+                  <MainSubLayoutTitle isLightTheme={themeType}>
+                    Track any address
+                  </MainSubLayoutTitle>
+                  <Stack direction="row" justifyContent="space-between">
+                    <EthereumAddressField
+                      isLightTheme={themeType}
+                      label="Track any ethereum address"
+                      onChange={addressUpdate}
+                      InputProps={{
+                        classes: { notchedOutline: classes.noBorder },
+                        sx: {
+                          color: themeType ? 'black' : 'white',
+                          paddingRight: '0px !important',
+                        },
+                      }}
+                      InputLabelProps={{
+                        style: {
+                          fontSize: 16,
+                          color: themeType ? '#8F8F8F' : '#878995',
+                        },
+                      }}
+                      style={{
+                        height: '60px',
+                      }}
+                    />
+                    <SubmitEthereumAddressBtn onClick={trackAddress} isLightTheme={themeType}>
+                      {themeType ? (
+                        <img src={ArrowRight} alt="arrow" />
+                      ) : (
+                        <img src={ArrowRightDark} alt="arrow" />
+                      )}
+                    </SubmitEthereumAddressBtn>
+                  </Stack>
+                  <ErrorComponent isWrongAddress={errorMsg} />
+                </EthereumAddressBlock>
+              </MainSubLayout>
+            </MainStyle>
           )}
-        </MainStyle>
-      </MainStyleParentLayout>
-      <div>
-        <Sidebar
-          isOpenSidebar={open}
-          onCloseSidebar={() => setOpen(false)}
-          address={localStorage.getItem('selected-account')}
-          name={localStorage.getItem('selected-name')}
-          global_wallet={localStorage.getItem('wallets')}
-          themeType={themeType}
-        />
-      </div>
-    </RootStyle>
+          {/*) }*/}
+        </RootStyle>
+      )}
+    </>
   );
 }

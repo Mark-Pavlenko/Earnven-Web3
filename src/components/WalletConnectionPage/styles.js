@@ -50,6 +50,9 @@ export const MainStyleFirstConnection = styled.div`
 
 export const MainSubLayout = styled.div`
   width: 570px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
   margin-top: 72px;
   @media (max-width: 600px) {
     width: 345px;
