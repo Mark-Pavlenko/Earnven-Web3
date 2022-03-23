@@ -54,6 +54,13 @@ import { SelectOptionsWithJSX } from '../../../HOC/selectOptionsWithJSX';
 import middleDice from '../../../../../assets/icons/middleDice-icon.svg';
 import ModalContainer from '../../../../common/modalContainer/modalContainer';
 import { CommonSubmitButton } from '../../../../../screens/TokenPage/components/styledComponentsCommon';
+import {
+  LeftSideWrapper,
+  LoadingSpinner,
+  PortocolLoadingBlock,
+} from '../../../../../screens/dashboard/styledComponents';
+import CircularProgress from '@mui/material/CircularProgress';
+import LoansAndSavings from '../../../../LoansAndSavings/index';
 
 export const LiquidityTableItem = ({
   item,
@@ -87,6 +94,8 @@ export const LiquidityTableItem = ({
   const [addLiquidityNormalTokenB, setAddLiquidityNormalTokenB] = useState('');
   const [tokenAddress, setTokenAddress] = useState('0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
   const [tokenSwapError, setTokenSwapError] = useState(false);
+  const [firstInputIsLoading, setFirstInputIsLoading] = useState(false);
+  const [secondInputIsLoading, setSecondInputIsLoading] = useState(false);
 
   const updatedOptions = SelectOptionsWithJSX(allTokensList);
 
@@ -248,6 +257,7 @@ export const LiquidityTableItem = ({
 
     if (!isNaN(Number(value)) && value !== '') {
       if (inputId === 'firstInput') {
+        setFirstInputIsLoading(true);
         let valueWithDecimal = value;
         for (let i = 0; i < tokenDecimal1; i++) {
           valueWithDecimal += 0;
@@ -261,8 +271,10 @@ export const LiquidityTableItem = ({
 
         setOutValue(+convertedValue[1] / 10 ** tokenDecimal2);
         setInValue(value);
+        setFirstInputIsLoading(false);
       }
       if (inputId === 'secondInput') {
+        setSecondInputIsLoading(true);
         let valueWithDecimal = value;
         for (let i = 0; i < tokenDecimal2; i++) {
           valueWithDecimal += 0;
@@ -279,6 +291,7 @@ export const LiquidityTableItem = ({
           setOutValue(value);
         }
       }
+      setSecondInputIsLoading(false);
     } else {
       setInValue('');
       setOutValue('');
@@ -322,6 +335,8 @@ export const LiquidityTableItem = ({
     );
 
     if (tokenAddress !== token1) {
+      setFirstInputIsLoading(true);
+      setSecondInputIsLoading(true);
       const convertedValue1 = await NewContract.methods
         .getAmountsOut((tokenValueHalf * 10 ** tokenDecimal).toString(), [tokenAddress, token1])
         .call()
@@ -331,11 +346,15 @@ export const LiquidityTableItem = ({
       if (convertedValue1?.[1]?.length) {
         setInValue(+convertedValue1[1] / 10 ** tokenDecimalPair1);
       }
+      setFirstInputIsLoading(false);
+      setSecondInputIsLoading(false);
     } else {
       setInValue(tokenValueHalf.toString());
     }
 
     if (tokenAddress !== token2) {
+      setFirstInputIsLoading(true);
+      setSecondInputIsLoading(true);
       const convertedValue2 = await NewContract.methods
         .getAmountsOut((tokenValueHalf * 10 ** tokenDecimal).toString(), [tokenAddress, token2])
         .call()
@@ -345,6 +364,8 @@ export const LiquidityTableItem = ({
       if (convertedValue2?.[1]?.length) {
         setOutValue(+convertedValue2[1] / 10 ** tokenDecimalPair2);
       }
+      setFirstInputIsLoading(false);
+      setSecondInputIsLoading(false);
     } else {
       setOutValue(tokenValueHalf.toString());
     }
@@ -452,15 +473,12 @@ export const LiquidityTableItem = ({
                   : '0.00'
               }`}</Balance>
             </InputBlock>
-            {/*<ButtonsBlock>*/}
-            {/*  <SupplyTokenButton>{`Supply a token`}</SupplyTokenButton>*/}
-            {/*</ButtonsBlock>*/}
             <DividerBlock>
               <ChangeToken isLightTheme={theme}>{'Or'}</ChangeToken>
             </DividerBlock>
             <SelectTitle isLightTheme={theme}>{'Supply a token'}</SelectTitle>
             {/*input-------------------->*/}
-            <InputBlock>
+            <InputBlock style={{ position: 'relative' }}>
               <BlockTokens>
                 <div>
                   <TokenImage src={`https://ethplorer.io${item.token0.image}`} />
@@ -481,11 +499,17 @@ export const LiquidityTableItem = ({
                   setTokenSwapError(false);
                 }}
               />
-              {/*<Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>*/}
+              {firstInputIsLoading && (
+                <div style={{ position: 'absolute', left: '85%', top: '55px' }}>
+                  <LoadingSpinner>
+                    <CircularProgress size={22} />
+                  </LoadingSpinner>
+                </div>
+              )}
             </InputBlock>
             {/*input-------------------->*/}
             {/*input-------------------->*/}
-            <InputBlock>
+            <InputBlock style={{ position: 'relative' }}>
               <div style={{ height: '17px' }}></div>
               <BlockTokens>
                 <div>
@@ -507,7 +531,13 @@ export const LiquidityTableItem = ({
                   setTokenSwapError(false);
                 }}
               />
-              {/*<Balance isLightTheme={theme}>{`Balance: ${5}`}</Balance>*/}
+              {secondInputIsLoading && (
+                <div style={{ position: 'absolute', left: '85%', top: '71px' }}>
+                  <LoadingSpinner>
+                    <CircularProgress size={22} />
+                  </LoadingSpinner>
+                </div>
+              )}
             </InputBlock>
             {/*input-------------------->*/}
             <LinksContainer>
@@ -517,8 +547,6 @@ export const LiquidityTableItem = ({
               <ModalLinkRight onClick={slippageHandler} isLightTheme={theme} href={'#'}>
                 {`${selectedGasPrice.length > 0 ? selectedGasPrice : proposeGasPrice} Gwei`}
               </ModalLinkRight>
-              {/*<ModalLink href={'#'}>{'Slippage Tolerance'}</ModalLink>*/}
-              {/*<ModalLinkRight href={'#'}>ddd</ModalLinkRight>*/}
             </LinksContainer>
             <ButtonsBlock>
               <SupplyTokenButton
@@ -559,36 +587,6 @@ export const LiquidityTableItem = ({
               </div>
             ))}
           </div>
-          {/*//TODO:slippageTolerance (doesn't implemented yet)*/}
-          {/*<div style={{ display: 'flex', justifyContent: 'center' }}>*/}
-          {/*  <CommonSubmitButton*/}
-          {/*    width={'189px'}*/}
-          {/*    isLightTheme={theme}*/}
-          {/*    // onClick={() => {*/}
-          {/*    //   setIsModalVisible('advancedSettings');*/}
-          {/*    // }}*/}
-          {/*  >*/}
-          {/*    {'Advanced settings'}*/}
-          {/*  </CommonSubmitButton>*/}
-          {/*</div>*/}
-          {/*<MenuPopoverBoxTitle isLightTheme={theme}>{'Slippage Tolerance'}</MenuPopoverBoxTitle>*/}
-          {/*<CommonHoverButtonTrans*/}
-          {/*  height={'45px'}*/}
-          {/*  width={'55px'}*/}
-          {/*  isLightTheme={theme}*/}
-          {/*  onClick={() => {}}>*/}
-          {/*  {'1%'}*/}
-          {/*</CommonHoverButtonTrans>*/}
-          {/*<CommonHoverButton height={'45px'} width={'55px'} isLightTheme={theme} onClick={() => {}}>*/}
-          {/*  {'3%'}*/}
-          {/*</CommonHoverButton>*/}
-          {/*<CommonHoverButtonTrans*/}
-          {/*  height={'45px'}*/}
-          {/*  width={'120px'}*/}
-          {/*  isLightTheme={theme}*/}
-          {/*  onClick={() => {}}>*/}
-          {/*  {'%'}*/}
-          {/*</CommonHoverButtonTrans>*/}
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <ResetButton isLightTheme={theme} onClick={resetButtonHandler}>
               {'Reset'}
@@ -660,13 +658,14 @@ export const LiquidityTableItem = ({
             {'Invest'}
           </CommonSubmitButton>
           {type === 'sushiswap' ? (
-            <Link to={`/${address}/${type}/address/${item.token0.id}/${item.token1.id}`}>
+            <Link
+              to={`/${address}/${type}/address/${item.token0.id}/${item.token1.id}/${item.token0.symbol}/${item.token1.symbol}`}>
               <InfoButton isLightTheme={theme}>
                 {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
               </InfoButton>
             </Link>
           ) : (
-            <Link to={`/${address}/${type}/address/${item.token0.id}/${item.token1.id}`}>
+            <Link to={`/${address}/${type}/address/${item.token0.id}/${item.token1.id}/`}>
               <InfoButton isLightTheme={theme}>
                 {theme ? <SvgComponent color="#4453AD" /> : <SvgComponent color="white" />}
               </InfoButton>
