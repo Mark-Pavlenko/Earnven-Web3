@@ -117,7 +117,6 @@ export const InvestTableItem = ({
   }, [tokenAddress]);
 
   const switchModal = (e) => {
-    console.log('switchModal', e.target.id);
     setSelectedModal(e.target.id);
     setIsModalVisible('addLiquidity');
   };
