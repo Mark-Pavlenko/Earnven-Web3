@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import pickleGaugeAddressList from '../../../contractAddress/PickleTokenAddresses';
-import abi from '../../../abi/PickleAbi.json';
+//import abi from '../../../abi/PickleAbi.json';
+import abi from '../../../abi/PickleDill.json';
 import { useWeb3React } from '@web3-react/core';
 import Web3 from 'web3';
 import { ethers } from 'ethers';
@@ -32,7 +33,12 @@ const PickleDill = ({ accountAddress }) => {
     const web3 = await getWeb3();
     if (web3 != undefined) {
       const contract = new web3.eth.Contract(abi, '0xbBCf169eE191A1Ba7371F30A1C344bFC498b29Cf');
-      const balance = (await contract.methods.balanceOf(accountAddress).call()) / 10 ** 18;
+      // const balance = (await contract.methods.balanceOf(accountAddress).call()) / 10 ** 18;
+      // setaccountbalance(balance);
+      const lockedBalance = await contract.methods.locked(accountAddress).call();
+      let result = JSON.stringify(lockedBalance).split(',')[2];
+      let balanceAmt = JSON.parse(result.split(':')[1]);
+      let balance = balanceAmt > 0 ? balanceAmt / 10 ** 18 : 0;
 
       setaccountbalance(balance);
 
