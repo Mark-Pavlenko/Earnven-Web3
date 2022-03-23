@@ -82,7 +82,8 @@ export default function LiquidityPools() {
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
   const SushiPoolsData = useSelector((state) => state.sushiSwap.sushiSwapLPData);
   const accountAddress = useSelector((state) => state.initSidebarValuesReducer.selectedAddress);
-
+  console.log('fvbdgfdvfd1', SushiPoolsData);
+  console.log('fvbdgfdvfd', uniswapV2lp);
   const dispatch = useDispatch();
 
   const [page, setPage] = useState(5);
@@ -113,6 +114,7 @@ export default function LiquidityPools() {
       });
     };
     const myPoolsData = correctSushiProtocolDataStructure(SushiPoolsData);
+    console.log('fvbdgfdvfd2', myPoolsData);
     const commonPoolsArray = [...myPoolsData, ...uniswapV2lp];
     setCommonPoolsArray(commonPoolsArray);
     setLoading(false);
