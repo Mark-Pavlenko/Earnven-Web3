@@ -66,7 +66,6 @@ export default function Index() {
   // useEffect(() => {
   //   setTokenPair();
   // }, []);
-  console.log('asdjioqwnqk', tokenid);
   return (
     <div style={{ margin: 'auto' }}>
       {tokenid && <PoolDetailsPage address={address} tokenid={tokenid} />}

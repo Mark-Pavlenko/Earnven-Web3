@@ -57,6 +57,8 @@ import { SelectOptionsWithJSX } from '../../../HOC/selectOptionsWithJSX';
 import middleDice from '../../../../../assets/icons/middleDice-icon.svg';
 import { GasPriceLabel } from '../../liquidityPoolsTable/styledComponents';
 import { CommonSubmitButton } from '../../../../../screens/TokenPage/components/styledComponentsCommon';
+import { LoadingSpinner } from '../../../../../screens/dashboard/styledComponents';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export const InvestTableItem = ({
   item,
@@ -73,7 +75,6 @@ export const InvestTableItem = ({
   const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
   const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
   const allTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
-  console.log('InvestTableItem', item);
   const currentWallet = JSON.parse(localStorage.getItem('mywallet'));
 
   const gasPricesWithIcons = addIconsGasPrices(GasPrices, fastDice, middleDice, slowDice, theme);
@@ -98,6 +99,8 @@ export const InvestTableItem = ({
   const [isWithdrawActive, setIsWithdrawActive] = useState(false);
   const [supplyTokenBalance, setSupplyTokenBalance] = useState('');
   const [tokenSwapError, setTokenSwapError] = useState(false);
+  const [firstInputIsLoading, setFirstInputIsLoading] = useState(false);
+  const [secondInputIsLoading, setSecondInputIsLoading] = useState(false);
 
   const selectInitialValue = {
     label: 'Ethereum',
@@ -260,6 +263,7 @@ export const InvestTableItem = ({
 
     if (!isNaN(Number(value)) && value !== '') {
       if (inputId === 'firstInput') {
+        setFirstInputIsLoading(true);
         let valueWithDecimal = value;
         for (let i = 0; i < tokenDecimal1; i++) {
           valueWithDecimal += 0;
@@ -273,8 +277,10 @@ export const InvestTableItem = ({
 
         setOutValue(+convertedValue[1] / 10 ** tokenDecimal2);
         setInValue(value);
+        setFirstInputIsLoading(false);
       }
       if (inputId === 'secondInput') {
+        setSecondInputIsLoading(true);
         let valueWithDecimal = value;
         for (let i = 0; i < tokenDecimal2; i++) {
           valueWithDecimal += 0;
@@ -291,6 +297,7 @@ export const InvestTableItem = ({
           setOutValue(value);
         }
       }
+      setSecondInputIsLoading(false);
     } else {
       setInValue('');
       setOutValue('');
@@ -333,6 +340,8 @@ export const InvestTableItem = ({
       item.protocol === 'Sushiswap' ? Addresses.sushiRouter : Addresses.uniRouter
     );
     if (tokenAddress !== token1) {
+      setFirstInputIsLoading(true);
+      setSecondInputIsLoading(true);
       const convertedValue1 = await NewContract.methods
         .getAmountsOut((tokenValueHalf * 10 ** tokenDecimal).toString(), [tokenAddress, token1])
         .call()
@@ -340,12 +349,18 @@ export const InvestTableItem = ({
           setTokenSwapError(true);
         });
 
-      setInValue(+convertedValue1[1] / 10 ** tokenDecimalPair1);
+      if (convertedValue1?.[1]?.length) {
+        setInValue(+convertedValue1[1] / 10 ** tokenDecimalPair1);
+      }
+      setFirstInputIsLoading(false);
+      setSecondInputIsLoading(false);
     } else {
       setInValue(tokenValueHalf.toString());
     }
 
     if (tokenAddress !== token2) {
+      setFirstInputIsLoading(true);
+      setSecondInputIsLoading(true);
       const convertedValue2 = await NewContract.methods
         .getAmountsOut((tokenValueHalf * 10 ** tokenDecimal).toString(), [tokenAddress, token2])
         .call()
@@ -353,7 +368,11 @@ export const InvestTableItem = ({
           setTokenSwapError(true);
         });
 
-      setOutValue(+convertedValue2[1] / 10 ** tokenDecimalPair2);
+      if (convertedValue2?.[1]?.length) {
+        setOutValue(+convertedValue2[1] / 10 ** tokenDecimalPair2);
+      }
+      setFirstInputIsLoading(false);
+      setSecondInputIsLoading(false);
     } else {
       setOutValue(tokenValueHalf.toString());
     }
@@ -492,7 +511,7 @@ export const InvestTableItem = ({
             </DividerBlock>
             <SelectTitle isLightTheme={theme}>{'Supply a token'}</SelectTitle>
             {/*input-------------------->*/}
-            <InputBlock>
+            <InputBlock style={{ position: 'relative' }}>
               <BlockTokens>
                 <div>
                   <TokenImage src={`${item.imageData[0]}`} />
@@ -505,7 +524,7 @@ export const InvestTableItem = ({
                 onChange={(e) => {
                   convertTokenPrice(
                     'firstInput',
-                    parseInt(e.target.value),
+                    e.target.value,
                     item.poolDetails.token0Address,
                     item.poolDetails.token1Address
                   );
@@ -518,10 +537,17 @@ export const InvestTableItem = ({
                   setTokenSwapError(false);
                 }}
               />
+              {firstInputIsLoading && (
+                <div style={{ position: 'absolute', left: '85%', top: '55px' }}>
+                  <LoadingSpinner>
+                    <CircularProgress size={22} />
+                  </LoadingSpinner>
+                </div>
+              )}
             </InputBlock>
             {/*input-------------------->*/}
             {/*input-------------------->*/}
-            <InputBlock>
+            <InputBlock style={{ position: 'relative' }}>
               <BlockTokens>
                 <div>
                   <TokenImage src={`${item.imageData[1]}`} />
@@ -534,7 +560,7 @@ export const InvestTableItem = ({
                 onChange={(e) => {
                   convertTokenPrice(
                     'secondInput',
-                    parseInt(e.target.value),
+                    e.target.value,
                     item.poolDetails.token0Address,
                     item.poolDetails.token1Address
                   );
@@ -547,6 +573,13 @@ export const InvestTableItem = ({
                   setTokenSwapError(false);
                 }}
               />
+              {secondInputIsLoading && (
+                <div style={{ position: 'absolute', left: '85%', top: '71px' }}>
+                  <LoadingSpinner>
+                    <CircularProgress size={22} />
+                  </LoadingSpinner>
+                </div>
+              )}
             </InputBlock>
             {/*input-------------------->*/}
             <LinksContainer>

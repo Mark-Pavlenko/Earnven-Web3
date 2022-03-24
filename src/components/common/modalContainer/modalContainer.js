@@ -22,9 +22,13 @@ const ModalContainer = ({
 }) => {
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
 
+  const ShadowBlockHandler = () => {
+    closeModal('');
+  };
+
   return ReactDom.createPortal(
     <>
-      <ShadowBlock isLightTheme={isLightTheme}></ShadowBlock>
+      <ShadowBlock onClick={ShadowBlockHandler} isLightTheme={isLightTheme}></ShadowBlock>
       <MainContent isLightTheme={isLightTheme} modalType={modalType}>
         {tokenSwapError && (
           <ErrorMessage>

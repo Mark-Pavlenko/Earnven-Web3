@@ -178,7 +178,7 @@ const Investment = ({
                             <img
                               src={token.tokenImage}
                               style={{
-                                height: '20px',
+                                height: '10px',
                                 marginTop: '',
                                 marginLeft: '15px',
                                 display: 'inline-block',
@@ -261,7 +261,7 @@ const Investment = ({
                             <img
                               src={token.tokenImage}
                               style={{
-                                height: '20px',
+                                height: '10px',
                                 marginTop: '',
                                 marginLeft: '15px',
                                 display: 'inline-block',
