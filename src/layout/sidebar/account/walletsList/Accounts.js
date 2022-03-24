@@ -47,6 +47,7 @@ import {
   WalletActionsLayout,
   WalletActionsListItemLabel,
   DisconnectWalletActionsListItem,
+  WalletListSubLayout,
 } from '../styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 

@@ -13,7 +13,7 @@ export const AccountStyle = styled.div`
   margin-top: 28px;
   margin-right: 20px;
 
-  @media (max-width: 1279px) {
+  @media (max-width: 1280px) {
     justify-content: start;
     //display: none;
   }

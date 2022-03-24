@@ -68,6 +68,7 @@ import {
   MyWalletsLabel,
   NewWalletLabel,
   NotMetamaskConnectedBlock,
+  WalletListSubLayout,
   WalletsList,
   WalletsListItem,
   WelcomeSpan,
@@ -781,7 +782,10 @@ export default function Sidebar({
       sx={{
         height: '100vh',
         // in order to get correct background for QHD & 4K Screens
-        background: () => (isLightTheme ? `url(${lightThemeBig})` : `#0F152C`),
+        background: () =>
+          isLightTheme
+            ? `url(${require(`../../assets/images/bgMobile_375x3201.jpg`).default})`
+            : `#0F152C`,
         backdropFilter: 'blur(35px)',
         boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
         '& .simplebar-content': { display: 'flex', flexDirection: 'column' },
@@ -844,23 +848,25 @@ export default function Sidebar({
         </MyWalletsLabel>
         <div>
           <WalletsList>
-            {accountList &&
-              reduxWalletsList !== undefined &&
-              accountList.map((option) => (
-                <WalletsListItem isLightTheme={isLightTheme}>
-                  <Accounts
-                    setaccount_menuclose={(w) => setaccount(w)}
-                    onClick={() => {
-                      hideAccountPopover();
-                    }}
-                    onReRender={handleReRender}
-                    address={option.address}
-                    name={option.name}
-                    globalWalletsList={global_wallet}
-                    isMetamaskWallet={false}
-                  />
-                </WalletsListItem>
-              ))}
+            <WalletListSubLayout isLightTheme={isLightTheme}>
+              {accountList &&
+                true &&
+                accountList.map((option) => (
+                  <WalletsListItem isLightTheme={isLightTheme}>
+                    <Accounts
+                      setaccount_menuclose={(w) => setaccount(w)}
+                      onClick={() => {
+                        hideAccountPopover();
+                      }}
+                      onReRender={handleReRender}
+                      address={option.address}
+                      name={option.name}
+                      globalWalletsList={global_wallet}
+                      isMetamaskWallet={false}
+                    />
+                  </WalletsListItem>
+                ))}
+            </WalletListSubLayout>
             <AddNewWalletListItem isLightTheme={isLightTheme} onClick={routeToConnectWallet}>
               <ListItemIcon sx={{ mr: 1, minWidth: '17px' }}>
                 <AddWalletIcon isLightTheme={isLightTheme} />
