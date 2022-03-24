@@ -12,7 +12,7 @@ export const PoolsBlock = styled.div`
   border-radius: 10px;
   padding-top: 1px;
   padding-bottom: 1px;
-  width: 48.5%;
+  //width: 48.5%;
   @media (max-width: 1150px) {
     display: block;
     width: 100%;
@@ -90,7 +90,7 @@ export const Header = styled.div`
 `;
 
 export const InvestmentWrapper = styled.div`
-  display: flex;
+  display: block;
   flex-wrap: wrap;
   justify-content: space-between;
   @media (max-width: 1150px) {

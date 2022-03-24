@@ -59,23 +59,11 @@ export default function Index(props) {
       setTokenPair(tokenid.toLowerCase());
       setTokenA(token0);
       setTokenB(token1);
-      console.log('TokenA', token0);
-      console.log('TokenB', token1);
     }
 
     getPairToken(token0, token1);
     // return () => {}
   }, [tokenid]);
-
-  // useEffect(() => {
-  //   setTokenPair()
-  // }, [])
-
-  // {navigate(`/${address}/sushiswap/pair/${tokenid}`)}
-  // {navigate(`/${address}/pair/${tokenid}`)}
-  // {navigate(`/${address}/sushiswap/pair/${token0}/${token1}`)}
-  // <PoolDetailsPage address={address} token0={token0} token1={token1} />
-  // <Redirect to={`/${address}/sushiswap/pair/${tokenid}}`} />
 
   return (
     <div style={{ margin: 'auto' }}>
@@ -87,8 +75,6 @@ export default function Index(props) {
         token1Symbol={token1Symbol}
         tokenid={tokenid}
       />
-      {/*{navigate(`/${address}/sushiswap/pair/${tokenid}`)}*/}
-      {/*<Link to={`/${address}/sushiswap/pair/${tokenid}`} />*/}
     </div>
   );
 }

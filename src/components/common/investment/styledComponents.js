@@ -92,7 +92,7 @@ export const ContentWrapper = styled.div`
   justify-content: space-between;
   padding: 0 32px 11px 26px;
   font-weight: 600;
-  font-size: 10px;
+  font-size: 12px;
 `;
 
 export const ProtocolTitle = styled.div`
