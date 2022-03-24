@@ -148,7 +148,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
     // } else {
     //   return name.substring(0, 8) + '..';
     // }
-    return '...' + address.substring(38, 42);
+    return address.substring(0, 6) + '...' + address.substring(38, 42);
   }
 
   const mobileSize = useMediaQuery('(max-width:709px)');

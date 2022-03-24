@@ -48,18 +48,13 @@ import {
   WalletActionsListItemLabel,
   DisconnectWalletActionsListItem,
 } from '../styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const useStyles = makeStyles(() =>
   createStyles({
     menupopover: {
       marginTop: '-13px',
       marginLeft: '45px',
-      // marginLeft: '132px',
-      // marginTop: '-25px',
-      // width: '338px',
-      // ['@media (max-width:1280px)']: {
-      //   marginLeft: '-3px',
-      // },
     },
     icon: {
       marginLeft: '21px',
@@ -98,7 +93,6 @@ export default function Accounts(
     currentWalletAddress,
     isMetamaskWallet,
     isMobileWalletsList,
-    endTabletSize,
   },
   props
 ) {
@@ -114,6 +108,7 @@ export default function Accounts(
   const [openPopup_rename, setOpenPopup_rename] = useState(false);
 
   const selectedAccountAddress = localStorage.getItem('selected-account');
+  const endTabletSize = useMediaQuery('(max-width:1280px)');
 
   const showAccountPopover = () => {
     setaccount(true);
@@ -177,12 +172,16 @@ export default function Accounts(
     <>
       <WalletsListLayout ref={anchorRef} isMetamaskWallet={isMetamaskWallet}>
         {isMetamaskWallet ? (
-          <WalletListItemAccountLogo
+          <Avatar
             src={userMockAvatar}
             alt="photoURL"
             isMetamaskWallet={isMetamaskWallet}
             isMobileWalletsList={isMobileWalletsList}
             endTabletSize={endTabletSize}
+            style={{
+              width: endTabletSize === true ? '46px' : '21px',
+              height: endTabletSize === true ? '46px' : '21px',
+            }}
           />
         ) : (
           <WalletListItemAccountLogo src={accountLogo} alt="photoURL" />

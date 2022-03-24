@@ -253,7 +253,7 @@ export const WalletsListItem = styled(ListItem)`
   align-items: center;
   height: 60px;
   width: 291px;
-  margin-left: 27px;
+  margin-left: 20px;
   padding-top: 12px;
   padding-left: 7px;
 
@@ -346,7 +346,7 @@ export const WalletListItemAccountLogo = styled(Avatar)`
   width: 21px;
   height: 21px;
 
-  @media (max-width: 710px) {
+  @media (max-width: 1280px) {
     width: ${(props) =>
       props.isMetamaskWallet && props.endTabletSize === false ? '46px' : '21px'};
     height: ${(props) =>

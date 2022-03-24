@@ -352,19 +352,10 @@ export default function Sidebar({
       }}>
       <SidebarMainLayout isLightTheme={isLightTheme}>
         <LogoBlock>
-          {startOfTabletScreen ? (
-            <>
-              <LogoImg src={CompanyLogo} alt="" />
-              {/*<MobileLogoTitle isLightTheme={isLightTheme}>Earnven</MobileLogoTitle>*/}
-              <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
-            </>
-          ) : (
-            <>
-              <LogoImg src={CompanyLogo} alt="" />
-              {/*<MobileLogoTitle isLightTheme={isLightTheme}>Earnven</MobileLogoTitle>*/}
-              <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
-            </>
-          )}
+          <>
+            <LogoImg src={CompanyLogo} alt="" />
+            <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
+          </>
 
           {startOfTabletScreen && !laptopScreen && (
             <SidebarTabletHeaderBtnsLayout>
