@@ -37,14 +37,14 @@ export default function Popup({ title, children, openPopup, setOpenPopup }) {
             position: 'absolute',
             width: '51.875rem',
             height: '24.375rem',
-            borderRadius: '10px',
+            // borderRadius: '10px',
           },
         }}>
         <DialogContent
           style={{
             background: isLightTheme
               ? `url(${require(`../../../../assets/images/lightDashboardBig.jpg`).default})`
-              : '#4453AD1A',
+              : '#10142D',
             padding: '17px 32px 0px 32px',
             // backdropFilter: 'blur(5px)',
             boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
@@ -57,14 +57,14 @@ export default function Popup({ title, children, openPopup, setOpenPopup }) {
                 {title}
               </PopupTitle>
               <img
-                src={closeWalletModalBtnDark}
+                src={isLightTheme ? closeWalletModalBtnDark : closeWalletModalBtnLight}
                 onClick={() => {
                   setOpenPopup(false);
                 }}
                 style={{
                   width: '14px',
                   height: '14px',
-                  marginTop: '13px',
+                  marginTop: '8px',
                   cursor: 'pointer',
                   opacity: 0.6,
                 }}
