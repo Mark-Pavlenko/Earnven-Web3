@@ -60,6 +60,10 @@ export const ListItemElement = styled(ListItem)`
 
 export const ListItemElementDisabledLayout = styled.div`
   margin-bottom: 0;
+
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 export const ListItemElementDisabled = styled(ListItem)`

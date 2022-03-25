@@ -13,7 +13,7 @@ import { PopupTitle } from './styles';
 const useStyles = makeStyles((isLightTheme) => ({
   //background modal blur style
   outer: {
-    // background: 'rgba(223, 235, 255, 0.4)',
+    background: '#FFFFFF29',
     boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
     mixBlendMode: 'normal',
     backdropFilter: 'blur(5px)',
@@ -29,6 +29,7 @@ export default function Popup({ title, children, openPopup, setOpenPopup, isLigh
         open={openPopup}
         maxWidth="md"
         classes={{ container: classes.outer }}
+        style={{}}
         PaperProps={{
           style: {
             position: 'absolute',
@@ -37,7 +38,7 @@ export default function Popup({ title, children, openPopup, setOpenPopup, isLigh
             borderRadius: '10px',
             boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
             mixBlendMode: 'normal',
-            backgroundColor: isLightTheme ? '#FFFFFF' : '#4453AD1A',
+            // background: isLightTheme ? '#FFFFFF29' : '#4453AD1A',
             backdropFilter: 'blur(35px)',
           },
         }}>

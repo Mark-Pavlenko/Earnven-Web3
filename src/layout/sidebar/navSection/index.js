@@ -151,7 +151,9 @@ export default function NavSection({ navConfig, address, ...other }) {
         <NavList disablePadding>
           {navConfig.map((item) => {
             // disabled last two elements in navBar
-            return item.title === 'yield farms' || item.title === 'savings' ? (
+            return item.title === 'Yield farms' ||
+              item.title === 'Savings' ||
+              item.title === 'Send' ? (
               <NavItemDisabled key={item.title} item={item} active={match} address={address} />
             ) : (
               <NavItem

@@ -72,7 +72,7 @@ export const getRecall = () => {
           : getIcon(iconoir_flashDark),
     },
     {
-      title: 'yield farms',
+      title: 'Yield farms',
       path: '/yieldfarm',
       icon:
         localStorage.getItem('selectedTheme') == 'Day'
@@ -80,7 +80,7 @@ export const getRecall = () => {
           : getIcon(sketchDark),
     },
     {
-      title: 'savings',
+      title: 'Savings',
       path: '/savings',
       icon:
         localStorage.getItem('selectedTheme') == 'Day'

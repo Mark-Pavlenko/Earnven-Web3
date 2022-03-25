@@ -15,7 +15,7 @@ export const DisconnectPopup = ({ address, name, setOpenPopup, isLightTheme }) =
     let selected_name = localStorage.getItem('selected-name');
     let mywallet = localStorage.getItem('mywallet');
     mywallet = JSON.parse(mywallet);
-    if (selected == address) {
+    if (selected === address) {
       setflag(true);
       flag_variable = true;
       mywallet &&
@@ -37,7 +37,7 @@ export const DisconnectPopup = ({ address, name, setOpenPopup, isLightTheme }) =
       localStorage.setItem('selected-address', 'null');
     }
     localStorage.setItem('wallets', JSON.stringify(output));
-    flag_variable == true
+    flag_variable === true
       ? navigate(`/app/connect-wallet`, { replace: true })
       : navigate(`/${address}${localStorage.getItem('setnavigation')}/`, { replace: true });
   };
@@ -45,7 +45,7 @@ export const DisconnectPopup = ({ address, name, setOpenPopup, isLightTheme }) =
   return (
     <div>
       <DisconnectWarnLabel isLightTheme={isLightTheme}>
-        Are you sure you want to disconnect ?
+        Are you sure you want to disconnect?
       </DisconnectWarnLabel>
 
       <CutAddressName isLightTheme={isLightTheme}>{name === 'null' ? '' : name}</CutAddressName>

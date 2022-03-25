@@ -50,7 +50,7 @@ export default function Router() {
     { path: 'dashboard', element: <Dashboard changeTheme={changeTheme} /> },
     { path: 'liquiditypools', element: <LiquidityPools /> },
     { path: 'yieldfarm', element: <YieldFarm /> },
-    { path: 'savings', element: <Savings /> },
+    { path: 'Savings', element: <Savings /> },
     { path: 'history', element: <History /> },
     { path: 'defimadeasy', element: <DefiMadeEasy /> },
     { path: 'assets', element: <AllAssetsPage /> },
