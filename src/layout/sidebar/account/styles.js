@@ -407,7 +407,7 @@ export const MetamaskLabel = styled.span`
 export const WalletListItemGreenDot = styled.img`
   display: flex;
   float: right;
-  margin-top: 5px;
+  margin-top: 2px;
   margin-left: 10px;
 `;
 
