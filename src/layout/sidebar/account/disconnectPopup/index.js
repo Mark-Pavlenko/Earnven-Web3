@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button_Cancel, Button_Success_Action, ButtonsLayout, CutAddressName } from './styles';
 import { DisconnectWarnLabel, Address, Button_Rename, Button_Rename_Disconnect } from './styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 export const DisconnectPopup = ({ address, name, setOpenPopup, isLightTheme }) => {
   const navigate = useNavigate();
-  const [flag, setflag] = useState(false);
+  const mobilePopoverSize = useMediaQuery('(max-width:850px)');
 
   const disconnect = (address) => {
     let result = localStorage.getItem('wallets');
@@ -16,7 +17,6 @@ export const DisconnectPopup = ({ address, name, setOpenPopup, isLightTheme }) =
     let mywallet = localStorage.getItem('mywallet');
     mywallet = JSON.parse(mywallet);
     if (selected === address) {
-      setflag(true);
       flag_variable = true;
       mywallet &&
         mywallet.map((option) => {

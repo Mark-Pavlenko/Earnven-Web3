@@ -10,7 +10,8 @@ export const PopupTitle = styled(Typography)`
   @media (max-width: 850px) {
     display: flex;
     justify-content: start;
-    //margin-top: 100px;
+    margin-top: 30px;
+    font-weight: 600;
   }
 `;
 

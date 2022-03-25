@@ -44,13 +44,17 @@ export const ButtonsLayout = styled('div')(({ isLightTheme }) => ({
   justifyContent: 'center',
   gap: '30px',
   marginTop: '70px',
+
+  '@media (max-width:850px)': {
+    flexDirection: 'column',
+    gap: '20px',
+    marginTop: '85px',
+  },
 }));
 
 export const Button_Cancel = styled(Button)(({ isLightTheme }) => ({
   width: '150px',
   height: '40px',
-  // position: 'absolute',
-
   mixBlendMode: 'normal',
   color: isLightTheme ? '#1E1E20' : '#ffffff',
   backgroundColor: isLightTheme ? '#FFFFFF29' : '#1F265C3D',
@@ -77,13 +81,15 @@ export const Button_Cancel = styled(Button)(({ isLightTheme }) => ({
     fontStyle: 'normal',
     overflow: 'inherit',
   },
+
+  '@media (max-width:850px)': {
+    width: '100%',
+  },
 }));
 
 export const Button_Success_Action = styled(Button)(({ isLightTheme }) => ({
   width: '150px',
   height: '40px',
-  // position: 'absolute',
-
   mixBlendMode: 'normal',
   color: isLightTheme ? '#4453AD' : '#ffffff',
   backgroundColor: isLightTheme ? '#FFFFFF' : '#8F86FF',
@@ -109,5 +115,8 @@ export const Button_Success_Action = styled(Button)(({ isLightTheme }) => ({
     display: 'flex',
     fontStyle: 'normal',
     overflow: 'inherit',
+  },
+  '@media (max-width:850px)': {
+    width: '100%',
   },
 }));

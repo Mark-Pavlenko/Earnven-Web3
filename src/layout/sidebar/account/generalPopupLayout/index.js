@@ -1,13 +1,8 @@
 import React from 'react';
 import { Dialog, DialogTitle, DialogContent, Typography } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
 import { makeStyles } from '@material-ui/styles';
-import { ThemeProvider } from '@material-ui/styles';
 import closeWalletModalBtnLight from '../../../../assets/icons/closeWalletModalBtnLight.svg';
 import closeWalletModalBtnDark from '../../../../assets/icons/closeWalletModalBtnDark.svg';
-
-import Mytheme from '../theme';
-import { IconButton } from '@mui/material';
 import { MobileLogoBlockSubLayout, PopupTitle } from './styles';
 import { useSelector } from 'react-redux';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -58,23 +53,28 @@ export default function Popup({ title, children, openPopup, setOpenPopup }) {
         }}>
         <DialogTitle style={{ padding: 0 }}>
           {mobilePopoverSize ? (
-            <MobileLogoBlockWalletsList>
-              <MobileLogoBlockSubLayout>
-                <LogoImg src={CompanyLogo} alt="" />
-                <img
-                  className="Earnven"
-                  src={isLightTheme ? Earnven : Dark_Earnven_logo}
-                  alt=""
-                  style={{ width: '93px', height: '19px' }}
-                />
-              </MobileLogoBlockSubLayout>
+            <>
+              <MobileLogoBlockWalletsList>
+                <MobileLogoBlockSubLayout>
+                  <LogoImg src={CompanyLogo} alt="" />
+                  <img
+                    className="Earnven"
+                    src={isLightTheme ? Earnven : Dark_Earnven_logo}
+                    alt=""
+                    style={{ width: '93px', height: '19px' }}
+                  />
+                </MobileLogoBlockSubLayout>
 
-              <CloseMobileSidebarIcon
-                src={isLightTheme ? CloseMobileSidebarLight : CloseMobileSidebarDark}
-                alt=""
-                // onClick={() => onCloseWalletsListMobile()}
-              />
-            </MobileLogoBlockWalletsList>
+                <CloseMobileSidebarIcon
+                  src={isLightTheme ? CloseMobileSidebarLight : CloseMobileSidebarDark}
+                  alt=""
+                  onClick={() => setOpenPopup(false)}
+                />
+              </MobileLogoBlockWalletsList>
+              <PopupTitle variant="popupTitle" component="div" isLightTheme={isLightTheme}>
+                {title}
+              </PopupTitle>
+            </>
           ) : (
             <div style={{ display: 'flex' }}>
               <PopupTitle variant="popupTitle" component="div" isLightTheme={isLightTheme}>
