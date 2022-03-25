@@ -7,8 +7,29 @@ export const PopupTitle = styled(Typography)`
   line-height: 41px;
   font-size: 26px;
 
-  @media (max-width: 710px) {
+  @media (max-width: 850px) {
     display: flex;
-    justify-content: center;
+    justify-content: start;
+    //margin-top: 100px;
   }
+`;
+
+export const CloseMobileSidebarIcon = styled.img`
+  margin-left: auto;
+  cursor: pointer;
+`;
+
+export const LogoImg = styled.img``;
+
+export const MobileLogoBlockWalletsList = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+`;
+
+export const MobileLogoBlockSubLayout = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
 `;

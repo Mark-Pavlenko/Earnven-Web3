@@ -8,9 +8,15 @@ import closeWalletModalBtnDark from '../../../../assets/icons/closeWalletModalBt
 
 import Mytheme from '../theme';
 import { IconButton } from '@mui/material';
-import { PopupTitle } from './styles';
+import { MobileLogoBlockSubLayout, PopupTitle } from './styles';
 import { useSelector } from 'react-redux';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { CloseMobileSidebarIcon, LogoImg, MobileLogoBlockWalletsList } from './styles';
+import CompanyLogo from '../../../../assets/icons/logo_menu.svg';
+import Earnven from '../../../../assets/icons/Earnven_menu_text.svg';
+import Dark_Earnven_logo from '../../../../assets/icons/Dark_Earnven_logo.svg';
+import CloseMobileSidebarLight from '../../../../assets/images/closeMobileSidebarLight.svg';
+import CloseMobileSidebarDark from '../../../../assets/images/closeMobileSidebarDark.svg';
 
 const useStyles = makeStyles((isLightTheme) => ({
   //background modal - can`t put props of theme to class styles
@@ -26,7 +32,7 @@ const useStyles = makeStyles((isLightTheme) => ({
 export default function Popup({ title, children, openPopup, setOpenPopup }) {
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
   const classes = useStyles(isLightTheme);
-  const endMobilePopoverSize = useMediaQuery('(max-width:850px)');
+  const mobilePopoverSize = useMediaQuery('(max-width:850px)');
 
   return (
     <Dialog
@@ -36,8 +42,8 @@ export default function Popup({ title, children, openPopup, setOpenPopup }) {
       PaperProps={{
         style: {
           position: 'absolute',
-          width: endMobilePopoverSize ? '100vw' : '830px',
-          height: endMobilePopoverSize ? '100vh' : '390px',
+          width: mobilePopoverSize ? '100vw' : '830px',
+          height: mobilePopoverSize ? '100vh' : '390px',
         },
       }}>
       <DialogContent
@@ -45,31 +51,52 @@ export default function Popup({ title, children, openPopup, setOpenPopup }) {
           background: isLightTheme
             ? `url(${require(`../../../../assets/images/lightDashboardBig.jpg`).default})`
             : '#10142D',
-          padding: '17px 32px 0px 32px',
+          padding: mobilePopoverSize ? '20px 15px 0 15px' : '17px 32px 0px 32px',
           boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
           mixBlendMode: 'normal',
           backdropFilter: 'blur(35px)',
         }}>
         <DialogTitle style={{ padding: 0 }}>
-          <div style={{ display: 'flex' }}>
-            <PopupTitle variant="popupTitle" component="div" isLightTheme={isLightTheme}>
-              {title}
-            </PopupTitle>
-            <img
-              src={isLightTheme ? closeWalletModalBtnDark : closeWalletModalBtnLight}
-              onClick={() => {
-                setOpenPopup(false);
-              }}
-              style={{
-                width: '14px',
-                height: '14px',
-                marginTop: '8px',
-                cursor: 'pointer',
-                opacity: 0.6,
-              }}
-              alt="close_modal_btn_icon"
-            />
-          </div>
+          {mobilePopoverSize ? (
+            <MobileLogoBlockWalletsList>
+              <MobileLogoBlockSubLayout>
+                <LogoImg src={CompanyLogo} alt="" />
+                <img
+                  className="Earnven"
+                  src={isLightTheme ? Earnven : Dark_Earnven_logo}
+                  alt=""
+                  style={{ width: '93px', height: '19px' }}
+                />
+              </MobileLogoBlockSubLayout>
+
+              <CloseMobileSidebarIcon
+                src={isLightTheme ? CloseMobileSidebarLight : CloseMobileSidebarDark}
+                alt=""
+                // onClick={() => onCloseWalletsListMobile()}
+              />
+            </MobileLogoBlockWalletsList>
+          ) : (
+            <div style={{ display: 'flex' }}>
+              <PopupTitle variant="popupTitle" component="div" isLightTheme={isLightTheme}>
+                {title}
+              </PopupTitle>
+
+              <img
+                src={isLightTheme ? closeWalletModalBtnDark : closeWalletModalBtnLight}
+                onClick={() => {
+                  setOpenPopup(false);
+                }}
+                style={{
+                  width: '14px',
+                  height: '14px',
+                  marginTop: '8px',
+                  cursor: 'pointer',
+                  opacity: 0.6,
+                }}
+                alt="close_modal_btn_icon"
+              />
+            </div>
+          )}
         </DialogTitle>
         <>{children}</>
       </DialogContent>
