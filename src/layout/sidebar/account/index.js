@@ -175,7 +175,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
             <p>My Wallet</p>
           </MyWalletsLabel>
           <WalletsList isMetamaskWallet={true}>
-            <WalletsListItem isLightTheme={themeType}>
+            <WalletsListItem isLightTheme={themeType} isMetamaskWallet={true}>
               <Accounts
                 setaccount_menuclose={(w) => setaccount(w)}
                 onClick={() => {
@@ -205,7 +205,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
           <WalletListSubLayout isLightTheme={themeType}>
             {reduxWalletsList !== undefined &&
               accountList.map((option) => (
-                <WalletsListItem isLightTheme={themeType}>
+                <WalletsListItem isLightTheme={themeType} isMetamaskWallet={false}>
                   <Accounts
                     setaccount_menuclose={(w) => setaccount(w)}
                     onClick={() => {
@@ -283,7 +283,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
                     <p>My Wallet</p>
                   </MyWalletsLabel>
                   <WalletsList isMetamaskWallet={true}>
-                    <WalletsListItem isLightTheme={themeType}>
+                    <WalletsListItem isLightTheme={themeType} isMetamaskWallet={true}>
                       <Accounts
                         setaccount_menuclose={(w) => setaccount(w)}
                         onClick={() => {
@@ -313,7 +313,7 @@ export default function Account({ address, name, global_wallet, setTheme }) {
                   {accountList &&
                     reduxWalletsList !== undefined &&
                     accountList.map((option) => (
-                      <WalletsListItem isLightTheme={themeType}>
+                      <WalletsListItem isLightTheme={themeType} isMetamaskWallet={false}>
                         <Accounts
                           setaccount_menuclose={(w) => setaccount(w)}
                           onClick={() => {

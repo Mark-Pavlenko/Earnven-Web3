@@ -180,8 +180,9 @@ export default function Accounts(
             isMobileWalletsList={isMobileWalletsList}
             endTabletSize={endTabletSize}
             style={{
-              width: endTabletSize === true ? '46px' : '21px',
-              height: endTabletSize === true ? '46px' : '21px',
+              width: endTabletSize ? '46px' : '21px',
+              height: endTabletSize ? '46px' : '21px',
+              marginTop: endTabletSize && '10px',
             }}
           />
         ) : (
