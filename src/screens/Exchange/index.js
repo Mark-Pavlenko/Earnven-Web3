@@ -992,6 +992,7 @@ export default function SwapComponent() {
                 {/* modal with send tokens list*/}
 
                 {isSendTokensModalVisible && (
+                  // modal window
                   <SelectTokensModalContainer
                     theme={isLightTheme}
                     isOpen={isSendTokensModalVisible}
