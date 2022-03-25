@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ButtonsLayout, CutAddressName } from './styles';
+import { Button_Cancel, Button_Success_Action, ButtonsLayout, CutAddressName } from './styles';
 import { DisconnectWarnLabel, Address, Button_Rename, Button_Rename_Disconnect } from './styles';
 
 export const DisconnectPopup = ({ address, name, setOpenPopup, isLightTheme }) => {
@@ -55,18 +55,18 @@ export const DisconnectPopup = ({ address, name, setOpenPopup, isLightTheme }) =
       </Address>
 
       <ButtonsLayout>
-        <Button_Rename onClick={() => setOpenPopup(false)} isLightTheme={isLightTheme}>
+        <Button_Cancel onClick={() => setOpenPopup(false)} isLightTheme={isLightTheme}>
           <p> Cancel </p>
-        </Button_Rename>
+        </Button_Cancel>
 
-        <Button_Rename_Disconnect
+        <Button_Success_Action
           isLightTheme={isLightTheme}
           onClick={() => {
             disconnect(address);
             setOpenPopup(false);
           }}>
           <p> Disconnect </p>
-        </Button_Rename_Disconnect>
+        </Button_Success_Action>
       </ButtonsLayout>
     </div>
   );

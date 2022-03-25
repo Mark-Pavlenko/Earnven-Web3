@@ -26,8 +26,6 @@ export const Address = styled('div')(({ isLightTheme }) => ({
   fontFamily: 'Saira, sans-serif',
 }));
 
-export const ButtonsLayout = styled('div')(({ isLightTheme }) => ({}));
-
 export const CutAddressName = styled('div')(({ isLightTheme }) => ({
   textAlign: 'center',
   position: 'relative',
@@ -40,12 +38,18 @@ export const CutAddressName = styled('div')(({ isLightTheme }) => ({
   fontWeight: 500,
 }));
 
-export const Button_Rename = styled(Button)(({ isLightTheme }) => ({
+export const ButtonsLayout = styled('div')(({ isLightTheme }) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  gap: '30px',
+  marginTop: '70px',
+}));
+
+export const Button_Cancel = styled(Button)(({ isLightTheme }) => ({
   width: '150px',
   height: '40px',
-  position: 'absolute',
-  left: '250px',
-  bottom: '53px',
+  // position: 'absolute',
 
   mixBlendMode: 'normal',
   color: isLightTheme ? '#1E1E20' : '#ffffff',
@@ -75,12 +79,10 @@ export const Button_Rename = styled(Button)(({ isLightTheme }) => ({
   },
 }));
 
-export const Button_Rename_Disconnect = styled(Button)(({ isLightTheme }) => ({
+export const Button_Success_Action = styled(Button)(({ isLightTheme }) => ({
   width: '150px',
   height: '40px',
-  position: 'absolute',
-  left: '430px',
-  bottom: '53px',
+  // position: 'absolute',
 
   mixBlendMode: 'normal',
   color: isLightTheme ? '#4453AD' : '#ffffff',

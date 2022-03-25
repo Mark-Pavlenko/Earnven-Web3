@@ -798,19 +798,12 @@ export default function Sidebar({
           <MobileLogoBlockWalletsList>
             <LogoImg src={CompanyLogo} alt="" />
             <img className="Earnven" src={isLightTheme ? Earnven : Dark_Earnven_logo} alt="" />
-            {isLightTheme ? (
-              <CloseMobileSidebarIcon
-                src={CloseMobileSidebarLight}
-                alt=""
-                onClick={() => onCloseWalletsListMobile()}
-              />
-            ) : (
-              <CloseMobileSidebarIcon
-                src={CloseMobileSidebarDark}
-                alt=""
-                onClick={() => onCloseWalletsListMobile()}
-              />
-            )}
+
+            <CloseMobileSidebarIcon
+              src={isLightTheme ? CloseMobileSidebarLight : CloseMobileSidebarDark}
+              alt=""
+              onClick={() => onCloseWalletsListMobile()}
+            />
           </MobileLogoBlockWalletsList>
         }
 
