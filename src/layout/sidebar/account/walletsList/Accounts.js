@@ -85,6 +85,8 @@ const useStyles = makeStyles(() =>
   })
 );
 
+import OutsideClickHandler from '../../../../screens/Exchange/outsideClickHandler';
+
 export default function Accounts(
   {
     address,
@@ -107,7 +109,7 @@ export default function Accounts(
   const [flag, setflag] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
   const [openPopup_rename, setOpenPopup_rename] = useState(false);
-
+  const [isModalHelperVisible, setIsModalHelperVisible] = useState(false);
   const selectedAccountAddress = localStorage.getItem('selected-account');
   const endTabletSize = useMediaQuery('(max-width:1280px)');
 
@@ -342,8 +344,11 @@ export default function Accounts(
                 </div>
                 <WalletActionsListItemLabel
                   isLightTheme={isLightTheme}
-                  onClick={onReRender}
-                  style={{}}
+                  onClick={() => {
+                    // onReRender();
+                    setIsModalHelperVisible(true);
+                    // console.log('clicked');
+                  }}
                   isDisconnectLabel={true}>
                   Disconnect
                 </WalletActionsListItemLabel>
@@ -353,18 +358,26 @@ export default function Accounts(
         )}
       </Popover>
       <ThemeConfig>
+        {/*{isModalHelperVisible === true && (*/}
         <Popup
           title="Disconnect"
           openPopup={openPopup}
           setOpenPopup={setOpenPopup}
           isLightTheme={isLightTheme}>
-          <DisconnectPopup
-            setOpenPopup={(w) => setOpenPopup(w)}
-            address={address}
-            name={name}
-            isLightTheme={isLightTheme}
-          />
+          <OutsideClickHandler
+            onOutsideClick={() => {
+              setIsModalHelperVisible(false);
+            }}>
+            <DisconnectPopup
+              setOpenPopup={(w) => setOpenPopup(w)}
+              address={address}
+              name={name}
+              isLightTheme={isLightTheme}
+            />
+          </OutsideClickHandler>
         </Popup>
+        {/*)}*/}
+
         <Popup
           title="Rename Wallet"
           openPopup={openPopup_rename}

@@ -43,7 +43,9 @@ export const DisconnectPopup = ({ address, name, setOpenPopup, isLightTheme }) =
   };
 
   return (
-    <div>
+    <div
+    // style={{ background: 'red' }}
+    >
       <DisconnectWarnLabel isLightTheme={isLightTheme}>
         Are you sure you want to disconnect?
       </DisconnectWarnLabel>

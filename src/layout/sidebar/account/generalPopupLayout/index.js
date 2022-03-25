@@ -37,8 +37,9 @@ export default function Popup({ title, children, openPopup, setOpenPopup }) {
       PaperProps={{
         style: {
           position: 'absolute',
-          width: mobilePopoverSize ? '100vw' : '830px',
-          height: mobilePopoverSize ? '100vh' : '390px',
+          width: mobilePopoverSize ? '100%' : '830px',
+          height: mobilePopoverSize ? '100%' : '390px',
+          // background: 'green',
         },
       }}>
       <DialogContent
