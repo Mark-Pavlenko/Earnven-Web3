@@ -182,7 +182,8 @@ export default function Accounts(
             style={{
               width: endTabletSize ? '46px' : '21px',
               height: endTabletSize ? '46px' : '21px',
-              marginTop: endTabletSize && '10px',
+              marginTop: endTabletSize && '-5px',
+              marginLeft: endTabletSize && '-10px',
             }}
           />
         ) : (
@@ -191,6 +192,7 @@ export default function Accounts(
 
         {/* mobile metamask wallet list content*/}
         <WalletListItemContent
+          endTabletSize={endTabletSize}
           isMetamaskWallet={isMetamaskWallet}
           isMobileWalletsList={isMobileWalletsList}
           onClick={() => {
@@ -203,7 +205,11 @@ export default function Accounts(
             variant="WaltchList_font_address"
             isLightTheme={isLightTheme}
             isMetamaskWallet={isMetamaskWallet}
-            isMobileWalletsList={isMobileWalletsList}>
+            isMobileWalletsList={isMobileWalletsList}
+            style={{
+              marginLeft: endTabletSize && isMetamaskWallet && '20px',
+              marginTop: endTabletSize && isMetamaskWallet && '-40px',
+            }}>
             <span>{walletAddressCutter(address, name)}</span>
             {selectedAccountAddress === address && (
               <WalletListItemGreenDot src={green_got_menu} alt="no pic" />
@@ -211,7 +217,9 @@ export default function Accounts(
           </WalletListItemAccountBalance>
         </WalletListItemContent>
 
-        <DotIconBlock onClick={showAccountPopover}>
+        <DotIconBlock
+          onClick={showAccountPopover}
+          style={{ marginTop: endTabletSize && isMetamaskWallet && '-21px' }}>
           <img src={dots_menu_icon} alt="no pic" />
         </DotIconBlock>
         {/* Current Account balance value*/}
@@ -222,13 +230,18 @@ export default function Accounts(
             hideAccountPopover();
             updateSelectedAccount(address, name);
             routeToDashboard();
-          }}>
+          }}
+          style={{ marginTop: endTabletSize && isMetamaskWallet && '-2px' }}>
           {!isMetamaskWallet ? (
             <AccountBalance address={address} isLightTheme={isLightTheme} />
           ) : (
             <MetamaskLabel
               isMobileWalletsList={isMobileWalletsList}
-              isMetamaskWallet={isMetamaskWallet}>
+              isMetamaskWallet={isMetamaskWallet}
+              style={{
+                marginLeft: endTabletSize && isMetamaskWallet && '48px',
+                marginTop: endTabletSize && isMetamaskWallet && '-10px',
+              }}>
               Metamask
             </MetamaskLabel>
           )}

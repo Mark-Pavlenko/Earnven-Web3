@@ -283,7 +283,11 @@ export default function Account({ address, name, global_wallet, setTheme }) {
                     <p>My Wallet</p>
                   </MyWalletsLabel>
                   <WalletsList isMetamaskWallet={true}>
-                    <WalletsListItem isLightTheme={themeType} isMetamaskWallet={true}>
+                    {/* not here*/}
+                    <WalletsListItem
+                      isLightTheme={themeType}
+                      isMetamaskWallet={true}
+                      endTabletSize={true}>
                       <Accounts
                         setaccount_menuclose={(w) => setaccount(w)}
                         onClick={() => {

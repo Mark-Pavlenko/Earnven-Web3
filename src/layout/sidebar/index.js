@@ -141,6 +141,8 @@ export default function Sidebar({
   setTheme,
   global_wallet,
 }) {
+  const endTabletSize = useMediaQuery('(max-width:1280px)');
+
   const [accountList, setaccountList] = useState([]);
   const [account, setaccount] = useState(false);
   const [myWallet, setMyWallet] = useState([]);
@@ -817,11 +819,21 @@ export default function Sidebar({
         (reduxMyWallet !== null || undefined) &&
         reduxMyWallet.length !== 0 ? (
           <>
-            <MyWalletsLabel isLightTheme={isLightTheme}>
+            <MyWalletsLabel
+              isLightTheme={isLightTheme}
+              style={{ marginLeft: endTabletSize && '17px' }}>
+              {/*My Wallet mobile*/}
               <p>My Wallet</p>
             </MyWalletsLabel>
             <WalletsList isMetamaskWallet={true}>
-              <WalletsListItem isLightTheme={isLightTheme}>
+              <WalletsListItem
+                isLightTheme={isLightTheme}
+                style={{
+                  height: endTabletSize && '70px',
+                  width: endTabletSize && '308px',
+                  marginLeft: endTabletSize && '10px',
+                  paddingLeft: endTabletSize && '18px',
+                }}>
                 <Accounts
                   setaccount_menuclose={(w) => setaccount(w)}
                   onClick={() => {
@@ -843,7 +855,10 @@ export default function Sidebar({
         )}
 
         {/* all wallets */}
-        <MyWalletsLabel isLightTheme={isLightTheme} allWalletsListMobile={true}>
+        <MyWalletsLabel
+          isLightTheme={isLightTheme}
+          allWalletsListMobile={true}
+          style={{ marginLeft: endTabletSize && '17px' }}>
           <p>{accountList.length > 0 && 'Watchlist'}</p>
         </MyWalletsLabel>
         <div>
