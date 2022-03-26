@@ -16,6 +16,7 @@ export const AddressInputLayout = styled('div')(() => ({
 }));
 
 export const Address = styled('div')(({ isLightTheme }) => ({
+  marginBottom: '12px',
   marginLeft: '2px',
   fontSize: '12px',
   lineHeight: '19px',
@@ -25,8 +26,11 @@ export const Address = styled('div')(({ isLightTheme }) => ({
   fontFamily: 'Saira, sans-serif',
   flexGrow: 1,
 
-  '@media (max-width:850px)': { marginBottom: '0px', marginTop: '10px', fontSize: '10px' },
-  '@media (min-width:851px)': { marginBottom: '12px' },
+  '@media (max-width:850px)': {
+    marginBottom: '0px',
+    marginTop: '10px',
+    fontSize: '10px',
+  },
 }));
 
 export const Input_Rename = styled(TextField)(({ isLightTheme }) => ({
