@@ -56,20 +56,36 @@ export const DisconnectPopup = ({ address, name, setOpenPopup, isLightTheme }) =
         {address}
       </Address>
 
-      <ButtonsLayout>
-        <Button_Cancel onClick={() => setOpenPopup(false)} isLightTheme={isLightTheme}>
-          <p> Cancel </p>
-        </Button_Cancel>
+      {mobilePopoverSize ? (
+        <ButtonsLayout>
+          <Button_Success_Action
+            isLightTheme={isLightTheme}
+            onClick={() => {
+              disconnect(address);
+              setOpenPopup(false);
+            }}>
+            <p> Disconnect </p>
+          </Button_Success_Action>
 
-        <Button_Success_Action
-          isLightTheme={isLightTheme}
-          onClick={() => {
-            disconnect(address);
-            setOpenPopup(false);
-          }}>
-          <p> Disconnect </p>
-        </Button_Success_Action>
-      </ButtonsLayout>
+          <Button_Cancel onClick={() => setOpenPopup(false)} isLightTheme={isLightTheme}>
+            <p> Cancel </p>
+          </Button_Cancel>
+        </ButtonsLayout>
+      ) : (
+        <ButtonsLayout>
+          <Button_Cancel onClick={() => setOpenPopup(false)} isLightTheme={isLightTheme}>
+            <p> Cancel </p>
+          </Button_Cancel>
+          <Button_Success_Action
+            isLightTheme={isLightTheme}
+            onClick={() => {
+              disconnect(address);
+              setOpenPopup(false);
+            }}>
+            <p> Disconnect </p>
+          </Button_Success_Action>
+        </ButtonsLayout>
+      )}
     </div>
   );
 };
