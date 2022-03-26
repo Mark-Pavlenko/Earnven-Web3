@@ -3,10 +3,10 @@ import { Dialog, DialogTitle, DialogContent, Typography } from '@material-ui/cor
 import { makeStyles } from '@material-ui/styles';
 import closeWalletModalBtnLight from '../../../../assets/icons/closeWalletModalBtnLight.svg';
 import closeWalletModalBtnDark from '../../../../assets/icons/closeWalletModalBtnDark.svg';
-import { MobileLogoBlockSubLayout, PopupTitle } from './styles';
+import { MobileLogoBlockSubLayout, PopupTitle } from './generalPopupStyles';
 import { useSelector } from 'react-redux';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { CloseMobileSidebarIcon, LogoImg, MobileLogoBlockWalletsList } from './styles';
+import { CloseMobileSidebarIcon, LogoImg, MobileLogoBlockWalletsList } from './generalPopupStyles';
 import CompanyLogo from '../../../../assets/icons/logo_menu.svg';
 import Earnven from '../../../../assets/icons/Earnven_menu_text.svg';
 import Dark_Earnven_logo from '../../../../assets/icons/Dark_Earnven_logo.svg';

@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button_Cancel, Button_Success_Action, ButtonsLayout, CutAddressName } from './styles';
-import { DisconnectWarnLabel, Address, Button_Rename, Button_Rename_Disconnect } from './styles';
+import {
+  DisconnectWarnLabel,
+  Address,
+  Button_Cancel,
+  Button_Success_Action,
+  ButtonsLayout,
+  CutAddressName,
+} from './additionalPopupsStyles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 export const DisconnectPopup = ({ address, name, setOpenPopup, isLightTheme }) => {

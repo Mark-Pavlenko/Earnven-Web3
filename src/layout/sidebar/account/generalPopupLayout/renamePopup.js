@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Address, AddressInputLayout, Input_Rename, RenameWalletGeneraLayout } from './styles';
+import {
+  AddressRenameWallet,
+  AddressInputLayout,
+  Input_Rename,
+  RenameWalletGeneraLayout,
+  Button_Cancel,
+  Button_Success_Action,
+  ButtonsLayout,
+} from './additionalPopupsStyles';
 import { makeStyles } from '@material-ui/styles';
-import { Button_Cancel, Button_Success_Action, ButtonsLayout } from '../disconnectPopup/styles';
+
 import useMediaQuery from '@mui/material/useMediaQuery';
 import DesktopRenameIcon from '../../../../assets/icons/desktopRemaneIcon.svg';
 
@@ -38,6 +46,7 @@ const renamePopup = ({ address, name, setOpenPopup, isLightTheme }) => {
     if (address === selected) {
       selected_name = rename;
     }
+
     localStorage.setItem('selected-name', selected_name);
     localStorage.setItem('wallets', JSON.stringify(result));
   };
@@ -51,7 +60,9 @@ const renamePopup = ({ address, name, setOpenPopup, isLightTheme }) => {
     <RenameWalletGeneraLayout>
       <AddressInputLayout>
         <div style={{ justifyContent: 'center', width: mobilePopoverSize && '100%' }}>
-          {!mobilePopoverSize && <Address isLightTheme={isLightTheme}>{address}</Address>}
+          {!mobilePopoverSize && (
+            <AddressRenameWallet isLightTheme={isLightTheme}>{address}</AddressRenameWallet>
+          )}
           <Input_Rename
             InputProps={{
               startAdornment: !mobilePopoverSize && (
@@ -68,7 +79,11 @@ const renamePopup = ({ address, name, setOpenPopup, isLightTheme }) => {
             value={rename}
             isLightTheme={isLightTheme}
           />
-          {mobilePopoverSize && <Address isLightTheme={isLightTheme}>{address}</Address>}
+          {mobilePopoverSize && (
+            <AddressRenameWallet isLightTheme={isLightTheme} style={{ marginLeft: '2px' }}>
+              {address}
+            </AddressRenameWallet>
+          )}
         </div>
       </AddressInputLayout>
       {mobilePopoverSize ? (

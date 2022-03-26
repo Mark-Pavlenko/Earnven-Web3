@@ -23,8 +23,8 @@ import copy_link_menu_icon from '../../../../assets/icons/copy_link_menu_icon.sv
 import disconnect_menu_icon from '../../../../assets/icons/disconnect_menu_icon.svg';
 import dots_menu_icon from '../../../../assets/icons/3dots_menu_icon.svg';
 import ThemeConfig from '../../../../theme';
-import { DisconnectPopup } from '../disconnectPopup';
-import RenamePopup from '../renamePopup';
+import { DisconnectPopup } from '../generalPopupLayout/disconnectPopup';
+import RenamePopup from '../generalPopupLayout/renamePopup';
 import Popup from '../generalPopupLayout';
 import green_got_menu from '../../../../assets/icons/greenDot.svg';
 import menurender_customhook from '../menurender_customhook';
