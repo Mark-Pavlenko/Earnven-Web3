@@ -28,6 +28,7 @@ export default function Popup({ title, children, openPopup, setOpenPopup }) {
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
   const classes = useStyles(isLightTheme);
   const mobilePopoverSize = useMediaQuery('(max-width:850px)');
+  const endMobileBackground = useMediaQuery('(max-width:450px)');
 
   return (
     <Dialog
@@ -39,13 +40,15 @@ export default function Popup({ title, children, openPopup, setOpenPopup }) {
           position: 'absolute',
           width: mobilePopoverSize ? '100%' : '830px',
           height: mobilePopoverSize ? '100%' : '390px',
-          // background: 'green',
         },
       }}>
       <DialogContent
+        // bgMobile_375x3201.jpg
         style={{
           background: isLightTheme
-            ? `url(${require(`../../../../assets/images/lightDashboardBig.jpg`).default})`
+            ? endMobileBackground
+              ? `url(${require(`../../../../assets/images/bgMobile_375x3201.jpg`).default})`
+              : `url(${require(`../../../../assets/images/lightDashboardBig.jpg`).default})`
             : '#10142D',
           padding: mobilePopoverSize ? '20px 15px 0 15px' : '17px 32px 0px 32px',
           boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
