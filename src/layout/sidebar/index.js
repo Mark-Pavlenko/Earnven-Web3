@@ -16,11 +16,9 @@ import Earnven from '../../assets/icons/Earnven_menu_text.svg';
 import Dark_Earnven_logo from '../../assets/icons/Dark_Earnven_logo.svg';
 import Account from './account';
 import Links from './social/Links';
-import lightTheme from '../../assets/images/lightDashboard.jpg';
 import lightThemeBig from '../../assets/images/lightDashboardBig.jpg';
 import CloseMobileSidebarLight from '../../assets/images/closeMobileSidebarLight.svg';
 import CloseMobileSidebarDark from '../../assets/images/closeMobileSidebarDark.svg';
-import testMobileNetworkButton from '../../assets/icons/testMobileNetworkButton.svg';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -55,7 +53,7 @@ import {
 } from './styles';
 import lightIcon from '../../assets/icons/lightIcon.svg';
 import darkIcon from '../../assets/icons/darkIcon.svg';
-import GasDropdownMenu from '../../components/gasDropDownMenu';
+// import GasDropdownMenu from '../../components/gasDropDownMenu';
 import {
   AccountWalletBalance,
   AddNewWalletListItem,
@@ -77,6 +75,7 @@ import Accounts from './account/walletsList/Accounts';
 import Box from '@material-ui/core/Box';
 import sx from '@mui/system/sx';
 import axios from 'axios';
+import { alpha } from '@material-ui/core/styles';
 import { data } from '../../globalStore';
 import {
   GasButton,
@@ -85,11 +84,15 @@ import {
   MobileSidebarSpeedValueParameter,
   SidebarMobileGasItemsBlock,
 } from '../../components/gasDropDownMenu/styles';
+
+//gas icons
 import FastGweiGasIcon from '../../assets/icons/fastGweiGasIcon.png';
 import MiddleGweiGasIcon from '../../assets/icons/middleGweiGasIcon.png';
 import SlowGweiGasIcon from '../../assets/icons/slowGweiGasIcon.png';
 import gasIcon from '../../assets/icons/gasIcon.svg';
-import { alpha } from '@material-ui/core/styles';
+
+//
+
 import pyramidIcon from '../../assets/icons/pyramidIcon.svg';
 import chevronDown from '../../assets/icons/chevronDownLightTheme.svg';
 import chevronDownDark from '../../assets/icons/chevronDownDarkTheme.svg';
@@ -100,36 +103,12 @@ import arbitrumIcon from '../../assets/icons/arbitrumIcon.svg';
 import fantomIcon from '../../assets/icons/fantomIcon.svg';
 import Polygon from '../../assets/icons/polygon.svg';
 
-Sidebar.propTypes = {
-  isOpenSidebar: PropTypes.bool,
-  onCloseSidebar: PropTypes.func,
-  isOpenWalletsListMobile: PropTypes.bool,
-  onCloseWalletsListMobile: PropTypes.func,
-  setTheme: PropTypes.bool,
-};
-
-const gasType = [
-  {
-    value: '',
-    label: 'Fast',
-    icon: FastGweiGasIcon,
-  },
-  {
-    value: '',
-    label: 'Average',
-    icon: MiddleGweiGasIcon,
-  },
-  {
-    value: '',
-    label: 'Slow',
-    icon: SlowGweiGasIcon,
-  },
-];
-
-const MINUTE_MS = 10000;
-
-import PersonAdd from '@material-ui/icons/PersonAdd';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { addIconsGasPrices } from '../../commonFunctions/commonFunctions';
+import {
+  GridLayoutItemIconSubBlock,
+  TransactionSpeedGridLayoutItem,
+} from '../../screens/Exchange/styled';
 
 export default function Sidebar({
   isOpenSidebar,
@@ -142,22 +121,32 @@ export default function Sidebar({
   global_wallet,
 }) {
   const endTabletSize = useMediaQuery('(max-width:1280px)');
-
+  const dispatch = useDispatch();
   const [accountList, setaccountList] = useState([]);
   const [account, setaccount] = useState(false);
   const [myWallet, setMyWallet] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileNetworksListEl, setMobileNetworksListEl] = useState(null);
 
-  const [selected, setselected] = useState('Average');
-  const [GasPrices, setGasPrices] = useState([]);
-  const [GasPricesContent, setGasPricesContent] = useState([]);
-
   const isLightTheme = useSelector((state) => state.themeReducer.isLightTheme);
-  const dispatch = useDispatch();
 
   const reduxWalletsList = useSelector((state) => state.initSidebarValuesReducer.walletsList);
   const reduxMyWallet = useSelector((state) => state.initSidebarValuesReducer.myWallet);
+
+  const gasPrices = useSelector((state) => state.gesData.gasPriceData);
+  const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
+  const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
+
+  console.log('sidebar gasPrices raw', gasPrices);
+
+  const addIconsGasPricesWithIcons = addIconsGasPrices(
+    gasPrices,
+    FastGweiGasIcon,
+    MiddleGweiGasIcon,
+    SlowGweiGasIcon
+  );
+
+  console.log('sidebar gasPrices total', addIconsGasPricesWithIcons);
 
   const handleMobileGasItemClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -274,68 +263,6 @@ export default function Sidebar({
       onCloseWalletsListMobile();
     }
   }, [pathname, address, name, global_wallet]);
-
-  //gas items content
-  useEffect(() => {
-    async function getData() {
-      try {
-        const response = await axios.get(
-          'https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=CISZAVU4237H8CFPFCFWEA25HHBI3QKB8W'
-        );
-        // console.log('gas item response', response);
-        const { result } = response.data;
-        gasType[0].value = result.FastGasPrice;
-        gasType[1].value = result.ProposeGasPrice;
-        gasType[2].value = result.SafeGasPrice;
-        data.gasSelected = result.ProposeGasPrice;
-        // setGasPrices([])
-        setGasPrices([...gasType]);
-        // console.log('gasType', gasType);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    getData();
-
-    const interval = setInterval(() => {
-      // console.log('Logs every 10 secs');
-      getData();
-    }, MINUTE_MS);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const updateGasValue = (val, label) => {
-      data.gasSelected = val;
-      setselected(label);
-    };
-
-    // console.log('Updating Layout....')
-    const content = GasPrices.map((option) => (
-      <Box
-        key={option.value}
-        selected={option.label === selected}
-        onClick={() => {
-          handleGasItemListClose();
-          updateGasValue(option.value, option.label);
-        }}
-        sx={{ py: 1, px: 2.5 }}>
-        <GasMenuItem isLightTheme={isLightTheme}>
-          <MobileSidebarSpeedValueParameter>
-            <img src={option.icon} alt="" />
-            <span>{`${option.label} `}</span>
-          </MobileSidebarSpeedValueParameter>
-          <MobileSidebarGasGweiLabel>
-            <span>{`${option.value} Gwei`}</span>
-          </MobileSidebarGasGweiLabel>
-        </GasMenuItem>
-      </Box>
-    ));
-
-    setGasPricesContent(content);
-  }, [GasPrices]);
 
   const isPhoneScreen = useMediaQuery('(max-width:709px)');
   const startOfTabletScreen = useMediaQuery('(min-width:710px)');
@@ -704,7 +631,19 @@ export default function Sidebar({
                   <SidebarMobilePopoverGasPriceTitle isLightTheme={isLightTheme}>
                     Realtime Gas Prices 123
                   </SidebarMobilePopoverGasPriceTitle>
-                  <SidebarMobileGasItemsBlock>{GasPricesContent}</SidebarMobileGasItemsBlock>
+                  <SidebarMobileGasItemsBlock>
+                    {addIconsGasPricesWithIcons.map((option) => (
+                      <TransactionSpeedGridLayoutItem isLightTheme={isLightTheme}>
+                        <GridLayoutItemIconSubBlock>
+                          <div>
+                            <img src={option.icon} alt="f" />
+                            <span>{option.label}</span>
+                          </div>
+                        </GridLayoutItemIconSubBlock>
+                        <span>{option.value} Gwei ($40.50)</span>
+                      </TransactionSpeedGridLayoutItem>
+                    ))}
+                  </SidebarMobileGasItemsBlock>
                   <SidebarMobilePopoverLink>
                     Provided by{' '}
                     <a href={'https://etherscan.io/'} target="_blank">
@@ -732,21 +671,20 @@ export default function Sidebar({
                 }}
                 PaperProps={{
                   sx: {
-                    mt: 1,
-                    ml: 2.2,
+                    // mt: 1,
+                    // ml: 2.2,
 
                     width: '345px',
-                    height: '540px',
+                    // height: '540px',
                     overflow: 'inherit',
                     borderRadius: '10px',
-                    // backgroundColor: 'red',
                     mixBlendMode: 'normal',
+
                     boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
                     backdropFilter: 'blur(15px)',
-                    ...sx,
                   },
                   style: {
-                    backgroundColor: 'transparent',
+                    backgroundColor: 'red',
                     boxShadow: 'none',
                   },
                 }}>
@@ -754,7 +692,19 @@ export default function Sidebar({
                   <SidebarMobilePopoverGasPriceTitle isLightTheme={isLightTheme}>
                     Realtime Gas Prices 456
                   </SidebarMobilePopoverGasPriceTitle>
-                  <SidebarMobileGasItemsBlock>{GasPricesContent}</SidebarMobileGasItemsBlock>
+                  <SidebarMobileGasItemsBlock>
+                    {addIconsGasPricesWithIcons.map((option) => (
+                      <TransactionSpeedGridLayoutItem isLightTheme={isLightTheme}>
+                        <GridLayoutItemIconSubBlock>
+                          <div>
+                            <img src={option.icon} alt="f" />
+                            <span>{option.label}</span>
+                          </div>
+                        </GridLayoutItemIconSubBlock>
+                        <span>{option.value} Gwei ($40.50)</span>
+                      </TransactionSpeedGridLayoutItem>
+                    ))}
+                  </SidebarMobileGasItemsBlock>
                   <SidebarMobilePopoverLink>
                     Provided by{' '}
                     <a href={'https://etherscan.io/'} target="_blank">
@@ -847,12 +797,12 @@ export default function Sidebar({
           </NotMetamaskConnectedBlock>
         )}
 
-        {/* all wallets */}
+        {/* all wallets Watchlist mobile */}
         <MyWalletsLabel
           isLightTheme={isLightTheme}
           allWalletsListMobile={true}
           style={{ marginLeft: endTabletSize && '17px' }}>
-          <p>{accountList.length > 0 && 'Watchlist mobile'}</p>
+          <p>{accountList.length > 0 && 'Watchlist'}</p>
         </MyWalletsLabel>
         <div>
           <WalletsList>
@@ -986,3 +936,11 @@ export default function Sidebar({
     </RootStyle>
   );
 }
+
+Sidebar.propTypes = {
+  isOpenSidebar: PropTypes.bool,
+  onCloseSidebar: PropTypes.func,
+  isOpenWalletsListMobile: PropTypes.bool,
+  onCloseWalletsListMobile: PropTypes.func,
+  setTheme: PropTypes.bool,
+};

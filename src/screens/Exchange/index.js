@@ -152,13 +152,16 @@ export default function SwapComponent() {
   const { address } = useParams();
 
   //work saga
-  const gasPrices = useSelector((state) => state.gesData.gasPriceData);
+
   const finalSendTokensList = useSelector((state) => state.tokensListReducer.sendTokensList);
   const finalReceiveTokensList = useSelector((state) => state.tokensListReducer.receiveTokensList);
   const initSendTokenSwap = useSelector((state) => state.tokensListReducer.initSendTokenSwap);
   const initReceiveFirstTokenSwap = useSelector(
     (state) => state.tokensListReducer.initReceiveFirstTokenSwap
   );
+
+  //gas API data
+  const gasPrices = useSelector((state) => state.gesData.gasPriceData);
   const selectedGasPrice = useSelector((state) => state.gesData.selectedGasPrice);
   const proposeGasPrice = useSelector((state) => state.gesData.proposeGasPrice);
 

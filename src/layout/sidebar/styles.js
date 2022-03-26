@@ -189,8 +189,7 @@ export const SidebarTabletNetworkButton = styled(Button)`
 
 export const MainSidebarMobilePopoverContent = styled.div`
   background-color: transparent !important;
-  //background-color: red;
-  height: 540px;
+  //height: 540px;
 `;
 
 export const MobileSidebarNetworksList = styled(List)`
