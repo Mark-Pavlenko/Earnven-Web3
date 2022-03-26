@@ -601,82 +601,65 @@ export default function Sidebar({
 
             {/*Gas Items Price*/}
             {isPhoneScreen && (
-              <Popover
-                id={id}
-                open={openGasPricesMobilePopover}
-                anchorEl={anchorEl}
-                onClose={handleGasItemListClose}
-                anchorReference="anchorPosition"
-                anchorPosition={{ top: 100, left: 10 }}
-                transformOrigin={{
-                  vertical: 'center',
-                  horizontal: 'left',
-                }}
-                PaperProps={{
-                  sx: {
-                    mt: 7,
-                    ml: 2.2,
-
-                    width: '345px',
-                    height: '540px',
-                    overflow: 'inherit',
-                    borderRadius: '10px',
-                    // backgroundColor: 'red',
-                    mixBlendMode: 'normal',
-                    boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-                    backdropFilter: 'blur(15px)',
-                    ...sx,
-                  },
-                  style: {
-                    backgroundColor: 'transparent',
-                    boxShadow: 'none',
-                  },
-                }}>
-                <MainSidebarMobilePopoverContent>
-                  <SidebarMobilePopoverGasPriceTitle isLightTheme={isLightTheme}>
-                    Realtime Gas Prices 123
-                  </SidebarMobilePopoverGasPriceTitle>
-                  <SidebarMobileGasItemsBlock>
-                    {addIconsGasPricesWithIcons.map((option) => (
-                      <Box
-                        key={option.value}
-                        onClick={() => {
-                          handleGasItemListClose();
-                          updateGasValue(option.value, option.label);
-                        }}
-                        sx={{ py: 1, px: 2.5 }}>
-                        <GasMenuItem
-                          isLightTheme={isLightTheme}
-                          style={{ backgroundColor: 'green' }}>
-                          <MobileSidebarSpeedValueParameter>
-                            <img src={option.icon} alt="" />
-                            <span>{`${option.label} `}</span>
-                          </MobileSidebarSpeedValueParameter>
-                          <MobileSidebarGasGweiLabel>
-                            <span>{`${option.value} Gwei`}</span>
-                          </MobileSidebarGasGweiLabel>
-                        </GasMenuItem>
-                      </Box>
-
-                      // <TransactionSpeedGridLayoutItem isLightTheme={isLightTheme}>
-                      //   <GridLayoutItemIconSubBlock>
-                      //     <div>
-                      //       <img src={option.icon} alt="f" />
-                      //       <span>{option.label}</span>
-                      //     </div>
-                      //   </GridLayoutItemIconSubBlock>
-                      //   <span>{option.value} Gwei ($40.50)</span>
-                      // </TransactionSpeedGridLayoutItem>
-                    ))}
-                  </SidebarMobileGasItemsBlock>
-                  <SidebarMobilePopoverLink>
-                    Provided by{' '}
-                    <a href={'https://etherscan.io/'} target="_blank">
-                      etherscan.io
-                    </a>
-                  </SidebarMobilePopoverLink>
-                </MainSidebarMobilePopoverContent>
-              </Popover>
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Popover
+                  id={id}
+                  open={openGasPricesMobilePopover}
+                  anchorEl={anchorEl}
+                  onClose={handleGasItemListClose}
+                  anchorReference="anchorPosition"
+                  anchorPosition={{ top: 100, left: 10 }}
+                  transformOrigin={{
+                    vertical: 'center',
+                    horizontal: 'left',
+                  }}
+                  PaperProps={{
+                    sx: {
+                      width: '100vw',
+                      height: '550px',
+                      overflow: 'inherit',
+                      borderRadius: '10px',
+                      mixBlendMode: 'normal',
+                      boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
+                      backdropFilter: 'blur(15px)',
+                      background: isLightTheme ? '#FFFFFF29' : '#1F265C3D',
+                    },
+                    // style: {},
+                  }}>
+                  <MainSidebarMobilePopoverContent>
+                    <SidebarMobilePopoverGasPriceTitle isLightTheme={isLightTheme}>
+                      Realtime Gas Prices 123
+                    </SidebarMobilePopoverGasPriceTitle>
+                    <SidebarMobileGasItemsBlock>
+                      {addIconsGasPricesWithIcons.map((option) => (
+                        <Box
+                          key={option.value}
+                          onClick={() => {
+                            handleGasItemListClose();
+                            updateGasValue(option.value, option.label);
+                          }}
+                          style={{ display: 'flex', justifyContent: 'center' }}>
+                          <GasMenuItem isLightTheme={isLightTheme}>
+                            <MobileSidebarSpeedValueParameter>
+                              <img src={option.icon} alt="" />
+                              <span>{`${option.label} `}</span>
+                            </MobileSidebarSpeedValueParameter>
+                            <MobileSidebarGasGweiLabel>
+                              <span>{`${option.value} Gwei`}</span>
+                            </MobileSidebarGasGweiLabel>
+                          </GasMenuItem>
+                        </Box>
+                      ))}
+                    </SidebarMobileGasItemsBlock>
+                    <SidebarMobilePopoverLink>
+                      Provided by{' '}
+                      <a href={'https://etherscan.io/'} target="_blank">
+                        etherscan.io
+                      </a>
+                    </SidebarMobilePopoverLink>
+                  </MainSidebarMobilePopoverContent>
+                </Popover>
+              </div>
             )}
 
             {startOfTabletScreen && !laptopScreen && (
