@@ -269,6 +269,11 @@ export default function Sidebar({
   const displayAccountsMobile = useMediaQuery('(min-width:780px)');
   const laptopScreen = useMediaQuery('(min-width:1280px)');
 
+  const updateGasValue = (val, label) => {
+    // data.gasSelected = val;
+    // setselected(label);
+  };
+
   // main sidebar content
   const desktopSidebarLayoutContent = (
     <Scrollbar
@@ -633,15 +638,35 @@ export default function Sidebar({
                   </SidebarMobilePopoverGasPriceTitle>
                   <SidebarMobileGasItemsBlock>
                     {addIconsGasPricesWithIcons.map((option) => (
-                      <TransactionSpeedGridLayoutItem isLightTheme={isLightTheme}>
-                        <GridLayoutItemIconSubBlock>
-                          <div>
-                            <img src={option.icon} alt="f" />
-                            <span>{option.label}</span>
-                          </div>
-                        </GridLayoutItemIconSubBlock>
-                        <span>{option.value} Gwei ($40.50)</span>
-                      </TransactionSpeedGridLayoutItem>
+                      <Box
+                        key={option.value}
+                        onClick={() => {
+                          handleGasItemListClose();
+                          updateGasValue(option.value, option.label);
+                        }}
+                        sx={{ py: 1, px: 2.5 }}>
+                        <GasMenuItem
+                          isLightTheme={isLightTheme}
+                          style={{ backgroundColor: 'green' }}>
+                          <MobileSidebarSpeedValueParameter>
+                            <img src={option.icon} alt="" />
+                            <span>{`${option.label} `}</span>
+                          </MobileSidebarSpeedValueParameter>
+                          <MobileSidebarGasGweiLabel>
+                            <span>{`${option.value} Gwei`}</span>
+                          </MobileSidebarGasGweiLabel>
+                        </GasMenuItem>
+                      </Box>
+
+                      // <TransactionSpeedGridLayoutItem isLightTheme={isLightTheme}>
+                      //   <GridLayoutItemIconSubBlock>
+                      //     <div>
+                      //       <img src={option.icon} alt="f" />
+                      //       <span>{option.label}</span>
+                      //     </div>
+                      //   </GridLayoutItemIconSubBlock>
+                      //   <span>{option.value} Gwei ($40.50)</span>
+                      // </TransactionSpeedGridLayoutItem>
                     ))}
                   </SidebarMobileGasItemsBlock>
                   <SidebarMobilePopoverLink>
@@ -671,38 +696,44 @@ export default function Sidebar({
                 }}
                 PaperProps={{
                   sx: {
-                    // mt: 1,
-                    // ml: 2.2,
-
-                    width: '345px',
-                    // height: '540px',
+                    width: '320px',
+                    height: '255px',
+                    marginTop: '11px',
                     overflow: 'inherit',
+                    background: isLightTheme ? '#FFFFFF29' : '#1F265C3D',
                     borderRadius: '10px',
                     mixBlendMode: 'normal',
-
                     boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-                    backdropFilter: 'blur(15px)',
+                    backdropFilter: 'blur(35px)',
                   },
                   style: {
-                    backgroundColor: 'red',
+                    backgroundColor: 'transparent !important',
                     boxShadow: 'none',
                   },
                 }}>
                 <MainSidebarMobilePopoverContent>
                   <SidebarMobilePopoverGasPriceTitle isLightTheme={isLightTheme}>
-                    Realtime Gas Prices 456
+                    Realtime Gas Prices
                   </SidebarMobilePopoverGasPriceTitle>
                   <SidebarMobileGasItemsBlock>
                     {addIconsGasPricesWithIcons.map((option) => (
-                      <TransactionSpeedGridLayoutItem isLightTheme={isLightTheme}>
-                        <GridLayoutItemIconSubBlock>
-                          <div>
-                            <img src={option.icon} alt="f" />
-                            <span>{option.label}</span>
-                          </div>
-                        </GridLayoutItemIconSubBlock>
-                        <span>{option.value} Gwei ($40.50)</span>
-                      </TransactionSpeedGridLayoutItem>
+                      <Box
+                        key={option.value}
+                        onClick={() => {
+                          handleGasItemListClose();
+                          updateGasValue(option.value, option.label);
+                        }}
+                        style={{ display: 'flex', justifyContent: 'center' }}>
+                        <GasMenuItem isLightTheme={isLightTheme}>
+                          <MobileSidebarSpeedValueParameter>
+                            <img src={option.icon} alt="" />
+                            <span>{`${option.label} `}</span>
+                          </MobileSidebarSpeedValueParameter>
+                          <MobileSidebarGasGweiLabel>
+                            <span>{`${option.value} Gwei`}</span>
+                          </MobileSidebarGasGweiLabel>
+                        </GasMenuItem>
+                      </Box>
                     ))}
                   </SidebarMobileGasItemsBlock>
                   <SidebarMobilePopoverLink>

@@ -188,8 +188,7 @@ export const SidebarTabletNetworkButton = styled(Button)`
 `;
 
 export const MainSidebarMobilePopoverContent = styled.div`
-  background-color: transparent !important;
-  //height: 540px;
+  //background-color: transparent !important;
 `;
 
 export const MobileSidebarNetworksList = styled(List)`
@@ -271,10 +270,10 @@ export const MobileSidebarNetworksListSubBlock = styled.div`
 `;
 
 export const SidebarMobilePopoverGasPriceTitle = styled.p`
-  margin-top: 20px;
-  margin-left: 30px;
+  margin-top: 16px;
+  margin-left: 13px;
   font-family: 'Saira', sans-serif;
-  font-size: 26px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 600;
   line-height: 41px;
@@ -283,8 +282,8 @@ export const SidebarMobilePopoverGasPriceTitle = styled.p`
 `;
 
 export const SidebarMobilePopoverLink = styled.div`
-  margin-top: 34px;
-  margin-left: 30px;
+  margin-top: 22px;
+  margin-left: 13px;
   font-size: 14px;
   color: #7b7c87;
   a {

@@ -64,11 +64,21 @@ export const MenuPopoverBoxNote = styled.div`
 `;
 
 export const SidebarMobileGasItemsBlock = styled.div`
-  margin-top: 33px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 10px;
   //background-color: blue;
 `;
 
 export const GasMenuItem = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 287px;
+  height: 40px;
+  border-radius: 10px;
   background-color: ${(props) =>
     props.isLightTheme
       ? props.selected
@@ -77,16 +87,6 @@ export const GasMenuItem = styled.div`
       : props.selected
       ? '#1F265C'
       : 'transparent'};
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  height: 40px;
-  margin-left: 13px;
-  margin-right: 13px;
-  border-radius: 10px;
-  padding-left: 12px;
-  padding-right: 19px;
   color: ${(props) => (props.isLightTheme ? 'black' : 'white')};
   font-family: 'Saira', sans-serif;
   font-size: 14px;
@@ -103,7 +103,7 @@ export const GasMenuItem = styled.div`
     cursor: pointer;
     background-color: ${(props) => (props.isLightTheme ? '#ffffff' : '#1F265C')};
     color: #4453ad;
-    font-weight: 500;
+    font-weight: 600;
 
     @media (max-width: 1280px) {
       border-radius: 10px;
@@ -122,9 +122,9 @@ export const MobileSidebarSpeedValueParameter = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin-left: 22px;
+  margin-left: 9px;
 `;
 
 export const MobileSidebarGasGweiLabel = styled.div`
-  margin-right: 32px;
+  margin-right: 19px;
 `;
