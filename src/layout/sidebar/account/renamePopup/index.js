@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Address, Button_Rename, Button_Rename_Disconnect, Input_Rename } from './styles';
+import { Address, AddressInputLayout, Input_Rename, RenameWalletGeneraLayout } from './styles';
 import { makeStyles } from '@material-ui/styles';
+import { Button_Cancel, Button_Success_Action, ButtonsLayout } from '../disconnectPopup/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import DesktopRenameIcon from '../../../../assets/icons/desktopRemaneIcon.svg';
 
 const useStyles = makeStyles((theme) => ({
   noBorder: {
@@ -11,11 +14,18 @@ const useStyles = makeStyles((theme) => ({
 
 const renamePopup = ({ address, name, setOpenPopup, isLightTheme }) => {
   const classes = useStyles(isLightTheme);
+  const mobilePopoverSize = useMediaQuery('(max-width:850px)');
 
-  const [rename, setrename] = useState('');
+  const [rename, setRename] = useState('');
   const navigate = useNavigate();
 
-  const Rename_name = (address) => {
+  useEffect(() => {
+    setRename(address);
+  }, []);
+
+  const renameWallet = (address) => {
+    // console.log('address rename', address);
+
     let result = localStorage.getItem('wallets');
     let selected = localStorage.getItem('selected-account');
     let selected_name = localStorage.getItem('selected-name');
@@ -35,35 +45,72 @@ const renamePopup = ({ address, name, setOpenPopup, isLightTheme }) => {
   const routeToDashboard = () => {
     const address = localStorage.getItem('selected-account');
     navigate(`/${address}${localStorage.getItem('setnavigation')}/`, { replace: true });
-    // navigate(-1);
   };
 
   return (
-    <>
-      <Address isLightTheme={isLightTheme}>{address}</Address>
-      <Input_Rename
-        onChange={(event) => setrename(event.target.value)}
-        classes={{ notchedOutline: classes.noBorder }}
-        placeholder={name === 'null' ? '' : name}
-        isLightTheme={isLightTheme}
-      />
-      <Button_Rename
-        onClick={() => {
-          setOpenPopup(false);
-        }}
-        isLightTheme={isLightTheme}>
-        <p> Cancel</p>
-      </Button_Rename>
-      <Button_Rename_Disconnect
-        isLightTheme={isLightTheme}
-        onClick={() => {
-          Rename_name(address);
-          routeToDashboard();
-          setOpenPopup(false);
-        }}>
-        <p> Save </p>
-      </Button_Rename_Disconnect>
-    </>
+    <RenameWalletGeneraLayout>
+      <AddressInputLayout>
+        <div style={{ justifyContent: 'center', width: mobilePopoverSize && '100%' }}>
+          {!mobilePopoverSize && <Address isLightTheme={isLightTheme}>{address}</Address>}
+          <Input_Rename
+            InputProps={{
+              startAdornment: !mobilePopoverSize && (
+                <img src={DesktopRenameIcon} alt="user" style={{ marginRight: '10px' }} />
+              ),
+              classes: { notchedOutline: classes.noBorder },
+              sx: {
+                color: isLightTheme ? '#1E1E20' : '#FFFFFF',
+                height: '60px',
+                fontSize: 14,
+              },
+            }}
+            onChange={(event) => setRename(event.target.value)}
+            value={rename}
+            isLightTheme={isLightTheme}
+          />
+          {mobilePopoverSize && <Address isLightTheme={isLightTheme}>{address}</Address>}
+        </div>
+      </AddressInputLayout>
+      {mobilePopoverSize ? (
+        <ButtonsLayout>
+          <Button_Success_Action
+            isLightTheme={isLightTheme}
+            onClick={() => {
+              renameWallet(address);
+              routeToDashboard();
+              setOpenPopup(false);
+            }}>
+            <p> Save </p>
+          </Button_Success_Action>
+          <Button_Cancel
+            onClick={() => {
+              setOpenPopup(false);
+            }}
+            isLightTheme={isLightTheme}>
+            <p> Cancel</p>
+          </Button_Cancel>
+        </ButtonsLayout>
+      ) : (
+        <ButtonsLayout>
+          <Button_Cancel
+            onClick={() => {
+              setOpenPopup(false);
+            }}
+            isLightTheme={isLightTheme}>
+            <p> Cancel</p>
+          </Button_Cancel>
+          <Button_Success_Action
+            isLightTheme={isLightTheme}
+            onClick={() => {
+              renameWallet(rename);
+              routeToDashboard();
+              setOpenPopup(false);
+            }}>
+            <p> Save </p>
+          </Button_Success_Action>
+        </ButtonsLayout>
+      )}
+    </RenameWalletGeneraLayout>
   );
 };
 

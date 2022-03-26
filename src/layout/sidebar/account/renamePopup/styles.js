@@ -1,16 +1,38 @@
 import styled from 'styled-components';
+import TextField from '@mui/material/TextField';
 
-import { Button } from '@material-ui/core';
+export const RenameWalletGeneraLayout = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+}));
 
-export const Input_Rename = styled('input')(({ isLightTheme }) => ({
-  textAlign: 'left',
-  position: 'absolute',
-  top: '153px',
-  left: '178px',
+export const AddressInputLayout = styled('div')(() => ({
+  display: 'flex',
+  justifyContent: 'center',
+  marginTop: '65px',
+
+  '@media (max-width:850px)': { marginTop: '46px' },
+}));
+
+export const Address = styled('div')(({ isLightTheme }) => ({
+  marginLeft: '2px',
+  fontSize: '12px',
+  lineHeight: '19px',
+  fontStyle: 'normal',
+  color: isLightTheme ? '#1E1E20' : '#FFFFFF',
+  opacity: isLightTheme && 0.5,
+  fontFamily: 'Saira, sans-serif',
+  flexGrow: 1,
+
+  '@media (max-width:850px)': { marginBottom: '0px', marginTop: '10px', fontSize: '10px' },
+  '@media (min-width:851px)': { marginBottom: '12px' },
+}));
+
+export const Input_Rename = styled(TextField)(({ isLightTheme }) => ({
   fontSize: '14px',
   lineHeight: '22px',
   fontStyle: 'normal',
-  paddingLeft: '1rem',
   fontFamily: 'Saira, sans-serif',
   height: '60px',
   width: '475px',
@@ -22,94 +44,6 @@ export const Input_Rename = styled('input')(({ isLightTheme }) => ({
   background: isLightTheme ? '#ffffff' : '#1F265C3D',
   color: isLightTheme ? 'black' : 'white',
   backdropFilter: isLightTheme ? 'none' : 'blur(35px)',
-}));
 
-export const Address = styled('div')(({ isLightTheme }) => ({
-  textAlign: 'left',
-  position: 'absolute',
-  top: '122px',
-  left: '178px',
-  fontSize: '12px',
-  lineHeight: '19px',
-  fontStyle: 'normal',
-  color: isLightTheme ? '#1E1E20' : '#FFFFFF',
-  opacity: isLightTheme && 0.5,
-  fontFamily: 'Saira, sans-serif',
-  flexGrow: 1,
-}));
-
-export const Button_Rename = styled(Button)(({ isLightTheme }) => ({
-  width: '150px',
-  height: '40px',
-  position: 'absolute',
-  left: '250px',
-  bottom: '97px',
-  mixBlendMode: 'normal',
-  color: isLightTheme ? '#1E1E20' : '#FFFFFF',
-  boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-  backdropFilter: isLightTheme ? 'none' : 'blur(35px)',
-  borderRadius: '10px',
-  fontFamily: 'Saira, sans-serif',
-  fontSize: '14px',
-  lineHeight: '22px',
-  display: 'flex',
-  fontStyle: 'normal',
-  border: '0px',
-  textAlign: 'center',
-  '&:hover': {
-    width: '150px',
-    height: '40px',
-    position: 'absolute',
-    left: '250px',
-    bottom: '97px',
-    mixBlendMode: 'normal',
-    boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.1)',
-    borderRadius: '10px',
-    fontFamily: 'Saira, sans-serif',
-    fontSize: '14px',
-    lineHeight: '22px',
-    display: 'flex',
-    fontStyle: 'normal',
-    border: '0px',
-    textAlign: 'center',
-  },
-}));
-
-export const Button_Rename_Disconnect = styled(Button)(({ isLightTheme }) => ({
-  width: '150px',
-  height: '40px',
-  position: 'absolute',
-  left: '430px',
-  bottom: '97px',
-  mixBlendMode: 'normal',
-  color: isLightTheme ? '#4453AD' : '#ffffff',
-  backgroundColor: isLightTheme ? '#FFFFFF' : '#8F86FF',
-  boxShadow: isLightTheme
-    ? 'inset 0px 5px 10px -6px rgba(51, 78, 131, 0.12)'
-    : '7px 21px 22px -15px rgba(51, 78, 131, 0.17)',
-  borderRadius: '10px',
-  fontFamily: 'Saira, sans-serif',
-  fontSize: '14px',
-  lineHeight: '22px',
-  display: 'flex',
-  fontStyle: 'normal',
-  overflow: 'inherit',
-  border: '0px',
-  '&:hover': {
-    width: '150px',
-    height: '40px',
-    position: 'absolute',
-    left: '430px',
-    bottom: '97px',
-    mixBlendMode: 'normal',
-    boxShadow: '0 14px 28px rgba(0,0,0,0.25), 0 5px 5px rgba(0,0,0,0.22)',
-    borderRadius: '10px',
-    fontFamily: 'Saira, sans-serif',
-    backgroundColor: isLightTheme ? '#FFFFFF' : '#8F86FF',
-    fontSize: '14px',
-    lineHeight: '22px',
-    display: 'flex',
-    fontStyle: 'normal',
-    overflow: 'inherit',
-  },
+  '@media (max-width:850px)': { width: '100%' },
 }));
