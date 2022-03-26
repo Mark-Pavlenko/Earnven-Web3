@@ -251,8 +251,8 @@ export default function Accounts(
       </WalletsListLayout>
       {/* popover menu with options for wallet*/}
       <Popover
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        anchorOrigin={{ vertical: 'top', horizontal: endTabletSize ? 'left' : 'right' }}
+        transformOrigin={{ vertical: endTabletSize ? 'top' : 'bottom', horizontal: 'left' }}
         className={classes.menupopover}
         PaperProps={{
           sx: {
@@ -263,6 +263,7 @@ export default function Accounts(
             background: isLightTheme ? '#FFFFFF29' : '#1F265C3D',
             mixBlendMode: 'normal',
             backdropFilter: 'blur(35px)',
+            marginLeft: endTabletSize && '-20px',
           },
         }}
         sx={{

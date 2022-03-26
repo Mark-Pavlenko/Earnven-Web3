@@ -852,7 +852,7 @@ export default function Sidebar({
           isLightTheme={isLightTheme}
           allWalletsListMobile={true}
           style={{ marginLeft: endTabletSize && '17px' }}>
-          <p>{accountList.length > 0 && 'Watchlist'}</p>
+          <p>{accountList.length > 0 && 'Watchlist mobile'}</p>
         </MyWalletsLabel>
         <div>
           <WalletsList>
